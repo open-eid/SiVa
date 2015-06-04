@@ -1,9 +1,13 @@
 package ee.sk.pdfvalidatortest;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.w3c.dom.Document;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.Collections;
 
 public class InvalidSignaturesTest extends PdfValidatorSoapTests {
@@ -17,6 +21,22 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
                 findErrorById("BBB_ICS_ISASCP_ANS", detailedReport(httpBody)));
     }
 
+    @Test
+    public void adesLtaBaselineProfileShouldPass() {
+        String httpBody = post(validationRequestFor(readFile("Signature-P-EE_AS-7.pdf"))).
+                andReturn().body().asString();
+
+        assertEquals(1, validSignatures(simpleReport(httpBody)));
+    }
+
+    @Test
+    public void adesTBaselineProfileShouldFail() {
+        String httpBody = post(validationRequestFor(readFile("Signature-P-EE_AS-5.pdf"))).
+                andReturn().body().asString();
+
+        assertEquals(0, validSignatures(simpleReport(httpBody)));
+    }
+
     private String findErrorById(String errorId, Document detailedReport) {
         return XmlUtil.findElementByXPath(
                 detailedReport,
@@ -24,9 +44,24 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
                 Collections.singletonMap("d", "http://dss.markt.ec.europa.eu/validation/diagnostic")).getTextContent();
     }
 
+    private int validSignatures(Document simpleReport) {
+        String stringResult = XmlUtil.findElementByXPath(
+                simpleReport,
+                "//d:SimpleReport/d:ValidSignaturesCount",
+                Collections.singletonMap("d", "http://dss.markt.ec.europa.eu/validation/diagnostic")).getTextContent();
+
+        return Integer.parseInt(stringResult);
+    }
+
     private Document detailedReport(String httpBody) {
         Document document = XmlUtil.parseXml(httpBody);
         String detailedReportString = XmlUtil.findElementByXPath(document, "//xmlDetailedReport").getTextContent();
+        return XmlUtil.parseXml(detailedReportString);
+    }
+
+    private Document simpleReport(String httpBody) {
+        Document document = XmlUtil.parseXml(httpBody);
+        String detailedReportString = XmlUtil.findElementByXPath(document, "//xmlSimpleReport").getTextContent();
         return XmlUtil.parseXml(detailedReportString);
     }
 

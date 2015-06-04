@@ -17,7 +17,7 @@ public abstract class PdfValidatorSoapTests {
 
     public static final String VALIDATION_SERVICE_URL = TESTS_PROPERTIES.getProperty("service_url");
 
-    public static final byte[] PDF_MISSING_SIGNING_CERT_ATTR = readFile("src/test/resources/missing_signing_certificate_attribute.pdf");
+    public static final byte[] PDF_MISSING_SIGNING_CERT_ATTR = readFile("missing_signing_certificate_attribute.pdf");
 
     protected String validationRequestFor(byte[] pdf) {
         return "<S:Envelope xmlns:S=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
@@ -27,9 +27,10 @@ public abstract class PdfValidatorSoapTests {
                 "                <bytes>\n" +
                 "                    " + Base64.encodeBase64String(pdf) +
                 "                </bytes>\n" +
-                "                <mimeType>PDF</mimeType>\n" +
-                "                <mimeTypeString>application/pdf</mimeTypeString>\n" +
                 "                <name>/fixedpath/file.pdf</name>\n" +
+                "                <absolutePath>/fixedpath/file.pdf</absolutePath>\n" +
+                "                <mimeType>PDF</mimeType>\n" +
+                "                <nextDocument></nextDocument>\n" +
                 "            </document>\n" +
                 "        <diagnosticDataToBeReturned>true</diagnosticDataToBeReturned>\n" +
                 "        </ns2:validateDocument>\n" +
@@ -56,8 +57,12 @@ public abstract class PdfValidatorSoapTests {
     }
 
     protected static byte[] readFile(String fileName) {
+        return readFileFromPath("src/test/resources/" + fileName);
+    }
+
+    protected static byte[] readFileFromPath(String pathName) {
         try {
-            return Files.readAllBytes(FileSystems.getDefault().getPath(fileName));
+            return Files.readAllBytes(FileSystems.getDefault().getPath(pathName));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

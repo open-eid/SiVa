@@ -26,7 +26,7 @@
 			<RevocationDataIsTrusted Level="FAIL"/>
 			<RevocationDataFreshness Level="WARN"/>
 			<ProspectiveCertificateChain Level="FAIL"/>
-			<KeyUsage Level="WARN">
+			<KeyUsage Level="FAIL">
 				<Identifier>nonRepudiation</Identifier>
 			</KeyUsage>
 			<Revoked Level="FAIL"/>
@@ -40,13 +40,11 @@
 			<Cryptographic Level="FAIL">
 				<AcceptableEncryptionAlgo>
 					<Algo>RSA</Algo>
-					<Algo>DSA</Algo>
 					<Algo>ECDSA</Algo>
 				</AcceptableEncryptionAlgo>
 				<MiniPublicKeySize>
-	                <Algo Size="128">DSA</Algo>
 					<Algo Size="1024">RSA</Algo>
-					<Algo Size="192">ECDSA</Algo>
+					<Algo Size="224">ECDSA</Algo>
 				</MiniPublicKeySize>
 				<AcceptableDigestAlgo>
 					<Algo>SHA1</Algo>
@@ -54,7 +52,6 @@
 					<Algo>SHA256</Algo>
 					<Algo>SHA384</Algo>
 					<Algo>SHA512</Algo>
-					<Algo>RIPEMD160</Algo>
 				</AcceptableDigestAlgo>
 			</Cryptographic>
 		</SigningCertificate>
@@ -68,13 +65,11 @@
 			<Cryptographic Level="FAIL">
 				<AcceptableEncryptionAlgo>
 					<Algo>RSA</Algo>
-					<Algo>DSA</Algo>
 					<Algo>ECDSA</Algo>
 				</AcceptableEncryptionAlgo>
 				<MiniPublicKeySize>
-	                <Algo Size="128">DSA</Algo>
 					<Algo Size="1024">RSA</Algo>
-	                <Algo Size="192">ECDSA</Algo>
+	                <Algo Size="224">ECDSA</Algo>
 				</MiniPublicKeySize>
 				<AcceptableDigestAlgo>
 					<Algo>SHA1</Algo>
@@ -82,20 +77,17 @@
 					<Algo>SHA256</Algo>
 					<Algo>SHA384</Algo>
 					<Algo>SHA512</Algo>
-					<Algo>RIPEMD160</Algo>
 				</AcceptableDigestAlgo>
 			</Cryptographic>
 		</CACertificate>
 		<Cryptographic Level="FAIL">
 			<AcceptableEncryptionAlgo>
 				<Algo>RSA</Algo>
-				<Algo>DSA</Algo>
 				<Algo>ECDSA</Algo>
 			</AcceptableEncryptionAlgo>
 			<MiniPublicKeySize>
-	            <Algo Size="128">DSA</Algo>
 				<Algo Size="1024">RSA</Algo>
-				<Algo Size="192">ECDSA</Algo>
+				<Algo Size="224">ECDSA</Algo>
 			</MiniPublicKeySize>
 			<AcceptableDigestAlgo>
 				<Algo>SHA1</Algo>
@@ -103,7 +95,6 @@
 				<Algo>SHA256</Algo>
 				<Algo>SHA384</Algo>
 				<Algo>SHA512</Algo>
-				<Algo>RIPEMD160</Algo>
 			</AcceptableDigestAlgo>
 		</Cryptographic>
 		<MandatedSignedQProperties>
@@ -145,13 +136,11 @@
 			<Cryptographic Level="FAIL">
 				<AcceptableEncryptionAlgo>
 					<Algo>RSA</Algo>
-					<Algo>DSA</Algo>
 					<Algo>ECDSA</Algo>
 				</AcceptableEncryptionAlgo>
 				<MiniPublicKeySize>
-	                <Algo Size="128">DSA</Algo>
 					<Algo Size="1024">RSA</Algo>
-					<Algo Size="192">ECDSA</Algo>
+					<Algo Size="224">ECDSA</Algo>
 				</MiniPublicKeySize>
 				<AcceptableDigestAlgo>
 					<Algo>SHA1</Algo>
@@ -159,7 +148,6 @@
 					<Algo>SHA256</Algo>
 					<Algo>SHA384</Algo>
 					<Algo>SHA512</Algo>
-					<Algo>RIPEMD160</Algo>
 				</AcceptableDigestAlgo>
 			</Cryptographic>
 		</SigningCertificate>
@@ -173,13 +161,11 @@
 			<Cryptographic Level="FAIL">
 				<AcceptableEncryptionAlgo>
 					<Algo>RSA</Algo>
-					<Algo>DSA</Algo>
 					<Algo>ECDSA</Algo>
 				</AcceptableEncryptionAlgo>
 				<MiniPublicKeySize>
-	                <Algo Size="128">DSA</Algo>
 					<Algo Size="1024">RSA</Algo>
-					<Algo Size="192">ECDSA</Algo>
+					<Algo Size="224">ECDSA</Algo>
 				</MiniPublicKeySize>
 				<AcceptableDigestAlgo>
 					<Algo>SHA1</Algo>
@@ -187,7 +173,6 @@
 					<Algo>SHA256</Algo>
 					<Algo>SHA384</Algo>
 					<Algo>SHA512</Algo>
-					<Algo>RIPEMD160</Algo>
 				</AcceptableDigestAlgo>
 			</Cryptographic>
 		</CACertificate>
@@ -204,13 +189,11 @@
 			<Cryptographic Level="WARN">
 				<AcceptableEncryptionAlgo>
 					<Algo>RSA</Algo>
-					<Algo>DSA</Algo>
 					<Algo>ECDSA</Algo>
 				</AcceptableEncryptionAlgo>
 				<MiniPublicKeySize>
-	                <Algo Size="128">DSA</Algo>
 					<Algo Size="1024">RSA</Algo>
-					<Algo Size="192">ECDSA</Algo>
+					<Algo Size="224">ECDSA</Algo>
 				</MiniPublicKeySize>
 				<AcceptableDigestAlgo>
 					<Algo>SHA1</Algo>
@@ -218,7 +201,6 @@
 					<Algo>SHA256</Algo>
 					<Algo>SHA384</Algo>
 					<Algo>SHA512</Algo>
-					<Algo>RIPEMD160</Algo>
 				</AcceptableDigestAlgo>
 			</Cryptographic>
 		</SigningCertificate>
@@ -232,13 +214,11 @@
 			<Cryptographic Level="FAIL">
 				<AcceptableEncryptionAlgo>
 					<Algo>RSA</Algo>
-					<Algo>DSA</Algo>
 					<Algo>ECDSA</Algo>
 				</AcceptableEncryptionAlgo>
 				<MiniPublicKeySize>
-	                <Algo Size="128">DSA</Algo>
 					<Algo Size="1024">RSA</Algo>
-					<Algo Size="192">ECDSA</Algo>
+					<Algo Size="224">ECDSA</Algo>
 				</MiniPublicKeySize>
 				<AcceptableDigestAlgo>
 					<Algo>SHA1</Algo>
@@ -246,27 +226,33 @@
 					<Algo>SHA256</Algo>
 					<Algo>SHA384</Algo>
 					<Algo>SHA512</Algo>
-					<Algo>RIPEMD160</Algo>
 				</AcceptableDigestAlgo>
 			</Cryptographic>
 		</CACertificate>
 	</Revocation>
 	<Cryptographic>
 		<AlgoExpirationDate Format="yyyy-MM-dd">
+			<!-- Algorithms under 112 bit strength: -->
 			<Algo Date="2017-02-24">SHA1</Algo>
-			<Algo Date="2035-02-24">SHA224</Algo>
-			<Algo Date="2035-02-24">SHA256</Algo>
+			<Algo Date="2017-02-24">RSA1024</Algo>
+			<Algo Date="2017-02-24">RSA1536</Algo>
+
+			<!-- Algorithms with ~ 112 bit strength: -->
+			<Algo Date="2025-02-24">SHA224</Algo>
+			<Algo Date="2025-02-24">RSA2048</Algo>
+			<Algo Date="2025-02-24">ECDSA224</Algo>
+
+			<!-- Algorithms with ~ 128 bit strength: -->
+			<Algo Date="2030-02-24">SHA256</Algo>
+			<Algo Date="2030-02-24">RSA3072</Algo>
+			<Algo Date="2030-02-24">RSA4096</Algo>
+			<Algo Date="2030-02-24">ECDSA256</Algo>
+
+			<!-- Algorithms with ~ 192 bit strength: -->
 			<Algo Date="2035-02-24">SHA384</Algo>
+
+			<!-- Algorithms with ~ 256 bit strength: -->
 			<Algo Date="2035-02-24">SHA512</Algo>
-			<Algo Date="2017-02-24">RIPEMD160</Algo>
-			<Algo Date="2017-02-24">DSA128</Algo>
-			<Algo Date="2015-02-24">RSA1024</Algo>
-			<Algo Date="2015-02-24">RSA1536</Algo>
-			<Algo Date="2020-02-24">RSA2048</Algo>
-			<Algo Date="2020-02-24">RSA3072</Algo>
-			<Algo Date="2035-02-24">RSA4096</Algo>
-			<Algo Date="2035-02-24">ECDSA192</Algo>
-			<Algo Date="2035-02-24">ECDSA256</Algo>
 		</AlgoExpirationDate>
 	</Cryptographic>
 </ConstraintsParameters>

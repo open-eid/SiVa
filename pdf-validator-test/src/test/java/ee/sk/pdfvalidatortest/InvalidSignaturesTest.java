@@ -1,14 +1,11 @@
 package ee.sk.pdfvalidatortest;
 
-import org.junit.Ignore;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.w3c.dom.Document;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
 import java.util.Collections;
+
+import static org.junit.Assert.assertEquals;
 
 public class InvalidSignaturesTest extends PdfValidatorSoapTests {
     @Test

@@ -8,12 +8,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 import static com.jayway.restassured.RestAssured.given;
 
 public abstract class PdfValidatorSoapTests {
     private static final Properties TESTS_PROPERTIES = readProperties("src/main/config/tests.properties");
+    private static final String PROJECT_SUBMODULE_NAME =  "pdf-validator-test";
 
     public static final String VALIDATION_SERVICE_URL = TESTS_PROPERTIES.getProperty("service_url");
 
@@ -47,17 +49,26 @@ public abstract class PdfValidatorSoapTests {
     }
 
     private static Properties readProperties(String pathname) {
+        String fullPath = getProjectBaseDirectory() + pathname;
         Properties properties = new Properties();
+
         try {
-            properties.load(new FileReader(new File(pathname)));
+            properties.load(new FileReader(new File(fullPath)));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
         return properties;
     }
 
     protected static byte[] readFile(String fileName) {
-        return readFileFromPath("src/test/resources/" + fileName);
+        String testFilesBase = getProjectBaseDirectory();
+        return readFileFromPath(testFilesBase + "src/test/resources/" + fileName);
+    }
+
+    private static String getProjectBaseDirectory() {
+        String path = Paths.get("").toAbsolutePath().normalize().toString();
+        return path + File.separator + PROJECT_SUBMODULE_NAME + File.separator;
     }
 
     protected static byte[] readFileFromPath(String pathName) {

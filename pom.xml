@@ -191,6 +191,8 @@
 		<xmlsec.version>2.0.2</xmlsec.version>
 		<pdfbox.version>1.8.8</pdfbox.version>
 		<junit.version>4.11</junit.version>
+		<mockito.version>2.0.2-beta</mockito.version>
+		<powermock.version>1.6.2</powermock.version>
 	</properties>
 
 	<dependencyManagement>
@@ -444,6 +446,7 @@
 				<artifactId>jgoodies-binding</artifactId>
 				<version>${jgoodies-bindings.version}</version>
 			</dependency>
+
 			<dependency>
 				<groupId>com.jgoodies</groupId>
 				<artifactId>jgoodies-forms</artifactId>
@@ -461,6 +464,25 @@
 				<artifactId>junit</artifactId>
 				<version>${junit.version}</version>
 			</dependency>
+
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-all</artifactId>
+				<version>${mockito.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.powermock</groupId>
+				<artifactId>powermock-module-junit4</artifactId>
+				<version>${powermock.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.powermock</groupId>
+				<artifactId>powermock-api-mockito</artifactId>
+				<version>${powermock.version}</version>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 	<repositories>

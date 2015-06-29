@@ -10,6 +10,10 @@
 			<Id>ANY_POLICY</Id>
 			<Id>NO_POLICY</Id>
 		</AcceptablePolicies>
+		<AcceptableSignatureFormats Level="FAIL">
+			<Id>PAdES_BASELINE_LT</Id>
+			<Id>PAdES_BASELINE_LTA</Id>
+		</AcceptableSignatureFormats>
 		<ReferenceDataExistence Level="FAIL">true</ReferenceDataExistence>
 		<ReferenceDataIntact Level="FAIL">true</ReferenceDataIntact>
 		<SignatureIntact Level="FAIL">true</SignatureIntact>

@@ -26,6 +26,14 @@
 									<xs:attribute type="tns:level" name="Level"/>
 								</xs:complexType>
 							</xs:element>
+							<xs:element name="AcceptableSignatureFormats" minOccurs="0" maxOccurs="1">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element type="xs:string" name="Id" maxOccurs="unbounded" minOccurs="0"/>
+									</xs:sequence>
+									<xs:attribute type="tns:level" name="Level"/>
+								</xs:complexType>
+							</xs:element>
 							<xs:element name="ReferenceDataExistence" minOccurs="0" maxOccurs="1">
 								<xs:complexType>
 									<xs:simpleContent>

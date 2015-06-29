@@ -20,26 +20,19 @@
  */
 package eu.europa.ec.markt.dss.validation102853.policy;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import eu.europa.ec.markt.dss.DSSUtils;
 import eu.europa.ec.markt.dss.exception.DSSException;
 import eu.europa.ec.markt.dss.validation102853.RuleUtils;
 import eu.europa.ec.markt.dss.validation102853.report.Conclusion;
-import eu.europa.ec.markt.dss.validation102853.rules.AttributeName;
-import eu.europa.ec.markt.dss.validation102853.rules.AttributeValue;
-import eu.europa.ec.markt.dss.validation102853.rules.Indication;
-import eu.europa.ec.markt.dss.validation102853.rules.MessageTag;
-import eu.europa.ec.markt.dss.validation102853.rules.NodeName;
-import eu.europa.ec.markt.dss.validation102853.rules.NodeValue;
-import eu.europa.ec.markt.dss.validation102853.rules.SubIndication;
+import eu.europa.ec.markt.dss.validation102853.rules.*;
 import eu.europa.ec.markt.dss.validation102853.xml.XmlDom;
 import eu.europa.ec.markt.dss.validation102853.xml.XmlNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class represents a constraint and indicates its level: IGNORE, INFORM, WARN, FAIL.
@@ -90,7 +83,7 @@ public class Constraint implements NodeName, NodeValue, AttributeName, Attribute
 	protected Map<String, String> messageAttributes = new HashMap<String, String>();
 	protected Conclusion conclusion;
 
-	public static enum Level {IGNORE, INFORM, WARN, FAIL}
+	public enum Level {IGNORE, INFORM, WARN, FAIL}
 
 	private Level level;
 

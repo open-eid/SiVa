@@ -20,14 +20,13 @@
  */
 package eu.europa.ec.markt.dss.validation102853.policy;
 
-import java.util.Date;
-import java.util.List;
-
-import org.w3c.dom.Document;
-
 import eu.europa.ec.markt.dss.validation102853.rules.AttributeName;
 import eu.europa.ec.markt.dss.validation102853.rules.RuleConstant;
 import eu.europa.ec.markt.dss.validation102853.xml.XmlDom;
+import org.w3c.dom.Document;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * This class encapsulates the constraint file that controls the policy to be used during the validation process. This is the base class used to implement a specific validation
@@ -71,6 +70,8 @@ public abstract class ValidationPolicy extends XmlDom implements RuleConstant, A
 	 * @return {@code Constraint} if SigningTime element is present in the constraint file, null otherwise.
 	 */
 	public abstract SignaturePolicyConstraint getSignaturePolicyConstraint();
+
+	public abstract SignatureFormatConstraint getSignatureFormatConstraint();
 
 	/**
 	 * Indicates if the structural validation should be checked. If StructuralValidation element is absent within the constraint file then null is returned.

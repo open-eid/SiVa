@@ -20,17 +20,17 @@
  */
 package eu.europa.ec.markt.dss.validation102853.policy;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.w3c.dom.Document;
-
 import eu.europa.ec.markt.dss.DSSUtils;
 import eu.europa.ec.markt.dss.exception.DSSException;
 import eu.europa.ec.markt.dss.validation102853.RuleUtils;
 import eu.europa.ec.markt.dss.validation102853.xml.XmlDom;
+import org.apache.commons.lang.StringUtils;
+import org.w3c.dom.Document;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class encapsulates the constraint file that controls the policy to be used during the validation process. It
@@ -53,7 +53,6 @@ public class EtsiValidationPolicy extends ValidationPolicy {
 	private Map<String, Date> algorithmExpirationDate = new HashMap<String, Date>();
 
 	public EtsiValidationPolicy(Document document) {
-
 		super(document);
 	}
 
@@ -137,6 +136,22 @@ public class EtsiValidationPolicy extends ValidationPolicy {
 			constraint.setExpectedValue(identifierList.toString());
 			return constraint;
 		}
+		return null;
+	}
+
+	@Override
+	public SignatureFormatConstraint getSignatureFormatConstraint() {
+		final String level = getValue("/ConstraintsParameters/MainSignature/AcceptableSignatureFormats/@Level");
+		if (StringUtils.isNotBlank(level)) {
+			final SignatureFormatConstraint constraint = new SignatureFormatConstraint(level);
+
+			final List<XmlDom> profilesAsDom = getElements("/ConstraintsParameters/MainSignature/AcceptableSignatureFormats/Id");
+			final List<String> profiles = XmlDom.convertToStringList(profilesAsDom);
+			constraint.setIdentifiers(profiles);
+			constraint.setExpectedValue(profiles.toString());
+			return constraint;
+		}
+
 		return null;
 	}
 

@@ -20,25 +20,19 @@
  */
 package eu.europa.ec.markt.dss.validation102853.processes.subprocesses;
 
-import static eu.europa.ec.markt.dss.validation102853.rules.MessageTag.BBB_ICS_AIDNASNE_ANS;
-import static eu.europa.ec.markt.dss.validation102853.rules.MessageTag.BBB_VCI_ISPK;
-import eu.europa.ec.markt.dss.DSSUtils;
 import eu.europa.ec.markt.dss.exception.DSSException;
 import eu.europa.ec.markt.dss.validation102853.SignaturePolicy;
 import eu.europa.ec.markt.dss.validation102853.policy.ProcessParameters;
+import eu.europa.ec.markt.dss.validation102853.policy.SignatureFormatConstraint;
 import eu.europa.ec.markt.dss.validation102853.policy.SignaturePolicyConstraint;
 import eu.europa.ec.markt.dss.validation102853.policy.ValidationPolicy;
 import eu.europa.ec.markt.dss.validation102853.report.Conclusion;
-import eu.europa.ec.markt.dss.validation102853.rules.AttributeName;
-import eu.europa.ec.markt.dss.validation102853.rules.AttributeValue;
-import eu.europa.ec.markt.dss.validation102853.rules.ExceptionMessage;
-import eu.europa.ec.markt.dss.validation102853.rules.Indication;
-import eu.europa.ec.markt.dss.validation102853.rules.NodeName;
-import eu.europa.ec.markt.dss.validation102853.rules.NodeValue;
-import eu.europa.ec.markt.dss.validation102853.rules.RuleConstant;
-import eu.europa.ec.markt.dss.validation102853.rules.SubIndication;
+import eu.europa.ec.markt.dss.validation102853.rules.*;
 import eu.europa.ec.markt.dss.validation102853.xml.XmlDom;
 import eu.europa.ec.markt.dss.validation102853.xml.XmlNode;
+import org.apache.commons.lang.StringUtils;
+
+import static eu.europa.ec.markt.dss.validation102853.rules.MessageTag.*;
 
 /**
  * 5.2 Validation Context Initialization (VCI)<br/>
@@ -120,7 +114,6 @@ public class ValidationContextInitialisation implements RuleConstant, Indication
     public Conclusion run(final ProcessParameters params, final XmlNode processNode) {
 
         if (processNode == null) {
-
             throw new DSSException(String.format(EXCEPTION_TCOPPNTBI, getClass().getSimpleName(), "processNode"));
         }
         prepareParameters(params);
@@ -128,10 +121,9 @@ public class ValidationContextInitialisation implements RuleConstant, Indication
         /**
          * 5.2. Validation Context Initialisation (VCI)
          */
-
         subProcessNode = processNode.addChild(VCI);
 
-        final Conclusion conclusion = process(params);
+        final Conclusion conclusion = process();
 
         final XmlNode conclusionXmlNode = conclusion.toXmlNode();
         subProcessNode.addChild(conclusionXmlNode);
@@ -141,10 +133,9 @@ public class ValidationContextInitialisation implements RuleConstant, Indication
     /**
      * This method implements VCI process.
      *
-     * @param params validation process parameters
      * @return the {@code Conclusion} which indicates the result of the process
      */
-    private Conclusion process(final ProcessParameters params) {
+    private Conclusion process() {
 
         final Conclusion conclusion = new Conclusion();
 
@@ -182,6 +173,10 @@ public class ValidationContextInitialisation implements RuleConstant, Indication
          */
 
         if (!checkSignaturePolicyIdentifier(conclusion)) {
+            return conclusion;
+        }
+
+        if (!checkSignatureFormat(conclusion)) {
             return conclusion;
         }
 
@@ -242,15 +237,29 @@ public class ValidationContextInitialisation implements RuleConstant, Indication
 
         constraint.create(subProcessNode, BBB_VCI_ISPK);
         String policyId = signatureContext.getValue("./Policy/Id/text()");
-        if (DSSUtils.isBlank(policyId)) {
+        if (StringUtils.isBlank(policyId)) {
             policyId = SignaturePolicy.NO_POLICY;
         }
+
         constraint.setIdentifier(policyId);
         constraint.setPolicyValidity(signatureContext.getBoolValue("./Policy/Status/text()"));
         constraint.setProcessingError(signatureContext.getValue("./Policy/ProcessingError/text()"));
         constraint.setNotice(signatureContext.getValue("./Policy/Notice/text()"));
 
         constraint.setIndications(INDETERMINATE, NO_SIGNER_CERTIFICATE_FOUND, BBB_ICS_AIDNASNE_ANS);
+        constraint.setConclusionReceiver(conclusion);
+
+        return constraint.check();
+    }
+
+    private boolean checkSignatureFormat(final Conclusion conclusion) {
+        final SignatureFormatConstraint constraint = constraintData.getSignatureFormatConstraint();
+        if (constraint == null) {
+            return true;
+        }
+
+        constraint.create(subProcessNode, BBB_VCI_ISFC);
+        constraint.setCurrentSignatureLevel(signatureContext.getValue("./SignatureFormat/text()"));
         constraint.setConclusionReceiver(conclusion);
 
         return constraint.check();

@@ -8,3 +8,7 @@ target
 dss-demo-webapp/dss-debug.log
 dss-demo-webapp/log.out
 log.out
+
+bin
+Vagrantfile
+ansible

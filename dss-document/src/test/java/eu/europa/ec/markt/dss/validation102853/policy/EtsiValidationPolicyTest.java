@@ -51,8 +51,8 @@ public class EtsiValidationPolicyTest {
     }
 
     @Test
-    public void testOnlyOneSignatureValu() throws Exception {
-         List<String> supportedTypes = new ArrayList<String>();
+    public void testOnlyOneSignatureValue() throws Exception {
+        List<String> supportedTypes = new ArrayList<String>();
         supportedTypes.add("PAdES_BASELINE_LT");
         mockSupportedSignatureList(supportedTypes);
 

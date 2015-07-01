@@ -20,17 +20,6 @@
  */
 package eu.europa.ec.markt.dss.validation102853.pades;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.commons.codec.binary.Base64;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import eu.europa.ec.markt.dss.DSSUtils;
 import eu.europa.ec.markt.dss.DigestAlgorithm;
 import eu.europa.ec.markt.dss.EncryptionAlgorithm;
@@ -45,24 +34,19 @@ import eu.europa.ec.markt.dss.signature.validation.AdvancedSignature;
 import eu.europa.ec.markt.dss.signature.validation.TimestampToken;
 import eu.europa.ec.markt.dss.signature.validation.cades.CAdESCertificateSource;
 import eu.europa.ec.markt.dss.signature.validation.pades.PAdESCertificateSource;
-import eu.europa.ec.markt.dss.validation102853.CertificatePool;
-import eu.europa.ec.markt.dss.validation102853.CertificateToken;
-import eu.europa.ec.markt.dss.validation102853.DefaultAdvancedSignature;
-import eu.europa.ec.markt.dss.validation102853.SignatureForm;
-import eu.europa.ec.markt.dss.validation102853.SignaturePolicy;
-import eu.europa.ec.markt.dss.validation102853.TimestampReference;
-import eu.europa.ec.markt.dss.validation102853.TimestampType;
-import eu.europa.ec.markt.dss.validation102853.bean.CandidatesForSigningCertificate;
-import eu.europa.ec.markt.dss.validation102853.bean.CertifiedRole;
-import eu.europa.ec.markt.dss.validation102853.bean.CommitmentType;
-import eu.europa.ec.markt.dss.validation102853.bean.SignatureCryptographicVerification;
-import eu.europa.ec.markt.dss.validation102853.bean.SignatureProductionPlace;
+import eu.europa.ec.markt.dss.validation102853.*;
+import eu.europa.ec.markt.dss.validation102853.bean.*;
 import eu.europa.ec.markt.dss.validation102853.cades.CAdESSignature;
 import eu.europa.ec.markt.dss.validation102853.certificate.CertificateRef;
 import eu.europa.ec.markt.dss.validation102853.crl.CRLRef;
 import eu.europa.ec.markt.dss.validation102853.crl.OfflineCRLSource;
 import eu.europa.ec.markt.dss.validation102853.ocsp.OCSPRef;
 import eu.europa.ec.markt.dss.validation102853.ocsp.OfflineOCSPSource;
+import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 /**
  * Implementation of AdvancedSignature for PAdES
@@ -165,6 +149,7 @@ public class PAdESSignature extends DefaultAdvancedSignature {
 			final PdfDssDict dssDictionary = getDSSDictionary();
 			offlineOCSPSource = new PAdESOCSPSource(cadesSignature, dssDictionary);
 		}
+
 		return offlineOCSPSource;
 	}
 

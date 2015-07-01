@@ -34,6 +34,14 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
         assertEquals(0, validSignatures(simpleReport(httpBody)));
     }
 
+    @Test
+    public void noOcspRequestsAreMadeForBaselineB() {
+        String httpBody = post(validationRequestFor(readFile("Signature-P-AT-1.pdf"))).
+                andReturn().body().asString();
+
+        assertEquals(0, validSignatures(simpleReport(httpBody)));
+    }
+
     private String findErrorById(String errorId, Document detailedReport) {
         return XmlUtil.findElementByXPath(
                 detailedReport,

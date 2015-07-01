@@ -39,9 +39,7 @@
 		<property name="dataSource" ref="dataSource"/>
 	</bean>
 
-	<bean id="ocspSource" class="eu.europa.ec.markt.dss.validation102853.ocsp.OnlineOCSPSource">
-		<property name="dataLoader" ref="ocspDataLoader"/>
-	</bean>
+	<bean id="ocspSource" class="eu.europa.ec.markt.dss.validation102853.ocsp.AlwaysFailingOCSPSource" />
 
 	<bean id="trustedListSource"
 	      class="eu.europa.ec.markt.dss.validation102853.tsl.ReloadableTrustedListCertificateSource">

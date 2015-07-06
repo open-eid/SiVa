@@ -46,14 +46,14 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
         return XmlUtil.findElementByXPath(
                 detailedReport,
                 "//d:Error[@NameId='" + errorId + "']",
-                Collections.singletonMap("d", "http://dss.markt.ec.europa.eu/validation/diagnostic")).getTextContent();
+                Collections.singletonMap("d", "http://dss.esig.europa.eu/validation/diagnostic")).getTextContent();
     }
 
     private int validSignatures(Document simpleReport) {
         String stringResult = XmlUtil.findElementByXPath(
                 simpleReport,
                 "//d:SimpleReport/d:ValidSignaturesCount",
-                Collections.singletonMap("d", "http://dss.markt.ec.europa.eu/validation/diagnostic")).getTextContent();
+                Collections.singletonMap("d", "http://dss.esig.europa.eu/validation/diagnostic")).getTextContent();
 
         return Integer.parseInt(stringResult);
     }

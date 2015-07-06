@@ -24,7 +24,7 @@ public abstract class PdfValidatorSoapTests {
     protected String validationRequestFor(byte[] pdf) {
         return "<S:Envelope xmlns:S=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "    <S:Body>\n" +
-                "        <ns2:validateDocument xmlns:ns2=\"http://ws.dss.markt.ec.europa.eu/\">\n" +
+                "        <ns2:validateDocument xmlns:ns2=\"http://ws.dss.esig.europa.eu/\">\n" +
                 "            <document>\n" +
                 "                <bytes>\n" +
                 "                    " + Base64.encodeBase64String(pdf) +

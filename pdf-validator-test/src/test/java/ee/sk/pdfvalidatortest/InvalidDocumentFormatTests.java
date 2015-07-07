@@ -7,10 +7,10 @@ import java.util.Collections;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
-public class InvalidDocumentFormatTests  extends PdfValidatorSoapTests {
+public class InvalidDocumentFormatTests extends PdfValidatorSoapTests {
 	
 	@Test
-    public void PAdESDocFormatShouldPass() {
+    public void PAdESDocumentShouldPass() {
         String httpBody = post(validationRequestFor(readFile("Signature-P-EE_AS-7.pdf"))).
                 andReturn().body().asString();
         
@@ -18,7 +18,7 @@ public class InvalidDocumentFormatTests  extends PdfValidatorSoapTests {
     }
 	
 	@Test
-    public void ASICDocFormatShouldFail() {
+    public void ASiCDocumentShouldFail() {
         String httpBody = post(validationRequestFor(readFile("Signature-A-EE-1.asice"))).
                 andReturn().body().asString();
         
@@ -26,7 +26,7 @@ public class InvalidDocumentFormatTests  extends PdfValidatorSoapTests {
     }
 	
 	@Test
-    public void XAdESDocFormatShouldFail() {
+    public void XAdESDocumentShouldFail() {
         String httpBody = post(validationRequestFor(readFile("Signature-X-AT-1.xml"))).
                 andReturn().body().asString();
         
@@ -34,7 +34,7 @@ public class InvalidDocumentFormatTests  extends PdfValidatorSoapTests {
     }
 	
 	@Test
-    public void CAdESDocFormatShouldFail() {
+    public void CAdESDocumentShouldFail() {
         String httpBody = post(validationRequestFor(readFile("Signature-C-AT-1.p7"))).
                 andReturn().body().asString();
         

@@ -64,12 +64,12 @@ public abstract class PdfValidatorSoapTests {
         return readFileFromPath(testFilesBase + path + fileName);
     }
 
-    protected static String getProjectBaseDirectory() {
+    private static String getProjectBaseDirectory() {
         String path = Paths.get("").toAbsolutePath().normalize().toString();
         return path + File.separator + PROJECT_SUBMODULE_NAME + File.separator;
     }
 
-    protected static byte[] readFileFromPath(String pathName) {
+    private static byte[] readFileFromPath(String pathName) {
         try {
             return Files.readAllBytes(FileSystems.getDefault().getPath(pathName));
         } catch (IOException e) {

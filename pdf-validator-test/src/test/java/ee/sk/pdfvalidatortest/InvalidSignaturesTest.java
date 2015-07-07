@@ -8,9 +8,10 @@ import java.util.Collections;
 import static org.junit.Assert.assertEquals;
 
 public class InvalidSignaturesTest extends PdfValidatorSoapTests {
+	
     @Test
     public void missingSignedAttributeForSigningCertificate() {
-        String httpBody = post(validationRequestFor(PDF_MISSING_SIGNING_CERT_ATTR)).
+        String httpBody = post(validationRequestFor(readFile("missing_signing_certificate_attribute.pdf"))).
                 andReturn().body().asString();
 
         assertEquals(
@@ -40,6 +41,10 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
                 andReturn().body().asString();
 
         assertEquals(0, validSignatures(simpleReport(httpBody)));
+    }
+    
+    private byte[] readFile(String fileName) {
+    	return super.readFile("src/test/resources/invalid_signature_documents/", fileName);
     }
 
     private String findErrorById(String errorId, Document detailedReport) {

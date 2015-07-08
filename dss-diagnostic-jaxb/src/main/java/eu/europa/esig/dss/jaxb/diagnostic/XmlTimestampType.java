@@ -34,11 +34,11 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *         &lt;element name="MessageImprintDataFound" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
  *         &lt;element name="MessageImprintDataIntact" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
  *         &lt;element name="CanonicalizationMethod" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="BasicSignature" type="{http://dss.esig.europa.eu/validation/diagnostic}BasicSignatureType"/>
- *         &lt;element name="SigningCertificate" type="{http://dss.esig.europa.eu/validation/diagnostic}SigningCertificateType"/>
- *         &lt;element name="CertificateChain" type="{http://dss.esig.europa.eu/validation/diagnostic}CertificateChainType"/>
- *         &lt;element name="Info" type="{http://dss.esig.europa.eu/validation/diagnostic}InfoType" minOccurs="0"/>
- *         &lt;element name="SignedObjects" type="{http://dss.esig.europa.eu/validation/diagnostic}SignedObjectsType" minOccurs="0"/>
+ *         &lt;element name="BasicSignature" type="{http://dss.markt.ec.europa.eu/validation/diagnostic}BasicSignatureType"/>
+ *         &lt;element name="SigningCertificate" type="{http://dss.markt.ec.europa.eu/validation/diagnostic}SigningCertificateType"/>
+ *         &lt;element name="CertificateChain" type="{http://dss.markt.ec.europa.eu/validation/diagnostic}CertificateChainType"/>
+ *         &lt;element name="Info" type="{http://dss.markt.ec.europa.eu/validation/diagnostic}InfoType" minOccurs="0"/>
+ *         &lt;element name="SignedObjects" type="{http://dss.markt.ec.europa.eu/validation/diagnostic}SignedObjectsType" minOccurs="0"/>
  *       &lt;/sequence>
  *       &lt;attribute name="Id" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="Type" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />

@@ -2,7 +2,7 @@
 <xsl:stylesheet version="1.0" 
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
 	xmlns:fo="http://www.w3.org/1999/XSL/Format"
-	xmlns:dss="http://dss.esig.europa.eu/validation/diagnostic">
+	xmlns:dss="http://dss.markt.ec.europa.eu/validation/diagnostic">
 	<xsl:output method="xml" indent="yes" />
 
 	<xsl:template match="/dss:ValidationData">

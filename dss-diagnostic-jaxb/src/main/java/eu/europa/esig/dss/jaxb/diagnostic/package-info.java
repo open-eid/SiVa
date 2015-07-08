@@ -5,5 +5,5 @@
 // Generated on: 2015.04.09 at 01:41:45 PM CEST 
 //
 
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://dss.esig.europa.eu/validation/diagnostic", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+@javax.xml.bind.annotation.XmlSchema(namespace = "http://dss.markt.ec.europa.eu/validation/diagnostic", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package eu.europa.esig.dss.jaxb.diagnostic;

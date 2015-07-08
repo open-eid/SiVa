@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><DiagnosticData xmlns="http://dss.esig.europa.eu/validation/diagnostic">
+<?xml version="1.0" encoding="UTF-8"?><DiagnosticData xmlns="http://dss.markt.ec.europa.eu/validation/diagnostic">
    <DocumentName>/Users/pvandenbroucke/Developpement/Git/dss-pades/src/test/resources/validation/pades-5-signatures-and-1-document-timestamp.pdf</DocumentName>
    <Signature Id="id-e15d323ce2d560672179fb9a907471a84d967522c2e8f5dec3036386284ef657">
       <DateTime>2011-05-05T09:06:38Z</DateTime>

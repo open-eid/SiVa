@@ -44,7 +44,7 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
     }
     
     private byte[] readFile(String fileName) {
-    	return super.readFile("src/test/resources/invalid_signature_documents/", fileName);
+    	return super.readFileFromTestResources("invalid_signature_documents/", fileName);
     }
 
     private String findErrorById(String errorId, Document detailedReport) {

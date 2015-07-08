@@ -42,7 +42,7 @@ public class InvalidDocumentFormatTests extends PdfValidatorSoapTests {
     }
 	
 	private byte[] readFile(String fileName) {
-    	return super.readFile("src/test/resources/invalid_format_documents/", fileName);
+    	return readFileFromTestResources("invalid_format_documents/", fileName);
     }
 	
 	private String signatureFormat(Document simpleReport) {

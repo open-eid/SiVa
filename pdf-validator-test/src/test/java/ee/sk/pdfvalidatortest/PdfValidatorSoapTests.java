@@ -59,9 +59,9 @@ public abstract class PdfValidatorSoapTests {
         return properties;
     }
 
-    protected static byte[] readFile(String path, String fileName) {
-        String testFilesBase = getProjectBaseDirectory();
-        return readFileFromPath(testFilesBase + path + fileName);
+    protected static byte[] readFileFromTestResources(String relativePath, String fileName) {
+        String testFilesBase = getProjectBaseDirectory() + "src/test/resources/";
+        return readFileFromPath(testFilesBase + relativePath + fileName);
     }
 
     private static String getProjectBaseDirectory() {

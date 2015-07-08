@@ -19,8 +19,6 @@ public abstract class PdfValidatorSoapTests {
 
     public static final String VALIDATION_SERVICE_URL = TESTS_PROPERTIES.getProperty("service_url");
 
-    public static final byte[] PDF_MISSING_SIGNING_CERT_ATTR = readFile("missing_signing_certificate_attribute.pdf");
-
     protected String validationRequestFor(byte[] pdf) {
         return "<S:Envelope xmlns:S=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "    <S:Body>\n" +
@@ -61,9 +59,9 @@ public abstract class PdfValidatorSoapTests {
         return properties;
     }
 
-    protected static byte[] readFile(String fileName) {
-        String testFilesBase = getProjectBaseDirectory();
-        return readFileFromPath(testFilesBase + "src/test/resources/" + fileName);
+    protected static byte[] readFileFromTestResources(String relativePath, String fileName) {
+        String testFilesBase = getProjectBaseDirectory() + "src/test/resources/";
+        return readFileFromPath(testFilesBase + relativePath + fileName);
     }
 
     private static String getProjectBaseDirectory() {
@@ -71,7 +69,7 @@ public abstract class PdfValidatorSoapTests {
         return path + File.separator + PROJECT_SUBMODULE_NAME + File.separator;
     }
 
-    protected static byte[] readFileFromPath(String pathName) {
+    private static byte[] readFileFromPath(String pathName) {
         try {
             return Files.readAllBytes(FileSystems.getDefault().getPath(pathName));
         } catch (IOException e) {

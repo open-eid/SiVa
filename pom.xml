@@ -30,6 +30,7 @@
 		<module>dss-cades</module>
 		<module>dss-pades</module>
 		<module>dss-xades</module>
+		<module>pdf-validator-test</module>
 	</modules>
 
 	<developers>

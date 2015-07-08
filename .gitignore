@@ -12,3 +12,4 @@ log.out
 bin
 Vagrantfile
 ansible
+*.log

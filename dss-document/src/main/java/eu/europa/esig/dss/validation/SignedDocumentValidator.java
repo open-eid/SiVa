@@ -460,8 +460,11 @@ public abstract class SignedDocumentValidator implements DocumentValidator {
 		// The list of all signing certificates is created to allow a parallel validation.
 		prepareCertificatesAndTimestamps(allSignatureList, validationContext);
 
-		final ListCRLSource signatureCRLSource = getSignatureCrlSource(allSignatureList);
-		certificateVerifier.setSignatureCRLSource(signatureCRLSource);
+		// Do not read CRL from signatures
+		/*
+		 * final ListCRLSource signatureCRLSource = getSignatureCrlSource(allSignatureList);
+		 * certificateVerifier.setSignatureCRLSource(signatureCRLSource);
+		 */
 
 		final ListOCSPSource signatureOCSPSource = getSignatureOcspSource(allSignatureList);
 		certificateVerifier.setSignatureOCSPSource(signatureOCSPSource);

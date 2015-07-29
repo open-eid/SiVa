@@ -193,6 +193,7 @@
 	<dependencyManagement>
 		<dependencies>
 			<!-- Internal Dependencies -->
+			<!--
 			<dependency>
 				<groupId>eu.europa.ec.joinup.sd-dss</groupId>
 				<artifactId>dss-demo-applet</artifactId>
@@ -203,6 +204,7 @@
 				<artifactId>dss-demo-applet-package</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			-->
 			<dependency>
 				<groupId>eu.europa.ec.joinup.sd-dss</groupId>
 				<artifactId>dss-demo-webapp</artifactId>

@@ -31,7 +31,8 @@
 		<module>dss-pades</module>
 		<module>dss-xades</module>
 		<module>pdf-validator-test</module>
-	</modules>
+        <module>pdf-validator-webapp</module>
+    </modules>
 
 	<developers>
 		<developer>
@@ -638,6 +639,25 @@
 	</distributionManagement>
 
 	<profiles>
+		<profile>
+			<id>pdf</id>
+			<modules>
+                <module>dss-document</module>
+                <module>dss-service</module>
+                <module>dss-spi</module>
+                <module>dss-test</module>
+                <module>sscd-mocca-adapter</module>
+                <module>dss-webservices</module>
+                <module>pdf-validator-webapp</module>
+                <module>dss-tsl-jaxb</module>
+                <module>dss-diagnostic-jaxb</module>
+                <module>validation-policy</module>
+                <module>dss-asic</module>
+                <module>dss-cades</module>
+                <module>dss-pades</module>
+                <module>dss-xades</module>
+            </modules>
+		</profile>
 		<profile>
 			<id>delivery</id>
 			<build>

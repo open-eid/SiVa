@@ -60,7 +60,7 @@
 	
 	<properties>
 		<project.encoding>UTF-8</project.encoding>
-	
+        <language.level>1.7</language.level>
 		<log4j.version>1.2.17</log4j.version>
 		<spring.version>3.2.13.RELEASE</spring.version>
 		<tiles.version>2.2.2</tiles.version>
@@ -175,8 +175,8 @@
 					<version>2.5.1</version>
 					<configuration>
 						<encoding>${project.encoding}</encoding>
-						<source>1.6</source>
-						<target>1.6</target>
+						<source>${language.level}</source>
+						<target>${language.level}</target>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -297,6 +297,11 @@
 				<type>war</type>
 				<version>${project.version}</version>
 			</dependency>
+            <dependency>
+                <groupId>eu.europa.ec.joinup.sd-dss</groupId>
+                <artifactId>pdf-validator-webapp</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 			<dependency>
 				<groupId>eu.europa.ec.joinup.sd-dss</groupId>
 				<artifactId>dss-spi</artifactId>
@@ -589,7 +594,19 @@
 				<artifactId>powermock-api-mockito</artifactId>
 				<version>${powermock.version}</version>
 			</dependency>
-		</dependencies>
+
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-server</artifactId>
+                <version>9.3.1.v20150714</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-webapp</artifactId>
+                <version>9.3.1.v20150714</version>
+            </dependency>
+
+        </dependencies>
 	</dependencyManagement>
 	<repositories>
 		<repository>

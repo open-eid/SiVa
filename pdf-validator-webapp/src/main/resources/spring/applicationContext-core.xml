@@ -29,14 +29,7 @@
 		<!--<property name="fileCacheDirectory" value="/temp"/>-->
 	</bean>
 
-	<bean id="cacheCrlSource" class="eu.europa.esig.dss.client.crl.OnlineCRLSource">
-		<property name="dataLoader" ref="dataLoader"/>
-	</bean>
-
-	<bean id="crlSource" class="eu.europa.esig.dss.client.crl.JdbcCacheCRLSource">
-		<property name="cachedSource" ref="cacheCrlSource"/>
-		<property name="dataSource" ref="dataSource"/>
-	</bean>
+	<bean id="crlSource" class="eu.europa.esig.dss.client.crl.AlwaysFailingCRLSource"/>
 
 	<bean id="ocspSource" class="eu.europa.esig.dss.client.ocsp.AlwaysFailingOCSPSource" />
 

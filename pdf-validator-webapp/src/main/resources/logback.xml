@@ -7,19 +7,25 @@
 			<level>DEBUG</level>
 		</filter>
 		<encoder>
-			<pattern>%-5level %F:%L [%thread] - %msg %n</pattern>
+			<pattern>%-5level %logger{0}:%L [%thread] - %msg%n</pattern>
 			<!--<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %F:%L - %msg%n</pattern>-->
 		</encoder>
 	</appender>
 
-	<appender name="debug" class="ch.qos.logback.core.FileAppender">
-		<file>dss-debug.log</file>
-		<!-- rewrite file each time -->
-		<append>false</append>
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>logs/pdf-validator-webapp.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>logs/pdf-validator-webapp.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter>
 		<!-- encoders are assigned the type
 			 ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
 		<encoder>
-			<pattern>%-5level %logger{35}:%L - %msg%n</pattern>
+			<pattern>%d{HH:mm:ss.SSS} %-5level %logger{0}:%L [%thread] - %msg%n</pattern>
 			<!--<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %F:%L - %msg%n</pattern>-->
 		</encoder>
 	</appender>
@@ -49,7 +55,7 @@
 
 	<root level="DEBUG">
 		<appender-ref ref="STDOUT"/>
-		<!--<appender-ref ref="debug"/>-->
+		<appender-ref ref="FILE"/>
 	</root>
 
 </configuration>

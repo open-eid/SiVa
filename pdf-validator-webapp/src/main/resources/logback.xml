@@ -38,8 +38,7 @@
 		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
 			<level>INFO</level>
 		</filter>
-		<suffixPattern>%-5level %logger{0}:%L [%thread] - %msg%n</suffixPattern>
-
+		<suffixPattern>%-5level %logger{0}:%L [%thread] - %msg</suffixPattern>
 	</appender>
 	-->
 

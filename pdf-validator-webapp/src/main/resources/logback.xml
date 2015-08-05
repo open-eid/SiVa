@@ -30,7 +30,6 @@
 		</encoder>
 	</appender>
 	
-	<!-- Syslog appender
 	<appender name="SYSLOG" class="ch.qos.logback.classic.net.SyslogAppender">
 		<syslogHost>enter_ip_or_hostname_here</syslogHost>
 		<port>514</port>
@@ -40,7 +39,6 @@
 		</filter>
 		<suffixPattern>%-5level %logger{0}:%L [%thread] - %msg</suffixPattern>
 	</appender>
-	-->
 
 	<!--<logger name="eu.europa" level="DEBUG">-->
 	<!--<appender-ref ref="STDOUT"/>-->

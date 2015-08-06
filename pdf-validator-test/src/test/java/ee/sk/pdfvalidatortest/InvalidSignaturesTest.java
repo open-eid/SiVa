@@ -8,7 +8,7 @@ import java.util.Collections;
 import static org.junit.Assert.assertEquals;
 
 public class InvalidSignaturesTest extends PdfValidatorSoapTests {
-	
+
     @Test
     public void missingSignedAttributeForSigningCertificate() {
         String httpBody = post(validationRequestFor(readFile("missing_signing_certificate_attribute.pdf"))).
@@ -18,6 +18,7 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
                 "The signed attribute: 'signing-certificate' is absent!",
                 findErrorById("BBB_ICS_ISASCP_ANS", detailedReport(httpBody)));
     }
+
 
     @Test
     public void adesLtaBaselineProfileShouldPass() {
@@ -40,6 +41,31 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
         String httpBody = post(validationRequestFor(readFile("Signature-P-AT-1.pdf"))).
                 andReturn().body().asString();
 
+        assertEquals(0, validSignatures(simpleReport(httpBody)));
+    }
+
+    @Test
+    public void adesBBaselineRevokedShouldFail() {
+        String httpBody = post(validationRequestFor(readFile("Signature-P-EE_AS-1.pdf"))).
+                andReturn().body().asString();
+
+        assertEquals(0, validSignatures(simpleReport(httpBody)));
+
+    }
+
+    @Test
+    public void adesLTBaselineShouldFail() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-pades-lt-sha256-sign.pdf"))).
+                andReturn().body().asString();
+
+        assertEquals(1, validSignatures(simpleReport(httpBody)));
+
+    }
+
+    @Test
+    public void adesNonRepudiationIsMandatoryShouldFail() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-pades-lt-sha256-auth.pdf"))).
+                andReturn().body().asString();
         assertEquals(0, validSignatures(simpleReport(httpBody)));
     }
     

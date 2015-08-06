@@ -29,6 +29,16 @@
 			<!--<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %F:%L - %msg%n</pattern>-->
 		</encoder>
 	</appender>
+	
+	<appender name="SYSLOG" class="ch.qos.logback.classic.net.SyslogAppender">
+		<syslogHost>enter_ip_or_hostname_here</syslogHost>
+		<port>514</port>
+		<facility>USER</facility>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter>
+		<suffixPattern>%-5level %logger{0}:%L [%thread] - %msg</suffixPattern>
+	</appender>
 
 	<!--<logger name="eu.europa" level="DEBUG">-->
 	<!--<appender-ref ref="STDOUT"/>-->
@@ -56,6 +66,7 @@
 	<root level="DEBUG">
 		<appender-ref ref="STDOUT"/>
 		<appender-ref ref="FILE"/>
+		<!--<appender-ref ref="SYSLOG"/>-->
 	</root>
 
 </configuration>

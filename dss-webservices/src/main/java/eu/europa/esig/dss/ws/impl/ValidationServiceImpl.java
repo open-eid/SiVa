@@ -48,7 +48,7 @@ import eu.europa.esig.dss.ws.report.WSValidationReport;
 @WebService(endpointInterface = "eu.europa.esig.dss.ws.ValidationService", serviceName = "ValidationService")
 public class ValidationServiceImpl implements ValidationService {
 
-	private static final Logger logger = LoggerFactory.getLogger(SignatureServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(ValidationServiceImpl.class);
 
 	private CertificateVerifier certificateVerifier;
 

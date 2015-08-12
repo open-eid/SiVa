@@ -48,13 +48,13 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
     public void adesBBaselineRevokedShouldFail() {
         String httpBody = post(validationRequestFor(readFile("Signature-P-EE_AS-1.pdf"))).
                 andReturn().body().asString();
-
+        System.out.print(httpBody);
         assertEquals(0, validSignatures(simpleReport(httpBody)));
 
     }
 
     @Test
-    public void adesLTBaselineShouldFail() {
+    public void adesLtBaselineShouldPass() {
         String httpBody = post(validationRequestFor(readFile("hellopades-pades-lt-sha256-sign.pdf"))).
                 andReturn().body().asString();
 
@@ -63,14 +63,56 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
     }
 
     @Test
-    public void adesNonRepudiationIsMandatoryShouldFail() {
+    public void adesLtBaselineNonRepudiationIsMandatoryShouldFail() {
         String httpBody = post(validationRequestFor(readFile("hellopades-pades-lt-sha256-auth.pdf"))).
                 andReturn().body().asString();
         assertEquals(0, validSignatures(simpleReport(httpBody)));
     }
-    
+
+    @Test
+    public void adesLtaBaselineNoOcspCrlInSignatureShouldFail() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-lta-no-ocsp.pdf"))).
+                andReturn().body().asString();
+        assertEquals(0, validSignatures(simpleReport(httpBody)));
+    }
+
+    @Test
+    public void adesLtBaselineOcsp15MinDelayShouldPass() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-ocsp-15min.pdf"))).
+                andReturn().body().asString();
+        System.out.println(httpBody);
+        assertEquals(1, validSignatures(simpleReport(httpBody)));
+    }
+
+
+
+    @Test
+    public void adesPdfSignedWithSha512CertifikateShouldPass() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha512.pdf"))).
+                andReturn().body().asString();
+        assertEquals(1, validSignatures(simpleReport(httpBody)));
+    }
+
+    @Test
+    public void adesPdfSignedWithSha1CertifikateShouldPass() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha1.pdf"))).
+                andReturn().body().asString();
+        assertEquals(1, validSignatures(simpleReport(httpBody)));
+    }
+
+    @Test
+    public void adesPdfSignedWithRevokedCertificateShouldFail() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-revoked.pdf"))).
+                andReturn().body().asString();
+        assertEquals(0, validSignatures(simpleReport(httpBody)));
+    }
+
+
+
+
+
     private byte[] readFile(String fileName) {
-    	return readFileFromTestResources("invalid_signature_documents/", fileName);
+        return readFileFromTestResources("invalid_signature_documents/", fileName);
     }
 
     private String findErrorById(String errorId, Document detailedReport) {

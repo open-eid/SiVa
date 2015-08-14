@@ -377,6 +377,10 @@ public class AdESTValidation {
 		if (!checkTimestampDelay(signatureConclusion)) {
 			return signatureConclusion;
 		}
+		
+		if (!checkOcspDelay(signatureConclusion)) {
+			return signatureConclusion;
+		}
 
 		// This validation process returns VALID
 		signatureConclusion.setIndication(Indication.VALID);
@@ -943,6 +947,28 @@ public class AdESTValidation {
 		constraint.setValue((date.getTime() + timestampDelay) > bestSignatureTime.getTime());
 		constraint.setConclusionReceiver(conclusion);
 
+		return constraint.check();
+	}
+	
+	/**
+	 * Check of: Ocsp delay compared to the best-signature-time.
+	 *
+	 * @param conclusion the conclusion to use to add the result of the check.
+	 * @return false if the check failed and the process should stop, true otherwise.
+	 */
+	private boolean checkOcspDelay(Conclusion conclusion) {
+		final String ocspIssuingTime = diagnosticData.getValue("./UsedCertificates/Certificate/Revocation/IssuingTime/text()");
+		if (ocspIssuingTime == null) {
+			return true;
+		}
+		final Date ocspDate = DSSUtils.quietlyParseDate(ocspIssuingTime);
+		final Constraint constraint = constraintData.getOcspDelayConstraint(ocspDate.getTime() - bestSignatureTime.getTime());
+		if (constraint == null) {
+			return true;
+		}
+		constraint.create(signatureXmlNode, MessageTag.ADEST_IOTNLABST);
+		constraint.setIndications(Indication.INVALID, null, MessageTag.ADEST_IOTNLABST_ANS);
+		constraint.setConclusionReceiver(conclusion);
 		return constraint.check();
 	}
 }

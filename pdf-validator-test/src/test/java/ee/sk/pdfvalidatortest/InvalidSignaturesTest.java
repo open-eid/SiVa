@@ -13,7 +13,8 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
     public void missingSignedAttributeForSigningCertificate() {
         String httpBody = post(validationRequestFor(readFile("missing_signing_certificate_attribute.pdf"))).
                 andReturn().body().asString();
-
+        //System.out.println(httpBody.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&#xD;", "").replaceAll("&quot;", "\""));
+        
         assertEquals(
                 "The signed attribute: 'signing-certificate' is absent!",
                 findErrorById("BBB_ICS_ISASCP_ANS", detailedReport(httpBody)));
@@ -48,7 +49,6 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
     public void adesBBaselineRevokedShouldFail() {
         String httpBody = post(validationRequestFor(readFile("Signature-P-EE_AS-1.pdf"))).
                 andReturn().body().asString();
-        System.out.print(httpBody);
         assertEquals(0, validSignatures(simpleReport(httpBody)));
 
     }
@@ -66,6 +66,7 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
     public void adesLtBaselineNonRepudiationIsMandatoryShouldFail() {
         String httpBody = post(validationRequestFor(readFile("hellopades-pades-lt-sha256-auth.pdf"))).
                 andReturn().body().asString();
+        
         assertEquals(0, validSignatures(simpleReport(httpBody)));
     }
 
@@ -73,23 +74,16 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
     public void adesLtaBaselineNoOcspCrlInSignatureShouldFail() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lta-no-ocsp.pdf"))).
                 andReturn().body().asString();
+        
         assertEquals(0, validSignatures(simpleReport(httpBody)));
     }
-
-    @Test
-    public void adesLtBaselineOcsp15MinDelayShouldPass() {
-        String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-ocsp-15min.pdf"))).
-                andReturn().body().asString();
-        System.out.println(httpBody);
-        assertEquals(1, validSignatures(simpleReport(httpBody)));
-    }
-
 
 
     @Test
     public void adesPdfSignedWithSha512CertifikateShouldPass() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha512.pdf"))).
                 andReturn().body().asString();
+        
         assertEquals(1, validSignatures(simpleReport(httpBody)));
     }
 
@@ -97,6 +91,7 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
     public void adesPdfSignedWithSha1CertifikateShouldPass() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha1.pdf"))).
                 andReturn().body().asString();
+        
         assertEquals(1, validSignatures(simpleReport(httpBody)));
     }
 
@@ -104,12 +99,25 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
     public void adesPdfSignedWithRevokedCertificateShouldFail() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-revoked.pdf"))).
                 andReturn().body().asString();
+        
         assertEquals(0, validSignatures(simpleReport(httpBody)));
     }
+    
+    @Test
+    public void adesLtBaselineOcspOver15MinDelayShouldPassButWarn() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-ocsp-15min1s.pdf"))).
+                andReturn().body().asString();
 
+        assertEquals(1, validSignatures(simpleReport(httpBody)));
+    }
+	
+	@Test
+    public void adesLtBaselineOcspOver24hDelayShouldFail() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-ocsp-28h.pdf"))).
+                andReturn().body().asString();
 
-
-
+        assertEquals(0, validSignatures(simpleReport(httpBody)));
+    }
 
     private byte[] readFile(String fileName) {
         return readFileFromTestResources("invalid_signature_documents/", fileName);

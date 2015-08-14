@@ -390,6 +390,8 @@ public abstract class ValidationPolicy extends XmlDom {
 	 * @return
 	 */
 	public abstract Constraint getTimestampDelaySigningTimePropertyConstraint();
+	
+	public abstract Constraint getOcspDelayConstraint(Long delay);
 
 	public abstract Constraint getContentTimestampImprintIntactConstraint();
 
@@ -400,5 +402,6 @@ public abstract class ValidationPolicy extends XmlDom {
 	public abstract Constraint getCounterSignatureReferenceDataIntactConstraint();
 
 	public abstract Constraint getCounterSignatureIntactConstraint();
+	
 }
 

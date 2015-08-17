@@ -14,14 +14,14 @@
 			<Id>PAdES_BASELINE_LT</Id>
 			<Id>PAdES_BASELINE_LTA</Id>
 		</AcceptableSignatureFormats>
-		<OcspDelayToSingingTime Unit="MINUTES">
+		<OcspDelayToBestSignatureTime Unit="MINUTES">
 			<Warn>
 				<MinimalDelay>15</MinimalDelay>
 			</Warn>
 			<Fail>
 				<MinimalDelay>1440</MinimalDelay>
 			</Fail>
-		</OcspDelayToSingingTime>
+		</OcspDelayToBestSignatureTime>
 		<ReferenceDataExistence Level="FAIL">true</ReferenceDataExistence>
 		<ReferenceDataIntact Level="FAIL">true</ReferenceDataIntact>
 		<SignatureIntact Level="FAIL">true</SignatureIntact>

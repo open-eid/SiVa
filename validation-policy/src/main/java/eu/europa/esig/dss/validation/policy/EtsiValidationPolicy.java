@@ -668,17 +668,17 @@ public class EtsiValidationPolicy extends ValidationPolicy {
 	}
 	
 	private Long getOcspDelayTimeForFail() {
-		Long minimalDelay = getLongValue("/ConstraintsParameters/MainSignature/OcspDelayToSingingTime/Fail/MinimalDelay/text()");
+		Long minimalDelay = getLongValue("/ConstraintsParameters/MainSignature/OcspDelayToBestSignatureTime/Fail/MinimalDelay/text()");
 		return getOcspDelayTime(minimalDelay);
 	}
 	
 	private Long getOcspDelayTimeForWarn() {
-		Long minimalDelay = getLongValue("/ConstraintsParameters/MainSignature/OcspDelayToSingingTime/Warn/MinimalDelay/text()");
+		Long minimalDelay = getLongValue("/ConstraintsParameters/MainSignature/OcspDelayToBestSignatureTime/Warn/MinimalDelay/text()");
 		return getOcspDelayTime(minimalDelay);
 	}
 	
 	private Long getOcspDelayTime(Long delay) {
-		String delayTimeUnit = getValue("/ConstraintsParameters/MainSignature/OcspDelayToSingingTime/@Unit");
+		String delayTimeUnit = getValue("/ConstraintsParameters/MainSignature/OcspDelayToBestSignatureTime/@Unit");
 		Long minimalDelayInMillis = RuleUtils.convertDuration(delayTimeUnit, "MILLISECONDS", delay);
 		return minimalDelayInMillis;
 	}

@@ -34,6 +34,27 @@
 									<xs:attribute type="tns:level" name="Level"/>
 								</xs:complexType>
 							</xs:element>
+							<xs:element name="OcspDelayToBestSignatureTime" minOccurs="0" maxOccurs="1">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Warn">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="MinimalDelay" type="xs:integer"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="Fail">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="MinimalDelay" type="xs:integer"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute type="tns:timeUnit" name="Unit" use="required" />
+								</xs:complexType>
+							</xs:element>
 							<xs:element name="ReferenceDataExistence" minOccurs="0" maxOccurs="1">
 								<xs:complexType>
 									<xs:simpleContent>

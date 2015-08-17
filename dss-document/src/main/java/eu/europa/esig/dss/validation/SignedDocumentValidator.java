@@ -879,7 +879,6 @@ public abstract class SignedDocumentValidator implements DocumentValidator {
 		final PublicKey publicKey = certToken.getPublicKey();
 		xmlCert.setPublicKeySize(DSSPKUtils.getPublicKeySize(publicKey));
 		xmlCert.setPublicKeyEncryptionAlgo(DSSPKUtils.getPublicKeyEncryptionAlgo(publicKey));
-
 		xmlForKeyUsageBits(certToken, xmlCert);
 
 		if (certToken.isOCSPSigning()) {
@@ -894,6 +893,8 @@ public abstract class SignedDocumentValidator implements DocumentValidator {
 
 			xmlCert.setExpiredCertOnCRL(true);
 		}
+
+		xmlCert.setX509Data(certToken.getEncoded());
 
 		final XmlBasicSignatureType xmlBasicSignatureType = DIAGNOSTIC_DATA_OBJECT_FACTORY.createXmlBasicSignatureType();
 

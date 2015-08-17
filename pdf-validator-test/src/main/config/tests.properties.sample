@@ -1,2 +1,2 @@
-service_url=http://dds.webmedia.int:8081/dss-webapp-test/wservice/validationService
+service_url=http://localhost:8080/pdf-validator-webapp/wservice/validationService
 deploy_war=/path/to/pdf-validator-webapp/target/webapp.war

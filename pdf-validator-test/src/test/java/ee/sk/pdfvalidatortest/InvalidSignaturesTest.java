@@ -20,7 +20,6 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
                 findErrorById("BBB_ICS_ISASCP_ANS", detailedReport(httpBody)));
     }
 
-
     @Test
     public void adesLtaBaselineProfileShouldPass() {
         String httpBody = post(validationRequestFor(readFile("Signature-P-EE_AS-7.pdf"))).
@@ -108,6 +107,9 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-ocsp-15min1s.pdf"))).
                 andReturn().body().asString();
 
+        assertEquals(
+                "OCSP is too long after the best-signature-time!",
+                findWarningById("ADEST_IOTNLABST_ANS", detailedReport(httpBody)));
         assertEquals(1, validSignatures(simpleReport(httpBody)));
     }
 	
@@ -116,6 +118,9 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-ocsp-28h.pdf"))).
                 andReturn().body().asString();
 
+        assertEquals(
+                "OCSP is too long after the best-signature-time!",
+                findErrorById("ADEST_IOTNLABST_ANS", detailedReport(httpBody)));
         assertEquals(0, validSignatures(simpleReport(httpBody)));
     }
 
@@ -141,6 +146,13 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
         return XmlUtil.findElementByXPath(
                 detailedReport,
                 "//d:Error[@NameId='" + errorId + "']",
+                Collections.singletonMap("d", "http://dss.markt.ec.europa.eu/validation/diagnostic")).getTextContent();
+    }
+    
+    private String findWarningById(String errorId, Document detailedReport) {
+        return XmlUtil.findElementByXPath(
+                detailedReport,
+                "//d:Warning[@NameId='" + errorId + "']",
                 Collections.singletonMap("d", "http://dss.markt.ec.europa.eu/validation/diagnostic")).getTextContent();
     }
 

@@ -153,9 +153,9 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
         return Integer.parseInt(stringResult);
     }
 
-    private String certificateContentsById(String certificateId, Document simpleReport) {
+    private String certificateContentsById(String certificateId, Document diagnosticData) {
         return XmlUtil.findElementByXPath(
-                simpleReport,
+                diagnosticData,
                 "//d:DiagnosticData/d:UsedCertificates/d:Certificate[@Id='" + certificateId + "']/d:X509Data",
                 Collections.singletonMap("d", "http://dss.markt.ec.europa.eu/validation/diagnostic")).getTextContent();
     }

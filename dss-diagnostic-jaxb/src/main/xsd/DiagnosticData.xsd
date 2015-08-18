@@ -108,6 +108,8 @@
 										<xs:element type="xs:boolean" name="IdPkixOcspNoCheck" minOccurs="0"/>
 										<xs:element type="xs:boolean" name="ExpiredCertOnCRL" minOccurs="0"/>
 
+										<xs:element type="xs:base64Binary" name="X509Data"/>
+
 										<xs:element type="BasicSignatureType" name="BasicSignature"/>
 										<xs:element type="SigningCertificateType" name="SigningCertificate"/>
 										<xs:element type="CertificateChainType" name="CertificateChain"/>

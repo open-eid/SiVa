@@ -157,6 +157,7 @@ public class EtsiValidationPolicy extends ValidationPolicy {
 	@Override
 	public Constraint getStructuralValidationConstraint() {
 
+		
 		final String XP_ROOT = "/ConstraintsParameters/MainSignature/StructuralValidation";
 		return getBasicConstraint(XP_ROOT, true);
 	}
@@ -646,6 +647,41 @@ public class EtsiValidationPolicy extends ValidationPolicy {
 		}
 		return null;
 	}
+	
+	@Override
+	public Constraint getOcspDelayConstraint(Long delay) {
+		if (delay != null) {
+			if (delay > getOcspDelayTimeForFail()) {
+
+				final Constraint constraint = new Constraint("FAIL");
+				constraint.setExpectedValue(TRUE);
+				constraint.setValue(FALSE);
+				return constraint;
+			} else if (delay > getOcspDelayTimeForWarn()) {
+				final Constraint constraint = new Constraint("WARN");
+				constraint.setExpectedValue(TRUE);
+				constraint.setValue(FALSE);
+				return constraint;
+			}
+		}
+		return null;
+	}
+	
+	private Long getOcspDelayTimeForFail() {
+		Long minimalDelay = getLongValue("/ConstraintsParameters/MainSignature/OcspDelayToBestSignatureTime/Fail/MinimalDelay/text()");
+		return getOcspDelayTime(minimalDelay);
+	}
+	
+	private Long getOcspDelayTimeForWarn() {
+		Long minimalDelay = getLongValue("/ConstraintsParameters/MainSignature/OcspDelayToBestSignatureTime/Warn/MinimalDelay/text()");
+		return getOcspDelayTime(minimalDelay);
+	}
+	
+	private Long getOcspDelayTime(Long delay) {
+		String delayTimeUnit = getValue("/ConstraintsParameters/MainSignature/OcspDelayToBestSignatureTime/@Unit");
+		Long minimalDelayInMillis = RuleUtils.convertDuration(delayTimeUnit, "MILLISECONDS", delay);
+		return minimalDelayInMillis;
+	}
 
 	@Override
 	public Constraint getContentTimestampImprintIntactConstraint() {
@@ -680,5 +716,6 @@ public class EtsiValidationPolicy extends ValidationPolicy {
 		final String XP_ROOT = "/ConstraintsParameters/MainSignature/MandatedUnsignedQProperties/CounterSignature/SignatureIntact";
 		return getBasicConstraint(XP_ROOT, true);
 	}
+
 }
 

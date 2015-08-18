@@ -13,6 +13,8 @@ public class InvalidDocumentFormatTests extends PdfValidatorSoapTests {
     public void PAdESDocumentShouldPass() {
         String httpBody = post(validationRequestFor(readFile("Signature-P-EE_AS-7.pdf"))).
                 andReturn().body().asString();
+        //System.out.println(httpBody.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&#xD;", "").replaceAll("&quot;", "\""));
+        
         assertEquals("PAdES_BASELINE_LT", signatureFormat(simpleReport(httpBody)));
     }
 

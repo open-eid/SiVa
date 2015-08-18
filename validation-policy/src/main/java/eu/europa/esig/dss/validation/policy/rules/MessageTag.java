@@ -163,6 +163,8 @@ public enum MessageTag {
 	ADEST_VFDTAOCST_ANS("The validation failed due to the absence of claimed signing time!"),
 	ADEST_ISTPTDABST("Is the signing-time plus the timestamp delay after the best-signature-time?"),
 	ADEST_ISTPTDABST_ANS("The validation failed due to the timestamp delay constraint!"),
+	ADEST_IOTNLABST("Is OCSP not long after the best-signature-time?"),
+	ADEST_IOTNLABST_ANS("OCSP is too long after the best-signature-time!"),
 	TSV_WACRABST("Was the algorithm(s) considered reliable at best-signature-time?"),
 	TSV_WACRABST_ANS("The algorithm(s) was not considered reliable at best-signature-time!"),
 

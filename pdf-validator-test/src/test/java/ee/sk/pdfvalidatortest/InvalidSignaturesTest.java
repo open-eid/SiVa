@@ -1,5 +1,6 @@
 package ee.sk.pdfvalidatortest;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
@@ -136,6 +137,54 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
         assertEquals(
                 "MIIEnTCCA4WgAwIBAgIQURtcmP07BjlUmR1RPIeGCTANBgkqhkiG9w0BAQUFADBkMQswCQYDVQQGEwJFRTEiMCAGA1UECgwZQVMgU2VydGlmaXRzZWVyaW1pc2tlc2t1czEXMBUGA1UEAwwORVNURUlELVNLIDIwMTExGDAWBgkqhkiG9w0BCQEWCXBraUBzay5lZTAeFw0xNDEyMjMwNzQ0MTdaFw0xOTEyMjIyMTU5NTlaMIGWMQswCQYDVQQGEwJFRTEPMA0GA1UECgwGRVNURUlEMRowGAYDVQQLDBFkaWdpdGFsIHNpZ25hdHVyZTEiMCAGA1UEAwwZU0lOSVZFRSxWRUlLTywzNjcwNjAyMDIxMDEQMA4GA1UEBAwHU0lOSVZFRTEOMAwGA1UEKgwFVkVJS08xFDASBgNVBAUTCzM2NzA2MDIwMjEwMIIBITANBgkqhkiG9w0BAQEFAAOCAQ4AMIIBCQKCAQCXenu4kxXVFaVpxUfs7PGBC37WgP1oCpFOujGBiWFQiPgSWX8BtcxUIQaGpXMG31BtotSUVhalNDNszjU+ANRMOfeHKZploOV5R+Pm09B/XwRF1D+mK1lG3q+hz0aSt0DWXxFw4UAieTd5tVCDM/WhPFUD7ZinQayejNdRDo4Q7WS0wqp4YBNm3VCg1YPp/1Y86T28nxGKSewquVs089VOU92O0UUmNYy8AHu7Sod+DCNO5eVz6uSpJBRJRyvMbMxxIDfwtQI5YuttKN26IYXtjgOZeNKTV9eW0neO+T5P351odNSKulWzaAYKaI+E/9lfnY6fhygXgd7tmBqBIrOhAgMBAAGjggEXMIIBEzAJBgNVHRMEAjAAMA4GA1UdDwEB/wQEAwIGQDBQBgNVHSAESTBHMEUGCisGAQQBzh8BAQQwNzASBggrBgEFBQcCAjAGGgRub25lMCEGCCsGAQUFBwIBFhVodHRwOi8vd3d3LnNrLmVlL2Nwcy8wHQYDVR0OBBYEFCcVGdX3X/moNIYusvO958F/gbj0MCIGCCsGAQUFBwEDBBYwFDAIBgYEAI5GAQEwCAYGBACORgEEMB8GA1UdIwQYMBaAFHtq8lVQXLjZegiHQa76ois9W1d2MEAGA1UdHwQ5MDcwNaAzoDGGL2h0dHA6Ly93d3cuc2suZWUvcmVwb3NpdG9yeS9jcmxzL2VzdGVpZDIwMTEuY3JsMA0GCSqGSIb3DQEBBQUAA4IBAQCJSoo6h+4Dgu2+0C2ehtqYYEvMBIyLldWP88uWKgxw6HujsF5HRRk/zWAU8jGDN/LNzDNYDz0jg2212mn+neVBgo+U8W1Urkw9zgTsSwqnP7CoGw0nG65gnybrT4K+eX1ykyVmj1RAzfShVgwuOrMCDmguq6jFRj9V1oOmiMDpmzQ7Qo22le7qkkKoQ+PTLRfi5vpN+CQOg6kleeXaVwtdlP0ETfJIrdDBKKBKi8bn5b60300V1dMmsQAxdwXsKcuKPtG1YKO5Rf+OIUdAuOayYboeShGTlXlAswoxcfGZajxF8MCe9B4y0Rse8X1Q9C+F2rgloa5W6+JXeGrY8sUL",
                 certificateContentsById("8835667315fdcf9681222d6b4aeaa69cd1ab5693ff3aa1a59a4c4288e4ac7842", diagnosticData(httpBody)));
+    }
+
+    @Test
+    public void adesLtBaselineSha256EcdsaShouldPass() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-ecdsa.pdf"))).
+                andReturn().body().asString();
+
+        assertEquals(1, validSignatures(simpleReport(httpBody)));
+    }
+
+    @Test
+    public void adesLtBaselineSha256Ec224ShouldPass() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-ec224.pdf"))).
+                andReturn().body().asString();
+
+        assertEquals(1, validSignatures(simpleReport(httpBody)));
+    }
+
+    @Test
+    public void adesLtBaselineSha256Ec256ShouldPass() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-ec256.pdf"))).
+                andReturn().body().asString();
+
+        assertEquals(1, validSignatures(simpleReport(httpBody)));
+    }
+
+    @Test
+    public void adesLtBaselineCertificateExpired5DaysAftrerSignShouldPass() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-rsa1024-5d.pdf"))).
+                andReturn().body().asString();
+
+        assertEquals(1, validSignatures(simpleReport(httpBody)));
+    }
+
+    @Test
+     public void adesLtBaselineSha256Rsa1024ShouldPass() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-rsa1024.pdf"))).
+                andReturn().body().asString();
+
+        assertEquals(1, validSignatures(simpleReport(httpBody)));
+    }
+
+    @Ignore //Ootab uut paarandatud faili.
+    public void adesLtBaselineAndLtBaselineSignatureShouldPass() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-sigb-signed.pdf"))).
+                andReturn().body().asString();
+
+        assertEquals(1, validSignatures(simpleReport(httpBody)));
     }
 
     private byte[] readFile(String fileName) {

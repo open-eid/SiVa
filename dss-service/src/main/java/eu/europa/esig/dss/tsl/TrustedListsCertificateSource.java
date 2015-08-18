@@ -257,10 +257,12 @@ public class TrustedListsCertificateSource extends CommonTrustedCertificateSourc
 
 		boolean refresh = shouldRefresh(url);
 		final byte[] bytes = dataLoader.get(url, refresh);
+
 		if (bytes == null) {
 			throw new NullPointerException(url);
 		}
-		boolean coreValidity = checkSignature ? validateTslSignature(signingCertList, bytes) : true;
+
+		boolean coreValidity = !checkSignature || validateTslSignature(signingCertList, bytes);
 		final Document doc = DSSXMLUtils.buildDOM(bytes);
 		final TrustStatusList trustStatusList = TrustServiceListFactory.newInstance(doc);
 		trustStatusList.setWellSigned(coreValidity);
@@ -408,7 +410,6 @@ public class TrustedListsCertificateSource extends CommonTrustedCertificateSourc
 		final int size = lotl.getOtherTSLPointers().size();
 
 		for (final PointerToOtherTSL pointerToTSL : lotl.getOtherTSLPointers()) {
-
 			final String url = pointerToTSL.getTslLocation();
 			final String territory = pointerToTSL.getTerritory();
 			final List<CertificateToken> signingCertList = pointerToTSL.getDigitalIdentity();
@@ -439,7 +440,7 @@ public class TrustedListsCertificateSource extends CommonTrustedCertificateSourc
 		try {
 
 			logger.info("Downloading LOTL from url= {}", lotlUrl);
-			final ArrayList<CertificateToken> x509CertificateList = new ArrayList<CertificateToken>();
+			final List<CertificateToken> x509CertificateList = new ArrayList<>();
 			x509CertificateList.add(lotlCert);
 			lotl = getTrustStatusList(lotlUrl, x509CertificateList);
 		} catch (DSSException e) {
@@ -669,5 +670,4 @@ public class TrustedListsCertificateSource extends CommonTrustedCertificateSourc
 			logger.error("Impossible to save: '{}'", file.getAbsolutePath(), e);
 		}
 	}
-
 }

@@ -20,13 +20,8 @@
  */
 package eu.europa.esig.dss.client.http.commons;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-
+import eu.europa.esig.dss.*;
+import eu.europa.esig.dss.client.http.Protocol;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -37,12 +32,12 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.europa.esig.dss.DSSCannotFetchDataException;
-import eu.europa.esig.dss.DSSException;
-import eu.europa.esig.dss.DSSUtils;
-import eu.europa.esig.dss.DigestAlgorithm;
-import eu.europa.esig.dss.ResourceLoader;
-import eu.europa.esig.dss.client.http.Protocol;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class provides some caching features to handle the resources. The default cache folder is set to {@code java.io.tmpdir}. The urls of the resources is transformed to the
@@ -66,6 +61,9 @@ public class FileCacheDataLoader extends CommonsDataLoader {
 	 * @param fileCacheDirectory {@code File} pointing the cache folder to be used.
 	 */
 	public void setFileCacheDirectory(final File fileCacheDirectory) {
+		if (fileCacheDirectory == null) {
+			return;
+		}
 
 		this.fileCacheDirectory = fileCacheDirectory;
 		this.fileCacheDirectory.mkdirs();
@@ -126,6 +124,10 @@ public class FileCacheDataLoader extends CommonsDataLoader {
 			final byte[] bytes = DSSUtils.toByteArray(file);
 			return bytes;
 		} else {
+			if (!fileExists && !refresh) {
+				throw new DSSCannotFetchDataException(new IOException("File not found in cache but offline mode enabled use pdf-validator-tsl-downloader to update cache"), FileCacheDataLoader.class.toString());
+			}
+
 			if(!fileExists) {
 				LOG.debug("There is no cached file!");
 			} else {

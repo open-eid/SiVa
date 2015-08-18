@@ -12,8 +12,12 @@
 
     <context:annotation-config/>
 	<context:component-scan base-package="eu.europa.esig.dss"/>
-	
-    <context:property-placeholder location="classpath:datasource.properties"/>
+
+    <context:property-placeholder location="classpath:application.properties"
+                                  ignore-unresolvable="true"
+                                  ignore-resource-not-found="true" />
+
+    <context:property-override location="file:${catalina.home}/conf/application-override.properties" />
 
     <jdbc:initialize-database data-source="dataSource">
         <jdbc:script location="classpath:structure.sql"/>
@@ -21,8 +25,7 @@
     </jdbc:initialize-database>
 
     <!-- The TrustedLists are reloaded every minute -->
-    <bean id="tlReload"
-          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    <bean id="tlReload" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="trustedListSource"/>
         <property name="targetMethod" value="refresh"/>
         <property name="concurrent" value="false"/>

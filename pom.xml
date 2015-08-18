@@ -30,8 +30,9 @@
 		<module>dss-cades</module>
 		<module>dss-pades</module>
 		<module>dss-xades</module>
-		<module>pdf-validator-test</module>
         <module>pdf-validator-webapp</module>
+        <module>pdf-validator-tsl-downloader</module>
+		<module>pdf-validator-test</module>
     </modules>
 
 	<developers>
@@ -62,7 +63,7 @@
 		<project.encoding>UTF-8</project.encoding>
         <language.level>1.7</language.level>
 		<log4j.version>1.2.17</log4j.version>
-		<spring.version>3.2.13.RELEASE</spring.version>
+		<spring.version>3.2.14.RELEASE</spring.version>
 		<tiles.version>2.2.2</tiles.version>
 		<slf4j.version>1.6.6</slf4j.version>
 		<logback-classic.version>1.0.13</logback-classic.version>
@@ -377,7 +378,13 @@
 				<scope>test</scope>
 			</dependency>
 			<!-- Public Dependencies -->
-			<dependency>
+            <dependency>
+                <groupId>org.json</groupId>
+                <artifactId>json</artifactId>
+                <version>20141113</version>
+            </dependency>
+
+            <dependency>
 				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpclient</artifactId>
 				<version>4.3.6</version>
@@ -470,6 +477,11 @@
 				<artifactId>spring-jdbc</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-expression</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-test</artifactId>
@@ -531,7 +543,7 @@
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-log4j12</artifactId>
 				<version>${slf4j.version}</version>
-				<scope>runtime</scope>
+				<!--<scope>runtime</scope>-->
 			</dependency>
 			<dependency>
 				<groupId>commons-logging</groupId>
@@ -542,19 +554,19 @@
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-jcl</artifactId>
 				<version>${slf4j.version}</version>
-				<scope>runtime</scope>
+				<!--<scope>runtime</scope>-->
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>jul-to-slf4j</artifactId>
 				<version>${slf4j.version}</version>
-				<scope>runtime</scope>
+				<!--<scope>runtime</scope>-->
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>jcl-over-slf4j</artifactId>
 				<version>${slf4j.version}</version>
-				<scope>runtime</scope>
+				<!--<scope>runtime</scope>-->
 			</dependency>
 			<dependency>
 				<groupId>ch.qos.logback</groupId>

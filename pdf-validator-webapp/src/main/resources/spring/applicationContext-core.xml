@@ -26,7 +26,7 @@
 	<bean id="fileCacheDataLoader" class="eu.europa.esig.dss.client.http.commons.FileCacheDataLoader">
 		<property name="proxyPreferenceManager" ref="proxyPreferenceManager"/>
 		<!-- Per default uses "java.io.tmpdir" property -->
-		<!--<property name="fileCacheDirectory" value="/temp"/>-->
+		<property name="fileCacheDirectory" value="${trusted.list.source.fileCacheDirectory}"/>
 	</bean>
 
 	<bean id="crlSource" class="eu.europa.esig.dss.client.crl.AlwaysFailingCRLSource"/>
@@ -37,8 +37,8 @@
 		<property name="dataLoader" ref="fileCacheDataLoader"/>
 		<property name="checkSignature" value="false"/>
 		<property name="lotlCertificate" value="classpath://ec.europa.eu.crt"/>
-		<property name="lotlUrl" value="https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml"/>
-		<property name="tslRefreshPolicy" value="WHEN_NECESSARY_OR_INDETERMINATE"/>
+		<property name="lotlUrl" value="${trusted.list.source.lotlUrl}"/>
+		<property name="tslRefreshPolicy" value="${trusted.list.source.tslRefreshPolicy}"/>
 	</bean>
 
 	<bean id="tspSource" class="eu.europa.esig.dss.client.tsp.OnlineTSPSource">

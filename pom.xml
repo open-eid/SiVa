@@ -33,6 +33,7 @@
         <module>pdf-validator-webapp</module>
         <module>pdf-validator-tsl-downloader</module>
 		<module>pdf-validator-test</module>
+        <module>pdf-validator-monitoring</module>
     </modules>
 
 	<developers>
@@ -63,7 +64,8 @@
 		<project.encoding>UTF-8</project.encoding>
         <language.level>1.7</language.level>
 		<log4j.version>1.2.17</log4j.version>
-		<spring.version>3.2.14.RELEASE</spring.version>
+		<spring.version>4.2.0.RELEASE</spring.version>
+        <spring.boot.version>1.2.5.RELEASE</spring.boot.version>
 		<tiles.version>2.2.2</tiles.version>
 		<slf4j.version>1.6.6</slf4j.version>
 		<logback-classic.version>1.0.13</logback-classic.version>
@@ -377,6 +379,17 @@
 				<version>${project.version}</version>
 				<scope>test</scope>
 			</dependency>
+
+            <!-- Spring boot -->
+            <dependency>
+                <!-- Import dependency management from Spring Boot -->
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
 			<!-- Public Dependencies -->
             <dependency>
                 <groupId>org.json</groupId>

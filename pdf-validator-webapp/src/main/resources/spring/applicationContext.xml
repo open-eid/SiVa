@@ -17,7 +17,9 @@
                                   ignore-unresolvable="true"
                                   ignore-resource-not-found="true" />
 
-    <context:property-override location="file:${catalina.home}/conf/application-override.properties" />
+    <context:property-override ignore-resource-not-found="true"
+                               ignore-unresolvable="true"
+                               location="file:${catalina.home}/conf/application-override.properties" />
 
     <jdbc:initialize-database data-source="dataSource">
         <jdbc:script location="classpath:structure.sql"/>

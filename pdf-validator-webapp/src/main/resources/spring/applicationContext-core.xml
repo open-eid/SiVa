@@ -33,6 +33,8 @@
 
 	<bean id="ocspSource" class="eu.europa.esig.dss.client.ocsp.AlwaysFailingOCSPSource" />
 
+	<!-- To additionally load custom trusted certificates, use 'eu.europa.esig.dss.tsl.ReloadableTrustedListAndCustomCertificateSource'
+		 class instead of 'eu.europa.esig.dss.tsl.ReloadableTrustedListCertificateSource' -->
 	<bean id="trustedListSource" class="eu.europa.esig.dss.tsl.ReloadableTrustedListCertificateSource">
 		<property name="dataLoader" ref="fileCacheDataLoader"/>
 		<property name="checkSignature" value="false"/>

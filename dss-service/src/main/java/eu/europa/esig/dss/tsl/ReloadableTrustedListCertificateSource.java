@@ -42,7 +42,7 @@ public class ReloadableTrustedListCertificateSource extends TrustedListsCertific
 
     private static final Logger LOG = LoggerFactory.getLogger(ReloadableTrustedListCertificateSource.class);
 
-    private TrustedListsCertificateSource currentSource = new TrustedListsCertificateSource();
+    protected TrustedListsCertificateSource currentSource = new TrustedListsCertificateSource();
 
     public ReloadableTrustedListCertificateSource() {
 

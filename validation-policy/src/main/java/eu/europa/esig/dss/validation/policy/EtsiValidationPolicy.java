@@ -649,18 +649,23 @@ public class EtsiValidationPolicy extends ValidationPolicy {
 	}
 	
 	@Override
+	public Constraint getOcspEarlierThanBestSignatureTimeConstraint() {
+		final Constraint constraint = new Constraint("FAIL");
+		constraint.setExpectedValue(TRUE);
+		return constraint;
+	}
+	
+	@Override
 	public Constraint getOcspDelayConstraint(Long delay) {
 		if (delay != null) {
 			if (delay > getOcspDelayTimeForFail()) {
 
 				final Constraint constraint = new Constraint("FAIL");
 				constraint.setExpectedValue(TRUE);
-				constraint.setValue(FALSE);
 				return constraint;
 			} else if (delay > getOcspDelayTimeForWarn()) {
 				final Constraint constraint = new Constraint("WARN");
 				constraint.setExpectedValue(TRUE);
-				constraint.setValue(FALSE);
 				return constraint;
 			}
 		}

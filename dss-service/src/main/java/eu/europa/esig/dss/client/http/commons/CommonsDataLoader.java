@@ -20,37 +20,15 @@
  */
 package eu.europa.esig.dss.client.http.commons;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.security.SecureRandom;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-
-import javax.naming.Context;
-import javax.naming.directory.Attribute;
-import javax.naming.directory.Attributes;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.InitialDirContext;
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-
+import eu.europa.esig.dss.DSSException;
+import eu.europa.esig.dss.DSSUtils;
+import eu.europa.esig.dss.client.http.DataLoader;
+import eu.europa.esig.dss.client.http.Protocol;
+import eu.europa.esig.dss.client.http.proxy.ProxyPreferenceManager;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpException;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
+import org.apache.http.*;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.AuthCache;
@@ -82,11 +60,26 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.europa.esig.dss.DSSException;
-import eu.europa.esig.dss.DSSUtils;
-import eu.europa.esig.dss.client.http.DataLoader;
-import eu.europa.esig.dss.client.http.Protocol;
-import eu.europa.esig.dss.client.http.proxy.ProxyPreferenceManager;
+import javax.naming.Context;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.InitialDirContext;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.security.SecureRandom;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation of DataLoader for any protocol.
@@ -371,6 +364,10 @@ public class CommonsDataLoader implements DataLoader, DSSNotifier {
 	 */
 	@Override
 	public byte[] get(final String url, final boolean refresh) {
+		if (!refresh) {
+			return null;
+		}
+
 		return get(url);
 	}
 

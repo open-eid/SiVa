@@ -66,8 +66,11 @@ public abstract class PdfValidatorSoapTests {
 
     private static String getProjectBaseDirectory() {
         String path = Paths.get("").toAbsolutePath().normalize().toString();
-        path = path.substring(0 , path.lastIndexOf(PROJECT_SUBMODULE_NAME));
-        return path + PROJECT_SUBMODULE_NAME + File.separator;
+        int pathLength = path.lastIndexOf(PROJECT_SUBMODULE_NAME);
+
+        pathLength = pathLength == -1 ? path.length() : pathLength;
+        path = path.substring(0 , pathLength);
+        return path + File.separator + PROJECT_SUBMODULE_NAME + File.separator;
     }
 
     private static byte[] readFileFromPath(String pathName) {

@@ -25,6 +25,7 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
     public void adesLtaBaselineProfileShouldPass() {
         String httpBody = post(validationRequestFor(readFile("Signature-P-EE_AS-7.pdf"))).
                 andReturn().body().asString();
+        
         assertEquals(1, validSignatures(simpleReport(httpBody)));
     }
 

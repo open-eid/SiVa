@@ -26,17 +26,24 @@
         <jdbc:script location="classpath:load.sql"/>
     </jdbc:initialize-database>
 
-    <!-- The TrustedLists are reloaded every minute -->
     <bean id="tlReload" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="trustedListSource"/>
         <property name="targetMethod" value="refresh"/>
         <property name="concurrent" value="false"/>
     </bean>
 
+	<!-- Initial job run -->
     <bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
         <property name="jobDetail" ref="tlReload"/>
         <property name="startDelay" value="6000"/>
-        <property name="repeatInterval" value="3600000"/>
+        <property name="repeatCount" value="0"/>
+        <!--<property name="repeatInterval" value="3600000"/>-->
+    </bean>
+    
+    <!-- Run the job every day at 03:00 -->
+    <bean id="cronTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="tlReload" />
+        <property name="cronExpression" value="0 0 3 * * ? *" />
     </bean>
 
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean"
@@ -44,6 +51,7 @@
         <property name="triggers">
             <list>
                 <ref bean="simpleTrigger"/>
+                <ref bean="cronTrigger"/>
             </list>
         </property>
     </bean>

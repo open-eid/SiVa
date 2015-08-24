@@ -190,12 +190,21 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
         assertEquals(1, validSignatures(simpleReport(httpBody)));
     }
 
-    @Ignore //Waiting new fixed pdf file.
-    public void adesLtBaselineAndLtBaselineSignatureShouldPass() {
-        String httpBody = post(validationRequestFor(readFile("hellopades-sigb-signed.pdf"))).
+
+    @Test
+    public void adesLtaBaselineAndBBaselineSignatureShouldPass() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-lt-b.pdf"))).
                 andReturn().body().asString();
 
         assertEquals(1, validSignatures(simpleReport(httpBody)));
+    }
+
+    @Test
+    public void adesLtBaselineSignedExpiredCertificateShouldFail() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-lt-rsa1024-sha1-expired.pdf"))).
+                andReturn().body().asString();
+
+        assertEquals(0, validSignatures(simpleReport(httpBody)));
     }
 
     private byte[] readFile(String fileName) {

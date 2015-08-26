@@ -19,7 +19,7 @@ public abstract class PdfValidatorSoapTests {
 
     public static final String VALIDATION_SERVICE_URL = TESTS_PROPERTIES.getProperty("service_url");
 
-    protected String validationRequestFor(byte[] pdf) {
+    protected static String validationRequestFor(byte[] pdf) {
         return "<S:Envelope xmlns:S=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "    <S:Body>\n" +
                 "        <ns2:validateDocument xmlns:ns2=\"http://ws.dss.esig.europa.eu/\">\n" +

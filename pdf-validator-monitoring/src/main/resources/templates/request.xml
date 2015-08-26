@@ -1,0 +1,16 @@
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+    <S:Body>
+        <ns2:validateDocument xmlns:ns2="http://ws.dss.esig.europa.eu/">
+            <document>\
+                <bytes>
+                    {{messageBody}}
+                </bytes>
+                <name>/fixedpath/file.pdf</name>
+                <absolutePath>/fixedpath/file.pdf</absolutePath>
+                <mimeType>PDF</mimeType>
+                <nextDocument></nextDocument>
+            </document>
+            <diagnosticDataToBeReturned>true</diagnosticDataToBeReturned>
+        </ns2:validateDocument>
+    </S:Body>
+</S:Envelope>

@@ -1,0 +1,19 @@
+{
+  "properties": [
+    {
+      "name": "monitoring.host",
+      "type": "java.lang.String",
+      "description": "PDF Validator WSDL web service hostname"
+    },
+    {
+      "name": "monitoring.path",
+      "type": "java.lang.String",
+      "description": "PDF Validator path to endpoint"
+    },
+    {
+      "name": "monitoring.request.interval",
+      "type": "java.lang.String",
+      "description": "How often to make request to PDF Validator Service"
+    }
+  ]
+}

@@ -124,7 +124,7 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
         assertEquals(0, validSignatures(simpleReport(httpBody)));
     }
 	
-	@Ignore
+	@Ignore // needs test file
 	@Test
     public void adesLtBaselineOcspBeforeBestSignatureTimeShouldFail() {
         String httpBody = post(validationRequestFor(readFile("some_pdf_file"))).
@@ -150,7 +150,7 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
                 certificateContentsById("8835667315fdcf9681222d6b4aeaa69cd1ab5693ff3aa1a59a4c4288e4ac7842", diagnosticData(httpBody)));
     }
 
-    @Ignore
+    @Ignore // current test file's signature doesn't contain ocsp
     @Test
     public void adesLtBaselineSha256EcdsaShouldPass() {
         String httpBody = post(validationRequestFor(readFile("hellopades-ecdsa.pdf"))).
@@ -159,7 +159,7 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
         assertEquals(1, validSignatures(simpleReport(httpBody)));
     }
 
-    @Test //Made with test certificate. Need Test tls.
+    @Test
     public void adesLtBaselineSha256Ec224ShouldPass() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-ec224.pdf"))).
                 andReturn().body().asString();
@@ -167,7 +167,7 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
         assertEquals(1, validSignatures(simpleReport(httpBody)));
     }
 
-    @Test //Made with test certificate. Need Test tls.
+    @Test
     public void adesLtBaselineSha256Ec256ShouldPass() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-ec256.pdf"))).
                 andReturn().body().asString();
@@ -175,7 +175,8 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
         assertEquals(1, validSignatures(simpleReport(httpBody)));
     }
 
-    @Test //Made with test certificate. Need Test tls.
+    @Ignore // current test file's signature doesn't contain ocsp
+    @Test
     public void adesLtBaselineCertificateExpired5DaysAftrerSignShouldPass() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-rsa1024-5d.pdf"))).
                 andReturn().body().asString();
@@ -183,7 +184,7 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
         assertEquals(1, validSignatures(simpleReport(httpBody)));
     }
 
-    @Test //Made with test certificate. Need Test tls.
+    @Test
      public void adesLtBaselineSha256Rsa1024ShouldPass() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-rsa1024.pdf"))).
                 andReturn().body().asString();
@@ -205,6 +206,22 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
                 andReturn().body().asString();
 
         assertEquals(0, validSignatures(simpleReport(httpBody)));
+    }
+    
+    @Test
+    public void adesLtBaselineRsa1023ShouldPass() {
+       String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-rsa1023.pdf"))).
+               andReturn().body().asString();
+
+       assertEquals(1, validSignatures(simpleReport(httpBody)));
+    }
+    
+    @Test
+    public void adesLtBaselineRsa2047ShouldPass() {
+       String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-rsa2047.pdf"))).
+               andReturn().body().asString();
+
+       assertEquals(1, validSignatures(simpleReport(httpBody)));
     }
 
     private byte[] readFile(String fileName) {

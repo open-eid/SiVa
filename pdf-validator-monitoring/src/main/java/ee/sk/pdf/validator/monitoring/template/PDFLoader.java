@@ -1,6 +1,7 @@
 package ee.sk.pdf.validator.monitoring.template;
 
 import com.google.common.io.BaseEncoding;
+import com.google.common.io.Resources;
 import ee.sk.pdf.validator.monitoring.logging.LoggingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,9 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.net.URL;
 
 @Component
 public class PDFLoader {
@@ -34,8 +33,8 @@ public class PDFLoader {
     }
 
     private byte[] loadPDFFile() throws URISyntaxException, IOException {
-        Path pdfFilePath = Paths.get(this.getClass().getResource(pdfFileLocation).toURI());
-        return Files.readAllBytes(pdfFilePath);
+        final URL pdfURI = getClass().getResource(pdfFileLocation);
+        return Resources.toByteArray(pdfURI);
     }
 
     public void setPdfFileLocation(String pdfFileLocation) {

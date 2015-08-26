@@ -1,7 +1,7 @@
 package ee.sk.pdf.validator.monitoring.template;
 
-import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
+import com.google.common.io.Resources;
 import ee.sk.pdf.validator.monitoring.logging.LoggingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,12 +10,9 @@ import org.springframework.stereotype.Component;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @Component
 public class RequestTemplateLoader implements TemplateLoader {
@@ -45,11 +42,10 @@ public class RequestTemplateLoader implements TemplateLoader {
             throw new FileNotFoundException("Invalid PDF file location");
         }
 
-        URI templateURI = this.getClass().getResource(templateLocation).toURI();
-
+        URL templateURI = getClass().getResource(templateLocation);
         LOGGER.info("Trying to load request XML template from path: " + templateURI);
-        Path templatePath = Paths.get(templateURI);
-        return Joiner.on("").join(Files.readAllLines(templatePath, Charset.defaultCharset()));
+
+        return Resources.toString(templateURI, Charset.defaultCharset());
     }
 
     public void setTemplateLocation(String templateLocation) {

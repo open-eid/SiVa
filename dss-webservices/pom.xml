@@ -15,6 +15,10 @@
     <description>DSS Web Services</description>
     <artifactId>dss-webservices</artifactId>
 
+    <properties>
+        <cxf.version>3.0.6</cxf.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>eu.europa.ec.joinup.sd-dss</groupId>
@@ -43,27 +47,27 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-transports-http</artifactId>
-            <version>2.7.13</version>
-            <exclusions>
-            	<exclusion>
-            		<artifactId>woodstox-core-asl</artifactId>
-            		<groupId>org.codehaus.woodstox</groupId>
-            	</exclusion>
-            	<exclusion>
-            		<artifactId>geronimo-javamail_1.4_spec</artifactId>
-            		<groupId>org.apache.geronimo.specs</groupId>
-            	</exclusion>
-            </exclusions>
+            <version>${cxf.version}</version>
+            <!--<exclusions>-->
+            	<!--<exclusion>-->
+            		<!--<artifactId>woodstox-core-asl</artifactId>-->
+            		<!--<groupId>org.codehaus.woodstox</groupId>-->
+            	<!--</exclusion>-->
+            	<!--<exclusion>-->
+            		<!--<artifactId>geronimo-javamail_1.4_spec</artifactId>-->
+            		<!--<groupId>org.apache.geronimo.specs</groupId>-->
+            	<!--</exclusion>-->
+            <!--</exclusions>-->
         </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-bindings-soap</artifactId>
-            <version>2.7.13</version>
+            <version>${cxf.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-jaxws</artifactId>
-            <version>2.7.13</version>
+            <version>${cxf.version}</version>
         </dependency>
 
         <!-- Logging -->

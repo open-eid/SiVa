@@ -151,6 +151,7 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
     }
 
     @Ignore
+    @Test
     public void adesLtBaselineSha256EcdsaShouldPass() {
         String httpBody = post(validationRequestFor(readFile("hellopades-ecdsa.pdf"))).
                 andReturn().body().asString();
@@ -189,7 +190,6 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
 
         assertEquals(1, validSignatures(simpleReport(httpBody)));
     }
-
 
     @Test
     public void adesLtaBaselineAndBBaselineSignatureShouldPass() {

@@ -392,6 +392,8 @@ public abstract class ValidationPolicy extends XmlDom {
 	public abstract Constraint getTimestampDelaySigningTimePropertyConstraint();
 	
 	public abstract Constraint getOcspDelayConstraint(Long delay);
+	
+	public abstract Constraint getOcspEarlierThanBestSignatureTimeConstraint();
 
 	public abstract Constraint getContentTimestampImprintIntactConstraint();
 

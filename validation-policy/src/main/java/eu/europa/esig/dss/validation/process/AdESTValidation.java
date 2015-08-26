@@ -378,7 +378,7 @@ public class AdESTValidation {
 			return signatureConclusion;
 		}
 		
-		if (!checkOcspDelay(signatureConclusion)) {
+		if (!checkOcspIssuingTime(signatureConclusion)) {
 			return signatureConclusion;
 		}
 
@@ -951,24 +951,37 @@ public class AdESTValidation {
 	}
 	
 	/**
-	 * Check of: Ocsp delay compared to the best-signature-time.
+	 * Check of: Ocsp time compared to best-signature-time.
 	 *
 	 * @param conclusion the conclusion to use to add the result of the check.
 	 * @return false if the check failed and the process should stop, true otherwise.
 	 */
-	private boolean checkOcspDelay(Conclusion conclusion) {
+	private boolean checkOcspIssuingTime(Conclusion conclusion) {
 		final String ocspIssuingTime = diagnosticData.getValue("./UsedCertificates/Certificate/Revocation/IssuingTime/text()");
 		if (ocspIssuingTime == null) {
 			return true;
 		}
-		final Date ocspDate = DSSUtils.quietlyParseDate(ocspIssuingTime);
-		final Constraint constraint = constraintData.getOcspDelayConstraint(ocspDate.getTime() - bestSignatureTime.getTime());
-		if (constraint == null) {
-			return true;
+		final Date ocspIssuingDate = DSSUtils.quietlyParseDate(ocspIssuingTime);
+		Constraint constraint = null;
+		if (ocspIssuingDate.before(bestSignatureTime)) {
+			constraint = constraintData.getOcspEarlierThanBestSignatureTimeConstraint();
+			if (constraint == null) {
+				return true;
+			}
+			constraint.create(signatureXmlNode, MessageTag.ADEST_IOABST);
+			constraint.setIndications(Indication.INVALID, null, MessageTag.ADEST_IOABST_ANS);
+			constraint.setValue(false);
+			constraint.setConclusionReceiver(conclusion);
+		} else {
+			constraint = constraintData.getOcspDelayConstraint(ocspIssuingDate.getTime() - bestSignatureTime.getTime());
+			if (constraint == null) {
+				return true;
+			}
+			constraint.create(signatureXmlNode, MessageTag.ADEST_IOTNLABST);
+			constraint.setIndications(Indication.INVALID, null, MessageTag.ADEST_IOTNLABST_ANS);
+			constraint.setValue(false);
+			constraint.setConclusionReceiver(conclusion);
 		}
-		constraint.create(signatureXmlNode, MessageTag.ADEST_IOTNLABST);
-		constraint.setIndications(Indication.INVALID, null, MessageTag.ADEST_IOTNLABST_ANS);
-		constraint.setConclusionReceiver(conclusion);
 		return constraint.check();
 	}
 }

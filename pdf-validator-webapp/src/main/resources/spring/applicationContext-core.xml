@@ -2,8 +2,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
 	<import resource="classpath:spring/applicationContext-dao.xml"/>
 
@@ -32,18 +32,30 @@
 	<bean id="crlSource" class="eu.europa.esig.dss.client.crl.AlwaysFailingCRLSource"/>
 
 	<bean id="ocspSource" class="eu.europa.esig.dss.client.ocsp.AlwaysFailingOCSPSource" />
-
-	<bean id="trustedListSource" class="eu.europa.esig.dss.tsl.ReloadableTrustedListCertificateSource">
-		<property name="dataLoader" ref="fileCacheDataLoader"/>
-		<property name="checkSignature" value="false"/>
-		<property name="lotlCertificate" value="classpath://ec.europa.eu.crt"/>
-		<property name="lotlUrl" value="${trusted.list.source.lotlUrl}"/>
-		<property name="tslRefreshPolicy" value="${trusted.list.source.tslRefreshPolicy}"/>
-	</bean>
-
+	
 	<bean id="tspSource" class="eu.europa.esig.dss.client.tsp.OnlineTSPSource">
 		<property name="tspServer" value="http://tsa.belgium.be/connect"/>
 		<property name="dataLoader" ref="dataLoader"/>
 	</bean>
+	
+	<beans profile="production">
+		<bean id="trustedListSource" class="eu.europa.esig.dss.tsl.ReloadableTrustedListCertificateSource">
+			<property name="dataLoader" ref="fileCacheDataLoader"/>
+			<property name="checkSignature" value="false"/>
+			<property name="lotlCertificate" value="classpath://ec.europa.eu.crt"/>
+			<property name="lotlUrl" value="${trusted.list.source.lotlUrl}"/>
+			<property name="tslRefreshPolicy" value="${trusted.list.source.tslRefreshPolicy}"/>
+		</bean>
+	</beans>
+	
+	<beans profile="development">
+		<bean id="trustedListSource" class="eu.europa.esig.dss.tsl.ReloadableTrustedListAndCustomCertificateSource">
+			<property name="dataLoader" ref="fileCacheDataLoader"/>
+			<property name="checkSignature" value="false"/>
+			<property name="lotlCertificate" value="classpath://ec.europa.eu.crt"/>
+			<property name="lotlUrl" value="${trusted.list.source.lotlUrl}"/>
+			<property name="tslRefreshPolicy" value="${trusted.list.source.tslRefreshPolicy}"/>
+		</bean>
+	</beans>
 
 </beans>

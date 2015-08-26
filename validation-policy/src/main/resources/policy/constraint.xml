@@ -14,6 +14,7 @@
 			<Id>PAdES_BASELINE_LT</Id>
 			<Id>PAdES_BASELINE_LTA</Id>
 		</AcceptableSignatureFormats>
+		<OcspTimeNotBeforeBestSignatureTime Level="FAIL"/>
 		<OcspDelayToBestSignatureTime Unit="MINUTES">
 			<Warn>
 				<MinimalDelay>15</MinimalDelay>

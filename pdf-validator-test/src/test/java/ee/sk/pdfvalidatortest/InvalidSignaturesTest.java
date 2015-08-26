@@ -9,7 +9,7 @@ import java.util.Collections;
 import static org.junit.Assert.assertEquals;
 
 public class InvalidSignaturesTest extends PdfValidatorSoapTests {
-
+	
     @Test
     public void missingSignedAttributeForSigningCertificate() {
         String httpBody = post(validationRequestFor(readFile("missing_signing_certificate_attribute.pdf"))).
@@ -25,7 +25,7 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
     public void adesLtaBaselineProfileShouldPass() {
         String httpBody = post(validationRequestFor(readFile("Signature-P-EE_AS-7.pdf"))).
                 andReturn().body().asString();
-
+        
         assertEquals(1, validSignatures(simpleReport(httpBody)));
     }
 
@@ -78,7 +78,6 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
         assertEquals(0, validSignatures(simpleReport(httpBody)));
     }
 
-
     @Test
     public void adesPdfSignedWithSha512CertifikateShouldPass() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha512.pdf"))).
@@ -109,7 +108,7 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
                 andReturn().body().asString();
 
         assertEquals(
-                "OCSP is too long after the best-signature-time!",
+                "The validation failed, because OCSP is too long after the best-signature-time!",
                 findWarningById("ADEST_IOTNLABST_ANS", detailedReport(httpBody)));
         assertEquals(1, validSignatures(simpleReport(httpBody)));
     }
@@ -120,8 +119,20 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
                 andReturn().body().asString();
 
         assertEquals(
-                "OCSP is too long after the best-signature-time!",
+                "The validation failed, because OCSP is too long after the best-signature-time!",
                 findErrorById("ADEST_IOTNLABST_ANS", detailedReport(httpBody)));
+        assertEquals(0, validSignatures(simpleReport(httpBody)));
+    }
+	
+	@Ignore
+	@Test
+    public void adesLtBaselineOcspBeforeBestSignatureTimeShouldFail() {
+        String httpBody = post(validationRequestFor(readFile("some_pdf_file"))).
+                andReturn().body().asString();
+
+        assertEquals(
+        		"The validation failed, because OCSP is before the best-signature-time!",
+                findErrorById("ADEST_IOABST_ANS", detailedReport(httpBody)));
         assertEquals(0, validSignatures(simpleReport(httpBody)));
     }
 
@@ -139,7 +150,7 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
                 certificateContentsById("8835667315fdcf9681222d6b4aeaa69cd1ab5693ff3aa1a59a4c4288e4ac7842", diagnosticData(httpBody)));
     }
 
-    @Test
+    @Ignore
     public void adesLtBaselineSha256EcdsaShouldPass() {
         String httpBody = post(validationRequestFor(readFile("hellopades-ecdsa.pdf"))).
                 andReturn().body().asString();
@@ -147,7 +158,7 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
         assertEquals(1, validSignatures(simpleReport(httpBody)));
     }
 
-    @Test
+    @Test //Made with test certificate. Need Test tls.
     public void adesLtBaselineSha256Ec224ShouldPass() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-ec224.pdf"))).
                 andReturn().body().asString();
@@ -155,7 +166,7 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
         assertEquals(1, validSignatures(simpleReport(httpBody)));
     }
 
-    @Test
+    @Test //Made with test certificate. Need Test tls.
     public void adesLtBaselineSha256Ec256ShouldPass() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-ec256.pdf"))).
                 andReturn().body().asString();
@@ -163,7 +174,7 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
         assertEquals(1, validSignatures(simpleReport(httpBody)));
     }
 
-    @Test
+    @Test //Made with test certificate. Need Test tls.
     public void adesLtBaselineCertificateExpired5DaysAftrerSignShouldPass() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-rsa1024-5d.pdf"))).
                 andReturn().body().asString();
@@ -171,7 +182,7 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
         assertEquals(1, validSignatures(simpleReport(httpBody)));
     }
 
-    @Test
+    @Test //Made with test certificate. Need Test tls.
      public void adesLtBaselineSha256Rsa1024ShouldPass() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-rsa1024.pdf"))).
                 andReturn().body().asString();
@@ -179,12 +190,21 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
         assertEquals(1, validSignatures(simpleReport(httpBody)));
     }
 
-    @Ignore //Ootab uut paarandatud faili.
-    public void adesLtBaselineAndLtBaselineSignatureShouldPass() {
-        String httpBody = post(validationRequestFor(readFile("hellopades-sigb-signed.pdf"))).
+
+    @Test
+    public void adesLtaBaselineAndBBaselineSignatureShouldPass() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-lt-b.pdf"))).
                 andReturn().body().asString();
 
         assertEquals(1, validSignatures(simpleReport(httpBody)));
+    }
+
+    @Test
+    public void adesLtBaselineSignedExpiredCertificateShouldFail() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-lt-rsa1024-sha1-expired.pdf"))).
+                andReturn().body().asString();
+
+        assertEquals(0, validSignatures(simpleReport(httpBody)));
     }
 
     private byte[] readFile(String fileName) {

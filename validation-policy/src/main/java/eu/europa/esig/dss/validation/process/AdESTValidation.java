@@ -965,6 +965,9 @@ public class AdESTValidation {
 		Constraint constraint = null;
 		if (ocspIssuingDate.before(bestSignatureTime)) {
 			constraint = constraintData.getOcspEarlierThanBestSignatureTimeConstraint();
+			if (constraint == null) {
+				return true;
+			}
 			constraint.create(signatureXmlNode, MessageTag.ADEST_IOABST);
 			constraint.setIndications(Indication.INVALID, null, MessageTag.ADEST_IOABST_ANS);
 			constraint.setValue(false);

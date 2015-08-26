@@ -650,9 +650,8 @@ public class EtsiValidationPolicy extends ValidationPolicy {
 	
 	@Override
 	public Constraint getOcspEarlierThanBestSignatureTimeConstraint() {
-		final Constraint constraint = new Constraint("FAIL");
-		constraint.setExpectedValue(TRUE);
-		return constraint;
+		final String XP_ROOT = "/ConstraintsParameters/MainSignature/OcspTimeNotBeforeBestSignatureTime";
+		return getBasicConstraint(XP_ROOT, true);
 	}
 	
 	@Override

@@ -74,7 +74,7 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
     public void adesLtaBaselineNoOcspCrlInSignatureShouldFail() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lta-no-ocsp.pdf"))).
                 andReturn().body().asString();
-
+        
         assertEquals(0, validSignatures(simpleReport(httpBody)));
     }
 
@@ -126,7 +126,7 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
 	
 	@Ignore
 	@Test
-    public void adesLtBaselineOcspBeforeBestSignatureTime() {
+    public void adesLtBaselineOcspBeforeBestSignatureTimeShouldFail() {
         String httpBody = post(validationRequestFor(readFile("some_pdf_file"))).
                 andReturn().body().asString();
 

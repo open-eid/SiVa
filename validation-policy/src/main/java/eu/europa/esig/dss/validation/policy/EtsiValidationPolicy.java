@@ -656,7 +656,7 @@ public class EtsiValidationPolicy extends ValidationPolicy {
 	
 	@Override
 	public Constraint getOcspDelayConstraint(Long delay) {
-		if (delay != null) {
+		if (delay != null && getElement("/ConstraintsParameters/MainSignature/OcspDelayToBestSignatureTime") != null) {
 			if (delay > getOcspDelayTimeForFail()) {
 
 				final Constraint constraint = new Constraint("FAIL");

@@ -2,22 +2,57 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <artifactId>sd-dss</artifactId>
         <groupId>eu.europa.ec.joinup.sd-dss</groupId>
         <version>4.5.RC1</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
     <artifactId>pdf-validator-monitoring</artifactId>
+    <name>SK PDF Validator Monitoring Service</name>
+    <description>PF Validator monitoring web service</description>
 
     <dependencies>
+        <!-- Spring Boot starter POMs -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+
+        <!-- Web Service client -->
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
+        </dependency>
+
+        <!-- Utility method lib -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>18.0</version>
+        </dependency>
+
+        <!-- Caching implementation -->
+        <dependency>
+            <groupId>javax.cache</groupId>
+            <artifactId>cache-api</artifactId>
+        </dependency>
+
+        <!-- For documenting configuration properties -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
     </dependencies>
-<!--
     <build>
         <plugins>
             <plugin>
@@ -34,6 +69,5 @@
             </plugin>
         </plugins>
     </build>
--->
 
 </project>

@@ -22,7 +22,7 @@ public class ResponseValidator {
         String stringResult = XmlUtil.findElementByXPath(
                 simpleReport,
                 "//d:SimpleReport/d:ValidSignaturesCount",
-                Collections.singletonMap("d", "http://dss.markt.ec.europa.eu/validation/diagnostic")).getTextContent();
+                Collections.singletonMap("d", "http://dss.esig.europa.eu/validation/diagnostic")).getTextContent();
 
         return Integer.parseInt(stringResult) == 1 ? ServiceStatus.OK : ServiceStatus.WARNING;
     }

@@ -65,7 +65,7 @@ public class InvalidDocumentFormatTests extends PdfValidatorSoapTests {
         String stringResult = XmlUtil.findElementByXPath(
                 simpleReport,
                 "//d:SimpleReport/d:Signature",
-                Collections.singletonMap("d", "http://dss.markt.ec.europa.eu/validation/diagnostic")).getAttribute("SignatureFormat");
+                Collections.singletonMap("d", "http://dss.esig.europa.eu/validation/diagnostic")).getAttribute("SignatureFormat");
 
         return stringResult;
     }

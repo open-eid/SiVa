@@ -33,10 +33,10 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *         &lt;element name="ErrorMessage" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="DateTime" type="{http://www.w3.org/2001/XMLSchema}dateTime"/>
  *         &lt;element name="SignatureFormat" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="StructuralValidation" type="{http://dss.markt.ec.europa.eu/validation/diagnostic}StructuralValidationType"/>
- *         &lt;element name="BasicSignature" type="{http://dss.markt.ec.europa.eu/validation/diagnostic}BasicSignatureType"/>
- *         &lt;element name="SigningCertificate" type="{http://dss.markt.ec.europa.eu/validation/diagnostic}SigningCertificateType"/>
- *         &lt;element name="CertificateChain" type="{http://dss.markt.ec.europa.eu/validation/diagnostic}CertificateChainType"/>
+ *         &lt;element name="StructuralValidation" type="{http://dss.esig.europa.eu/validation/diagnostic}StructuralValidationType"/>
+ *         &lt;element name="BasicSignature" type="{http://dss.esig.europa.eu/validation/diagnostic}BasicSignatureType"/>
+ *         &lt;element name="SigningCertificate" type="{http://dss.esig.europa.eu/validation/diagnostic}SigningCertificateType"/>
+ *         &lt;element name="CertificateChain" type="{http://dss.esig.europa.eu/validation/diagnostic}CertificateChainType"/>
  *         &lt;element name="ContentType" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="ContentIdentifier" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="ContentHints" type="{http://www.w3.org/2001/XMLSchema}string"/>
@@ -77,7 +77,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *             &lt;/complexContent>
  *           &lt;/complexType>
  *         &lt;/element>
- *         &lt;element name="CertifiedRoles" type="{http://dss.markt.ec.europa.eu/validation/diagnostic}CertifiedRolesType" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="CertifiedRoles" type="{http://dss.esig.europa.eu/validation/diagnostic}CertifiedRolesType" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element name="Policy">
  *           &lt;complexType>
  *             &lt;complexContent>
@@ -100,7 +100,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *             &lt;complexContent>
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                 &lt;sequence>
- *                   &lt;element name="Timestamp" type="{http://dss.markt.ec.europa.eu/validation/diagnostic}TimestampType" maxOccurs="unbounded" minOccurs="0"/>
+ *                   &lt;element name="Timestamp" type="{http://dss.esig.europa.eu/validation/diagnostic}TimestampType" maxOccurs="unbounded" minOccurs="0"/>
  *                 &lt;/sequence>
  *               &lt;/restriction>
  *             &lt;/complexContent>
@@ -111,7 +111,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *             &lt;complexContent>
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                 &lt;sequence>
- *                   &lt;element name="SignatureScope" type="{http://dss.markt.ec.europa.eu/validation/diagnostic}SignatureScopeType" maxOccurs="unbounded"/>
+ *                   &lt;element name="SignatureScope" type="{http://dss.esig.europa.eu/validation/diagnostic}SignatureScopeType" maxOccurs="unbounded"/>
  *                 &lt;/sequence>
  *               &lt;/restriction>
  *             &lt;/complexContent>

@@ -8,7 +8,7 @@ Any modifications to this file will be lost upon recompilation of the source sch
 Generated on: 2015.02.17 at 03:26:09 PM CET 
 
   -->
-  <bindings scd="x-schema::tns" xmlns:tns="http://dss.markt.ec.europa.eu/validation/diagnostic">
+  <bindings scd="x-schema::tns" xmlns:tns="http://dss.esig.europa.eu/validation/diagnostic">
     <schemaBindings map="false">
       <package name="eu.europa.ec.markt.dss.validation102853.data.diagnostic"/>
     </schemaBindings>

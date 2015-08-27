@@ -232,21 +232,21 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
         return XmlUtil.findElementByXPath(
                 detailedReport,
                 "//d:Error[@NameId='" + errorId + "']",
-                Collections.singletonMap("d", "http://dss.markt.ec.europa.eu/validation/diagnostic")).getTextContent();
+                Collections.singletonMap("d", "http://dss.esig.europa.eu/validation/diagnostic")).getTextContent();
     }
     
     private String findWarningById(String errorId, Document detailedReport) {
         return XmlUtil.findElementByXPath(
                 detailedReport,
                 "//d:Warning[@NameId='" + errorId + "']",
-                Collections.singletonMap("d", "http://dss.markt.ec.europa.eu/validation/diagnostic")).getTextContent();
+                Collections.singletonMap("d", "http://dss.esig.europa.eu/validation/diagnostic")).getTextContent();
     }
 
     private int validSignatures(Document simpleReport) {
         String stringResult = XmlUtil.findElementByXPath(
                 simpleReport,
                 "//d:SimpleReport/d:ValidSignaturesCount",
-                Collections.singletonMap("d", "http://dss.markt.ec.europa.eu/validation/diagnostic")).getTextContent();
+                Collections.singletonMap("d", "http://dss.esig.europa.eu/validation/diagnostic")).getTextContent();
 
         return Integer.parseInt(stringResult);
     }
@@ -255,7 +255,7 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
         return XmlUtil.findElementByXPath(
                 diagnosticData,
                 "//d:DiagnosticData/d:UsedCertificates/d:Certificate[@Id='" + certificateId + "']/d:X509Data",
-                Collections.singletonMap("d", "http://dss.markt.ec.europa.eu/validation/diagnostic")).getTextContent();
+                Collections.singletonMap("d", "http://dss.esig.europa.eu/validation/diagnostic")).getTextContent();
     }
 
     private Document detailedReport(String httpBody) {

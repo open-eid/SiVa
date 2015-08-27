@@ -33,10 +33,10 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *         &lt;element name="Reason" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="IssuingTime" type="{http://www.w3.org/2001/XMLSchema}dateTime"/>
  *         &lt;element name="NextUpdate" type="{http://www.w3.org/2001/XMLSchema}dateTime"/>
- *         &lt;element name="BasicSignature" type="{http://dss.markt.ec.europa.eu/validation/diagnostic}BasicSignatureType"/>
- *         &lt;element name="SigningCertificate" type="{http://dss.markt.ec.europa.eu/validation/diagnostic}SigningCertificateType"/>
- *         &lt;element name="CertificateChain" type="{http://dss.markt.ec.europa.eu/validation/diagnostic}CertificateChainType"/>
- *         &lt;element name="Info" type="{http://dss.markt.ec.europa.eu/validation/diagnostic}InfoType" minOccurs="0"/>
+ *         &lt;element name="BasicSignature" type="{http://dss.esig.europa.eu/validation/diagnostic}BasicSignatureType"/>
+ *         &lt;element name="SigningCertificate" type="{http://dss.esig.europa.eu/validation/diagnostic}SigningCertificateType"/>
+ *         &lt;element name="CertificateChain" type="{http://dss.esig.europa.eu/validation/diagnostic}CertificateChainType"/>
+ *         &lt;element name="Info" type="{http://dss.esig.europa.eu/validation/diagnostic}InfoType" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>

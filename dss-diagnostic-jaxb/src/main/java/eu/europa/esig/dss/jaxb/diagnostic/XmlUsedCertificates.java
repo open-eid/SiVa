@@ -31,11 +31,11 @@ import javax.xml.bind.annotation.XmlType;
  *             &lt;complexContent>
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                 &lt;sequence>
- *                   &lt;element name="SubjectDistinguishedName" type="{http://dss.markt.ec.europa.eu/validation/diagnostic}DistinguishedName" maxOccurs="unbounded"/>
- *                   &lt;element name="IssuerDistinguishedName" type="{http://dss.markt.ec.europa.eu/validation/diagnostic}DistinguishedName" maxOccurs="unbounded"/>
+ *                   &lt;element name="SubjectDistinguishedName" type="{http://dss.esig.europa.eu/validation/diagnostic}DistinguishedName" maxOccurs="unbounded"/>
+ *                   &lt;element name="IssuerDistinguishedName" type="{http://dss.esig.europa.eu/validation/diagnostic}DistinguishedName" maxOccurs="unbounded"/>
  *                   &lt;element name="IssuerCertificate" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *                   &lt;element name="SerialNumber" type="{http://www.w3.org/2001/XMLSchema}integer"/>
- *                   &lt;element name="DigestAlgAndValue" type="{http://dss.markt.ec.europa.eu/validation/diagnostic}DigestAlgAndValueType" maxOccurs="unbounded" minOccurs="0"/>
+ *                   &lt;element name="DigestAlgAndValue" type="{http://dss.esig.europa.eu/validation/diagnostic}DigestAlgAndValueType" maxOccurs="unbounded" minOccurs="0"/>
  *                   &lt;element name="NotAfter" type="{http://www.w3.org/2001/XMLSchema}dateTime"/>
  *                   &lt;element name="NotBefore" type="{http://www.w3.org/2001/XMLSchema}dateTime"/>
  *                   &lt;element name="PublicKeySize" type="{http://www.w3.org/2001/XMLSchema}int"/>
@@ -54,9 +54,9 @@ import javax.xml.bind.annotation.XmlType;
  *                   &lt;element name="IdKpOCSPSigning" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
  *                   &lt;element name="IdPkixOcspNoCheck" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
  *                   &lt;element name="ExpiredCertOnCRL" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
- *                   &lt;element name="BasicSignature" type="{http://dss.markt.ec.europa.eu/validation/diagnostic}BasicSignatureType"/>
- *                   &lt;element name="SigningCertificate" type="{http://dss.markt.ec.europa.eu/validation/diagnostic}SigningCertificateType"/>
- *                   &lt;element name="CertificateChain" type="{http://dss.markt.ec.europa.eu/validation/diagnostic}CertificateChainType"/>
+ *                   &lt;element name="BasicSignature" type="{http://dss.esig.europa.eu/validation/diagnostic}BasicSignatureType"/>
+ *                   &lt;element name="SigningCertificate" type="{http://dss.esig.europa.eu/validation/diagnostic}SigningCertificateType"/>
+ *                   &lt;element name="CertificateChain" type="{http://dss.esig.europa.eu/validation/diagnostic}CertificateChainType"/>
  *                   &lt;element name="Trusted" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
  *                   &lt;element name="SelfSigned" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
  *                   &lt;element name="QCStatement" minOccurs="0">
@@ -73,9 +73,9 @@ import javax.xml.bind.annotation.XmlType;
  *                       &lt;/complexContent>
  *                     &lt;/complexType>
  *                   &lt;/element>
- *                   &lt;element name="TrustedServiceProvider" type="{http://dss.markt.ec.europa.eu/validation/diagnostic}TrustedServiceProviderType" maxOccurs="unbounded"/>
- *                   &lt;element name="Revocation" type="{http://dss.markt.ec.europa.eu/validation/diagnostic}RevocationType"/>
- *                   &lt;element name="Info" type="{http://dss.markt.ec.europa.eu/validation/diagnostic}InfoType" minOccurs="0"/>
+ *                   &lt;element name="TrustedServiceProvider" type="{http://dss.esig.europa.eu/validation/diagnostic}TrustedServiceProviderType" maxOccurs="unbounded"/>
+ *                   &lt;element name="Revocation" type="{http://dss.esig.europa.eu/validation/diagnostic}RevocationType"/>
+ *                   &lt;element name="Info" type="{http://dss.esig.europa.eu/validation/diagnostic}InfoType" minOccurs="0"/>
  *                 &lt;/sequence>
  *                 &lt;attribute name="Id" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *               &lt;/restriction>

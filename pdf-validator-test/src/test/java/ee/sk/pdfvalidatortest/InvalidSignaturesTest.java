@@ -224,6 +224,32 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
        assertEquals(1, validSignatures(simpleReport(httpBody)));
     }
 
+    @Test
+    public void adesLtBaselineRsa1024NoExpiredShouldPass() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-rsa1024-not-expired.pdf"))).
+                andReturn().body().asString();
+
+        assertEquals(1, validSignatures(simpleReport(httpBody)));
+    }
+
+    @Test
+    public void adesLtBaselineCertificateExpired7DaysAftrerSignRsa2048ShouldPass() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-rsa2048-7d.pdf"))).
+                andReturn().body().asString();
+
+        assertEquals(1, validSignatures(simpleReport(httpBody)));
+    }
+
+    @Test
+    public void adesLtBaselineRsa2048ShouldPass() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-rsa2048.pdf"))).
+                andReturn().body().asString();
+
+        assertEquals(1, validSignatures(simpleReport(httpBody)));
+    }
+
+
+
     private byte[] readFile(String fileName) {
         return readFileFromTestResources("invalid_signature_documents/", fileName);
     }

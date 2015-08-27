@@ -6,7 +6,7 @@ import ee.sk.pdf.validator.monitoring.logging.LoggingService;
 import ee.sk.pdf.validator.monitoring.response.ResponseValidator;
 import ee.sk.pdf.validator.monitoring.status.ServiceStatus;
 import ee.sk.pdf.validator.monitoring.status.StatusRepository;
-import ee.sk.pdf.validator.monitoring.status.StatusResponse;
+import ee.sk.pdf.validator.monitoring.status.StatusResponseBuilder;
 import ee.sk.pdf.validator.monitoring.template.PDFLoader;
 import ee.sk.pdf.validator.monitoring.template.TemplateLoader;
 import org.slf4j.Logger;
@@ -57,12 +57,13 @@ public class WsdlRequestMaker {
     public void getServiceStatus() {
         makeRequest();
         LOGGER.info("Current service status is: {}", serviceStatus);
-        StatusResponse statusResponse = new StatusResponse();
-        statusResponse.setServiceStatus(serviceStatus);
-        statusResponse.setStatusMessage(statusMessage);
-        statusResponse.setLastChecked(new Date());
 
-        statusRepository.setStatusResponse(statusResponse);
+        statusRepository.setStatusResponse(new StatusResponseBuilder()
+                .withMessage(statusMessage)
+                .withServiceStatus(serviceStatus)
+                .withLastCheckTime(new Date())
+                .getStatusResponse()
+        );
     }
 
     private void makeRequest() {
@@ -91,7 +92,7 @@ public class WsdlRequestMaker {
         }
 
         String body = response.readEntity(String.class);
-        if (isServiceFAult(body)) {
+        if (isServiceFault(body)) {
             loggingService.logInfo(LOGGER, "monitoring.validationFailed");
             statusResult = ServiceStatus.WARNING;
         }
@@ -103,7 +104,7 @@ public class WsdlRequestMaker {
         return statusResult;
     }
 
-    private static boolean isServiceFAult(String body) {
+    private static boolean isServiceFault(String body) {
         return body.contains("<soap:Fault>");
     }
 
@@ -119,16 +120,20 @@ public class WsdlRequestMaker {
         try {
             return sendRequest(target);
         } catch (ProcessingException ex) {
-            @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
-            Throwable rootCause = Throwables.getRootCause(ex);
-
-            String connectionExceptionName = ConnectException.class.getName();
-            if (rootCause.getClass().getName().equals(connectionExceptionName)) {
-                throw (ConnectException) rootCause;
-            }
+            getRootCause(ex);
         }
 
         return null;
+    }
+
+    private static void getRootCause(Exception ex) throws ConnectException {
+        @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
+        Throwable rootCause = Throwables.getRootCause(ex);
+
+        String connectionExceptionName = ConnectException.class.getName();
+        if (rootCause.getClass().getName().equals(connectionExceptionName)) {
+            throw (ConnectException) rootCause;
+        }
     }
 
     private Response sendRequest(WebTarget target) {

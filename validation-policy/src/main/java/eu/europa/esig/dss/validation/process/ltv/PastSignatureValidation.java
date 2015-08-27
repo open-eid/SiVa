@@ -217,7 +217,7 @@ public class PastSignatureValidation {
 				 * terminate with INVALID/NOT_YET_VALID.<br>
 				 */
 
-				final int signingCertId = getSigningCertificateId(signature);
+				final String signingCertId = signature.getValue("./SigningCertificate/@Id");
 				final XmlDom signingCert = params.getCertificate(signingCertId);
 				final Date notBefore = signingCert.getTimeValue("./NotBefore/text()");
 

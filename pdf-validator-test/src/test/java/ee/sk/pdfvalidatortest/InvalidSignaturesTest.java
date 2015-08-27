@@ -21,6 +21,14 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
                 findErrorById("BBB_ICS_ISASCP_ANS", detailedReport(httpBody)));
     }
 
+    @Test @Ignore("TODO: when we get a PDF file for the same test case, use that one instead of this ASiC file")
+    public void signaturesMadeWithExpiredSigningCertificatesAreInvalid() {
+        String httpBody = post(validationRequestFor(readFile("IB-3691_bdoc21-TS-old-cert.bdoc"))).
+                andReturn().body().asString();
+
+        assertEquals(0, validSignatures(simpleReport(httpBody)));
+    }
+
     @Test
     public void adesLtaBaselineProfileShouldPass() {
         String httpBody = post(validationRequestFor(readFile("Signature-P-EE_AS-7.pdf"))).
@@ -225,7 +233,7 @@ public class InvalidSignaturesTest extends PdfValidatorSoapTests {
     }
 
     @Test
-    public void adesLtBaselineRsa1024NoExpiredShouldPass() {
+    public void validSignaturesRemainValidAfterSigningCertificateExpires() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-rsa1024-not-expired.pdf"))).
                 andReturn().body().asString();
 

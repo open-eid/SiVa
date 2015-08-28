@@ -23,9 +23,9 @@ public class ReloadableTrustedListAndCustomCertificateSource extends ReloadableT
 	    final Thread reloader = new Thread(target);
 	    
         LOG.debug("--> refresh(): START");
-        LOG.debug("--> addCustomCertificates(): START");
+        LOG.info("--> addCustomCertificates(): START");
         addCustomTrustedCertificates(newSource);
-        LOG.debug("--> addCustomCertificates(): END");
+        LOG.info("--> addCustomCertificates(): END");
         reloader.start();
         LOG.debug("--> refresh(): END");
         currentSource = newSource;
@@ -33,7 +33,9 @@ public class ReloadableTrustedListAndCustomCertificateSource extends ReloadableT
 	
 	private void addCustomTrustedCertificates(TrustedListsCertificateSource tlCertSource) {
 		
-		// TEST of EE Certification Centre Root CA
+		CertificateToken cerToken;
+		
+				// TEST of EE Certification Centre Root CA
 				CertificateToken certToken = DSSUtils.loadCertificateFromBase64EncodedString(
 						"MIIEEzCCAvugAwIBAgIQc/jtqiMEFERMtVvsSsH7sjANBgkqhkiG9w0BAQUFADB9" +
 						"MQswCQYDVQQGEwJFRTEiMCAGA1UECgwZQVMgU2VydGlmaXRzZWVyaW1pc2tlc2t1" +
@@ -58,11 +60,7 @@ public class ReloadableTrustedListAndCustomCertificateSource extends ReloadableT
 						"tH3vIMUPPiKdiNkGjVLSdChwkW3z+m0EvAjyD9rnGCmjeEm5diLFu7VMNVqupsbZ" +
 						"SfDzzBLc5+6TqgQTOG7GaZk2diMkn03iLdHGFrh8ML+mXG9SjEPI");
 
-				ServiceInfo serviceInfo = new ServiceInfo();
-				serviceInfo.setStatus("http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/undersupervision");
-				serviceInfo.setType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
-				serviceInfo.setStatusStartDate(certToken.getCertificate().getNotBefore());
-				tlCertSource.addCertificate(certToken, serviceInfo);
+				tlCertSource.addCertificate(certToken, getCAServiceInfo(certToken));
 
 				// TEST of ESTEID-SK 2011
 				certToken = DSSUtils.loadCertificateFromBase64EncodedString(
@@ -94,11 +92,7 @@ public class ReloadableTrustedListAndCustomCertificateSource extends ReloadableT
 						"2c0eVE4OxRulZ3KmBLPWbJKZ0TyGa/Aooc+TorEjxz//WzcF/Sklp4FeD0MU" +
 						"39UURIlg7LfEcm832bPzZzVGFd4drBd5Dy0Uquu63kW7RDqr+wQFSxKr9DIH");
 
-				serviceInfo = new ServiceInfo();
-				serviceInfo.setStatus("http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/undersupervision");
-				serviceInfo.setType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
-				serviceInfo.setStatusStartDate(certToken.getCertificate().getNotBefore());
-				tlCertSource.addCertificate(certToken, serviceInfo);
+				tlCertSource.addCertificate(certToken, getCAServiceInfo(certToken));
 				
 				// TEST of KLASS3-SK 2010
 				certToken = DSSUtils.loadCertificateFromBase64EncodedString(
@@ -129,11 +123,7 @@ public class ReloadableTrustedListAndCustomCertificateSource extends ReloadableT
 						"0yczX3d8+I3EBNBlzfPMsyU1LCn6Opbs2/DGF/4enhRGk/49L6ltfOyOA73buSog" +
 						"S2JkvCweSx6Y2cs1fXVyFszm2HJmQgwbZYfR");
 
-				serviceInfo = new ServiceInfo();
-				serviceInfo.setStatus("http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/undersupervision");
-				serviceInfo.setType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
-				serviceInfo.setStatusStartDate(certToken.getCertificate().getNotBefore());
-				tlCertSource.addCertificate(certToken, serviceInfo);
+				tlCertSource.addCertificate(certToken, getCAServiceInfo(certToken));
 				
 				// TEST of SK OCSP RESPONDER 2011
 				certToken = DSSUtils.loadCertificateFromBase64EncodedString(
@@ -164,11 +154,7 @@ public class ReloadableTrustedListAndCustomCertificateSource extends ReloadableT
 						"Dei5Q3+XTED41j8szRWglzYf6zOv4djkja64WYraQ5zb4x8Xh7qTCk6UupZ7" +
 						"je+0oRfuz0h/3zyRdjcRPkjloSpQp/NG8Rmrcnr874p8d9fdwCrRI7U=");
 
-				serviceInfo = new ServiceInfo();
-				serviceInfo.setStatus("http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/undersupervision");
-				serviceInfo.setType("http://uri.etsi.org/TrstSvc/Svctype/OCSP/QC");
-				serviceInfo.setStatusStartDate(certToken.getCertificate().getNotBefore());
-				tlCertSource.addCertificate(certToken, serviceInfo);
+				tlCertSource.addCertificate(certToken, getOCSPServiceInfo(certToken));
 						
 				// QuoVadis Time-Stamp Authority 1
 				certToken = DSSUtils.loadCertificateFromBase64EncodedString(
@@ -207,11 +193,7 @@ public class ReloadableTrustedListAndCustomCertificateSource extends ReloadableT
 						"VjdeCe3o0E9dUVSBgp4Ulu3x9hLJ9ps1+xt/HtM2VYEDiIlF5CLzyhm/0Egdss8o" +
 						"+TJRSQWq43roK5RW7Gle");
 
-				serviceInfo = new ServiceInfo();
-				serviceInfo.setStatus("http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/undersupervision");
-				serviceInfo.setType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
-				serviceInfo.setStatusStartDate(certToken.getCertificate().getNotBefore());
-				tlCertSource.addCertificate(certToken, serviceInfo);
+				tlCertSource.addCertificate(certToken, getCAServiceInfo(certToken));
 		
 				// QuoVadis Time-Stamp Authority 2
 				certToken = DSSUtils.loadCertificateFromBase64EncodedString(
@@ -250,13 +232,25 @@ public class ReloadableTrustedListAndCustomCertificateSource extends ReloadableT
 						"0QFoiIbPLv8vFH/ObkV/tivBelxHNYZt0JrgNQQAG7TcQ4GSxWzxmXU35BHvaOuj" +
 						"h2qLqIv3l1rSlPt82HY=");
 
-				serviceInfo = new ServiceInfo();
-				serviceInfo.setStatus("http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/undersupervision");
-				serviceInfo.setType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
-				serviceInfo.setStatusStartDate(certToken.getCertificate().getNotBefore());
-				tlCertSource.addCertificate(certToken, serviceInfo);
+				tlCertSource.addCertificate(certToken, getCAServiceInfo(certToken));
 
 
+	}
+	
+	private ServiceInfo getCAServiceInfo(CertificateToken certToken) {
+		ServiceInfo serviceInfo = new ServiceInfo();
+		serviceInfo.setStatus("http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/undersupervision");
+		serviceInfo.setType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
+		serviceInfo.setStatusStartDate(certToken.getCertificate().getNotBefore());
+		return serviceInfo;
+	}
+	
+	private ServiceInfo getOCSPServiceInfo(CertificateToken certToken) {
+		ServiceInfo serviceInfo = new ServiceInfo();
+		serviceInfo.setStatus("http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/undersupervision");
+		serviceInfo.setType("http://uri.etsi.org/TrstSvc/Svctype/OCSP/QC");
+		serviceInfo.setStatusStartDate(certToken.getCertificate().getNotBefore());
+		return serviceInfo;
 	}
 
 }

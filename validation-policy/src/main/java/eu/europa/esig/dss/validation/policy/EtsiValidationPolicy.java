@@ -650,13 +650,13 @@ public class EtsiValidationPolicy extends ValidationPolicy {
 	
 	@Override
 	public Constraint getOcspEarlierThanBestSignatureTimeConstraint() {
-		final String XP_ROOT = "/ConstraintsParameters/MainSignature/OcspTimeNotBeforeBestSignatureTime";
+		final String XP_ROOT = "/ConstraintsParameters/MainSignature/OcspTimeBeforeBestSignatureTime";
 		return getBasicConstraint(XP_ROOT, true);
 	}
 	
 	@Override
 	public Constraint getOcspDelayConstraint(Long delay) {
-		if (delay != null && getElement("/ConstraintsParameters/MainSignature/OcspDelayToBestSignatureTime") != null) {
+		if (delay != null && getElement("/ConstraintsParameters/MainSignature/OcspTimeTooMuchAfterBestSignatureTime") != null) {
 			if (delay > getOcspDelayTimeForFail()) {
 
 				final Constraint constraint = new Constraint("FAIL");
@@ -672,17 +672,17 @@ public class EtsiValidationPolicy extends ValidationPolicy {
 	}
 	
 	private Long getOcspDelayTimeForFail() {
-		Long minimalDelay = getLongValue("/ConstraintsParameters/MainSignature/OcspDelayToBestSignatureTime/Fail/MinimalDelay/text()");
+		Long minimalDelay = getLongValue("/ConstraintsParameters/MainSignature/OcspTimeTooMuchAfterBestSignatureTime/Fail/MinimalDelay/text()");
 		return getOcspDelayTime(minimalDelay);
 	}
 	
 	private Long getOcspDelayTimeForWarn() {
-		Long minimalDelay = getLongValue("/ConstraintsParameters/MainSignature/OcspDelayToBestSignatureTime/Warn/MinimalDelay/text()");
+		Long minimalDelay = getLongValue("/ConstraintsParameters/MainSignature/OcspTimeTooMuchAfterBestSignatureTime/Warn/MinimalDelay/text()");
 		return getOcspDelayTime(minimalDelay);
 	}
 	
 	private Long getOcspDelayTime(Long delay) {
-		String delayTimeUnit = getValue("/ConstraintsParameters/MainSignature/OcspDelayToBestSignatureTime/@Unit");
+		String delayTimeUnit = getValue("/ConstraintsParameters/MainSignature/OcspTimeTooMuchAfterBestSignatureTime/@Unit");
 		Long minimalDelayInMillis = RuleUtils.convertDuration(delayTimeUnit, "MILLISECONDS", delay);
 		return minimalDelayInMillis;
 	}

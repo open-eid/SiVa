@@ -1,18 +1,18 @@
 package eu.europa.esig.dss.web.context;
 
 import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
-import org.springframework.web.context.ContextLoaderListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ContextLoaderListenerLogger extends ContextLoaderListener {
+public class ContextListenerLogger implements ServletContextListener {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(ContextLoaderListenerLogger.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ContextListenerLogger.class);
 
     @Override
-    public void contextInitialized(ServletContextEvent sce) {
-    	String profile = System.getProperty("spring.profiles.active");
+    public void contextInitialized(ServletContextEvent servletContextEvent) {
+        String profile = System.getProperty("spring.profiles.active");
         if ("development".equals(profile)) {
             LOG.warn(" =========================================================================");
             LOG.warn("||                                                                       ||");
@@ -23,6 +23,11 @@ public class ContextLoaderListenerLogger extends ContextLoaderListener {
             LOG.warn("||                                                                       ||");
             LOG.warn(" =========================================================================");
         }
+    }
+
+    @Override
+    public void contextDestroyed(ServletContextEvent servletContextEvent) {
+
     }
 
 }

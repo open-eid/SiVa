@@ -15,12 +15,13 @@
 	</context-param>
 
 	<listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+		<listener-class>eu.europa.esig.dss.web.context.ContextListenerLogger</listener-class>
 	</listener>
 
 	<listener>
-		<listener-class>eu.europa.esig.dss.web.context.ContextLoaderListenerLogger</listener-class>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
+
 
 	<listener>
 		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>

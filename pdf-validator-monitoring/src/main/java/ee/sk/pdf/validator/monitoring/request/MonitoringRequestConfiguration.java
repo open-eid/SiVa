@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class MonitoringRequestConfiguration {
     private String host;
     private String path;
-    private String requestInterval;
+    private String tslStatusPath;
 
     public String getHost() {
         return host;
@@ -28,12 +28,12 @@ public class MonitoringRequestConfiguration {
         this.path = path;
     }
 
-    public String getRequestInterval() {
-        return requestInterval;
+    public String getTslStatusPath() {
+        return tslStatusPath;
     }
 
     @SuppressWarnings("unused")
-    public void setRequestInterval(String requestInterval) {
-        this.requestInterval = requestInterval;
+    public void setTslStatusPath(String tslStatusPath) {
+        this.tslStatusPath = tslStatusPath;
     }
 }

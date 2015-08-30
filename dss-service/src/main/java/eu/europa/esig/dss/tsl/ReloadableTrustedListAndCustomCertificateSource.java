@@ -1,11 +1,10 @@
 package eu.europa.esig.dss.tsl;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import eu.europa.esig.dss.DSSUtils;
 import eu.europa.esig.dss.x509.CertificateToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * In addition of (re)loading from LOTL, ReloadableTrustedListAndCustomCertificateSource also loads given certificates in
@@ -15,7 +14,7 @@ import eu.europa.esig.dss.x509.CertificateToken;
 public class ReloadableTrustedListAndCustomCertificateSource extends ReloadableTrustedListCertificateSource {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(ReloadableTrustedListAndCustomCertificateSource.class);
-	
+
 	@Override
 	public synchronized void refresh() {
         final TrustedListsCertificateSource newSource = new TrustedListsCertificateSource(this);
@@ -25,12 +24,14 @@ public class ReloadableTrustedListAndCustomCertificateSource extends ReloadableT
         LOG.debug("--> refresh(): START");
         LOG.debug("--> addCustomCertificates(): START");
         addCustomTrustedCertificates(newSource);
-        LOG.debug("--> addCustomCertificates(): END");
+        LOG.info("--> addCustomCertificates(): END");
         reloader.start();
-        LOG.debug("--> refresh(): END");
+
+		setTslRefreshInfo(target, reloader);
+		LOG.debug("--> refresh(): END");
         currentSource = newSource;
     }
-	
+
 	private void addCustomTrustedCertificates(TrustedListsCertificateSource tlCertSource) {
 		
 		// TEST of EE Certification Centre Root CA

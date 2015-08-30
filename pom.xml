@@ -73,7 +73,7 @@
 		<jgoodies-forms.version>1.6.0</jgoodies-forms.version>
 		<jgoodies-bindings.version>2.7.0</jgoodies-bindings.version>
 		<xmlsec.version>2.0.2</xmlsec.version>
-		<junit.version>4.11</junit.version>
+		<junit.version>4.12</junit.version>
 		<mockito.version>2.0.2-beta</mockito.version>
 		<powermock.version>1.6.2</powermock.version>
 	</properties>
@@ -643,17 +643,6 @@
         </dependencies>
 	</dependencyManagement>
 	<repositories>
-        <repository>
-            <id>spring-snapshots</id>
-            <url>http://repo.spring.io/snapshot</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>spring-milestones</id>
-            <url>http://repo.spring.io/milestone</url>
-        </repository>
 		<repository>
 			<id>jboss-public</id>
 			<url>https://repository.jboss.org/nexus/</url>
@@ -674,6 +663,17 @@
 			<id>joinup-dss-thirdparty</id>
 			<url>http://joinup.ec.europa.eu/site/sd-dss/maven2</url>
 		</repository>
+        <repository>
+            <id>spring-snapshots</id>
+            <url>http://repo.spring.io/snapshot</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>spring-milestones</id>
+            <url>http://repo.spring.io/milestone</url>
+        </repository>
 	</repositories>
     <pluginRepositories>
         <pluginRepository>

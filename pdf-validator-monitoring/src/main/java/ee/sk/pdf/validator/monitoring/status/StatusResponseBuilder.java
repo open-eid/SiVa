@@ -1,5 +1,7 @@
 package ee.sk.pdf.validator.monitoring.status;
 
+import ee.sk.pdf.validator.monitoring.response.TslStatusResponse;
+
 import java.util.Date;
 
 public class StatusResponseBuilder {
@@ -17,6 +19,11 @@ public class StatusResponseBuilder {
 
     public StatusResponseBuilder withServiceStatus(ServiceStatus serviceStatus) {
         statusResponse.setServiceStatus(serviceStatus);
+        return this;
+    }
+
+    public StatusResponseBuilder withTslStatus(TslStatusResponse response) {
+        statusResponse.setTslStatusResponse(response);
         return this;
     }
 

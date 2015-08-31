@@ -7,7 +7,7 @@ import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 
-public class InvalidDocumentFormatTests extends PdfValidatorSoapTests {
+public class DocumentFormatTests extends PdfValidatorSoapTests {
 	
 	@Test
     public void PAdESDocumentShouldPass() {
@@ -57,8 +57,8 @@ public class InvalidDocumentFormatTests extends PdfValidatorSoapTests {
     }
 
 
-	private byte[] readFile(String fileName) {
-    	return readFileFromTestResources("invalid_format_documents/", fileName);
+	protected byte[] readFile(String fileName) {
+    	return readFileFromTestResources("document_format_test_files/", fileName);
     }
 
 	private String signatureFormat(Document simpleReport) {
@@ -68,12 +68,6 @@ public class InvalidDocumentFormatTests extends PdfValidatorSoapTests {
                 Collections.singletonMap("d", "http://dss.esig.europa.eu/validation/diagnostic")).getAttribute("SignatureFormat");
 
         return stringResult;
-    }
-
-	private Document simpleReport(String httpBody) {
-        Document document = XmlUtil.parseXml(httpBody);
-        String detailedReportString = XmlUtil.findElementByXPath(document, "//xmlSimpleReport").getTextContent();
-        return XmlUtil.parseXml(detailedReportString);
     }
 
 	private String soapFaultstring(String httpBody) {

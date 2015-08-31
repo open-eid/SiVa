@@ -389,7 +389,9 @@ public class PAdESSignature extends DefaultAdvancedSignature {
 	@Override
 	public String getId() {
 		String cadesId = cadesSignature.getId();
-		return cadesId + getDigestOfByteRange();
+		// TODO: Commented out getDigestOfByteRange(), as otherwise
+		// signature ID lookup code will fail later during validation.
+		return cadesId /*+ getDigestOfByteRange()*/;
 	}
 
 	private String getDigestOfByteRange() {

@@ -482,7 +482,17 @@ public abstract class SignedDocumentValidator implements DocumentValidator {
 			usedCertificatesDigestAlgorithms.addAll(signature.getUsedCertificatesDigestAlgorithms());
 			jaxbDiagnosticData.getSignature().add(xmlSignature);
 		}
+
+		// TODO: As PAdESSignature.getUsedCertificatesDigestAlgorithms() always returns a hardcoded
+		// value SHA1, as a quick work around we simply iterate over all possible supported hash
+		// algorithms; without this, lookup code would later fail during validation.
+		usedCertificatesDigestAlgorithms.add(DigestAlgorithm.SHA224);
+		usedCertificatesDigestAlgorithms.add(DigestAlgorithm.SHA256);
+		usedCertificatesDigestAlgorithms.add(DigestAlgorithm.SHA384);
+		usedCertificatesDigestAlgorithms.add(DigestAlgorithm.SHA512);
+
 		final Set<CertificateToken> processedCertificates = validationContext.getProcessedCertificates();
+
 		dealUsedCertificates(usedCertificatesDigestAlgorithms, processedCertificates);
 
 		return jaxbDiagnosticData;

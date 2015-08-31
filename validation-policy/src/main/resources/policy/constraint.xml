@@ -14,15 +14,15 @@
 			<Id>PAdES_BASELINE_LT</Id>
 			<Id>PAdES_BASELINE_LTA</Id>
 		</AcceptableSignatureFormats>
-		<OcspTimeNotBeforeBestSignatureTime Level="FAIL"/>
-		<OcspDelayToBestSignatureTime Unit="MINUTES">
+		<OcspTimeBeforeBestSignatureTime Level="FAIL"/>
+		<OcspTimeTooMuchAfterBestSignatureTime Unit="MINUTES">
 			<Warn>
 				<MinimalDelay>15</MinimalDelay>
 			</Warn>
 			<Fail>
 				<MinimalDelay>1440</MinimalDelay>
 			</Fail>
-		</OcspDelayToBestSignatureTime>
+		</OcspTimeTooMuchAfterBestSignatureTime>
 		<ReferenceDataExistence Level="FAIL">true</ReferenceDataExistence>
 		<ReferenceDataIntact Level="FAIL">true</ReferenceDataIntact>
 		<SignatureIntact Level="FAIL">true</SignatureIntact>
@@ -34,7 +34,7 @@
 			<IssuerSerialMatch Level="WARN">true</IssuerSerialMatch>
 			<Signed Level="FAIL" />
 			<Signature Level="FAIL"/>
-			<Expiration Level="IGNORE"/>
+			<Expiration Level="FAIL"/>
 			<RevocationDataAvailable Level="FAIL"/>
 			<RevocationDataIsTrusted Level="FAIL"/>
 			<RevocationDataFreshness Level="WARN"/>

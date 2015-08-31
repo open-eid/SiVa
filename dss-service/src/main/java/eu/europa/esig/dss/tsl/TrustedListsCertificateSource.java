@@ -510,7 +510,7 @@ public class TrustedListsCertificateSource extends CommonTrustedCertificateSourc
 			logger.info(".... done for '{}'", territory);
 			diagnosticInfo.put(trimmedUrl, "Loaded " + new Date().toString());
 		} catch (final Exception e) {
-			logger.error("An error occured while loading url " + url + " : " + e.getMessage(), e);
+			logger.error("An error occurred while loading url " + url + " : " + e.getMessage(), e);
 			diagnosticInfo.put(url, "Unable to load TSL : " + e.getMessage());
 		}
 	}

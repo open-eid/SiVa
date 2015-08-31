@@ -6,12 +6,15 @@ import static org.junit.Assert.assertEquals;
 
 public class BaselineProfileTests extends PdfValidatorSoapTests {
 
-    @Test
+    @Test // this file is actually invalid
     public void baselineProfileBDocumentShouldFail() {
         String httpBody = post(validationRequestFor(readFile("hellopades-pades-b-sha256-auth.pdf"))).
                 andReturn().body().asString();
         //System.out.println(httpBody.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&#xD;", "").replaceAll("&quot;", "\""));
 
+        assertEquals(
+                "The signature format is not allowed by the validation policy constraint!",
+                findErrorById("BBB_VCI_ISFC_ANS_1", detailedReport(httpBody)));
         assertEquals(0, validSignatures(simpleReport(httpBody)));
 
     }
@@ -21,6 +24,9 @@ public class BaselineProfileTests extends PdfValidatorSoapTests {
         String httpBody = post(validationRequestFor(readFile("Signature-P-EE_AS-5.pdf"))).
                 andReturn().body().asString();
 
+        assertEquals(
+                "The signature format is not allowed by the validation policy constraint!",
+                findErrorById("BBB_VCI_ISFC_ANS_1", detailedReport(httpBody)));
         assertEquals(0, validSignatures(simpleReport(httpBody)));
     }
 

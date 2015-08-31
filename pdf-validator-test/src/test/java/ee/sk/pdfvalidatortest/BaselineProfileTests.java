@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 public class BaselineProfileTests extends PdfValidatorSoapTests {
 
     @Test
-    public void revokedBaselineProfileBDocumentShouldFail() {
+    public void baselineProfileBDocumentShouldFail() {
         String httpBody = post(validationRequestFor(readFile("hellopades-pades-b-sha256-auth.pdf"))).
                 andReturn().body().asString();
         //System.out.println(httpBody.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&#xD;", "").replaceAll("&quot;", "\""));

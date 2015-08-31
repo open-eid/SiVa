@@ -11,16 +11,17 @@ public class DocumentFormatTests extends PdfValidatorSoapTests {
 	
 	@Test
     public void PAdESDocumentShouldPass() {
-        String httpBody = post(validationRequestFor(readFile("Signature-P-EE_AS-7.pdf"))).
+        String httpBody = post(validationRequestFor(readFile("hellopades-pades-lt-sha256-sign.pdf"))).
                 andReturn().body().asString();
         //System.out.println(httpBody.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&#xD;", "").replaceAll("&quot;", "\""));
         
         assertEquals("PAdES_BASELINE_LT", signatureFormat(simpleReport(httpBody)));
+        assertEquals(1, validSignatures(simpleReport(httpBody)));
     }
 
 	@Test
     public void ASiCDocumentShouldFail() {
-        String httpBody = post(validationRequestFor(readFile("Signature-A-EE-1.asice"))).
+        String httpBody = post(validationRequestFor(readFile("TS-11_23634_TS_2_timestamps.asice"))).
                 andReturn().body().asString();
 
         assertEquals("Document format not recognized/handled", soapFaultstring(httpBody));
@@ -28,7 +29,7 @@ public class DocumentFormatTests extends PdfValidatorSoapTests {
 
 	@Test
     public void XAdESDocumentShouldFail() {
-        String httpBody = post(validationRequestFor(readFile("Signature-X-AT-1.xml"))).
+        String httpBody = post(validationRequestFor(readFile("ALLK_KIIP_02_DIGIDOC-XML_1.3.ddoc"))).
                 andReturn().body().asString();
 
         assertEquals("Document format not recognized/handled", soapFaultstring(httpBody));
@@ -36,7 +37,7 @@ public class DocumentFormatTests extends PdfValidatorSoapTests {
 
 	@Test
     public void CAdESDocumentShouldFail() {
-        String httpBody = post(validationRequestFor(readFile("Signature-C-AT-1.p7"))).
+        String httpBody = post(validationRequestFor(readFile("hellocades.p7s"))).
                 andReturn().body().asString();
 
         assertEquals("Document format not recognized/handled", soapFaultstring(httpBody));
@@ -51,7 +52,7 @@ public class DocumentFormatTests extends PdfValidatorSoapTests {
 
     @Test
     public void DocDocumentShouldFail() {
-        String httpBody = post(validationRequestFor(readFile("Signature-P-EE_AS-1.doc"))).
+        String httpBody = post(validationRequestFor(readFile("hellopades-pades-lt-sha256-sign.doc"))).
                 andReturn().body().asString();
         assertEquals("Document format not recognized/handled", soapFaultstring(httpBody));
     }

@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 public class SignatureRevocationValueTests extends PdfValidatorSoapTests {
 
     @Test
-    public void DocumentWithOcspOver15MinDelayShouldPassButWarn() {
+    public void documentWithOcspOver15MinDelayShouldPassButWarn() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-ocsp-15min1s.pdf"))).
                 andReturn().body().asString();
 
@@ -19,7 +19,7 @@ public class SignatureRevocationValueTests extends PdfValidatorSoapTests {
     }
 
     @Test
-    public void DocumentWithOcspOver24hDelayShouldFail() {
+    public void documentWithOcspOver24hDelayShouldFail() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-ocsp-28h.pdf"))).
                 andReturn().body().asString();
 
@@ -30,7 +30,7 @@ public class SignatureRevocationValueTests extends PdfValidatorSoapTests {
     }
 
     @Test
-    public void DocumentWithNoOcspNorCrlInSignatureShouldFail() {
+    public void documentWithNoOcspNorCrlInSignatureShouldFail() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lta-no-ocsp.pdf"))).
                 andReturn().body().asString();
 
@@ -39,7 +39,7 @@ public class SignatureRevocationValueTests extends PdfValidatorSoapTests {
 
     @Ignore // needs test file
     @Test
-    public void DocumentSignedWithOcspTimeValueBeforeBestSignatureTimeShouldFail() {
+    public void documentSignedWithOcspTimeValueBeforeBestSignatureTimeShouldFail() {
         String httpBody = post(validationRequestFor(readFile("some_pdf_file"))).
                 andReturn().body().asString();
 

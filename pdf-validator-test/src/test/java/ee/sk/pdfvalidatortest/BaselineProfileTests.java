@@ -7,8 +7,8 @@ import static org.junit.Assert.assertEquals;
 public class BaselineProfileTests extends PdfValidatorSoapTests {
 
     @Test
-    public void RevokedBaselineProfileBDocumentShouldFail() {
-        String httpBody = post(validationRequestFor(readFile("Signature-P-EE_AS-1.pdf"))).
+    public void revokedBaselineProfileBDocumentShouldFail() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-pades-b-sha256-auth.pdf"))).
                 andReturn().body().asString();
         //System.out.println(httpBody.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&#xD;", "").replaceAll("&quot;", "\""));
 
@@ -16,16 +16,8 @@ public class BaselineProfileTests extends PdfValidatorSoapTests {
 
     }
 
-    @Test
-    public void noOcspRequestsAreMadeForBaselineProfileBDocument() {
-        String httpBody = post(validationRequestFor(readFile("Signature-P-AT-1.pdf"))).
-                andReturn().body().asString();
-
-        assertEquals(0, validSignatures(simpleReport(httpBody)));
-    }
-
-    @Test
-    public void BaselineProfileTDocumentShouldFail() {
+    @Test // need non-plugtest test file
+    public void baselineProfileTDocumentShouldFail() {
         String httpBody = post(validationRequestFor(readFile("Signature-P-EE_AS-5.pdf"))).
                 andReturn().body().asString();
 
@@ -33,7 +25,7 @@ public class BaselineProfileTests extends PdfValidatorSoapTests {
     }
 
     @Test
-    public void BaselineProfileLTDocumentShouldPass() {
+    public void baselineProfileLTDocumentShouldPass() {
         String httpBody = post(validationRequestFor(readFile("hellopades-pades-lt-sha256-sign.pdf"))).
                 andReturn().body().asString();
 
@@ -41,8 +33,8 @@ public class BaselineProfileTests extends PdfValidatorSoapTests {
 
     }
 
-    @Test
-    public void BaselineProfileLTADocumentShouldPass() {
+    @Test // need non-plugtest test file
+    public void baselineProfileLTADocumentShouldPass() {
         String httpBody = post(validationRequestFor(readFile("Signature-P-EE_AS-7.pdf"))).
                 andReturn().body().asString();
 
@@ -50,7 +42,7 @@ public class BaselineProfileTests extends PdfValidatorSoapTests {
     }
 
     @Test
-    public void BaselineProfileLTADocumentWithBaselineProfileBSignatureShouldPass() {
+    public void documentWithBaselineProfilesBAndLTASignaturesShouldPass() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-b.pdf"))).
                 andReturn().body().asString();
 

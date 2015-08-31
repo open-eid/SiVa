@@ -20,15 +20,15 @@
  */
 package eu.europa.esig.dss.tsl;
 
-import java.util.List;
-import java.util.Map;
-
+import eu.europa.esig.dss.DSSException;
+import eu.europa.esig.dss.x509.CertificatePool;
+import eu.europa.esig.dss.x509.CertificateToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.europa.esig.dss.DSSEncodingException;
-import eu.europa.esig.dss.x509.CertificatePool;
-import eu.europa.esig.dss.x509.CertificateToken;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This CertificateSource keep a list of trusted certificates extracted from the trusted list. To populate this list {@link
@@ -39,6 +39,9 @@ import eu.europa.esig.dss.x509.CertificateToken;
  */
 
 public class ReloadableTrustedListCertificateSource extends TrustedListsCertificateSource {
+    private Date updateStartDate;
+    private Date updateEndTime;
+    private String  tslUpdateMessage;
 
     private static final Logger LOG = LoggerFactory.getLogger(ReloadableTrustedListCertificateSource.class);
 
@@ -50,11 +53,13 @@ public class ReloadableTrustedListCertificateSource extends TrustedListsCertific
     }
 
     static class Reloader implements Runnable {
+        private Date started;
+        private Date ended;
+        private String errorMessage = "TSL Update completed successfully";
 
         private TrustedListsCertificateSource underlyingSource;
 
         Reloader(final TrustedListsCertificateSource underlyingSource) {
-
             this.underlyingSource = underlyingSource;
         }
 
@@ -62,20 +67,58 @@ public class ReloadableTrustedListCertificateSource extends TrustedListsCertific
         public void run() {
 
             try {
-
+                started = new Date();
                 LOG.info("--> run(): START LOADING");
                 underlyingSource.init();
+
+                ended = new Date();
                 LOG.info("--> run(): END LOADING");
 
-            } catch (DSSEncodingException e) {
+            } catch (DSSException e) {
                 makeATrace(e);
             }
         }
 
-        private static void makeATrace(final Exception e) {
-
+        private void makeATrace(final Exception e) {
+            errorMessage = "TSL update failed with ERROR: " + e.getMessage();
             LOG.error(e.getMessage(), e);
         }
+
+        protected Date getStarted() {
+            return started;
+        }
+
+        protected Date getEnded() {
+            return ended;
+        }
+
+        protected String getErrorMessage() {
+            return errorMessage;
+        }
+    }
+
+    public Date getUpdateStartDate() {
+        return updateStartDate;
+    }
+
+    public void setUpdateStartDate(Date updateStartDate) {
+        this.updateStartDate = updateStartDate;
+    }
+
+    public Date getUpdateEndTime() {
+        return updateEndTime;
+    }
+
+    public void setUpdateEndTime(Date updateEndTime) {
+        this.updateEndTime = updateEndTime;
+    }
+
+    public String getTslUpdateMessage() {
+        return tslUpdateMessage;
+    }
+
+    public void setTslUpdateMessage(String tslUpdateMessage) {
+        this.tslUpdateMessage = tslUpdateMessage;
     }
 
     public synchronized void refresh() {
@@ -83,13 +126,33 @@ public class ReloadableTrustedListCertificateSource extends TrustedListsCertific
         final TrustedListsCertificateSource newSource = new TrustedListsCertificateSource(this);
 	    final Reloader target = new Reloader(newSource);
 	    final Thread reloader = new Thread(target);
-        LOG.debug("--> refresh(): START");
-        reloader.start();
-        LOG.debug("--> refresh(): END");
 
+        updateStartDate = new Date();
+        reloader.start();
+
+        setTslRefreshInfo(target, reloader);
+
+        updateEndTime = new Date();
         currentSource = newSource;
     }
 
+    protected void setTslRefreshInfo(Reloader target, Thread reloader) {
+        try {
+            reloader.join();
+
+            setUpdateEndTime(target.getEnded());
+            setUpdateStartDate(target.getStarted());
+            setTslUpdateMessage(target.getErrorMessage());
+
+            LOG.info("TSL Update error occurred: {}", target.getErrorMessage());
+            LOG.info("TSL loading started: {}", getUpdateStartDate());
+            LOG.info("TSL Ended loading: {}", getUpdateEndTime());
+        } catch (InterruptedException e) {
+            LOG.info("TSL update failed: {}", e.getMessage());
+        }
+    }
+
+    @Override
     public Map<String, String> getDiagnosticInfo() {
 
         return currentSource.getDiagnosticInfo();

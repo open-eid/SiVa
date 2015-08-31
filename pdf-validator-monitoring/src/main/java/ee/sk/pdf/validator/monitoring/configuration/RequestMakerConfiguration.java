@@ -2,6 +2,7 @@ package ee.sk.pdf.validator.monitoring.configuration;
 
 import ee.sk.pdf.validator.monitoring.logging.LoggingService;
 import ee.sk.pdf.validator.monitoring.request.MonitoringRequestConfiguration;
+import ee.sk.pdf.validator.monitoring.request.TslStatusRequestMaker;
 import ee.sk.pdf.validator.monitoring.response.ResponseValidator;
 import ee.sk.pdf.validator.monitoring.template.PDFLoader;
 import ee.sk.pdf.validator.monitoring.template.RequestTemplateLoader;
@@ -53,5 +54,10 @@ public class RequestMakerConfiguration {
     @Bean
     public Client webServiceClient() {
         return ClientBuilder.newClient();
+    }
+
+    @Bean
+    public TslStatusRequestMaker tslStatusRequestMaker() {
+        return new TslStatusRequestMaker();
     }
 }

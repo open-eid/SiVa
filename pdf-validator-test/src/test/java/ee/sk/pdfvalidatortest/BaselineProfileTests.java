@@ -10,7 +10,6 @@ public class BaselineProfileTests extends PdfValidatorSoapTests {
     public void baselineProfileBDocumentShouldFail() {
         String httpBody = post(validationRequestFor(readFile("hellopades-pades-b-sha256-auth.pdf"))).
                 andReturn().body().asString();
-        //System.out.println(httpBody.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&#xD;", "").replaceAll("&quot;", "\""));
 
         assertEquals(
                 "The signature format is not allowed by the validation policy constraint!",

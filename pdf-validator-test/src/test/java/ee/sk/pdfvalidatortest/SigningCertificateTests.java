@@ -87,6 +87,28 @@ public class SigningCertificateTests extends PdfValidatorSoapTests {
                 certificateContentsById("8835667315fdcf9681222d6b4aeaa69cd1ab5693ff3aa1a59a4c4288e4ac7842", diagnosticData(httpBody)));
     }
 
+    @Test
+    public void documentSignedWithExpiredRsa2048CertificateShouldFail() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-rsa2048-expired.pdf"))).
+                andReturn().body().asString();
+
+        assertEquals(0, validSignatures(simpleReport(httpBody)));
+    }
+
+    @Test
+     public void documentSignedWithExpiredRsa1024CertificateShouldFail() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-rsa1024-expired2.pdf"))).
+                andReturn().body().asString();
+        assertEquals(0, validSignatures(simpleReport(httpBody)));
+    }
+
+    @Test
+    public void documentSignedWithExpiredSha1CertificateShouldFail() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha1-rsa1024-expired2.pdf"))).
+                andReturn().body().asString();
+        assertEquals(0, validSignatures(simpleReport(httpBody)));
+    }
+
     protected byte[] readFile(String fileName) {
         return readFileFromTestResources("signing_certifacte_test_files/", fileName);
     }

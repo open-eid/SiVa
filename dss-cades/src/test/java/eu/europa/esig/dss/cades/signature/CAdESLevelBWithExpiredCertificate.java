@@ -1,16 +1,6 @@
 package eu.europa.esig.dss.cades.signature;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.Date;
-
-import org.junit.Before;
-
-import eu.europa.esig.dss.DSSDocument;
-import eu.europa.esig.dss.InMemoryDocument;
-import eu.europa.esig.dss.MimeType;
-import eu.europa.esig.dss.SignatureAlgorithm;
-import eu.europa.esig.dss.SignatureLevel;
+import eu.europa.esig.dss.*;
 import eu.europa.esig.dss.cades.CAdESSignatureParameters;
 import eu.europa.esig.dss.signature.AbstractTestSignature;
 import eu.europa.esig.dss.signature.DocumentSignatureService;
@@ -22,11 +12,18 @@ import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.validation.policy.rules.Indication;
 import eu.europa.esig.dss.validation.policy.rules.SubIndication;
 import eu.europa.esig.dss.validation.report.SimpleReport;
+import org.junit.Before;
+import org.junit.Ignore;
+
+import java.util.Date;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Cryptographic signature is valid with expired certificate
  *
  */
+@Ignore
 public class CAdESLevelBWithExpiredCertificate extends AbstractTestSignature {
 
 	private DocumentSignatureService<CAdESSignatureParameters> service;

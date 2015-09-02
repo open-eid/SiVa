@@ -20,29 +20,29 @@
  */
 package eu.europa.esig.dss.cades.validation;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.List;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.bouncycastle.cms.CMSException;
-import org.bouncycastle.cms.CMSSignedData;
-import org.junit.Test;
-
 import eu.europa.esig.dss.DSSDocument;
 import eu.europa.esig.dss.DSSException;
 import eu.europa.esig.dss.FileDocument;
-import eu.europa.esig.dss.cades.validation.CAdESSignature;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
 import eu.europa.esig.dss.validation.report.DiagnosticData;
 import eu.europa.esig.dss.validation.report.Reports;
+import org.apache.commons.collections.CollectionUtils;
+import org.bouncycastle.cms.CMSException;
+import org.bouncycastle.cms.CMSSignedData;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.util.List;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Unit test added to fix : https://esig-dss.atlassian.net/browse/DSS-662
  *
  */
+@Ignore
 public class CAdESWithDEREncodedTimestampTest {
 
 	@Test

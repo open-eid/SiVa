@@ -22,7 +22,9 @@ package eu.europa.esig.dss.asic.extension.asics;
 
 import eu.europa.esig.dss.SignatureLevel;
 import eu.europa.esig.dss.asic.extension.AbstractTestASiCwithCAdESExtension;
+import org.junit.Ignore;
 
+@Ignore
 public class ASiCsExtensionWithCAdESBToTTest extends AbstractTestASiCwithCAdESExtension {
 
 	@Override

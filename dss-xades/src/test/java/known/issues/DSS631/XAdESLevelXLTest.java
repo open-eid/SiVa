@@ -20,16 +20,7 @@
  */
 package known.issues.DSS631;
 
-import java.io.File;
-import java.util.Date;
-
-import org.junit.Before;
-
-import eu.europa.esig.dss.DSSDocument;
-import eu.europa.esig.dss.FileDocument;
-import eu.europa.esig.dss.MimeType;
-import eu.europa.esig.dss.SignatureAlgorithm;
-import eu.europa.esig.dss.SignatureLevel;
+import eu.europa.esig.dss.*;
 import eu.europa.esig.dss.signature.AbstractTestSignature;
 import eu.europa.esig.dss.signature.DocumentSignatureService;
 import eu.europa.esig.dss.signature.SignaturePackaging;
@@ -40,7 +31,13 @@ import eu.europa.esig.dss.validation.CertificateVerifier;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.xades.XAdESSignatureParameters;
 import eu.europa.esig.dss.xades.signature.XAdESService;
+import org.junit.Before;
+import org.junit.Ignore;
 
+import java.io.File;
+import java.util.Date;
+
+@Ignore
 public class XAdESLevelXLTest extends AbstractTestSignature {
 
 	private DocumentSignatureService<XAdESSignatureParameters> service;

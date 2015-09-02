@@ -34,6 +34,7 @@
         <module>pdf-validator-tsl-downloader</module>
 		<module>pdf-validator-test</module>
         <module>pdf-validator-monitoring</module>
+        <module>pdf-validator-distribution</module>
     </modules>
 
 	<developers>

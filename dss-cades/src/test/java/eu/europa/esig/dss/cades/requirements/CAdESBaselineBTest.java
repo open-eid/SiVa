@@ -1,15 +1,6 @@
 package eu.europa.esig.dss.cades.requirements;
 
-import static org.junit.Assert.assertTrue;
-
-import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
-
-import eu.europa.esig.dss.DSSDocument;
-import eu.europa.esig.dss.InMemoryDocument;
-import eu.europa.esig.dss.SignatureAlgorithm;
-import eu.europa.esig.dss.SignatureLevel;
-import eu.europa.esig.dss.SignatureValue;
-import eu.europa.esig.dss.ToBeSigned;
+import eu.europa.esig.dss.*;
 import eu.europa.esig.dss.cades.CAdESSignatureParameters;
 import eu.europa.esig.dss.cades.signature.CAdESService;
 import eu.europa.esig.dss.signature.SignaturePackaging;
@@ -18,7 +9,12 @@ import eu.europa.esig.dss.test.gen.CertificateService;
 import eu.europa.esig.dss.test.mock.MockPrivateKeyEntry;
 import eu.europa.esig.dss.validation.CertificateVerifier;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
+import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
+import org.junit.Ignore;
 
+import static org.junit.Assert.assertTrue;
+
+@Ignore
 public class CAdESBaselineBTest extends AbstractRequirementChecks {
 
 	@Override

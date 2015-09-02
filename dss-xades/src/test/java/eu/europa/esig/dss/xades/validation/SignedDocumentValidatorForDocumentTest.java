@@ -1,20 +1,20 @@
 package eu.europa.esig.dss.xades.validation;
 
-import static org.junit.Assert.assertTrue;
+import eu.europa.esig.dss.DSSDocument;
+import eu.europa.esig.dss.FileDocument;
+import eu.europa.esig.dss.InMemoryDocument;
+import eu.europa.esig.dss.validation.SignedDocumentValidator;
+import org.apache.commons.io.IOUtils;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import org.apache.commons.io.IOUtils;
-import org.junit.Test;
+import static org.junit.Assert.assertTrue;
 
-import eu.europa.esig.dss.DSSDocument;
-import eu.europa.esig.dss.FileDocument;
-import eu.europa.esig.dss.InMemoryDocument;
-import eu.europa.esig.dss.validation.SignedDocumentValidator;
-import eu.europa.esig.dss.xades.validation.XMLDocumentValidator;
-
+@Ignore("Turned off by SK PDF Validator")
 public class SignedDocumentValidatorForDocumentTest {
 
 	@Test

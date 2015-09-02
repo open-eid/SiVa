@@ -1,17 +1,17 @@
 package eu.europa.esig.dss.client.tsp;
 
-import static org.junit.Assert.assertNotNull;
-
-import org.bouncycastle.tsp.TimeStampToken;
-import org.junit.Test;
-
 import eu.europa.esig.dss.DSSUtils;
 import eu.europa.esig.dss.DigestAlgorithm;
 import eu.europa.esig.dss.client.NonceSource;
 import eu.europa.esig.dss.client.http.NativeHTTPDataLoader;
 import eu.europa.esig.dss.client.http.commons.CommonsDataLoader;
-import eu.europa.esig.dss.client.tsp.OnlineTSPSource;
+import org.bouncycastle.tsp.TimeStampToken;
+import org.junit.Ignore;
+import org.junit.Test;
 
+import static org.junit.Assert.assertNotNull;
+
+@Ignore
 public class OnlineTSPSourceTest {
 
 	private static final String TSA_URL = "http://tsa.belgium.be/connect";

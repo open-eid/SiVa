@@ -1,14 +1,13 @@
 package eu.europa.esig.dss.tsl;
 
-import java.net.UnknownHostException;
-
+import eu.europa.esig.dss.client.http.commons.CommonsDataLoader;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
-import eu.europa.esig.dss.client.http.commons.CommonsDataLoader;
-import eu.europa.esig.dss.tsl.TSLRefreshPolicy;
-import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
+import java.net.UnknownHostException;
 
+@Ignore
 public class TrustedListCertificateSourceTest {
 
 	@Test

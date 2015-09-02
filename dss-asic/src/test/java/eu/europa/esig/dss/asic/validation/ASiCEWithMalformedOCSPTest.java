@@ -20,21 +20,22 @@
  */
 package eu.europa.esig.dss.asic.validation;
 
-import static org.junit.Assert.assertNotNull;
-
-import org.junit.Test;
-
 import eu.europa.esig.dss.DSSDocument;
 import eu.europa.esig.dss.FileDocument;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
 import eu.europa.esig.dss.validation.report.DiagnosticData;
 import eu.europa.esig.dss.validation.report.Reports;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Unit test added to fix : https://esig-dss.atlassian.net/browse/DSS-663
  *
  */
+@Ignore
 public class ASiCEWithMalformedOCSPTest {
 
 	@Test

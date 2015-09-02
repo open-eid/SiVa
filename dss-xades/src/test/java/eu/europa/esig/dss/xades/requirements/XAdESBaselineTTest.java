@@ -1,16 +1,6 @@
 package eu.europa.esig.dss.xades.requirements;
 
-import java.io.File;
-import java.util.Date;
-
-import javax.xml.xpath.XPathExpressionException;
-
-import eu.europa.esig.dss.DSSDocument;
-import eu.europa.esig.dss.FileDocument;
-import eu.europa.esig.dss.SignatureAlgorithm;
-import eu.europa.esig.dss.SignatureLevel;
-import eu.europa.esig.dss.SignatureValue;
-import eu.europa.esig.dss.ToBeSigned;
+import eu.europa.esig.dss.*;
 import eu.europa.esig.dss.signature.SignaturePackaging;
 import eu.europa.esig.dss.test.TestUtils;
 import eu.europa.esig.dss.test.gen.CertificateService;
@@ -20,7 +10,13 @@ import eu.europa.esig.dss.validation.CertificateVerifier;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.xades.XAdESSignatureParameters;
 import eu.europa.esig.dss.xades.signature.XAdESService;
+import org.junit.Ignore;
 
+import javax.xml.xpath.XPathExpressionException;
+import java.io.File;
+import java.util.Date;
+
+@Ignore
 public class XAdESBaselineTTest extends AbstractRequirementChecks {
 
 	@Override

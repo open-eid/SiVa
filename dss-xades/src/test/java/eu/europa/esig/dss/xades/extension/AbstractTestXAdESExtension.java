@@ -20,14 +20,7 @@
  */
 package eu.europa.esig.dss.xades.extension;
 
-import java.io.File;
-import java.util.Date;
-
-import eu.europa.esig.dss.DSSDocument;
-import eu.europa.esig.dss.FileDocument;
-import eu.europa.esig.dss.SignatureAlgorithm;
-import eu.europa.esig.dss.SignatureValue;
-import eu.europa.esig.dss.ToBeSigned;
+import eu.europa.esig.dss.*;
 import eu.europa.esig.dss.extension.AbstractTestExtension;
 import eu.europa.esig.dss.signature.DocumentSignatureService;
 import eu.europa.esig.dss.signature.SignaturePackaging;
@@ -38,7 +31,12 @@ import eu.europa.esig.dss.validation.CertificateVerifier;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.xades.XAdESSignatureParameters;
 import eu.europa.esig.dss.xades.signature.XAdESService;
+import org.junit.Ignore;
 
+import java.io.File;
+import java.util.Date;
+
+@Ignore
 public abstract class AbstractTestXAdESExtension extends AbstractTestExtension<XAdESSignatureParameters> {
 
 	@Override

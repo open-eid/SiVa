@@ -6,12 +6,14 @@ import eu.europa.esig.dss.client.http.NativeHTTPDataLoader;
 import eu.europa.esig.dss.x509.CertificateToken;
 import eu.europa.esig.dss.x509.OCSPToken;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
 
 import static org.junit.Assert.assertNotNull;
 
+@Ignore
 public class OnlineOCSPSourceTest {
 
 	private CertificateToken certificateToken;

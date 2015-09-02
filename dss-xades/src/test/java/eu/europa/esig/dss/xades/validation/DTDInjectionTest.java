@@ -1,21 +1,22 @@
 package eu.europa.esig.dss.xades.validation;
 
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-
-import org.apache.commons.lang.StringUtils;
-import org.junit.Test;
-
 import eu.europa.esig.dss.FileDocument;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
 import eu.europa.esig.dss.validation.report.DiagnosticData;
 import eu.europa.esig.dss.validation.report.Reports;
+import org.apache.commons.lang.StringUtils;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.io.File;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Unit test added to fix issue : https://esig-dss.atlassian.net/browse/DSS-678
  */
+@Ignore("Turned off by SK PDF Validator")
 public class DTDInjectionTest {
 
 	@Test

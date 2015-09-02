@@ -20,25 +20,7 @@
  */
 package eu.europa.esig.dss.xades.signature;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.util.Arrays;
-import java.util.List;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
-
-import eu.europa.esig.dss.DSSDocument;
-import eu.europa.esig.dss.FileDocument;
-import eu.europa.esig.dss.SignatureAlgorithm;
-import eu.europa.esig.dss.SignatureLevel;
-import eu.europa.esig.dss.SignatureValue;
-import eu.europa.esig.dss.ToBeSigned;
+import eu.europa.esig.dss.*;
 import eu.europa.esig.dss.signature.SignaturePackaging;
 import eu.europa.esig.dss.test.TestUtils;
 import eu.europa.esig.dss.test.gen.CertificateService;
@@ -48,7 +30,21 @@ import eu.europa.esig.dss.validation.SignedDocumentValidator;
 import eu.europa.esig.dss.validation.report.DiagnosticData;
 import eu.europa.esig.dss.validation.report.Reports;
 import eu.europa.esig.dss.xades.XAdESSignatureParameters;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
+import java.io.File;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+@Ignore("Turned off by SK PDF Validator")
 @RunWith(Parameterized.class)
 public class XAdESDoubleSignatureTest {
 

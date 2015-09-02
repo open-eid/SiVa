@@ -1,21 +1,6 @@
 package eu.europa.esig.dss.pades;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.io.File;
-import java.util.Date;
-
-import org.apache.commons.lang.exception.ExceptionUtils;
-import org.junit.Test;
-
-import eu.europa.esig.dss.DSSDocument;
-import eu.europa.esig.dss.DSSException;
-import eu.europa.esig.dss.FileDocument;
-import eu.europa.esig.dss.SignatureAlgorithm;
-import eu.europa.esig.dss.SignatureLevel;
-import eu.europa.esig.dss.SignatureValue;
-import eu.europa.esig.dss.ToBeSigned;
+import eu.europa.esig.dss.*;
 import eu.europa.esig.dss.pades.signature.PAdESService;
 import eu.europa.esig.dss.signature.DocumentSignatureService;
 import eu.europa.esig.dss.signature.SignaturePackaging;
@@ -23,7 +8,17 @@ import eu.europa.esig.dss.test.TestUtils;
 import eu.europa.esig.dss.test.gen.CertificateService;
 import eu.europa.esig.dss.test.mock.MockPrivateKeyEntry;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.junit.Ignore;
+import org.junit.Test;
 
+import java.io.File;
+import java.util.Date;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+@Ignore
 public class PAdESLevelBNotEnoughSpaceForSignatureTest {
 
 	@Test

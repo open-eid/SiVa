@@ -1,13 +1,5 @@
 package known.issues.DSS646;
 
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.junit.Test;
-
 import eu.europa.esig.dss.DSSDocument;
 import eu.europa.esig.dss.FileDocument;
 import eu.europa.esig.dss.SignatureAlgorithm;
@@ -20,10 +12,19 @@ import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
 import eu.europa.esig.dss.validation.report.DiagnosticData;
 import eu.europa.esig.dss.validation.report.Reports;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Unit test to fix issue https://esig-dss.atlassian.net/browse/DSS-646
  */
+@Ignore
 public class ExtendToCAdESLtaTest {
 
 	private static final String SIGNED_DOC_PATH = "src/test/resources/validation/dss-646/CAdES_A_DETACHED.csig";

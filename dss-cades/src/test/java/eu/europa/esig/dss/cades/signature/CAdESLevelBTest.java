@@ -20,53 +20,7 @@
  */
 package eu.europa.esig.dss.cades.signature;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.crypto.Cipher;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.xml.security.utils.Base64;
-import org.bouncycastle.asn1.ASN1InputStream;
-import org.bouncycastle.asn1.ASN1Integer;
-import org.bouncycastle.asn1.ASN1ObjectIdentifier;
-import org.bouncycastle.asn1.ASN1OctetString;
-import org.bouncycastle.asn1.ASN1Primitive;
-import org.bouncycastle.asn1.ASN1Sequence;
-import org.bouncycastle.asn1.ASN1Set;
-import org.bouncycastle.asn1.ASN1TaggedObject;
-import org.bouncycastle.asn1.DERTaggedObject;
-import org.bouncycastle.asn1.cms.ContentInfo;
-import org.bouncycastle.asn1.cms.IssuerAndSerialNumber;
-import org.bouncycastle.asn1.cms.SignedData;
-import org.bouncycastle.asn1.cms.SignerIdentifier;
-import org.bouncycastle.asn1.cms.SignerInfo;
-import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
-import org.bouncycastle.asn1.x509.DigestInfo;
-import org.bouncycastle.cert.X509CertificateHolder;
-import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.util.encoders.Hex;
-import org.junit.Before;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import eu.europa.esig.dss.DSSDocument;
-import eu.europa.esig.dss.DSSUtils;
-import eu.europa.esig.dss.DigestAlgorithm;
-import eu.europa.esig.dss.InMemoryDocument;
-import eu.europa.esig.dss.MimeType;
-import eu.europa.esig.dss.SignatureAlgorithm;
-import eu.europa.esig.dss.SignatureLevel;
+import eu.europa.esig.dss.*;
 import eu.europa.esig.dss.cades.CAdESSignatureParameters;
 import eu.europa.esig.dss.cades.validation.CAdESSignature;
 import eu.europa.esig.dss.signature.AbstractTestSignature;
@@ -76,7 +30,33 @@ import eu.europa.esig.dss.test.gen.CertificateService;
 import eu.europa.esig.dss.test.mock.MockPrivateKeyEntry;
 import eu.europa.esig.dss.validation.CertificateVerifier;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.xml.security.utils.Base64;
+import org.bouncycastle.asn1.*;
+import org.bouncycastle.asn1.cms.*;
+import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
+import org.bouncycastle.asn1.x509.DigestInfo;
+import org.bouncycastle.cert.X509CertificateHolder;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.util.encoders.Hex;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.crypto.Cipher;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import static org.junit.Assert.*;
+
+@Ignore
 public class CAdESLevelBTest extends AbstractTestSignature {
 
 	private static final String HELLO_WORLD = "Hello World";

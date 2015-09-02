@@ -20,23 +20,7 @@
  */
 package eu.europa.esig.dss.xades.signature;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.Date;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.IOUtils;
-import org.junit.Before;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import eu.europa.esig.dss.DSSDocument;
-import eu.europa.esig.dss.DSSUtils;
-import eu.europa.esig.dss.DigestAlgorithm;
-import eu.europa.esig.dss.DigestDocument;
-import eu.europa.esig.dss.MimeType;
-import eu.europa.esig.dss.SignatureAlgorithm;
-import eu.europa.esig.dss.SignatureLevel;
+import eu.europa.esig.dss.*;
 import eu.europa.esig.dss.signature.AbstractTestSignature;
 import eu.europa.esig.dss.signature.DocumentSignatureService;
 import eu.europa.esig.dss.signature.SignaturePackaging;
@@ -45,7 +29,18 @@ import eu.europa.esig.dss.test.mock.MockPrivateKeyEntry;
 import eu.europa.esig.dss.validation.CertificateVerifier;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.xades.XAdESSignatureParameters;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.Date;
+
+@Ignore
 public class XAdESLevelBEnvelopingDigestDocumentTest extends AbstractTestSignature {
 
 	private static final Logger logger = LoggerFactory.getLogger(XAdESLevelBEnvelopingDigestDocumentTest.class);

@@ -1,22 +1,19 @@
 package eu.europa.esig.dss.pades;
 
-import static org.junit.Assert.assertEquals;
-
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import eu.europa.esig.dss.pdf.PdfDssDict;
 import eu.europa.esig.dss.pdf.PdfSignatureOrDocTimestampInfo;
 import eu.europa.esig.dss.pdf.PdfSignatureOrDocTimestampInfoComparator;
 import eu.europa.esig.dss.validation.SignatureCryptographicVerification;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 
+import java.security.cert.X509Certificate;
+import java.util.*;
+
+import static org.junit.Assert.assertEquals;
+
+@Ignore
 public class PdfSignatureOrDocTimestampInfoComparatorTest {
 
 	private MockPdfSignature mock0;

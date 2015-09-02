@@ -1,17 +1,5 @@
 package plugtests;
 
-import static org.junit.Assert.assertNotNull;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-
-import org.apache.commons.io.FileUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
-
 import eu.europa.esig.dss.FileDocument;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
@@ -19,10 +7,23 @@ import eu.europa.esig.dss.validation.report.DetailedReport;
 import eu.europa.esig.dss.validation.report.DiagnosticData;
 import eu.europa.esig.dss.validation.report.Reports;
 import eu.europa.esig.dss.validation.report.SimpleReport;
+import org.apache.commons.io.FileUtils;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * This test is only to ensure that we don't have exception with valid? files
  */
+@Ignore("Turned off by SK PDF Validator")
 @RunWith(Parameterized.class)
 public class ETSISamplesValidationTest {
 

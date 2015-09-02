@@ -20,16 +20,7 @@
  */
 package eu.europa.esig.dss.cades.signature;
 
-import java.util.Date;
-
-import org.junit.Before;
-
-import eu.europa.esig.dss.DSSDocument;
-import eu.europa.esig.dss.DigestAlgorithm;
-import eu.europa.esig.dss.InMemoryDocument;
-import eu.europa.esig.dss.MimeType;
-import eu.europa.esig.dss.SignatureAlgorithm;
-import eu.europa.esig.dss.SignatureLevel;
+import eu.europa.esig.dss.*;
 import eu.europa.esig.dss.cades.CAdESSignatureParameters;
 import eu.europa.esig.dss.signature.AbstractTestSignature;
 import eu.europa.esig.dss.signature.DocumentSignatureService;
@@ -38,7 +29,12 @@ import eu.europa.esig.dss.test.gen.CertificateService;
 import eu.europa.esig.dss.test.mock.MockPrivateKeyEntry;
 import eu.europa.esig.dss.validation.CertificateVerifier;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
+import org.junit.Before;
+import org.junit.Ignore;
 
+import java.util.Date;
+
+@Ignore
 public class CAdESLevelBSHA512Test extends AbstractTestSignature {
 
 	private static final String HELLO_WORLD = "Hello World";

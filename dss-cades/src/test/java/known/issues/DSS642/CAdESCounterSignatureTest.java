@@ -20,41 +20,7 @@
  */
 package known.issues.DSS642;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.io.InputStream;
-import java.security.GeneralSecurityException;
-import java.util.Collection;
-import java.util.List;
-
-import org.apache.commons.io.IOUtils;
-import org.bouncycastle.asn1.cms.Attribute;
-import org.bouncycastle.asn1.cms.AttributeTable;
-import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
-import org.bouncycastle.cms.CMSSignedData;
-import org.bouncycastle.cms.SignerId;
-import org.bouncycastle.cms.SignerInformation;
-import org.bouncycastle.cms.SignerInformationStore;
-import org.bouncycastle.cms.SignerInformationVerifier;
-import org.bouncycastle.cms.SignerInformationVerifierProvider;
-import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoVerifierBuilder;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.operator.OperatorCreationException;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import eu.europa.esig.dss.DSSDocument;
-import eu.europa.esig.dss.FileDocument;
-import eu.europa.esig.dss.SignatureAlgorithm;
-import eu.europa.esig.dss.SignatureLevel;
-import eu.europa.esig.dss.SignatureValue;
-import eu.europa.esig.dss.ToBeSigned;
-import eu.europa.esig.dss.XmlDom;
+import eu.europa.esig.dss.*;
 import eu.europa.esig.dss.cades.CAdESSignatureParameters;
 import eu.europa.esig.dss.cades.signature.CAdESService;
 import eu.europa.esig.dss.signature.SignaturePackaging;
@@ -68,7 +34,28 @@ import eu.europa.esig.dss.validation.SignedDocumentValidator;
 import eu.europa.esig.dss.validation.policy.rules.AttributeValue;
 import eu.europa.esig.dss.validation.report.DiagnosticData;
 import eu.europa.esig.dss.validation.report.Reports;
+import org.apache.commons.io.IOUtils;
+import org.bouncycastle.asn1.cms.Attribute;
+import org.bouncycastle.asn1.cms.AttributeTable;
+import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
+import org.bouncycastle.cms.*;
+import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoVerifierBuilder;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.operator.OperatorCreationException;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.InputStream;
+import java.security.GeneralSecurityException;
+import java.util.Collection;
+import java.util.List;
+
+import static org.junit.Assert.*;
+
+@Ignore
 public class CAdESCounterSignatureTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(CAdESCounterSignatureTest.class);

@@ -20,17 +20,7 @@
  */
 package eu.europa.esig.dss.asic.signature.asics;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.Date;
-
-import org.junit.Before;
-
-import eu.europa.esig.dss.DSSDocument;
-import eu.europa.esig.dss.InMemoryDocument;
-import eu.europa.esig.dss.MimeType;
-import eu.europa.esig.dss.SignatureAlgorithm;
-import eu.europa.esig.dss.SignatureLevel;
+import eu.europa.esig.dss.*;
 import eu.europa.esig.dss.asic.ASiCSignatureParameters;
 import eu.europa.esig.dss.asic.signature.ASiCService;
 import eu.europa.esig.dss.signature.AbstractTestSignature;
@@ -42,7 +32,14 @@ import eu.europa.esig.dss.validation.CertificateVerifier;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.validation.report.DiagnosticData;
 import eu.europa.esig.dss.x509.SignatureForm;
+import org.junit.Before;
+import org.junit.Ignore;
 
+import java.util.Date;
+
+import static org.junit.Assert.assertEquals;
+
+@Ignore
 public class ASiCSLevelBCAdESTest extends AbstractTestSignature {
 
 	private DocumentSignatureService<ASiCSignatureParameters> service;

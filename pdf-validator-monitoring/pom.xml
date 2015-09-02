@@ -13,7 +13,7 @@
 
     <artifactId>pdf-validator-monitoring</artifactId>
     <name>SK PDF Validator Monitoring Service</name>
-    <description>PF Validator monitoring web service</description>
+    <description>PDF Validator monitoring web service</description>
 
     <dependencies>
         <!-- Spring Boot starter POMs -->
@@ -46,12 +46,13 @@
         </dependency>
 
         <!-- For documenting configuration properties -->
+        <!--
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
-
+        -->
     </dependencies>
     <build>
         <plugins>

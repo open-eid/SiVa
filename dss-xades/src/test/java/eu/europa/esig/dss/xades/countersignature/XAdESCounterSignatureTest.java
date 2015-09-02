@@ -20,31 +20,7 @@
  */
 package eu.europa.esig.dss.xades.countersignature;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.security.GeneralSecurityException;
-import java.util.List;
-
-import org.apache.commons.io.IOUtils;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-
-import eu.europa.esig.dss.DSSDocument;
-import eu.europa.esig.dss.DSSXMLUtils;
-import eu.europa.esig.dss.FileDocument;
-import eu.europa.esig.dss.SignatureAlgorithm;
-import eu.europa.esig.dss.SignatureLevel;
-import eu.europa.esig.dss.SignatureValue;
-import eu.europa.esig.dss.ToBeSigned;
-import eu.europa.esig.dss.XPathQueryHolder;
-import eu.europa.esig.dss.XmlDom;
+import eu.europa.esig.dss.*;
 import eu.europa.esig.dss.signature.SignaturePackaging;
 import eu.europa.esig.dss.test.TestUtils;
 import eu.europa.esig.dss.test.gen.CertificateService;
@@ -58,7 +34,22 @@ import eu.europa.esig.dss.validation.report.DiagnosticData;
 import eu.europa.esig.dss.validation.report.Reports;
 import eu.europa.esig.dss.xades.XAdESSignatureParameters;
 import eu.europa.esig.dss.xades.signature.XAdESService;
+import org.apache.commons.io.IOUtils;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 
+import java.io.File;
+import java.security.GeneralSecurityException;
+import java.util.List;
+
+import static org.junit.Assert.*;
+
+@Ignore("Turned off by SK PDF Validator")
 public class XAdESCounterSignatureTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(XAdESCounterSignatureTest.class);

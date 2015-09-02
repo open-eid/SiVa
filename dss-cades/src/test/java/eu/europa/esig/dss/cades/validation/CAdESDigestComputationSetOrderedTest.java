@@ -20,21 +20,22 @@
  */
 package eu.europa.esig.dss.cades.validation;
 
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
-
 import eu.europa.esig.dss.DSSDocument;
 import eu.europa.esig.dss.FileDocument;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
 import eu.europa.esig.dss.validation.report.DiagnosticData;
 import eu.europa.esig.dss.validation.report.Reports;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Unit test added to fix : https://esig-dss.atlassian.net/browse/DSS-667
  *
  */
+@Ignore
 public class CAdESDigestComputationSetOrderedTest {
 
 	@Test

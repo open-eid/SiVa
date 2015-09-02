@@ -22,7 +22,9 @@ package known.issues.DSS631;
 
 import eu.europa.esig.dss.SignatureLevel;
 import eu.europa.esig.dss.cades.extension.AbstractTestCAdESExtension;
+import org.junit.Ignore;
 
+@Ignore
 public class CAdESExtensionTToLTTest extends AbstractTestCAdESExtension {
 
 	@Override

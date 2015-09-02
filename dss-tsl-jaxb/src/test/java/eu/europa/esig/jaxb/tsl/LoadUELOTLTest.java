@@ -1,22 +1,19 @@
 package eu.europa.esig.jaxb.tsl;
 
-import static org.junit.Assert.assertNotNull;
-
-import java.io.File;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.JAXBIntrospector;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.namespace.QName;
-
+import org.junit.Ignore;
 import org.junit.Test;
 
+import javax.xml.bind.*;
+import javax.xml.namespace.QName;
+import java.io.File;
+
+import static org.junit.Assert.assertNotNull;
+
 /**
+ *
  * This test loads the UE LOTL
  */
+@Ignore
 public class LoadUELOTLTest {
 
 	@Test

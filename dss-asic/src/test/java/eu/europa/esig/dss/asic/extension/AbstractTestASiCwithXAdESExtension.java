@@ -20,13 +20,7 @@
  */
 package eu.europa.esig.dss.asic.extension;
 
-import java.util.Date;
-
-import eu.europa.esig.dss.DSSDocument;
-import eu.europa.esig.dss.InMemoryDocument;
-import eu.europa.esig.dss.SignatureAlgorithm;
-import eu.europa.esig.dss.SignatureValue;
-import eu.europa.esig.dss.ToBeSigned;
+import eu.europa.esig.dss.*;
 import eu.europa.esig.dss.asic.ASiCSignatureParameters;
 import eu.europa.esig.dss.asic.signature.ASiCService;
 import eu.europa.esig.dss.extension.AbstractTestExtension;
@@ -38,6 +32,8 @@ import eu.europa.esig.dss.test.mock.MockTSPSource;
 import eu.europa.esig.dss.validation.CertificateVerifier;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.x509.SignatureForm;
+
+import java.util.Date;
 
 public abstract class AbstractTestASiCwithXAdESExtension extends AbstractTestExtension {
 

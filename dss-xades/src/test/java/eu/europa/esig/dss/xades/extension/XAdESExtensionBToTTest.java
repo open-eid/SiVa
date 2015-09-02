@@ -21,7 +21,9 @@
 package eu.europa.esig.dss.xades.extension;
 
 import eu.europa.esig.dss.SignatureLevel;
+import org.junit.Ignore;
 
+@Ignore
 public class XAdESExtensionBToTTest extends AbstractTestXAdESExtension {
 
 	@Override

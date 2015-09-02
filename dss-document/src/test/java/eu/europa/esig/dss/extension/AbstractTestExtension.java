@@ -20,28 +20,22 @@
  */
 package eu.europa.esig.dss.extension;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.security.GeneralSecurityException;
-import java.security.Signature;
-
-import org.junit.Test;
-
-import eu.europa.esig.dss.AbstractSignatureParameters;
-import eu.europa.esig.dss.DSSDocument;
-import eu.europa.esig.dss.SignatureAlgorithm;
-import eu.europa.esig.dss.SignatureLevel;
-import eu.europa.esig.dss.SignatureValue;
-import eu.europa.esig.dss.ToBeSigned;
+import eu.europa.esig.dss.*;
 import eu.europa.esig.dss.signature.DocumentSignatureService;
 import eu.europa.esig.dss.test.mock.MockPrivateKeyEntry;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
 import eu.europa.esig.dss.validation.report.DiagnosticData;
 import eu.europa.esig.dss.validation.report.Reports;
+import org.junit.Ignore;
+import org.junit.Test;
 
+import java.security.GeneralSecurityException;
+import java.security.Signature;
+
+import static org.junit.Assert.*;
+
+@Ignore
 public abstract class AbstractTestExtension<SP extends AbstractSignatureParameters> {
 
 	protected abstract DSSDocument getSignedDocument() throws Exception;

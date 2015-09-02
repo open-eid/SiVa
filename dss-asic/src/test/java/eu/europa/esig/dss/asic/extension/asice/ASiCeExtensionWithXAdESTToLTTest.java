@@ -22,7 +22,9 @@ package eu.europa.esig.dss.asic.extension.asice;
 
 import eu.europa.esig.dss.SignatureLevel;
 import eu.europa.esig.dss.asic.extension.AbstractTestASiCwithXAdESExtension;
+import org.junit.Ignore;
 
+@Ignore
 public class ASiCeExtensionWithXAdESTToLTTest extends AbstractTestASiCwithXAdESExtension {
 
 	@Override

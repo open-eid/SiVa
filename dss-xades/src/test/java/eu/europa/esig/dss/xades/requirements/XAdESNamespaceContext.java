@@ -1,9 +1,11 @@
 package eu.europa.esig.dss.xades.requirements;
 
-import java.util.Iterator;
+import org.junit.Ignore;
 
 import javax.xml.namespace.NamespaceContext;
+import java.util.Iterator;
 
+@Ignore
 public class XAdESNamespaceContext implements NamespaceContext {
 
 	@Override

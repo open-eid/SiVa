@@ -134,9 +134,9 @@
 						</goals>
 						<configuration>
 							<skipTests>false</skipTests>
-							<testFailureIgnore>false</testFailureIgnore>		
+							<testFailureIgnore>false</testFailureIgnore>
 							<includes>
-								<include>eu/**/*Test.java</include>	
+								<include>eu/**/*Test.java</include>
 							</includes>
 						</configuration>
 					</execution>
@@ -148,9 +148,9 @@
 						</goals>
 						<configuration>
 							<skipTests>false</skipTests>
-							<testFailureIgnore>true</testFailureIgnore>		
+							<testFailureIgnore>true</testFailureIgnore>
 							<includes>
-								<include>plugtests/**/*Test.java</include>	
+								<include>plugtests/**/*Test.java</include>
 							</includes>
 						</configuration>
 					</execution>
@@ -162,9 +162,9 @@
 						</goals>
 						<configuration>
 							<skipTests>false</skipTests>
-							<testFailureIgnore>true</testFailureIgnore>						
+							<testFailureIgnore>true</testFailureIgnore>
 							<includes>
-								<include>known/issues/**/*Test.java</include>	
+								<include>known/issues/**/*Test.java</include>
 							</includes>
 						</configuration>
 					</execution>

@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 public class SignatureCryptographicAlgorithmTests extends PdfValidatorSoapTests {
 
     @Test
-    public void DocumentSignedWithSha512CertifikateShouldPass() {
+    public void documentSignedWithSha512CertificateShouldPass() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha512.pdf"))).
                 andReturn().body().asString();
 
@@ -16,7 +16,7 @@ public class SignatureCryptographicAlgorithmTests extends PdfValidatorSoapTests 
     }
 
     @Test
-    public void DocumentSignedWithSha1CertifikateShouldPass() {
+    public void documentSignedWithSha1CertificateShouldPass() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha1.pdf"))).
                 andReturn().body().asString();
 
@@ -25,7 +25,7 @@ public class SignatureCryptographicAlgorithmTests extends PdfValidatorSoapTests 
 
     @Ignore // current test file's signature doesn't contain ocsp
     @Test
-    public void DocumentSignedWithSha256EcdsaAlgoShouldPass() {
+    public void documentSignedWithSha256EcdsaAlgoShouldPass() {
         String httpBody = post(validationRequestFor(readFile("hellopades-ecdsa.pdf"))).
                 andReturn().body().asString();
 
@@ -33,7 +33,7 @@ public class SignatureCryptographicAlgorithmTests extends PdfValidatorSoapTests 
     }
 
     @Test
-    public void DocumentSignedWithSha256Ec224AlgoShouldPass() {
+    public void documentSignedWithSha256Ec224AlgoShouldPass() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-ec224.pdf"))).
                 andReturn().body().asString();
 
@@ -41,7 +41,7 @@ public class SignatureCryptographicAlgorithmTests extends PdfValidatorSoapTests 
     }
 
     @Test
-    public void DocumentSignedWithSha256Ec256AlgoShouldPass() {
+    public void documentSignedWithSha256Ec256AlgoShouldPass() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-ec256.pdf"))).
                 andReturn().body().asString();
 
@@ -49,7 +49,7 @@ public class SignatureCryptographicAlgorithmTests extends PdfValidatorSoapTests 
     }
 
     @Test
-    public void DocumentSignedWithSha256Rsa1024AlgoShouldPass() {
+    public void documentSignedWithSha256Rsa1024AlgoShouldPass() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-rsa1024.pdf"))).
                 andReturn().body().asString();
 
@@ -57,7 +57,7 @@ public class SignatureCryptographicAlgorithmTests extends PdfValidatorSoapTests 
     }
 
     @Test
-    public void DocumentSignedWithRsa1023AlgoShouldPass() {
+    public void documentSignedWithRsa1023AlgoShouldPass() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-rsa1023.pdf"))).
                 andReturn().body().asString();
 
@@ -65,7 +65,7 @@ public class SignatureCryptographicAlgorithmTests extends PdfValidatorSoapTests 
     }
 
     @Test
-    public void DocumentSignedWithRsa2047AlgoShouldPass() {
+    public void documentSignedWithRsa2047AlgoShouldPass() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-rsa2047.pdf"))).
                 andReturn().body().asString();
 
@@ -73,7 +73,7 @@ public class SignatureCryptographicAlgorithmTests extends PdfValidatorSoapTests 
     }
 
     @Test
-    public void DocumentSignedWithRsa2048AlgoShouldPass() {
+    public void documentSignedWithRsa2048AlgoShouldPass() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-rsa2048.pdf"))).
                 andReturn().body().asString();
 

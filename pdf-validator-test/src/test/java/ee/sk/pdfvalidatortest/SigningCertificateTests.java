@@ -7,20 +7,14 @@ import static org.junit.Assert.assertEquals;
 
 public class SigningCertificateTests extends PdfValidatorSoapTests {
 
-    @Ignore // current test file's signature doesn't contain ocsp
     @Test
-    public void CertificateExpired5DaysAfterDocumentSigningShouldPass() {
-        String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-rsa1024-5d.pdf"))).
-                andReturn().body().asString();
-
-        assertEquals(1, validSignatures(simpleReport(httpBody)));
-    }
-
-    @Test
-    public void CertificateExpiredBeforeDocumentSigningShouldFail() {
+    public void certificateExpiredBeforeDocumentSigningShouldFail() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-rsa1024-sha1-expired.pdf"))).
                 andReturn().body().asString();
 
+        assertEquals(
+                "The current time is not in the validity range of the signer's certificate.",
+                findErrorById("BBB_XCV_ICTIVRSC_ANS", detailedReport(httpBody)));
         assertEquals(0, validSignatures(simpleReport(httpBody)));
     }
 
@@ -33,14 +27,15 @@ public class SigningCertificateTests extends PdfValidatorSoapTests {
     }
 
     @Test
-    public void CertificateExpired7DaysAfterDocumentSigningShouldPass() {
+    public void certificateExpired7DaysAfterDocumentSigningShouldPass() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-rsa2048-7d.pdf"))).
                 andReturn().body().asString();
 
         assertEquals(1, validSignatures(simpleReport(httpBody)));
     }
 
-    @Test @Ignore("TODO: when we get a PDF file for the same test case, use that one instead of this ASiC file")
+    @Ignore("TODO: when we get a PDF file for the same test case, use that one instead of this ASiC file")
+    @Test
     public void signaturesMadeWithExpiredSigningCertificatesAreInvalid() {
         String httpBody = post(validationRequestFor(readFile("IB-3691_bdoc21-TS-old-cert.bdoc"))).
                 andReturn().body().asString();
@@ -48,8 +43,9 @@ public class SigningCertificateTests extends PdfValidatorSoapTests {
         assertEquals(0, validSignatures(simpleReport(httpBody)));
     }
 
+    @Ignore // current test file's signature doesn't contain ocsp
     @Test
-    public void DocumentSignedWithRevokedCertificateShouldFail() {
+    public void documentSignedWithRevokedCertificateShouldFail() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-revoked.pdf"))).
                 andReturn().body().asString();
 
@@ -67,10 +63,13 @@ public class SigningCertificateTests extends PdfValidatorSoapTests {
     }
 
     @Test
-    public void DocumentWithoutNonRepudiationKeyUsageAttributeShouldFail() {
+    public void signingCertificateWithoutNonRepudiationKeyUsageAttributeShouldFail() {
         String httpBody = post(validationRequestFor(readFile("hellopades-pades-lt-sha256-auth.pdf"))).
                 andReturn().body().asString();
 
+        assertEquals(
+                "The signer's certificate has not expected key-usage!",
+                findErrorById("BBB_XCV_ISCGKU_ANS", detailedReport(httpBody)));
         assertEquals(0, validSignatures(simpleReport(httpBody)));
     }
 

@@ -1,6 +1,5 @@
 package ee.sk.pdfvalidatortest;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -36,11 +35,10 @@ public class SignatureRevocationValueTests extends PdfValidatorSoapTests {
 
         assertEquals(0, validSignatures(simpleReport(httpBody)));
     }
-
-    @Ignore // needs test file
+    
     @Test
     public void documentSignedWithOcspTimeValueBeforeBestSignatureTimeShouldFail() {
-        String httpBody = post(validationRequestFor(readFile("some_pdf_file"))).
+        String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-rsa2048-ocsp-before-ts.pdf"))).
                 andReturn().body().asString();
 
         assertEquals(

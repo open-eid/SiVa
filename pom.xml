@@ -35,7 +35,8 @@
 		<module>pdf-validator-test</module>
         <module>pdf-validator-monitoring</module>
         <module>pdf-validator-distribution</module>
-    </modules>
+		<module>pdf-validator-keystore-generator</module>
+	</modules>
 
 	<developers>
 		<developer>

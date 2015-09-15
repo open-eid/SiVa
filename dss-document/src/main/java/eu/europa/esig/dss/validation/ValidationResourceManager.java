@@ -20,26 +20,25 @@
  */
 package eu.europa.esig.dss.validation;
 
-import java.io.InputStream;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-
 import eu.europa.esig.dss.DSSException;
 import eu.europa.esig.dss.DSSXMLUtils;
 import eu.europa.esig.dss.jaxb.diagnostic.DiagnosticData;
 import eu.europa.esig.dss.jaxb.diagnostic.ObjectFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import java.io.InputStream;
 
 public class ValidationResourceManager {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ValidationResourceManager.class);
 
 	public static String defaultPolicyConstraintsLocation = "/policy/constraint.xml";
+	public static String tslPolicyConstraintsLocation = "/policy/constraint.xml";
 	public static String defaultCountersignaturePolicyConstraintsLocation = "/policy/countersignature-constraint.xml";
 	public static String defaultPolicyXsdLocation = "/policy/policy.xsd";
 

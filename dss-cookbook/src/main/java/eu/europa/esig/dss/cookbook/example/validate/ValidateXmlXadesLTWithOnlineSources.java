@@ -37,6 +37,7 @@ import eu.europa.esig.dss.validation.report.DetailedReport;
 import eu.europa.esig.dss.validation.report.Reports;
 import eu.europa.esig.dss.validation.report.SimpleReport;
 import eu.europa.esig.dss.x509.CertificateToken;
+import eu.europa.esig.dss.x509.KeyStoreCertificateSource;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -82,7 +83,8 @@ public class ValidateXmlXadesLTWithOnlineSources extends Cookbook {
 		certificateSource.setCheckSignature(true);
 		certificateSource.setDataLoader(fileCacheDataLoader);
 		certificateSource.setTslRefreshPolicy(TSLRefreshPolicy.NEVER);
-		certificateSource.setLotlCertificate("file:/" + getPathFromResource("/lotl.cer"));
+		KeyStoreCertificateSource keyStoreCertificateSource = new KeyStoreCertificateSource(new File("src/main/resources/keystore.jks"), "dss-password");
+		certificateSource.setKeyStoreCertificateSource(keyStoreCertificateSource );
 		certificateSource.init();
 
 		certificateSource.addCertificate(trustedCertificate, new MockServiceInfo());

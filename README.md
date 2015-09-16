@@ -1,7 +1,7 @@
 PDF Valdiator
 =============
 
-Used for validating PDF digital signature container files (according to Estonians laws).
+Used for validating PDF digital signature container files.
 This project depends on Digital Signature Service (DSS), Github: https://github.com/esig/dss, Project: https://joinup.ec.europa.eu/asset/sd-dss/description
 
 How to build

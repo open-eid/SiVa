@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>sd-dss</artifactId>
+        <artifactId>pdf-validator</artifactId>
         <groupId>eu.europa.ec.joinup.sd-dss</groupId>
         <version>4.5.RC1</version>
     </parent>
@@ -19,6 +19,7 @@
         <dependency>
             <groupId>eu.europa.ec.joinup.sd-dss</groupId>
             <artifactId>pdf-validator-webapp</artifactId>
+			<version>${project.version}</version>
             <type>war</type>
         </dependency>
         <dependency>
@@ -42,7 +43,6 @@
         <plugins>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.5.5</version>
                 <executions>
                     <execution>
                         <id>make-bundles</id>

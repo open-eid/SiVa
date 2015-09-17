@@ -1,3 +1,6 @@
 [submodule "sd-dss"]
 	path = sd-dss
 	url = ../VAL/Lib/dss.git
+[submodule "maven-local-repo"]
+	path = maven-local-repo
+	url = ../VAL/Lib/pdfValidatorMavenLocalRepo.git

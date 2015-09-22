@@ -1,5 +1,6 @@
 package ee.sk.pdfvalidatortest;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -18,9 +19,10 @@ public class BaselineProfileTests extends PdfValidatorSoapTests {
 
     }
 
+    @Ignore
     @Test // need non-plugtest test file
     public void baselineProfileTDocumentShouldFail() {
-        String httpBody = post(validationRequestFor(readFile("Signature-P-EE_AS-5.pdf"))).
+        String httpBody = post(validationRequestFor(readFile("some_file.pdf"))).
                 andReturn().body().asString();
 
         assertEquals(
@@ -38,9 +40,10 @@ public class BaselineProfileTests extends PdfValidatorSoapTests {
 
     }
 
+    @Ignore
     @Test // need non-plugtest test file
     public void baselineProfileLTADocumentShouldPass() {
-        String httpBody = post(validationRequestFor(readFile("Signature-P-EE_AS-7.pdf"))).
+        String httpBody = post(validationRequestFor(readFile("some_file.pdf"))).
                 andReturn().body().asString();
 
         assertEquals(1, validSignatures(simpleReport(httpBody)));

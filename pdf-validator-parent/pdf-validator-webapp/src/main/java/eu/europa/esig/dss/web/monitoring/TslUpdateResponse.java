@@ -3,6 +3,7 @@ package eu.europa.esig.dss.web.monitoring;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
+import java.util.Map;
 
 public class TslUpdateResponse {
 
@@ -13,6 +14,8 @@ public class TslUpdateResponse {
     private Date updateEndTime;
 
     private String updateMessage;
+
+    private Map<String, String> loadingInfoPerTslUrls;
 
     @SuppressWarnings("unused")
     public Date getUpdateStartTime() {
@@ -39,6 +42,15 @@ public class TslUpdateResponse {
 
     public void setUpdateMessage(String updateMessage) {
         this.updateMessage = updateMessage;
+    }
+
+    @SuppressWarnings("unused")
+    public Map<String, String> getLoadingInfoPerTslUrls() {
+        return loadingInfoPerTslUrls;
+    }
+
+    public void setLoadingInfoPerTslUrls(Map<String, String> loadingInfoPerTslUrls) {
+        this.loadingInfoPerTslUrls = loadingInfoPerTslUrls;
     }
 }
 

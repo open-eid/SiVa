@@ -20,6 +20,7 @@ public class MonitoringInfo {
         tslUpdateResponse.setUpdateEndTime(reloadableTrustedListCertificateSource.getUpdateEndTime());
         tslUpdateResponse.setUpdateStartTime(reloadableTrustedListCertificateSource.getUpdateStartDate());
         tslUpdateResponse.setUpdateMessage(reloadableTrustedListCertificateSource.getTslUpdateMessage());
+        tslUpdateResponse.setLoadingInfoPerTslUrls(reloadableTrustedListCertificateSource.getDiagnosticInfo());
 
         return tslUpdateResponse;
     }

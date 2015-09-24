@@ -15,7 +15,7 @@ public class TslUpdateResponse {
 
     private String updateMessage;
 
-    private Map<String, String> loadingInfoPerTslUrls;
+    private Map<String, TslDiagnosticInfo> diagnosticInfoPerTslUrls;
 
     @SuppressWarnings("unused")
     public Date getUpdateStartTime() {
@@ -45,12 +45,12 @@ public class TslUpdateResponse {
     }
 
     @SuppressWarnings("unused")
-    public Map<String, String> getLoadingInfoPerTslUrls() {
-        return loadingInfoPerTslUrls;
+    public Map<String, TslDiagnosticInfo> getDiagnosticInfoPerTslUrls() {
+        return diagnosticInfoPerTslUrls;
     }
 
-    public void setLoadingInfoPerTslUrls(Map<String, String> loadingInfoPerTslUrls) {
-        this.loadingInfoPerTslUrls = loadingInfoPerTslUrls;
+    public void setDiagnosticInfoPerTslUrls(Map<String, TslDiagnosticInfo> diagnosticInfoPerTslUrls) {
+        this.diagnosticInfoPerTslUrls = diagnosticInfoPerTslUrls;
     }
 }
 

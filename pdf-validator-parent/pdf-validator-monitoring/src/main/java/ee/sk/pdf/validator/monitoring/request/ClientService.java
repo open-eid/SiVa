@@ -34,11 +34,7 @@ public class ClientService {
                 .path(path);
 
         try {
-            if (mediaType.equals(MediaType.TEXT_XML)) {
-                return sendRequest(target);
-            } else {
-                return sendJsonRequest(target);
-            }
+            return mediaType.equals(MediaType.TEXT_XML) ? sendRequest(target) : sendJsonRequest(target);
         } catch (ProcessingException ex) {
             getRootCause(ex);
         }

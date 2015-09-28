@@ -1,9 +1,11 @@
 package ee.sk.pdf.validator.monitoring.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import ee.sk.pdf.validator.monitoring.status.ServiceStatus;
 
 import java.util.Date;
+import java.util.Map;
 
 public class TslStatusResponse {
     private ServiceStatus serviceStatus;
@@ -15,39 +17,51 @@ public class TslStatusResponse {
     private Date updateEndTime;
     private String updateMessage;
 
-    public Date getUpdateStartTime() {
+    private Map<String, TslCertificateInfo> tslCertificateInfo;
+
+    public final Date getUpdateStartTime() {
         return updateStartTime;
     }
 
     @SuppressWarnings("unused")
-    public void setUpdateStartTime(Date updateStartTime) {
+    public final void setUpdateStartTime(Date updateStartTime) {
         this.updateStartTime = updateStartTime;
     }
 
-    public Date getUpdateEndTime() {
+    public final Date getUpdateEndTime() {
         return updateEndTime;
     }
 
     @SuppressWarnings("unused")
-    public void setUpdateEndTime(Date updateEndTime) {
+    public final void setUpdateEndTime(Date updateEndTime) {
         this.updateEndTime = updateEndTime;
     }
 
     @SuppressWarnings("unused")
-    public String getUpdateMessage() {
+    public final String getUpdateMessage() {
         return updateMessage;
     }
 
-    public void setUpdateMessage(String updateMessage) {
+    public final void setUpdateMessage(String updateMessage) {
         this.updateMessage = updateMessage;
     }
 
     @SuppressWarnings("unused")
-    public ServiceStatus getServiceStatus() {
+    public final ServiceStatus getServiceStatus() {
         return serviceStatus;
     }
 
-    public void setServiceStatus(ServiceStatus serviceStatus) {
+    public final void setServiceStatus(ServiceStatus serviceStatus) {
         this.serviceStatus = serviceStatus;
+    }
+
+    @JsonProperty("tslCertificateInfo")
+    public final Map<String, TslCertificateInfo> getTslCertificateInfo() {
+        return tslCertificateInfo;
+    }
+
+    @JsonProperty("diagnosticInfoPerTslUrls")
+    public final void setTslCertificateInfo(Map<String, TslCertificateInfo> tslCertificateInfo) {
+        this.tslCertificateInfo = tslCertificateInfo;
     }
 }

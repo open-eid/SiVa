@@ -29,7 +29,7 @@ public class MonitoringInfo {
         return tslUpdateResponse;
     }
 
-    private Map<String, TslDiagnosticInfo> buildJson(Map<String, TrustedListsCertificateSource.DiagnosticInfo> diagnosticInfoPerTslUrls) {
+    protected Map<String, TslDiagnosticInfo> buildJson(Map<String, TrustedListsCertificateSource.DiagnosticInfo> diagnosticInfoPerTslUrls) {
         Map<String, TslDiagnosticInfo> result = new LinkedHashMap<>();
         for (Map.Entry<String, TrustedListsCertificateSource.DiagnosticInfo> entry : diagnosticInfoPerTslUrls.entrySet()) {
             result.put(entry.getKey(), new TslDiagnosticInfo(entry.getValue()));

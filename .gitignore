@@ -16,3 +16,4 @@ ansible
 
 # helper script config files
 helper-scripts.conf
+etc

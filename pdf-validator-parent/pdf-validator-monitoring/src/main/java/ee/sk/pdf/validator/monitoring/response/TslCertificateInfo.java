@@ -1,6 +1,7 @@
 package ee.sk.pdf.validator.monitoring.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,10 +27,12 @@ public class TslCertificateInfo {
         this.loadingDiagnosticInfo = loadingDiagnosticInfo;
     }
 
+    @JsonProperty("signerCertificateValidUntil")
     public final Date getUsedSigningCertificatesValidityEndDates() {
         return usedSigningCertificatesValidityEndDates;
     }
 
+    @JsonProperty("usedSigningCertificatesValidityEndDates")
     public final void setUsedSigningCertificatesValidityEndDates(String[] usedSigningCertificatesValidityEndDates) {
         try {
             this.usedSigningCertificatesValidityEndDates = dateFormat.parse(usedSigningCertificatesValidityEndDates[0]);
@@ -38,10 +41,12 @@ public class TslCertificateInfo {
         }
     }
 
+    @JsonProperty("tslValidUntil")
     public final Date getTslNextUpdate() {
         return tslNextUpdate;
     }
 
+    @JsonProperty("tslNextUpdate")
     public final void setTslNextUpdate(String tslNextUpdate) {
         try {
             if (tslNextUpdate != null) {

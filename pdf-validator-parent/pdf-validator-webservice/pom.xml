@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>pdf-validator-parent</artifactId>
+        <groupId>eu.europa.ec.joinup.sd-dss</groupId>
+        <version>4.5.RC1</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>pdf-validator-webservice</artifactId>
+    <name>SK PDF Validator: Web Service</name>
+	<description>SK PDF Validator: Validator WSDL Web Service</description>
+
+    <properties>
+        <cxf.version>3.0.6</cxf.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+			<groupId>eu.europa.ec.joinup.sd-dss</groupId>
+			<artifactId>dss-webservices</artifactId>
+		</dependency>
+    </dependencies>
+
+</project>

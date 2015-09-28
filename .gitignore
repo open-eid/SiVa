@@ -13,3 +13,9 @@ bin
 Vagrantfile
 ansible
 *.log
+
+# helper script config files
+helper-scripts.conf
+etc
+
+apache-tomcat-*

@@ -1,0 +1,3 @@
+USERNAME='john.smith'
+PASSWORD='password'
+JIRA_URL_PREFIX='s/^/https:\/\/jira.sk.ee\/browse\//'

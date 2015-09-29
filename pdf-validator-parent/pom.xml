@@ -59,7 +59,7 @@
 		<junit.version>4.12</junit.version>
 		<mockito.version>2.0.2-beta</mockito.version>
 		<powermock.version>1.6.2</powermock.version>
-        <dss.version>4.5.RC1</dss.version>
+        <dss.version>4.5.0</dss.version>
 	</properties>
 	
 	<build>

@@ -11,7 +11,7 @@
     <name>PDF Validator Service</name>
 
     <modules>
-	<module>sd-dss</module>
-	<module>pdf-validator-parent</module>
+    	<module>sd-dss</module>
+    	<module>pdf-validator-parent</module>
     </modules>
 </project>

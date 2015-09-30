@@ -6,12 +6,12 @@
 
     <groupId>eu.europa.ec.joinup.sd-dss</groupId>
     <artifactId>pdf-validator</artifactId>
-    <version>4.5.RC1</version>
+    <version>1.0.1.RC1</version>
     <packaging>pom</packaging>
     <name>PDF Validator Service</name>
 
     <modules>
-	<module>sd-dss</module>
-	<module>pdf-validator-parent</module>
+    	<module>sd-dss</module>
+    	<module>pdf-validator-parent</module>
     </modules>
 </project>

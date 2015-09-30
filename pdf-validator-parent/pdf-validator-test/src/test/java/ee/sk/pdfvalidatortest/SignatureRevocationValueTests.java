@@ -1,5 +1,6 @@
 package ee.sk.pdfvalidatortest;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -29,6 +30,7 @@ public class SignatureRevocationValueTests extends PdfValidatorSoapTests {
     }
 
     @Test
+    @Ignore("VAL-98 File size limit exeeded with thsi file")
     public void documentWithNoOcspNorCrlInSignatureShouldFail() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lta-no-ocsp.pdf"))).
                 andReturn().body().asString();

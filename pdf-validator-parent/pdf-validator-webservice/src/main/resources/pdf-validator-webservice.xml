@@ -21,9 +21,7 @@
         <property name="certificateVerifier" ref="certificateVerifier"/>
     </bean>
 
-    <jaxws:endpoint id="validationService" implementor="#dss.validation.validationService" address="/validationService">
-
-    </jaxws:endpoint>
+    <jaxws:endpoint id="validationService" implementor="#dss.validation.validationService" address="/validationService" />
 
     <bean id="certificateVerifier" class="eu.europa.esig.dss.validation.CommonCertificateVerifier">
         <property name="trustedCertSource" ref="trustedListSource"/>

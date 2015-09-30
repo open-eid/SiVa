@@ -3,7 +3,6 @@
 source ./helper-scripts.conf
 
 EXTENSION='.tar.gz'
-PDF_VALIDATOR_VERSION='4.5.RC1'
 TOMCAT_FILENAME=apache-tomcat-${TOMCAT_VERSION}
 TOMCAT_URL=http://www.eu.apache.org/dist/tomcat/tomcat-7/v${TOMCAT_VERSION}/bin/${TOMCAT_FILENAME}${EXTENSION}
 

@@ -12,7 +12,7 @@
 
     <cxf:bus>
         <cxf:properties>
-            <entry key="org.apache.cxf.stax.maxTextLength" value="11500000" />
+            <entry key="org.apache.cxf.stax.maxTextLength" value="15000000" />
         </cxf:properties>
     </cxf:bus>
 

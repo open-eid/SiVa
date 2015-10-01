@@ -57,8 +57,23 @@ public class BaselineProfileTests extends PdfValidatorSoapTests {
         assertEquals(1, validSignatures(simpleReport(httpBody)));
     }
 
+    @Test
+    public void documentMessageDigestAttributeValueDoesNotMatchCalculatedValue() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-lt1-lt2-wrongDigestValue.pdf"))).
+                andReturn().body().asString();
+        System.out.print(httpBody);
+        assertEquals(1, validSignatures(simpleReport(httpBody)));
+    }
+
+    @Test
+    public void documentSignedWithMultipleSignersSerialSignature() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-lt1-lt2-Serial.pdf"))).
+                andReturn().body().asString();
+        System.out.print(httpBody);
+        assertEquals(1, validSignatures(simpleReport(httpBody)));
+    }
+
     protected byte[] readFile(String fileName) {
         return readFileFromTestResources("baseline_profile_test_files/", fileName);
     }
-
 }

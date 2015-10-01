@@ -6,7 +6,7 @@
 
 source ./helper-scripts.conf
 
-LOG_FILE='dss-change.log' 
+LOG_FILE='git-change.log' 
 TASKS_FILE='tasks.txt'
 TASK_TITLES_FILE='task-titles.txt'
 OUTPUT_FILE='tasks-combined.log'

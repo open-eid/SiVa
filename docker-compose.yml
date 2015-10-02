@@ -1,0 +1,8 @@
+pdf-validator-webapp:
+  build: ./pdf-validator-parent/pdf-validator-webapp
+  ports:
+    - "8080:8080"
+pdf-validator-monitoring:
+  build: ./pdf-validator-parent/pdf-validator-monitoring
+  ports:
+    - "9000:9000"

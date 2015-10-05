@@ -73,6 +73,14 @@ public class BaselineProfileTests extends PdfValidatorSoapTests {
         assertEquals(1, validSignatures(simpleReport(httpBody)));
     }
 
+    @Test
+    public void documentSignedWithMultipleSignersParallelSignature() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-lt1-lt2-parallel3.pdf"))).
+                andReturn().body().asString();
+        System.out.print(httpBody);
+        assertEquals(2, validSignatures(simpleReport(httpBody)));
+    }
+
     protected byte[] readFile(String fileName) {
         return readFileFromTestResources("baseline_profile_test_files/", fileName);
     }

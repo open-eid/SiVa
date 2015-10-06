@@ -22,6 +22,8 @@ mkdir -p ${TOMCAT_FILENAME}/conf/Catalina/localhost
 WEBAPP_PATH="$PWD/pdf-validator-parent/pdf-validator-webapp/target/pdf-validator-webapp-${PDF_VALIDATOR_VERSION}"
 MATCH='{webapp_path}'
 WEBAPP_CONFIG_PATH=$PWD/apache-tomcat-${TOMCAT_VERSION}/conf/catalina/localhost
+TEMPLATE_PATH="$PWD/helpers/templates"
 
-cp $PWD/helpers/templates/pdf-validator-webapp.xml $WEBAPP_CONFIG_PATH 
+cp $TEMPLATE_PATH/pdf-validator-webapp.xml $WEBAPP_CONFIG_PATH 
+cp $TEMPLATE_PATH/setenv.sh $PWD/apache-tomcat-${TOMCAT_VERSION}/bin
 sed -i '' "s#$MATCH#$WEBAPP_PATH#g" $WEBAPP_CONFIG_PATH/pdf-validator-webapp.xml 

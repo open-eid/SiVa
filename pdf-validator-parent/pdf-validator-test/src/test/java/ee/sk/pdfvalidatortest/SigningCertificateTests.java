@@ -18,7 +18,7 @@ public class SigningCertificateTests extends PdfValidatorSoapTests {
         assertEquals(0, validSignatures(simpleReport(httpBody)));
     }
 
-    @Test
+    @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
     public void validSignaturesRemainValidAfterSigningCertificateExpires() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-rsa1024-not-expired.pdf"))).
                 andReturn().body().asString();
@@ -26,7 +26,7 @@ public class SigningCertificateTests extends PdfValidatorSoapTests {
         assertEquals(1, validSignatures(simpleReport(httpBody)));
     }
 
-    @Test
+    @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
     public void certificateExpired7DaysAfterDocumentSigningShouldPass() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-rsa2048-7d.pdf"))).
                 andReturn().body().asString();

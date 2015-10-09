@@ -38,7 +38,7 @@ public class SignatureRevocationValueTests extends PdfValidatorSoapTests {
         assertEquals(0, validSignatures(simpleReport(httpBody)));
     }
     
-    @Test
+    @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
     public void documentSignedWithOcspTimeValueBeforeBestSignatureTimeShouldFail() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-rsa2048-ocsp-before-ts.pdf"))).
                 andReturn().body().asString();

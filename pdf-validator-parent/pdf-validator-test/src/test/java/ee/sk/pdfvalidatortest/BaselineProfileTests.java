@@ -57,7 +57,7 @@ public class BaselineProfileTests extends PdfValidatorSoapTests {
         assertEquals(1, validSignatures(simpleReport(httpBody)));
     }
 
-    @Test
+    @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
     public void documentMessageDigestAttributeValueDoesNotMatchCalculatedValue() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt1-lt2-wrongDigestValue.pdf"))).
                 andReturn().body().asString();
@@ -65,12 +65,31 @@ public class BaselineProfileTests extends PdfValidatorSoapTests {
         assertEquals(1, validSignatures(simpleReport(httpBody)));
     }
 
-    @Test
+    @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
     public void documentSignedWithMultipleSignersSerialSignature() {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt1-lt2-Serial.pdf"))).
                 andReturn().body().asString();
         System.out.print(httpBody);
-        assertEquals(1, validSignatures(simpleReport(httpBody)));
+        assertEquals(2, validSignatures(simpleReport(httpBody)));
+    }
+
+    @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
+    public void documentSignedWithMultipleSignersParallelSignature() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-lt1-lt2-parallel3.pdf"))).
+                andReturn().body().asString();
+        System.out.print(httpBody);
+        assertEquals(2, validSignatures(simpleReport(httpBody)));
+    }
+
+    @Test
+    public void ifSignerCertificateIsNotQualifiedAndWithoutSscdItIsRejected() {
+        String httpBody = post(validationRequestFor(readFile("hellopades-lt1-lt2-parallel3.pdf"))).
+                andReturn().body().asString();
+
+        assertEquals(
+                "The certificate is not qualified!",
+                findErrorById("BBB_XCV_CMDCIQC_ANS", simpleReport(httpBody)));
+        assertEquals(0, validSignatures(simpleReport(httpBody)));
     }
 
     protected byte[] readFile(String fileName) {

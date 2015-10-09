@@ -1,0 +1,13 @@
+pdf-validator-webapp:
+  build: ./pdf-validator-parent/pdf-validator-webapp
+  ports:
+    - "8080:8080"
+pdf-validator-monitoring:
+  build: ./pdf-validator-parent/pdf-validator-monitoring
+  environment:
+      MONITORING_HOST: http://${VAL_PDF_VALIDATOR_WEBAPP_1_PORT_8080_TCP_ADDR}:${VAL_PDF_VALIDATOR_WEBAPP_1_PORT_8080_TCP_PORT}
+      MONITORING_INTERVAL: 30000
+  links: 
+    - "pdf-validator-webapp"
+  ports:
+    - "9000:9000"

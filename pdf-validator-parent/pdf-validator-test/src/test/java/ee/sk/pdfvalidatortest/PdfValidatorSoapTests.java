@@ -74,9 +74,9 @@ public abstract class PdfValidatorSoapTests {
         return XmlUtil.parseXml(detailedReportString);
     }
 
-    protected String findErrorById(String errorId, Document detailedReport) {
+    protected String findErrorById(String errorId, Document report) {
         return XmlUtil.findElementByXPath(
-                detailedReport,
+                report,
                 "//d:Error[@NameId='" + errorId + "']",
                 Collections.singletonMap("d", "http://dss.esig.europa.eu/validation/diagnostic")).getTextContent();
     }

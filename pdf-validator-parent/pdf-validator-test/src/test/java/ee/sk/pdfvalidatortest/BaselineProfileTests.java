@@ -70,7 +70,7 @@ public class BaselineProfileTests extends PdfValidatorSoapTests {
         String httpBody = post(validationRequestFor(readFile("hellopades-lt1-lt2-Serial.pdf"))).
                 andReturn().body().asString();
         System.out.print(httpBody);
-        assertEquals(1, validSignatures(simpleReport(httpBody)));
+        assertEquals(2, validSignatures(simpleReport(httpBody)));
     }
 
     @Test

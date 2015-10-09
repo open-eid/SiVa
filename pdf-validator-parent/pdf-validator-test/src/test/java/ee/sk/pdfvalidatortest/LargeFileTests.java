@@ -36,7 +36,7 @@ public class LargeFileTests extends PdfValidatorSoapTests {
     }
     @Test
     public void fourMegabyteFilesWithLtSignatureAreAccepted () {
-        String httpBody = post(validationRequestFor(readFile("egovenrment-benchmark-lt-3-8mb.pdf"))).
+        String httpBody = post(validationRequestFor(readFile("egovernment-benchmark-lt-3-8mb.pdf"))).
                 andReturn().body().asString();
         assertEquals(1, validSignatures(simpleReport(httpBody)));
 

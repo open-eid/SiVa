@@ -1,0 +1,15 @@
+site_name: PDF Validator Documentation 
+theme: readthedocs
+pages:
+  - PDF Validation Service Overview: index.md
+  - Architecture of the Core Service: architecture.md    
+  - Validation Policy: policy.md
+  - Interface description: interface_description.md
+  - Deploying PDF Validator Web Service: deployment.md
+  - TSL file loading without internet: tsl_downloader.md
+  - Generating keystore for LOTL validation (optional): lotl_keystore.md
+  - Logging: logging.md    
+  - Monitoring Service: monitoring.md
+  - Automation testing: testing.md
+  - Known Issues: issues.md
+  - Appendixes: appendix.md

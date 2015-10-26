@@ -1,4 +1,4 @@
-PDF Valdiator
+PDF Validator
 =============
 
 Used for validating PDF digital signature container files.

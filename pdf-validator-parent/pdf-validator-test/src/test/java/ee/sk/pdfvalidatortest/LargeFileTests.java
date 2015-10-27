@@ -1,10 +1,13 @@
 package ee.sk.pdfvalidatortest;
 
+import ee.sk.pdfvalidatortest.configuration.IntegrationTest;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import static org.junit.Assert.assertEquals;
 
+@Category(IntegrationTest.class)
 public class LargeFileTests extends PdfValidatorSoapTests {
 
     @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")

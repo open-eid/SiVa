@@ -1,10 +1,13 @@
 package ee.sk.pdfvalidatortest;
 
+import ee.sk.pdfvalidatortest.configuration.IntegrationTest;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import static org.junit.Assert.assertEquals;
 
+@Category(IntegrationTest.class)
 public class SignatureRevocationValueTests extends PdfValidatorSoapTests {
 
     @Test

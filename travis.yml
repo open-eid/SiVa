@@ -1,0 +1,8 @@
+language: java
+jdk:
+  - openjdk7
+  - oraclejdk7
+before_install:
+  - git submodule update --init --recursive
+install: true
+script: mvn clean package -Dmaven.test.skip.exec

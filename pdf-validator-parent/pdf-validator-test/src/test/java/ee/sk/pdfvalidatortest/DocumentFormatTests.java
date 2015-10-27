@@ -1,12 +1,15 @@
 package ee.sk.pdfvalidatortest;
 
+import ee.sk.pdfvalidatortest.configuration.IntegrationTest;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.w3c.dom.Document;
 
 import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 
+@Category(IntegrationTest.class)
 public class DocumentFormatTests extends PdfValidatorSoapTests {
 	
 	@Test

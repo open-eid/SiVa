@@ -8,7 +8,7 @@ How to build
 ------------
 
 ```bash
- mvn clean install
+mvn clean install -Dmaven.test.skip.exec -DargLine="-Xmx512m"
 ```
 
 Above command will have quite long running time and may run into complications due to DSS tests, to skip these tests run:

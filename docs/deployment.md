@@ -1,17 +1,18 @@
 # Deploying PDF Validator Web Service
 
-System requirements:
+### System requirements:
 
+-  At least **2GB of RAM** on machine where the build is executed
 -  Minimum required Java version is **Java 7u80** but Java 8 is
    recommended
 -  **Maven 3** to build project manually. (Any minor version update to
    Mave 3 should work.)
 -  **Tomcat 7** to run PDF validator web service. (Any minor version
-   update to Mave 3 should work.)
+   update to should work.)
 
 > **NOTE**: There are known PowerMock issues when building test JAR files
 > with Java 7. Therefore, it is required to use the latest Java 7 update.
-> Currently Java SDK version 1.7.0\_80.
+> Currently Java SDK version **1.7.0\_80**.
 
 Building project manually
 -------------------------
@@ -20,9 +21,51 @@ The easiest way to get all required files is to just download the ZIP
 file with all the required apps and services. But if You prefer to build
 the project manually, then just issue following Maven command:
 
+### Basic build process
+
+If `git`, `mvn` and `javac` have been installed correctly then You can just issue these commands:
+
 ```bash
-mvn install –DskipTests
+git clone https://github.com/open-eid/pdf-validator.git --recursive
+cd pdf-validator
+mvn clean install -Dmaven.test.skip.exec -DargLine="-Xmx512m"
 ```
+
+Next step is to deploy the build artifacts to Tomcat.
+
+
+### Build process on Ubuntu 15.04
+
+First we need to install all required software dependencies for that we need 
+to issue following commands:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y git 
+sudo apt-get install -y openjdk-7-jdk
+sudo apt-get install -y maven
+sudo apt-get install -y tomcat7
+```
+
+> **NOTE**: Recommended way of using Tomcat is to download it directly from Apache Tomcat homepage.
+> Reason for that is to get more platform independent deployment process.
+
+Next we need to clone the `pdf-validator` project I chose `$HOME` directory
+
+```bash
+cd $HOME
+git clone https://github.com/open-eid/pdf-validator.git --recursive
+cd pdf-validator
+```
+
+Now are ready to build the project by issuing following Maven command
+
+```bash
+mvn clean install -Dmaven.test.skip.exec -DargLine="-Xmx512m"
+```
+
+We can skip test execution when building because most of the tests are integration tests
+and may fail in some cases.
 
 > **NOTE**: The computer where maven install command is issued must be
 > open to the internet. Maven pulls dependencies from several different
@@ -32,8 +75,13 @@ mvn install –DskipTests
 > very slow sometimes, so please be patient when building project the
 > first time.
 
-Installing the PDF Validator webapp
------------------------------------
+Installing the PDF Validator on Ubuntu 15.04
+--------------------------------------------
+
+
+
+Installing the PDF Validator webapp with downloaded Apache Tomcat for development 
+---------------------------------------------------------------------------------
 
 1.  Navigate the directory that holds the ZIP file (if you built the ZIP
     file using Maven, navigate to
@@ -94,6 +142,12 @@ Installing the PDF Validator webapp
 
 8.  Check that service is running by navigating to URL: `http://localhost:8080/pdf-validator-webapp/wservice` You should see
 list of WSDL endpoints.
+
+System checks after installation
+--------------------------------
+
+Configuring Java certificate keystore location
+----------------------------------------------
 
 Validation request maximum size limit
 -------------------------------------

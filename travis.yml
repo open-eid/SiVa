@@ -5,4 +5,4 @@ jdk:
 before_install:
   - git submodule update --init --recursive
 install: true
-script: mvn clean package -Dmaven.test.skip.exec
+script: ./mvnw clean package -Dmaven.test.skip.exec

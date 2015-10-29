@@ -1,6 +1,7 @@
 pom.xml.versionsBackup
 dependency-reduced-pom.xml
 .*
+!.mvn
 *.iml
 .idea
 .svn

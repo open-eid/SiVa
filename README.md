@@ -7,6 +7,23 @@ This project depends on Digital Signature Service (DSS), Github: https://github.
 How to build
 ------------
 
+### Using Maven Wrapper
+
+Recommended way of building this project is using [Maven Wrapper](https://github.com/takari/maven-wrapper) to build it.
+Run following command:
+
+```bash
+./mvnw clean package -Dmaven.test.skip.exec
+```
+
+Or even easier is just run:
+
+```bash
+./build.sh
+```
+
+### When You have Maven installed
+
 ```bash
 mvn clean install -Dmaven.test.skip.exec -DargLine="-Xmx512m"
 ```

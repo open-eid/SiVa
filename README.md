@@ -78,7 +78,7 @@ curl -s http://localhost:9000
 Documentation
 -------------
 
-You can read more detailed documentation [in our GitHub Pages](http://open-eid.github.io/pdf-validator/).
+You can read more detailed documentation about PDF Validator here [in our GitHub Pages](http://open-eid.github.io/pdf-validator/).
 
 To update and edit documentation follow these steps:
 

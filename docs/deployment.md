@@ -78,7 +78,57 @@ and may fail in some cases.
 Installing the PDF Validator on Ubuntu 15.04
 --------------------------------------------
 
+After build has completed successfully we can continue installing the build artifacts
+into our Tomcat web container. 
 
+First make sure You have installed the Tomcat.
+
+```bash
+sudo apt-get update && sudo apt-get install -y tomcat7
+```
+
+First we need to create directory where our certificate Java keystore reside in by issuing following 
+commands:
+
+```bash
+cd /tmp
+sudo mkdir cert-store
+sudo chown tomcat7:root
+sudo chmod 755 cert-store
+```
+
+Now we need to configure some environment variables to make PDF Validator work correctly.
+Make `bin` directory in `$CATALINA_HOME` and add `setenv.sh` file into it.
+
+> **NOTE:** Paths below are based on default paths of package manger 
+installed version of **Tomcat 7 of Ubuntu 15.04**
+
+```bash
+cd /var/lib/tomcat7
+sudo mkdir bin 
+sudo touch bin/setenv.sh 
+```
+
+Add following content into this file.
+
+```
+export DSS_DATA_FOLDER=/tmp/cert-store
+```
+
+Next we need to install the build artifacts into `webapps` directory:
+
+```bash
+cp $HOME/pdf-validator/pdf-validator-parent/pdf-validator-webapp/target/pdf-validator-webapp-*.war /var/lib/tomcat7/webapps
+```
+
+> **NOTE** It would be good to rename the `war` file to make more usable URL otherwise the version number will be visible in 
+> URL path
+
+Now we can start the Tomcat service:
+
+```bash
+sudo service tomcat7 restart
+```
 
 Installing the PDF Validator webapp with downloaded Apache Tomcat for development 
 ---------------------------------------------------------------------------------
@@ -146,8 +196,23 @@ list of WSDL endpoints.
 System checks after installation
 --------------------------------
 
+After checking logs for errors You can navigate to `http://<server-ip>:8080/pdf-validator-webapp-1.0.1.RC1/wservice` with browser to 
+check if web service has started correctly and see similar web page as shown below.
+
+![WSDL Endpoints after service has started](img/working_web_service.png)
+
 Configuring Java certificate keystore location
 ----------------------------------------------
+
+When PDF Validator web application starts it creates `etc` directory relative to path of Tomcat startup script execution 
+location. In most of Linux distribution the default solution won't work because of lack of write permissions in startup forlder.
+
+To fix this You need to set environment variable `DSS_DATA_FOLDER` and make it accessible to Tomcat Web container user.
+
+<!---
+Using Nginx reverse proxy in front of PDF Validator web service
+---------------------------------------------------------------
+-->
 
 Validation request maximum size limit
 -------------------------------------

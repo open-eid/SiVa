@@ -42,10 +42,9 @@ PDF Valdiator TSL Downloader
 
 Used to load/update TSL in cache, when the server itself is behind a firewall and cannot access the TSL over the internet.
 Steps to manually update TSL files temp directory:
-1. ```bash
-java -jar pdf-validator-tsl-downloader-4.5.RC1.jar
-``` -> It creates tmp directory in same directory where the JAR file is.
-2. Copy tmp directory contents to Tomcat tmp directory.
+
+1.  `java -jar pdf-validator-tsl-downloader-4.5.RC1.jar` -> It creates tmp directory in same directory where the JAR file is.
+2.  Copy tmp directory contents to Tomcat tmp directory.
 
 Make sure there is application-override.properties file inside Tomcat's conf directory with following contents:
 ```bash
@@ -75,3 +74,21 @@ To get the monitoring report, just request the monitoring service on the configu
 ```bash
 curl -s http://localhost:9000
 ```
+
+Documentation
+-------------
+
+You can read more detailed documentation [in our GitHub Pages](http://open-eid.github.io/pdf-validator/).
+
+To update and edit documentation follow these steps:
+
+> **NOTE** Python must be installed before You continue
+
+1.  Install MkDocs: `pip install mkdocs`
+2.  Edit markdown files inside the `docs` directory
+3.  Preview Your changes by issuing `mkdocs serve` and navigating to `http://localhost:8000`
+4.  Commit Your changes to `git`
+5.  Generate GitHub Pages: `mkdocs gh-deploy` 
+6.  You are done
+
+

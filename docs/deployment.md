@@ -1,4 +1,4 @@
-# Deploying PDF Validator Web Service
+# Deploying PDF Validation Web Service
 
 ### System requirements:
 
@@ -6,8 +6,8 @@
 -  Minimum required Java version is **Java 7u80** but Java 8 is
    recommended
 -  **Maven 3** to build project manually. (Any minor version update to
-   Mave 3 should work.)
--  **Tomcat 7** to run PDF validator web service. (Any minor version
+   Maven 3 should work.)
+-  **Tomcat 7** to run PDF validation web service. (Any minor version
    update to should work.)
 
 > **NOTE**: There are known PowerMock issues when building test JAR files
@@ -176,7 +176,7 @@ This step assumes that the project has already been built previously.
 
 
 5.  Create context by issuing following commands relative to
-    `~/pdfvalidator` directory:
+    `~/pdf-validator` directory:
 
 		mkdir -p apache-tomcat-7.0.64/conf/Catalina/localhost\
 		touch apache-tomcat-7.0.64/conf/Catalina/localhost/pdf-validator-webapp.xml6.
@@ -187,7 +187,7 @@ This step assumes that the project has already been built previously.
 	    <Context path="/pdf-validator-webapp" docBase="/home/vagrant/pdfvalidator/bin/pdf-validator-webapp-1.0.1.RC1.war" />
 
 7.  Start the web service by issuing following command relative to
-`~/pdfvalidator`
+`~/pdf-validator`
 
 	    ./apache-tomcat-7.0.64/bin/startup.sh start
 
@@ -235,7 +235,7 @@ http://localhost:8080/pdf-validator-webapp/wservice/validationService\\?wsdl
 | xmllint --format - | pygmentize -l xml
 ```
 
-> **NOTE**: xmllint and pygmentize maybe required to be installed
+> **NOTE**: `xmllint` and `pygmentize` maybe required to be installed
 > separately
 
 Produced output should look similar to this:

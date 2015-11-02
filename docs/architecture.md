@@ -4,7 +4,6 @@ The following picture represents the most important modules (JAR-files) in the s
 The WAR file can be deployed to an application server like Tomcat.
 
 ![Architecture overview](img/arch_overview.png)
-<image>
 
 The Service is built on top of the EU DSS library, which already contains almost everything that the current project needs 
 (including a web service for validating signatures). The scope of this project is to add additional requirements (e.g. additional 

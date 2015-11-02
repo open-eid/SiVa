@@ -27,7 +27,7 @@ To override the default keystore, following steps should be taken:
 
 3.  Run PDF Validator Keystore Generator to generate keystore:
 
-		java -jar pdf-validator-keystore-generator-4.5.RC1.jar\
+		java -jar pdf-validator-keystore-generator-1.0.1.RC1.jar\
 
     keystore.jks will be created inside the etc/ folder, which is
     relative to the given executable jar.

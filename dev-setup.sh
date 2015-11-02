@@ -6,6 +6,9 @@ EXTENSION='.tar.gz'
 TOMCAT_FILENAME=apache-tomcat-${TOMCAT_VERSION}
 TOMCAT_URL=http://www.eu.apache.org/dist/tomcat/tomcat-7/v${TOMCAT_VERSION}/bin/${TOMCAT_FILENAME}${EXTENSION}
 
+echo "Current Tomcat version is: ${TOMCAT_VERSION}"
+echo "Download URL is:  ${TOMCAT_URL}"
+
 # Clean before download 
 echo 'Cleaning up tomcats'
 rm -fr ${TOMCAT_FILENAME}* 
@@ -13,8 +16,6 @@ rm -fr ${TOMCAT_FILENAME}*
 echo 'Downloding new version of Tomcat'
 http $TOMCAT_URL > $TOMCAT_FILENAME${EXTENSION}
 tar xf ${TOMCAT_FILENAME}${EXTENSION} 
-
-rm -fr ${TOMCAT_FILENAME}${EXTENSION}
 
 echo 'Creating directories for tomcat configuration'
 mkdir -p ${TOMCAT_FILENAME}/conf/Catalina/localhost

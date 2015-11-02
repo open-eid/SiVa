@@ -26,7 +26,7 @@ Using TSL downloader Java application
 	-  Run PDF Validator TSL Downloader in machine that is open to
            Internet:
 
-        	java -jar pdf-validator-tsl-downloader-4.5.RC1.jar\
+        	java -jar pdf-validator-tsl-downloader-1.0.1.RC1.jar\
 
 > After completing it creates `tmp` directory in same directory where the
 > JAR file is.

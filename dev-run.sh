@@ -2,4 +2,4 @@
 
 source ./helper-scripts.conf
 
-./build.sh && ./apache-tomcat-$TOMCAT_VERSION/bin/catalina.sh run
+./apache-tomcat-$TOMCAT_VERSION/bin/catalina.sh run

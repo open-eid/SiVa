@@ -60,7 +60,7 @@ PDF Valdiator TSL Downloader
 Used to load/update TSL in cache, when the server itself is behind a firewall and cannot access the TSL over the internet.
 Steps to manually update TSL files temp directory:
 
-1.  `java -jar pdf-validator-tsl-downloader-4.5.RC1.jar` -> It creates tmp directory in same directory where the JAR file is.
+1.  `java -jar pdf-validator-tsl-downloader-1.0.1.RC1.jar` -> It creates tmp directory in same directory where the JAR file is.
 2.  Copy tmp directory contents to Tomcat tmp directory.
 
 Make sure there is application-override.properties file inside Tomcat's conf directory with following contents:
@@ -74,7 +74,7 @@ PDF Valdiator Monitoring
 
 PDF Validator monitoring is a web service to check that the PDF validator service is running correctly. Run with following command:
 ```bash
-java -jar pdf-validator-monitoring-4.5.RC1.jar
+java -jar pdf-validator-monitoring-1.0.1.RC1.jar
 ```
 
 Default parameters for monitoring application are:
@@ -85,7 +85,7 @@ monitoring.path=/pdf-validator-webapp/wservice/validationService
 # Default monitoring interval is 5 min
 monitoring.requestInterval=300000
 ```
-You can override these properties by placing application.properties file in same directory where the pdf-validator-monitoring-4.5.RC1.jar is located
+You can override these properties by placing application.properties file in same directory where the pdf-validator-monitoring-1.0.1.RC1.jar is located
 
 To get the monitoring report, just request the monitoring service on the configured port, for example:
 ```bash

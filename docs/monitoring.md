@@ -1,4 +1,3 @@
-
 Starting and configuring monitoring Service
 -------------------------------------------
 
@@ -12,8 +11,9 @@ occurred on the validation server (if any) and shows when the TSLs
 way to run this service is to issue a command shown below.
 
 **Run PDF validator monitoring Service**
+
 ```bash
-java -jar pdf-validator-monitoring-4.5.RC1.jar
+java -jar pdf-validator-monitoring-1.0.1.RC1.jar
 ```
 
 Default parameters for monitoring application are:
@@ -30,7 +30,7 @@ monitoring.requestInterval=300000
 ```
 
 You can override these properties by placing application.properties file
-in same directory where the `pdf-validator-monitoring-4.5.RC1.jar` is
+in same directory where the `pdf-validator-monitoring-1.0.1.RC1.jar` is
 located.
 
 Monitoring Service response values
@@ -98,7 +98,7 @@ list of TSL certificates. Following information is provided.
   i.e WARNING
 - **tslCertificateInfo** - collection of all the countries TSLs that
   have been loaded into PDF Validator
-- **loadingDiagnosticInfo** - Additonal information when loading or
+- **loadingDiagnosticInfo** - Additional information when loading or
   validating the TSL failed or loading time if no error was not
   encountered
 - **signerCertificateValidUntil** - TSL signing certificate expiration

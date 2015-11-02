@@ -14,7 +14,7 @@ The Service uses
 EU DSS library was chosen as it has already been used in DigiDoc4J
 library (where it was chosen for having the most complete functionality
 compared to other Java libraries). For more information on EU DSS, see
-k<https://joinup.ec.europa.eu/asset/sd-dss/description>.
+<https://joinup.ec.europa.eu/asset/sd-dss/description>.
 
 The Service will use the following functionalities of EU DSS library:
 
@@ -43,8 +43,8 @@ Main features of the Service:
 - Signatures with PadES-LT and PadES-LTA profile are supported.
 - The Signature must contain OCSP confirmation that meets the
   Service’s requirements.
-- At the time of creating the current documentation, it is expected that
 
+At the time of creating the current documentation, it is expected that
 the Service will be used by the following applications:
 
 - DigiDoc3 Client application

@@ -17,9 +17,9 @@ echo 'Downloding new version of Tomcat'
 http $TOMCAT_URL > $TOMCAT_FILENAME${EXTENSION}
 tar xf ${TOMCAT_FILENAME}${EXTENSION} 
 
-ls -al
 echo 'Creating directories for tomcat configuration'
-mkdir -p ${TOMCAT_FILENAME}/conf/Catalina/localhost
+mkdir -p ${PWD}/${TOMCAT_FILENAME}/conf/Catalina/localhost
+ls -al ${TOMCAT_FILENAME}/conf
 
 WEBAPP_PATH="$PWD/pdf-validator-parent/pdf-validator-webapp/target/pdf-validator-webapp-${PDF_VALIDATOR_VERSION}"
 MATCH='{webapp_path}'

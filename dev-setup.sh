@@ -14,7 +14,7 @@ echo 'Cleaning up tomcats'
 rm -fr ${TOMCAT_FILENAME}* 
 
 echo 'Downloding new version of Tomcat'
-http $TOMCAT_URL > $TOMCAT_FILENAME${EXTENSION}
+http ${TOMCAT_URL} > ${TOMCAT_FILENAME}${EXTENSION}
 tar xf ${TOMCAT_FILENAME}${EXTENSION} 
 
 echo 'Creating directories for tomcat configuration'
@@ -23,9 +23,11 @@ mkdir -p ${PWD}/${TOMCAT_FILENAME}/conf/Catalina/localhost
 WEBAPP_PATH="$PWD/pdf-validator-parent/pdf-validator-webapp/target/pdf-validator-webapp-${PDF_VALIDATOR_VERSION}"
 MATCH='{webapp_path}'
 WEBAPP_CONFIG_PATH=$PWD/apache-tomcat-${TOMCAT_VERSION}/conf/Catalina/localhost
-TEMPLATE_PATH="$PWD/helpers/templates"
+TEMPLATE_PATH=$PWD/helpers/templates
 
+ls -al ${TEMPLATE_PATH}
 ls -al ${WEBAPP_CONFIG_PATH}
-cp $TEMPLATE_PATH/pdf-validator-webapp.xml $WEBAPP_CONFIG_PATH 
-cp $TEMPLATE_PATH/setenv.sh $PWD/apache-tomcat-${TOMCAT_VERSION}/bin
+
+cp ${TEMPLATE_PATH}/pdf-validator-webapp.xml ${WEBAPP_CONFIG_PATH}
+cp ${TEMPLATE_PATH}/setenv.sh $PWD/apache-tomcat-${TOMCAT_VERSION}/bin
 sed -i '' "s#$MATCH#$WEBAPP_PATH#g" ${WEBAPP_CONFIG_PATH}/pdf-validator-webapp.xml

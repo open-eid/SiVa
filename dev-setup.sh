@@ -28,6 +28,6 @@ TEMPLATE_PATH=$PWD/helpers/templates
 ls -al ${TEMPLATE_PATH}
 ls -al ${WEBAPP_CONFIG_PATH}
 
-cp ${TEMPLATE_PATH}/pdf-validator-webapp.xml ${WEBAPP_CONFIG_PATH}
-cp ${TEMPLATE_PATH}/setenv.sh $PWD/apache-tomcat-${TOMCAT_VERSION}/bin
+cp ${TEMPLATE_PATH}/pdf-validator-webapp.xml ${WEBAPP_CONFIG_PATH}/pdf-validator-webapp.xml
+cp ${TEMPLATE_PATH}/setenv.sh $PWD/apache-tomcat-${TOMCAT_VERSION}/bin/setenv.sh
 sed -i '' "s#$MATCH#$WEBAPP_PATH#g" ${WEBAPP_CONFIG_PATH}/pdf-validator-webapp.xml

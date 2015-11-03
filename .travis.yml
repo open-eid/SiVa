@@ -5,6 +5,7 @@ jdk:
   - oraclejdk8
 before_install:
   - git submodule update --init --recursive
+  - apt-get update && apt-get install -y httpie
   - cp helper-scripts.conf.sample helper-scripts.conf
   - ./dev-setup.sh
   - ls -al

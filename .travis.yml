@@ -5,7 +5,7 @@ jdk:
   - oraclejdk8
 before_install:
   - git submodule update --init --recursive
-  - sudo pip install --upgrade pip setuptools
+  - sudo pip install --upgrade pip setuptools && sudo pip install --upgrade httpie
   - cp helper-scripts.conf.sample helper-scripts.conf
   - ./dev-setup.sh
   - ls -al

@@ -17,6 +17,7 @@ echo 'Downloding new version of Tomcat'
 http $TOMCAT_URL > $TOMCAT_FILENAME${EXTENSION}
 tar xf ${TOMCAT_FILENAME}${EXTENSION} 
 
+ls -al
 echo 'Creating directories for tomcat configuration'
 mkdir -p ${TOMCAT_FILENAME}/conf/Catalina/localhost
 

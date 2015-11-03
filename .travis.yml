@@ -7,12 +7,12 @@ before_install:
   - git submodule update --init --recursive
   - sudo pip install --upgrade pip setuptools && sudo pip install --upgrade httpie
   - cp helper-scripts.conf.sample helper-scripts.conf
-  - ./dev-setup.sh
-  - ls -al
 branches:
   only:
     - develop
 install: true
-script: ./mvnw clean package -Dmaven.test.skip.exec
+script:
+  - ./mvnw clean package -Dmaven.test.skip.exec
+  - ./dev-setup.sh
 notifications:
   email: false

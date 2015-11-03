@@ -4,5 +4,8 @@ jdk:
   - oraclejdk7
 before_install:
   - git submodule update --init --recursive
+branches:
+  only:
+    - develop
 install: true
 script: ./mvnw clean package -Dmaven.test.skip.exec

@@ -15,7 +15,7 @@ branches:
     - develop
 install: true
 script:
-  - ./mvnw clean package -Dmaven.test.skip.exec
+  - ./mvnw clean install -Dmaven.test.skip.exec
   - ./dev-setup.sh
   - ./mvnw -f ./pdf-validator-parent/pdf-validator-test/pom.xml verify
 notifications:

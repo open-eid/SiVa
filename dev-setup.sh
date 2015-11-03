@@ -25,11 +25,8 @@ MATCH='{webapp_path}'
 WEBAPP_CONFIG_PATH=${PWD}/apache-tomcat-${TOMCAT_VERSION}/conf/Catalina/localhost
 TEMPLATE_PATH=${PWD}/helpers/templates
 
-ls -al ${TEMPLATE_PATH}
-
 cp ${TEMPLATE_PATH}/pdf-validator-webapp.xml ${WEBAPP_CONFIG_PATH}/pdf-validator-webapp.xml
 cp ${TEMPLATE_PATH}/setenv.sh $PWD/apache-tomcat-${TOMCAT_VERSION}/bin/setenv.sh
 
 ls -al ${WEBAPP_CONFIG_PATH}
 sed -i.bak "s#$MATCH#$WEBAPP_PATH#g" ${WEBAPP_CONFIG_PATH}/pdf-validator-webapp.xml
-#sed "s#$MATCH#$WEBAPP_PATH#g" ${WEBAPP_CONFIG_PATH}/pdf-validator-webapp.xml

@@ -8,6 +8,7 @@ jdk:
 before_install:
   - git submodule update --init --recursive
   - sudo pip install --upgrade pip setuptools && sudo pip install --upgrade httpie
+  - sudo pip install --upgrade pygments
   - cp helper-scripts.conf.sample helper-scripts.conf
 branches:
   only:
@@ -16,5 +17,7 @@ install: true
 script:
   - ./mvnw clean package -Dmaven.test.skip.exec
   - ./dev-setup.sh
+  - ./travis-tomcat-run.sh
+  - ./mvnw -f ./pdf-validator-parent/pdf-validator-test/pom.xml verify
 notifications:
   email: false

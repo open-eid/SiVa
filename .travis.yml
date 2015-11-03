@@ -5,7 +5,7 @@ jdk:
   - oraclejdk8
 before_install:
   - git submodule update --init --recursive
-  - sudo apt-get update && sudo apt-get install -y httpie
+  - sudo pip install --upgrade pip setuptools
   - cp helper-scripts.conf.sample helper-scripts.conf
   - ./dev-setup.sh
   - ls -al
@@ -14,3 +14,5 @@ branches:
     - develop
 install: true
 script: ./mvnw clean package -Dmaven.test.skip.exec
+notifications:
+  email: false

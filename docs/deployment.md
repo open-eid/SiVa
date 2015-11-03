@@ -19,7 +19,7 @@ Building project manually
 
 The easiest way to get all required files is to just download the ZIP
 file with all the required apps and services. But if You prefer to build
-the project manually, then just issue following Maven command:
+the project manually, the following sections will describe how.
 
 ### Basic build process
 
@@ -50,7 +50,7 @@ sudo apt-get install -y tomcat7
 > **NOTE**: Recommended way of using Tomcat is to download it directly from Apache Tomcat homepage.
 > Reason for that is to get more platform independent deployment process.
 
-Next we need to clone the `pdf-validator` project I chose `$HOME` directory
+Next we need to clone the `pdf-validator` project. Here, I have chosen the `$HOME` directory.
 
 ```bash
 cd $HOME
@@ -75,8 +75,8 @@ and may fail in some cases.
 > very slow sometimes, so please be patient when building project the
 > first time.
 
-Installing the PDF Validation on Ubuntu 15.04
---------------------------------------------
+Option 1: Installing and configuring Tomcat using *apt-get* under Ubuntu 15.04
+----------------------------------------------------------------------------
 
 After build has completed successfully we can continue installing the build artifacts
 into our Tomcat web container. 
@@ -87,8 +87,7 @@ First make sure You have installed the Tomcat.
 sudo apt-get update && sudo apt-get install -y tomcat7
 ```
 
-First we need to create directory where our certificate Java keystore reside in by issuing following 
-commands:
+Then we need to create directory where our certificate Java keystore will reside in:
 
 ```bash
 cd /tmp
@@ -97,8 +96,8 @@ sudo chown tomcat7:root
 sudo chmod 755 cert-store
 ```
 
-Now we need to configure some environment variables to make PDF Validation work correctly.
-Make `bin` directory in `$CATALINA_HOME` and add `setenv.sh` file into it.
+Now we need to configure some environment variables to make PDF Validator work correctly.
+Create a `bin` directory in `$CATALINA_HOME` and add `setenv.sh` file into it.
 
 > **NOTE:** Paths below are based on default paths of package manger 
 installed version of **Tomcat 7 of Ubuntu 15.04**
@@ -130,8 +129,10 @@ Now we can start the Tomcat service:
 sudo service tomcat7 restart
 ```
 
-Installing the PDF Validator webapp with downloaded Apache Tomcat for development 
----------------------------------------------------------------------------------
+Option 2: Installing and configuring Tomcat using a manual download
+-------------------------------------------------------------------
+
+This step assumes that the project has already been built previously.
 
 1.  Navigate the directory that holds the ZIP file (if you built the ZIP
     file using Maven, navigate to
@@ -193,14 +194,6 @@ Installing the PDF Validator webapp with downloaded Apache Tomcat for developmen
 8.  Check that service is running by navigating to URL: `http://localhost:8080/pdf-validator-webapp/wservice` You should see
 list of WSDL endpoints.
 
-System checks after installation
---------------------------------
-
-After checking logs for errors You can navigate to `http://<server-ip>:8080/pdf-validator-webapp-1.0.1.RC1/wservice` with browser to 
-check if web service has started correctly and see similar web page as shown below.
-
-![WSDL Endpoints after service has started](img/working_web_service.png)
-
 Configuring Java certificate keystore location
 ----------------------------------------------
 
@@ -258,3 +251,14 @@ Produced output should look similar to this:
 	</soap:Body>
 </soap:Envelope>
 ```
+
+Verifying installation
+----------------------
+
+After checking logs for errors You can navigate to `http://<server-ip>:8080/pdf-validator-webapp-1.0.1.RC1/wservice` with browser to
+check if web service has started correctly and see similar web page as shown below.
+
+![WSDL Endpoints after service has started](img/working_web_service.png)
+
+
+For a more thorough validation of the installation, the next step can be configuring and running the [built-in Monitoring Service](monitoring).

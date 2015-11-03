@@ -2,8 +2,12 @@ language: java
 jdk:
   - openjdk7
   - oraclejdk7
+  - oraclejdk8
 before_install:
   - git submodule update --init --recursive
+  - cp helper-scripts.conf.sample helper-scripts.conf
+  - ./dev-setup.sh
+  - ls -al
 branches:
   only:
     - develop

@@ -16,6 +16,5 @@ branches:
 install: true
 script:
   - ./mvnw clean install -Dmaven.test.skip.exec
-  - ./dev-setup.sh
 notifications:
   email: false

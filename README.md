@@ -107,5 +107,3 @@ To update and edit documentation follow these steps:
 4.  Commit Your changes to `git`
 5.  Generate GitHub Pages: `mkdocs gh-deploy` 
 6.  You are done
-
-

@@ -1,4 +1,4 @@
-PDF Valdiator
+PDF Validator
 =============
 
 Used for validating PDF digital signature container files.
@@ -32,6 +32,15 @@ Above command will have quite long running time and may run into complications d
 ```bash
  mvn clean install -Dmaven.test.skip=true
 ```
+
+Note: Make sure that you have also pulled the DSS submodule, otherwise the build will fail.
+To pull the DSS submodule run following commands:
+
+```bash
+git submodule init
+git submodule update
+```
+
 
 Introducing new modules in addition to existing DSS modules:
 
@@ -107,3 +116,5 @@ To update and edit documentation follow these steps:
 4.  Commit Your changes to `git`
 5.  Generate GitHub Pages: `mkdocs gh-deploy` 
 6.  You are done
+
+

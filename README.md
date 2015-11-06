@@ -49,7 +49,7 @@ PDF Validator Webapp
 
 Used to deploy to servlet container to offer the validation service.
 
-PDF Valdiator Tests
+PDF Validator Tests
 -------------------
 
 Run tests:
@@ -63,7 +63,7 @@ Some of the test files are signed with test certificate (chain), so in order for
  -Dspring.profiles.active=development
 ```
 
-PDF Valdiator TSL Downloader
+PDF Validator TSL Downloader
 ----------------------------
 
 Used to load/update TSL in cache, when the server itself is behind a firewall and cannot access the TSL over the internet.
@@ -78,7 +78,7 @@ trustedListSource.tslRefreshPolicy=NEVER
 ```
 When updating TSL the service should be shut down to avoid unwanted behaviour.
 
-PDF Valdiator Monitoring
+PDF Validator Monitoring
 ------------------------
 
 PDF Validator monitoring is a web service to check that the PDF validator service is running correctly. Run with following command:

@@ -230,9 +230,8 @@ To test file size limit You can submit large files with the following
 command (which submits "demo.xml", presumably a large file):
 
 ```bash
-curl -s -X POST -d "@demo.xml"
-http://localhost:8080/pdf-validator-webapp/wservice/validationService\\?wsdl
-| xmllint --format - | pygmentize -l xml
+curl -s -X POST -d "@demo.xml" \
+http://localhost:8080/pdf-validator-webapp/wservice/validationService\\?wsdl | xmllint --format - | pygmentize -l xml
 ```
 
 > **NOTE**: `xmllint` and `pygmentize` maybe required to be installed
@@ -262,3 +261,29 @@ check if web service has started correctly and see similar web page as shown bel
 
 
 For a more thorough validation of the installation, the next step can be configuring and running the [built-in Monitoring Service](monitoring).
+
+### Using command line
+
+When You want to verify that signature validation by sending request to PDF validator web service then You need to follow these steps.
+
+First download sample request file:
+```
+wget https://raw.githubusercontent.com/open-eid/pdf-validator/develop/test-files/check_status_request.xml
+```
+
+Now issue `curl` command to verify that PDF validator service can validate document correctly:
+
+```bash
+curl -s -X POST -d "@check_status_request.xml" http://localhost:8080/pdf-validator-webapp/wservice/validationService |
+xmllint --format - |
+pygmentize -l xml |
+grep "ValidSignaturesCount" | sed 's/&lt;/ /g' | sed 's/&gt;/ /g'
+
+```
+
+Above command should produce following result. It means there where 1 valid signature inside PDF file:
+
+```
+    ValidSignaturesCount 1 /ValidSignaturesCount
+
+```

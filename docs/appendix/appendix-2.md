@@ -31,30 +31,28 @@ Appendix 2 - Functional Requirements
     * **Must / Should**: Must
     * **FR-ID**: DSS-FR-PDF_ERROR
 * **Name**: Online TSL Renewal
-    * **Description**: The Service has to be able to renew TSL information from Online Sources
+    * **Description**: The Service has to be able to renew TSL information
+      from Online Sources
     * **Must / Should**: Should
     * **FR-ID**: DSS-FR-ONLINE_TSL
 * **Name**: Cached TSL
-    * **Description**: The Service has to be able to use Cached TSL data when checking for Certificate Validities.
+    * **Description**: The Service has to be able to use Cached TSL data
+      when checking for Certificate Validities.
     * **Must / Should**: Should
     * **FR-ID**: DSS-FR-CACHED_TSL
 * **Name**: Automatic TSL list’s validity check
-    * **Description**: The Service must check the Validity of TSL at preconfigured intervals. Initial TSL checking interval: 24 hours.
+    * **Description**: The Service must check the Validity of TSL at preconfigured
+      intervals. Initial TSL checking interval: 24 hours.
     * **Must / Should**: Must
     * **FR-ID**: DSS-FR-TSL_AUTOCHECK
 * **Name**: TSL Certificate Checking
-    * **Description**: TSL's certificate's must be validated - one of 3 predefined certificates must be used for signing TSL.
+    * **Description**: TSL's certificate's must be validated - one of 3 predefined
+      certificates must be used for signing TSL.
     * **Must / Should**: Must
     * **FR-ID**: DSS-FR-TSL_CERT_VALIDATE
 * **Name**: Verification Process Cancelling
-    * **Description**: Verification process can be cancelled only in case of fatal errors (it is not possible to parse the file)
+    * **Description**: Verification process can be cancelled only in
+      case of fatal errors (it is not possible to parse the file)
     * **Must / Should**: Should
     * **FR-ID**: DSS-FR-CANCEL
-
-
-
-
-
-
-
 

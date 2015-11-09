@@ -13,4 +13,14 @@ pages:
   - Automation testing: testing.md
   - Known Issues: issues.md
   - Documentation updating: documentation.md
-  - Appendixes: appendix.md
+  - Appendixes:
+    - Appendix 1 - Non-Functional Requirements: appendix/appendix-1.md
+    - Appendix 2 - Functional Requirements: appendix/appendix-2.md
+    - Appendix 3 - Validation Policy: appendix/appendix-3.md
+    - Appendix 4 - Validation Constraint Configuration: appendix/appendix-4.md
+    - Appendix 5 - Sample Validation Policy Configuration: appendix/appendix-5.md
+    - Appendix 6 - ValidationService WSDL: appendix/appendix-6.md
+    - Appendix 7 - Sample PDF Validation Service Request: appendix/appendix-7.md
+    - Appendix 8 - Sample Response Data Blocks - positive response: appendix/appendix-8.md
+    - Appendix 9 - Sample Response Data Blocks – negative response: appendix/appendix-9.md
+    - Appendix 10 - Summary of modifications made to the DSS library: appendix/appendix-10.md

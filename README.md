@@ -1,4 +1,4 @@
-PDF Valdiator
+PDF Validator
 =============
 
 Used for validating PDF digital signature container files.
@@ -33,6 +33,15 @@ Above command will have quite long running time and may run into complications d
  mvn clean install -Dmaven.test.skip=true
 ```
 
+Note: Make sure that you have also pulled the DSS submodule, otherwise the build will fail.
+To pull the DSS submodule run following commands:
+
+```bash
+git submodule init
+git submodule update
+```
+
+
 Introducing new modules in addition to existing DSS modules:
 
 PDF Validator Webapp
@@ -40,7 +49,7 @@ PDF Validator Webapp
 
 Used to deploy to servlet container to offer the validation service.
 
-PDF Valdiator Tests
+PDF Validator Tests
 -------------------
 
 Run tests:
@@ -54,7 +63,7 @@ Some of the test files are signed with test certificate (chain), so in order for
  -Dspring.profiles.active=development
 ```
 
-PDF Valdiator TSL Downloader
+PDF Validator TSL Downloader
 ----------------------------
 
 Used to load/update TSL in cache, when the server itself is behind a firewall and cannot access the TSL over the internet.
@@ -69,7 +78,7 @@ trustedListSource.tslRefreshPolicy=NEVER
 ```
 When updating TSL the service should be shut down to avoid unwanted behaviour.
 
-PDF Valdiator Monitoring
+PDF Validator Monitoring
 ------------------------
 
 PDF Validator monitoring is a web service to check that the PDF validator service is running correctly. Run with following command:
@@ -107,3 +116,5 @@ To update and edit documentation follow these steps:
 4.  Commit Your changes to `git`
 5.  Generate GitHub Pages: `mkdocs gh-deploy` 
 6.  You are done
+
+

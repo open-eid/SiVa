@@ -1,6 +1,8 @@
 pom.xml.versionsBackup
 dependency-reduced-pom.xml
 .*
+!.mvn
+!.travis.yml
 *.iml
 .idea
 .svn
@@ -19,3 +21,5 @@ helper-scripts.conf
 etc
 
 apache-tomcat-*
+site
+

@@ -16,7 +16,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class XmlUtil {
+public final class XmlUtil {
+
+    private XmlUtil() {}
+
     public static Element findElementByXPath(Document document, String xPath) {
         return findElementByXPath(document, xPath, Collections.<String, String>emptyMap());
     }
@@ -63,7 +66,7 @@ public class XmlUtil {
     }
 
     private static class BasicNamespaceContext implements NamespaceContext {
-        private Map<String, String> namespacePrefixesToUris = new HashMap<String, String>();
+        private Map<String, String> namespacePrefixesToUris = new HashMap<>();
 
         public BasicNamespaceContext(Map<String, String> namespacePrefixesToUris) {
             this.namespacePrefixesToUris = namespacePrefixesToUris;

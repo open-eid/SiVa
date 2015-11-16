@@ -46,8 +46,7 @@ public class ClientService {
         @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
         Throwable rootCause = Throwables.getRootCause(ex);
 
-        String connectionExceptionName = ConnectException.class.getName();
-        if (rootCause.getClass().getName().equals(connectionExceptionName)) {
+        if (rootCause instanceof ConnectException) {
             throw (ConnectException) rootCause;
         }
     }

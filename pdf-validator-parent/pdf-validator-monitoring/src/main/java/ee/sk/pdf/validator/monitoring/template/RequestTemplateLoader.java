@@ -2,7 +2,7 @@ package ee.sk.pdf.validator.monitoring.template;
 
 import com.google.common.base.Strings;
 import com.google.common.io.Resources;
-import ee.sk.pdf.validator.monitoring.logging.LoggingService;
+import ee.sk.pdf.validator.monitoring.message.MessageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,35 +10,34 @@ import org.springframework.stereotype.Component;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
 
 @Component
 public class RequestTemplateLoader implements TemplateLoader {
-    private final static Logger LOGGER = LoggerFactory.getLogger(RequestTemplateLoader.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RequestTemplateLoader.class);
 
-    private final static String RESPONSE_BODY_TEMPLATE_KEY = "{{messageBody}}";
-    private final static String EMPTY_STRING = "";
+    private static final String RESPONSE_BODY_TEMPLATE_KEY = "{{messageBody}}";
+    private static final String EMPTY_STRING = "";
     private String templateLocation;
 
     @Autowired
-    private LoggingService loggingService;
+    private MessageService messageService;
 
     @Override
     public String parsedTemplate(CharSequence replaceWith) {
         try {
             return getResponseBodyTemplate().replace(RESPONSE_BODY_TEMPLATE_KEY, replaceWith);
-        } catch (URISyntaxException | IOException e) {
-            loggingService.logWarning(LOGGER, "monitoring.xmlTemplateLoadingFailed", e.getMessage());
+        } catch (IOException e) {
+            LOGGER.warn(messageService.getMessage("monitoring.xmlTemplateLoadingFailed", e.getMessage()), e);
         }
 
         return EMPTY_STRING;
     }
 
-    private String getResponseBodyTemplate() throws URISyntaxException, IOException {
+    private String getResponseBodyTemplate() throws IOException {
         if (Strings.isNullOrEmpty(templateLocation)) {
-            loggingService.logWarning(LOGGER, "monitoring.pdfLocationError");
+            LOGGER.warn(messageService.getMessage("monitoring.pdfLocationError"));
             throw new FileNotFoundException("Invalid PDF file location");
         }
 

@@ -22,7 +22,7 @@ public class MonitoringApplication {
 
     @RequestMapping("/")
     @ResponseBody
-    private StatusResponse index() {
+    public StatusResponse index() {
         return statusRepository.getSystemStatus();
     }
 

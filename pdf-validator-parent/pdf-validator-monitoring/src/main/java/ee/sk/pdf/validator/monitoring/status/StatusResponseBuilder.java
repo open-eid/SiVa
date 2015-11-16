@@ -5,7 +5,7 @@ import ee.sk.pdf.validator.monitoring.response.TslStatusResponse;
 import java.util.Date;
 
 public class StatusResponseBuilder {
-    private StatusResponse statusResponse = new StatusResponse();
+    private final StatusResponse statusResponse = new StatusResponse();
 
     public StatusResponseBuilder withMessage(String message) {
         statusResponse.setStatusMessage(message);

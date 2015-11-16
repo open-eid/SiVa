@@ -14,7 +14,8 @@ public class DocumentFormatTests extends PdfValidatorSoapTests {
 	
 	@Test
     public void PAdESDocumentShouldPass() {
-        String httpBody = post(validationRequestFor(readFile("hellopades-pades-lt-sha256-sign.pdf"))).
+        String request = validationRequestFor(readFile("hellopades-pades-lt-sha256-sign.pdf"));
+        String httpBody = post(request).
                 andReturn().body().asString();
         //System.out.println(httpBody.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&#xD;", "").replaceAll("&quot;", "\""));
         

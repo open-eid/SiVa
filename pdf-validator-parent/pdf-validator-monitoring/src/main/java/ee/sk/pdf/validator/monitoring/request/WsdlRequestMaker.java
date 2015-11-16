@@ -1,6 +1,6 @@
 package ee.sk.pdf.validator.monitoring.request;
 
-import ee.sk.pdf.validator.monitoring.logging.LoggingService;
+import ee.sk.pdf.validator.monitoring.message.MessageService;
 import ee.sk.pdf.validator.monitoring.response.ResponseValidator;
 import ee.sk.pdf.validator.monitoring.status.ServiceStatus;
 import ee.sk.pdf.validator.monitoring.status.StatusRepository;
@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestOperations;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -19,10 +20,12 @@ import java.util.Date;
 
 @Service
 public class WsdlRequestMaker {
-    private final static Logger LOGGER = LoggerFactory.getLogger(WsdlRequestMaker.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WsdlRequestMaker.class);
 
     private ServiceStatus serviceStatus;
     private String statusMessage;
+
+    private RestOperations restOperations;
 
     @Autowired
     private ClientService clientService;
@@ -34,7 +37,7 @@ public class WsdlRequestMaker {
     private ResponseValidator responseValidator;
 
     @Autowired
-    private LoggingService loggingService;
+    private MessageService messageService;
 
     @Autowired
     private StatusRepository statusRepository;
@@ -59,44 +62,50 @@ public class WsdlRequestMaker {
     private void makeRequest() {
         String webServicePath = monitoringRequestConfiguration.getPath();
         String fullPath = monitoringRequestConfiguration.getHost() + webServicePath;
-        loggingService.logInfo(LOGGER, "monitoring.startRequest", fullPath);
+        LOGGER.info(messageService.getMessage("monitoring.startRequest", fullPath));
 
         ServiceStatus statusResult = ServiceStatus.OK;
         try {
             Response response = clientService.getResponse(webServicePath, MediaType.TEXT_XML);
             statusResult = response != null ? validateResponse(statusResult, response) : ServiceStatus.CRITICAL;
         } catch (ConnectException e) {
-            loggingService.logInfo(LOGGER, "monitoring.requestFailed", fullPath, e.getMessage());
+            LOGGER.info(messageService.getMessage("monitoring.requestFailed", fullPath, e.getMessage()));
+            LOGGER.error("Failed to make request to PDF validator validation service endpoint", e);
             statusResult = ServiceStatus.CRITICAL;
         }
 
         serviceStatus = statusResult;
-        statusMessage = loggingService.getLastLoggedMessage();
+        statusMessage = messageService.getLastLoggedMessage();
         if (statusResult == ServiceStatus.OK) {
             statusMessage = "PDF validator service running correctly";
         }
     }
 
     private ServiceStatus validateResponse(ServiceStatus statusResult, Response response) {
+        ServiceStatus currentServiceStatus = statusResult;
         if (response.getStatus() == HttpStatus.NOT_FOUND.value()) {
-            statusResult = ServiceStatus.CRITICAL;
+            currentServiceStatus = ServiceStatus.CRITICAL;
         }
 
         String body = response.readEntity(String.class);
         if (ResponseValidator.isServiceFault(body)) {
-            loggingService.logInfo(LOGGER, "monitoring.validationFailed");
-            statusResult = ServiceStatus.WARNING;
+            LOGGER.info(messageService.getMessage("monitoring.validationFailed"));
+            currentServiceStatus = ServiceStatus.WARNING;
         }
 
-        if (ResponseValidator.shouldCheckForValidSignature(statusResult, body)) {
-            statusResult =  responseValidator.validateResponse(body);
+        if (ResponseValidator.shouldCheckForValidSignature(currentServiceStatus, body)) {
+            currentServiceStatus = responseValidator.validateResponse(body);
         }
 
-        if (statusResult == ServiceStatus.WARNING) {
-            loggingService.logInfo(LOGGER, "monitoring.pdfSimpleReportError", responseValidator.getGetErrorMessage());
+        if (currentServiceStatus == ServiceStatus.WARNING) {
+            LOGGER.info(messageService.getMessage("monitoring.pdfSimpleReportError", responseValidator.getGetErrorMessage()));
         }
 
-        return statusResult;
+        return currentServiceStatus;
     }
 
+    @Autowired
+    public void setRestOperations(RestOperations restOperations) {
+        this.restOperations = restOperations;
+    }
 }

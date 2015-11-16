@@ -45,6 +45,18 @@
             <artifactId>cache-api</artifactId>
         </dependency>
 
+        <!-- Developer tools for Spring Boot -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+        </dependency>
+
+        <!--Testing setup -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+
         <!-- For documenting configuration properties -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

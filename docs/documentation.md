@@ -26,7 +26,7 @@ Both Ubuntu and Mac OS X come `python` version 2 already installed You only need
 
 Installing Python:
 
-1. Download the installer from the official `python` homepage: https://www.python.org/downloads/
+1. Download the installer from the official `python` homepage: <https://www.python.org/downloads/>
 > **NOTE:** Starting with version 2.7.9 and onwards `pip` ships along with python,<br/>
 so there shouldn't be any need to install `pip` separately.
 2. Execute the python installer

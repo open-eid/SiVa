@@ -1,7 +1,7 @@
 package ee.sk.pdf.validator.monitoring.request;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ee.sk.pdf.validator.monitoring.logging.LoggingService;
+import ee.sk.pdf.validator.monitoring.message.MessageService;
 import ee.sk.pdf.validator.monitoring.response.TslCertificateInfo;
 import ee.sk.pdf.validator.monitoring.response.TslStatusResponse;
 import ee.sk.pdf.validator.monitoring.status.ServiceStatus;
@@ -22,51 +22,42 @@ public class TslStatusRequestMaker {
     private static final Logger LOGGER = LoggerFactory.getLogger(TslStatusRequestMaker.class);
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a z");
-    private ServiceStatus serviceStatus;
     private TslStatusResponse statusResponse = new TslStatusResponse();
 
-    @Autowired
     private MonitoringRequestConfiguration monitoringRequestConfiguration;
-
-    @Autowired
     private ClientService clientService;
-
-    @Autowired
-    private LoggingService loggingService;
+    private MessageService messageService;
 
     public TslStatusResponse getPdfValidatorTslLoadingStatus() {
-        makeRequest();
-        statusResponse.setServiceStatus(serviceStatus);
-
-        return statusResponse;
-    }
-
-    private void makeRequest() {
-        ServiceStatus serviceStatus;
         String tslStatusPath = monitoringRequestConfiguration.getTslStatusPath();
         String fullPath = monitoringRequestConfiguration.getHost() + tslStatusPath;
 
+        ServiceStatus tslServiceStatus = validateRequestResponse(tslStatusPath, fullPath);
+        setServiceStatusInfoMessages(tslServiceStatus);
+        if (tslServiceStatus == ServiceStatus.OK) {
+            tslServiceStatus = validateTslCertificates();
+        }
+
+        statusResponse.setServiceStatus(tslServiceStatus);
+        return statusResponse;
+    }
+
+    private ServiceStatus validateRequestResponse(String tslStatusPath, String fullPath) {
+        ServiceStatus tslServiceStatus;
         try {
             Response response = clientService.getResponse(tslStatusPath, MediaType.APPLICATION_JSON_VALUE);
-            serviceStatus = response != null ? validateTslResponse(response) : ServiceStatus.CRITICAL;
-
-
+            tslServiceStatus = response != null ? validateTslResponse(response) : ServiceStatus.CRITICAL;
         } catch (IOException e) {
-            serviceStatus = ServiceStatus.CRITICAL;;
-            loggingService.logError(LOGGER, "monitoring.tslRequestFailed", fullPath, e.getMessage());
+            tslServiceStatus = ServiceStatus.CRITICAL;
+            LOGGER.error(messageService.getMessage("monitoring.tslRequestFailed", fullPath, e.getMessage()), e);
         }
 
-        setServiceStatusInfoMessages(serviceStatus);
-        if (serviceStatus == ServiceStatus.OK) {
-            serviceStatus = validateTslCertificates();
-        }
-
-        this.serviceStatus = serviceStatus;
+        return tslServiceStatus;
     }
 
     private ServiceStatus validateTslCertificates() {
         String message = "Expiration WARNING(s) for: ";
-        ServiceStatus serviceStatus = ServiceStatus.OK;
+        ServiceStatus tslServiceStatus = ServiceStatus.OK;
 
         for(Map.Entry<String, TslCertificateInfo> entry: statusResponse.getTslCertificateInfo().entrySet()) {
             TslCertificateInfo tslCertificateInfo = entry.getValue();
@@ -87,12 +78,12 @@ public class TslStatusRequestMaker {
             }
 
             if (isExpired(signingCertificateEndDate) || isExpired(tslNextUpdate)) {
-                serviceStatus = ServiceStatus.WARNING;
+                tslServiceStatus = ServiceStatus.WARNING;
             }
         }
 
         statusResponse.setUpdateMessage(message.replaceAll("\\s+", " ").trim());
-        return serviceStatus;
+        return tslServiceStatus;
     }
 
     private static boolean isExpired(Date date) {
@@ -125,4 +116,20 @@ public class TslStatusRequestMaker {
     private boolean isTslUpdateNotCompleted() {
         return statusResponse.getUpdateEndTime() == null || statusResponse.getUpdateStartTime() == null;
     }
+
+    @Autowired
+    public void setClientService(ClientService clientService) {
+        this.clientService = clientService;
+    }
+
+    @Autowired
+    public void setMessageService(MessageService messageService) {
+        this.messageService = messageService;
+    }
+
+    @Autowired
+    public void setMonitoringRequestConfiguration(MonitoringRequestConfiguration monitoringRequestConfiguration) {
+        this.monitoringRequestConfiguration = monitoringRequestConfiguration;
+    }
 }
+

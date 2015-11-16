@@ -11,4 +11,4 @@ DEP_PUREGE_OPTS='-DreResolve=false'
 
 OPTS=${SKIP_TESTS} 
 # mvn clean install -Dmaven.test.skip.exec
-./mvnw clean package -Dmaven.test.skip.exec
+./mvnw -T 4 package -Dmaven.test.skip.exec

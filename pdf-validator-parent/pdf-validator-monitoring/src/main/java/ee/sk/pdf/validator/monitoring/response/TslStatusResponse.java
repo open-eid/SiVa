@@ -1,12 +1,14 @@
 package ee.sk.pdf.validator.monitoring.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ee.sk.pdf.validator.monitoring.status.ServiceStatus;
 
 import java.util.Date;
 import java.util.Map;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TslStatusResponse {
     private ServiceStatus serviceStatus;
 

@@ -33,6 +33,31 @@ You can override these properties by placing application.properties file
 in same directory where the `pdf-validator-monitoring-1.0.1.RC1.jar` is
 located.
 
+Command line arguments
+----------------------
+
+If You do not like messing around with `application.properties` then You
+can pass in configuration as command line arguments.
+
+following command line options are available:
+
+```bash
+java -jar pdf-validator-monitoring-1.0.1.RC1.jar \
+	--server.port=4500 \
+	--monitoring.host=http://localhost:8080 \
+	--monitoring.path=/pdf-validator-webapp/wservice/validationService \
+	--monitoring.tslStatusPath=/pdf-validator-webapp/status/tsl \
+	--monitoring.requestInterval=3000
+```
+
+Explanation of command line arguments:
+* `--server.port` - set the port in which the monitoring service should be started
+* `--monitoring.host` - URL Path to PDF Validator service
+* `--monitoring.path` - path to PDF Validator validation service endpoint
+* `--monitoring.tslStatusPath` - path to info about TSL state in PDF Validator
+* `--monitoring.requestInterval` - how often should be checked for PDF Validator service state.
+  Interval is in milliseconds.
+
 Monitoring Service response values
 ----------------------------------
 
@@ -113,5 +138,3 @@ Explanation of TSL update Service status values:
   progress
 - **CRITICAL** - TSL update status information could not be queried
   from PDF Validator Service  
-
-

@@ -36,12 +36,12 @@ Next step is to deploy the build artifacts to Tomcat.
 
 ### Build process on Ubuntu 15.04
 
-First we need to install all required software dependencies for that we need 
+First we need to install all required software dependencies for that we need
 to issue following commands:
 
 ```bash
 sudo apt-get update
-sudo apt-get install -y git 
+sudo apt-get install -y git
 sudo apt-get install -y openjdk-7-jdk
 sudo apt-get install -y maven
 sudo apt-get install -y tomcat7
@@ -79,7 +79,7 @@ Option 1: Installing and configuring Tomcat using *apt-get* under Ubuntu 15.04
 ----------------------------------------------------------------------------
 
 After build has completed successfully we can continue installing the build artifacts
-into our Tomcat web container. 
+into our Tomcat web container.
 
 First make sure You have installed the Tomcat.
 
@@ -99,13 +99,22 @@ sudo chmod 755 cert-store
 Now we need to configure some environment variables to make PDF Validator work correctly.
 Create a `bin` directory in `$CATALINA_HOME` and add `setenv.sh` file into it.
 
-> **NOTE:** Paths below are based on default paths of package manger 
+First we need to set `CATALINA_HOME` and `CATALINA_BASE` by below lines into `/etc/default/tomcat7`
+
+```bash
+CATALINA_HOME=/usr/share/tomcat7
+
+# Directory for per-instance configuration files and webapps
+CATALINA_BASE=/var/lib/tomcat7
+```
+
+> **NOTE:** Paths below are based on default paths of package manger
 installed version of **Tomcat 7 of Ubuntu 15.04**
 
 ```bash
 cd /var/lib/tomcat7
-sudo mkdir bin 
-sudo touch bin/setenv.sh 
+sudo mkdir bin
+sudo touch bin/setenv.sh
 ```
 
 Add following content into this file.
@@ -120,7 +129,7 @@ Next we need to install the build artifacts into `webapps` directory:
 cp $HOME/pdf-validator/pdf-validator-parent/pdf-validator-webapp/target/pdf-validator-webapp-*.war /var/lib/tomcat7/webapps
 ```
 
-> **NOTE** It would be good to rename the `war` file to make more usable URL otherwise the version number will be visible in 
+> **NOTE** It would be good to rename the `war` file to make more usable URL otherwise the version number will be visible in
 > URL path
 
 Now we can start the Tomcat service:
@@ -197,7 +206,7 @@ list of WSDL endpoints.
 Configuring Java certificate keystore location
 ----------------------------------------------
 
-When PDF Validator web application starts it creates `etc` directory relative to path of Tomcat startup script execution 
+When PDF Validator web application starts it creates `etc` directory relative to path of Tomcat startup script execution
 location. In most of Linux distribution the default solution won't work because of lack of write permissions in startup forlder.
 
 To fix this You need to set environment variable `DSS_DATA_FOLDER` and make it accessible to Tomcat Web container user.
@@ -211,7 +220,7 @@ Validation request maximum size limit
 -------------------------------------
 
 PDF Validator by default can validate files around **10MB** in size. If there
-is need to validate larger files then web service needs to be recompiled. 
+is need to validate larger files then web service needs to be recompiled.
 
 Steps to change upload limit:
 
@@ -220,7 +229,7 @@ Steps to change upload limit:
 
     		<cxf:bus>
     			<cxf:properties>
-    				<entry key="org.apache.cxf.stax.maxTextLength" value="10000000" /> 
+    				<entry key="org.apache.cxf.stax.maxTextLength" value="10000000" />
     			</cxf:properties>
     		</cxf:bus>
 
@@ -254,11 +263,25 @@ Produced output should look similar to this:
 Verifying installation
 ----------------------
 
+### Validate that PDF Validator has started correctly from logs
+
+Easiest way is to look for below shown lines in `catalina.out` log files:
+
+```bash
+...
+11:47:37.592 [Thread-4] INFO  TrustedListsCertificateSource.java:398 - Loading completed: 31 trusted lists
+11:47:37.592 [Thread-4] INFO  TrustedListsCertificateSource.java:399 -                  : 1351 certificates
+11:47:37.592 [Thread-4] INFO  ReloadableTrustedListCertificateSource.java:80 - --> run(): END LOADING
+11:47:37.627 [org.springframework.scheduling.quartz.SchedulerFactoryBean#0_Worker-1] INFO  ReloadableTrustedListCertificateSource.java:156 - TSL Update error occurred: TSL Update completed successfully
+...
+```
+
+### Using browser to check that service works
+
 After checking logs for errors You can navigate to `http://<server-ip>:8080/pdf-validator-webapp-1.0.1.RC1/wservice` with browser to
 check if web service has started correctly and see similar web page as shown below.
 
 ![WSDL Endpoints after service has started](img/working_web_service.png)
-
 
 For a more thorough validation of the installation, the next step can be configuring and running the [built-in Monitoring Service](monitoring).
 
@@ -275,8 +298,6 @@ Now issue `curl` command to verify that PDF validator service can validate docum
 
 ```bash
 curl -s -X POST -d "@check_status_request.xml" http://localhost:8080/pdf-validator-webapp/wservice/validationService |
-xmllint --format - |
-pygmentize -l xml |
 grep "ValidSignaturesCount" | sed 's/&lt;/ /g' | sed 's/&gt;/ /g'
 
 ```

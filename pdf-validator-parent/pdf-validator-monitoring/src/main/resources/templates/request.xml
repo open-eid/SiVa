@@ -8,7 +8,7 @@
                 <name>/fixedpath/file.pdf</name>
                 <absolutePath>/fixedpath/file.pdf</absolutePath>
                 <mimeType>PDF</mimeType>
-                <nextDocument></nextDocument>
+                <nextDocument />
             </document>
             <diagnosticDataToBeReturned>true</diagnosticDataToBeReturned>
         </ns2:validateDocument>

@@ -9,7 +9,7 @@
                 <mimeType>PDF</mimeType>
                 <nextDocument></nextDocument>
             </document>
-        <diagnosticDataToBeReturned>true</diagnosticDataToBeReturned>
+            <diagnosticDataToBeReturned>true</diagnosticDataToBeReturned>
         </ns2:validateDocument>
     </S:Body>
 </S:Envelope>

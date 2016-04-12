@@ -5,13 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>eu.europa.ec.joinup.sd-dss</groupId>
-    <artifactId>pdf-validator</artifactId>
-    <version>1.0.1.RC1</version>
+    <artifactId>siva</artifactId>
+    <version>2.0.1.SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>PDF Validator Service</name>
+    <name>SIVa Digitally signed documents validation service</name>
 
     <modules>
     	<module>sd-dss</module>
     	<module>pdf-validator-parent</module>
+        <module>siva-parent</module>
     </modules>
 </project>

@@ -1,54 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>siva</artifactId>
+        <groupId>eu.europa.ec.joinup.sd-dss</groupId>
+        <version>2.0.1.SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
 
-	<modelVersion>4.0.0</modelVersion>
-	
-	<parent>
-		<artifactId>siva</artifactId>
-		<groupId>eu.europa.ec.joinup.sd-dss</groupId>
-		<version>2.0.1.SNAPSHOT</version>
-	</parent>
+    <artifactId>siva-parent</artifactId>
+    <packaging>pom</packaging>
+    <name>SIVa webapp and other core modules</name>
+    <version>2.0.1.SNAPSHOT</version>
 
-	<artifactId>pdf-validator-parent</artifactId>
-	<version>2.0.1.SNAPSHOT</version>
-	<packaging>pom</packaging>
-	<name>PDF Validator Service</name>
+    <modules>
+        <module>siva-webapp</module>
+    </modules>
 
-	<modules>
-		<module>pdf-validator-webapp</module>
-		<module>pdf-validator-tsl-downloader</module>
-		<module>pdf-validator-test</module>
-		<module>pdf-validator-monitoring</module>
-		<module>pdf-validator-distribution</module>
-		<module>pdf-validator-keystore-generator</module>
-		<module>pdf-validator-webservice</module>
-	</modules>
-
-	<developers>
-		<developer>
-			<id>risto</id>
-			<name>Risto Alas</name>
-			<roles>
-				<role>developer</role>
-			</roles>
-		</developer>
-		<developer>
-			<id>mihkel</id>
-			<name>Mihkel Selgal</name>
-			<roles>
-				<role>developer</role>
-			</roles>
-		</developer>
-		<developer>
-			<id>andres</id>
-			<name>Andres Voll</name>
-			<roles>
-				<role>developer</role>
-			</roles>
-		</developer>
-	</developers>
-	
 	<properties>
 		<project.encoding>UTF-8</project.encoding>
         <language.level>1.8</language.level>
@@ -61,70 +30,6 @@
 		<powermock.version>1.6.2</powermock.version>
         <dss.version>4.5.0</dss.version>
 	</properties>
-	
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.18.1</version>
-				<configuration>
-					<!-- Default test configuration -->
-					<skipTests>true</skipTests>
-					<systemProperties>
-						<java.util.logging.config.file>../logging.properties</java.util.logging.config.file>
-					</systemProperties>
-				</configuration>
-			</plugin>
-		</plugins>
-
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.5.1</version>
-					<configuration>
-						<encoding>${project.encoding}</encoding>
-						<source>${language.level}</source>
-						<target>${language.level}</target>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-resources-plugin</artifactId>
-					<version>2.5</version>
-					<configuration>
-						<encoding>${project.encoding}</encoding>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-war-plugin</artifactId>
-					<version>2.2</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.18</version>
-				</plugin>
-				<plugin>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-maven-plugin</artifactId>
-					<version>${spring.boot.version}</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-deploy-plugin</artifactId>
-					<version>2.8.2</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-assembly-plugin</artifactId>
-					<version>2.5.5</version>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
 
 	<dependencyManagement>
 		<dependencies>
@@ -149,7 +54,7 @@
 				<artifactId>dss-spi</artifactId>
 				<version>${dss.version}</version>
 			</dependency>
-			
+
             <!-- Spring boot -->
             <dependency>
                 <!-- Import dependency management from Spring Boot -->
@@ -165,36 +70,6 @@
                 <artifactId>jersey-client</artifactId>
                 <version>2.21</version>
             </dependency>
-
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-core</artifactId>
-				<version>2.7.3</version>
-			</dependency>
-
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-databind</artifactId>
-				<version>2.7.3</version>
-			</dependency>
-
-			<dependency>
-				<groupId>com.fasterxml.jackson.dataformat</groupId>
-				<artifactId>jackson-dataformat-xml</artifactId>
-				<version>2.6.3</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.codehaus.woodstox</groupId>
-				<artifactId>woodstox-core-asl</artifactId>
-				<version>4.4.1</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.json</groupId>
-				<artifactId>json</artifactId>
-				<version>20160212</version>
-			</dependency>
 
 			<!-- Public Dependencies -->
 			<dependency>
@@ -286,9 +161,73 @@
                 <artifactId>jetty-webapp</artifactId>
                 <version>9.3.1.v20150714</version>
             </dependency>
-
         </dependencies>
 	</dependencyManagement>
+
+    <build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.18.1</version>
+				<configuration>
+					<!-- Default test configuration -->
+					<skipTests>true</skipTests>
+					<systemProperties>
+						<java.util.logging.config.file>../logging.properties</java.util.logging.config.file>
+					</systemProperties>
+				</configuration>
+			</plugin>
+		</plugins>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.5.1</version>
+					<configuration>
+						<encoding>${project.encoding}</encoding>
+						<source>${language.level}</source>
+						<target>${language.level}</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.5</version>
+					<configuration>
+						<encoding>${project.encoding}</encoding>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>2.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.18</version>
+				</plugin>
+				<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+					<version>${spring.boot.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>2.8.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>2.5.5</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
 	<repositories>
 		<repository>
 			<id>jboss-public</id>

@@ -21,8 +21,7 @@ public class PdfValidationProxy {
     @Autowired
     private ValidationService validationService;
 
-    public String validate() {
-        final JSONDocument document = createDocument();
+    public String validate(final JSONDocument document) {
         return validationService.validateDocument(document);
     }
 

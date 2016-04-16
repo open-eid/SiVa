@@ -1,9 +1,7 @@
 package ee.openeid.siva.webapp;
 
-import ee.openeid.pdf.webservice.json.JSONDocument;
+import ee.openeid.siva.model.ValidationRequest;
 import ee.openeid.siva.proxy.PdfValidationProxy;
-import ee.openeid.siva.webapp.request.model.JSONValidationRequest;
-import ee.openeid.siva.webapp.transformer.RequestToJsonDocumentTransformer;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,57 +14,46 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 
 public class ValidationControllerTest {
 
-    private PdfValidationProxySpy validationProxy = new PdfValidationProxySpy();
-    private RequestToJsonDocumentTransformerSpy transformer = new RequestToJsonDocumentTransformerSpy();
+    private PdfValidationProxySpy validationProxySpy = new PdfValidationProxySpy();
 
     private MockMvc mockMvc;
 
     @Before
     public void setUp() {
         ValidationController validationController = new ValidationController();
-        validationController.setValidationProxy(validationProxy);
-        validationController.setTransformer(transformer);
+        validationController.setValidationProxy(validationProxySpy);
         mockMvc = standaloneSetup(validationController).build();
     }
 
     @Test
     public void jsonIsCorrectlyMappedToPOJO() throws Exception {
-        JSONValidationRequest request = new JSONValidationRequest();
         mockMvc.perform(post("/validate")
             .contentType(MediaType.APPLICATION_JSON)
             .content(mockRequest().getBytes())
         );
-        assertEquals(transformer.validationRequest.getFilename(), "filename.asd");
-        assertEquals(transformer.validationRequest.getBase64Document(), "ASD");
-        assertEquals(transformer.validationRequest.getType(), "some type");
-        assertEquals(transformer.validationRequest.getReportType(), "simple");
+        assertEquals("filename.asd", validationProxySpy.validationRequest.getFilename());
+        assertEquals("ASD", validationProxySpy.validationRequest.getBase64Document());
+        assertEquals("some type", validationProxySpy.validationRequest.getType());
+        assertEquals("simple", validationProxySpy.validationRequest.getReportType());
     }
 
     private String mockRequest() {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("base64Document", "ASD");
+        jsonObject.put("document", "ASD");
         jsonObject.put("filename", "filename.asd");
-        jsonObject.put("type", "some type");
-        jsonObject.put("reportType", "simple");
+        jsonObject.put("document-type", "some type");
+        jsonObject.put("report-type", "simple");
         return jsonObject.toString();
-    }
-
-    private class RequestToJsonDocumentTransformerSpy extends RequestToJsonDocumentTransformer {
-
-        private JSONValidationRequest validationRequest;
-
-        @Override
-        public JSONDocument transform(JSONValidationRequest validationRequest) {
-            this.validationRequest = validationRequest;
-            return new JSONDocument();
-        }
     }
 
     private class PdfValidationProxySpy extends PdfValidationProxy {
 
+        private ValidationRequest validationRequest;
+
         @Override
-        public String validate(JSONDocument document) {
-            return "OK";
+        public String validate(ValidationRequest validationRequest) {
+            this.validationRequest = validationRequest;
+            return null;
         }
     }
 }

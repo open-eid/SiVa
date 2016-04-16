@@ -1,4 +1,4 @@
-package ee.openeid.siva.webapp.mimetype;
+package ee.openeid.siva.proxy.mimetype;
 
 import eu.europa.esig.dss.MimeType;
 import org.junit.Rule;

@@ -1,8 +1,7 @@
 package ee.openeid.siva.webapp;
 
 import ee.openeid.siva.proxy.PdfValidationProxy;
-import ee.openeid.siva.webapp.request.model.JSONValidationRequest;
-import ee.openeid.siva.webapp.transformer.RequestToJsonDocumentTransformer;
+import ee.openeid.siva.webapp.request.JSONValidationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,11 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class ValidationController {
 
     private PdfValidationProxy validationProxy;
-    private RequestToJsonDocumentTransformer transformer;
 
     @RequestMapping(value = "/validate", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public String validate(@RequestBody JSONValidationRequest validationRequest) {
-        return validationProxy.validate(transformer.transform(validationRequest));
+        return validationProxy.validate(validationRequest);
     }
 
     @Autowired
@@ -26,8 +24,4 @@ public class ValidationController {
         this.validationProxy = validationProxy;
     }
 
-    @Autowired
-    public void setTransformer(RequestToJsonDocumentTransformer transformer) {
-        this.transformer = transformer;
-    }
 }

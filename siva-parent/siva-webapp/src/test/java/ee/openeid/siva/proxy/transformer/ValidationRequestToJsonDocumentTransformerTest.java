@@ -1,7 +1,8 @@
-package ee.openeid.siva.webapp.transformer;
+package ee.openeid.siva.proxy.transformer;
 
 import ee.openeid.pdf.webservice.json.JSONDocument;
-import ee.openeid.siva.webapp.request.model.JSONValidationRequest;
+import ee.openeid.siva.model.ValidationRequest;
+import ee.openeid.siva.testutils.MockValidationRequestBuilder;
 import eu.europa.esig.dss.MimeType;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Before;
@@ -9,20 +10,19 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
 
-public class RequestToJsonDocumentTransformerTest {
+public class ValidationRequestToJsonDocumentTransformerTest {
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
     private static final String VALID_PDF_FILE = "test-files/sample.pdf";
-    private RequestToJsonDocumentTransformer transformer = new RequestToJsonDocumentTransformer();
-    private JSONValidationRequest validationRequest;
+    private ValidationRequestToJsonDocumentTransformer transformer = new ValidationRequestToJsonDocumentTransformer();
+    private ValidationRequest validationRequest;
 
     @Before
     public void setUp() throws Exception {
@@ -47,17 +47,18 @@ public class RequestToJsonDocumentTransformerTest {
 
     @Test
     public void unsupportedTypeThrowsException() {
-        validationRequest.setType("unsupported");
+        validationRequest = MockValidationRequestBuilder.aValidationRequest().withType("unsupported").build();
         expectedException.expect(RuntimeException.class);
         expectedException.expectMessage("type = unsupported is unsupported");
         transformer.transform(validationRequest);
     }
 
     private void setValidPdfValidationRequest() throws Exception {
-        validationRequest = new JSONValidationRequest();
-        validationRequest.setFilename("filename.pdf");
-        validationRequest.setType("pdf");
         Path filepath = Paths.get(getClass().getClassLoader().getResource(VALID_PDF_FILE).toURI());
-        validationRequest.setBase64Document(Base64.encodeBase64String(Files.readAllBytes(filepath)));
+        validationRequest = MockValidationRequestBuilder
+                .aValidationRequest()
+                .withType("pdf")
+                .withDocument(filepath)
+                .build();
     }
 }

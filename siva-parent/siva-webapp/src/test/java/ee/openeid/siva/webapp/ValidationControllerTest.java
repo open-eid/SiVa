@@ -2,7 +2,7 @@ package ee.openeid.siva.webapp;
 
 import ee.openeid.pdf.webservice.json.JSONDocument;
 import ee.openeid.siva.service.ValidationProxyService;
-import ee.openeid.siva.webapp.transformer.ValidationRequestToJsonDocumentTransformer;
+import ee.openeid.siva.webapp.transformer.ValidationRequestToJSONDocumentTransformer;
 import eu.europa.esig.dss.MimeType;
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
@@ -25,7 +25,7 @@ public class ValidationControllerTest {
     public void setUp() {
         ValidationController validationController = new ValidationController();
         validationController.setValidationProxy(validationProxyServiceSpy);
-        validationController.setTransformer(new ValidationRequestToJsonDocumentTransformer());
+        validationController.setTransformer(new ValidationRequestToJSONDocumentTransformer());
         mockMvc = standaloneSetup(validationController).build();
     }
 

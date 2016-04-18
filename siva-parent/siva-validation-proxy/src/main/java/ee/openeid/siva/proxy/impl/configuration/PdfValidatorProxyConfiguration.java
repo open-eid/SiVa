@@ -1,4 +1,4 @@
-package ee.openeid.siva;
+package ee.openeid.siva.proxy.impl.configuration;
 
 import ee.openeid.pdf.webservice.json.JSONValidationService;
 import ee.openeid.pdf.webservice.json.ValidationService;

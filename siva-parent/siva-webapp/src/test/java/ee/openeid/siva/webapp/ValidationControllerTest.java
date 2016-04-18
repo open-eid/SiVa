@@ -1,7 +1,7 @@
 package ee.openeid.siva.webapp;
 
 import ee.openeid.pdf.webservice.json.JSONDocument;
-import ee.openeid.siva.service.ValidationProxyService;
+import ee.openeid.siva.proxy.service.ValidationProxyService;
 import ee.openeid.siva.webapp.transformer.ValidationRequestToJSONDocumentTransformer;
 import eu.europa.esig.dss.MimeType;
 import org.apache.commons.codec.binary.Base64;

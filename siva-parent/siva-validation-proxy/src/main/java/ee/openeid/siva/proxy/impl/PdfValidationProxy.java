@@ -1,8 +1,8 @@
-package ee.openeid.siva.impl;
+package ee.openeid.siva.proxy.impl;
 
 import ee.openeid.pdf.webservice.json.JSONDocument;
 import ee.openeid.pdf.webservice.json.ValidationService;
-import ee.openeid.siva.ValidationProxy;
+import ee.openeid.siva.proxy.ValidationProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,8 +1,8 @@
-package ee.openeid.siva.service;
+package ee.openeid.siva.proxy.service;
 
 import ee.openeid.pdf.webservice.json.JSONDocument;
-import ee.openeid.siva.ValidationProxy;
-import ee.openeid.siva.factory.ValidationProxyFactory;
+import ee.openeid.siva.proxy.ValidationProxy;
+import ee.openeid.siva.proxy.factory.ValidationProxyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

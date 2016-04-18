@@ -1,4 +1,4 @@
-package ee.openeid.siva;
+package ee.openeid.siva.proxy;
 
 import ee.openeid.pdf.webservice.json.JSONDocument;
 

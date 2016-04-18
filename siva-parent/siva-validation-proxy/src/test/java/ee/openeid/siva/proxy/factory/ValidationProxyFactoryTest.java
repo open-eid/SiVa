@@ -1,8 +1,9 @@
-package ee.openeid.siva.factory;
+package ee.openeid.siva.proxy.factory;
 
 
-import ee.openeid.siva.ValidationProxy;
-import ee.openeid.siva.impl.PdfValidationProxy;
+import ee.openeid.siva.proxy.ValidationProxy;
+import ee.openeid.siva.proxy.factory.ValidationProxyFactory;
+import ee.openeid.siva.proxy.impl.PdfValidationProxy;
 import eu.europa.esig.dss.MimeType;
 import org.junit.Assert;
 import org.junit.Rule;

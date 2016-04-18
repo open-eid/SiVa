@@ -1,6 +1,6 @@
 package ee.openeid.siva.webapp;
 
-import ee.openeid.siva.service.ValidationProxyService;
+import ee.openeid.siva.proxy.service.ValidationProxyService;
 import ee.openeid.siva.webapp.transformer.ValidationRequestToJSONDocumentTransformer;
 import ee.openeid.siva.webapp.request.impl.JSONValidationRequest;
 import org.springframework.beans.factory.annotation.Autowired;

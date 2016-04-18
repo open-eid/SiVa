@@ -1,14 +1,12 @@
-package ee.openeid.siva;
+package ee.openeid.siva.proxy.impl;
 
 
 import ee.openeid.pdf.webservice.json.JSONDocument;
 import ee.openeid.pdf.webservice.json.ValidationService;
-import ee.openeid.siva.impl.PdfValidationProxy;
-import eu.europa.esig.dss.MimeType;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class PdfValidationProxyTest {

@@ -43,7 +43,7 @@
 		<property name="tspServer" value="http://tsa.belgium.be/connect"/>
 		<property name="dataLoader" ref="dataLoader"/>
 	</bean>
-	
+
 	<beans profile="production">
 		<bean id="trustedListSource" class="eu.europa.esig.dss.tsl.ReloadableTrustedListCertificateSource">
 			<property name="dataLoader" ref="fileCacheDataLoader"/>

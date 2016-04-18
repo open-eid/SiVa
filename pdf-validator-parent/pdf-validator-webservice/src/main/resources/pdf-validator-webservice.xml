@@ -1,13 +1,19 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
        xmlns:cxf="http://cxf.apache.org/core" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
        xsi:schemaLocation="http://cxf.apache.org/core
         http://cxf.apache.org/schemas/core.xsd
 		http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
-		http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+		http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
     <context:annotation-config/>
+
+    <jdbc:initialize-database data-source="dataSource">
+        <jdbc:script location="classpath:structure.sql"/>
+        <jdbc:script location="classpath:load.sql"/>
+    </jdbc:initialize-database>
 
     <!--<cxf:bus>-->
         <!--<cxf:properties>-->
@@ -22,11 +28,88 @@
 
     <!--<jaxws:endpoint id="validationService" implementor="#dss.validation.validationService" address="/validationService" />-->
 
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="${datasource.driver.class}"/>
+        <property name="url" value="${datasource.url}"/>
+        <property name="username" value="${datasource.username}"/>
+        <property name="password" value="${datasource.password}"/>
+    </bean>
+
+    <bean id="proxyDao" class="eu.europa.esig.dss.client.http.proxy.ProxyJdbcDao">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+    <bean id="proxyPreferenceManager" class="eu.europa.esig.dss.client.http.proxy.ProxyPreferenceManager">
+		<property name="proxyDao" ref="proxyDao"/>
+		<!--<property name="proxyDao" ref="proxyFile"/>-->
+	</bean>
+
+    <bean id="fileCacheDataLoader" class="eu.europa.esig.dss.client.http.commons.FileCacheDataLoader">
+		<property name="proxyPreferenceManager" ref="proxyPreferenceManager"/>
+		<!-- Per default uses "java.io.tmpdir" property -->
+		<property name="fileCacheDirectory" value="${trusted.list.source.fileCacheDirectory}"/>
+	</bean>
+
+    <bean id="dssKeyStore"  class="ee.openeid.pdf.webservice.DSSKeyStoreFactoryBean">
+		<property name="keyStoreType" value="${keystore.type}" />
+		<property name="keyStoreFilename" value="${keystore.filename}" />
+		<property name="keyStorePassword" value="${keystore.password}" />
+	</bean>
+
+    <bean id="crlSource" class="eu.europa.esig.dss.client.crl.AlwaysFailingCRLSource"/>
+    <bean id="ocspSource" class="eu.europa.esig.dss.client.ocsp.AlwaysFailingOCSPSource" />
+
+    <bean id="trustedListSource" class="eu.europa.esig.dss.tsl.ReloadableTrustedListCertificateSource">
+        <property name="dataLoader" ref="fileCacheDataLoader"/>
+        <property name="checkSignature" value="true"/>
+        <property name="keyStoreCertificateSource" ref="dssKeyStore"/>
+        <property name="lotlUrl" value="${trusted.list.source.lotlUrl}"/>
+        <property name="tslRefreshPolicy" value="${trusted.list.source.tslRefreshPolicy}"/>
+    </bean>
+
+    <bean id="dataLoader" class="eu.europa.esig.dss.client.http.commons.CommonsDataLoader">
+		<property name="proxyPreferenceManager" ref="proxyPreferenceManager"/>
+	</bean>
+
     <bean id="certificateVerifier" class="eu.europa.esig.dss.validation.CommonCertificateVerifier">
         <property name="trustedCertSource" ref="trustedListSource"/>
         <property name="ocspSource" ref="ocspSource"/>
         <property name="crlSource" ref="crlSource"/>
         <property name="dataLoader" ref="dataLoader"/>
+    </bean>
+
+	<!-- Initial job run -->
+    <bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+        <property name="jobDetail" ref="tlReload"/>
+        <property name="startDelay" value="6000"/>
+        <property name="repeatCount" value="0"/>
+        <!--<property name="repeatInterval" value="3600000"/>-->
+    </bean>
+
+	<bean id="preferencesDao" class="ee.openeid.pdf.webservice.dao.PreferencesJdbcDao">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+    <bean id="tlReload" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="trustedListSource"/>
+        <property name="targetMethod" value="refresh"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+
+    <!-- Run the job every day at 03:00 -->
+    <bean id="cronTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="tlReload" />
+        <property name="cronExpression" value="0 0 3 * * ? *" />
+    </bean>
+
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean"
+          destroy-method="destroy">
+        <property name="triggers">
+            <list>
+                <ref bean="simpleTrigger"/>
+                <ref bean="cronTrigger"/>
+            </list>
+        </property>
     </bean>
 
 </beans>

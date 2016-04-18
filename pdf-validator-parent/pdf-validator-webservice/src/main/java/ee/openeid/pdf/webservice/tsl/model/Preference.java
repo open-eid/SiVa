@@ -18,7 +18,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package ee.openeid.pdf.webservice.model;
+package ee.openeid.pdf.webservice.tsl.model;
 
 /**
  * 
@@ -30,41 +30,43 @@ package ee.openeid.pdf.webservice.model;
  *
  *
  */
-public enum PreferenceKey {
-    /**
-     * The enum constant url service.
-     */
-    SERVICE_URL("preference.url.service"), DEFAULT_POLICY_URL("preference.default.policy.url");
+public class Preference {
 
-    public static PreferenceKey fromKey(String key) {
-        for (final PreferenceKey preferenceKey : values()) {
-            if (preferenceKey.key.equals(key)) {
-                return preferenceKey;
-            }
-        }
-        return null;
+    /**
+     * The preferences key.
+     */
+    private String key;
+    /**
+     * The preferences value.
+     */
+    private String value;
+
+    /**
+     * @return the key
+     */
+    public String getKey() {
+        return key;
     }
 
-    private final String key;
+    /**
+     * @return the value
+     */
+    public String getValue() {
+        return value;
+    }
 
     /**
-     * 
-     * The default constructor for PreferenceKey.
-     * 
-     * @param key
+     * @param key the key to set
      */
-    PreferenceKey(final String key) {
+    public void setKey(String key) {
         this.key = key;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Enum#toString()
+    /**
+     * @param value the value to set
      */
-    @Override
-    public String toString() {
-        return key;
+    public void setValue(String value) {
+        this.value = value;
     }
 
 }

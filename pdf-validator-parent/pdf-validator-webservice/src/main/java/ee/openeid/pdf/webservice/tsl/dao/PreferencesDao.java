@@ -18,9 +18,10 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package ee.openeid.pdf.webservice.dao;
+package ee.openeid.pdf.webservice.tsl.dao;
 
-import java.util.List;
+import ee.openeid.pdf.webservice.tsl.model.Preference;
+import ee.openeid.pdf.webservice.tsl.model.PreferenceKey;
 
 /**
  * 
@@ -31,27 +32,7 @@ import java.util.List;
  * 
  *
  *
- * @param <T>
- * @param <ID>
  */
-public interface GenericDao<T, ID> {
-
-    /**
-     * 
-     * @param id
-     */
-    T get(ID id);
-
-    /**
-     * 
-     * @return
-     */
-    List<T> getAll();
-
-    /**
-     * 
-     * @param entity
-     */
-    void update(T entity);
+public interface PreferencesDao extends GenericDao<Preference, PreferenceKey> {
 
 }

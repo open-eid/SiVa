@@ -86,7 +86,7 @@
         <!--<property name="repeatInterval" value="3600000"/>-->
     </bean>
 
-	<bean id="preferencesDao" class="ee.openeid.pdf.webservice.dao.PreferencesJdbcDao">
+	<bean id="preferencesDao" class="ee.openeid.pdf.webservice.tsl.dao.PreferencesJdbcDao">
 		<property name="dataSource" ref="dataSource"/>
 	</bean>
 

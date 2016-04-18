@@ -18,10 +18,10 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package ee.openeid.pdf.webservice.dao;
+package ee.openeid.pdf.webservice.tsl.dao;
 
-import ee.openeid.pdf.webservice.model.Preference;
-import ee.openeid.pdf.webservice.model.PreferenceKey;
+import ee.openeid.pdf.webservice.tsl.model.Preference;
+import ee.openeid.pdf.webservice.tsl.model.PreferenceKey;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

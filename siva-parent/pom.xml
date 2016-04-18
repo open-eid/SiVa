@@ -16,7 +16,8 @@
 
     <modules>
         <module>siva-webapp</module>
-    </modules>
+		<module>siva-validation-proxy</module>
+	</modules>
 
 	<properties>
 		<project.encoding>UTF-8</project.encoding>

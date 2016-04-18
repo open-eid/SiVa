@@ -1,9 +1,9 @@
-package ee.openeid.siva.proxy.transformer;
+package ee.openeid.siva.webapp.transformer;
 
 
 import ee.openeid.pdf.webservice.json.JSONDocument;
-import ee.openeid.siva.proxy.mimetype.MimeTypeResolver;
-import ee.openeid.siva.model.ValidationRequest;
+import ee.openeid.siva.mimetype.MimeTypeResolver;
+import ee.openeid.siva.webapp.request.ValidationRequest;
 import eu.europa.esig.dss.MimeType;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Component;

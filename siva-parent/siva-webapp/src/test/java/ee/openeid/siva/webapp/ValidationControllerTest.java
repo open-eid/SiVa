@@ -1,7 +1,10 @@
 package ee.openeid.siva.webapp;
 
-import ee.openeid.siva.model.ValidationRequest;
-import ee.openeid.siva.proxy.PdfValidationProxy;
+import ee.openeid.pdf.webservice.json.JSONDocument;
+import ee.openeid.siva.service.ValidationProxyService;
+import ee.openeid.siva.webapp.transformer.ValidationRequestToJsonDocumentTransformer;
+import eu.europa.esig.dss.MimeType;
+import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,14 +17,15 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 
 public class ValidationControllerTest {
 
-    private PdfValidationProxySpy validationProxySpy = new PdfValidationProxySpy();
+    private ValidationProxyServiceSpy validationProxyServiceSpy = new ValidationProxyServiceSpy();
 
     private MockMvc mockMvc;
 
     @Before
     public void setUp() {
         ValidationController validationController = new ValidationController();
-        validationController.setValidationProxy(validationProxySpy);
+        validationController.setValidationProxy(validationProxyServiceSpy);
+        validationController.setTransformer(new ValidationRequestToJsonDocumentTransformer());
         mockMvc = standaloneSetup(validationController).build();
     }
 
@@ -31,28 +35,26 @@ public class ValidationControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(mockRequest().getBytes())
         );
-        assertEquals("filename.asd", validationProxySpy.validationRequest.getFilename());
-        assertEquals("ASD", validationProxySpy.validationRequest.getBase64Document());
-        assertEquals("some type", validationProxySpy.validationRequest.getType());
-        assertEquals("simple", validationProxySpy.validationRequest.getReportType());
+        assertEquals("filename.asd", validationProxyServiceSpy.document.getName());
+        assertEquals("QVNE", Base64.encodeBase64String(validationProxyServiceSpy.document.getBytes()));
+        assertEquals(MimeType.PDF , validationProxyServiceSpy.document.getMimeType());
     }
 
     private String mockRequest() {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("document", "ASD");
+        jsonObject.put("document", "QVNE");
         jsonObject.put("filename", "filename.asd");
-        jsonObject.put("document-type", "some type");
-        jsonObject.put("report-type", "simple");
+        jsonObject.put("documentType", "PDF");
         return jsonObject.toString();
     }
 
-    private class PdfValidationProxySpy extends PdfValidationProxy {
+    private class ValidationProxyServiceSpy extends ValidationProxyService {
 
-        private ValidationRequest validationRequest;
+        private JSONDocument document;
 
         @Override
-        public String validate(ValidationRequest validationRequest) {
-            this.validationRequest = validationRequest;
+        public String validate(JSONDocument document) {
+            this.document = document;
             return null;
         }
     }

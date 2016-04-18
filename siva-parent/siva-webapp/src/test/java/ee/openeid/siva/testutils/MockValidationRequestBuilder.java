@@ -1,6 +1,6 @@
 package ee.openeid.siva.testutils;
 
-import ee.openeid.siva.model.ValidationRequest;
+import ee.openeid.siva.webapp.request.ValidationRequest;
 import org.apache.commons.codec.binary.Base64;
 
 import java.io.IOException;

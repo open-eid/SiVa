@@ -1,7 +1,7 @@
-package ee.openeid.siva.webapp.request;
+package ee.openeid.siva.webapp.request.impl;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import ee.openeid.siva.model.ValidationRequest;
+import ee.openeid.siva.webapp.request.ValidationRequest;
 
 //TODO: Need to add some restrictions when we know what restrictions we need on the request
 public class JSONValidationRequest implements ValidationRequest {
@@ -12,10 +12,10 @@ public class JSONValidationRequest implements ValidationRequest {
     @JsonProperty("filename")
     private String filename;
 
-    @JsonProperty("document-type")
+    @JsonProperty("documentType")
     private String type;
 
-    @JsonProperty("report-type")
+    @JsonProperty("reportType")
     private String reportType;
 
     public String getBase64Document() {

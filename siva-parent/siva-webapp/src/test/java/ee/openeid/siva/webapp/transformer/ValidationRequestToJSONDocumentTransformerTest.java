@@ -1,10 +1,11 @@
-package ee.openeid.siva.proxy.transformer;
+package ee.openeid.siva.webapp.transformer;
 
 import ee.openeid.pdf.webservice.json.JSONDocument;
-import ee.openeid.siva.model.ValidationRequest;
+import ee.openeid.siva.webapp.request.ValidationRequest;
 import ee.openeid.siva.testutils.MockValidationRequestBuilder;
 import eu.europa.esig.dss.MimeType;
 import org.apache.commons.codec.binary.Base64;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -15,13 +16,13 @@ import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
 
-public class ValidationRequestToJsonDocumentTransformerTest {
+public class ValidationRequestToJSONDocumentTransformerTest {
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
     private static final String VALID_PDF_FILE = "test-files/sample.pdf";
-    private ValidationRequestToJsonDocumentTransformer transformer = new ValidationRequestToJsonDocumentTransformer();
+    private ValidationRequestToJSONDocumentTransformer transformer = new ValidationRequestToJSONDocumentTransformer();
     private ValidationRequest validationRequest;
 
     @Before
@@ -42,7 +43,7 @@ public class ValidationRequestToJsonDocumentTransformerTest {
     @Test
     public void contentIsCorrectlyTransformedToBytes() {
         JSONDocument jsonDocument = transformer.transform(validationRequest);
-        assertEquals(validationRequest.getBase64Document(), Base64.encodeBase64String(jsonDocument.getBytes()));
+        Assert.assertEquals(validationRequest.getBase64Document(), Base64.encodeBase64String(jsonDocument.getBytes()));
     }
 
     @Test

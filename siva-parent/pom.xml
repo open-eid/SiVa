@@ -16,7 +16,8 @@
 
     <modules>
         <module>siva-webapp</module>
-    </modules>
+		<module>siva-validation-proxy</module>
+	</modules>
 
 	<properties>
 		<project.encoding>UTF-8</project.encoding>
@@ -81,6 +82,13 @@
 				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
 				<version>2.4</version>
+			</dependency>
+
+			<!-- Lombok for getters and setters -->
+			<dependency>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok</artifactId>
+				<version>1.16.8</version>
 			</dependency>
 
 			<dependency>

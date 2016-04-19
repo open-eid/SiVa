@@ -45,6 +45,8 @@ public class JSONDocument {
 
 	private String absolutePath = "WSDocument";
 
+	private String reportType;
+
 	protected JSONDocument nextDocument;
 
 	/**
@@ -116,6 +118,14 @@ public class JSONDocument {
 
 	public void setAbsolutePath(String absolutePath) {
 		this.absolutePath = absolutePath;
+	}
+
+	public String getReportType() {
+		return reportType;
+	}
+
+	public void setReportType(String reportType) {
+		this.reportType = reportType;
 	}
 
 	public InputStream openStream() throws DSSException {

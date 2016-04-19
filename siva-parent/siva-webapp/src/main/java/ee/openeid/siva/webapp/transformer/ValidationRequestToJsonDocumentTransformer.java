@@ -16,6 +16,7 @@ public class ValidationRequestToJSONDocumentTransformer {
         jsonDocument.setName(validationRequest.getFilename());
         jsonDocument.setMimeType(mimeTypeFromString(validationRequest.getType()));
         jsonDocument.setBytes(base64ToBytes(validationRequest.getBase64Document()));
+        jsonDocument.setReportType(validationRequest.getReportType());
         return jsonDocument;
     }
 

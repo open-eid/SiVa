@@ -28,7 +28,7 @@ public class ValidationProxyFactoryTest {
         expectedException.expect(RuntimeException.class);
         expectedException.expectMessage("type = application/octet-stream is unsupported");
 
-        ValidationProxy validationProxy = validationProxyFactory.getValidationProxy(MimeType.BINARY);
+        validationProxyFactory.getValidationProxy(MimeType.BINARY);
     }
 
 }

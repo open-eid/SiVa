@@ -13,8 +13,7 @@ public class ValidationProxyService {
 
     public String validate(JSONDocument document) {
         ValidationProxy validationProxy = validationProxyFactory.getValidationProxy(document.getMimeType());
-        validationProxy.validate(document);
-        return null;
+        return validationProxy.validate(document);
     }
 
     @Autowired

@@ -1,12 +1,11 @@
-package ee.openeid.siva;
+package ee.openeid.siva.sample;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SivaWebApplication {
+public class SivaDemoApplication {
     public static void main(String... args) {
-        SpringApplication.run(SivaWebApplication.class, args);
+        SpringApplication.run(SivaDemoApplication.class, args);
     }
 }

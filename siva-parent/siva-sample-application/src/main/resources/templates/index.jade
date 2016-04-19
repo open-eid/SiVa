@@ -1,0 +1,14 @@
+extends layout/main-layout
+
+block content
+    .row
+        .col-md-12
+            h1 1. Upload a digitally signed file
+            form(action="/upload", method="POST", enctype="multipart/form-data")
+                input(type="file", name="file")
+                button(type="submit").btn.btn-primary Upload file
+    .row
+        .col-md-12
+            h1 2. View validation report
+            if validationResult != null
+                pre.prettyprint= validationResult

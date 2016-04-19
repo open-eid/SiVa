@@ -1,0 +1,5 @@
+server:
+  port: 9000
+siva:
+  service:
+    url: "http://localhost:8080/validate"

@@ -23,7 +23,7 @@ public class ValidationController {
 
     @Autowired
     public void setValidationProxy(ValidationProxyService validationProxy) {
-        this.validationProxyService = validationProxy;
+        validationProxyService = validationProxy;
     }
 
     @Autowired

@@ -17,15 +17,16 @@
     <modules>
         <module>siva-webapp</module>
 		<module>siva-validation-proxy</module>
+		<module>siva-sample-application</module>
 	</modules>
 
 	<properties>
 		<project.encoding>UTF-8</project.encoding>
         <language.level>1.8</language.level>
-		<spring.version>4.2.5.RELEASE</spring.version>
-        <spring.boot.version>1.4.0.M1</spring.boot.version>
-		<slf4j.version>1.6.6</slf4j.version>
-		<logback-classic.version>1.0.13</logback-classic.version>
+		<!--<spring.version>4.2.5.RELEASE</spring.version>-->
+        <spring.boot.version>1.4.0.M2</spring.boot.version>
+		<!--<slf4j.version>1.6.6</slf4j.version>-->
+		<!--<logback-classic.version>1.0.13</logback-classic.version>-->
 		<junit.version>4.12</junit.version>
 		<mockito.version>2.0.2-beta</mockito.version>
 		<powermock.version>1.6.2</powermock.version>
@@ -72,6 +73,28 @@
                 <version>2.21</version>
             </dependency>
 
+            <!-- Front-end development -->
+			<dependency>
+				<groupId>com.domingosuarez.boot</groupId>
+				<artifactId>spring-boot-starter-jade4j</artifactId>
+				<version>0.3.0</version>
+			</dependency>
+            <dependency>
+                <groupId>de.neuland-bfi</groupId>
+                <artifactId>spring-jade4j</artifactId>
+                <version>1.2.1</version>
+            </dependency>
+            <dependency>
+                <groupId>de.neuland-bfi</groupId>
+                <artifactId>jade4j</artifactId>
+                <version>1.2.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars.bower</groupId>
+                <artifactId>bootstrap</artifactId>
+                <version>4.0.0-alpha.2</version>
+            </dependency>
+
 			<!-- Public Dependencies -->
 			<dependency>
 				<groupId>commons-codec</groupId>
@@ -91,7 +114,7 @@
 				<version>1.16.8</version>
 			</dependency>
 
-			<dependency>
+			<!--<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-beans</artifactId>
 				<version>${spring.version}</version>
@@ -122,7 +145,7 @@
 				<artifactId>quartz</artifactId>
 				<version>2.2.1</version>
 			</dependency>
-
+-->
             <!-- DB for webapp settings -->
 			<dependency>
 				<groupId>org.hsqldb</groupId>
@@ -131,7 +154,7 @@
 			</dependency>
 
 			<!-- Logger -->
-			<dependency>
+			<!--<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
 				<version>${slf4j.version}</version>
@@ -140,13 +163,13 @@
 				<groupId>org.slf4j</groupId>
 				<artifactId>jcl-over-slf4j</artifactId>
 				<version>${slf4j.version}</version>
-			</dependency>
-			<dependency>
+			</dependency>-->
+			<!--<dependency>
 				<groupId>ch.qos.logback</groupId>
 				<artifactId>logback-classic</artifactId>
 				<version>${logback-classic.version}</version>
 			</dependency>
-
+-->
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
@@ -268,6 +291,10 @@
             <id>spring-milestones</id>
             <url>http://repo.spring.io/milestone</url>
         </repository>
+        <repository>
+            <id>jCenter</id>
+            <url>http://jcenter.bintray.com/</url>
+        </repository>
 		<repository>
 			<id>apache.snapshots</id>
 			<url>https://repository.apache.org/content/repositories/snapshots</url>
@@ -278,6 +305,7 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
+
 	</repositories>
     <pluginRepositories>
         <pluginRepository>

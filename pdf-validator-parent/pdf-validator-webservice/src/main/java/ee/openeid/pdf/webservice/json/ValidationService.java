@@ -1,5 +1,5 @@
 package ee.openeid.pdf.webservice.json;
 
 public interface ValidationService {
-    String validateDocument(JSONDocument wsDocument);
+    String validateDocument(PDFDocument wsDocument);
 }

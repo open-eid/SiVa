@@ -35,7 +35,7 @@ import java.util.Arrays;
  *
  */
 
-public class JSONDocument {
+public class PDFDocument {
 
 	private byte[] bytes;
 
@@ -47,12 +47,12 @@ public class JSONDocument {
 
 	private String reportType;
 
-	protected JSONDocument nextDocument;
+	protected PDFDocument nextDocument;
 
 	/**
 	 * This constructor is used by Spring in the web-app..
 	 */
-	public JSONDocument() {
+	public PDFDocument() {
 
 	}
 
@@ -62,7 +62,7 @@ public class JSONDocument {
 	 * @param dssDocument
 	 * @throws DSSException
 	 */
-	public JSONDocument(final DSSDocument dssDocument) throws DSSException {
+	public PDFDocument(final DSSDocument dssDocument) throws DSSException {
 
 		final byte[] bytes = dssDocument.getBytes();
 		this.bytes = Arrays.copyOf(bytes, bytes.length);
@@ -72,7 +72,7 @@ public class JSONDocument {
 
 		final DSSDocument nextDssDocument = dssDocument.getNextDocument();
 		if (nextDssDocument != null) {
-			nextDocument = new JSONDocument(nextDssDocument);
+			nextDocument = new PDFDocument(nextDssDocument);
 		}
 	}
 
@@ -134,11 +134,11 @@ public class JSONDocument {
 		return byteArrayInputStream;
 	}
 
-	public JSONDocument getNextDocument() {
+	public PDFDocument getNextDocument() {
 		return nextDocument;
 	}
 
-	public void setNextDocument(JSONDocument nextDocument) {
+	public void setNextDocument(PDFDocument nextDocument) {
 		this.nextDocument = nextDocument;
 	}
 

@@ -31,40 +31,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.soap.SOAPException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
 
 /**
  * Implementation of the Interface for the Contract of the Validation Web Service.
  */
 @Service
-public class JSONValidationService implements ValidationService {
-	private static final Logger logger = LoggerFactory.getLogger(JSONValidationService.class);
+public class PDFValidationService implements ValidationService {
+	private static final Logger logger = LoggerFactory.getLogger(PDFValidationService.class);
 
     private XMLConverter converter;
 	private CertificateVerifier certificateVerifier;
 
-    @Autowired
-	public void setCertificateVerifier(CertificateVerifier certificateVerifier) {
-		this.certificateVerifier = certificateVerifier;
-	}
-
-    @Autowired
-    public void setConverter(XMLConverter converter) {
-        this.converter = converter;
-    }
-
     @Override
-	public String validateDocument(JSONDocument wsDocument) throws DSSException {
+	public String validateDocument(PDFDocument wsDocument) throws DSSException {
 
 		String exceptionMessage;
 		try {
@@ -104,12 +86,15 @@ public class JSONValidationService implements ValidationService {
 		throw new DSSException(exceptionMessage);
 	}
 
-
-	private Document getDocument(String xml) throws ParserConfigurationException, IOException, SAXException {
-		DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-		InputSource inputSource = new InputSource();
-		inputSource.setCharacterStream(new StringReader(xml));
-
-		return documentBuilder.parse(inputSource);
+	@Autowired
+	public void setCertificateVerifier(CertificateVerifier certificateVerifier) {
+		this.certificateVerifier = certificateVerifier;
 	}
+
+    @Autowired
+    public void setConverter(XMLConverter converter) {
+        this.converter = converter;
+    }
+
+
 }

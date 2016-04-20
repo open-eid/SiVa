@@ -1,6 +1,6 @@
 package ee.openeid.siva.proxy.impl;
 
-import ee.openeid.pdf.webservice.json.JSONDocument;
+import ee.openeid.pdf.webservice.json.PDFDocument;
 import ee.openeid.pdf.webservice.json.ValidationService;
 import ee.openeid.siva.proxy.ValidationProxy;
 import org.slf4j.Logger;
@@ -15,7 +15,7 @@ public class PdfValidationProxy implements ValidationProxy {
 
     private ValidationService validationService;
 
-    public String validate(final JSONDocument document) {
+    public String validate(final PDFDocument document) {
         return validationService.validateDocument(document);
     }
 

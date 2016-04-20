@@ -1,6 +1,6 @@
 package ee.openeid.siva.webapp;
 
-import ee.openeid.pdf.webservice.json.JSONDocument;
+import ee.openeid.pdf.webservice.json.PDFDocument;
 import ee.openeid.siva.proxy.service.ValidationProxyService;
 import ee.openeid.siva.webapp.transformer.ValidationRequestToJSONDocumentTransformer;
 import eu.europa.esig.dss.MimeType;
@@ -50,10 +50,10 @@ public class ValidationControllerTest {
 
     private class ValidationProxyServiceSpy extends ValidationProxyService {
 
-        private JSONDocument document;
+        private PDFDocument document;
 
         @Override
-        public String validate(JSONDocument document) {
+        public String validate(PDFDocument document) {
             this.document = document;
             return null;
         }

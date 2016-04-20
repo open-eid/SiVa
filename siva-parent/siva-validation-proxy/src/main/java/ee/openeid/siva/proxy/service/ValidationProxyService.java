@@ -1,6 +1,6 @@
 package ee.openeid.siva.proxy.service;
 
-import ee.openeid.pdf.webservice.json.JSONDocument;
+import ee.openeid.pdf.webservice.json.PDFDocument;
 import ee.openeid.siva.proxy.ValidationProxy;
 import ee.openeid.siva.proxy.factory.ValidationProxyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ public class ValidationProxyService {
 
     private ValidationProxyFactory validationProxyFactory;
 
-    public String validate(JSONDocument document) {
+    public String validate(PDFDocument document) {
         ValidationProxy validationProxy = validationProxyFactory.getValidationProxy(document.getMimeType());
         return validationProxy.validate(document);
     }

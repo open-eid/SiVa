@@ -32,15 +32,15 @@ final class JSONUtils {
 	private JSONUtils() {
 	}
 
-	static DSSDocument createDssDocument(final JSONDocument jsonDocument) {
-		if (jsonDocument == null) {
+	static DSSDocument createDssDocument(final PDFDocument PDFDocument) {
+		if (PDFDocument == null) {
 			return null;
 		}
 
-		final InMemoryDocument dssDocument = new InMemoryDocument(jsonDocument.getBytes());
-		dssDocument.setName(jsonDocument.getName());
-		dssDocument.setAbsolutePath(jsonDocument.getAbsolutePath());
-		final MimeType mimeType = jsonDocument.getMimeType();
+		final InMemoryDocument dssDocument = new InMemoryDocument(PDFDocument.getBytes());
+		dssDocument.setName(PDFDocument.getName());
+		dssDocument.setAbsolutePath(PDFDocument.getAbsolutePath());
+		final MimeType mimeType = PDFDocument.getMimeType();
 		dssDocument.setMimeType(mimeType);
 
 		return dssDocument;

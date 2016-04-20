@@ -1,7 +1,7 @@
 package ee.openeid.siva.proxy.impl;
 
 
-import ee.openeid.pdf.webservice.json.JSONDocument;
+import ee.openeid.pdf.webservice.json.PDFDocument;
 import ee.openeid.pdf.webservice.json.ValidationService;
 
 import org.junit.Before;
@@ -22,19 +22,19 @@ public class PdfValidationProxyTest {
 
     @Test
     public void validationRequestIsTranformedAndForwardedToValidationService() {
-        pdfValidationProxy.validate(new JSONDocument());
-        assertNotNull(validationServiceSpy.jsonDocument);
+        pdfValidationProxy.validate(new PDFDocument());
+        assertNotNull(validationServiceSpy.PDFDocument);
     }
 
 
 
     private class ValidationServiceSpy implements ValidationService {
 
-        JSONDocument jsonDocument;
+        PDFDocument PDFDocument;
 
         @Override
-        public String validateDocument(JSONDocument wsDocument) {
-            jsonDocument = wsDocument;
+        public String validateDocument(PDFDocument wsDocument) {
+            PDFDocument = wsDocument;
             return null;
         }
     }

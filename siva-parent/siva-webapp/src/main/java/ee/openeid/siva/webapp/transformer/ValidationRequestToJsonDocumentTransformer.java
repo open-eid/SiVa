@@ -12,12 +12,11 @@ import org.springframework.stereotype.Component;
 public class ValidationRequestToJSONDocumentTransformer {
 
     public PDFDocument transform(ValidationRequest validationRequest) {
-        PDFDocument PDFDocument = new PDFDocument();
-        PDFDocument.setName(validationRequest.getFilename());
-        PDFDocument.setMimeType(mimeTypeFromString(validationRequest.getType()));
-        PDFDocument.setBytes(base64ToBytes(validationRequest.getBase64Document()));
-        PDFDocument.setReportType(validationRequest.getReportType());
-        return PDFDocument;
+        PDFDocument jsonDocument = new PDFDocument();
+        jsonDocument.setName(validationRequest.getFilename());
+        jsonDocument.setMimeType(mimeTypeFromString(validationRequest.getType()));
+        jsonDocument.setBytes(base64ToBytes(validationRequest.getBase64Document()));
+        return jsonDocument;
     }
 
     private byte[] base64ToBytes(String base64File) {

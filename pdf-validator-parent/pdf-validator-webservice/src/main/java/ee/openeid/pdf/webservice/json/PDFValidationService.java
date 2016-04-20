@@ -20,13 +20,11 @@
  */
 package ee.openeid.pdf.webservice.json;
 
-import ee.openeid.pdf.webservice.json.converter.XMLConverter;
 import eu.europa.esig.dss.DSSDocument;
 import eu.europa.esig.dss.DSSException;
 import eu.europa.esig.dss.validation.CertificateVerifier;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
 import eu.europa.esig.dss.validation.report.Reports;
-import eu.europa.esig.dss.validation.report.SimpleReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +32,8 @@ import org.springframework.stereotype.Service;
 
 import javax.xml.soap.SOAPException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Implementation of the Interface for the Contract of the Validation Web Service.
@@ -42,11 +42,10 @@ import java.io.InputStream;
 public class PDFValidationService implements ValidationService {
 	private static final Logger logger = LoggerFactory.getLogger(PDFValidationService.class);
 
-    private XMLConverter converter;
 	private CertificateVerifier certificateVerifier;
 
     @Override
-	public String validateDocument(PDFDocument wsDocument) throws DSSException {
+	public Map<String, String> validateDocument(PDFDocument pdfDocument) throws DSSException {
 
 		String exceptionMessage;
 		try {
@@ -54,30 +53,33 @@ public class PDFValidationService implements ValidationService {
 				logger.info("WsValidateDocument: begin");
 			}
 
-			if (wsDocument == null) {
+			if (pdfDocument == null) {
 				throw new SOAPException("No request document found");
 			}
 
-			final DSSDocument dssDocument = JSONUtils.createDssDocument(wsDocument);
+			final DSSDocument dssDocument = JSONUtils.createDssDocument(pdfDocument);
 			final SignedDocumentValidator validator = SignedDocumentValidator.fromDocument(dssDocument);
 			validator.setCertificateVerifier(certificateVerifier);
 
 			final InputStream inputStream =  null;
 			final Reports reports = validator.validateDocument(inputStream);
 
-			final SimpleReport simpleReport = reports.getSimpleReport();
-
             if (logger.isInfoEnabled()) {
 				logger.info(
 						"Validation completed. Total signature count: {} and valid signature count: {}",
-						simpleReport.getElement("//SignaturesCount").getText(),
-						simpleReport.getElement("//ValidSignaturesCount").getText()
+						reports.getSimpleReport().getElement("//SignaturesCount").getText(),
+						reports.getSimpleReport().getElement("//ValidSignaturesCount").getText()
 				);
 
 				logger.info("WsValidateDocument: end");
 			}
 
-            return converter.toJSON(reports.getSimpleReport().toString());
+			Map<String, String> reportMap = new HashMap<>();
+			reportMap.put("SIMPLE", reports.getSimpleReport().toString());
+			reportMap.put("DETAILED", reports.getDetailedReport().toString());
+			reportMap.put("DIAGNOSTICDATA", reports.getDiagnosticData().toString());
+
+            return reportMap;
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			exceptionMessage = e.getMessage();
@@ -90,11 +92,6 @@ public class PDFValidationService implements ValidationService {
 	public void setCertificateVerifier(CertificateVerifier certificateVerifier) {
 		this.certificateVerifier = certificateVerifier;
 	}
-
-    @Autowired
-    public void setConverter(XMLConverter converter) {
-        this.converter = converter;
-    }
 
 
 }

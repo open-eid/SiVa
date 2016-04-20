@@ -1,8 +1,9 @@
 package ee.openeid.siva.webapp;
 
 import ee.openeid.pdf.webservice.json.PDFDocument;
+import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.service.ValidationProxyService;
-import ee.openeid.siva.webapp.transformer.ValidationRequestToJSONDocumentTransformer;
+import ee.openeid.siva.webapp.transformer.ValidationRequestToProxyDocumentTransformer;
 import eu.europa.esig.dss.MimeType;
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
@@ -25,7 +26,7 @@ public class ValidationControllerTest {
     public void setUp() {
         ValidationController validationController = new ValidationController();
         validationController.setValidationProxy(validationProxyServiceSpy);
-        validationController.setTransformer(new ValidationRequestToJSONDocumentTransformer());
+        validationController.setTransformer(new ValidationRequestToProxyDocumentTransformer());
         mockMvc = standaloneSetup(validationController).build();
     }
 
@@ -45,15 +46,16 @@ public class ValidationControllerTest {
         jsonObject.put("document", "QVNE");
         jsonObject.put("filename", "filename.asd");
         jsonObject.put("documentType", "PDF");
+        jsonObject.put("reportType", "simple");
         return jsonObject.toString();
     }
 
     private class ValidationProxyServiceSpy extends ValidationProxyService {
 
-        private PDFDocument document;
+        private ProxyDocument document;
 
         @Override
-        public String validate(PDFDocument document) {
+        public String validate(ProxyDocument document) {
             this.document = document;
             return null;
         }

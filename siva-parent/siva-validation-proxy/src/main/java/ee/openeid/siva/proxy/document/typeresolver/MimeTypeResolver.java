@@ -1,4 +1,4 @@
-package ee.openeid.siva.mimetype;
+package ee.openeid.siva.proxy.document.typeresolver;
 
 import eu.europa.esig.dss.MimeType;
 import org.apache.commons.lang.StringUtils;
@@ -20,7 +20,4 @@ public class MimeTypeResolver {
         return mimeType;
     }
 
-    public static class UnsupportedTypeException extends RuntimeException {
-        public UnsupportedTypeException(String message) {super(message);}
-    }
 }

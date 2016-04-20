@@ -1,5 +1,7 @@
-package ee.openeid.siva.mimetype;
+package ee.openeid.siva.proxy.document.typeresolver;
 
+import ee.openeid.siva.proxy.document.typeresolver.MimeTypeResolver;
+import ee.openeid.siva.proxy.document.typeresolver.UnsupportedTypeException;
 import eu.europa.esig.dss.MimeType;
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,7 +33,7 @@ public class MimeTypeResolverTest {
     @Test
     public void unsupportedTypeThrowsException() throws Exception {
         String unsupportedType = "some not supported type";
-        expectedException.expect(MimeTypeResolver.UnsupportedTypeException.class);
+        expectedException.expect(UnsupportedTypeException.class);
         expectedException.expectMessage("type = " + unsupportedType + " is unsupported");
         MimeTypeResolver.mimeTypeFromString(unsupportedType);
     }
@@ -39,7 +41,7 @@ public class MimeTypeResolverTest {
     @Test
     public void extraWhiteSpaceInOtherwiseSupportedTypeIsIllegal() {
         String supportedTypeWithExtraWhiteSpace = " pdf   ";
-        expectedException.expect(MimeTypeResolver.UnsupportedTypeException.class);
+        expectedException.expect(UnsupportedTypeException.class);
         expectedException.expectMessage("type = " + supportedTypeWithExtraWhiteSpace + " is unsupported");
         MimeTypeResolver.mimeTypeFromString(supportedTypeWithExtraWhiteSpace);
     }

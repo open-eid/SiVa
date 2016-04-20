@@ -39,13 +39,11 @@ public class PDFDocument {
 
 	private byte[] bytes;
 
-	private String name = "WSDocument";
+	private String name;
 
 	protected MimeType mimeType;
 
 	private String absolutePath = "WSDocument";
-
-	private String reportType;
 
 	protected PDFDocument nextDocument;
 
@@ -118,14 +116,6 @@ public class PDFDocument {
 
 	public void setAbsolutePath(String absolutePath) {
 		this.absolutePath = absolutePath;
-	}
-
-	public String getReportType() {
-		return reportType;
-	}
-
-	public void setReportType(String reportType) {
-		this.reportType = reportType;
 	}
 
 	public InputStream openStream() throws DSSException {

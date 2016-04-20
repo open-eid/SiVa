@@ -2,10 +2,10 @@ package ee.openeid.siva.proxy.factory;
 
 
 import ee.openeid.siva.proxy.ValidationProxy;
-import ee.openeid.siva.proxy.factory.ValidationProxyFactory;
-import ee.openeid.siva.proxy.impl.PdfValidationProxy;
+import ee.openeid.siva.proxy.PdfValidationProxy;
 import eu.europa.esig.dss.MimeType;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -15,7 +15,14 @@ public class ValidationProxyFactoryTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
-    ValidationProxyFactory validationProxyFactory = new ValidationProxyFactory();
+    private ValidationProxyFactory validationProxyFactory;
+
+    @Before
+    public void setUp() {
+        validationProxyFactory = new ValidationProxyFactory();
+        validationProxyFactory.setPdfValidationProxy(new PdfValidationProxy());
+    }
+
 
     @Test
     public void getPdfValidationProxy() {

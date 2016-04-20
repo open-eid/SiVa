@@ -1,9 +1,9 @@
 package ee.openeid.siva.proxy;
 
-import ee.openeid.pdf.webservice.json.PDFDocument;
+import ee.openeid.siva.proxy.document.ProxyDocument;
 
 public interface ValidationProxy {
 
-    String validate(final PDFDocument document);
+    String validate(final ProxyDocument document);
 
 }

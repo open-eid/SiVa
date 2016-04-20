@@ -1,6 +1,7 @@
 package ee.openeid.siva.webapp.transformer;
 
 import ee.openeid.pdf.webservice.json.PDFDocument;
+import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.webapp.request.ValidationRequest;
 import ee.openeid.siva.testutils.MockValidationRequestBuilder;
 import eu.europa.esig.dss.MimeType;
@@ -16,13 +17,13 @@ import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
 
-public class ValidationRequestToPDFDocumentTransformerTest {
+public class ValidationRequestToProxyDocumentTransformerTest {
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
     private static final String VALID_PDF_FILE = "test-files/sample.pdf";
-    private ValidationRequestToJSONDocumentTransformer transformer = new ValidationRequestToJSONDocumentTransformer();
+    private ValidationRequestToProxyDocumentTransformer transformer = new ValidationRequestToProxyDocumentTransformer();
     private ValidationRequest validationRequest;
 
     @Before
@@ -42,8 +43,8 @@ public class ValidationRequestToPDFDocumentTransformerTest {
 
     @Test
     public void contentIsCorrectlyTransformedToBytes() {
-        PDFDocument PDFDocument = transformer.transform(validationRequest);
-        Assert.assertEquals(validationRequest.getBase64Document(), Base64.encodeBase64String(PDFDocument.getBytes()));
+        ProxyDocument proxyDocument = transformer.transform(validationRequest);
+        Assert.assertEquals(validationRequest.getBase64Document(), Base64.encodeBase64String(proxyDocument.getBytes()));
     }
 
     @Test

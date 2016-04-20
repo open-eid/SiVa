@@ -1,5 +1,7 @@
 package ee.openeid.pdf.webservice.json;
 
+import java.util.Map;
+
 public interface ValidationService {
-    String validateDocument(PDFDocument wsDocument);
+    Map<String, String> validateDocument(PDFDocument wsDocument);
 }

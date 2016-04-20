@@ -1,7 +1,7 @@
 package ee.openeid.siva.webapp;
 
 import ee.openeid.siva.proxy.service.ValidationProxyService;
-import ee.openeid.siva.webapp.transformer.ValidationRequestToJSONDocumentTransformer;
+import ee.openeid.siva.webapp.transformer.ValidationRequestToProxyDocumentTransformer;
 import ee.openeid.siva.webapp.request.impl.JSONValidationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ValidationController {
 
     private ValidationProxyService validationProxyService;
-    private ValidationRequestToJSONDocumentTransformer transformer;
+    private ValidationRequestToProxyDocumentTransformer transformer;
 
     @RequestMapping(value = "/validate", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public String validate(@RequestBody JSONValidationRequest validationRequest) {
@@ -27,7 +27,7 @@ public class ValidationController {
     }
 
     @Autowired
-    public void setTransformer(ValidationRequestToJSONDocumentTransformer transformer) {
+    public void setTransformer(ValidationRequestToProxyDocumentTransformer transformer) {
         this.transformer = transformer;
     }
 

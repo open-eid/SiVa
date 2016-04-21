@@ -1,4 +1,4 @@
-package ee.openeid.siva.webapp.request.validation.json;
+package ee.openeid.siva.webapp.request.validation;
 
 import ee.openeid.siva.proxy.document.ReportType;
 import ee.openeid.siva.proxy.document.typeresolver.DocumentType;

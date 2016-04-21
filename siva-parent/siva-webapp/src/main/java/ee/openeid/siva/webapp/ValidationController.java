@@ -3,7 +3,7 @@ package ee.openeid.siva.webapp;
 import ee.openeid.siva.proxy.service.ValidationProxyService;
 import ee.openeid.siva.webapp.transformer.ValidationRequestToProxyDocumentTransformer;
 import ee.openeid.siva.webapp.response.erroneus.RequestValidationError;
-import ee.openeid.siva.webapp.request.impl.JSONValidationRequest;
+import ee.openeid.siva.webapp.request.JSONValidationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

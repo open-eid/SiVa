@@ -1,4 +1,6 @@
-package ee.openeid.siva.webapp.request.validation.json;
+package ee.openeid.siva.webapp.request.validation.validators;
+
+import ee.openeid.siva.webapp.request.validation.annotations.AcceptValues;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

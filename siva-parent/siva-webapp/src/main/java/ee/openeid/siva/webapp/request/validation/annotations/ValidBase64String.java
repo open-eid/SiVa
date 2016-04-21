@@ -1,4 +1,6 @@
-package ee.openeid.siva.webapp.request.validation.json;
+package ee.openeid.siva.webapp.request.validation.annotations;
+
+import ee.openeid.siva.webapp.request.validation.validators.ValidBase64ConstraintValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -7,13 +9,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ElementType.FIELD, ElementType.ANNOTATION_TYPE})
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy=AcceptValuesConstraintValidator.class)
-public @interface AcceptValues {
+@Constraint(validatedBy=ValidBase64ConstraintValidator.class)
+public @interface ValidBase64String {
 
-    AcceptedValue value();
-    String message() default "invalid field value";
+    String message() default "document not encoded in base64";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

@@ -16,7 +16,7 @@ public class ValidationRequestToProxyDocumentTransformer {
         ProxyDocument proxyDocument = new ProxyDocument();
         proxyDocument.setName(validationRequest.getFilename());
         proxyDocument.setMimeType(MimeTypeResolver.mimeTypeFromString(validationRequest.getDocumentType()));
-        proxyDocument.setBytes(Base64.decodeBase64(validationRequest.getBase64Document()));
+        proxyDocument.setBytes(Base64.decodeBase64(validationRequest.getDocument()));
         proxyDocument.setReportType(ReportTypeResolver.reportTypeFromString(validationRequest.getReportType()));
         proxyDocument.setRequestProtocol(RequestProtocol.JSON);
         return proxyDocument;

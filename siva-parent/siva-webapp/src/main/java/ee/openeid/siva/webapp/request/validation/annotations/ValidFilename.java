@@ -1,4 +1,4 @@
-package ee.openeid.siva.webapp.request.validation.json;
+package ee.openeid.siva.webapp.request.validation.annotations;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -11,7 +11,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import static ee.openeid.siva.webapp.request.validation.json.ValidFilename.PATTERN;
+import static ee.openeid.siva.webapp.request.validation.annotations.ValidFilename.PATTERN;
 
 @NotBlank
 @Pattern(regexp = PATTERN)

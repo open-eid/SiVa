@@ -43,7 +43,7 @@ public class ValidationControllerTest {
             .content(validRequest().toString().getBytes())
         );
         assertEquals("filename.asd", transformerSpy.validationRequest.getFilename());
-        assertEquals("QVNE", transformerSpy.validationRequest.getBase64Document());
+        assertEquals("QVNE", transformerSpy.validationRequest.getDocument());
         assertEquals("PDF" , transformerSpy.validationRequest.getDocumentType());
         assertEquals("simple" , transformerSpy.validationRequest.getReportType());
     }
@@ -70,6 +70,18 @@ public class ValidationControllerTest {
                 .andExpect(jsonPath("$.requestErrors", Matchers.hasSize(1)))
                 .andExpect(jsonPath("$.requestErrors[0].field", is("documentType")))
                 .andExpect(jsonPath("$.requestErrors[0].message", containsString("invalid documentType")));
+    }
+
+    @Test
+    public void requestWithNonBase64EncodedDocumentReturnsErroneousResponse() throws Exception {
+        mockMvc.perform(post("/validate")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestWithInvalidDocumentEncoding().toString().getBytes()))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.requestErrors", Matchers.hasSize(1)))
+                .andExpect(jsonPath("$.requestErrors[0].field", is("document")))
+                .andExpect(jsonPath("$.requestErrors[0].message", containsString("document not encoded in base64")));
     }
 
     @Test
@@ -129,9 +141,9 @@ public class ValidationControllerTest {
                 .content(invalidRequest().toString().getBytes()))
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.requestErrors", Matchers.hasSize(3)))
-                .andExpect(jsonPath("$.requestErrors[*].field", containsInAnyOrder("filename", "documentType", "reportType")))
-                .andExpect(jsonPath("$.requestErrors[*].message", containsInAnyOrder("invalid filename", "invalid documentType", "invalid reportType")));
+                .andExpect(jsonPath("$.requestErrors", Matchers.hasSize(4)))
+                .andExpect(jsonPath("$.requestErrors[*].field", containsInAnyOrder("filename", "documentType", "reportType", "document")))
+                .andExpect(jsonPath("$.requestErrors[*].message", containsInAnyOrder("invalid filename", "invalid documentType", "invalid reportType", "document not encoded in base64")));
     }
 
     private String filenameWithIllegalCharacter(String illegalCharacter) {
@@ -170,9 +182,15 @@ public class ValidationControllerTest {
         return jsonObject;
     }
 
+    private JSONObject requestWithInvalidDocumentEncoding() {
+        JSONObject jsonObject = validRequest();
+        jsonObject.put("document", "ÖÕ::žšPQ;ÜÜ");
+        return jsonObject;
+    }
+
     private JSONObject invalidRequest() {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("document", "ÖÕÜÜ");
+        jsonObject.put("document", "ÖÕ::žšPQ;ÜÜ");
         jsonObject.put("filename", filenameWithIllegalCharacter("/"));
         jsonObject.put("documentType", "BLAMA");
         jsonObject.put("reportType", "very complicated");
@@ -203,7 +221,7 @@ public class ValidationControllerTest {
         @Override
         public ProxyDocument transform(ValidationRequest validationRequest) {
             this.validationRequest = validationRequest;
-            return null;
+            return super.transform(validationRequest);
         }
     }
 }

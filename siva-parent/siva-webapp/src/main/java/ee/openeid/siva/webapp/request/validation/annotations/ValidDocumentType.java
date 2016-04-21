@@ -1,4 +1,7 @@
-package ee.openeid.siva.webapp.request.validation.json;
+package ee.openeid.siva.webapp.request.validation.annotations;
+
+import ee.openeid.siva.webapp.request.validation.AcceptedValue;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -8,14 +11,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@AcceptValues(AcceptedValue.REPORT)
+@NotBlank
+@AcceptValues(AcceptedValue.DOCUMENT)
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy={})
 @ReportAsSingleViolation
-public @interface ValidReportType {
+public @interface ValidDocumentType {
 
-    String message() default "invalid reportType";
+    String message() default "invalid documentType";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 

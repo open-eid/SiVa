@@ -62,7 +62,7 @@ public class PdfValidationProxyTest {
         proxyDocument.setRequestProtocol(RequestProtocol.XML);
         proxyDocument.setReportType(ReportType.SIMPLE);
         String report = pdfValidationProxy.validate(proxyDocument);
-        assertEquals("<SimpleReport><xmlns>blah</xmlns><content>data</content></SimpleReport>", report);
+        assertEquals("<SimpleReport xmlns=\"xmlnamespace\"><content>data</content></SimpleReport>", report);
     }
 
     private class ValidationServiceSpy implements ValidationService {
@@ -71,9 +71,9 @@ public class PdfValidationProxyTest {
         public Map<String,String> validateDocument(PDFDocument pdfDocument) {
 
             Map<String,String> reportMap = new HashMap<>();
-            reportMap.put("SIMPLE", "<SimpleReport><xmlns>blah</xmlns><content>data</content></SimpleReport>");
-            reportMap.put("DETAILED", "<DetailedReport><xmlns>blah</xmlns><content>data</content></DetailedReport>");
-            reportMap.put("DIAGNOSTICDATA", "<DiagnosticData><xmlns>blah</xmlns><content>data</content></DiagnosticData>");
+            reportMap.put("SIMPLE", "<SimpleReport xmlns=\"xmlnamespace\"><content>data</content></SimpleReport>");
+            reportMap.put("DETAILED", "<DetailedReport xmlns=\"xmlnamespace\"><content>data</content></DetailedReport>");
+            reportMap.put("DIAGNOSTICDATA", "<DiagnosticData xmlns=\"xmlnamespace\"><content>data</content></DiagnosticData>");
             return reportMap;
         }
     }

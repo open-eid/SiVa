@@ -2,9 +2,9 @@ package ee.openeid.siva.webapp.request;
 
 public interface ValidationRequest {
 
-    String getBase64Document();
+    String getDocument();
     String getFilename();
-    String getType();
+    String getDocumentType();
     String getReportType();
 
 }

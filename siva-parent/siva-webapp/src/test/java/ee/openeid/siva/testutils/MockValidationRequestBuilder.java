@@ -38,12 +38,12 @@ public class MockValidationRequestBuilder {
     }
 
     public MockValidationRequestBuilder withDocument(String document) {
-        this.validationRequest.base64Document = document;
+        this.validationRequest.document = document;
         return this;
     }
 
     public MockValidationRequestBuilder withDocument(Path documentPath) throws IOException {
-        this.validationRequest.base64Document = Base64.encodeBase64String(Files.readAllBytes(documentPath));
+        this.validationRequest.document = Base64.encodeBase64String(Files.readAllBytes(documentPath));
         return this;
     }
 
@@ -53,14 +53,14 @@ public class MockValidationRequestBuilder {
 
     private static class MockValidationRequest implements ValidationRequest {
 
-        private String base64Document = DEFAULT_DOCUMENT;
+        private String document = DEFAULT_DOCUMENT;
         private String filename = DEFAULT_FILENAME;
         private String type = DEFAULT_TYPE;
         private String reportType = DEFAULT_REPORT;
 
         @Override
-        public String getBase64Document() {
-            return base64Document;
+        public String getDocument() {
+            return document;
         }
 
         @Override
@@ -69,7 +69,7 @@ public class MockValidationRequestBuilder {
         }
 
         @Override
-        public String getType() {
+        public String getDocumentType() {
             return type;
         }
 

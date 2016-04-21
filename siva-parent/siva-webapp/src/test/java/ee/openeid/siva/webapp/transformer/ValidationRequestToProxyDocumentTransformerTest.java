@@ -1,6 +1,5 @@
 package ee.openeid.siva.webapp.transformer;
 
-import ee.openeid.pdf.webservice.json.PDFDocument;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.webapp.request.ValidationRequest;
 import ee.openeid.siva.testutils.MockValidationRequestBuilder;
@@ -44,7 +43,7 @@ public class ValidationRequestToProxyDocumentTransformerTest {
     @Test
     public void contentIsCorrectlyTransformedToBytes() {
         ProxyDocument proxyDocument = transformer.transform(validationRequest);
-        Assert.assertEquals(validationRequest.getBase64Document(), Base64.encodeBase64String(proxyDocument.getBytes()));
+        Assert.assertEquals(validationRequest.getDocument(), Base64.encodeBase64String(proxyDocument.getBytes()));
     }
 
     @Test

@@ -17,10 +17,9 @@ public class SivaValidationService {
     @Value("${siva.service.url}")
     private String sivaBaseUrl;
 
-    @Autowired
     private RestTemplate restTemplate;
 
-    public String validateDocument(File file, ReportType sivaReportType) throws IOException {
+    public String validateDocument(final File file, final ReportType sivaReportType) throws IOException {
         String encodeFile = Base64.encodeBase64String(FileUtils.readFileToByteArray(file));
 
         ValidationRequest validationRequest = new ValidationRequest();
@@ -34,11 +33,16 @@ public class SivaValidationService {
         return restTemplate.postForObject(sivaBaseUrl, validationRequest, String.class);
     }
 
-    private FileType parseFileExtension(String fileExtension) {
+    private FileType parseFileExtension(final String fileExtension) {
         return Arrays.asList(FileType.values()).stream()
                 .filter(fileType -> fileType.name().equalsIgnoreCase(fileExtension))
                 .findFirst()
                 .orElse(null);
 
+    }
+
+    @Autowired
+    public void setRestTemplate(final RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 }

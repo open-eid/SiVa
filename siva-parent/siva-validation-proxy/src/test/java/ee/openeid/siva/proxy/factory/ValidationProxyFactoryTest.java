@@ -10,6 +10,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import static org.junit.Assert.assertTrue;
+
 public class ValidationProxyFactoryTest {
 
     @Rule
@@ -22,12 +24,11 @@ public class ValidationProxyFactoryTest {
         validationProxyFactory = new ValidationProxyFactory();
         validationProxyFactory.setPdfValidationProxy(new PdfValidationProxy());
     }
-
-
+    
     @Test
-    public void getPdfValidationProxy() {
+    public void mimeTypePDFReturnsPdfValidationProxy() {
         ValidationProxy validationProxy = validationProxyFactory.getProxyForType(DocumentType.PDF);
-        Assert.assertTrue(validationProxy instanceof PdfValidationProxy);
+        assertTrue(validationProxy instanceof PdfValidationProxy);
     }
 
     @Test

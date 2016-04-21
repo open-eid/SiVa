@@ -9,9 +9,11 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 @Service
 public class SivaValidationService {
+
     @Value("${siva.service.url}")
     private String sivaBaseUrl;
 
@@ -23,10 +25,20 @@ public class SivaValidationService {
 
         ValidationRequest validationRequest = new ValidationRequest();
         validationRequest.setDocument(encodeFile);
-        validationRequest.setFilename(file.getName());
         validationRequest.setReportType(sivaReportType);
-        validationRequest.setDocumentType(FileType.PDF);
+
+        String filename = file.getName();
+        validationRequest.setFilename(filename);
+        validationRequest.setDocumentType(parseFileExtension(filename.substring(filename.lastIndexOf(".") + 1)));
 
         return restTemplate.postForObject(sivaBaseUrl, validationRequest, String.class);
+    }
+
+    private FileType parseFileExtension(String fileExtension) {
+        return Arrays.asList(FileType.values()).stream()
+                .filter(fileType -> fileType.name().equalsIgnoreCase(fileExtension))
+                .findFirst()
+                .orElse(null);
+
     }
 }

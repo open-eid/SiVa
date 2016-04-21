@@ -3,12 +3,11 @@ package ee.openeid.siva.proxy;
 
 import ee.openeid.pdf.webservice.json.PDFDocument;
 import ee.openeid.pdf.webservice.json.ValidationService;
-
-import ee.openeid.siva.proxy.PdfValidationProxy;
 import ee.openeid.siva.proxy.converter.XMLToJSONConverter;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.document.ReportType;
 import ee.openeid.siva.proxy.document.RequestProtocol;
+import ee.openeid.siva.proxy.document.DocumentType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,6 +32,7 @@ public class PdfValidationProxyTest {
     public void returnSimpleReportAsJSON() {
         ProxyDocument proxyDocument= new ProxyDocument();
         proxyDocument.setRequestProtocol(RequestProtocol.JSON);
+        proxyDocument.setDocumentType(DocumentType.PDF);
         proxyDocument.setReportType(ReportType.SIMPLE);
         String report = pdfValidationProxy.validate(proxyDocument);
         assertEquals("{\"SimpleReport\":{\"content\":\"data\"}}", report);
@@ -42,6 +42,7 @@ public class PdfValidationProxyTest {
     public void returnDetailedReportAsJSON() {
         ProxyDocument proxyDocument= new ProxyDocument();
         proxyDocument.setRequestProtocol(RequestProtocol.JSON);
+        proxyDocument.setDocumentType(DocumentType.PDF);
         proxyDocument.setReportType(ReportType.DETAILED);
         String report = pdfValidationProxy.validate(proxyDocument);
         assertEquals("{\"DetailedReport\":{\"content\":\"data\"}}", report);
@@ -51,6 +52,7 @@ public class PdfValidationProxyTest {
     public void returnDiagnosticDataAsJSON() {
         ProxyDocument proxyDocument= new ProxyDocument();
         proxyDocument.setRequestProtocol(RequestProtocol.JSON);
+        proxyDocument.setDocumentType(DocumentType.PDF);
         proxyDocument.setReportType(ReportType.DIAGNOSTICDATA);
         String report = pdfValidationProxy.validate(proxyDocument);
         assertEquals("{\"DiagnosticData\":{\"content\":\"data\"}}", report);
@@ -60,6 +62,7 @@ public class PdfValidationProxyTest {
     public void returnSimpleReportAsXML() {
         ProxyDocument proxyDocument= new ProxyDocument();
         proxyDocument.setRequestProtocol(RequestProtocol.XML);
+        proxyDocument.setDocumentType(DocumentType.PDF);
         proxyDocument.setReportType(ReportType.SIMPLE);
         String report = pdfValidationProxy.validate(proxyDocument);
         assertEquals("<SimpleReport xmlns=\"xmlnamespace\"><content>data</content></SimpleReport>", report);

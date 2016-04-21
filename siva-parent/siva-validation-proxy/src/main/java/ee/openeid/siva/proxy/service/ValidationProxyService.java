@@ -12,7 +12,7 @@ public class ValidationProxyService {
     private ValidationProxyFactory validationProxyFactory;
 
     public String validate(ProxyDocument document) {
-        ValidationProxy validationProxy = validationProxyFactory.getValidationProxy(document.getMimeType());
+        ValidationProxy validationProxy = validationProxyFactory.getProxyForType(document.getDocumentType());
         return validationProxy.validate(document);
     }
 

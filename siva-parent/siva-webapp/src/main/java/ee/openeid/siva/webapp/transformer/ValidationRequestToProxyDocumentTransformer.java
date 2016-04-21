@@ -1,7 +1,7 @@
 package ee.openeid.siva.webapp.transformer;
 
 
-import ee.openeid.siva.proxy.document.typeresolver.MimeTypeResolver;
+import ee.openeid.siva.proxy.document.typeresolver.DocumentTypeResolver;
 import ee.openeid.siva.proxy.document.typeresolver.ReportTypeResolver;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.document.RequestProtocol;
@@ -15,7 +15,7 @@ public class ValidationRequestToProxyDocumentTransformer {
     public ProxyDocument transform(ValidationRequest validationRequest) {
         ProxyDocument proxyDocument = new ProxyDocument();
         proxyDocument.setName(validationRequest.getFilename());
-        proxyDocument.setMimeType(MimeTypeResolver.mimeTypeFromString(validationRequest.getDocumentType()));
+        proxyDocument.setDocumentType(DocumentTypeResolver.documentTypeFromString(validationRequest.getDocumentType()));
         proxyDocument.setBytes(Base64.decodeBase64(validationRequest.getDocument()));
         proxyDocument.setReportType(ReportTypeResolver.reportTypeFromString(validationRequest.getReportType()));
         proxyDocument.setRequestProtocol(RequestProtocol.JSON);

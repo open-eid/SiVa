@@ -1,6 +1,5 @@
 package ee.openeid.siva.proxy.document;
 
-import eu.europa.esig.dss.MimeType;
 import lombok.Data;
 
 @Data
@@ -10,7 +9,7 @@ public class ProxyDocument {
 
     private String name;
 
-    protected MimeType mimeType;
+    protected DocumentType documentType;
 
     private String absolutePath = "WSDocument";
 

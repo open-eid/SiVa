@@ -25,7 +25,7 @@ public class PdfValidationProxy implements ValidationProxy {
         PDFDocument pdfDocument = new PDFDocument();
         pdfDocument.setName(document.getName());
         pdfDocument.setBytes(document.getBytes());
-        pdfDocument.setMimeType(document.getMimeType());
+        pdfDocument.setMimeType(document.getDocumentType().getMimeType());
 
         Map<String, String> reportMap =  validationService.validateDocument(pdfDocument);
         String report = reportMap.get(document.getReportType().name());

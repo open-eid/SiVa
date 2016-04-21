@@ -1,33 +1,31 @@
 package ee.openeid.siva.proxy.document.typeresolver;
 
-import ee.openeid.siva.proxy.document.typeresolver.MimeTypeResolver;
-import ee.openeid.siva.proxy.document.typeresolver.UnsupportedTypeException;
-import eu.europa.esig.dss.MimeType;
+import ee.openeid.siva.proxy.document.DocumentType;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertEquals;
 
-public class MimeTypeResolverTest {
+public class DocumentTypeResolverTest {
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void pdfTypeReturnsPdfMimeType() {
-        MimeType mimeType = MimeTypeResolver.mimeTypeFromString("pdf");
-        assertEquals(mimeType, MimeType.PDF);
+        DocumentType documentType = DocumentTypeResolver.documentTypeFromString("pdf");
+        assertEquals(documentType, DocumentType.PDF);
     }
 
     @Test
     public void ignoreCaseForType() {
-        MimeType mimeType = MimeTypeResolver.mimeTypeFromString("PdF");
-        assertEquals(mimeType, MimeType.PDF);
-        mimeType = MimeTypeResolver.mimeTypeFromString("PDF");
-        assertEquals(mimeType, MimeType.PDF);
-        mimeType = MimeTypeResolver.mimeTypeFromString("pdf");
-        assertEquals(mimeType, MimeType.PDF);
+        DocumentType documentType = DocumentTypeResolver.documentTypeFromString("PdF");
+        assertEquals(documentType, DocumentType.PDF);
+        documentType = DocumentTypeResolver.documentTypeFromString("PDF");
+        assertEquals(documentType, DocumentType.PDF);
+        documentType = DocumentTypeResolver.documentTypeFromString("pdf");
+        assertEquals(documentType, DocumentType.PDF);
     }
 
     @Test
@@ -35,7 +33,7 @@ public class MimeTypeResolverTest {
         String unsupportedType = "some not supported type";
         expectedException.expect(UnsupportedTypeException.class);
         expectedException.expectMessage("type = " + unsupportedType + " is unsupported");
-        MimeTypeResolver.mimeTypeFromString(unsupportedType);
+        DocumentTypeResolver.documentTypeFromString(unsupportedType);
     }
 
     @Test
@@ -43,6 +41,6 @@ public class MimeTypeResolverTest {
         String supportedTypeWithExtraWhiteSpace = " pdf   ";
         expectedException.expect(UnsupportedTypeException.class);
         expectedException.expectMessage("type = " + supportedTypeWithExtraWhiteSpace + " is unsupported");
-        MimeTypeResolver.mimeTypeFromString(supportedTypeWithExtraWhiteSpace);
+        DocumentTypeResolver.documentTypeFromString(supportedTypeWithExtraWhiteSpace);
     }
 }

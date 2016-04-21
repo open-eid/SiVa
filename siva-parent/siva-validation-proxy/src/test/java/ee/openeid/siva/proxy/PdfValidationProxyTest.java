@@ -44,7 +44,7 @@ public class PdfValidationProxyTest {
         proxyDocument.setRequestProtocol(RequestProtocol.JSON);
         proxyDocument.setReportType(ReportType.DETAILED);
         String report = pdfValidationProxy.validate(proxyDocument);
-        assertEquals("{\"DetailedReport\":\"data\"}", report);
+        assertEquals("{\"DetailedReport\":{\"content\":\"data\"}}", report);
     }
 
     @Test
@@ -53,7 +53,7 @@ public class PdfValidationProxyTest {
         proxyDocument.setRequestProtocol(RequestProtocol.JSON);
         proxyDocument.setReportType(ReportType.DIAGNOSTICDATA);
         String report = pdfValidationProxy.validate(proxyDocument);
-        assertEquals("{\"DiagnosticData\":\"data\"}", report);
+        assertEquals("{\"DiagnosticData\":{\"content\":\"data\"}}", report);
     }
 
     @Test
@@ -62,7 +62,7 @@ public class PdfValidationProxyTest {
         proxyDocument.setRequestProtocol(RequestProtocol.XML);
         proxyDocument.setReportType(ReportType.SIMPLE);
         String report = pdfValidationProxy.validate(proxyDocument);
-        assertEquals("<SimpleReport><xmlns>blah</xmlns>data</SimpleReport>", report);
+        assertEquals("<SimpleReport><xmlns>blah</xmlns><content>data</content></SimpleReport>", report);
     }
 
     private class ValidationServiceSpy implements ValidationService {
@@ -71,9 +71,9 @@ public class PdfValidationProxyTest {
         public Map<String,String> validateDocument(PDFDocument pdfDocument) {
 
             Map<String,String> reportMap = new HashMap<>();
-            reportMap.put("SIMPLE", "<SimpleReport><xmlns>blah</xmlns>data</SimpleReport>");
-            reportMap.put("DETAILED", "<DetailedReport>data</DetailedReport>");
-            reportMap.put("DIAGNOSTICDATA", "<DiagnosticData>data</DiagnosticData>");
+            reportMap.put("SIMPLE", "<SimpleReport><xmlns>blah</xmlns><content>data</content></SimpleReport>");
+            reportMap.put("DETAILED", "<DetailedReport><xmlns>blah</xmlns><content>data</content></DetailedReport>");
+            reportMap.put("DIAGNOSTICDATA", "<DiagnosticData><xmlns>blah</xmlns><content>data</content></DiagnosticData>");
             return reportMap;
         }
     }

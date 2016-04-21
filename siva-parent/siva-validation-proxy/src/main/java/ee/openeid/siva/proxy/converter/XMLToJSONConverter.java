@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 @Component
 public class XMLToJSONConverter {
@@ -15,8 +16,13 @@ public class XMLToJSONConverter {
 
     public String toJSON(String xml) {
         final JSONObject jsonObject = XML.toJSONObject(xml);
-        if (jsonObject.has("SimpleReport")) {
-            jsonObject.getJSONObject("SimpleReport").remove("xmlns");
+
+        Iterator<?> keys = jsonObject.keys();
+        while(keys.hasNext()) {
+            String key = (String)keys.next();
+            if (jsonObject.get(key) instanceof JSONObject) {
+                ((JSONObject) jsonObject.get(key)).remove("xmlns");
+            }
         }
 
         ObjectMapper mapper = new ObjectMapper();

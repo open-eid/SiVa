@@ -22,7 +22,7 @@
 		<module>pdf-validator-monitoring</module>
 		<module>pdf-validator-distribution</module>
 		<module>pdf-validator-keystore-generator</module>
-		<module>pdf-validator-webservice</module>
+		<module>pdf-validation-service</module>
 	</modules>
 
 	<developers>

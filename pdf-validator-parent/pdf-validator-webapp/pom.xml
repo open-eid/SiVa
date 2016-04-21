@@ -77,7 +77,7 @@
 
         <dependency>
             <groupId>eu.europa.ec.joinup.sd-dss</groupId>
-            <artifactId>pdf-validator-webservice</artifactId>
+            <artifactId>pdf-validation-service</artifactId>
             <version>${project.version}</version>
         </dependency>
 

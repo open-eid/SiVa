@@ -10,7 +10,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>pdf-validator-webservice</artifactId>
+    <artifactId>pdf-validation-service</artifactId>
     <name>SK PDF Validator: Web Service</name>
 	<description>SK PDF Validator: Validator WSDL Web Service</description>
 

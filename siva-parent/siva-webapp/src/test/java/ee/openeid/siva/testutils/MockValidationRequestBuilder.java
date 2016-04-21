@@ -69,7 +69,7 @@ public class MockValidationRequestBuilder {
         }
 
         @Override
-        public String getType() {
+        public String getDocumentType() {
             return type;
         }
 

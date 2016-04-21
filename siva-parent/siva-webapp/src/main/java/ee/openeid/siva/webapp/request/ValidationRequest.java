@@ -4,7 +4,7 @@ public interface ValidationRequest {
 
     String getBase64Document();
     String getFilename();
-    String getType();
+    String getDocumentType();
     String getReportType();
 
 }

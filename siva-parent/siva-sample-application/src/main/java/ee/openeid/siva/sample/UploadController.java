@@ -1,5 +1,6 @@
 package ee.openeid.siva.sample;
 
+import ee.openeid.siva.sample.siva.ReportType;
 import ee.openeid.siva.sample.siva.SivaValidationService;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 @Controller
 public class UploadController {
@@ -32,30 +34,26 @@ public class UploadController {
 
     @RequestMapping("/")
     public String startPage(@ModelAttribute("validationResult") String validationResult, Model model) {
-        model.addAttribute(validationResult);
+        model.addAttribute("reportTypes", ReportType.values());
         return "index";
     }
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+    public String getUploadedFile(
+            @RequestParam("file") final MultipartFile file,
+            @RequestParam("reportType") final String reportType,
+            final RedirectAttributes redirectAttributes
+    ) {
         if (file.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "File upload failed");
             return "redirect:/";
         }
 
         try {
-            final Path uploadDir = Paths.get("upload-dir").toAbsolutePath();
-            final String fullFilename = uploadDir + "/" + file.getOriginalFilename();
-            if (!Files.exists(uploadDir)) {
-                Files.createDirectory(uploadDir);
-            }
+            final String fullFilename = getUploadedFile(file);
+            final ReportType sivaReportType = getReportTypeFromRequest(reportType);
+            final String validationResult = validationService.validateDocument(new File(fullFilename), sivaReportType);
 
-            final BufferedOutputStream stream = new BufferedOutputStream(
-                    new FileOutputStream(new File(fullFilename))
-            );
-            FileCopyUtils.copy(file.getInputStream(), stream);
-
-            final String validationResult = validationService.validateDocument(new File(fullFilename));
             redirectAttributes.addFlashAttribute("validationResult", new JSONObject(validationResult).toString(4));
             redirectAttributes.addFlashAttribute("error", "File upload success");
         } catch (IOException e) {
@@ -64,5 +62,25 @@ public class UploadController {
         }
 
         return "redirect:/";
+    }
+
+    private String getUploadedFile(@RequestParam("file") MultipartFile file) throws IOException {
+        final Path uploadDir = Paths.get("upload-dir").toAbsolutePath();
+        final String fullFilename = uploadDir + "/" + file.getOriginalFilename();
+        if (!Files.exists(uploadDir)) {
+            Files.createDirectory(uploadDir);
+        }
+
+        final BufferedOutputStream stream = new BufferedOutputStream(
+                new FileOutputStream(new File(fullFilename))
+        );
+        FileCopyUtils.copy(file.getInputStream(), stream);
+        return fullFilename;
+    }
+
+    private ReportType getReportTypeFromRequest(String reportType) {
+        return Arrays.asList(ReportType.values()).stream().filter(sivaReportType -> sivaReportType.name().equalsIgnoreCase(reportType))
+                .findFirst()
+                .orElse(ReportType.SIMPLE);
     }
 }

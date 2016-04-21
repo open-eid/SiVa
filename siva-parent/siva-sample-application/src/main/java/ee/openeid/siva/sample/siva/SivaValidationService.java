@@ -18,13 +18,13 @@ public class SivaValidationService {
     @Autowired
     private RestTemplate restTemplate;
 
-    public String validateDocument(File file) throws IOException {
+    public String validateDocument(File file, ReportType sivaReportType) throws IOException {
         String encodeFile = Base64.encodeBase64String(FileUtils.readFileToByteArray(file));
 
         ValidationRequest validationRequest = new ValidationRequest();
         validationRequest.setDocument(encodeFile);
         validationRequest.setFilename(file.getName());
-        validationRequest.setReportType(ReportType.SIMPLE);
+        validationRequest.setReportType(sivaReportType);
         validationRequest.setDocumentType(FileType.PDF);
 
         return restTemplate.postForObject(sivaBaseUrl, validationRequest, String.class);

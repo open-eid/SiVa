@@ -24,7 +24,7 @@ public class ValidationProxyFactoryTest {
         validationProxyFactory = new ValidationProxyFactory();
         validationProxyFactory.setPdfValidationProxy(new PdfValidationProxy());
     }
-    
+
     @Test
     public void mimeTypePDFReturnsPdfValidationProxy() {
         ValidationProxy validationProxy = validationProxyFactory.getProxyForType(DocumentType.PDF);

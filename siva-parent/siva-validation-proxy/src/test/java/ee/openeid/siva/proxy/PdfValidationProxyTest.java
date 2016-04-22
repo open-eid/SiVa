@@ -29,7 +29,7 @@ public class PdfValidationProxyTest {
     }
 
     @Test
-    public void returnSimpleReportAsJSON() {
+    public void whenRequestProtocolJSONAndReportTypeSimpleThenReturnSimpleReportAsJSON() {
         ProxyDocument proxyDocument= new ProxyDocument();
         proxyDocument.setRequestProtocol(RequestProtocol.JSON);
         proxyDocument.setDocumentType(DocumentType.PDF);
@@ -39,7 +39,7 @@ public class PdfValidationProxyTest {
     }
 
     @Test
-    public void returnDetailedReportAsJSON() {
+    public void whenRequestProtocolJSONAndReportTypeDetailedThenReturnDetailedReportAsJSON() {
         ProxyDocument proxyDocument= new ProxyDocument();
         proxyDocument.setRequestProtocol(RequestProtocol.JSON);
         proxyDocument.setDocumentType(DocumentType.PDF);
@@ -49,7 +49,7 @@ public class PdfValidationProxyTest {
     }
 
     @Test
-    public void returnDiagnosticDataAsJSON() {
+    public void whenRequestProtocolJSONAndReportTypeDiagnosticDataThenReturnDiagnosticDataAsJSON() {
         ProxyDocument proxyDocument= new ProxyDocument();
         proxyDocument.setRequestProtocol(RequestProtocol.JSON);
         proxyDocument.setDocumentType(DocumentType.PDF);
@@ -59,7 +59,7 @@ public class PdfValidationProxyTest {
     }
 
     @Test
-    public void returnSimpleReportAsXML() {
+    public void whenRequestProtocolXMLAndReportTypeSimpleThenReturnSimpleReportSimplereportAsXML() {
         ProxyDocument proxyDocument= new ProxyDocument();
         proxyDocument.setRequestProtocol(RequestProtocol.XML);
         proxyDocument.setDocumentType(DocumentType.PDF);

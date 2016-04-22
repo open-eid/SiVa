@@ -12,7 +12,7 @@ public class DocumentTypeResolver {
 
     public static DocumentType documentTypeFromString(String type) {
         Optional<DocumentType> documentType = stream(DocumentType.class.getEnumConstants())
-                .filter(dt -> type.equalsIgnoreCase(dt.name()))
+                .filter(dt -> dt.name().equalsIgnoreCase(type))
                 .findAny();
 
         if (!documentType.isPresent()) {

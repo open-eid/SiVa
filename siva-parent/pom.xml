@@ -16,46 +16,46 @@
 
     <modules>
         <module>siva-webapp</module>
-		<module>siva-validation-proxy</module>
-		<module>siva-sample-application</module>
-	</modules>
+        <module>siva-validation-proxy</module>
+        <module>siva-sample-application</module>
+    </modules>
 
-	<properties>
-		<project.encoding>UTF-8</project.encoding>
+    <properties>
+        <project.encoding>UTF-8</project.encoding>
         <language.level>1.8</language.level>
-		<!--<spring.version>4.2.5.RELEASE</spring.version>-->
-        <spring.boot.version>1.4.0.M2</spring.boot.version>
-		<!--<slf4j.version>1.6.6</slf4j.version>-->
-		<!--<logback-classic.version>1.0.13</logback-classic.version>-->
-		<junit.version>4.12</junit.version>
-		<mockito.version>2.0.2-beta</mockito.version>
-		<powermock.version>1.6.2</powermock.version>
+        <!--<spring.version>4.2.5.RELEASE</spring.version>-->
+        <spring.boot.version>1.4.0.SNAPSHOT</spring.boot.version>
+        <!--<slf4j.version>1.6.6</slf4j.version>-->
+        <!--<logback-classic.version>1.0.13</logback-classic.version>-->
+        <junit.version>4.12</junit.version>
+        <mockito.version>2.0.2-beta</mockito.version>
+        <powermock.version>1.6.2</powermock.version>
         <dss.version>4.5.0</dss.version>
-	</properties>
+    </properties>
 
-	<dependencyManagement>
-		<dependencies>
-			<!-- DSS -->
-			<dependency>
-				<groupId>eu.europa.ec.joinup.sd-dss</groupId>
-				<artifactId>dss-document</artifactId>
-				<version>${dss.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>eu.europa.ec.joinup.sd-dss</groupId>
-				<artifactId>dss-service</artifactId>
-				<version>${dss.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>eu.europa.ec.joinup.sd-dss</groupId>
-				<artifactId>dss-webservices</artifactId>
-				<version>${dss.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>eu.europa.ec.joinup.sd-dss</groupId>
-				<artifactId>dss-spi</artifactId>
-				<version>${dss.version}</version>
-			</dependency>
+    <dependencyManagement>
+        <dependencies>
+            <!-- DSS -->
+            <dependency>
+                <groupId>eu.europa.ec.joinup.sd-dss</groupId>
+                <artifactId>dss-document</artifactId>
+                <version>${dss.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>eu.europa.ec.joinup.sd-dss</groupId>
+                <artifactId>dss-service</artifactId>
+                <version>${dss.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>eu.europa.ec.joinup.sd-dss</groupId>
+                <artifactId>dss-webservices</artifactId>
+                <version>${dss.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>eu.europa.ec.joinup.sd-dss</groupId>
+                <artifactId>dss-spi</artifactId>
+                <version>${dss.version}</version>
+            </dependency>
 
             <!-- Spring boot -->
             <dependency>
@@ -74,11 +74,11 @@
             </dependency>
 
             <!-- Front-end development -->
-			<dependency>
-				<groupId>com.domingosuarez.boot</groupId>
-				<artifactId>spring-boot-starter-jade4j</artifactId>
-				<version>0.3.0</version>
-			</dependency>
+            <dependency>
+                <groupId>com.domingosuarez.boot</groupId>
+                <artifactId>spring-boot-starter-jade4j</artifactId>
+                <version>0.3.0</version>
+            </dependency>
             <dependency>
                 <groupId>de.neuland-bfi</groupId>
                 <artifactId>spring-jade4j</artifactId>
@@ -94,98 +94,98 @@
                 <artifactId>bootstrap</artifactId>
                 <version>4.0.0-alpha.2</version>
             </dependency>
-			<dependency>
-				<groupId>org.webjars.bower</groupId>
-				<artifactId>bootstrap-fileinput</artifactId>
-				<version>4.3.1</version>
-			</dependency>
+            <dependency>
+                <groupId>org.webjars.bower</groupId>
+                <artifactId>bootstrap-fileinput</artifactId>
+                <version>4.3.1</version>
+            </dependency>
 
-			<!-- Public Dependencies -->
-			<dependency>
-				<groupId>commons-codec</groupId>
-				<artifactId>commons-codec</artifactId>
-				<version>1.6</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-io</groupId>
-				<artifactId>commons-io</artifactId>
-				<version>2.4</version>
-			</dependency>
+            <!-- Public Dependencies -->
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>1.6</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>2.4</version>
+            </dependency>
 
-			<!-- Lombok for getters and setters -->
-			<dependency>
-				<groupId>org.projectlombok</groupId>
-				<artifactId>lombok</artifactId>
-				<version>1.16.8</version>
-			</dependency>
+            <!-- Lombok for getters and setters -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.16.8</version>
+            </dependency>
 
-			<!--<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-beans</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-web</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-webmvc</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-context-support</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-jdbc</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
+            <!--<dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-webmvc</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context-support</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jdbc</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
 
-			<dependency>
-				<groupId>org.quartz-scheduler</groupId>
-				<artifactId>quartz</artifactId>
-				<version>2.2.1</version>
-			</dependency>
+            <dependency>
+                <groupId>org.quartz-scheduler</groupId>
+                <artifactId>quartz</artifactId>
+                <version>2.2.1</version>
+            </dependency>
 -->
             <!-- DB for webapp settings -->
-			<dependency>
-				<groupId>org.hsqldb</groupId>
-				<artifactId>hsqldb</artifactId>
-				<version>1.8.0.10</version>
-			</dependency>
+            <dependency>
+                <groupId>org.hsqldb</groupId>
+                <artifactId>hsqldb</artifactId>
+                <version>1.8.0.10</version>
+            </dependency>
 
-			<!-- Logger -->
-			<!--<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-api</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>jcl-over-slf4j</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>-->
-			<!--<dependency>
-				<groupId>ch.qos.logback</groupId>
-				<artifactId>logback-classic</artifactId>
-				<version>${logback-classic.version}</version>
-			</dependency>
+            <!-- Logger -->
+            <!--<dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jcl-over-slf4j</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>-->
+            <!--<dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback-classic.version}</version>
+            </dependency>
 -->
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>${junit.version}</version>
-			</dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+            </dependency>
 
-			<dependency>
-				<groupId>org.mockito</groupId>
-				<artifactId>mockito-all</artifactId>
-				<version>${mockito.version}</version>
-			</dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>${mockito.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
@@ -198,93 +198,93 @@
                 <version>9.3.1.v20150714</version>
             </dependency>
         </dependencies>
-	</dependencyManagement>
+    </dependencyManagement>
 
     <build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.18.1</version>
-				<configuration>
-					<!-- Default test configuration -->
-					<skipTests>true</skipTests>
-					<systemProperties>
-						<java.util.logging.config.file>../logging.properties</java.util.logging.config.file>
-					</systemProperties>
-				</configuration>
-			</plugin>
-		</plugins>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.18.1</version>
+                <configuration>
+                    <!-- Default test configuration -->
+                    <skipTests>true</skipTests>
+                    <systemProperties>
+                        <java.util.logging.config.file>../logging.properties</java.util.logging.config.file>
+                    </systemProperties>
+                </configuration>
+            </plugin>
+        </plugins>
 
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.5.1</version>
-					<configuration>
-						<encoding>${project.encoding}</encoding>
-						<source>${language.level}</source>
-						<target>${language.level}</target>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-resources-plugin</artifactId>
-					<version>2.5</version>
-					<configuration>
-						<encoding>${project.encoding}</encoding>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-war-plugin</artifactId>
-					<version>2.2</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.18</version>
-				</plugin>
-				<plugin>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-maven-plugin</artifactId>
-					<version>${spring.boot.version}</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-deploy-plugin</artifactId>
-					<version>2.8.2</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-assembly-plugin</artifactId>
-					<version>2.5.5</version>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>2.5.1</version>
+                    <configuration>
+                        <encoding>${project.encoding}</encoding>
+                        <source>${language.level}</source>
+                        <target>${language.level}</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>2.5</version>
+                    <configuration>
+                        <encoding>${project.encoding}</encoding>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>2.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.18</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring.boot.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.8.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>2.5.5</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
-	<repositories>
-		<repository>
-			<id>jboss-public</id>
-			<url>https://repository.jboss.org/nexus/</url>
-		</repository>
-		<repository>
-			<id>netbeans</id>
-			<url>http://bits.netbeans.org/maven2/</url>
-		</repository>
-		<repository>
-			<id>java.net</id>
-			<url>http://download.java.net/maven/2/</url>
-		</repository>
-		<!--<repository>
-			<id>joinup-mocca-thirparty</id>
-			<url>http://joinup.ec.europa.eu/site/mocca/m2/repository/</url>
-		</repository>
-		<repository>
-			<id>joinup-dss-thirdparty</id>
-			<url>http://joinup.ec.europa.eu/site/sd-dss/maven2</url>
-		</repository>-->
+    <repositories>
+        <repository>
+            <id>jboss-public</id>
+            <url>https://repository.jboss.org/nexus/</url>
+        </repository>
+        <repository>
+            <id>netbeans</id>
+            <url>http://bits.netbeans.org/maven2/</url>
+        </repository>
+        <repository>
+            <id>java.net</id>
+            <url>http://download.java.net/maven/2/</url>
+        </repository>
+        <!--<repository>
+            <id>joinup-mocca-thirparty</id>
+            <url>http://joinup.ec.europa.eu/site/mocca/m2/repository/</url>
+        </repository>
+        <repository>
+            <id>joinup-dss-thirdparty</id>
+            <url>http://joinup.ec.europa.eu/site/sd-dss/maven2</url>
+        </repository>-->
         <repository>
             <id>spring-snapshots</id>
             <url>http://repo.spring.io/snapshot</url>
@@ -300,18 +300,18 @@
             <id>jCenter</id>
             <url>http://jcenter.bintray.com/</url>
         </repository>
-		<repository>
-			<id>apache.snapshots</id>
-			<url>https://repository.apache.org/content/repositories/snapshots</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
+        <repository>
+            <id>apache.snapshots</id>
+            <url>https://repository.apache.org/content/repositories/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
 
-	</repositories>
+    </repositories>
     <pluginRepositories>
         <pluginRepository>
             <id>spring-snapshots</id>
@@ -321,17 +321,17 @@
             <id>spring-milestones</id>
             <url>http://repo.spring.io/milestone</url>
         </pluginRepository>
-		<pluginRepository>
-			<id>apache.snapshots</id>
-			<name>Apache Snapshots</name>
-			<url>https://repository.apache.org/content/repositories/snapshots</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
+        <pluginRepository>
+            <id>apache.snapshots</id>
+            <name>Apache Snapshots</name>
+            <url>https://repository.apache.org/content/repositories/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
     </pluginRepositories>
 
 </project>

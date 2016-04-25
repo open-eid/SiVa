@@ -1,14 +1,16 @@
 package ee.openeid.siva.proxy.factory;
 
 
-import ee.openeid.siva.proxy.ValidationProxy;
 import ee.openeid.siva.proxy.PdfValidationProxy;
-import eu.europa.esig.dss.MimeType;
+import ee.openeid.siva.proxy.ValidationProxy;
+import ee.openeid.siva.proxy.document.DocumentType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import static org.junit.Assert.assertTrue;
 
 public class ValidationProxyFactoryTest {
 
@@ -23,19 +25,18 @@ public class ValidationProxyFactoryTest {
         validationProxyFactory.setPdfValidationProxy(new PdfValidationProxy());
     }
 
-
     @Test
-    public void getPdfValidationProxy() {
-        ValidationProxy validationProxy = validationProxyFactory.getValidationProxy(MimeType.PDF);
-        Assert.assertTrue(validationProxy instanceof PdfValidationProxy);
+    public void mimeTypePDFReturnsPdfValidationProxy() {
+        ValidationProxy validationProxy = validationProxyFactory.getProxyForType(DocumentType.PDF);
+        assertTrue(validationProxy instanceof PdfValidationProxy);
     }
 
     @Test
     public void expectExceptionWhenMimeTypeUnsupported() {
         expectedException.expect(RuntimeException.class);
-        expectedException.expectMessage("type = application/octet-stream is unsupported");
+        expectedException.expectMessage("type = DDOC is unsupported");
 
-        validationProxyFactory.getValidationProxy(MimeType.BINARY);
+        validationProxyFactory.getProxyForType(DocumentType.DDOC);
     }
 
 }

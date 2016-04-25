@@ -3,12 +3,11 @@ package ee.openeid.siva.proxy;
 
 import ee.openeid.pdf.webservice.json.PDFDocument;
 import ee.openeid.pdf.webservice.json.ValidationService;
-
-import ee.openeid.siva.proxy.PdfValidationProxy;
 import ee.openeid.siva.proxy.converter.XMLToJSONConverter;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.document.ReportType;
 import ee.openeid.siva.proxy.document.RequestProtocol;
+import ee.openeid.siva.proxy.document.DocumentType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,39 +29,43 @@ public class PdfValidationProxyTest {
     }
 
     @Test
-    public void returnSimpleReportAsJSON() {
+    public void whenRequestProtocolJSONAndReportTypeSimpleThenReturnSimpleReportAsJSON() {
         ProxyDocument proxyDocument= new ProxyDocument();
         proxyDocument.setRequestProtocol(RequestProtocol.JSON);
+        proxyDocument.setDocumentType(DocumentType.PDF);
         proxyDocument.setReportType(ReportType.SIMPLE);
         String report = pdfValidationProxy.validate(proxyDocument);
         assertEquals("{\"SimpleReport\":{\"content\":\"data\"}}", report);
     }
 
     @Test
-    public void returnDetailedReportAsJSON() {
+    public void whenRequestProtocolJSONAndReportTypeDetailedThenReturnDetailedReportAsJSON() {
         ProxyDocument proxyDocument= new ProxyDocument();
         proxyDocument.setRequestProtocol(RequestProtocol.JSON);
+        proxyDocument.setDocumentType(DocumentType.PDF);
         proxyDocument.setReportType(ReportType.DETAILED);
         String report = pdfValidationProxy.validate(proxyDocument);
-        assertEquals("{\"DetailedReport\":\"data\"}", report);
+        assertEquals("{\"DetailedReport\":{\"content\":\"data\"}}", report);
     }
 
     @Test
-    public void returnDiagnosticDataAsJSON() {
+    public void whenRequestProtocolJSONAndReportTypeDiagnosticDataThenReturnDiagnosticDataAsJSON() {
         ProxyDocument proxyDocument= new ProxyDocument();
         proxyDocument.setRequestProtocol(RequestProtocol.JSON);
+        proxyDocument.setDocumentType(DocumentType.PDF);
         proxyDocument.setReportType(ReportType.DIAGNOSTICDATA);
         String report = pdfValidationProxy.validate(proxyDocument);
-        assertEquals("{\"DiagnosticData\":\"data\"}", report);
+        assertEquals("{\"DiagnosticData\":{\"content\":\"data\"}}", report);
     }
 
     @Test
-    public void returnSimpleReportAsXML() {
+    public void whenRequestProtocolXMLAndReportTypeSimpleThenReturnSimpleReportSimplereportAsXML() {
         ProxyDocument proxyDocument= new ProxyDocument();
         proxyDocument.setRequestProtocol(RequestProtocol.XML);
+        proxyDocument.setDocumentType(DocumentType.PDF);
         proxyDocument.setReportType(ReportType.SIMPLE);
         String report = pdfValidationProxy.validate(proxyDocument);
-        assertEquals("<SimpleReport><xmlns>blah</xmlns>data</SimpleReport>", report);
+        assertEquals("<SimpleReport xmlns=\"xmlnamespace\"><content>data</content></SimpleReport>", report);
     }
 
     private class ValidationServiceSpy implements ValidationService {
@@ -71,9 +74,9 @@ public class PdfValidationProxyTest {
         public Map<String,String> validateDocument(PDFDocument pdfDocument) {
 
             Map<String,String> reportMap = new HashMap<>();
-            reportMap.put("SIMPLE", "<SimpleReport><xmlns>blah</xmlns>data</SimpleReport>");
-            reportMap.put("DETAILED", "<DetailedReport>data</DetailedReport>");
-            reportMap.put("DIAGNOSTICDATA", "<DiagnosticData>data</DiagnosticData>");
+            reportMap.put("SIMPLE", "<SimpleReport xmlns=\"xmlnamespace\"><content>data</content></SimpleReport>");
+            reportMap.put("DETAILED", "<DetailedReport xmlns=\"xmlnamespace\"><content>data</content></DetailedReport>");
+            reportMap.put("DIAGNOSTICDATA", "<DiagnosticData xmlns=\"xmlnamespace\"><content>data</content></DiagnosticData>");
             return reportMap;
         }
     }

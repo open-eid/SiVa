@@ -13,13 +13,13 @@ public class ReportTypeResolverTest {
     public ExpectedException expectedException = ExpectedException.none();
 
     @Test
-    public void testSimpleReportType() {
+    public void whenInputReportTypeStringIsSimpleThenReturnSimpleReportType() {
         ReportType reportType = ReportTypeResolver.reportTypeFromString("SIMPLE");
         assertEquals(reportType, ReportType.SIMPLE);
     }
 
     @Test
-    public void testReportTypeIgnoreCase() {
+    public void ignoreCaseWithVariousInputReportTypeStrings() {
         ReportType reportType = ReportTypeResolver.reportTypeFromString("sImPlE");
         assertEquals(reportType, ReportType.SIMPLE);
         reportType = ReportTypeResolver.reportTypeFromString("DeTAILed");
@@ -29,19 +29,19 @@ public class ReportTypeResolverTest {
     }
 
     @Test
-    public void testDetailedReportType() {
+    public void whenInputReportTypeStringIsDetailedThenReturnDetailedReportType() {
         ReportType reportType = ReportTypeResolver.reportTypeFromString("DETAILED");
         assertEquals(reportType, ReportType.DETAILED);
     }
 
     @Test
-    public void testDiagnosticDataReportType() {
+    public void whenInputReportTypeStringIsDiagnosticDataThenReturnSDiagnosticDataReportType() {
         ReportType reportType = ReportTypeResolver.reportTypeFromString("DIAGNOSTICDATA");
         assertEquals(reportType, ReportType.DIAGNOSTICDATA);
     }
 
     @Test
-    public void testInvalidDataReportType() {
+    public void whenInputReportTypeStringIsInvalidThenThrowUnsupportedTypeException() {
         String reportTypeInput = "RANDOMREPORTTYPE";
         expectedException.expect(UnsupportedTypeException.class);
         expectedException.expectMessage("type = " + reportTypeInput + " is unsupported");

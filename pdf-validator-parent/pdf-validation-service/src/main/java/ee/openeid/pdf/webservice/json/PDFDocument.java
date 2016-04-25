@@ -37,108 +37,108 @@ import java.util.Arrays;
 
 public class PDFDocument {
 
-	private byte[] bytes;
+    private byte[] bytes;
 
-	private String name;
+    private String name;
 
-	protected MimeType mimeType;
+    protected MimeType mimeType;
 
-	private String absolutePath = "WSDocument";
+    private String absolutePath = "WSDocument";
 
-	protected PDFDocument nextDocument;
+    protected PDFDocument nextDocument;
 
-	/**
-	 * This constructor is used by Spring in the web-app..
-	 */
-	public PDFDocument() {
+    /**
+     * This constructor is used by Spring in the web-app..
+     */
+    public PDFDocument() {
 
-	}
+    }
 
-	/**
-	 * The default constructor for WSDocument.
-	 *
-	 * @param dssDocument
-	 * @throws DSSException
-	 */
-	public PDFDocument(final DSSDocument dssDocument) throws DSSException {
+    /**
+     * The default constructor for WSDocument.
+     *
+     * @param dssDocument
+     * @throws DSSException
+     */
+    public PDFDocument(final DSSDocument dssDocument) throws DSSException {
 
-		final byte[] bytes = dssDocument.getBytes();
-		this.bytes = Arrays.copyOf(bytes, bytes.length);
-		mimeType = dssDocument.getMimeType();
-		name = dssDocument.getName();
-		absolutePath = dssDocument.getAbsolutePath();
+        final byte[] bytes = dssDocument.getBytes();
+        this.bytes = Arrays.copyOf(bytes, bytes.length);
+        mimeType = dssDocument.getMimeType();
+        name = dssDocument.getName();
+        absolutePath = dssDocument.getAbsolutePath();
 
-		final DSSDocument nextDssDocument = dssDocument.getNextDocument();
-		if (nextDssDocument != null) {
-			nextDocument = new PDFDocument(nextDssDocument);
-		}
-	}
+        final DSSDocument nextDssDocument = dssDocument.getNextDocument();
+        if (nextDssDocument != null) {
+            nextDocument = new PDFDocument(nextDssDocument);
+        }
+    }
 
-	/**
-	 * This method is used by web services
-	 *
-	 * @return the bytes
-	 */
-	public byte[] getBytes() {
+    /**
+     * This method is used by web services
+     *
+     * @return the bytes
+     */
+    public byte[] getBytes() {
 
-		return bytes;
-	}
+        return bytes;
+    }
 
-	/**
-	 * This method is used by web services
-	 *
-	 * @param bytes the bytes to set
-	 */
-	public void setBytes(byte[] bytes) {
+    /**
+     * This method is used by web services
+     *
+     * @param bytes the bytes to set
+     */
+    public void setBytes(byte[] bytes) {
 
-		this.bytes = bytes;
-	}
+        this.bytes = bytes;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public MimeType getMimeType() {
-		return mimeType;
-	}
+    public MimeType getMimeType() {
+        return mimeType;
+    }
 
-	public void setMimeType(final MimeType mimeType) {
-		this.mimeType = mimeType;
-	}
+    public void setMimeType(final MimeType mimeType) {
+        this.mimeType = mimeType;
+    }
 
-	public String getAbsolutePath() {
-		return absolutePath;
-	}
+    public String getAbsolutePath() {
+        return absolutePath;
+    }
 
-	public void setAbsolutePath(String absolutePath) {
-		this.absolutePath = absolutePath;
-	}
+    public void setAbsolutePath(String absolutePath) {
+        this.absolutePath = absolutePath;
+    }
 
-	public InputStream openStream() throws DSSException {
+    public InputStream openStream() throws DSSException {
 
-		final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
-		return byteArrayInputStream;
-	}
+        final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+        return byteArrayInputStream;
+    }
 
-	public PDFDocument getNextDocument() {
-		return nextDocument;
-	}
+    public PDFDocument getNextDocument() {
+        return nextDocument;
+    }
 
-	public void setNextDocument(PDFDocument nextDocument) {
-		this.nextDocument = nextDocument;
-	}
+    public void setNextDocument(PDFDocument nextDocument) {
+        this.nextDocument = nextDocument;
+    }
 
-	@Override
-	public String toString() {
+    @Override
+    public String toString() {
 
-		final StringWriter stringWriter = new StringWriter();
-		stringWriter.append("Name: " + getName()).append(" / ").append("mime-type=" + (mimeType == null ? "null" : mimeType.getMimeTypeString())).append(" / ")
-			  .append(" / AbsolutePath [").append(getAbsolutePath()).append("] / nextDocument [").append(nextDocument.toString()).append("]");
-		final String string = stringWriter.toString();
-		return string;
-	}
+        final StringWriter stringWriter = new StringWriter();
+        stringWriter.append("Name: " + getName()).append(" / ").append("mime-type=" + (mimeType == null ? "null" : mimeType.getMimeTypeString())).append(" / ")
+              .append(" / AbsolutePath [").append(getAbsolutePath()).append("] / nextDocument [").append(nextDocument.toString()).append("]");
+        final String string = stringWriter.toString();
+        return string;
+    }
 }

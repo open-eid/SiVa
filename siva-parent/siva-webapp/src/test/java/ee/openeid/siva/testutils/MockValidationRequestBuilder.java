@@ -47,11 +47,11 @@ public class MockValidationRequestBuilder {
         return this;
     }
 
-    public ValidationRequest build() {
+    public MockValidationRequest build() {
         return validationRequest;
     }
 
-    private static class MockValidationRequest implements ValidationRequest {
+    public static class MockValidationRequest implements ValidationRequest {
 
         private String document = DEFAULT_DOCUMENT;
         private String filename = DEFAULT_FILENAME;
@@ -76,6 +76,22 @@ public class MockValidationRequestBuilder {
         @Override
         public String getReportType() {
             return reportType;
+        }
+
+        public void setDocument(String document) {
+            this.document = document;
+        }
+
+        public void setFilename(String filename) {
+            this.filename = filename;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public void setReportType(String reportType) {
+            this.reportType = reportType;
         }
     }
 }

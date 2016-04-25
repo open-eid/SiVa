@@ -1,9 +1,9 @@
 package ee.openeid.siva.webapp.transformer;
 
 import ee.openeid.siva.proxy.document.ProxyDocument;
-import ee.openeid.siva.webapp.request.ValidationRequest;
+import ee.openeid.siva.proxy.document.ReportType;
+import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.testutils.MockValidationRequestBuilder;
-import eu.europa.esig.dss.MimeType;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,7 +23,7 @@ public class ValidationRequestToProxyDocumentTransformerTest {
 
     private static final String VALID_PDF_FILE = "test-files/sample.pdf";
     private ValidationRequestToProxyDocumentTransformer transformer = new ValidationRequestToProxyDocumentTransformer();
-    private ValidationRequest validationRequest;
+    private MockValidationRequestBuilder.MockValidationRequest validationRequest;
 
     @Before
     public void setUp() throws Exception {
@@ -36,8 +36,44 @@ public class ValidationRequestToProxyDocumentTransformerTest {
     }
 
     @Test
-    public void typeIsCorrectlyTransformedToMimeType() {
-        assertEquals(MimeType.PDF, transformer.transform(validationRequest).getMimeType());
+    public void pdfTypeIsCorrectlyTransformedToDocumentType() {
+        assertEquals(DocumentType.PDF, transformer.transform(validationRequest).getDocumentType());
+    }
+
+    @Test
+    public void bdocTypeIsCorrectlyTransformedToDocumentType() {
+        validationRequest.setType("bdoc");
+        assertEquals(DocumentType.BDOC, transformer.transform(validationRequest).getDocumentType());
+    }
+
+    @Test
+    public void xmlTypeIsCorrectlyTransformedToDocumentType() {
+        validationRequest.setType("xml");
+        assertEquals(DocumentType.XML, transformer.transform(validationRequest).getDocumentType());
+    }
+
+    @Test
+    public void ddocTypeIsCorrectlyTransformedToDocumentType() {
+        validationRequest.setType("ddoc");
+        assertEquals(DocumentType.DDOC, transformer.transform(validationRequest).getDocumentType());
+    }
+
+    @Test
+    public void simpleReportTypeIsCorrectlyTransformedToReportType() {
+        validationRequest.setReportType("SimPle");
+        assertEquals(ReportType.SIMPLE, transformer.transform(validationRequest).getReportType());
+    }
+
+    @Test
+    public void detailedReportTypeIsCorrectlyTransformedToReportType() {
+        validationRequest.setReportType("detailed");
+        assertEquals(ReportType.DETAILED, transformer.transform(validationRequest).getReportType());
+    }
+
+    @Test
+    public void diagnosticDataReportTypeIsCorrectlyTransformedToReportType() {
+        validationRequest.setReportType("diagnosticData");
+        assertEquals(ReportType.DIAGNOSTICDATA, transformer.transform(validationRequest).getReportType());
     }
 
     @Test

@@ -85,6 +85,18 @@ public class ValidationControllerTest {
     }
 
     @Test
+    public void requestWithEmptyDocumentReturnsErroneousResponse() throws Exception {
+        mockMvc.perform(post("/validate")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestWithEmptyDocument().toString().getBytes()))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.requestErrors", Matchers.hasSize(1)))
+                .andExpect(jsonPath("$.requestErrors[0].field", is("document")))
+                .andExpect(jsonPath("$.requestErrors[0].message", containsString("document cannot be empty")));
+    }
+
+    @Test
     public void requestWithEmptyFilenameReturnsErroneousResponse() throws Exception {
         testIllegalFilename("");
     }
@@ -185,6 +197,12 @@ public class ValidationControllerTest {
     private JSONObject requestWithInvalidDocumentEncoding() {
         JSONObject jsonObject = validRequest();
         jsonObject.put("document", "ÖÕ::žšPQ;ÜÜ");
+        return jsonObject;
+    }
+
+    private JSONObject requestWithEmptyDocument() {
+        JSONObject jsonObject = validRequest();
+        jsonObject.put("document", "");
         return jsonObject;
     }
 

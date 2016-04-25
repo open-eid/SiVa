@@ -22,10 +22,7 @@ public class PdfValidationProxy implements ValidationProxy {
     private ValidationService validationService;
 
     public String validate(final ProxyDocument document) {
-        PDFDocument pdfDocument = new PDFDocument();
-        pdfDocument.setName(document.getName());
-        pdfDocument.setBytes(document.getBytes());
-        pdfDocument.setMimeType(document.getMimeType());
+        PDFDocument pdfDocument = createPdfDocument(document);
 
         Map<String, String> reportMap =  validationService.validateDocument(pdfDocument);
         String report = reportMap.get(document.getReportType().name());
@@ -33,6 +30,14 @@ public class PdfValidationProxy implements ValidationProxy {
             report = converter.toJSON(report);
         }
         return report;
+    }
+
+    private PDFDocument createPdfDocument(ProxyDocument document) {
+        PDFDocument pdfDocument = new PDFDocument();
+        pdfDocument.setName(document.getName());
+        pdfDocument.setBytes(document.getBytes());
+        pdfDocument.setMimeType(document.getDocumentType().getMimeType());
+        return pdfDocument;
     }
 
     @Autowired

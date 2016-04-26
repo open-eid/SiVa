@@ -5,7 +5,7 @@ trusted:
       tslRefreshPolicy: WHEN_NECESSARY_OR_INDETERMINATE
       fileCacheDirectory:
       scheduler:
-        cron: "0 0 3 * * ? *"
+        cron: "0 0 3 * * ?"
 
 keystore:
   type: JKS

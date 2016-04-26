@@ -20,11 +20,8 @@ public class ReloadableTrustedListAndCustomCertificateSource extends ReloadableT
 	
 	private static final Logger LOG = LoggerFactory.getLogger(ReloadableTrustedListAndCustomCertificateSource.class);
 
-	@PostConstruct
-	public void initRefresh() {
-		refresh();
-	}
 	@Override
+	@PostConstruct
 	@Scheduled(cron = "${trusted.list.source.scheduler.cron}")
 	public synchronized void refresh() {
         final TrustedListsCertificateSource newSource = new TrustedListsCertificateSource(this);

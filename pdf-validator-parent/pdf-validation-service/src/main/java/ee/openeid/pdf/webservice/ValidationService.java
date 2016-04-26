@@ -1,4 +1,6 @@
-package ee.openeid.pdf.webservice.json;
+package ee.openeid.pdf.webservice;
+
+import ee.openeid.pdf.webservice.document.PDFDocument;
 
 import java.util.Map;
 

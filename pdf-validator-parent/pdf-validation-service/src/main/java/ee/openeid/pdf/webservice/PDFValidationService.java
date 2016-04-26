@@ -18,8 +18,10 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package ee.openeid.pdf.webservice.json;
+package ee.openeid.pdf.webservice;
 
+import ee.openeid.pdf.webservice.document.PDFDocument;
+import ee.openeid.pdf.webservice.document.transformer.PDFDocumentToDSSDocumentTransformer;
 import eu.europa.esig.dss.DSSDocument;
 import eu.europa.esig.dss.DSSException;
 import eu.europa.esig.dss.validation.CertificateVerifier;
@@ -57,7 +59,7 @@ public class PDFValidationService implements ValidationService {
                 throw new SOAPException("No request document found");
             }
 
-            final DSSDocument dssDocument = JSONUtils.createDssDocument(pdfDocument);
+            final DSSDocument dssDocument = PDFDocumentToDSSDocumentTransformer.createDssDocument(pdfDocument);
             final SignedDocumentValidator validator = SignedDocumentValidator.fromDocument(dssDocument);
             validator.setCertificateVerifier(certificateVerifier);
 

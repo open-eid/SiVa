@@ -18,21 +18,29 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package ee.openeid.pdf.webservice.tsl.dao;
+package ee.openeid.pdf.webservice.document.transformer;
 
-import ee.openeid.pdf.webservice.tsl.model.Preference;
-import ee.openeid.pdf.webservice.tsl.model.PreferenceKey;
+import ee.openeid.pdf.webservice.document.PDFDocument;
+import eu.europa.esig.dss.DSSDocument;
+import eu.europa.esig.dss.InMemoryDocument;
+import eu.europa.esig.dss.MimeType;
 
-/**
- * 
- * TODO
- * 
- *
- *
- * 
- *
- *
- */
-public interface PreferencesDao extends GenericDao<Preference, PreferenceKey> {
+public class PDFDocumentToDSSDocumentTransformer {
 
+	private PDFDocumentToDSSDocumentTransformer() {
+	}
+
+	public static DSSDocument createDssDocument(final PDFDocument PDFDocument) {
+		if (PDFDocument == null) {
+			return null;
+		}
+
+		final InMemoryDocument dssDocument = new InMemoryDocument(PDFDocument.getBytes());
+		dssDocument.setName(PDFDocument.getName());
+		dssDocument.setAbsolutePath(PDFDocument.getAbsolutePath());
+		final MimeType mimeType = PDFDocument.getMimeType();
+		dssDocument.setMimeType(mimeType);
+
+		return dssDocument;
+	}
 }

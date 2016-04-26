@@ -1,4 +1,4 @@
-package ee.openeid.pdf.webservice.json;
+package ee.openeid.pdf.webservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

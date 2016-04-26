@@ -1,0 +1,13 @@
+trusted:
+  list:
+    source:
+      lotlUrl: https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml
+      tslRefreshPolicy: WHEN_NECESSARY_OR_INDETERMINATE
+      fileCacheDirectory:
+      scheduler:
+        cron: "0 0 3 * * ? *"
+
+keystore:
+  type: JKS
+  filename: keystore.jks
+  password: pdf-validator-password

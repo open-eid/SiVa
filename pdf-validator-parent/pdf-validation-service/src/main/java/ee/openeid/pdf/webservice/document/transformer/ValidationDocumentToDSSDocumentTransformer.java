@@ -20,25 +20,25 @@
  */
 package ee.openeid.pdf.webservice.document.transformer;
 
-import ee.openeid.pdf.webservice.document.PDFDocument;
+import ee.openeid.siva.validation.document.ValidationDocument;
 import eu.europa.esig.dss.DSSDocument;
 import eu.europa.esig.dss.InMemoryDocument;
 import eu.europa.esig.dss.MimeType;
 
-public class PDFDocumentToDSSDocumentTransformer {
+public class ValidationDocumentToDSSDocumentTransformer {
 
-	private PDFDocumentToDSSDocumentTransformer() {
+	private ValidationDocumentToDSSDocumentTransformer() {
 	}
 
-	public static DSSDocument createDssDocument(final PDFDocument PDFDocument) {
-		if (PDFDocument == null) {
+	public static DSSDocument createDssDocument(final ValidationDocument ValidationDocument) {
+		if (ValidationDocument == null) {
 			return null;
 		}
 
-		final InMemoryDocument dssDocument = new InMemoryDocument(PDFDocument.getBytes());
-		dssDocument.setName(PDFDocument.getName());
-		dssDocument.setAbsolutePath(PDFDocument.getAbsolutePath());
-		final MimeType mimeType = PDFDocument.getMimeType();
+		final InMemoryDocument dssDocument = new InMemoryDocument(ValidationDocument.getBytes());
+		dssDocument.setName(ValidationDocument.getName());
+		dssDocument.setAbsolutePath(ValidationDocument.getAbsolutePath());
+		final MimeType mimeType = ValidationDocument.getMimeType();
 		dssDocument.setMimeType(mimeType);
 
 		return dssDocument;

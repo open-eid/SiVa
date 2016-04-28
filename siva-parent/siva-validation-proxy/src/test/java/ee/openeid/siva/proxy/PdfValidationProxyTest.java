@@ -1,13 +1,12 @@
 package ee.openeid.siva.proxy;
 
-
-import ee.openeid.pdf.webservice.document.PDFDocument;
-import ee.openeid.pdf.webservice.ValidationService;
 import ee.openeid.siva.proxy.converter.XMLToJSONConverter;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.document.ReportType;
 import ee.openeid.siva.proxy.document.RequestProtocol;
 import ee.openeid.siva.proxy.document.DocumentType;
+import ee.openeid.siva.validation.document.ValidationDocument;
+import ee.openeid.siva.validation.service.ValidationService;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -71,7 +70,7 @@ public class PdfValidationProxyTest {
     private class ValidationServiceSpy implements ValidationService {
 
         @Override
-        public Map<String,String> validateDocument(PDFDocument pdfDocument) {
+        public Map<String,String> validateDocument(ValidationDocument validationDocument) {
 
             Map<String,String> reportMap = new HashMap<>();
             reportMap.put("SIMPLE", "<SimpleReport xmlns=\"xmlnamespace\"><content>data</content></SimpleReport>");

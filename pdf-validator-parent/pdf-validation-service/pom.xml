@@ -23,12 +23,20 @@
 			<groupId>eu.europa.ec.joinup.sd-dss</groupId>
 			<artifactId>dss-webservices</artifactId>
 		</dependency>
-
         <dependency>
             <groupId>eu.europa.ec.joinup.sd-dss</groupId>
             <artifactId>dss-service</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>eu.europa.ec.joinup.sd-dss</groupId>
+            <artifactId>validation-services-parent</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.joinup.sd-dss</groupId>
+            <artifactId>tsl-loader</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!-- Database -->
 		<dependency>
 			<groupId>org.hsqldb</groupId>
@@ -73,7 +81,6 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
         </dependency>
-
     </dependencies>
 
 </project>

@@ -1,10 +1,10 @@
 package ee.openeid.siva.proxy;
 
-import ee.openeid.pdf.webservice.document.PDFDocument;
-import ee.openeid.pdf.webservice.ValidationService;
 import ee.openeid.siva.proxy.converter.XMLToJSONConverter;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.document.RequestProtocol;
+import ee.openeid.siva.validation.document.ValidationDocument;
+import ee.openeid.siva.validation.service.ValidationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,23 +21,23 @@ public class PdfValidationProxy implements ValidationProxy {
 
     private ValidationService validationService;
 
-    public String validate(final ProxyDocument document) {
-        PDFDocument pdfDocument = createPdfDocument(document);
+    public String validate(final ProxyDocument proxyDocument) {
+        ValidationDocument validationDocument = createValidationDocument(proxyDocument);
 
-        Map<String, String> reportMap =  validationService.validateDocument(pdfDocument);
-        String report = reportMap.get(document.getReportType().name());
-        if (document.getRequestProtocol() == RequestProtocol.JSON) {
+        Map<String, String> reportMap =  validationService.validateDocument(validationDocument);
+        String report = reportMap.get(proxyDocument.getReportType().name());
+        if (proxyDocument.getRequestProtocol() == RequestProtocol.JSON) {
             report = converter.toJSON(report);
         }
         return report;
     }
 
-    private PDFDocument createPdfDocument(ProxyDocument document) {
-        PDFDocument pdfDocument = new PDFDocument();
-        pdfDocument.setName(document.getName());
-        pdfDocument.setBytes(document.getBytes());
-        pdfDocument.setMimeType(document.getDocumentType().getMimeType());
-        return pdfDocument;
+    private ValidationDocument createValidationDocument(ProxyDocument proxyDocument) {
+        ValidationDocument validationDocument = new ValidationDocument();
+        validationDocument.setName(proxyDocument.getName());
+        validationDocument.setBytes(proxyDocument.getBytes());
+        validationDocument.setMimeType(proxyDocument.getDocumentType().getMimeType());
+        return validationDocument;
     }
 
     @Autowired

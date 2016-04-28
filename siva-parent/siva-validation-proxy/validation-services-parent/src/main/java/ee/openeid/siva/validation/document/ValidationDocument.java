@@ -18,7 +18,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package ee.openeid.pdf.webservice.document;
+package ee.openeid.siva.validation.document;
 
 import eu.europa.esig.dss.DSSDocument;
 import eu.europa.esig.dss.DSSException;
@@ -35,7 +35,7 @@ import java.util.Arrays;
  *
  */
 
-public class PDFDocument {
+public class ValidationDocument {
 
     private byte[] bytes;
 
@@ -45,12 +45,12 @@ public class PDFDocument {
 
     private String absolutePath = "WSDocument";
 
-    protected PDFDocument nextDocument;
+    protected ValidationDocument nextDocument;
 
     /**
      * This constructor is used by Spring in the web-app..
      */
-    public PDFDocument() {
+    public ValidationDocument() {
 
     }
 
@@ -60,7 +60,7 @@ public class PDFDocument {
      * @param dssDocument
      * @throws DSSException
      */
-    public PDFDocument(final DSSDocument dssDocument) throws DSSException {
+    public ValidationDocument(final DSSDocument dssDocument) throws DSSException {
 
         final byte[] bytes = dssDocument.getBytes();
         this.bytes = Arrays.copyOf(bytes, bytes.length);
@@ -70,7 +70,7 @@ public class PDFDocument {
 
         final DSSDocument nextDssDocument = dssDocument.getNextDocument();
         if (nextDssDocument != null) {
-            nextDocument = new PDFDocument(nextDssDocument);
+            nextDocument = new ValidationDocument(nextDssDocument);
         }
     }
 
@@ -124,11 +124,11 @@ public class PDFDocument {
         return byteArrayInputStream;
     }
 
-    public PDFDocument getNextDocument() {
+    public ValidationDocument getNextDocument() {
         return nextDocument;
     }
 
-    public void setNextDocument(PDFDocument nextDocument) {
+    public void setNextDocument(ValidationDocument nextDocument) {
         this.nextDocument = nextDocument;
     }
 

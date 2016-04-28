@@ -10,6 +10,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>siva-validation-proxy</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>validation-services-parent</module>
+    </modules>
 
     <dependencies>
         <dependency>
@@ -19,7 +23,7 @@
         </dependency>
         <dependency>
             <groupId>eu.europa.ec.joinup.sd-dss</groupId>
-            <artifactId>siva-tsl-loader</artifactId>
+            <artifactId>validation-services-parent</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

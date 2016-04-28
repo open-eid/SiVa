@@ -1,8 +1,8 @@
 package ee.openeid.siva.proxy;
 
 import ee.openeid.pdf.webservice.PDFValidationService;
-import ee.openeid.pdf.webservice.ValidationService;
 import ee.openeid.siva.proxy.converter.XMLToJSONConverter;
+import ee.openeid.siva.validation.service.ValidationService;
 import eu.europa.esig.dss.validation.CertificateVerifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

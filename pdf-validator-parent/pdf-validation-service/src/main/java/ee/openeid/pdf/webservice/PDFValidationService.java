@@ -20,8 +20,9 @@
  */
 package ee.openeid.pdf.webservice;
 
-import ee.openeid.pdf.webservice.document.PDFDocument;
-import ee.openeid.pdf.webservice.document.transformer.PDFDocumentToDSSDocumentTransformer;
+import ee.openeid.pdf.webservice.document.transformer.ValidationDocumentToDSSDocumentTransformer;
+import ee.openeid.siva.validation.document.ValidationDocument;
+import ee.openeid.siva.validation.service.ValidationService;
 import eu.europa.esig.dss.DSSDocument;
 import eu.europa.esig.dss.DSSException;
 import eu.europa.esig.dss.validation.CertificateVerifier;
@@ -47,7 +48,7 @@ public class PDFValidationService implements ValidationService {
     private CertificateVerifier certificateVerifier;
 
     @Override
-    public Map<String, String> validateDocument(PDFDocument pdfDocument) throws DSSException {
+    public Map<String, String> validateDocument(ValidationDocument validationDocument) throws DSSException {
 
         String exceptionMessage;
         try {
@@ -55,11 +56,11 @@ public class PDFValidationService implements ValidationService {
                 logger.info("WsValidateDocument: begin");
             }
 
-            if (pdfDocument == null) {
+            if (validationDocument == null) {
                 throw new SOAPException("No request document found");
             }
 
-            final DSSDocument dssDocument = PDFDocumentToDSSDocumentTransformer.createDssDocument(pdfDocument);
+            final DSSDocument dssDocument = ValidationDocumentToDSSDocumentTransformer.createDssDocument(validationDocument);
             final SignedDocumentValidator validator = SignedDocumentValidator.fromDocument(dssDocument);
             validator.setCertificateVerifier(certificateVerifier);
 

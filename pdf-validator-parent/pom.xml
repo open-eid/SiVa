@@ -22,7 +22,6 @@
 		<module>pdf-validator-monitoring</module>
 		<module>pdf-validator-distribution</module>
 		<module>pdf-validator-keystore-generator</module>
-		<module>pdf-validation-service</module>
 	</modules>
 
 	<developers>
@@ -148,6 +147,11 @@
 				<groupId>eu.europa.ec.joinup.sd-dss</groupId>
 				<artifactId>dss-spi</artifactId>
 				<version>${dss.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>eu.europa.ec.joinup.sd-dss</groupId>
+				<artifactId>pdf-validation-service</artifactId>
+				<version>${project.version}</version>
 			</dependency>
 			
             <!-- Spring boot -->

@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>pdf-validator-parent</artifactId>
+        <artifactId>validation-services-parent</artifactId>
         <groupId>eu.europa.ec.joinup.sd-dss</groupId>
         <version>2.0.1.SNAPSHOT</version>
     </parent>
@@ -26,16 +26,6 @@
         <dependency>
             <groupId>eu.europa.ec.joinup.sd-dss</groupId>
             <artifactId>dss-service</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>eu.europa.ec.joinup.sd-dss</groupId>
-            <artifactId>validation-services-parent</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>eu.europa.ec.joinup.sd-dss</groupId>
-            <artifactId>tsl-loader</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <!-- Database -->
 		<dependency>

@@ -3,13 +3,18 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>validation-services-parent</artifactId>
+        <artifactId>siva</artifactId>
         <groupId>eu.europa.ec.joinup.sd-dss</groupId>
         <version>2.0.1.SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>bdoc-validation-service</artifactId>
-
+    <artifactId>validation-services-parent</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>bdoc-validation-service</module>
+        <module>tsl-loader</module>
+        <module>pdf-validation-service</module>
+    </modules>
 
 </project>

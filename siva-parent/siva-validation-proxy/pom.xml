@@ -11,21 +11,8 @@
 
     <artifactId>siva-validation-proxy</artifactId>
     <packaging>pom</packaging>
-    <modules>
-        <module>validation-services-parent</module>
-    </modules>
 
     <dependencies>
-        <dependency>
-            <groupId>eu.europa.ec.joinup.sd-dss</groupId>
-            <artifactId>pdf-validation-service</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>eu.europa.ec.joinup.sd-dss</groupId>
-            <artifactId>validation-services-parent</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>

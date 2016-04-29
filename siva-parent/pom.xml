@@ -18,7 +18,6 @@
         <module>siva-webapp</module>
         <module>siva-validation-proxy</module>
         <module>siva-sample-application</module>
-        <module>siva-tsl-loader</module>
     </modules>
 
     <properties>

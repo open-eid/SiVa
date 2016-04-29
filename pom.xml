@@ -14,5 +14,6 @@
     	<module>sd-dss</module>
     	<module>pdf-validator-parent</module>
         <module>siva-parent</module>
+        <module>validation-services-parent</module>
     </modules>
 </project>

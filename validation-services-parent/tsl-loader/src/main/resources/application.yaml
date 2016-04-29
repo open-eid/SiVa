@@ -9,5 +9,5 @@ trusted:
 
 keystore:
   type: JKS
-  filename: keystore.jks
-  password: pdf-validator-password
+  filename: siva-keystore.jks
+  password: siva-keystore-password

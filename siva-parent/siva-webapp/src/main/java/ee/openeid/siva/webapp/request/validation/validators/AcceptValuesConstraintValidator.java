@@ -1,6 +1,7 @@
 package ee.openeid.siva.webapp.request.validation.validators;
 
 import ee.openeid.siva.webapp.request.validation.annotations.AcceptValues;
+import org.apache.commons.lang.StringUtils;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -14,11 +15,11 @@ public class AcceptValuesConstraintValidator implements ConstraintValidator<Acce
     @Override
     public void initialize(AcceptValues values) {
         acceptedValues = new ArrayList<>();
-        values.value().getAcceptedValues().forEach(av -> acceptedValues.add(av.toLowerCase()));
+        values.value().getAcceptedValues().forEach(av -> acceptedValues.add(StringUtils.lowerCase(av)));
     }
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-        return acceptedValues.contains(value.toLowerCase());
+        return acceptedValues.contains(StringUtils.lowerCase(value));
     }
 }

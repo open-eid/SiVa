@@ -15,7 +15,7 @@ public class PdfValidatorProxyConfiguration {
     }
 
     @Bean
-    public ValidationService validationService(CertificateVerifier certificateVerifier) {
+    public PDFValidationService validationService(CertificateVerifier certificateVerifier) {
         PDFValidationService PDFValidationService = new PDFValidationService();
         PDFValidationService.setCertificateVerifier(certificateVerifier);
 

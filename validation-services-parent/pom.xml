@@ -23,6 +23,7 @@
         <language.level>1.8</language.level>
         <dss.version>4.5.0</dss.version>
         <spring.boot.version>1.4.0.M2</spring.boot.version>
+        <digidoc4j.version>1.0.2</digidoc4j.version>
         <!--<spring.boot.version>1.4.0.BUILD-SNAPSHOT</spring.boot.version>-->
     </properties>
 
@@ -37,6 +38,12 @@
                 <scope>import</scope>
             </dependency>
 
+            <!-- DigiDoc4J -->
+            <dependency>
+                <groupId>org.digidoc4j</groupId>
+                <artifactId>digidoc4j</artifactId>
+                <version>${digidoc4j.version}</version>
+            </dependency>
             <!-- Spring boot -->
             <dependency>
                 <!-- Import dependency management from Spring Boot -->

@@ -1,10 +1,10 @@
 package ee.openeid.siva.proxy;
 
-import ee.openeid.pdf.webservice.PDFValidationService;
 import ee.openeid.siva.proxy.converter.XMLToJSONConverter;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.document.RequestProtocol;
 import ee.openeid.siva.validation.document.ValidationDocument;
+import ee.openeid.siva.validation.service.bdoc.BDOCValidationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,18 +13,18 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 @Service
-public class PdfValidationProxy implements ValidationProxy {
+public class BDocValidationProxy implements ValidationProxy {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PdfValidationProxy.class);
 
     private XMLToJSONConverter converter;
 
-    private PDFValidationService pdfValidationService;
+    private BDOCValidationService bdocValidationService;
 
     public String validate(final ProxyDocument proxyDocument) {
         ValidationDocument validationDocument = createValidationDocument(proxyDocument);
 
-        Map<String, String> reportMap =  pdfValidationService.validateDocument(validationDocument);
+        Map<String, String> reportMap =  bdocValidationService.validateDocument(validationDocument);
         String report = reportMap.get(proxyDocument.getReportType().name());
         if (proxyDocument.getRequestProtocol() == RequestProtocol.JSON) {
             report = converter.toJSON(report);
@@ -41,8 +41,8 @@ public class PdfValidationProxy implements ValidationProxy {
     }
 
     @Autowired
-    public void setPDFValidationService(PDFValidationService pdfValidationService) {
-        this.pdfValidationService = pdfValidationService;
+    public void setBDOCValidationService(BDOCValidationService bdocValidationService) {
+        this.bdocValidationService = bdocValidationService;
     }
 
     @Autowired

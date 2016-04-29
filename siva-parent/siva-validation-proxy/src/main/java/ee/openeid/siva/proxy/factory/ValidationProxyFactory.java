@@ -1,5 +1,6 @@
 package ee.openeid.siva.proxy.factory;
 
+import ee.openeid.siva.proxy.BDocValidationProxy;
 import ee.openeid.siva.proxy.PdfValidationProxy;
 import ee.openeid.siva.proxy.ValidationProxy;
 import ee.openeid.siva.proxy.document.DocumentType;
@@ -12,9 +13,13 @@ public class ValidationProxyFactory {
 
     private PdfValidationProxy pdfValidationProxy;
 
+    private BDocValidationProxy bdocValidationProxy;
+
     public ValidationProxy getProxyForType(final DocumentType documentType) {
         if (DocumentType.PDF.equals(documentType)) {
             return pdfValidationProxy;
+        } else if (DocumentType.BDOC.equals(documentType)) {
+            return bdocValidationProxy;
         } else {
             throw new UnsupportedTypeException("type = " + documentType.name() + " is unsupported");
         }
@@ -23,6 +28,11 @@ public class ValidationProxyFactory {
     @Autowired
     public void setPdfValidationProxy(PdfValidationProxy pdfValidationProxy) {
         this.pdfValidationProxy = pdfValidationProxy;
+    }
+
+    @Autowired
+    public void setBDocValidationProxy(BDocValidationProxy bdocValidationProxy) {
+        this.bdocValidationProxy = bdocValidationProxy;
     }
 
 }

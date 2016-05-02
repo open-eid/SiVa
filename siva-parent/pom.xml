@@ -32,29 +32,29 @@
         <junit.version>4.12</junit.version>
         <mockito.version>2.0.2-beta</mockito.version>
         <powermock.version>1.6.2</powermock.version>
-        <dss.version>4.5.0</dss.version>
+        <dss.version>4.6.RC1.d4j.2</dss.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <!-- DSS -->
             <dependency>
-                <groupId>eu.europa.ec.joinup.sd-dss</groupId>
+                <groupId>org.digidoc4j.dss</groupId>
                 <artifactId>dss-document</artifactId>
                 <version>${dss.version}</version>
             </dependency>
             <dependency>
-                <groupId>eu.europa.ec.joinup.sd-dss</groupId>
+                <groupId>org.digidoc4j.dss</groupId>
                 <artifactId>dss-service</artifactId>
                 <version>${dss.version}</version>
             </dependency>
             <dependency>
-                <groupId>eu.europa.ec.joinup.sd-dss</groupId>
+                <groupId>org.digidoc4j.dss</groupId>
                 <artifactId>dss-webservices</artifactId>
                 <version>${dss.version}</version>
             </dependency>
             <dependency>
-                <groupId>eu.europa.ec.joinup.sd-dss</groupId>
+                <groupId>org.digidoc4j.dss</groupId>
                 <artifactId>dss-spi</artifactId>
                 <version>${dss.version}</version>
             </dependency>

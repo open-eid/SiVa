@@ -13,7 +13,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>eu.europa.ec.joinup.sd-dss</groupId>
+            <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-spi</artifactId>
         </dependency>
     </dependencies>

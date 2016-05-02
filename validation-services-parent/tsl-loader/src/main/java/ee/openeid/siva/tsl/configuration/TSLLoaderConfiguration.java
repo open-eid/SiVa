@@ -4,10 +4,8 @@ import ee.openeid.siva.tsl.ReloadableTrustedListAndCustomCertificateSource;
 import ee.openeid.siva.tsl.ReloadableTrustedListCertificateSource;
 import ee.openeid.siva.tsl.TSLRefreshPolicy;
 import ee.openeid.siva.tsl.keystore.DSSKeyStoreFactoryBean;
-import eu.europa.esig.dss.client.crl.AlwaysFailingCRLSource;
 import eu.europa.esig.dss.client.http.commons.CommonsDataLoader;
 import eu.europa.esig.dss.client.http.commons.FileCacheDataLoader;
-import eu.europa.esig.dss.client.ocsp.AlwaysFailingOCSPSource;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.x509.KeyStoreCertificateSource;
 import eu.europa.esig.dss.x509.crl.CRLSource;
@@ -44,7 +42,7 @@ public class TSLLoaderConfiguration {
     @Bean
     public FileCacheDataLoader fileCacheDataLoader() {
         FileCacheDataLoader fileCacheDataLoader = new FileCacheDataLoader();
-        File fileCacheDir = fileCacheDirectory != null && !fileCacheDirectory.isEmpty() ? new File(fileCacheDirectory) : null;
+        File fileCacheDir = fileCacheDirectory != null && !fileCacheDirectory.isEmpty() ? new File(fileCacheDirectory) : new File(System.getProperty("java.io.tmpdir"));
         fileCacheDataLoader.setFileCacheDirectory(fileCacheDir);
         return fileCacheDataLoader;
     }
@@ -83,5 +81,10 @@ public class TSLLoaderConfiguration {
     public CommonCertificateVerifier certificateVerifier(ReloadableTrustedListCertificateSource trustedListSource, OCSPSource ocspSource, CRLSource crlSource) {
        return new CommonCertificateVerifier(trustedListSource, crlSource, ocspSource, new CommonsDataLoader());
     }
+
+//    @Bean
+//    public CommonCertificateVerifier commonCertificateVerifier() {
+//        return new CommonCertificateVerifier();
+//    }
 
 }

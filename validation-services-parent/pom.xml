@@ -21,9 +21,10 @@
     <properties>
         <project.encoding>UTF-8</project.encoding>
         <language.level>1.8</language.level>
-        <dss.version>4.5.0</dss.version>
+        <dss.version>4.6.RC1.d4j.2</dss.version>
         <spring.boot.version>1.4.0.M2</spring.boot.version>
         <digidoc4j.version>1.0.2</digidoc4j.version>
+
         <!--<spring.boot.version>1.4.0.BUILD-SNAPSHOT</spring.boot.version>-->
     </properties>
 
@@ -31,7 +32,7 @@
         <dependencies>
             <!-- DSS -->
             <dependency>
-                <groupId>eu.europa.ec.joinup.sd-dss</groupId>
+                <groupId>org.digidoc4j.dss</groupId>
                 <artifactId>sd-dss</artifactId>
                 <version>${dss.version}</version>
                 <type>pom</type>

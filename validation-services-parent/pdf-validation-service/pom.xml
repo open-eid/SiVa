@@ -26,16 +26,19 @@
         </dependency>
 
         <dependency>
-			<groupId>eu.europa.ec.joinup.sd-dss</groupId>
+			<groupId>org.digidoc4j.dss</groupId>
 			<artifactId>dss-webservices</artifactId>
-		</dependency>
-        <dependency>
-            <groupId>eu.europa.ec.joinup.sd-dss</groupId>
-            <artifactId>dss-service</artifactId>
+            <version>${dss.version}</version>
         </dependency>
         <dependency>
-            <groupId>eu.europa.ec.joinup.sd-dss</groupId>
+            <groupId>org.digidoc4j.dss</groupId>
+            <artifactId>dss-service</artifactId>
+            <version>${dss.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-spi</artifactId>
+            <version>${dss.version}</version>
         </dependency>
 
         <!-- Spring Boot -->

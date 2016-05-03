@@ -22,7 +22,7 @@ public class BDOCValidationService implements ValidationService {
         InputStream containerInputStream = new ByteArrayInputStream(validationDocument.getBytes());
 
         ValidationResult validationResult = ContainerBuilder.
-                aContainer("BDOC").
+                aContainer().
                 withConfiguration(configuration).
                 fromStream(containerInputStream).
                 build().validate();

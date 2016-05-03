@@ -26,9 +26,12 @@
         </dependency>
 
         <dependency>
-			<groupId>org.digidoc4j.dss</groupId>
-			<artifactId>dss-webservices</artifactId>
-            <version>${dss.version}</version>
+            <groupId>org.digidoc4j.dss</groupId>
+            <artifactId>dss-document</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.digidoc4j.dss</groupId>
+            <artifactId>dss-pades</artifactId>
         </dependency>
         <dependency>
             <groupId>org.digidoc4j.dss</groupId>

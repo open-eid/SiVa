@@ -1,7 +1,7 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
-import org.hamcrest.Matchers;
+import ee.openeid.siva.integrationtest.report.simple.SimpleReport;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -13,82 +13,47 @@ public class SigningCertificateTests extends SiVaRestTests{
 
     @Test
     public void certificateExpiredBeforeDocumentSigningShouldFail() {
-        /* TODO: implement finding errors by id from json
-        String httpBody = post(validationRequestFor(readFile("hellopades-lt-rsa1024-sha1-expired.pdf"))).
-                andReturn().body().asString();
-
-        assertEquals(
-                "The current time is not in the validity range of the signer's certificate.",
-                findErrorById("BBB_XCV_ICTIVRSC_ANS", detailedReport(httpBody)));
-        */
-        post(validationRequestFor("hellopades-lt-rsa1024-sha1-expired.pdf", "simple"))
-                .then()
-                .body("SimpleReport.ValidSignaturesCount", Matchers.is(0));
+        SimpleReport report = postForSimpleReport("hellopades-lt-rsa1024-sha1-expired.pdf");
+        assertInvalidWithError(report, "BBB_XCV_ICTIVRSC_ANS", "The current time is not in the validity range of the signer's certificate.");
     }
 
     @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
     public void validSignaturesRemainValidAfterSigningCertificateExpires() {
-        post(validationRequestFor("hellopades-lt-sha256-rsa1024-not-expired.pdf", "simple"))
-                .then()
-                .body("SimpleReport.ValidSignaturesCount", Matchers.is(1));
+        assertAllSignaturesAreValid(postForSimpleReport("hellopades-lt-sha256-rsa1024-not-expired.pdf"));
     }
 
     @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
     public void certificateExpired7DaysAfterDocumentSigningShouldPass() {
-        post(validationRequestFor("hellopades-lt-sha256-rsa2048-7d.pdf", "simple"))
-                .then()
-                .body("SimpleReport.ValidSignaturesCount", Matchers.is(1));
+        assertAllSignaturesAreValid(postForSimpleReport("hellopades-lt-sha256-rsa2048-7d.pdf"));
     }
 
     @Ignore("TODO: when we get a PDF file for the same test case, use that one instead of this ASiC file")
     @Test
     public void signaturesMadeWithExpiredSigningCertificatesAreInvalid() {
-        post(validationRequestFor("IB-3691_bdoc21-TS-old-cert.bdoc", "simple"))
-                .then()
-                .body("SimpleReport.ValidSignaturesCount", Matchers.is(0));
+        assertAllSignaturesAreInvalid(postForSimpleReport("IB-3691_bdoc21-TS-old-cert.bdoc"));
     }
 
     @Ignore // current test file's signature doesn't contain ocsp
     @Test
     public void documentSignedWithRevokedCertificateShouldFail() {
-        post(validationRequestFor("hellopades-lt-sha256-revoked.pdf", "simple"))
-                .then()
-                .body("SimpleReport.ValidSignaturesCount", Matchers.is(0));
+        assertAllSignaturesAreInvalid(postForSimpleReport("hellopades-lt-sha256-revoked.pdf"));
     }
 
     @Test
     public void missingSignedAttributeForSigningCertificate() {
-        /* TODO: implement finding errors by id from json
-        String httpBody = post(validationRequestFor(readFile("missing_signing_certificate_attribute.pdf"))).
-                andReturn().body().asString();
-
-        assertEquals(
-                "The signed attribute: 'signing-certificate' is absent!",
-                findErrorById("BBB_ICS_ISASCP_ANS", detailedReport(httpBody)));
-        */
-        post(validationRequestFor("missing_signing_certificate_attribute.pdf", "simple"))
-                .then()
-                .body("SimpleReport.ValidSignaturesCount", Matchers.is(0));
+        SimpleReport report = postForSimpleReport("missing_signing_certificate_attribute.pdf");
+        assertInvalidWithError(report, "BBB_ICS_ISASCP_ANS", "The signed attribute: 'signing-certificate' is absent!");
     }
 
     @Test
     public void signingCertificateWithoutNonRepudiationKeyUsageAttributeShouldFail() {
-        /* TODO: implement finding errors by id from json
-        String httpBody = post(validationRequestFor(readFile("hellopades-pades-lt-sha256-auth.pdf"))).
-                andReturn().body().asString();
-
-        assertEquals(
-                "The signer's certificate has not expected key-usage!",
-                findErrorById("BBB_XCV_ISCGKU_ANS", detailedReport(httpBody)));
-        */
-        post(validationRequestFor("hellopades-pades-lt-sha256-auth.pdf", "simple"))
-                .then()
-                .body("SimpleReport.ValidSignaturesCount", Matchers.is(0));
+        SimpleReport report = postForSimpleReport("hellopades-pades-lt-sha256-auth.pdf");
+        assertInvalidWithError(report, "BBB_XCV_ISCGKU_ANS", "The signer's certificate has not expected key-usage!");
     }
 
-    @Test
+    @Test @Ignore
     public void certificateContentsAreIncludedInResponse() {
-        /* TODO: implement finding certificate contents by id from json diagnostic data
+        /* TODO: We currently don't know how the certificates will be included in the report - fix the test when we do
         String httpBody = post(validationRequestFor(readFile("hellopades-lt-sha256-ocsp-15min1s.pdf"))).
                 andReturn().body().asString();
 
@@ -104,23 +69,17 @@ public class SigningCertificateTests extends SiVaRestTests{
 
     @Test
     public void documentSignedWithExpiredRsa2048CertificateShouldFail() {
-        post(validationRequestFor("hellopades-lt-sha256-rsa2048-expired.pdf", "simple"))
-                .then()
-                .body("SimpleReport.ValidSignaturesCount", Matchers.is(0));
+        assertAllSignaturesAreInvalid(postForSimpleReport("hellopades-lt-sha256-rsa2048-expired.pdf"));
     }
 
     @Test
     public void documentSignedWithExpiredRsa1024CertificateShouldFail() {
-        post(validationRequestFor("hellopades-lt-sha256-rsa1024-expired2.pdf", "simple"))
-                .then()
-                .body("SimpleReport.ValidSignaturesCount", Matchers.is(0));
+        assertAllSignaturesAreInvalid(postForSimpleReport("hellopades-lt-sha256-rsa1024-expired2.pdf"));
     }
 
     @Test
     public void documentSignedWithExpiredSha1CertificateShouldFail() {
-        post(validationRequestFor("hellopades-lt-sha1-rsa1024-expired2.pdf", "simple"))
-                .then()
-                .body("SimpleReport.ValidSignaturesCount", Matchers.is(0));
+        assertAllSignaturesAreInvalid(postForSimpleReport("hellopades-lt-sha1-rsa1024-expired2.pdf"));
     }
 
     @Override

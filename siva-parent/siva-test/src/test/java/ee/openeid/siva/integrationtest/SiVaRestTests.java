@@ -1,14 +1,16 @@
 package ee.openeid.siva.integrationtest;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import ee.openeid.siva.SivaWebApplication;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+import ee.openeid.siva.integrationtest.report.simple.SimpleReport;
+import ee.openeid.siva.integrationtest.report.simple.SimpleReportWrapper;
 import ee.openeid.siva.proxy.document.DocumentType;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.binary.StringUtils;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.experimental.categories.Category;
@@ -25,6 +27,8 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 
 import static com.jayway.restassured.RestAssured.given;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @Category(IntegrationTest.class)
@@ -51,6 +55,15 @@ public abstract class SiVaRestTests {
                 .post(VALIDATION_ENDPOINT);
     }
 
+    protected SimpleReport postForSimpleReport(String file) {
+        try {
+            return new ObjectMapper().readValue(post(validationRequestFor(file, "simple")).andReturn().body().asString(), SimpleReportWrapper.class).getSimpleReport();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
     protected String validationRequestFor(String file, String reportType) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("document", Base64.encodeBase64String(readFileFromTestResources(file)));
@@ -66,6 +79,27 @@ public abstract class SiVaRestTests {
     }
 
     protected abstract String getTestFilesDirectory();
+
+    protected void assertInvalidWithError(SimpleReport report, String errorCode, String expectedMessage) {
+        assertAllSignaturesAreInvalid(report);
+        assertEquals(expectedMessage, report.findErrorById(errorCode).get().getContent());
+    }
+
+    protected void assertHasWarning(SimpleReport report, String warningCode, String expectedMessage) {
+        assertEquals(expectedMessage, report.findWarningById(warningCode).get().getContent());
+    }
+
+    protected void assertAllSignaturesAreValid(SimpleReport report) {
+        assertTrue(report.getSignaturesCount() == report.getValidSignaturesCount());
+    }
+
+    protected void assertSomeSignaturesAreValid(SimpleReport report, int expectedValidSignatures) {
+        assertTrue(expectedValidSignatures == report.getValidSignaturesCount());
+    }
+
+    protected void assertAllSignaturesAreInvalid(SimpleReport report) {
+        assertTrue(report.getValidSignaturesCount() == 0);
+    }
 
     private static byte[] readFileFromPath(String pathName) {
         try {

@@ -1,4 +1,4 @@
-package ee.openeid.pdf.webservice;
+package ee.openeid.validation.service.pdf;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

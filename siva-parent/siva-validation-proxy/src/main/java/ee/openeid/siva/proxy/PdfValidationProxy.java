@@ -1,6 +1,6 @@
 package ee.openeid.siva.proxy;
 
-import ee.openeid.pdf.webservice.PDFValidationService;
+import ee.openeid.validation.service.pdf.PDFValidationService;
 import ee.openeid.siva.proxy.converter.XMLToJSONConverter;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.document.RequestProtocol;

@@ -336,7 +336,7 @@ public class EstonianAdESTValidation {
             return signatureConclusion;
         }
 
-        if (!checkRevocationDelay(signatureConclusion)) {
+        if (!checkRevocationIssuingTime(signatureConclusion)) {
             return signatureConclusion;
         }
 
@@ -914,21 +914,34 @@ public class EstonianAdESTValidation {
      * @param conclusion the conclusion to use to add the result of the check.
      * @return false if the check failed and the process should stop, true otherwise.
      */
-    private boolean checkRevocationDelay(Conclusion conclusion) {
+    private boolean checkRevocationIssuingTime(Conclusion conclusion) {
         if (constraintData instanceof EstonianEtsiValidationPolicy) {
             EstonianEtsiValidationPolicy constraintdata = (EstonianEtsiValidationPolicy) constraintData;
             final String ocspIssuingTime = diagnosticData.getValue("./UsedCertificates/Certificate/Revocation/IssuingTime/text()");
             if (ocspIssuingTime == null) {
                 return true;
             }
-            final Date ocspDate = DSSUtils.quietlyParseDate(ocspIssuingTime);
-            final EstonianConstraint constraint = constraintdata.getRevocationDelayConstraint(ocspDate.getTime() - bestSignatureTime.getTime());
-            if (constraint == null) {
-                return true;
+            final Date ocspIssuingDate = DSSUtils.quietlyParseDate(ocspIssuingTime);
+            EstonianConstraint constraint = null;
+            if (ocspIssuingDate.before(bestSignatureTime)) {
+                constraint = constraintdata.getOcspEarlierThanBestSignatureTimeConstraint();
+                if (constraint == null) {
+                    return true;
+                }
+                constraint.create(signatureXmlNode, EstonianMessageTag.ADEST_IOABST);
+                constraint.setIndications(Indication.INVALID, null, MessageTag.EMPTY);
+                constraint.setValue(false);
+                constraint.setConclusionReceiver(conclusion);
+            } else {
+                constraint = constraintdata.getRevocationDelayConstraint(ocspIssuingDate.getTime() - bestSignatureTime.getTime());
+                if (constraint == null) {
+                    return true;
+                }
+                constraint.create(signatureXmlNode, EstonianMessageTag.ADEST_IOTNLABST);
+                constraint.setIndications(Indication.INVALID, null, MessageTag.EMPTY);
+                constraint.setValue(false);
+                constraint.setConclusionReceiver(conclusion);
             }
-            constraint.create(signatureXmlNode, EstonianMessageTag.ADEST_IOTNLABST);
-            constraint.setIndications(Indication.INVALID, null, MessageTag.EMPTY);
-            constraint.setConclusionReceiver(conclusion);
             return constraint.check();
         }
         return false;

@@ -2,6 +2,7 @@ package ee.openeid.validation.service.pdf.validator.policy;
 
 import eu.europa.esig.dss.validation.policy.EtsiValidationPolicy;
 import eu.europa.esig.dss.validation.policy.RuleUtils;
+import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Document;
 
 public class EstonianEtsiValidationPolicy extends EtsiValidationPolicy {
@@ -10,10 +11,31 @@ public class EstonianEtsiValidationPolicy extends EtsiValidationPolicy {
         super(document);
     }
 
-    public EstonianConstraint getRevocationDelayConstraint(Long delay) {
-        if (delay != null) {
-            if (delay > getRevocationDelayTimeForFail()) {
+    public EstonianConstraint getOcspEarlierThanBestSignatureTimeConstraint() {
+        final String XP_ROOT = "/ConstraintsParameters/MainSignature/OcspTimeBeforeBestSignatureTime";
+        return getBasicConstraint(XP_ROOT, true);
+    }
 
+    @Override
+    protected EstonianConstraint getBasicConstraint(final String XP_ROOT, final boolean defaultExpectedValue) {
+
+        final String level = getValue(XP_ROOT + "/@Level");
+        if (StringUtils.isNotBlank(level)) {
+
+            final EstonianConstraint constraint = new EstonianConstraint(level);
+            String expectedValue = getValue(XP_ROOT + "/text()");
+            if (StringUtils.isBlank(expectedValue)) {
+                expectedValue = defaultExpectedValue ? TRUE : FALSE;
+            }
+            constraint.setExpectedValue(expectedValue);
+            return constraint;
+        }
+        return null;
+    }
+
+    public EstonianConstraint getRevocationDelayConstraint(Long delay) {
+        if (delay != null && getElement("/ConstraintsParameters/MainSignature/OcspTimeTooMuchAfterBestSignatureTime") != null) {
+            if (delay > getRevocationDelayTimeForFail()) {
                 final EstonianConstraint constraint = new EstonianConstraint("FAIL");
                 constraint.setExpectedValue(TRUE);
                 constraint.setValue(FALSE);

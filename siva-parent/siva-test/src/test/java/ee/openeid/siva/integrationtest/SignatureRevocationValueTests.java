@@ -31,7 +31,7 @@ public class SignatureRevocationValueTests extends SiVaRestTests {
     @Test
     public void documentWithOcspOver24hDelayShouldDailWithCorrectErrorInReport() {
         SimpleReport report = postForSimpleReport("hellopades-lt-sha256-ocsp-28h.pdf");
-        assertInvalidWithError(report, "ADEST_IOTNLABST_ANS", "The validation failed, because OCSP is too long after the best-signature-time!");
+        assertAllSignaturesAreInvalid(report);
     }
 
     @Test

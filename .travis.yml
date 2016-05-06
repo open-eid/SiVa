@@ -2,19 +2,14 @@ language: java
 sudo: required
 dist: trusty
 jdk:
-  - openjdk7
-  - oraclejdk7
   - oraclejdk8
 before_install:
   - git submodule update --init --recursive
-  - sudo pip install --upgrade pip setuptools && sudo pip install --upgrade httpie
-  - sudo pip install --upgrade pygments
-  - cp helper-scripts.conf.sample helper-scripts.conf
 branches:
   only:
     - develop
 install: true
 script:
-  - ./mvnw clean install -Dmaven.test.skip.exec
+  - ./mvnw clean install
 notifications:
   email: false

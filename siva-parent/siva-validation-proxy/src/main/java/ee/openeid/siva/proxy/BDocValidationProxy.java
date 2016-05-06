@@ -4,7 +4,7 @@ import ee.openeid.siva.proxy.converter.XMLToJSONConverter;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.document.RequestProtocol;
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.service.bdoc.BDOCValidationService;
+import ee.openeid.validation.service.bdoc.BDOCValidationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

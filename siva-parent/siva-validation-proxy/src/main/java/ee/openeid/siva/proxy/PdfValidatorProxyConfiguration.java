@@ -1,8 +1,7 @@
 package ee.openeid.siva.proxy;
 
-import ee.openeid.pdf.webservice.PDFValidationService;
+import ee.openeid.validation.service.pdf.PDFValidationService;
 import ee.openeid.siva.proxy.converter.XMLToJSONConverter;
-import ee.openeid.siva.validation.service.ValidationService;
 import eu.europa.esig.dss.validation.CertificateVerifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +14,7 @@ public class PdfValidatorProxyConfiguration {
     }
 
     @Bean
-    public PDFValidationService validationService(CertificateVerifier certificateVerifier) {
+    public PDFValidationService pdfValidationService(CertificateVerifier certificateVerifier) {
         PDFValidationService PDFValidationService = new PDFValidationService();
         PDFValidationService.setCertificateVerifier(certificateVerifier);
 

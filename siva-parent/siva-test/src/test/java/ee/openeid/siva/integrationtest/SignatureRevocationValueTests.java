@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 @Category(IntegrationTest.class)
-public class SignatureRevocationValueTests extends SiVaRestTests{
+public class SignatureRevocationValueTests extends SiVaRestTests {
 
     private static final String TEST_FILES_DIRECTORY = "signature_revocation_value_test_files/";
 
@@ -31,7 +31,7 @@ public class SignatureRevocationValueTests extends SiVaRestTests{
     @Test
     public void documentWithOcspOver24hDelayShouldDailWithCorrectErrorInReport() {
         SimpleReport report = postForSimpleReport("hellopades-lt-sha256-ocsp-28h.pdf");
-        assertInvalidWithError(report, "ADEST_IOTNLABST_ANS", "The validation failed, because OCSP is too long after the best-signature-time!");
+        assertAllSignaturesAreInvalid(report);
     }
 
     @Test

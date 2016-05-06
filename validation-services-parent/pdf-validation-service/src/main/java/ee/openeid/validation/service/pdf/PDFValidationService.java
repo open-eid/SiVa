@@ -18,15 +18,15 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package ee.openeid.pdf.webservice;
+package ee.openeid.validation.service.pdf;
 
-import ee.openeid.pdf.webservice.document.transformer.ValidationDocumentToDSSDocumentTransformer;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.service.ValidationService;
+import ee.openeid.validation.service.pdf.document.transformer.ValidationDocumentToDSSDocumentTransformer;
+import ee.openeid.validation.service.pdf.validator.EstonianPDFDocumentValidator;
 import eu.europa.esig.dss.DSSDocument;
 import eu.europa.esig.dss.DSSException;
 import eu.europa.esig.dss.validation.CertificateVerifier;
-import eu.europa.esig.dss.validation.SignedDocumentValidator;
 import eu.europa.esig.dss.validation.report.Reports;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.xml.soap.SOAPException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,7 +42,10 @@ import java.util.Map;
  */
 @Service
 public class PDFValidationService implements ValidationService {
+
     private static final Logger logger = LoggerFactory.getLogger(PDFValidationService.class);
+
+    private static final String POLICY_CONSTRAINTS_LOCATION = "/constraint.xml";
 
     private CertificateVerifier certificateVerifier;
 
@@ -61,11 +63,16 @@ public class PDFValidationService implements ValidationService {
             }
 
             final DSSDocument dssDocument = ValidationDocumentToDSSDocumentTransformer.createDssDocument(validationDocument);
-            final SignedDocumentValidator validator = SignedDocumentValidator.fromDocument(dssDocument);
+
+
+            if (!new EstonianPDFDocumentValidator().isSupported(dssDocument)) {
+                throw new DSSException("Document format not recognized/handled");
+            }
+
+            EstonianPDFDocumentValidator validator = new EstonianPDFDocumentValidator(dssDocument);
             validator.setCertificateVerifier(certificateVerifier);
 
-            final InputStream inputStream = null;
-            final Reports reports = validator.validateDocument(inputStream);
+            final Reports reports = validator.validateDocument(POLICY_CONSTRAINTS_LOCATION);
 
             if (logger.isInfoEnabled()) {
                 logger.info(

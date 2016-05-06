@@ -34,12 +34,10 @@
         <dependency>
             <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-service</artifactId>
-            <version>${dss.version}</version>
         </dependency>
         <dependency>
             <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-spi</artifactId>
-            <version>${dss.version}</version>
         </dependency>
 
         <!-- Spring Boot -->

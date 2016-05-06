@@ -17,7 +17,6 @@
         <dependency>
             <groupId>org.digidoc4j</groupId>
             <artifactId>digidoc4j</artifactId>
-            <version>${digidoc4j.version}</version>
         </dependency>
     </dependencies>
 

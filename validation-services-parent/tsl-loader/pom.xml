@@ -13,17 +13,14 @@
         <dependency>
             <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-service</artifactId>
-            <version>${dss.version}</version>
         </dependency>
         <dependency>
             <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-tsl-jaxb</artifactId>
-            <version>${dss.version}</version>
         </dependency>
         <dependency>
             <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-xades</artifactId>
-            <version>${dss.version}</version>
         </dependency>
 
         <!-- Spring Boot -->

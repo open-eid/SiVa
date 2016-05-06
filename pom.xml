@@ -10,16 +10,15 @@
     <name>SIVa Digitally signed documents validation service</name>
 
     <modules>
-    	<module>sd-dss</module>
         <module>validation-services-parent</module>
-    	<module>pdf-validator-parent</module>
+        <!--<module>pdf-validator-parent</module>-->
         <module>siva-parent</module>
     </modules>
 
-    <!--
-        To update SiVa version for all the modules run below command:
-        ./mvnw release:update-versions -DautoVersionSubmodules=true
-    -->
+<!--
+    To update SiVa version for all the modules run below command:
+    ./mvnw release:update-versions -DautoVersionSubmodules=true
+-->
 
     <build>
         <plugins>

@@ -45,7 +45,7 @@ public class PDFValidationService implements ValidationService {
 
     private static final Logger logger = LoggerFactory.getLogger(PDFValidationService.class);
 
-    private static final String POLICY_CONSTRAINTS_LOCATION = "/policy/constraint.xml";
+    private static final String POLICY_CONSTRAINTS_LOCATION = "/constraint.xml";
 
     private CertificateVerifier certificateVerifier;
 

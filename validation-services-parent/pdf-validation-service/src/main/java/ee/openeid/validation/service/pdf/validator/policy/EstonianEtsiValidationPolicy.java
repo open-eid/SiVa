@@ -1,14 +1,32 @@
 package ee.openeid.validation.service.pdf.validator.policy;
 
+import ee.openeid.validation.service.pdf.validator.policy.rules.SignatureFormatConstraint;
+import eu.europa.esig.dss.XmlDom;
 import eu.europa.esig.dss.validation.policy.EtsiValidationPolicy;
 import eu.europa.esig.dss.validation.policy.RuleUtils;
 import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Document;
 
+import java.util.List;
+
 public class EstonianEtsiValidationPolicy extends EtsiValidationPolicy {
 
     public EstonianEtsiValidationPolicy(Document document) {
         super(document);
+    }
+
+    public SignatureFormatConstraint getSignatureFormatConstraint() {
+        final String level = getValue("/ConstraintsParameters/MainSignature/AcceptableSignatureFormats/@Level");
+        if (StringUtils.isNotBlank(level)) {
+            final SignatureFormatConstraint constraint = new SignatureFormatConstraint(level);
+
+            final List<XmlDom> profilesAsDom = getElements("/ConstraintsParameters/MainSignature/AcceptableSignatureFormats/Id");
+            final List<String> profiles = XmlDom.convertToStringList(profilesAsDom);
+            constraint.setIdentifiers(profiles);
+            constraint.setExpectedValue(profiles.toString());
+            return constraint;
+        }
+        return null;
     }
 
     public EstonianConstraint getOcspEarlierThanBestSignatureTimeConstraint() {

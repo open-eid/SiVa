@@ -11,10 +11,10 @@ public class BaselineProfileTests extends SiVaRestTests{
 
     private static final String TEST_FILES_DIRECTORY = "baseline_profile_test_files/";
 
-    @Test // this file is actually invalid
+    @Test
     public void baselineProfileBDocumentShouldFail() {
         SimpleReport report = postForSimpleReport("hellopades-pades-b-sha256-auth.pdf");
-        assertInvalidWithError(report, "BBB_VCI_ISFC_ANS_1", "The signature format is not allowed by the validation policy constraint!");
+        assertAllSignaturesAreInvalid(report);
     }
 
     @Ignore
@@ -37,7 +37,8 @@ public class BaselineProfileTests extends SiVaRestTests{
 
     @Test
     public void documentWithBaselineProfilesBAndLTASignaturesShouldPass() {
-        assertSomeSignaturesAreValid(postForSimpleReport("hellopades-lt-b.pdf"), 1);
+        SimpleReport report = postForSimpleReport("hellopades-lt-b.pdf");
+        assertSomeSignaturesAreValid(report, 1);
     }
 
     @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")

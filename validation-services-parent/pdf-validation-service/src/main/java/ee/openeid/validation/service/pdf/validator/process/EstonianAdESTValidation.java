@@ -9,7 +9,6 @@ import eu.europa.esig.dss.XmlDom;
 import eu.europa.esig.dss.validation.policy.*;
 import eu.europa.esig.dss.validation.policy.rules.*;
 import eu.europa.esig.dss.validation.process.AdESTValidation;
-import eu.europa.esig.dss.validation.process.BasicValidation;
 import eu.europa.esig.dss.validation.process.TimestampValidation;
 import eu.europa.esig.dss.validation.process.ValidationXPathQueryHolder;
 import eu.europa.esig.dss.validation.report.Conclusion;
@@ -126,7 +125,7 @@ public class EstonianAdESTValidation {
             /**
              * The execution of the Basic Validation process which creates the basic validation data.<br>
              */
-            final BasicValidation basicValidation = new BasicValidation();
+            final EstonianBasicValidation basicValidation = new EstonianBasicValidation();
             basicValidationData = basicValidation.run(mainNode, params);
         }
         if (timestampValidationData == null) {

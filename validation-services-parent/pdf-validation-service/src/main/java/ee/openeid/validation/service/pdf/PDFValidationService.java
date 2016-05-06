@@ -45,7 +45,7 @@ public class PDFValidationService implements ValidationService {
 
     private static final Logger logger = LoggerFactory.getLogger(PDFValidationService.class);
 
-    private static final String POLICY_PATH = "/constraint.xml";
+    private static final String POLICY_CONSTRAINTS_LOCATION = "/policy/constraint.xml";
 
     private CertificateVerifier certificateVerifier;
 
@@ -72,7 +72,7 @@ public class PDFValidationService implements ValidationService {
             EstonianPDFDocumentValidator validator = new EstonianPDFDocumentValidator(dssDocument);
             validator.setCertificateVerifier(certificateVerifier);
 
-            final Reports reports = validator.validateDocument(POLICY_PATH);
+            final Reports reports = validator.validateDocument(POLICY_CONSTRAINTS_LOCATION);
 
             if (logger.isInfoEnabled()) {
                 logger.info(

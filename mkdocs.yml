@@ -12,8 +12,8 @@ markdown_extensions:
   - grid_tables
   - def_list
 pages:
+  - Introduction: index.md
   - Version info: siva/version_info.md
-  - Introduction: siva/introduction.md
   - SiVa Service Overview: siva/overview.md
   - Regulatory environment: siva/regulatory_environment.md
   - Component diagram: siva/component_diagram.md

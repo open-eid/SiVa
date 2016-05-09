@@ -7,7 +7,7 @@ extra:
     primary: 'Light Green'
     accent: 'Lime'
 markdown_extensions:
-  - codehilite(css_class=code)
+  - codehilite
   - admonition
   - grid_tables
   - def_list
@@ -25,7 +25,7 @@ pages:
   - Logging: siva/logging.md
   - References: siva/references.md
   - Appendixes:
-        - Appendix 1 - Non-Functional Requirements - kas andmekaitselised nõuded on siin all kaetud või on database schema all?: index.md
-        - Appendix 2 - Functional Requirements: index.md
-        - Appendix 3 - Validation Policy: index.md
-        - Appendix 4 - Validation Constraint Configuration: index.md
+        - Appendix 1 - Non-Functional Requirements: siva/appendix/none_functional_requirements.md
+        - Appendix 2 - Functional Requirements: siva/appendix/functional_requirements.md
+        - Appendix 3 - Validation Policy: siva/appendix/validation_policy.md
+        - Appendix 4 - Validation Constraint Configuration: siva/appendix/validation_constraints.md

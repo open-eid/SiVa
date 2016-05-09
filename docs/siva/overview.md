@@ -1,9 +1,10 @@
 # SiVa overview
 
-PDF Validation Service (hereinafter – the Service) is a SOAP-based
-service which purpose is to validate signatures in digitally signed
-PDF-files according to laws of the Republic of Estonia (described below
-in the Validation Policy section).
+SiVa (Signature Validation) web service (hereinafter – the Service) 
+is a JSON and SOAP based service which purpose is to validate signatures 
+in digitally signed BDOC, DDOC, PDF and X-Road ASiCE files according to 
+laws of the Republic of Estonia 
+(described in the [Validation Policy](appendix/validation_policy) section).
 
 The Service uses
 

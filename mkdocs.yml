@@ -14,6 +14,7 @@ markdown_extensions:
 pages:
   - Introduction: index.md
   - Version info: siva/version_info.md
+  - Definitions: siva/definitions.md
   - SiVa Service Overview: siva/overview.md
   - Regulatory environment: siva/regulatory_environment.md
   - Component diagram: siva/component_diagram.md

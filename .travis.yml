@@ -3,8 +3,6 @@ sudo: required
 dist: trusty
 jdk:
   - oraclejdk8
-before_install:
-  - git submodule update --init --recursive
 branches:
   only:
     - develop
@@ -12,4 +10,4 @@ install: true
 script:
   - ./mvnw clean install
 notifications:
-  email: false
+  emai

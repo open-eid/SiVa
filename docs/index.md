@@ -17,23 +17,23 @@ when deploying it to production environment.
 Below list will give You an overview of what each section of the 
 SiVa architecture document will cover:
 
-* [**Overview**](overview) - gives overview what SiVa is and 
+* [**Overview**](siva/overview) - gives overview what SiVa is and 
   it's main features.
-* [**Regulatory environment**](regulatory_environment) - legal analysis 
+* [**Regulatory environment**](siva/regulatory_environment) - legal analysis 
   and standards that are used when building SiVa application
-* [**Component diagram**](component_diagram) - gives overview of 
+* [**Component diagram**](siva/component_diagram) - gives overview of 
   main SiVa subsystems and and and base validation Java libraries 
   used for different validation services
-* [**Deployment view**](deployment_view) - gives general overview of 
+* [**Deployment view**](siva/deployment_view) - gives general overview of 
   servers required when deploying SiVa validation web service 
   into production
-* [**Interfaces**](interface_description) - Description of SiVa 
+* [**Interfaces**](siva/interface_description) - Description of SiVa 
   SOAP and JSON API request and response
-* [**Database schema**](database_schema) - description of SiVa 
+* [**Database schema**](siva/database_schema) - description of SiVa 
   validation administration service database 
-* [**Use cases**](use_cases) - describes main processes in SiVa 
+* [**Use cases**](siva/use_cases) - describes main processes in SiVa 
   validation web service 
-* [**Deploying**](deployment) - how to build, deploy and configure 
+* [**Deploying**](siva/deployment) - how to build, deploy and configure 
   SiVa web service
-* [**Logging**](logging) - how to configure and setup SiVa validation 
+* [**Logging**](siva/logging) - how to configure and setup SiVa validation 
   service logging support

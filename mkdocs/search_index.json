@@ -1,6 +1,21 @@
 {
     "docs": [
         {
+            "location": "/",
+            "text": "Introduction\n\n\nSiVa is digital signature validation web service that provides SOAP and JSON\nAPI to validate following file types: \n\n\n\n\nOlder Estonian digital signature files with DDOC extension\n\n\nBDOC containers with \nTimeMark\n and \nTimeStamp\n signatures\n\n\nDigitally signed PDF files\n\n\nX-Road security server ASiCE signature containers\n\n\n\n\nArchitecture document main purpose is to give overview what SiVa is.\nGive an overview of it's internal processes and provide information \nwhen deploying it to production environment.\n\n\nSiVa architecture document sections overview\n\n\nBelow list will give You an overview of what each section of the \nSiVa architecture document will cover:\n\n\n\n\nOverview\n - gives overview what SiVa is and \n  it's main features.\n\n\nRegulatory environment\n - legal analysis \n  and standards that are used when building SiVa application\n\n\nComponent diagram\n - gives overview of \n  main SiVa subsystems and and and base validation Java libraries \n  used for different validation services\n\n\nDeployment view\n - gives general overview of \n  servers required when deploying SiVa validation web service \n  into production\n\n\nInterfaces\n - Description of SiVa \n  SOAP and JSON API request and response\n\n\nDatabase schema\n - description of SiVa \n  validation administration service database \n\n\nUse cases\n - describes main processes in SiVa \n  validation web service \n\n\nDeploying\n - how to build, deploy and configure \n  SiVa web service\n\n\nLogging\n - how to configure and setup SiVa validation \n  service logging support",
+            "title": "Introduction"
+        },
+        {
+            "location": "/#introduction",
+            "text": "SiVa is digital signature validation web service that provides SOAP and JSON\nAPI to validate following file types:    Older Estonian digital signature files with DDOC extension  BDOC containers with  TimeMark  and  TimeStamp  signatures  Digitally signed PDF files  X-Road security server ASiCE signature containers   Architecture document main purpose is to give overview what SiVa is.\nGive an overview of it's internal processes and provide information \nwhen deploying it to production environment.",
+            "title": "Introduction"
+        },
+        {
+            "location": "/#siva-architecture-document-sections-overview",
+            "text": "Below list will give You an overview of what each section of the \nSiVa architecture document will cover:   Overview  - gives overview what SiVa is and \n  it's main features.  Regulatory environment  - legal analysis \n  and standards that are used when building SiVa application  Component diagram  - gives overview of \n  main SiVa subsystems and and and base validation Java libraries \n  used for different validation services  Deployment view  - gives general overview of \n  servers required when deploying SiVa validation web service \n  into production  Interfaces  - Description of SiVa \n  SOAP and JSON API request and response  Database schema  - description of SiVa \n  validation administration service database   Use cases  - describes main processes in SiVa \n  validation web service   Deploying  - how to build, deploy and configure \n  SiVa web service  Logging  - how to configure and setup SiVa validation \n  service logging support",
+            "title": "SiVa architecture document sections overview"
+        },
+        {
             "location": "/siva/version_info/",
             "text": "Version info\n\n\n\n\n\n\n\n\n\n\nVersion number\n\n\n\n\n\n\nChange date\n\n\n\n\n\n\nAuthor\n\n\n\n\n\n\nDescription\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n0.1\n\n\n\n\n\n\n\n06.05.2016\n\n\n\n\n\n\n\nMihkel Selgal\n\n\n\n\n\n\n\nInitial SiVa architecture\ndocument",
             "title": "Version info"
@@ -9,21 +24,6 @@
             "location": "/siva/version_info/#version-info",
             "text": "Version number    Change date    Author    Description        0.1    06.05.2016    Mihkel Selgal    Initial SiVa architecture\ndocument",
             "title": "Version info"
-        },
-        {
-            "location": "/siva/introduction/",
-            "text": "Introduction\n\n\nSiVa is digital signature validation web service that provides SOAP and JSON\nAPI to validate following file types: \n\n\n\n\nOlder Estonian digital signature files with DDOC extension\n\n\nBDOC containers with \nTimeMark\n and \nTimeStamp\n signatures\n\n\nDigitally signed PDF files\n\n\nX-Road security server ASiCE signature containers\n\n\n\n\nArchitecture document main purpose is to give overview what SiVa is.\nGive an overview of it's internal processes and provide information \nwhen deploying it to production environment.\n\n\nSiVa architecture document sections overview\n\n\nBelow list will give You an overview of what each section of the \nSiVa architecture document will cover:\n\n\n\n\nOverview\n - gives overview what SiVa is and \n  it's main features.\n\n\nRegulatory environment\n - legal analysis \n  and standards that are used when building SiVa application\n\n\nComponent diagram\n - gives overview of \n  main SiVa subsystems and and and base validation Java libraries \n  used for different validation services\n\n\nDeployment view\n - gives general overview of \n  servers required when deploying SiVa validation web service \n  into production\n\n\nInterfaces\n - Description of SiVa \n  SOAP and JSON API request and response\n\n\nDatabase schema\n - description of SiVa \n  validation administration service database \n\n\nUse cases\n - describes main processes in SiVa \n  validation web service \n\n\nDeploying\n - how to build, deploy and configure \n  SiVa web service\n\n\nLogging\n - how to configure and setup SiVa validation \n  service logging support",
-            "title": "Introduction"
-        },
-        {
-            "location": "/siva/introduction/#introduction",
-            "text": "SiVa is digital signature validation web service that provides SOAP and JSON\nAPI to validate following file types:    Older Estonian digital signature files with DDOC extension  BDOC containers with  TimeMark  and  TimeStamp  signatures  Digitally signed PDF files  X-Road security server ASiCE signature containers   Architecture document main purpose is to give overview what SiVa is.\nGive an overview of it's internal processes and provide information \nwhen deploying it to production environment.",
-            "title": "Introduction"
-        },
-        {
-            "location": "/siva/introduction/#siva-architecture-document-sections-overview",
-            "text": "Below list will give You an overview of what each section of the \nSiVa architecture document will cover:   Overview  - gives overview what SiVa is and \n  it's main features.  Regulatory environment  - legal analysis \n  and standards that are used when building SiVa application  Component diagram  - gives overview of \n  main SiVa subsystems and and and base validation Java libraries \n  used for different validation services  Deployment view  - gives general overview of \n  servers required when deploying SiVa validation web service \n  into production  Interfaces  - Description of SiVa \n  SOAP and JSON API request and response  Database schema  - description of SiVa \n  validation administration service database   Use cases  - describes main processes in SiVa \n  validation web service   Deploying  - how to build, deploy and configure \n  SiVa web service  Logging  - how to configure and setup SiVa validation \n  service logging support",
-            "title": "SiVa architecture document sections overview"
         },
         {
             "location": "/siva/overview/",

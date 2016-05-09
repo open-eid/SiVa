@@ -10,7 +10,6 @@
     <name>SIVa Digitally signed documents validation service</name>
 
     <modules>
-    	<module>sd-dss</module>
         <module>validation-services-parent</module>
         <module>siva-parent</module>
     </modules>

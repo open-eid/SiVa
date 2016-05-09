@@ -9,19 +9,21 @@ extra:
 markdown_extensions:
   - codehilite(css_class=code)
   - admonition
+  - grid_tables
   - def_list
 pages:
   - Version info: siva/version_info.md
-  - SiVa Service Overview: index.md
   - Introduction: siva/introduction.md
+  - SiVa Service Overview: siva/overview.md
   - Regulatory environment: siva/regulatory_environment.md
   - Component diagram: siva/component_diagram.md
   - Deployment view: siva/deployment_view.md
   - Interfaces: siva/interface_description.md
   - Database schema: siva/database_schema.md
-  - Use cases: index.md
+  - Use cases: siva/use_cases.md
+  - Deployment: siva/deployment.md
   - Logging: siva/logging.md
-  - References: index.md
+  - References: siva/references.md
   - Appendixes:
         - Appendix 1 - Non-Functional Requirements - kas andmekaitselised nõuded on siin all kaetud või on database schema all?: index.md
         - Appendix 2 - Functional Requirements: index.md

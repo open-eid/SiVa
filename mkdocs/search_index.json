@@ -1,0 +1,224 @@
+{
+    "docs": [
+        {
+            "location": "/siva/version_info/",
+            "text": "Version info\n\n\n\n\n\n\n\n\n\n\nVersion number\n\n\n\n\n\n\nChange date\n\n\n\n\n\n\nAuthor\n\n\n\n\n\n\nDescription\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n0.1\n\n\n\n\n\n\n\n06.05.2016\n\n\n\n\n\n\n\nMihkel Selgal\n\n\n\n\n\n\n\nInitial SiVa architecture\ndocument",
+            "title": "Version info"
+        },
+        {
+            "location": "/siva/version_info/#version-info",
+            "text": "Version number    Change date    Author    Description        0.1    06.05.2016    Mihkel Selgal    Initial SiVa architecture\ndocument",
+            "title": "Version info"
+        },
+        {
+            "location": "/siva/introduction/",
+            "text": "Introduction\n\n\nSiVa is digital signature validation web service that provides SOAP and JSON\nAPI to validate following file types: \n\n\n\n\nOlder Estonian digital signature files with DDOC extension\n\n\nBDOC containers with \nTimeMark\n and \nTimeStamp\n signatures\n\n\nDigitally signed PDF files\n\n\nX-Road security server ASiCE signature containers\n\n\n\n\nArchitecture document main purpose is to give overview what SiVa is.\nGive an overview of it's internal processes and provide information \nwhen deploying it to production environment.\n\n\nSiVa architecture document sections overview\n\n\nBelow list will give You an overview of what each section of the \nSiVa architecture document will cover:\n\n\n\n\nOverview\n - gives overview what SiVa is and \n  it's main features.\n\n\nRegulatory environment\n - legal analysis \n  and standards that are used when building SiVa application\n\n\nComponent diagram\n - gives overview of \n  main SiVa subsystems and and and base validation Java libraries \n  used for different validation services\n\n\nDeployment view\n - gives general overview of \n  servers required when deploying SiVa validation web service \n  into production\n\n\nInterfaces\n - Description of SiVa \n  SOAP and JSON API request and response\n\n\nDatabase schema\n - description of SiVa \n  validation administration service database \n\n\nUse cases\n - describes main processes in SiVa \n  validation web service \n\n\nDeploying\n - how to build, deploy and configure \n  SiVa web service\n\n\nLogging\n - how to configure and setup SiVa validation \n  service logging support",
+            "title": "Introduction"
+        },
+        {
+            "location": "/siva/introduction/#introduction",
+            "text": "SiVa is digital signature validation web service that provides SOAP and JSON\nAPI to validate following file types:    Older Estonian digital signature files with DDOC extension  BDOC containers with  TimeMark  and  TimeStamp  signatures  Digitally signed PDF files  X-Road security server ASiCE signature containers   Architecture document main purpose is to give overview what SiVa is.\nGive an overview of it's internal processes and provide information \nwhen deploying it to production environment.",
+            "title": "Introduction"
+        },
+        {
+            "location": "/siva/introduction/#siva-architecture-document-sections-overview",
+            "text": "Below list will give You an overview of what each section of the \nSiVa architecture document will cover:   Overview  - gives overview what SiVa is and \n  it's main features.  Regulatory environment  - legal analysis \n  and standards that are used when building SiVa application  Component diagram  - gives overview of \n  main SiVa subsystems and and and base validation Java libraries \n  used for different validation services  Deployment view  - gives general overview of \n  servers required when deploying SiVa validation web service \n  into production  Interfaces  - Description of SiVa \n  SOAP and JSON API request and response  Database schema  - description of SiVa \n  validation administration service database   Use cases  - describes main processes in SiVa \n  validation web service   Deploying  - how to build, deploy and configure \n  SiVa web service  Logging  - how to configure and setup SiVa validation \n  service logging support",
+            "title": "SiVa architecture document sections overview"
+        },
+        {
+            "location": "/siva/overview/",
+            "text": "SiVa overview\n\n\nSiVa (Signature Validation) web service (hereinafter \u2013 the Service) \nis a JSON and SOAP based service which purpose is to validate signatures \nin digitally signed BDOC, DDOC, PDF and X-Road ASiCE files according to \nlaws of the Republic of Estonia \n(described in the \nValidation Policy\n section).\n\n\nThe Service uses\n\n\n\n\nEU DSS (Digital Signature Service) library as Core Library\n\n\nCustomized Validation Policy constraints that will verify the signed\n  PDF-file's\u00a0conformity to laws of Republic of Estonia.\n\n\n\n\nEU DSS library was chosen as it has already been used in DigiDoc4J\nlibrary (where it was chosen for having the most complete functionality\ncompared to other Java libraries). For more information on EU DSS, see\n\nhttps://joinup.ec.europa.eu/asset/sd-dss/description\n.\n\n\nThe Service will use the following functionalities of EU DSS library:\n\n\n\n\nValidation Functionality\n\n\n\n\nMain features of the Service:\n\n\n\n\nEU DSS SOAP API with some additional information (Signer\u2019s\n  certificate etc).\n\n\nThe Service handles files in PDF-format version 1.7 and later,\n  signed with PadES-profile signatures.\n\n\nMultiple Signatures are supported.\n\n\nThe Service uses European Commission\u2019s TSL (Trusted Service\n  Status List) for certificate chain validation.\n\n\nEuropean Commission\u2019s TSL contains references to TSLs of\n  European Union\u2019s member states and members of the European\n  Economic Area. This allows the PDF Validator to validate\n  signature that has been signed with certificates issued in any\n  of European Union\u2019s member states.\n\n\nDuring the Validation Process, a Certificate Chain is created\n  from Signer\u2019s Certificate up to the Trust Anchor (national Trust\n  List referenced by the central European Commission's Trust List)\n  for all certificates included in the signature (i.e. the\n  signer's certificate, OCSP Service's certificate, time-stamping\n  Service's certificate).\n\n\n\n\n\n\nSignatures with PadES-LT and PadES-LTA profile are supported.\n\n\nThe Signature must contain OCSP confirmation that meets the\n  Service\u2019s requirements.\n\n\n\n\nAt the time of creating the current documentation, it is expected that\nthe Service will be used by the following applications:\n\n\n\n\nDigiDoc3 Client application\n\n\nThird party document management applications",
+            "title": "SiVa Service Overview"
+        },
+        {
+            "location": "/siva/overview/#siva-overview",
+            "text": "SiVa (Signature Validation) web service (hereinafter \u2013 the Service) \nis a JSON and SOAP based service which purpose is to validate signatures \nin digitally signed BDOC, DDOC, PDF and X-Road ASiCE files according to \nlaws of the Republic of Estonia \n(described in the  Validation Policy  section).  The Service uses   EU DSS (Digital Signature Service) library as Core Library  Customized Validation Policy constraints that will verify the signed\n  PDF-file's\u00a0conformity to laws of Republic of Estonia.   EU DSS library was chosen as it has already been used in DigiDoc4J\nlibrary (where it was chosen for having the most complete functionality\ncompared to other Java libraries). For more information on EU DSS, see https://joinup.ec.europa.eu/asset/sd-dss/description .  The Service will use the following functionalities of EU DSS library:   Validation Functionality   Main features of the Service:   EU DSS SOAP API with some additional information (Signer\u2019s\n  certificate etc).  The Service handles files in PDF-format version 1.7 and later,\n  signed with PadES-profile signatures.  Multiple Signatures are supported.  The Service uses European Commission\u2019s TSL (Trusted Service\n  Status List) for certificate chain validation.  European Commission\u2019s TSL contains references to TSLs of\n  European Union\u2019s member states and members of the European\n  Economic Area. This allows the PDF Validator to validate\n  signature that has been signed with certificates issued in any\n  of European Union\u2019s member states.  During the Validation Process, a Certificate Chain is created\n  from Signer\u2019s Certificate up to the Trust Anchor (national Trust\n  List referenced by the central European Commission's Trust List)\n  for all certificates included in the signature (i.e. the\n  signer's certificate, OCSP Service's certificate, time-stamping\n  Service's certificate).    Signatures with PadES-LT and PadES-LTA profile are supported.  The Signature must contain OCSP confirmation that meets the\n  Service\u2019s requirements.   At the time of creating the current documentation, it is expected that\nthe Service will be used by the following applications:   DigiDoc3 Client application  Third party document management applications",
+            "title": "SiVa overview"
+        },
+        {
+            "location": "/siva/regulatory_environment/",
+            "text": "Regulatory environment\n\n\n\n\nNote\n\n\nRegulatory environment section will be added when analysis will be completed",
+            "title": "Regulatory environment"
+        },
+        {
+            "location": "/siva/regulatory_environment/#regulatory-environment",
+            "text": "Note  Regulatory environment section will be added when analysis will be completed",
+            "title": "Regulatory environment"
+        },
+        {
+            "location": "/siva/component_diagram/",
+            "text": "Component diagram\n\n\n\n\n\n\nWeb API is standard Spring MVC module it will take in JSON or SOAP requests sent by\n  systems that integrate with SIVA web service API\n\n\nValidation service proxy or validation service selector is Spring module that will choose\n  the appropriate validation service for user request\n\n\nTSL loader loads in contents of TSL file from given URL in online mode or from directory when\n  using offline mode in predefined interval.\n\n\nP\u00fcPKI proxy converts P\u00fcPKI DB SQL results to Java objects that validation services,\n  validation service proxy and Web API will use\n\n\nValidation services (listed below) validate different digitally signed documents\n\n\nPDF validation service for PDF files will use \nDidiDoc4J DSS forked\n library\n\n\nBDOC for ASiC compliant containers both TM and TS will latest Maven released \nDigiDoc4J\n library\n\n\nDDOC for previous generation digitally signed files will use latest Maven release of \nJDigiDoc\n\n\nX-Road Signature validation service for X-Road web service signature files will use X-Road Security server project\n   provided X-Road signature validation command line utility.\n\n\n\n\n\n\nP\u00fcPKI DB relational database providing client information and client request counting\n\n\nP\u00fcPKI UI a separate Python application that will provide CRUD operations for clients",
+            "title": "Component diagram"
+        },
+        {
+            "location": "/siva/component_diagram/#component-diagram",
+            "text": "Web API is standard Spring MVC module it will take in JSON or SOAP requests sent by\n  systems that integrate with SIVA web service API  Validation service proxy or validation service selector is Spring module that will choose\n  the appropriate validation service for user request  TSL loader loads in contents of TSL file from given URL in online mode or from directory when\n  using offline mode in predefined interval.  P\u00fcPKI proxy converts P\u00fcPKI DB SQL results to Java objects that validation services,\n  validation service proxy and Web API will use  Validation services (listed below) validate different digitally signed documents  PDF validation service for PDF files will use  DidiDoc4J DSS forked  library  BDOC for ASiC compliant containers both TM and TS will latest Maven released  DigiDoc4J  library  DDOC for previous generation digitally signed files will use latest Maven release of  JDigiDoc  X-Road Signature validation service for X-Road web service signature files will use X-Road Security server project\n   provided X-Road signature validation command line utility.    P\u00fcPKI DB relational database providing client information and client request counting  P\u00fcPKI UI a separate Python application that will provide CRUD operations for clients",
+            "title": "Component diagram"
+        },
+        {
+            "location": "/siva/deployment_view/",
+            "text": "Deployment view\n\n\n\n\nLoad balancer\n\n\nLoad balancer can distribute traffic between SiVa nodes when there is more then one instance running.\nSiVa do not set any specific requirements for load balancer but in diagram the Nginx reverse proxy option is shown.\n\n\nSiVa application server\n\n\nSiVa validation service server that will provide the service needs to have JVM installed) both\nmore commonly known options Oracle or OpenJDK are supported. SiVa application is built as executable JAR and can be\nconfigured like system service on Linux operating system.\n\n\nRead more about running\n\nSpring Boot applications as Linux system service\n\n\nSiVa validation service can run in cluster because it does not keep or create any sessions with client application\nor service.\n\n\n\n\nNote\n\n\nThe single executable JAR option may change in the future because we are considering isolating\neach validation service and SiVa web application into separate JVM instance\n\n\n\n\nDatabase server\n\n\nSiVa database server requirements are dictated by P\u00fcPKI application and from these requirements needs to be\nPostgreSQL. Currently there are no special requirements for database server nor database setup.\n\n\n\n\nNote\n\n\nDatabase requirements section will be updated when analysis and development will begin on modification of\nP\u00fcPKI application\n\n\n\n\n\n\nDevelopment\n\n\nIt may be possible that we will build administration user interface as part of SiVa project so the database\nand type of database RDBMS or NoSQL may change in the future\n\n\n\n\nSiVa administration server\n\n\nSiVa administration will use P\u00fcPKI administration user interface to manage authorized service users and collect\n information about basic service usage by authorized clients.\n\n\nOnly requirement currently known is that Python programming language support must be present in the server.\n\n\n\n\nNote\n\n\nMore detailed information about SiVa administration server setup will be provided when development and\nanalysis will begin for administration service\n\n\n\n\n\n\nDevelopment\n\n\nThere is alternative option that we will build administration user interface from scratch using Java and\nSpring Boot",
+            "title": "Deployment view"
+        },
+        {
+            "location": "/siva/deployment_view/#deployment-view",
+            "text": "",
+            "title": "Deployment view"
+        },
+        {
+            "location": "/siva/deployment_view/#load-balancer",
+            "text": "Load balancer can distribute traffic between SiVa nodes when there is more then one instance running.\nSiVa do not set any specific requirements for load balancer but in diagram the Nginx reverse proxy option is shown.",
+            "title": "Load balancer"
+        },
+        {
+            "location": "/siva/deployment_view/#siva-application-server",
+            "text": "SiVa validation service server that will provide the service needs to have JVM installed) both\nmore commonly known options Oracle or OpenJDK are supported. SiVa application is built as executable JAR and can be\nconfigured like system service on Linux operating system.  Read more about running Spring Boot applications as Linux system service  SiVa validation service can run in cluster because it does not keep or create any sessions with client application\nor service.   Note  The single executable JAR option may change in the future because we are considering isolating\neach validation service and SiVa web application into separate JVM instance",
+            "title": "SiVa application server"
+        },
+        {
+            "location": "/siva/deployment_view/#database-server",
+            "text": "SiVa database server requirements are dictated by P\u00fcPKI application and from these requirements needs to be\nPostgreSQL. Currently there are no special requirements for database server nor database setup.   Note  Database requirements section will be updated when analysis and development will begin on modification of\nP\u00fcPKI application    Development  It may be possible that we will build administration user interface as part of SiVa project so the database\nand type of database RDBMS or NoSQL may change in the future",
+            "title": "Database server"
+        },
+        {
+            "location": "/siva/deployment_view/#siva-administration-server",
+            "text": "SiVa administration will use P\u00fcPKI administration user interface to manage authorized service users and collect\n information about basic service usage by authorized clients.  Only requirement currently known is that Python programming language support must be present in the server.   Note  More detailed information about SiVa administration server setup will be provided when development and\nanalysis will begin for administration service    Development  There is alternative option that we will build administration user interface from scratch using Java and\nSpring Boot",
+            "title": "SiVa administration server"
+        },
+        {
+            "location": "/siva/interface_description/",
+            "text": "Interface description\n\n\n\n\nWarning\n\n\nThe REST and SOAP API will be revised when final report is has been agreed upon\n\n\n\n\n\n\nDevelopment\n\n\nMaybe we should only display link to Swagger/Open API generated documentation\nto more easily keep SiVa API documentation in sync.",
+            "title": "Interfaces"
+        },
+        {
+            "location": "/siva/interface_description/#interface-description",
+            "text": "Warning  The REST and SOAP API will be revised when final report is has been agreed upon    Development  Maybe we should only display link to Swagger/Open API generated documentation\nto more easily keep SiVa API documentation in sync.",
+            "title": "Interface description"
+        },
+        {
+            "location": "/siva/database_schema/",
+            "text": "Database schema\n\n\n\n\nNote\n\n\nWill be added after SiVa administration system analysis has been completed.",
+            "title": "Database schema"
+        },
+        {
+            "location": "/siva/database_schema/#database-schema",
+            "text": "Note  Will be added after SiVa administration system analysis has been completed.",
+            "title": "Database schema"
+        },
+        {
+            "location": "/siva/use_cases/",
+            "text": "Use cases\n\n\nDigitally signed document validation process\n\n\nDigitally signed document validation process shows how SiVa chooses\nvalidation service and possible output of validation process.\n\n\n\n\nUser of SiVa system provides digitally signed document file in form of \nBase64 encoded string. The validation of file and validation policy \nis handled by validation services underlying libraries. \n\n\n\n\nIn case of PDF file it will be DSS\n\n\nFor BDOC and DDOC files we will use DigiDoc4J or when required jDigiDoc\n\n\nAnd for X-Road signatures we will use X-road signature validation utility \n\n\n\n\nWe will log following failure cases:\nWhen file upload fails (request started but was not completed successfully)\nWhen request validation (JSON or SOAP) fails\nWhen user authentication fails - \nnot shown in diagram above\n\nWhen signature validation fails \u2013 \nnot shown in diagram above\n\nWhen increasing of request count fails \u2013 \nnot shown in diagram above\n\n\nCRL loading process\n\n\nAll validation services require certificates to validate digitally signed\ndocuments. Below process shows how certificates are loaded into \nvalidation service. Loading process is done separably for each validation\nservice.\n\n\n\n\nCRL loading process is scheduled cron job inside each validation \nservice to update currently in memory loaded CRLs.\n\n\nThis process should run after TSL loader has completed updating \nSiVa local copy of CRLs.\n\n\nX-Road 6 security server SOAP request process\n\n\nX-Road validation process is brought out because we skip authentication \nprocess for X-Road security server interface and and use XML SOAP \nas input source.\n\n\n\n\nValidation of SOAP request XML is done in the SiVa web application module.\n\nDocument validation process is described in detail in \nDigitally signed document validation process\n  \n\nValidation report output id described in \nInterface description\n\n\nAuthenticate JSON REST API user\n\n\n\n\nValidation of JSON request is done in  SiVA web application module \nDocument validation process is described in detail in \nDigitally signed document validation process\n  \n\nValidation report output id described in \nInterface description\n\n\nTSL loading use case",
+            "title": "Use cases"
+        },
+        {
+            "location": "/siva/use_cases/#use-cases",
+            "text": "",
+            "title": "Use cases"
+        },
+        {
+            "location": "/siva/use_cases/#digitally-signed-document-validation-process",
+            "text": "Digitally signed document validation process shows how SiVa chooses\nvalidation service and possible output of validation process.   User of SiVa system provides digitally signed document file in form of \nBase64 encoded string. The validation of file and validation policy \nis handled by validation services underlying libraries.    In case of PDF file it will be DSS  For BDOC and DDOC files we will use DigiDoc4J or when required jDigiDoc  And for X-Road signatures we will use X-road signature validation utility    We will log following failure cases:\nWhen file upload fails (request started but was not completed successfully)\nWhen request validation (JSON or SOAP) fails\nWhen user authentication fails -  not shown in diagram above \nWhen signature validation fails \u2013  not shown in diagram above \nWhen increasing of request count fails \u2013  not shown in diagram above",
+            "title": "Digitally signed document validation process"
+        },
+        {
+            "location": "/siva/use_cases/#crl-loading-process",
+            "text": "All validation services require certificates to validate digitally signed\ndocuments. Below process shows how certificates are loaded into \nvalidation service. Loading process is done separably for each validation\nservice.   CRL loading process is scheduled cron job inside each validation \nservice to update currently in memory loaded CRLs.  This process should run after TSL loader has completed updating \nSiVa local copy of CRLs.",
+            "title": "CRL loading process"
+        },
+        {
+            "location": "/siva/use_cases/#x-road-6-security-server-soap-request-process",
+            "text": "X-Road validation process is brought out because we skip authentication \nprocess for X-Road security server interface and and use XML SOAP \nas input source.   Validation of SOAP request XML is done in the SiVa web application module. \nDocument validation process is described in detail in  Digitally signed document validation process    \nValidation report output id described in  Interface description",
+            "title": "X-Road 6 security server SOAP request process"
+        },
+        {
+            "location": "/siva/use_cases/#authenticate-json-rest-api-user",
+            "text": "Validation of JSON request is done in  SiVA web application module \nDocument validation process is described in detail in  Digitally signed document validation process    \nValidation report output id described in  Interface description",
+            "title": "Authenticate JSON REST API user"
+        },
+        {
+            "location": "/siva/use_cases/#tsl-loading-use-case",
+            "text": "",
+            "title": "TSL loading use case"
+        },
+        {
+            "location": "/siva/deployment/",
+            "text": "Deployment\n\n\nSystem requirements\n\n\nFollowing are minimum requirements to build and deploy SiVa validation\nweb service:\n\n\n\n\nJava 8 or above both OpenJDK and Oracle are supported\n\n\nGit version control system version 1.8 or above is recommended\n\n\n2GB of RAM\n\n\n1 process core\n\n\nOpen internet connection\n\n\n1GB of free disk space\n\n\nSupported operating systems are: Linux, Mac OS X and Windows\n\n\n\n\nBuilding SiVa validation web service on Ubuntu 16.04\n\n\nFirst we need to install Git and Java SDK 8 by issuing below commands:\n\n\nsudo apt-get update\nsudo apt-get install git -y\nsudo apt-get install default-jdk -y\n\n\n\n\n\nNext we need to clone the SiVa Github repository:\n\n\ngit clone https://github.com/open-eid/SiVa.git --branch develop\n\n\n\n\n\nFinal step is building the SiVa project using Maven Wrapper\n\n\ncd\n SiVa\n./mvnw install",
+            "title": "Deployment"
+        },
+        {
+            "location": "/siva/deployment/#deployment",
+            "text": "",
+            "title": "Deployment"
+        },
+        {
+            "location": "/siva/deployment/#system-requirements",
+            "text": "Following are minimum requirements to build and deploy SiVa validation\nweb service:   Java 8 or above both OpenJDK and Oracle are supported  Git version control system version 1.8 or above is recommended  2GB of RAM  1 process core  Open internet connection  1GB of free disk space  Supported operating systems are: Linux, Mac OS X and Windows",
+            "title": "System requirements"
+        },
+        {
+            "location": "/siva/deployment/#building-siva-validation-web-service-on-ubuntu-1604",
+            "text": "First we need to install Git and Java SDK 8 by issuing below commands:  sudo apt-get update\nsudo apt-get install git -y\nsudo apt-get install default-jdk -y  Next we need to clone the SiVa Github repository:  git clone https://github.com/open-eid/SiVa.git --branch develop  Final step is building the SiVa project using Maven Wrapper  cd  SiVa\n./mvnw install",
+            "title": "Building SiVa validation web service on Ubuntu 16.04"
+        },
+        {
+            "location": "/siva/logging/",
+            "text": "Logging\n\n\nLogging functionality is handled by the \nSLF4J\n logging facade and on top\nof it the \nLogback\n framework is used.\u00a0As a result, logging can be\nconfigured via the standard Logback configuration file.\u00a0By default,\nlogging works on the \nINFO\n level and logs are directed to the system\nconsole as well as a log file.\n\n\nThe logback xml configuration file can be found at:\n\n\npdfValidator/pdf-validator-webapp/src/main/resources/logback.xml\n\n\n\n\n\nand when compiled the file will reside at\u00a0\n\n\nWEB-INF/classes/logback.xml\n\n\n\n\n\nwithin the packaged war. There is also a possibility to set the location\nof the default configuration file with a system\nproperty\u00a0\nlogback.configurationFile\n as a JVM argument.\u00a0The value of\nthis property can be a URL, a resource on the class path or a path to a\nfile external to the application.\n\n\njava -Dlogback.configurationFile\n=\n/path/to/config.xml\n\n\n\n\n\nIn this configuration file there are three appenders: \nSTDOUT\n (logs to\nstandard output), \nFILE\n (logs to a file) and \nSYSLOG\n (logs to syslog\nserver over the network). To disable certain appender from logging,\ncommenting out its \nappender-ref\n is sufficient, but it is \nrecommended\n\nthat the appender itself should also be commented out. For example to\ndisable \nSYSLOG\n appender (which is the default configuration), then one\ncan use following configuration:\n\n\n<!--\n\n\n<appender name=\"SYSLOG\" class=\"ch.qos.logback.classic.net.SyslogAppender\">\n\n\n    <syslogHost>enter\\_ip\\_or\\_hostname\\_here</syslogHost>\n\n\n    <port>514</port>\n\n\n    <facility>USER</facility>\n\n\n    <filter class=\"ch.qos.logback.classic.filter.ThresholdFilter\">\n\n\n        <level>INFO</level>\n\n\n    </filter>\n\n\n    <suffixPattern>%-5level %logger{0}:%L \\[%thread\\] - %msg</suffixPattern>\n\n\n</appender>\n\n\n-->\n\n\n\n<root\n \nlevel=\n\"DEBUG\"\n>\n\n\n<appender-ref\n \nref=\n\"STDOUT\"\n/>\n\n\n<appender-ref\n \nref=\n\"FILE\"\n/>\n\n\n<!--<appender-ref ref=\"SYSLOG\"/>-->\n\n\n\n</root>\n\n\n\n\n\n\nLogback configuration manual:\u00a0\nhttp://logback.qos.ch/manual/\n\n\nSTDOUT appender\n\n\n\n\nDefault the log level is set to DEBUG\n\n\nAppender output pattern is:\u00a0\n%d{HH:mm:ss.SSS} %-5level %logger{0}:%L [%thread] - %msg%n\n\n\n\n\nFILE appender\n\n\n\n\nDefault log level is set to \nINFO\n\n\nuses\u00a0RollingFileAppender configured with\u00a0\nTimeBasedRollingPolicy\n.\n  Current configuration makes a seperate logfile for each day and each\n  file is kept for \n30 days\n. \n\n\n\n\nPS!\n keep in mind when using relative\n  destination file path, then the path is added at the end of the\n  currently working directory, i.e. where the application was started.\n  (Current day's logfile path:\u00a0\nlogs/pdf-validator-webapp.log\n,\n  prievious days pattern:\u00a0\n\n\n    logs/pdf-validator-webapp.%d{yyyy-MM-dd}.log)\n\n\n\n\n\n\n\nAppender output pattern is:\u00a0 \n%d{HH:mm:ss.SSS} %-5level %logger{0}:%L \\[%thread\\] - %msg%n\n-Dlogback.configurationFile=config.xml\n\n\n\n\n\n\n\n\n\nSYSLOG appender\n\n\n\n\nDefault log level is set to \nINFO\n\n\nTarget's ip/hostname and port are\u00a0configurable\n\n\nSyslog messsages' severity is\u00a0configurable\n\n\nSyslog messages' payload's timestamp and hostname part are created\n  implicitly and the suffixpattern is:\u00a0 \n%-5level %logger{0}:%L \\[%thread\\] - %msg",
+            "title": "Logging"
+        },
+        {
+            "location": "/siva/logging/#logging",
+            "text": "Logging functionality is handled by the  SLF4J  logging facade and on top\nof it the  Logback  framework is used.\u00a0As a result, logging can be\nconfigured via the standard Logback configuration file.\u00a0By default,\nlogging works on the  INFO  level and logs are directed to the system\nconsole as well as a log file.  The logback xml configuration file can be found at:  pdfValidator/pdf-validator-webapp/src/main/resources/logback.xml  and when compiled the file will reside at\u00a0  WEB-INF/classes/logback.xml  within the packaged war. There is also a possibility to set the location\nof the default configuration file with a system\nproperty\u00a0 logback.configurationFile  as a JVM argument.\u00a0The value of\nthis property can be a URL, a resource on the class path or a path to a\nfile external to the application.  java -Dlogback.configurationFile = /path/to/config.xml  In this configuration file there are three appenders:  STDOUT  (logs to\nstandard output),  FILE  (logs to a file) and  SYSLOG  (logs to syslog\nserver over the network). To disable certain appender from logging,\ncommenting out its  appender-ref  is sufficient, but it is  recommended \nthat the appender itself should also be commented out. For example to\ndisable  SYSLOG  appender (which is the default configuration), then one\ncan use following configuration:  <!--  <appender name=\"SYSLOG\" class=\"ch.qos.logback.classic.net.SyslogAppender\">      <syslogHost>enter\\_ip\\_or\\_hostname\\_here</syslogHost>      <port>514</port>      <facility>USER</facility>      <filter class=\"ch.qos.logback.classic.filter.ThresholdFilter\">          <level>INFO</level>      </filter>      <suffixPattern>%-5level %logger{0}:%L \\[%thread\\] - %msg</suffixPattern>  </appender>  -->  <root   level= \"DEBUG\" >  <appender-ref   ref= \"STDOUT\" />  <appender-ref   ref= \"FILE\" />  <!--<appender-ref ref=\"SYSLOG\"/>-->  </root>   Logback configuration manual:\u00a0 http://logback.qos.ch/manual/",
+            "title": "Logging"
+        },
+        {
+            "location": "/siva/logging/#stdout-appender",
+            "text": "Default the log level is set to DEBUG  Appender output pattern is:\u00a0 %d{HH:mm:ss.SSS} %-5level %logger{0}:%L [%thread] - %msg%n",
+            "title": "STDOUT appender"
+        },
+        {
+            "location": "/siva/logging/#file-appender",
+            "text": "Default log level is set to  INFO  uses\u00a0RollingFileAppender configured with\u00a0 TimeBasedRollingPolicy .\n  Current configuration makes a seperate logfile for each day and each\n  file is kept for  30 days .    PS!  keep in mind when using relative\n  destination file path, then the path is added at the end of the\n  currently working directory, i.e. where the application was started.\n  (Current day's logfile path:\u00a0 logs/pdf-validator-webapp.log ,\n  prievious days pattern:\u00a0      logs/pdf-validator-webapp.%d{yyyy-MM-dd}.log)   Appender output pattern is:\u00a0  %d{HH:mm:ss.SSS} %-5level %logger{0}:%L \\[%thread\\] - %msg%n -Dlogback.configurationFile=config.xml",
+            "title": "FILE appender"
+        },
+        {
+            "location": "/siva/logging/#syslog-appender",
+            "text": "Default log level is set to  INFO  Target's ip/hostname and port are\u00a0configurable  Syslog messsages' severity is\u00a0configurable  Syslog messages' payload's timestamp and hostname part are created\n  implicitly and the suffixpattern is:\u00a0  %-5level %logger{0}:%L \\[%thread\\] - %msg",
+            "title": "SYSLOG appender"
+        },
+        {
+            "location": "/siva/references/",
+            "text": "References",
+            "title": "References"
+        },
+        {
+            "location": "/siva/references/#references",
+            "text": "",
+            "title": "References"
+        },
+        {
+            "location": "/siva/appendix/none_functional_requirements/",
+            "text": "",
+            "title": "Appendix 1 - Non-Functional Requirements"
+        },
+        {
+            "location": "/siva/appendix/functional_requirements/",
+            "text": "",
+            "title": "Appendix 2 - Functional Requirements"
+        },
+        {
+            "location": "/siva/appendix/validation_policy/",
+            "text": "Validation policy\n\n\n\n\nNote\n\n\nInformation will be added after analysis has been completed and agreed \nupon",
+            "title": "Appendix 3 - Validation Policy"
+        },
+        {
+            "location": "/siva/appendix/validation_policy/#validation-policy",
+            "text": "Note  Information will be added after analysis has been completed and agreed \nupon",
+            "title": "Validation policy"
+        },
+        {
+            "location": "/siva/appendix/validation_constraints/",
+            "text": "",
+            "title": "Appendix 4 - Validation Constraint Configuration"
+        }
+    ]
+}

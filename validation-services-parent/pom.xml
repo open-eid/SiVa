@@ -71,6 +71,13 @@
                 <version>20160212</version>
             </dependency>
 
+            <!-- Lombok for getters and setters -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.16.8</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

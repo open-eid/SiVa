@@ -1,17 +1,16 @@
 package ee.openeid.siva.proxy;
 
 import ee.openeid.pdf.webservice.PDFValidationService;
+import ee.openeid.pdf.webservice.document.transformer.PDFValidationResult;
 import ee.openeid.siva.proxy.converter.XMLToJSONConverter;
 import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.document.ReportType;
 import ee.openeid.siva.proxy.document.RequestProtocol;
+import ee.openeid.siva.validation.document.QualifiedValidationResult;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -70,13 +69,12 @@ public class PdfValidationProxyTest {
     private class ValidationServiceSpy extends PDFValidationService {
 
         @Override
-        public Map<String,String> validateDocument(ValidationDocument validationDocument) {
-
-            Map<String,String> reportMap = new HashMap<>();
-            reportMap.put("SIMPLE", "<SimpleReport xmlns=\"xmlnamespace\"><content>data</content></SimpleReport>");
-            reportMap.put("DETAILED", "<DetailedReport xmlns=\"xmlnamespace\"><content>data</content></DetailedReport>");
-            reportMap.put("DIAGNOSTICDATA", "<DiagnosticData xmlns=\"xmlnamespace\"><content>data</content></DiagnosticData>");
-            return reportMap;
+        public QualifiedValidationResult validateDocument(ValidationDocument validationDocument) {
+            PDFValidationResult validationResult = new PDFValidationResult();
+            validationResult.setSimpleReport("<SimpleReport xmlns=\"xmlnamespace\"><content>data</content></SimpleReport>");
+            validationResult.setDetailedReport("<DetailedReport xmlns=\"xmlnamespace\"><content>data</content></DetailedReport>");
+            validationResult.setDiagnosticData("<DiagnosticData xmlns=\"xmlnamespace\"><content>data</content></DiagnosticData>");
+            return validationResult;
         }
     }
 

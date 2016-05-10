@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1">
     
       
-        <title>Logging - SiVa - Validation Service Documentation</title>
+        <title>Definitions - SiVa - Validation Service Documentation</title>
       
       
       
@@ -91,7 +91,7 @@
             
           </span>
         
-        Logging
+        Definitions
       </div>
     </div>
     
@@ -160,9 +160,14 @@
           
             
   <li>
-    <a class="" title="Definitions" href="../definitions/">
+    <a class="current" title="Definitions" href="./">
       Definitions
     </a>
+    
+      
+        
+      
+      
     
   </li>
 
@@ -241,36 +246,9 @@
           
             
   <li>
-    <a class="current" title="Logging" href="./">
+    <a class="" title="Logging" href="../logging/">
       Logging
     </a>
-    
-      
-        
-      
-      
-        <ul>
-          
-            <li class="anchor">
-              <a title="STDOUT appender" href="#stdout-appender">
-                STDOUT appender
-              </a>
-            </li>
-          
-            <li class="anchor">
-              <a title="FILE appender" href="#file-appender">
-                FILE appender
-              </a>
-            </li>
-          
-            <li class="anchor">
-              <a title="SYSLOG appender" href="#syslog-appender">
-                SYSLOG appender
-              </a>
-            </li>
-          
-        </ul>
-      
     
   </li>
 
@@ -339,96 +317,44 @@
       <article class="article">
         <div class="wrapper">
           
-          <h1 id="logging">Logging</h1>
-<p>Logging functionality is handled by the <strong>SLF4J</strong> logging facade and on top
-of it the <strong>Logback</strong> framework is used. As a result, logging can be
-configured via the standard Logback configuration file. By default,
-logging works on the <code>INFO</code> level and logs are directed to the system
-console as well as a log file.</p>
-<p>The logback xml configuration file can be found at:</p>
-<div class="codehilite"><pre><span></span>pdfValidator/pdf-validator-webapp/src/main/resources/logback.xml
-</pre></div>
-
-
-<p>and when compiled the file will reside at </p>
-<div class="codehilite"><pre><span></span>WEB-INF/classes/logback.xml
-</pre></div>
-
-
-<p>within the packaged war. There is also a possibility to set the location
-of the default configuration file with a system
-property <code>logback.configurationFile</code> as a JVM argument. The value of
-this property can be a URL, a resource on the class path or a path to a
-file external to the application.</p>
-<div class="codehilite"><pre><span></span>java -Dlogback.configurationFile<span class="o">=</span>/path/to/config.xml
-</pre></div>
-
-
-<p>In this configuration file there are three appenders: <code>STDOUT</code> (logs to
-standard output), <code>FILE</code> (logs to a file) and <code>SYSLOG</code> (logs to syslog
-server over the network). To disable certain appender from logging,
-commenting out its <code>appender-ref</code> is sufficient, but it is <em>recommended</em>
-that the appender itself should also be commented out. For example to
-disable <code>SYSLOG</code> appender (which is the default configuration), then one
-can use following configuration:</p>
-<div class="codehilite"><pre><span></span><span class="c">&lt;!--</span>
-<span class="c">&lt;appender name=&quot;SYSLOG&quot; class=&quot;ch.qos.logback.classic.net.SyslogAppender&quot;&gt;</span>
-<span class="c">    &lt;syslogHost&gt;enter\_ip\_or\_hostname\_here&lt;/syslogHost&gt;</span>
-<span class="c">    &lt;port&gt;514&lt;/port&gt;</span>
-<span class="c">    &lt;facility&gt;USER&lt;/facility&gt;</span>
-<span class="c">    &lt;filter class=&quot;ch.qos.logback.classic.filter.ThresholdFilter&quot;&gt;</span>
-<span class="c">        &lt;level&gt;INFO&lt;/level&gt;</span>
-<span class="c">    &lt;/filter&gt;</span>
-<span class="c">    &lt;suffixPattern&gt;%-5level %logger{0}:%L \[%thread\] - %msg&lt;/suffixPattern&gt;</span>
-<span class="c">&lt;/appender&gt;</span>
-<span class="c">--&gt;</span>
-
-<span class="nt">&lt;root</span> <span class="na">level=</span><span class="s">&quot;DEBUG&quot;</span><span class="nt">&gt;</span>
-<span class="nt">&lt;appender-ref</span> <span class="na">ref=</span><span class="s">&quot;STDOUT&quot;</span><span class="nt">/&gt;</span>
-<span class="nt">&lt;appender-ref</span> <span class="na">ref=</span><span class="s">&quot;FILE&quot;</span><span class="nt">/&gt;</span>
-<span class="c">&lt;!--&lt;appender-ref ref=&quot;SYSLOG&quot;/&gt;--&gt;</span>
-
-<span class="nt">&lt;/root&gt;</span>
-</pre></div>
-
-
-<p>Logback configuration manual: <a href="http://logback.qos.ch/manual/">http://logback.qos.ch/manual/</a></p>
-<h2 id="stdout-appender">STDOUT appender</h2>
-<ul>
-<li>Default the log level is set to DEBUG</li>
-<li>Appender output pattern is: <code>%d{HH:mm:ss.SSS} %-5level %logger{0}:%L [%thread] - %msg%n</code></li>
-</ul>
-<h2 id="file-appender">FILE appender</h2>
-<ul>
-<li>Default log level is set to <code>INFO</code></li>
-<li>uses RollingFileAppender configured with <code>TimeBasedRollingPolicy</code>.
-  Current configuration makes a seperate logfile for each day and each
-  file is kept for <em>30 days</em>. </li>
-</ul>
-<p><em>PS!</em> keep in mind when using relative
-  destination file path, then the path is added at the end of the
-  currently working directory, i.e. where the application was started.
-  (Current day's logfile path: <code>logs/pdf-validator-webapp.log</code>,
-  prievious days pattern: </p>
-<div class="codehilite"><pre><span></span>    logs/pdf-validator-webapp.%d{yyyy-MM-dd}.log)
-</pre></div>
-
-
-<ul>
-<li>Appender output pattern is:  <code>%d{HH:mm:ss.SSS} %-5level %logger{0}:%L \[%thread\] - %msg%n</code><div class="codehilite"><pre><span></span>-Dlogback.configurationFile=config.xml
-</pre></div>
-
-
-</li>
-</ul>
-<h2 id="syslog-appender">SYSLOG appender</h2>
-<ul>
-<li>Default log level is set to <code>INFO</code></li>
-<li>Target's ip/hostname and port are configurable</li>
-<li>Syslog messsages' severity is configurable</li>
-<li>Syslog messages' payload's timestamp and hostname part are created
-  implicitly and the suffixpattern is:  <code>%-5level %logger{0}:%L \[%thread\] - %msg</code></li>
-</ul>
+          <h1 id="definition">Definition:</h1>
+<dl>
+<dt>DSS</dt>
+<dd>Digital Signature Services is Java library to sign and validate European digital signature formats</dd>
+<dt>BDOC</dt>
+<dd><strong>Not defined</strong></dd>
+<dt>DDOC</dt>
+<dd><strong>Not defined</strong></dd>
+<dt>PDF</dt>
+<dd>Portable document format is a file format that provides an electronic image of text or text and graphics that
+  looks like a printed document and can be viewed, printed, and electronically transmitted.</dd>
+<dt>SiVa</dt>
+<dd>is RESTful web service providing digital signature validation services for BDOC, DDOC, PDF and X-Road
+  files</dd>
+<dt>JVM</dt>
+<dd>The Java Virtual Machine is the runtime engine of the Java Platform, which
+  allows any program written in Java or other language compiled into Java bytecode to run on any
+  computer that has a native JVM.</dd>
+<dt>JAR</dt>
+<dd>Java Archive is a package file format typically used to aggregate many Java class files and associated metadata
+  and resources (text, images, etc.) into one file to distribute application software or libraries on the Java platform.</dd>
+<dt>Fat JAR</dt>
+<dd>The fat JAR is the JAR, which contains classes from all the libraries, on which your project depends and,
+  the classes of built project.</dd>
+<dt>Spring Boot</dt>
+<dd>is a framework from the team at Pivotal, designed to simplify the bootstrapping and development of a new
+  Spring application. The framework takes an opinionated approach to configuration, freeing developers from the
+  need to define boilerplate configuration</dd>
+<dt>Linux</dt>
+<dd>an operating system, based on UNIX, that runs on many different hardware platforms and whose source
+  code is available to the public.</dd>
+<dt>PüPKI</dt>
+<dd><strong>Not defined</strong></dd>
+<dt>PostgreSQL</dt>
+<dd>is an open source relational database management system ( DBMS ) developed by a worldwide team of volunteers.
+   PostgreSQL is not controlled by any corporation or other private entity and the source code is available
+   free of charge.</dd>
+</dl>
           <aside class="copyright" role="note">
             
             Documentation built with
@@ -445,7 +371,7 @@ can use following configuration:</p>
   <nav class="pagination" aria-label="Footer">
     <div class="previous">
       
-        <a href="../deployment/" title="Deployment">
+        <a href="../version_info/" title="Version info">
           <span class="direction">
             Previous
           </span>
@@ -455,7 +381,7 @@ can use following configuration:</p>
             </div>
             <div class="stretch">
               <div class="title">
-                Deployment
+                Version info
               </div>
             </div>
           </div>
@@ -464,14 +390,14 @@ can use following configuration:</p>
     </div>
     <div class="next">
       
-        <a href="../references/" title="References">
+        <a href="../overview/" title="SiVa Service Overview">
           <span class="direction">
             Next
           </span>
           <div class="page">
             <div class="stretch">
               <div class="title">
-                References
+                SiVa Service Overview
               </div>
             </div>
             <div class="button button-next" role="button" aria-label="Next">

@@ -2,9 +2,12 @@ package ee.openeid.validation.service.bdoc;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.service.ValidationService;
+import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import org.digidoc4j.Configuration;
 import org.digidoc4j.ContainerBuilder;
 import org.digidoc4j.ValidationResult;
+import org.digidoc4j.impl.bdoc.tsl.TSLCertificateSourceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -13,11 +16,14 @@ import java.util.Map;
 
 public class BDOCValidationService implements ValidationService {
 
+    private TrustedListsCertificateSource trustedListSource;
+
+    private Configuration configuration;
+
     @Override
     public Map<String, String> validateDocument(ValidationDocument validationDocument) {
 
-        // TODO: Make configuration mode configurable
-        Configuration configuration = new Configuration(Configuration.Mode.PROD);
+        initConfiguration();
 
         InputStream containerInputStream = new ByteArrayInputStream(validationDocument.getBytes());
 
@@ -34,5 +40,21 @@ public class BDOCValidationService implements ValidationService {
 
         return reportMap;
     }
+
+    public void initConfiguration() {
+        if (configuration == null) {
+            configuration = new Configuration();
+
+            TSLCertificateSourceImpl tslCertificateSource = new TSLCertificateSourceImpl();
+            trustedListSource.getCertificates().stream().forEach(certToken -> tslCertificateSource.addTSLCertificate(certToken.getCertificate()));
+            configuration.setTSL(tslCertificateSource);
+        }
+    }
+
+    @Autowired
+    public void setTrustedListSource(TrustedListsCertificateSource trustedListSource) {
+        this.trustedListSource = trustedListSource;
+    }
+
 
 }

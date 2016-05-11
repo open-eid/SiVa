@@ -1,11 +1,11 @@
 package ee.openeid.siva.tsl.configuration;
 
-import ee.openeid.siva.tsl.ReloadableTrustedListAndCustomCertificateSource;
-import ee.openeid.siva.tsl.ReloadableTrustedListCertificateSource;
-import ee.openeid.siva.tsl.TSLRefreshPolicy;
+import ee.openeid.siva.tsl.CustomTSLValidationJob;
 import ee.openeid.siva.tsl.keystore.DSSKeyStoreFactoryBean;
 import eu.europa.esig.dss.client.http.commons.CommonsDataLoader;
-import eu.europa.esig.dss.client.http.commons.FileCacheDataLoader;
+import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
+import eu.europa.esig.dss.tsl.service.TSLRepository;
+import eu.europa.esig.dss.tsl.service.TSLValidationJob;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.x509.KeyStoreCertificateSource;
 import eu.europa.esig.dss.x509.crl.CRLSource;
@@ -15,14 +15,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import java.io.File;
-
 @Configuration
 @EnableScheduling
 public class TSLLoaderConfiguration {
-
-    @Value("${trusted.list.source.fileCacheDirectory}")
-    String fileCacheDirectory;
 
     @Value("${keystore.type}")
     String keystoreType;
@@ -36,16 +31,8 @@ public class TSLLoaderConfiguration {
     @Value("${trusted.list.source.lotlUrl}")
     String lotlUrl;
 
-    @Value("${trusted.list.source.tslRefreshPolicy}")
-    String tslRefreshPolicy;
-
-    @Bean
-    public FileCacheDataLoader fileCacheDataLoader() {
-        FileCacheDataLoader fileCacheDataLoader = new FileCacheDataLoader();
-        File fileCacheDir = fileCacheDirectory != null && !fileCacheDirectory.isEmpty() ? new File(fileCacheDirectory) : new File(System.getProperty("java.io.tmpdir"));
-        fileCacheDataLoader.setFileCacheDirectory(fileCacheDir);
-        return fileCacheDataLoader;
-    }
+    @Value("${trusted.list.source.lotlCode}")
+    String lotlCode;
 
     @Bean
     public DSSKeyStoreFactoryBean dssKeyStore() {
@@ -66,25 +53,44 @@ public class TSLLoaderConfiguration {
         return new AlwaysFailingOCSPSource();
     }
 
+
     @Bean
-    public ReloadableTrustedListCertificateSource trustedListSource(KeyStoreCertificateSource keyStoreCertificateSource, FileCacheDataLoader fileCacheDataLoader) throws Exception {
-        ReloadableTrustedListCertificateSource reloadableTrustedListCertificateSource = new ReloadableTrustedListAndCustomCertificateSource();
-        reloadableTrustedListCertificateSource.setDataLoader(fileCacheDataLoader);
-        reloadableTrustedListCertificateSource.setCheckSignature(true);
-        reloadableTrustedListCertificateSource.setKeyStoreCertificateSource(keyStoreCertificateSource);
-        reloadableTrustedListCertificateSource.setLotlUrl(lotlUrl);
-        reloadableTrustedListCertificateSource.setTslRefreshPolicy(TSLRefreshPolicy.valueOf(tslRefreshPolicy));
-        return reloadableTrustedListCertificateSource;
+    public CommonCertificateVerifier certificateVerifier(TrustedListsCertificateSource trustedListSource, OCSPSource ocspSource, CRLSource crlSource) {
+        return new CommonCertificateVerifier(trustedListSource, crlSource, ocspSource, new CommonsDataLoader());
     }
 
     @Bean
-    public CommonCertificateVerifier certificateVerifier(ReloadableTrustedListCertificateSource trustedListSource, OCSPSource ocspSource, CRLSource crlSource) {
-       return new CommonCertificateVerifier(trustedListSource, crlSource, ocspSource, new CommonsDataLoader());
+    public TSLValidationJob tslValidationJob(CommonsDataLoader dataLoader, TSLRepository tslRepository, KeyStoreCertificateSource keyStoreCertificateSource) {
+        CustomTSLValidationJob tslValidationJob = new CustomTSLValidationJob();
+        tslValidationJob.setDataLoader(dataLoader);
+        tslValidationJob.setRepository(tslRepository);
+        tslValidationJob.setLotlUrl(lotlUrl);
+        tslValidationJob.setLotlCode(lotlCode);
+        tslValidationJob.setDssKeyStore(keyStoreCertificateSource);
+        tslValidationJob.setCheckLOTLSignature(true);
+        tslValidationJob.setCheckTSLSignatures(true);
+        return tslValidationJob;
     }
 
-//    @Bean
-//    public CommonCertificateVerifier commonCertificateVerifier() {
-//        return new CommonCertificateVerifier();
-//    }
+    @Bean
+    public CommonsDataLoader dataLoader() {
+        return new CommonsDataLoader();
+    }
+
+    @Bean
+    public TSLRepository tslRepository(TrustedListsCertificateSource trustedListSource) {
+        TSLRepository tslRepository = new TSLRepository();
+        tslRepository.setTrustedListsCertificateSource(trustedListSource);
+        return tslRepository;
+    }
+
+    @Bean
+    public TrustedListsCertificateSource trustedListSource(KeyStoreCertificateSource keyStoreCertificateSource) {
+        TrustedListsCertificateSource trustedListsCertificateSource = new TrustedListsCertificateSource();
+        trustedListsCertificateSource.setDssKeyStore(keyStoreCertificateSource);
+        return trustedListsCertificateSource;
+    }
+
+
 
 }

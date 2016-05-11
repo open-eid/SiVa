@@ -1,7 +1,7 @@
-package ee.openeid.siva.tsl.configuration;
+package ee.openeid.tsl.configuration;
 
-import ee.openeid.siva.tsl.CustomTSLValidationJob;
-import ee.openeid.siva.tsl.keystore.DSSKeyStoreFactoryBean;
+import ee.openeid.tsl.CustomTSLValidationJob;
+import ee.openeid.tsl.keystore.DSSKeyStoreFactoryBean;
 import eu.europa.esig.dss.client.http.commons.CommonsDataLoader;
 import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.tsl.service.TSLRepository;

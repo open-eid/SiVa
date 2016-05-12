@@ -6,6 +6,6 @@ import lombok.Data;
 public class SignatureScope {
 
     private String name;
-    private String scope; //TODO: enum?
+    private String scope;
     private String content;
 }

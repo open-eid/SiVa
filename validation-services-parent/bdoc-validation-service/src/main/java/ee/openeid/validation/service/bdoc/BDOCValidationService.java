@@ -4,7 +4,7 @@ import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.service.ValidationService;
 import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
-import ee.openeid.validation.service.bdoc.report.QualifiedReportBuilder;
+import ee.openeid.validation.service.bdoc.report.BDOCQualifiedReportBuilder;
 import org.digidoc4j.Configuration;
 import org.digidoc4j.Container;
 import org.digidoc4j.ContainerBuilder;
@@ -38,7 +38,7 @@ public class BDOCValidationService implements ValidationService {
         ValidationResult validationResult = container.validate();
         Date validationTime = new Date();
 
-        QualifiedReportBuilder reportBuilder = new QualifiedReportBuilder(container, validationDocument.getName(), validationTime);
+        BDOCQualifiedReportBuilder reportBuilder = new BDOCQualifiedReportBuilder(container, validationDocument.getName(), validationTime);
         QualifiedReport qualifiedReport = reportBuilder.build();
 
         BDOCValidationResult bdocValidationResult = new BDOCValidationResult(validationResult);

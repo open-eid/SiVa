@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 import static org.digidoc4j.X509Cert.SubjectName.CN;
 
 
-public class QualifiedReportBuilder {
+public class BDOCQualifiedReportBuilder {
 
     private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final String FULL_SIGNATURE_SCOPE = "FullSignatureScope";
@@ -33,7 +33,7 @@ public class QualifiedReportBuilder {
     private String documentName;
     private Date validationTime;
 
-    public QualifiedReportBuilder(Container container, String documentName, Date validationTime) {
+    public BDOCQualifiedReportBuilder(Container container, String documentName, Date validationTime) {
         this.container = container;
         this.documentName = documentName;
         this.validationTime = validationTime;

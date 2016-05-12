@@ -1,4 +1,4 @@
-package ee.openeid.siva.validation.service.bdoc.testutils;
+package ee.openeid.validation.service.bdoc.testutils;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
 

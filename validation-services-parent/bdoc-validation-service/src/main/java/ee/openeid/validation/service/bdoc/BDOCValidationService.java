@@ -4,7 +4,7 @@ import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.service.ValidationService;
 import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
-import ee.openeid.siva.validation.service.bdoc.report.qualified.builder.QualifiedReportBuilder;
+import ee.openeid.validation.service.bdoc.report.QualifiedReportBuilder;
 import org.digidoc4j.Configuration;
 import org.digidoc4j.Container;
 import org.digidoc4j.ContainerBuilder;
@@ -55,6 +55,14 @@ public class BDOCValidationService implements ValidationService {
             trustedListSource.getCertificates().stream().forEach(certToken -> tslCertificateSource.addTSLCertificate(certToken.getCertificate()));
             configuration.setTSL(tslCertificateSource);
         }
+    }
+
+    /**
+     * allow setting the configuration manually for testing purposes
+     * @param configuration
+     */
+    void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
     }
 
     @Autowired

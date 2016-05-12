@@ -1,4 +1,4 @@
-package ee.openeid.pdf.webservice.document.transformer;
+package ee.openeid.validation.service.pdf.validator.result;
 
 import ee.openeid.siva.validation.document.QualifiedValidationResult;
 import ee.openeid.siva.validation.document.report.QualifiedReport;

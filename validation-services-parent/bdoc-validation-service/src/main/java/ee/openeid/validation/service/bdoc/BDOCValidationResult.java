@@ -1,4 +1,4 @@
-package ee.openeid.siva.validation.service.bdoc;
+package ee.openeid.validation.service.bdoc;
 
 import ee.openeid.siva.validation.document.QualifiedValidationResult;
 import ee.openeid.siva.validation.document.report.QualifiedReport;

@@ -20,8 +20,7 @@
  */
 package ee.openeid.validation.service.pdf;
 
-import ee.openeid.pdf.webservice.document.transformer.PDFValidationResult;
-import ee.openeid.pdf.webservice.document.transformer.ValidationDocumentToDSSDocumentTransformer;
+import ee.openeid.validation.service.pdf.validator.result.PDFValidationResult;
 import ee.openeid.siva.validation.document.QualifiedValidationResult;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.service.ValidationService;
@@ -37,9 +36,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.xml.soap.SOAPException;
-import java.util.HashMap;
-import java.util.Map;
-import java.io.InputStream;
 
 /**
  * Implementation of the Interface for the Contract of the Validation Web Service.

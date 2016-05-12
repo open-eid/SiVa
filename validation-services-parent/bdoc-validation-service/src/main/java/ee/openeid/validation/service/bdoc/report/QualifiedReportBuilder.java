@@ -1,4 +1,4 @@
-package ee.openeid.siva.validation.service.bdoc.report.qualified.builder;
+package ee.openeid.validation.service.bdoc.report;
 
 import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.document.report.Error;
@@ -82,14 +82,14 @@ public class QualifiedReportBuilder {
     }
 
     private String getSignatureLevel(BDocSignature bDocSignature) {
-        return bDocSignature.getDssValidationReport().getSimpleReport().getSignatureLevel(bDocSignature.getId()).name();
+        return bDocSignature.getDssValidationReport().getReport().getSimpleReport().getSignatureLevel(bDocSignature.getId()).name();
     }
 
     private SignatureValidationData.Indication getIndication(BDocSignature bDocSignature) {
         SignatureValidationResult validationResult = bDocSignature.validateSignature();
         if (validationResult.isValid()) {
             return SignatureValidationData.Indication.TOTAL_PASSED;
-        } else if (REPORT_INDICATION_INDETERMINATE.equals(bDocSignature.getDssValidationReport().getSimpleReport().getIndication(bDocSignature.getId()))) {
+        } else if (REPORT_INDICATION_INDETERMINATE.equals(bDocSignature.getDssValidationReport().getReport().getSimpleReport().getIndication(bDocSignature.getId()))) {
             return SignatureValidationData.Indication.INDETERMINATE;
         } else {
             return SignatureValidationData.Indication.TOTAL_FAILED;
@@ -104,7 +104,7 @@ public class QualifiedReportBuilder {
     }
 
     private List<Warning> getWarnings(BDocSignature bDocSignature) {
-        List<Warning> warnings = bDocSignature.getDssValidationReport().getSimpleReport().getWarnings(bDocSignature.getId())
+        List<Warning> warnings = bDocSignature.getDssValidationReport().getReport().getSimpleReport().getWarnings(bDocSignature.getId())
                 .stream()
                 .map(this::mapDssWarning)
                 .collect(Collectors.toList());
@@ -152,7 +152,7 @@ public class QualifiedReportBuilder {
 
     private List<Error> getErrors(BDocSignature bDocSignature) {
         //First get DSS errors as they have error codes
-        List<Error> errors = bDocSignature.getDssValidationReport().getSimpleReport().getErrors(bDocSignature.getId())
+        List<Error> errors = bDocSignature.getDssValidationReport().getReport().getSimpleReport().getErrors(bDocSignature.getId())
                 .stream()
                 .map(this::mapDssError)
                 .collect(Collectors.toList());

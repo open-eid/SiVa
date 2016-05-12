@@ -9,7 +9,7 @@ import ee.openeid.siva.proxy.exception.ValidationProxyException;
 import ee.openeid.siva.validation.document.QualifiedValidationResult;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
-import ee.openeid.siva.validation.service.bdoc.BDOCValidationService;
+import ee.openeid.validation.service.bdoc.BDOCValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

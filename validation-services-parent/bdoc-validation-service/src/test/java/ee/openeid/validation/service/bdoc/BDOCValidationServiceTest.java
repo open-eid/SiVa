@@ -1,10 +1,11 @@
-package ee.openeid.siva.validation.service.bdoc;
+package ee.openeid.validation.service.bdoc;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.document.report.SignatureScope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
-import ee.openeid.siva.validation.service.bdoc.testutils.DummyValidationDocumentBuilder;
+import ee.openeid.validation.service.bdoc.testutils.DummyValidationDocumentBuilder;
+import org.digidoc4j.Configuration;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -18,7 +19,7 @@ public class BDOCValidationServiceTest {
     private static final String VALID_BDOC_TM_1_SIGNATURE = "bdoc_tm_valid_1_signature.bdoc";
     private static final String VALID_BDOC_TM_2_SIGNATURES = "bdoc_tm_valid_2_signatures.bdoc";
 
-    private static BDOCValidationService validationService = new BDOCValidationService();
+    private static BDOCValidationService validationService = new BDOCValidationServiceSpy();
     private static BDOCValidationResult validationResult2Signatures;
 
     @BeforeClass
@@ -100,5 +101,13 @@ public class BDOCValidationServiceTest {
                 .withDocument(TEST_FILES_LOCATION + VALID_BDOC_TM_2_SIGNATURES)
                 .withName(VALID_BDOC_TM_2_SIGNATURES)
                 .build();
+    }
+
+    private static class BDOCValidationServiceSpy extends BDOCValidationService {
+
+        @Override
+        public void initConfiguration() {
+            super.setConfiguration(new Configuration(Configuration.Mode.PROD));
+        }
     }
 }

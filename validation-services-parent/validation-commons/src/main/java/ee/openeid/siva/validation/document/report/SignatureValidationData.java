@@ -17,7 +17,6 @@ public class SignatureValidationData {
     private String claimedSigningTime;
     private List<Warning> warnings;
     private Info info;
-    private AdditionalValidation additionalValidation;
 
     public enum Indication {
         TOTAL_PASSED {

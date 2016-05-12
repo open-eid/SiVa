@@ -1,7 +1,7 @@
 package ee.openeid.validation.service.bdoc.report;
 
-import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.document.report.Error;
+import ee.openeid.siva.validation.document.report.*;
 import eu.europa.esig.dss.validation.report.Conclusion;
 import org.apache.xml.security.signature.Reference;
 import org.digidoc4j.*;
@@ -21,8 +21,7 @@ public class BDOCQualifiedReportBuilder {
     private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final String FULL_SIGNATURE_SCOPE = "FullSignatureScope";
     private static final String FULL_DOCUMENT = "Full document";
-    private static final String BDOC_SIGNATURE_WARNING = "BDOC_SIGNATURE_WARNING";
-    private static final String BDOC_SIGNATURE_ERROR = "BDOC_SIGNATURE_ERROR";
+    private static final String GENERIC = "GENERIC";
     private static final String XADES_FORMAT_PREFIX = "XAdES_BASELINE_";
     private static final String DSS_BASIC_INFO_NAME_ID = "NameId";
     private static final String DSS_BASIC_INFO_CONTENT = "content";
@@ -76,8 +75,6 @@ public class BDOCQualifiedReportBuilder {
         signatureValidationData.setInfo(getInfo(bDocSignature));
         signatureValidationData.setIndication(getIndication(bDocSignature));
 
-        //TODO: additional validation? d4j seems to add it's own exceptions to additional validation tag, We also add them in errors - so maybe not necessary?
-
         return signatureValidationData;
 
     }
@@ -104,7 +101,10 @@ public class BDOCQualifiedReportBuilder {
     private Info getInfo(BDocSignature bDocSignature) {
         Info info = new Info();
         info.setNameId(BDOC_SIGNATURE_INFO); //TODO: what's actually meant here? is it necessary?
-        info.setBestSignatureTime(new SimpleDateFormat(DEFAULT_DATE_TIME_FORMAT).format(bDocSignature.getTrustedSigningTime()));
+        Date trustedTime = bDocSignature.getTrustedSigningTime();
+        if (trustedTime != null) {
+            info.setBestSignatureTime(new SimpleDateFormat(DEFAULT_DATE_TIME_FORMAT).format(trustedTime));
+        }
         return info;
     }
 
@@ -134,7 +134,7 @@ public class BDOCQualifiedReportBuilder {
 
     private Warning mapDigidoc4JWarning(DigiDoc4JException digiDoc4JException) {
         Warning warning = new Warning();
-        warning.setNameId(BDOC_SIGNATURE_WARNING); //TODO: what's the actual code to use here?
+        warning.setNameId(GENERIC);
         warning.setDescription(digiDoc4JException.getMessage());
         return warning;
     }
@@ -186,7 +186,7 @@ public class BDOCQualifiedReportBuilder {
 
     private Error mapDigidoc4JException(DigiDoc4JException digiDoc4JException) {
         Error error = new Error();
-        error.setNameId(BDOC_SIGNATURE_ERROR); //TODO: what's the actual code to use here?
+        error.setNameId(GENERIC);
         error.setContent(digiDoc4JException.getMessage());
         return error;
     }

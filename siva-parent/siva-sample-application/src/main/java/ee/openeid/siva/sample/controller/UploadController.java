@@ -1,6 +1,5 @@
-package ee.openeid.siva.sample;
+package ee.openeid.siva.sample.controller;
 
-import ee.openeid.siva.sample.siva.SivaValidationReportService;
 import ee.openeid.siva.sample.siva.SivaValidationService;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -22,15 +21,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static ee.openeid.siva.sample.siva.ValidationReportUtils.getOverallValidationResult;
+import static ee.openeid.siva.sample.siva.ValidationReportUtils.getValidateFilename;
+
 @Controller
 class UploadController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UploadController.class);
 
     @Autowired
     private SivaValidationService validationService;
-
-    @Autowired
-    private SivaValidationReportService sivaValidationReportService;
 
     @RequestMapping("/")
     public String startPage() {
@@ -52,8 +51,8 @@ class UploadController {
             final String validationResult = validationService.validateDocument(new File(fullFilename));
 
             redirectAttributes.addFlashAttribute("validationResult", new JSONObject(validationResult).toString(4));
-            redirectAttributes.addFlashAttribute("documentName", sivaValidationReportService.getValidateFilename(validationResult));
-            redirectAttributes.addFlashAttribute("overallValidationResult", sivaValidationReportService.getOverallValidationResult(validationResult));
+            redirectAttributes.addFlashAttribute("documentName", getValidateFilename(validationResult));
+            redirectAttributes.addFlashAttribute("overallValidationResult", getOverallValidationResult(validationResult));
             redirectAttributes.addFlashAttribute("error", "File upload success");
         } catch (final IOException e) {
             LOGGER.warn("File upload problem", e);

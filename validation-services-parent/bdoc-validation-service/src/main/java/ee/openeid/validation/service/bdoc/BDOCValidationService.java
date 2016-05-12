@@ -3,7 +3,10 @@ package ee.openeid.validation.service.bdoc;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.service.ValidationService;
 import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
+import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.service.bdoc.report.qualified.builder.QualifiedReportBuilder;
 import org.digidoc4j.Configuration;
+import org.digidoc4j.Container;
 import org.digidoc4j.ContainerBuilder;
 import org.digidoc4j.ValidationResult;
 import org.digidoc4j.impl.bdoc.tsl.TSLCertificateSourceImpl;
@@ -11,8 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Date;
 
 public class BDOCValidationService implements ValidationService {
 
@@ -21,24 +23,28 @@ public class BDOCValidationService implements ValidationService {
     private Configuration configuration;
 
     @Override
-    public Map<String, String> validateDocument(ValidationDocument validationDocument) {
+    public BDOCValidationResult validateDocument(ValidationDocument validationDocument) {
 
         initConfiguration();
 
         InputStream containerInputStream = new ByteArrayInputStream(validationDocument.getBytes());
 
-        ValidationResult validationResult = ContainerBuilder.
+        Container container = ContainerBuilder.
                 aContainer().
                 withConfiguration(configuration).
                 fromStream(containerInputStream).
-                build().validate();
+                build();
 
-        Map<String, String> reportMap = new HashMap<>();
-        reportMap.put("SIMPLE", validationResult.getReport().toString());
-        reportMap.put("DETAILED", validationResult.getReport().toString());
-        reportMap.put("DIAGNOSTICDATA", validationResult.getReport().toString());
+        ValidationResult validationResult = container.validate();
+        Date validationTime = new Date();
 
-        return reportMap;
+        QualifiedReportBuilder reportBuilder = new QualifiedReportBuilder(container, validationDocument.getName(), validationTime);
+        QualifiedReport qualifiedReport = reportBuilder.build();
+
+        BDOCValidationResult bdocValidationResult = new BDOCValidationResult(validationResult);
+        bdocValidationResult.setQualifiedReport(qualifiedReport);
+
+        return bdocValidationResult;
     }
 
     public void initConfiguration() {
@@ -55,6 +61,5 @@ public class BDOCValidationService implements ValidationService {
     public void setTrustedListSource(TrustedListsCertificateSource trustedListSource) {
         this.trustedListSource = trustedListSource;
     }
-
 
 }

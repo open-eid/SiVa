@@ -1,4 +1,4 @@
-package ee.openeid.siva.validation.service.bdoc.report.qualified;
+package ee.openeid.siva.validation.document.report;
 
 import lombok.Data;
 

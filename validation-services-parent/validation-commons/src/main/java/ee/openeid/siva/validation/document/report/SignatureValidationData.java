@@ -1,4 +1,4 @@
-package ee.openeid.siva.validation.service.bdoc.report.qualified;
+package ee.openeid.siva.validation.document.report;
 
 import lombok.Data;
 
@@ -8,10 +8,10 @@ import java.util.List;
 public class SignatureValidationData {
 
     private String id;
-    private String signatureFormat; //TODO: enum?
-    private String signatureLevel; //TODO: enum?
+    private String signatureFormat;
+    private String signatureLevel;
     private String signedBy;
-    private Indication indication; //TODO: enum? also sub indication?
+    private Indication indication;
     private List<Error> errors;
     private List<SignatureScope> signatureScopes;
     private String claimedSigningTime;
@@ -39,5 +39,4 @@ public class SignatureValidationData {
             }
         }
     }
-
 }

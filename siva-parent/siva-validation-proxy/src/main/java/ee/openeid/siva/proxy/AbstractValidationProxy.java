@@ -22,7 +22,7 @@ abstract class AbstractValidationProxy implements ValidationProxy {
     abstract QualifiedValidationResult validateInService(ValidationDocument validationDocument);
     abstract String toJSON(String report);
 
-    private ValidationDocument createValidationDocument(ProxyDocument proxyDocument) {
+    ValidationDocument createValidationDocument(ProxyDocument proxyDocument) {
         ValidationDocument validationDocument = new ValidationDocument();
         validationDocument.setName(proxyDocument.getName());
         validationDocument.setBytes(proxyDocument.getBytes());

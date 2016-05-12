@@ -16,6 +16,11 @@
             <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-spi</artifactId>
         </dependency>
+        <!-- Lombok for getters and setters -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

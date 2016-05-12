@@ -18,6 +18,10 @@ public class SignatureValidationData {
     private List<Warning> warnings;
     private Info info;
 
+    public String getIndication() {
+        return indication.toString();
+    }
+
     public enum Indication {
         TOTAL_PASSED {
             @Override

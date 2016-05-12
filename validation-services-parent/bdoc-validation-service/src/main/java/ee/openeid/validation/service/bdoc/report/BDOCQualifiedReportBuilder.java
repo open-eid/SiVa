@@ -3,6 +3,7 @@ package ee.openeid.validation.service.bdoc.report;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
 import eu.europa.esig.dss.validation.report.Conclusion;
+import org.apache.commons.lang.StringUtils;
 import org.apache.xml.security.signature.Reference;
 import org.digidoc4j.*;
 import org.digidoc4j.exceptions.DigiDoc4JException;
@@ -48,7 +49,7 @@ public class BDOCQualifiedReportBuilder {
         qualifiedReport.setValidSignaturesCount(
                 qualifiedReport.getSignatures()
                         .stream()
-                        .filter(vd -> vd.getIndication() == SignatureValidationData.Indication.TOTAL_PASSED)
+                        .filter(vd -> StringUtils.equals(vd.getIndication(), SignatureValidationData.Indication.TOTAL_PASSED.toString()))
                         .collect(Collectors.toList())
                         .size());
 

@@ -1,6 +1,7 @@
 package ee.openeid.validation.service.bdoc;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
+import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.document.report.SignatureScope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
@@ -9,22 +10,22 @@ import org.digidoc4j.Configuration;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class BDOCValidationServiceTest {
 
     private static final String TEST_FILES_LOCATION = "test-files/";
-    private static final String VALID_BDOC_TM_1_SIGNATURE = "bdoc_tm_valid_1_signature.bdoc";
     private static final String VALID_BDOC_TM_2_SIGNATURES = "bdoc_tm_valid_2_signatures.bdoc";
+    private static final String TS_NO_MANIFEST = "asic-e-baseline-lt_allan_live_no_manifest.bdoc";
 
     private static BDOCValidationService validationService = new BDOCValidationServiceSpy();
     private static BDOCValidationResult validationResult2Signatures;
+    private static BDOCValidationResult validationResultSignedNoManifest;
 
     @BeforeClass
     public static void setUpClass() throws Exception {
         validationResult2Signatures = validationService.validateDocument(bdocValid2Signatures());
+        validationResultSignedNoManifest = validationService.validateDocument(bdocTSIndeterminateNoManifest());
     }
 
     @Test
@@ -97,11 +98,32 @@ public class BDOCValidationServiceTest {
         assertEquals("2016-05-04T14:14:32Z", sig2.getInfo().getBestSignatureTime());
     }
 
+    @Test
+    public void reportForBdocTSWithUntrustedRevocationDataShouldContainError() {
+        QualifiedReport report = validationResultSignedNoManifest.getQualifiedReport();
+        assertTrue(report.getValidSignaturesCount() == 0);
+        SignatureValidationData sig = report.getSignatures().get(0);
+        assertTrue(sig.getErrors().size() == 1);
+
+        Error error = sig.getErrors().get(0);
+        assertEquals("BBB_XCV_IRDTFC_ANS", error.getNameId());
+
+        assertTrue(sig.getIndication() == SignatureValidationData.Indication.INDETERMINATE);
+    }
+
     private static ValidationDocument bdocValid2Signatures() throws Exception {
+        return buildValidationDocument(VALID_BDOC_TM_2_SIGNATURES);
+    }
+
+    private static ValidationDocument bdocTSIndeterminateNoManifest() throws Exception {
+        return buildValidationDocument(TS_NO_MANIFEST);
+    }
+
+    private static ValidationDocument buildValidationDocument(String testFile) throws Exception {
         return DummyValidationDocumentBuilder
                 .aValidationDocument()
-                .withDocument(TEST_FILES_LOCATION + VALID_BDOC_TM_2_SIGNATURES)
-                .withName(VALID_BDOC_TM_2_SIGNATURES)
+                .withDocument(TEST_FILES_LOCATION + testFile)
+                .withName(testFile)
                 .build();
     }
 

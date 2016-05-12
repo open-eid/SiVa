@@ -3,19 +3,22 @@ extends layout/main-layout
 block content
     .row
         .col-md-12
-            h1 1. Upload a digitally signed file
+            h1 Upload a digitally signed file
             form(action="/upload", method="POST", enctype="multipart/form-data")
-                .form-group
-                    label Report type
-                    select.form-control(name="reportType")
-                        for report in reportTypes
-                            option(value=report.name())= report.name()
                 .form-group
                     input(type="file", name="file")
                 .form-group
                     button(type="submit").btn.btn-primary Validate
+    if overallValidationResult != null
+        .row
+            .col-md-12
+                h1 Overall validation result
+                p Document
+                    strong= documentName
+                    |&nbsp;is&nbsp;
+                    strong(class="validation-result "  + overallValidationResult.toLowerCase())= overallValidationResult
     .row
         .col-md-12
-            h1 2. View validation report
+            h1 Validation report
             if validationResult != null
                 pre.prettyprint= validationResult

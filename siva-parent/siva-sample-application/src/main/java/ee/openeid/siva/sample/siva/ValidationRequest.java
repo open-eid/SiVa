@@ -3,9 +3,9 @@ package ee.openeid.siva.sample.siva;
 import lombok.Data;
 
 @Data
-public class ValidationRequest {
+class ValidationRequest {
+    private ReportType reportType = ReportType.SIMPLE;
     private FileType documentType;
-    private ReportType reportType;
     private String filename;
     private String document;
 }

@@ -13,32 +13,40 @@ import java.util.Arrays;
 
 @Service
 public class SivaValidationService {
+    private static final String FILENAME_EXTENSION_SEPARATOR = ".";
 
-    @Value("${siva.service.url}")
     private String sivaBaseUrl;
-
     private RestTemplate restTemplate;
 
-    public String validateDocument(final File file, final ReportType sivaReportType) throws IOException {
-        String encodeFile = Base64.encodeBase64String(FileUtils.readFileToByteArray(file));
+    public String validateDocument(final File file) throws IOException {
+        final String base64EncodedFile = Base64.encodeBase64String(FileUtils.readFileToByteArray(file));
 
-        ValidationRequest validationRequest = new ValidationRequest();
-        validationRequest.setDocument(encodeFile);
-        validationRequest.setReportType(sivaReportType);
+        final ValidationRequest validationRequest = new ValidationRequest();
+        validationRequest.setDocument(base64EncodedFile);
 
-        String filename = file.getName();
+        final String filename = file.getName();
         validationRequest.setFilename(filename);
-        validationRequest.setDocumentType(parseFileExtension(filename.substring(filename.lastIndexOf(".") + 1)));
+        setValidationDocumentType(validationRequest, filename);
 
         return restTemplate.postForObject(sivaBaseUrl, validationRequest, String.class);
     }
 
-    private FileType parseFileExtension(final String fileExtension) {
+    private static void setValidationDocumentType(final ValidationRequest validationRequest, final String filename) {
+        final String uploadedFileExtension = filename.substring(filename.lastIndexOf(FILENAME_EXTENSION_SEPARATOR) + 1);
+        validationRequest.setDocumentType(parseFileExtension(uploadedFileExtension));
+    }
+
+    private static FileType parseFileExtension(final String fileExtension) {
         return Arrays.asList(FileType.values()).stream()
                 .filter(fileType -> fileType.name().equalsIgnoreCase(fileExtension))
                 .findFirst()
                 .orElse(null);
 
+    }
+
+    @Value("${siva.service.url}")
+    public void setSivaBaseUrl(final String sivaBaseUrl) {
+        this.sivaBaseUrl = sivaBaseUrl;
     }
 
     @Autowired

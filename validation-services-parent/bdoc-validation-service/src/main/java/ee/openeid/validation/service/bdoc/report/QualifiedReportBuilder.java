@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.digidoc4j.X509Cert.SubjectName.CN;
+
 
 public class QualifiedReportBuilder {
 
@@ -66,8 +68,7 @@ public class QualifiedReportBuilder {
         signatureValidationData.setId(bDocSignature.getId());
         signatureValidationData.setSignatureFormat(getSignatureFormat(bDocSignature.getProfile()));
         signatureValidationData.setSignatureLevel(getSignatureLevel(bDocSignature));
-        //TODO: throws ArrayIndexOutOfBoundsException -> fixed in next d4j version
-        //signatureValidationData.setSignedBy(bDocSignature.getSigningCertificate().getSubjectName(CN));
+        signatureValidationData.setSignedBy(removeQuotes(bDocSignature.getSigningCertificate().getSubjectName(CN)));
         signatureValidationData.setErrors(getErrors(bDocSignature));
         signatureValidationData.setSignatureScopes(getSignatureScopes(bDocSignature, dataFileNames));
         signatureValidationData.setClaimedSigningTime(new SimpleDateFormat(DEFAULT_DATE_TIME_FORMAT).format(bDocSignature.getClaimedSigningTime()));
@@ -79,6 +80,10 @@ public class QualifiedReportBuilder {
 
         return signatureValidationData;
 
+    }
+
+    private String removeQuotes(String subjectName) {
+        return subjectName.replaceAll("^\"|\"$", "");
     }
 
     private String getSignatureLevel(BDocSignature bDocSignature) {

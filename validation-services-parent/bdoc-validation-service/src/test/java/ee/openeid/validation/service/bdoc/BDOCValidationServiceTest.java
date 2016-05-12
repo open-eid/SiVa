@@ -61,6 +61,7 @@ public class BDOCValidationServiceTest {
 
         assertEquals("XAdES_BASELINE_LT_TM", sig1.getSignatureFormat());
         assertEquals("QES", sig1.getSignatureLevel());
+        assertEquals("JUHANSON,ALLAN,38608014910", sig1.getSignedBy());
         assertTrue(SignatureValidationData.Indication.TOTAL_PASSED == sig1.getIndication());
         assertTrue(sig1.getErrors().size() == 0);
         assertTrue(sig1.getWarnings().size() == 0);
@@ -83,6 +84,7 @@ public class BDOCValidationServiceTest {
 
         assertEquals("XAdES_BASELINE_LT_TM", sig2.getSignatureFormat());
         assertEquals("QES", sig2.getSignatureLevel());
+        assertEquals("VOLL,ANDRES,39004170346", sig2.getSignedBy());
         assertTrue(SignatureValidationData.Indication.TOTAL_PASSED == sig2.getIndication());
         assertTrue(sig2.getErrors().size() == 0);
         assertTrue(sig2.getWarnings().size() == 0);

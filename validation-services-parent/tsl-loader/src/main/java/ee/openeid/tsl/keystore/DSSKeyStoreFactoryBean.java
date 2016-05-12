@@ -1,4 +1,4 @@
-package ee.openeid.siva.tsl.keystore;
+package ee.openeid.tsl.keystore;
 
 import eu.europa.esig.dss.DSSException;
 import eu.europa.esig.dss.x509.KeyStoreCertificateSource;

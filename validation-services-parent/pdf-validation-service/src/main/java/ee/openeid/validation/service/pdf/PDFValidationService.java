@@ -20,6 +20,8 @@
  */
 package ee.openeid.validation.service.pdf;
 
+import ee.openeid.validation.service.pdf.validator.result.PDFValidationResult;
+import ee.openeid.siva.validation.document.QualifiedValidationResult;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.validation.service.pdf.document.transformer.ValidationDocumentToDSSDocumentTransformer;
@@ -34,8 +36,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.xml.soap.SOAPException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Implementation of the Interface for the Contract of the Validation Web Service.
@@ -50,7 +50,7 @@ public class PDFValidationService implements ValidationService {
     private CertificateVerifier certificateVerifier;
 
     @Override
-    public Map<String, String> validateDocument(ValidationDocument validationDocument) throws DSSException {
+    public QualifiedValidationResult validateDocument(ValidationDocument validationDocument) throws DSSException {
 
         String exceptionMessage;
         try {
@@ -84,12 +84,8 @@ public class PDFValidationService implements ValidationService {
                 logger.info("WsValidateDocument: end");
             }
 
-            Map<String, String> reportMap = new HashMap<>();
-            reportMap.put("SIMPLE", reports.getSimpleReport().toString());
-            reportMap.put("DETAILED", reports.getDetailedReport().toString());
-            reportMap.put("DIAGNOSTICDATA", reports.getDiagnosticData().toString());
+            return new PDFValidationResult(reports);
 
-            return reportMap;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             exceptionMessage = e.getMessage();

@@ -40,12 +40,12 @@ The Service will use the following functionality of EU DSS library:
   document types
 - The Service handles files in PDF-format version 1.7 and later,
   signed with PadES-profile signatures.
-- Service handles DDOC files starting from version 1.3 or later
+- Service handles DDOC files starting from version 1.0 or later
 - Service supports BDOC files starting from version 2.1 or later
 - Service supports X-Road 6 security server ASiCE containers
 - Multiple Signatures are supported.
 - The Service uses European Commission’s TSL (Trusted Service
-  Status List) for certificate chain validation.
+  Status List) for certificate chain validation for PDF and BDOC files.
 	- European Commission’s TSL contains references to TSLs of
 	  European Union’s member states and members of the European
 	  Economic Area. This allows the PDF Validator to validate
@@ -57,6 +57,7 @@ The Service will use the following functionality of EU DSS library:
 	  for all certificates included in the signature (i.e. the
 	  signer's certificate, OCSP Service's certificate, time-stamping
 	  Service's certificate).
+-  
 - Signatures with PadES-LT and PadES-LTA profile are supported.
 - BDOC signatures with type BDOC-TM and BDOC-TS are supported 
 - The Signature must contain OCSP confirmation that meets the

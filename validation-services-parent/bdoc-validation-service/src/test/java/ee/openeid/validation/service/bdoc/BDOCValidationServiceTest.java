@@ -71,8 +71,8 @@ public class BDOCValidationServiceTest {
         assertEquals("chrome-signing.log", scope.getName());
         assertEquals("Full document", scope.getContent());
         assertEquals("FullSignatureScope", scope.getScope());
-        assertEquals("2016-05-04T11:43:55Z", sig1.getClaimedSigningTime());
-        assertEquals("2016-05-04T11:44:23Z", sig1.getInfo().getBestSignatureTime());
+        assertEquals("2016-05-04T08:43:55Z", sig1.getClaimedSigningTime());
+        assertEquals("2016-05-04T08:44:23Z", sig1.getInfo().getBestSignatureTime());
     }
 
     @Test
@@ -94,8 +94,8 @@ public class BDOCValidationServiceTest {
         assertEquals("chrome-signing.log", scope.getName());
         assertEquals("Full document", scope.getContent());
         assertEquals("FullSignatureScope", scope.getScope());
-        assertEquals("2016-05-04T14:14:23Z", sig2.getClaimedSigningTime());
-        assertEquals("2016-05-04T14:14:32Z", sig2.getInfo().getBestSignatureTime());
+        assertEquals("2016-05-04T11:14:23Z", sig2.getClaimedSigningTime());
+        assertEquals("2016-05-04T11:14:32Z", sig2.getInfo().getBestSignatureTime());
     }
 
     @Test

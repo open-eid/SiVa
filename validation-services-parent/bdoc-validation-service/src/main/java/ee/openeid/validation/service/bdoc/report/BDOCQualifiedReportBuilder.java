@@ -12,6 +12,7 @@ import org.digidoc4j.impl.bdoc.BDocSignature;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import static org.digidoc4j.X509Cert.SubjectName.CN;
@@ -42,7 +43,7 @@ public class BDOCQualifiedReportBuilder {
     public QualifiedReport build() {
         QualifiedReport qualifiedReport = new QualifiedReport();
         qualifiedReport.setPolicy(Policy.SIVA_DEFAULT);
-        qualifiedReport.setValidationTime(new SimpleDateFormat(DEFAULT_DATE_TIME_FORMAT).format(validationTime));
+        qualifiedReport.setValidationTime(getDateFormatterWithGMTZone().format(validationTime));
         qualifiedReport.setDocumentName(documentName);
         qualifiedReport.setSignaturesCount(container.getSignatures().size());
         qualifiedReport.setSignatures(createSignaturesForReport(container));
@@ -71,13 +72,19 @@ public class BDOCQualifiedReportBuilder {
         signatureValidationData.setSignedBy(removeQuotes(bDocSignature.getSigningCertificate().getSubjectName(CN)));
         signatureValidationData.setErrors(getErrors(bDocSignature));
         signatureValidationData.setSignatureScopes(getSignatureScopes(bDocSignature, dataFileNames));
-        signatureValidationData.setClaimedSigningTime(new SimpleDateFormat(DEFAULT_DATE_TIME_FORMAT).format(bDocSignature.getClaimedSigningTime()));
+        signatureValidationData.setClaimedSigningTime(getDateFormatterWithGMTZone().format(bDocSignature.getClaimedSigningTime()));
         signatureValidationData.setWarnings(getWarnings(bDocSignature));
         signatureValidationData.setInfo(getInfo(bDocSignature));
         signatureValidationData.setIndication(getIndication(bDocSignature));
 
         return signatureValidationData;
 
+    }
+
+    private SimpleDateFormat getDateFormatterWithGMTZone() {
+        SimpleDateFormat sdf = new SimpleDateFormat(DEFAULT_DATE_TIME_FORMAT);
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return sdf;
     }
 
     private String removeQuotes(String subjectName) {
@@ -104,7 +111,7 @@ public class BDOCQualifiedReportBuilder {
         info.setNameId(BDOC_SIGNATURE_INFO); //TODO: what's actually meant here? is it necessary?
         Date trustedTime = bDocSignature.getTrustedSigningTime();
         if (trustedTime != null) {
-            info.setBestSignatureTime(new SimpleDateFormat(DEFAULT_DATE_TIME_FORMAT).format(trustedTime));
+            info.setBestSignatureTime(getDateFormatterWithGMTZone().format(trustedTime));
         }
         return info;
     }

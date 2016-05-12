@@ -3,6 +3,8 @@ sudo: required
 dist: trusty
 jdk:
   - oraclejdk8
+before_install:
+  - export TZ=Estonia/Tallinn
 branches:
   only:
     - develop

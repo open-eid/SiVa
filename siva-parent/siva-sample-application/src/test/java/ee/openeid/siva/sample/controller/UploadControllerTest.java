@@ -13,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 
@@ -37,6 +38,9 @@ public class UploadControllerTest {
     @MockBean
     private SivaValidationService sivaValidationService;
 
+    @MockBean
+    private FileUploadService fileUploadService;
+
     @Test
     public void displayStartPageCheckPresenceOfUploadForm() throws Exception {
         final HtmlPage startPage = webClient.getPage("/");
@@ -49,6 +53,9 @@ public class UploadControllerTest {
     public void uploadPageWithFileReturnsValidationResult() throws Exception {
         given(sivaValidationService.validateDocument(any(File.class)))
                 .willReturn("{\"documentName\": \"random.bdoc\", \"validSignaturesCount\": 1, \"signaturesCount\": 1}");
+        given(fileUploadService.getUploadedFile(any(MultipartFile.class)))
+                .willReturn("random.bdoc");
+
         final MockMultipartFile uploadFile = new MockMultipartFile(
                 "file",
                 "random.bdoc",

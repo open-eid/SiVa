@@ -1,5 +1,7 @@
 package ee.openeid.siva.sample.controller;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,13 +13,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-final class UploadUtils {
-    private static String uploadDirectory = "upload-dir";
+@Service
+class FileUploadService {
+    private String uploadDirectory;
 
-    private UploadUtils() {
-    }
+    String getUploadedFile(final MultipartFile file) throws IOException {
+        if (file == null) {
+            return "";
+        }
 
-    static String getUploadedFile(final MultipartFile file) throws IOException {
         final Path uploadDir = getUploadDirectory();
         final String fullFilename = uploadDir + File.separator + file.getOriginalFilename();
         if (!Files.exists(uploadDir)) {
@@ -31,15 +35,16 @@ final class UploadUtils {
         return fullFilename;
     }
 
-    private static Path getUploadDirectory() {
+    Path getUploadDirectory() {
         return Paths.get(uploadDirectory).toAbsolutePath();
     }
 
-    static void deleteUploadedFile(final Path filename) throws IOException {
-        if (!Files.exists(filename)) {
-            return;
-        }
+    void deleteUploadedFile(final Path filename) throws IOException {
+        Files.deleteIfExists(filename);
+    }
 
-        Files.delete(filename);
+    @Value("${siva.uploadDirectory}")
+    public void setUploadDirectory(String uploadDirectory) {
+        this.uploadDirectory = uploadDirectory;
     }
 }

@@ -1,6 +1,7 @@
 server:
   port: 9000
 siva:
+  uploadDirectory: "upload-dir"
   service:
     url: "http://localhost:8080/validate"
 multipart:

@@ -24,6 +24,7 @@ class UploadController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UploadController.class);
     private static final String REDIRECT_PATH = "redirect:/";
     private SivaValidationService validationService;
+    private FileUploadService fileUploadService;
 
     @RequestMapping("/")
     public String startPage() {
@@ -41,11 +42,11 @@ class UploadController {
         }
 
         try {
-            final String fullFilename = UploadUtils.getUploadedFile(file);
+            final String fullFilename = fileUploadService.getUploadedFile(file);
             final String validationResult = validationService.validateDocument(new File(fullFilename));
 
             setModelFlashAttributes(redirectAttributes, validationResult);
-            UploadUtils.deleteUploadedFile(Paths.get(fullFilename));
+            fileUploadService.deleteUploadedFile(Paths.get(fullFilename));
         } catch (final IOException e) {
             LOGGER.warn("File upload problem", e);
             redirectAttributes.addFlashAttribute("File upload failed with message: " + e.getMessage());
@@ -63,5 +64,10 @@ class UploadController {
     @Autowired
     public void setValidationService(final SivaValidationService validationService) {
         this.validationService = validationService;
+    }
+
+    @Autowired
+    public void setFileUploadService(final FileUploadService fileUploadService) {
+        this.fileUploadService = fileUploadService;
     }
 }

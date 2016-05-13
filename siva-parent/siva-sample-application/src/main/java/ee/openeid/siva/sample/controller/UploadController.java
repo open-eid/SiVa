@@ -6,19 +6,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static ee.openeid.siva.sample.siva.ValidationReportUtils.getOverallValidationResult;
@@ -27,8 +22,7 @@ import static ee.openeid.siva.sample.siva.ValidationReportUtils.getValidateFilen
 @Controller
 class UploadController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UploadController.class);
-
-    @Autowired
+    private static final String REDIRECT_PATH = "redirect:/";
     private SivaValidationService validationService;
 
     @RequestMapping("/")
@@ -43,37 +37,31 @@ class UploadController {
     ) {
         if (file.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "File upload failed");
-            return "redirect:/";
+            return REDIRECT_PATH;
         }
 
         try {
-            final String fullFilename = getUploadedFile(file);
+            final String fullFilename = UploadUtils.getUploadedFile(file);
             final String validationResult = validationService.validateDocument(new File(fullFilename));
 
-            redirectAttributes.addFlashAttribute("validationResult", new JSONObject(validationResult).toString(4));
-            redirectAttributes.addFlashAttribute("documentName", getValidateFilename(validationResult));
-            redirectAttributes.addFlashAttribute("overallValidationResult", getOverallValidationResult(validationResult));
-            redirectAttributes.addFlashAttribute("error", "File upload success");
+            setModelFlashAttributes(redirectAttributes, validationResult);
+            UploadUtils.deleteUploadedFile(Paths.get(fullFilename));
         } catch (final IOException e) {
             LOGGER.warn("File upload problem", e);
             redirectAttributes.addFlashAttribute("File upload failed with message: " + e.getMessage());
         }
 
-        return "redirect:/";
+        return REDIRECT_PATH;
     }
 
-    private static String getUploadedFile(@RequestParam("file") final MultipartFile file) throws IOException {
-        final Path uploadDir = Paths.get("upload-dir").toAbsolutePath();
-        final String fullFilename = uploadDir + "/" + file.getOriginalFilename();
-        if (!Files.exists(uploadDir)) {
-            Files.createDirectory(uploadDir);
-        }
-
-        final BufferedOutputStream stream = new BufferedOutputStream(
-                new FileOutputStream(new File(fullFilename))
-        );
-        FileCopyUtils.copy(file.getInputStream(), stream);
-        return fullFilename;
+    private static void setModelFlashAttributes(final RedirectAttributes redirectAttributes, final String validationResult) {
+        redirectAttributes.addFlashAttribute("validationResult", new JSONObject(validationResult).toString(4));
+        redirectAttributes.addFlashAttribute("documentName", getValidateFilename(validationResult));
+        redirectAttributes.addFlashAttribute("overallValidationResult", getOverallValidationResult(validationResult));
     }
 
+    @Autowired
+    public void setValidationService(final SivaValidationService validationService) {
+        this.validationService = validationService;
+    }
 }

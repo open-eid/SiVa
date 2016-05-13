@@ -1,6 +1,6 @@
-# Signature Verification Service [![Build Status](https://travis-ci.org/open-eid/SiVa.svg?branch=develop)](https://travis-ci.org/open-eid/SiVa)
+# Signature Verification Service 
 
-![Build status](https://travis-ci.org/open-eid/SiVa.svg?branch=develop)
+[![Build Status](https://travis-ci.org/open-eid/SiVa.svg?branch=develop)](https://travis-ci.org/open-eid/SiVa)
 
 Used for validating digital signature container files.
 This project depends on [Digital Signature Service (DSS)](https://github.com/esig/dss)

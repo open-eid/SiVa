@@ -18,4 +18,3 @@
        provided X-Road signature validation command line utility.
 * PüPKI DB relational database providing client information and client request counting
 * PüPKI UI a separate Python application that will provide CRUD operations for clients
-

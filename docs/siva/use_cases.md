@@ -22,20 +22,20 @@ When user authentication fails - **not shown in diagram above**
 When signature validation fails – **not shown in diagram above**
 When increasing of request count fails – **not shown in diagram above**
 
-## CRL loading process
+## Certificate loading process
 
 All validation services require certificates to validate digitally signed
 documents. Below process shows how certificates are loaded into 
 validation service. Loading process is done separably for each validation
 service.
 
-![CRL Loading process](/img/siva/siva_validator_crl_loading.png)
+![Certificate Loading process](/img/siva/siva_validator_crl_loading.png)
 
-CRL loading process is scheduled cron job inside each validation 
-service to update currently in memory loaded CRLs.
+Certificate loading process is scheduled cron job inside each validation 
+service to update currently in memory loaded certificates.
 
 This process should run after TSL loader has completed updating 
-SiVa local copy of CRLs.
+SiVa local copy of certificates.
 
 ## X-Road 6 security server SOAP request process
 

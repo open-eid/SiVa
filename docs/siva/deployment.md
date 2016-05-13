@@ -5,13 +5,13 @@
 Following are minimum requirements to build and deploy SiVa validation
 web service:
 
-* Java 8 or above both OpenJDK and Oracle are supported
+* Java 8 or above Oracle JVM is supported
 * Git version control system version 1.8 or above is recommended
 * 2GB of RAM
-* 1 process core
+* 1 processor core
 * Open internet connection
 * 1GB of free disk space
-* Supported operating systems are: Linux, Mac OS X and Windows
+* Supported operating system is Ubuntu 14.04 LTS  
 
 ## Building SiVa validation web service on Ubuntu 16.04
 

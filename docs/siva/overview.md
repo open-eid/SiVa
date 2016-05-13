@@ -57,7 +57,8 @@ The Service will use the following functionality of EU DSS library:
 	  for all certificates included in the signature (i.e. the
 	  signer's certificate, OCSP Service's certificate, time-stamping
 	  Service's certificate).
--  
+- The services for DDOC and X-Road signature containers will use configured 
+  list certificates.
 - Signatures with PadES-LT and PadES-LTA profile are supported.
 - BDOC signatures with type BDOC-TM and BDOC-TS are supported 
 - The Signature must contain OCSP confirmation that meets the

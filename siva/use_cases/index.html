@@ -240,8 +240,8 @@
             </li>
           
             <li class="anchor">
-              <a title="CRL loading process" href="#crl-loading-process">
-                CRL loading process
+              <a title="Certificate loading process" href="#certificate-loading-process">
+                Certificate loading process
               </a>
             </li>
           
@@ -370,16 +370,16 @@ When request validation (JSON or SOAP) fails
 When user authentication fails - <strong>not shown in diagram above</strong>
 When signature validation fails – <strong>not shown in diagram above</strong>
 When increasing of request count fails – <strong>not shown in diagram above</strong></p>
-<h2 id="crl-loading-process">CRL loading process</h2>
+<h2 id="certificate-loading-process">Certificate loading process</h2>
 <p>All validation services require certificates to validate digitally signed
 documents. Below process shows how certificates are loaded into 
 validation service. Loading process is done separably for each validation
 service.</p>
-<p><img alt="CRL Loading process" src="../../img/siva/siva_validator_crl_loading.png" /></p>
-<p>CRL loading process is scheduled cron job inside each validation 
-service to update currently in memory loaded CRLs.</p>
+<p><img alt="Certificate Loading process" src="../../img/siva/siva_validator_crl_loading.png" /></p>
+<p>Certificate loading process is scheduled cron job inside each validation 
+service to update currently in memory loaded certificates.</p>
 <p>This process should run after TSL loader has completed updating 
-SiVa local copy of CRLs.</p>
+SiVa local copy of certificates.</p>
 <h2 id="x-road-6-security-server-soap-request-process">X-Road 6 security server SOAP request process</h2>
 <p>X-Road validation process is brought out because we skip authentication 
 process for X-Road security server interface and and use XML SOAP 

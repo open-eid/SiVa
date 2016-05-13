@@ -370,12 +370,12 @@ compared to other Java libraries). For more information on EU DSS, see
   document types</li>
 <li>The Service handles files in PDF-format version 1.7 and later,
   signed with PadES-profile signatures.</li>
-<li>Service handles DDOC files starting from version 1.3 or later</li>
+<li>Service handles DDOC files starting from version 1.0 or later</li>
 <li>Service supports BDOC files starting from version 2.1 or later</li>
 <li>Service supports X-Road 6 security server ASiCE containers</li>
 <li>Multiple Signatures are supported.</li>
 <li>The Service uses European Commission’s TSL (Trusted Service
-  Status List) for certificate chain validation.<ul>
+  Status List) for certificate chain validation for PDF and BDOC files.<ul>
 <li>European Commission’s TSL contains references to TSLs of
   European Union’s member states and members of the European
   Economic Area. This allows the PDF Validator to validate
@@ -389,6 +389,8 @@ compared to other Java libraries). For more information on EU DSS, see
   Service's certificate).</li>
 </ul>
 </li>
+<li>The services for DDOC and X-Road signature containers will use configured 
+  list certificates.</li>
 <li>Signatures with PadES-LT and PadES-LTA profile are supported.</li>
 <li>BDOC signatures with type BDOC-TM and BDOC-TS are supported </li>
 <li>The Signature must contain OCSP confirmation that meets the

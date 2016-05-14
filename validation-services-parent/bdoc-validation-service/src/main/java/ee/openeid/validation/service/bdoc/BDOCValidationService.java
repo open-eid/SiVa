@@ -11,11 +11,13 @@ import org.digidoc4j.ContainerBuilder;
 import org.digidoc4j.ValidationResult;
 import org.digidoc4j.impl.bdoc.tsl.TSLCertificateSourceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Date;
 
+@Service
 public class BDOCValidationService implements ValidationService {
 
     private TrustedListsCertificateSource trustedListSource;

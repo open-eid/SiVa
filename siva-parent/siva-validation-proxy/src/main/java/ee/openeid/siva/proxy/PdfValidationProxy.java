@@ -13,11 +13,13 @@ public class PdfValidationProxy extends AbstractValidationProxy {
     private XMLToJSONConverter converter;
     private PDFValidationService pdfValidationService;
 
+    @Override
     QualifiedValidationResult validateInService(ValidationDocument validationDocument) {
         return pdfValidationService.validateDocument(validationDocument);
     }
 
-    String toJSON(String report) {
+    @Override
+    String toJSON(final String report) {
         return converter.toJSON(report);
     }
 

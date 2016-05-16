@@ -11,7 +11,7 @@
 * PüPKI proxy converts PüPKI DB SQL results to Java objects that validation services,
   validation service proxy and Web API will use
 * Validation services (listed below) validate different digitally signed documents
-     * PDF validation service for PDF files will use **DidiDoc4J DSS forked** library
+     * PDF validation service for PDF files will use **DigiDoc4J DSS forked** library
      * BDOC for ASiC compliant containers both TM and TS will latest Maven released **DigiDoc4J** library
      * DDOC for previous generation digitally signed files will use latest Maven release of **JDigiDoc**
      * X-Road Signature validation service for X-Road web service signature files will use X-Road Security server project

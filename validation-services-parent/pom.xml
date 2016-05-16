@@ -14,6 +14,7 @@
         <module>pdf-validation-service</module>
         <module>bdoc-validation-service</module>
         <module>tsl-loader</module>
+        <module>xroad-validation-service</module>
     </modules>
 
     <properties>
@@ -51,7 +52,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
 
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>

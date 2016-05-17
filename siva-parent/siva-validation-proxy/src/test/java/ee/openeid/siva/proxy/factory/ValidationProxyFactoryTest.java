@@ -4,7 +4,6 @@ package ee.openeid.siva.proxy.factory;
 import ee.openeid.siva.proxy.PdfValidationProxy;
 import ee.openeid.siva.proxy.ValidationProxy;
 import ee.openeid.siva.proxy.document.DocumentType;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -34,9 +33,9 @@ public class ValidationProxyFactoryTest {
     @Test
     public void expectExceptionWhenMimeTypeUnsupported() {
         expectedException.expect(RuntimeException.class);
-        expectedException.expectMessage("type = DDOC is unsupported");
+        expectedException.expectMessage("type = ASICE is unsupported");
 
-        validationProxyFactory.getProxyForType(DocumentType.DDOC);
+        validationProxyFactory.getProxyForType(DocumentType.ASICE);
     }
 
 }

@@ -10,10 +10,10 @@ public enum DocumentType {
             return MimeType.PDF;
         }
     },
-    XML {
+    ASICE {
         @Override
         public MimeType getMimeType() {
-            return MimeType.XML;
+            return MimeType.ASICE;
         }
     },
     BDOC {
@@ -24,9 +24,7 @@ public enum DocumentType {
     },
     DDOC {
         @Override
-        public MimeType getMimeType() {
-            return null;
-        }
+        public MimeType getMimeType() { return MimeType.XML; }
     };
 
     public abstract MimeType getMimeType();

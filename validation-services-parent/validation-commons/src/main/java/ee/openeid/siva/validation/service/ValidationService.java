@@ -5,5 +5,5 @@ import ee.openeid.siva.validation.document.QualifiedValidationResult;
 import ee.openeid.siva.validation.document.ValidationDocument;
 
 public interface ValidationService {
-    QualifiedValidationResult validateDocument(ValidationDocument wsDocument);
+    QualifiedValidationResult validateDocument(ValidationDocument validationDocument);
 }

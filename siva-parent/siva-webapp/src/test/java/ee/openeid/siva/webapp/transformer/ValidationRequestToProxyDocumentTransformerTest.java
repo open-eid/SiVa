@@ -47,12 +47,6 @@ public class ValidationRequestToProxyDocumentTransformerTest {
     }
 
     @Test
-    public void xmlTypeIsCorrectlyTransformedToDocumentType() {
-        validationRequest.setType("xml");
-        assertEquals(DocumentType.XML, transformer.transform(validationRequest).getDocumentType());
-    }
-
-    @Test
     public void ddocTypeIsCorrectlyTransformedToDocumentType() {
         validationRequest.setType("ddoc");
         assertEquals(DocumentType.DDOC, transformer.transform(validationRequest).getDocumentType());

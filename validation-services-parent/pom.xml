@@ -47,20 +47,6 @@
                 <scope>import</scope>
             </dependency>
 
-            <!-- JDigiDoc -->
-            <dependency>
-                <groupId>ee.sk.digidoc</groupId>
-                <artifactId>jdigidoc</artifactId>
-                <version>3.12.0</version>
-            </dependency>
-            <dependency>
-                <groupId>iaik.prod</groupId>
-                <artifactId>iaikPkcs11Wrapper</artifactId>
-                <version>1.2.16</version>
-                <scope>system</scope>
-                <systemPath>${basedir}/ddoc-validation-service/src/main/resources/lib/iaikPkcs11Wrapper.jar</systemPath>
-            </dependency>
-
             <!-- Spring boot -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>

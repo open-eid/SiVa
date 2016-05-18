@@ -22,6 +22,7 @@
             <artifactId>validation-commons</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>io.github.openeid.siva</groupId>
             <artifactId>xroad-asice-verifier</artifactId>

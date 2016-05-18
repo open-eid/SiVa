@@ -9,7 +9,7 @@ branches:
     - develop
 install: true
 script:
-  - ./mvnw clean package
+  - ./mvnw clean install
 notifications:
   email:
     recipients:

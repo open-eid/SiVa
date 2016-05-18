@@ -7,22 +7,22 @@ import ee.sk.digidoc.DigiDocException;
 import ee.sk.digidoc.SignedDoc;
 import ee.sk.digidoc.factory.DigiDocFactory;
 import ee.sk.utils.ConfigManager;
+import org.apache.commons.io.IOUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.security.Security;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class DDOCValidationService implements ValidationService {
 
-    private static final Logger logger = LoggerFactory.getLogger(DDOCValidationService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DDOCValidationService.class);
 
     private static final String JDIGIDOC_CONF_FILE = "/jdigidoc.cfg";
 
@@ -30,8 +30,16 @@ public class DDOCValidationService implements ValidationService {
 
     @PostConstruct
     private void initConfig() throws DigiDocException, IOException {
-        File confFile = new ClassPathResource(JDIGIDOC_CONF_FILE).getFile();
-        ConfigManager.init(confFile.getAbsolutePath());
+        InputStream inputStream = getClass().getResourceAsStream(JDIGIDOC_CONF_FILE);
+        File file = File.createTempFile("jdigidoc", "cfg");
+        file.deleteOnExit();
+        OutputStream outputStream = new FileOutputStream(file);
+
+        IOUtils.copy(inputStream, outputStream);
+        outputStream.close();
+
+//        LOGGER.info("JDigiDoc configuration file path: {}", resource);
+        ConfigManager.init(file.getAbsolutePath());
     }
 
     @Override
@@ -41,7 +49,7 @@ public class DDOCValidationService implements ValidationService {
         }
 
         synchronized (lock) {
-            SignedDoc signedDoc = null;
+            SignedDoc signedDoc;
             List<DigiDocException> errors = new ArrayList<>();
 
             try {
@@ -54,7 +62,7 @@ public class DDOCValidationService implements ValidationService {
 
                 return new DDOCValidationResult(signedDoc);
             } catch (DigiDocException e) {
-                logger.warn("Unexpected exception when validating DDOC document: " + e.getMessage(), e);
+                LOGGER.warn("Unexpected exception when validating DDOC document: " + e.getMessage(), e);
                 throw new RuntimeException(e); // this should be replaced with something like "validationexception" in the future
             }
         }

@@ -9,4 +9,12 @@ branches:
     - develop
 install: true
 script:
-  - ./mvnw clean install
+  - ./mvnw clean package
+notifications:
+  email:
+    recipients:
+      - mihkel.selgal@nortal.com
+      - andres.voll@nortal.com
+      - allan.juhanson@nortal.com
+    on_success: never
+    on_failure: always

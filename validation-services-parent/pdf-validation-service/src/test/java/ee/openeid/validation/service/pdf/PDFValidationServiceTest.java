@@ -3,19 +3,13 @@ package ee.openeid.validation.service.pdf;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
-import ee.openeid.tsl.CustomTSLValidationJob;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
-import eu.europa.esig.dss.client.http.commons.CommonsDataLoader;
-import eu.europa.esig.dss.tsl.service.TSLRepository;
-import eu.europa.esig.dss.tsl.service.TSLValidationJob;
 import eu.europa.esig.dss.validation.CertificateVerifier;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
-import eu.europa.esig.dss.x509.KeyStoreCertificateSource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.context.annotation.Bean;
@@ -23,8 +17,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.util.Collections;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -77,26 +69,6 @@ public class PDFValidationServiceTest {
     @Import(TSLLoaderConfiguration.class)
     public static class TestTslLoaderConfiguration {
 
-        @Value("${trusted.list.source.lotlUrl}")
-        String lotlUrl;
-
-        @Value("${trusted.list.source.lotlCode}")
-        String lotlCode;
-
-        @Bean
-        public TSLValidationJob tslValidationJob(CommonsDataLoader dataLoader, TSLRepository tslRepository, KeyStoreCertificateSource keyStoreCertificateSource) {
-            CustomTSLValidationJob tslValidationJob = new CustomTSLValidationJob();
-            tslValidationJob.setDataLoader(dataLoader);
-            tslValidationJob.setRepository(tslRepository);
-            tslValidationJob.setLotlUrl(lotlUrl);
-            tslValidationJob.setLotlCode(lotlCode);
-            tslValidationJob.setDssKeyStore(keyStoreCertificateSource);
-            tslValidationJob.setFilterTerritories(Collections.singletonList("EE"));
-            tslValidationJob.setCheckLOTLSignature(true);
-            tslValidationJob.setCheckTSLSignatures(true);
-            return tslValidationJob;
-        }
-
         @Bean
         public YamlPropertiesFactoryBean yamlProperties() {
             YamlPropertiesFactoryBean  yamlProperties = new YamlPropertiesFactoryBean();
@@ -110,6 +82,7 @@ public class PDFValidationServiceTest {
             ppc.setProperties(yamlProperties.getObject());
             return ppc;
         }
+
     }
 
 

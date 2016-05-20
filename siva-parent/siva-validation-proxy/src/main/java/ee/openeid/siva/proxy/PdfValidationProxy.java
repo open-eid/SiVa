@@ -1,36 +1,24 @@
 package ee.openeid.siva.proxy;
 
-import ee.openeid.validation.service.pdf.PDFValidationService;
-import ee.openeid.siva.proxy.converter.XMLToJSONConverter;
-import ee.openeid.siva.validation.document.QualifiedValidationResult;
 import ee.openeid.siva.validation.document.ValidationDocument;
+import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.validation.service.pdf.PDFValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PdfValidationProxy extends AbstractValidationProxy {
 
-    private XMLToJSONConverter converter;
     private PDFValidationService pdfValidationService;
 
     @Override
-    QualifiedValidationResult validateInService(ValidationDocument validationDocument) {
+    QualifiedReport validateInService(ValidationDocument validationDocument) {
         return pdfValidationService.validateDocument(validationDocument);
-    }
-
-    @Override
-    String toJSON(final String report) {
-        return converter.toJSON(report);
     }
 
     @Autowired
     public void setPDFValidationService(PDFValidationService pdfValidationService) {
         this.pdfValidationService = pdfValidationService;
-    }
-
-    @Autowired
-    public void setXMLToJSONConverter(XMLToJSONConverter converter) {
-        this.converter = converter;
     }
 
 }

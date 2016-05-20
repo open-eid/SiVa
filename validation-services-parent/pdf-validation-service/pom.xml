@@ -24,6 +24,12 @@
         </dependency>
 
         <dependency>
+            <artifactId>tsl-loader</artifactId>
+            <groupId>io.github.openeid.siva</groupId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-document</artifactId>
         </dependency>
@@ -44,6 +50,13 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- Testing -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <!-- JSON -->

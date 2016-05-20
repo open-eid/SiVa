@@ -1,7 +1,7 @@
 package ee.openeid.validation.service.ddoc;
 
-import ee.openeid.siva.validation.document.QualifiedValidationResult;
 import ee.openeid.siva.validation.document.ValidationDocument;
+import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.sk.digidoc.DigiDocException;
 import ee.sk.digidoc.SignedDoc;
@@ -43,7 +43,7 @@ public class DDOCValidationService implements ValidationService {
     }
 
     @Override
-    public QualifiedValidationResult validateDocument(ValidationDocument validationDocument) {
+    public QualifiedReport validateDocument(ValidationDocument validationDocument) {
         if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
             Security.addProvider(new BouncyCastleProvider());
         }
@@ -60,7 +60,7 @@ public class DDOCValidationService implements ValidationService {
                     throw new RuntimeException(); // this should be replaced with something like "validationexception" in the future
                 }
 
-                return new DDOCValidationResult(signedDoc);
+                return new DDOCValidationResult(signedDoc).getQualifiedReport();
             } catch (DigiDocException e) {
                 LOGGER.warn("Unexpected exception when validating DDOC document: " + e.getMessage(), e);
                 throw new RuntimeException(e); // this should be replaced with something like "validationexception" in the future

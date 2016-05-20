@@ -1,5 +1,6 @@
 package ee.openeid.siva.validation.document.report;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.util.List;
@@ -23,23 +24,25 @@ public class SignatureValidationData {
     }
 
     public enum Indication {
-        TOTAL_PASSED {
-            @Override
-            public String toString() {
-                return "TOTAL-PASSED";
-            }
-        },
-        TOTAL_FAILED {
-            @Override
-            public String toString() {
-                return "TOTAL-FAILED";
-            }
-        },
-        INDETERMINATE {
-            @Override
-            public String toString() {
-                return this.name();
-            }
+        @JsonProperty("TOTAL-PASSED")
+        TOTAL_PASSED("TOTAL-PASSED"),
+
+        @JsonProperty("TOTAL-FAILED")
+        TOTAL_FAILED("TOTAL-FAILED"),
+
+        @JsonProperty("INDETERMINATE")
+        INDETERMINATE("INDETERMINATE");
+
+        private final String stringRepresentation;
+
+        private Indication(String stringRepresentation) {
+            this.stringRepresentation = stringRepresentation;
         }
+
+        @Override
+        public String toString() {
+            return stringRepresentation;
+        }
+
     }
 }

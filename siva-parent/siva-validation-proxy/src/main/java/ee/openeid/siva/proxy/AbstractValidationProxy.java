@@ -1,28 +1,32 @@
 package ee.openeid.siva.proxy;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import ee.openeid.siva.proxy.document.ProxyDocument;
-import ee.openeid.siva.proxy.document.ReportType;
 import ee.openeid.siva.proxy.document.RequestProtocol;
-import ee.openeid.siva.validation.document.QualifiedValidationResult;
+import ee.openeid.siva.proxy.exception.ValidationProxyException;
 import ee.openeid.siva.validation.document.ValidationDocument;
+import ee.openeid.siva.validation.document.report.QualifiedReport;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import java.io.StringWriter;
 
 abstract class AbstractValidationProxy implements ValidationProxy {
 
     @Override
     public String validate(final ProxyDocument proxyDocument) {
-        ValidationDocument validationDocument = createValidationDocument(proxyDocument);
-        QualifiedValidationResult validationResult = validateInService(validationDocument);
-        String report = getReport(validationResult, proxyDocument.getReportType());
+        QualifiedReport report = validateInService(createValidationDocument(proxyDocument));
         if (proxyDocument.getRequestProtocol() == RequestProtocol.JSON) {
-            report = toJSON(report);
+            return toJSON(report);
         }
-        return report;
+        return toXML(report);
     }
 
-    abstract QualifiedValidationResult validateInService(ValidationDocument validationDocument);
-    abstract String toJSON(String report);
+    abstract QualifiedReport validateInService(ValidationDocument validationDocument);
 
-    ValidationDocument createValidationDocument(ProxyDocument proxyDocument) {
+    private ValidationDocument createValidationDocument(ProxyDocument proxyDocument) {
         ValidationDocument validationDocument = new ValidationDocument();
         validationDocument.setName(proxyDocument.getName());
         validationDocument.setBytes(proxyDocument.getBytes());
@@ -30,13 +34,23 @@ abstract class AbstractValidationProxy implements ValidationProxy {
         return validationDocument;
     }
 
-    private String getReport(QualifiedValidationResult validationResult, ReportType reportType) {
-        if (reportType == ReportType.DETAILED) {
-            return validationResult.getDetailedReport();
-        } else if (reportType == ReportType.DIAGNOSTICDATA) {
-            return validationResult.getDiagnosticData();
-        } else {
-            return validationResult.getSimpleReport();
+    private String toXML(QualifiedReport report) {
+        try {
+            Marshaller jaxbMarshaller = JAXBContext.newInstance(QualifiedReport.class).createMarshaller();
+            StringWriter sw = new StringWriter();
+            jaxbMarshaller.marshal(report, sw);
+            return sw.toString();
+        } catch (JAXBException e) {
+            throw new ValidationProxyException(e);
+        }
+    }
+
+    private String toJSON(QualifiedReport report) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.writeValueAsString(report);
+        } catch (JsonProcessingException e) {
+            throw new ValidationProxyException(e);
         }
     }
 }

@@ -55,10 +55,6 @@
             <groupId>io.github.openeid.siva</groupId>
             <artifactId>ddoc-validation-service</artifactId>
         </dependency>
-        <dependency>
-            <groupId>io.github.openeid.siva</groupId>
-            <artifactId>tsl-loader</artifactId>
-        </dependency>
 
     </dependencies>
 

@@ -1,7 +1,7 @@
 package ee.openeid.siva.xroad;
 
-import ee.openeid.siva.validation.document.QualifiedValidationResult;
 import ee.openeid.siva.validation.document.ValidationDocument;
+import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.ria.xroad.common.CodedException;
 import ee.ria.xroad.common.SystemProperties;
@@ -23,7 +23,7 @@ public class XRoadValidationService implements ValidationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(XRoadValidationService.class);
 
     @Override
-    public QualifiedValidationResult validateDocument(ValidationDocument wsDocument) {
+    public QualifiedReport validateDocument(ValidationDocument wsDocument) {
         try {
             final InputStream inputStream = new ByteArrayInputStream(wsDocument.getBytes());
             final AsicContainer container = AsicContainer.read(inputStream);

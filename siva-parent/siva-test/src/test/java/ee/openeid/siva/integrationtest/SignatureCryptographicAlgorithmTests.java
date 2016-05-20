@@ -12,48 +12,48 @@ public class SignatureCryptographicAlgorithmTests extends SiVaRestTests{
 
     @Test
     public void documentSignedWithSha512CertificateShouldPass() {
-        assertAllSignaturesAreValid(postForSimpleReport("hellopades-lt-sha512.pdf"));
+        assertAllSignaturesAreValid(postForReport("hellopades-lt-sha512.pdf"));
     }
 
     @Test
     public void documentSignedWithSha1CertificateShouldPass() {
-        assertAllSignaturesAreValid(postForSimpleReport("hellopades-lt-sha1.pdf"));
+        assertAllSignaturesAreValid(postForReport("hellopades-lt-sha1.pdf"));
     }
 
     @Ignore("TODO - current test file's signature doesn't contain ocsp")
     @Test
     public void documentSignedWithSha256EcdsaAlgoShouldPass() {
-        assertAllSignaturesAreValid(postForSimpleReport("hellopades-ecdsa.pdf"));
+        assertAllSignaturesAreValid(postForReport("hellopades-ecdsa.pdf"));
     }
 
     @Test
     public void documentSignedWithSha256Ec224AlgoShouldPass() {
-        assertAllSignaturesAreValid(postForSimpleReport("hellopades-lt-sha256-ec224.pdf"));
+        assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-ec224.pdf"));
     }
 
     @Test
     public void documentSignedWithSha256Ec256AlgoShouldPass() {
-        assertAllSignaturesAreValid(postForSimpleReport("hellopades-lt-sha256-ec256.pdf"));
+        assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-ec256.pdf"));
     }
 
     @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
     public void documentSignedWithSha256Rsa1024AlgoShouldPass() {
-        assertAllSignaturesAreValid(postForSimpleReport("hellopades-lt-sha256-rsa1024.pdf"));
+        assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-rsa1024.pdf"));
     }
 
     @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
     public void documentSignedWithRsa1023AlgoShouldPass() {
-        assertAllSignaturesAreValid(postForSimpleReport("hellopades-lt-sha256-rsa1023.pdf"));
+        assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-rsa1023.pdf"));
     }
 
     @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
     public void documentSignedWithRsa2047AlgoShouldPass() {
-        assertAllSignaturesAreValid(postForSimpleReport("hellopades-lt-sha256-rsa2047.pdf"));
+        assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-rsa2047.pdf"));
     }
 
     @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
     public void documentSignedWithRsa2048AlgoShouldPass() {
-        assertAllSignaturesAreValid(postForSimpleReport("hellopades-lt-sha256-rsa2048.pdf"));
+        assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-rsa2048.pdf"));
     }
 
     @Override

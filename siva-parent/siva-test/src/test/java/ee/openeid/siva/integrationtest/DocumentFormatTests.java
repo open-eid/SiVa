@@ -1,7 +1,7 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
-import ee.openeid.siva.integrationtest.report.simple.SimpleReport;
+import ee.openeid.siva.validation.document.report.QualifiedReport;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -15,7 +15,7 @@ public class DocumentFormatTests extends SiVaRestTests {
 
     @Test
     public void PAdESDocumentShouldPass() {
-        SimpleReport report = postForSimpleReport("hellopades-pades-lt-sha256-sign.pdf");
+        QualifiedReport report = postForReport("hellopades-pades-lt-sha256-sign.pdf");
         assertAllSignaturesAreValid(report);
         assertEquals("PAdES_BASELINE_LT", report.getSignatures().get(0).getSignatureFormat());
     }

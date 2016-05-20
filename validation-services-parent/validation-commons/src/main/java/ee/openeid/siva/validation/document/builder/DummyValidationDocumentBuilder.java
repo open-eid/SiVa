@@ -1,14 +1,23 @@
-package ee.openeid.validation.service.bdoc.testutils;
+package ee.openeid.siva.validation.document.builder;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
+import eu.europa.esig.dss.MimeType;
+import org.apache.commons.lang.StringUtils;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * Use for testing purposes only
+ */
 public class DummyValidationDocumentBuilder {
 
     private ValidationDocument validationDocument;
+
+    private DummyValidationDocumentBuilder() {
+        validationDocument = new ValidationDocument();
+    }
 
     public static DummyValidationDocumentBuilder aValidationDocument() {
         return new DummyValidationDocumentBuilder();
@@ -22,11 +31,20 @@ public class DummyValidationDocumentBuilder {
 
     public DummyValidationDocumentBuilder withName(String name) throws Exception {
         validationDocument.setName(name);
+        validationDocument.setMimeType(parseFileExtension(name));
         return this;
     }
 
-    private DummyValidationDocumentBuilder() {
-        validationDocument = new ValidationDocument();
+    private MimeType parseFileExtension(final String filename) {
+        String fileExtension = filename.substring(filename.lastIndexOf(".") + 1);
+        if (StringUtils.equalsIgnoreCase(fileExtension, "pdf")) {
+            return MimeType.PDF;
+        }
+        else if (StringUtils.equalsIgnoreCase(fileExtension, "bdoc") || StringUtils.equalsIgnoreCase(fileExtension, "asice")) {
+            return MimeType.ASICE;
+        }
+        return MimeType.fromFileName(filename);
+
     }
 
     public ValidationDocument build() {

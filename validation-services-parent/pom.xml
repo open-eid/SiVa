@@ -31,6 +31,15 @@
     <dependencyManagement>
         <dependencies>
 
+            <!-- Spring boot -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
             <!-- DigiDoc4J -->
             <dependency>
                 <groupId>org.digidoc4j</groupId>
@@ -43,15 +52,6 @@
                 <groupId>org.digidoc4j.dss</groupId>
                 <artifactId>sd-dss</artifactId>
                 <version>${dss.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <!-- Spring boot -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring.boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

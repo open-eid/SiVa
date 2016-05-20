@@ -20,12 +20,12 @@
  */
 package ee.openeid.validation.service.pdf;
 
-import ee.openeid.validation.service.pdf.validator.result.PDFValidationResult;
-import ee.openeid.siva.validation.document.QualifiedValidationResult;
 import ee.openeid.siva.validation.document.ValidationDocument;
+import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.validation.service.pdf.document.transformer.ValidationDocumentToDSSDocumentTransformer;
 import ee.openeid.validation.service.pdf.validator.EstonianPDFDocumentValidator;
+import ee.openeid.validation.service.pdf.validator.report.PDFQualifiedReportBuilder;
 import eu.europa.esig.dss.DSSDocument;
 import eu.europa.esig.dss.DSSException;
 import eu.europa.esig.dss.validation.CertificateVerifier;
@@ -36,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.xml.soap.SOAPException;
+import java.time.LocalDateTime;
 
 /**
  * Implementation of the Interface for the Contract of the Validation Web Service.
@@ -50,7 +51,7 @@ public class PDFValidationService implements ValidationService {
     private CertificateVerifier certificateVerifier;
 
     @Override
-    public QualifiedValidationResult validateDocument(ValidationDocument validationDocument) throws DSSException {
+    public QualifiedReport validateDocument(ValidationDocument validationDocument) throws DSSException {
 
         String exceptionMessage;
         try {
@@ -73,6 +74,7 @@ public class PDFValidationService implements ValidationService {
             validator.setCertificateVerifier(certificateVerifier);
 
             final Reports reports = validator.validateDocument(POLICY_CONSTRAINTS_LOCATION);
+            LocalDateTime validationTime = LocalDateTime.now();
 
             if (logger.isInfoEnabled()) {
                 logger.info(
@@ -83,8 +85,8 @@ public class PDFValidationService implements ValidationService {
 
                 logger.info("WsValidateDocument: end");
             }
-
-            return new PDFValidationResult(reports);
+            PDFQualifiedReportBuilder reportBuilder = new PDFQualifiedReportBuilder(reports, validationTime, validationDocument.getName());
+            return reportBuilder.build();
 
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

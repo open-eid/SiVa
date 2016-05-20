@@ -1,7 +1,7 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
-import ee.openeid.siva.integrationtest.report.simple.SimpleReport;
+import ee.openeid.siva.validation.document.report.QualifiedReport;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -13,41 +13,41 @@ public class SigningCertificateTests extends SiVaRestTests{
 
     @Test
     public void certificateExpiredBeforeDocumentSigningShouldFail() {
-        SimpleReport report = postForSimpleReport("hellopades-lt-rsa1024-sha1-expired.pdf");
+        QualifiedReport report = postForReport("hellopades-lt-rsa1024-sha1-expired.pdf");
         assertInvalidWithError(report, "BBB_XCV_ICTIVRSC_ANS", "The current time is not in the validity range of the signer's certificate.");
     }
 
     @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
     public void validSignaturesRemainValidAfterSigningCertificateExpires() {
-        assertAllSignaturesAreValid(postForSimpleReport("hellopades-lt-sha256-rsa1024-not-expired.pdf"));
+        assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-rsa1024-not-expired.pdf"));
     }
 
     @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
     public void certificateExpired7DaysAfterDocumentSigningShouldPass() {
-        assertAllSignaturesAreValid(postForSimpleReport("hellopades-lt-sha256-rsa2048-7d.pdf"));
+        assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-rsa2048-7d.pdf"));
     }
 
     @Ignore("TODO: when we get a PDF file for the same test case, use that one instead of this ASiC file")
     @Test
     public void signaturesMadeWithExpiredSigningCertificatesAreInvalid() {
-        assertAllSignaturesAreInvalid(postForSimpleReport("IB-3691_bdoc21-TS-old-cert.bdoc"));
+        assertAllSignaturesAreInvalid(postForReport("IB-3691_bdoc21-TS-old-cert.bdoc"));
     }
 
     @Ignore // current test file's signature doesn't contain ocsp
     @Test
     public void documentSignedWithRevokedCertificateShouldFail() {
-        assertAllSignaturesAreInvalid(postForSimpleReport("hellopades-lt-sha256-revoked.pdf"));
+        assertAllSignaturesAreInvalid(postForReport("hellopades-lt-sha256-revoked.pdf"));
     }
 
     @Test
     public void missingSignedAttributeForSigningCertificate() {
-        SimpleReport report = postForSimpleReport("missing_signing_certificate_attribute.pdf");
+        QualifiedReport report = postForReport("missing_signing_certificate_attribute.pdf");
         assertInvalidWithError(report, "BBB_ICS_ISASCP_ANS", "The signed attribute: 'signing-certificate' is absent!");
     }
 
     @Test
     public void signingCertificateWithoutNonRepudiationKeyUsageAttributeShouldFail() {
-        SimpleReport report = postForSimpleReport("hellopades-pades-lt-sha256-auth.pdf");
+        QualifiedReport report = postForReport("hellopades-pades-lt-sha256-auth.pdf");
         assertInvalidWithError(report, "BBB_XCV_ISCGKU_ANS", "The signer's certificate has not expected key-usage!");
     }
 
@@ -69,17 +69,17 @@ public class SigningCertificateTests extends SiVaRestTests{
 
     @Test
     public void documentSignedWithExpiredRsa2048CertificateShouldFail() {
-        assertAllSignaturesAreInvalid(postForSimpleReport("hellopades-lt-sha256-rsa2048-expired.pdf"));
+        assertAllSignaturesAreInvalid(postForReport("hellopades-lt-sha256-rsa2048-expired.pdf"));
     }
 
     @Test
     public void documentSignedWithExpiredRsa1024CertificateShouldFail() {
-        assertAllSignaturesAreInvalid(postForSimpleReport("hellopades-lt-sha256-rsa1024-expired2.pdf"));
+        assertAllSignaturesAreInvalid(postForReport("hellopades-lt-sha256-rsa1024-expired2.pdf"));
     }
 
     @Test
     public void documentSignedWithExpiredSha1CertificateShouldFail() {
-        assertAllSignaturesAreInvalid(postForSimpleReport("hellopades-lt-sha1-rsa1024-expired2.pdf"));
+        assertAllSignaturesAreInvalid(postForReport("hellopades-lt-sha1-rsa1024-expired2.pdf"));
     }
 
     @Override

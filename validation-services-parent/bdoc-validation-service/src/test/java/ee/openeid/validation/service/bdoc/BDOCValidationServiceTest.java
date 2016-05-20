@@ -1,11 +1,11 @@
 package ee.openeid.validation.service.bdoc;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
+import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.document.report.SignatureScope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
-import ee.openeid.validation.service.bdoc.testutils.DummyValidationDocumentBuilder;
 import org.digidoc4j.Configuration;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -19,8 +19,8 @@ public class BDOCValidationServiceTest {
     private static final String TS_NO_MANIFEST = "asic-e-baseline-lt_allan_live_no_manifest.bdoc";
 
     private static BDOCValidationService validationService = new BDOCValidationServiceSpy();
-    private static BDOCValidationResult validationResult2Signatures;
-    private static BDOCValidationResult validationResultSignedNoManifest;
+    private static QualifiedReport validationResult2Signatures;
+    private static QualifiedReport validationResultSignedNoManifest;
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -29,32 +29,23 @@ public class BDOCValidationServiceTest {
     }
 
     @Test
-    public void callingValidateWithValidBdocShouldReturnBDOCValidationResultWithReportsIncluded() throws Exception {
-        assertNotNull(validationResult2Signatures.getSimpleReport());
-        assertNotNull(validationResult2Signatures.getDetailedReport());
-    }
-
-    @Test
     public void bdocValidationResultShouldIncludeQualifiedReportPOJO() throws Exception {
-        assertNotNull(validationResult2Signatures.getQualifiedReport());
+        assertNotNull(validationResult2Signatures);
     }
 
     @Test
     public void qualifiedReportShouldIncludeRequiredFields() throws Exception {
-        QualifiedReport report = validationResult2Signatures.getQualifiedReport();
-        assertNotNull(report.getPolicy());
-        assertNotNull(report.getValidationTime());
-        assertEquals(VALID_BDOC_TM_2_SIGNATURES, report.getDocumentName());
-        assertTrue(report.getSignatures().size() == 2);
-        assertTrue(report.getValidSignaturesCount() == 2);
-        assertTrue(report.getSignaturesCount() == 2);
+        assertNotNull(validationResult2Signatures.getPolicy());
+        assertNotNull(validationResult2Signatures.getValidationTime());
+        assertEquals(VALID_BDOC_TM_2_SIGNATURES, validationResult2Signatures.getDocumentName());
+        assertTrue(validationResult2Signatures.getSignatures().size() == 2);
+        assertTrue(validationResult2Signatures.getValidSignaturesCount() == 2);
+        assertTrue(validationResult2Signatures.getSignaturesCount() == 2);
     }
 
     @Test
     public void qualifiedReportShouldHaveCorrectSignatureValidationDataForSignature1() {
-        QualifiedReport report = validationResult2Signatures.getQualifiedReport();
-
-        SignatureValidationData sig1 = report.getSignatures()
+        SignatureValidationData sig1 = validationResult2Signatures.getSignatures()
                 .stream()
                 .filter(sig -> sig.getId().equals("S0"))
                 .findFirst()
@@ -77,7 +68,7 @@ public class BDOCValidationServiceTest {
 
     @Test
     public void qualifiedReportShouldHaveCorrectSignatureValidationDataForSignature2() {
-        SignatureValidationData sig2 = validationResult2Signatures.getQualifiedReport().getSignatures()
+        SignatureValidationData sig2 = validationResult2Signatures.getSignatures()
                 .stream()
                 .filter(sig -> sig.getId().equals("S1"))
                 .findFirst()
@@ -100,9 +91,8 @@ public class BDOCValidationServiceTest {
 
     @Test
     public void reportForBdocTSWithUntrustedRevocationDataShouldContainError() {
-        QualifiedReport report = validationResultSignedNoManifest.getQualifiedReport();
-        assertTrue(report.getValidSignaturesCount() == 0);
-        SignatureValidationData sig = report.getSignatures().get(0);
+        assertTrue(validationResultSignedNoManifest.getValidSignaturesCount() == 0);
+        SignatureValidationData sig = validationResultSignedNoManifest.getSignatures().get(0);
         assertTrue(sig.getErrors().size() == 1);
 
         Error error = sig.getErrors().get(0);

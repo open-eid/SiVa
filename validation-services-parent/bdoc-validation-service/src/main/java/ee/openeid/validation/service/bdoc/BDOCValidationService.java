@@ -25,7 +25,7 @@ public class BDOCValidationService implements ValidationService {
     private Configuration configuration;
 
     @Override
-    public BDOCValidationResult validateDocument(ValidationDocument validationDocument) {
+    public QualifiedReport validateDocument(ValidationDocument validationDocument) {
 
         initConfiguration();
 
@@ -38,15 +38,11 @@ public class BDOCValidationService implements ValidationService {
                 build();
 
         ValidationResult validationResult = container.validate();
+
         Date validationTime = new Date();
 
         BDOCQualifiedReportBuilder reportBuilder = new BDOCQualifiedReportBuilder(container, validationDocument.getName(), validationTime);
-        QualifiedReport qualifiedReport = reportBuilder.build();
-
-        BDOCValidationResult bdocValidationResult = new BDOCValidationResult(validationResult);
-        bdocValidationResult.setQualifiedReport(qualifiedReport);
-
-        return bdocValidationResult;
+        return reportBuilder.build();
     }
 
     public void initConfiguration() {

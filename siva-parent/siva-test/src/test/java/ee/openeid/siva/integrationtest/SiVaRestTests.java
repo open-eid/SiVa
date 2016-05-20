@@ -7,10 +7,13 @@ import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import ee.openeid.siva.SivaWebApplication;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
-import ee.openeid.siva.integrationtest.report.simple.SimpleReport;
-import ee.openeid.siva.integrationtest.report.simple.SimpleReportWrapper;
 import ee.openeid.siva.proxy.document.DocumentType;
+import ee.openeid.siva.validation.document.report.Error;
+import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.Warning;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.experimental.categories.Category;
@@ -25,6 +28,8 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Optional;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
@@ -55,14 +60,13 @@ public abstract class SiVaRestTests {
                 .post(VALIDATION_ENDPOINT);
     }
 
-    protected SimpleReport postForSimpleReport(String file) {
+    protected QualifiedReport postForReport(String file) {
         try {
-            return new ObjectMapper().readValue(post(validationRequestFor(file, "simple")).andReturn().body().asString(), SimpleReportWrapper.class).getSimpleReport();
+            return new ObjectMapper().readValue(post(validationRequestFor(file, "simple")).andReturn().body().asString(), QualifiedReport.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-
 
     protected String validationRequestFor(String file, String reportType) {
         JSONObject jsonObject = new JSONObject();
@@ -80,25 +84,45 @@ public abstract class SiVaRestTests {
 
     protected abstract String getTestFilesDirectory();
 
-    protected void assertInvalidWithError(SimpleReport report, String errorCode, String expectedMessage) {
+    protected void assertInvalidWithError(QualifiedReport report, String errorCode, String expectedMessage) {
         assertAllSignaturesAreInvalid(report);
-        assertEquals(expectedMessage, report.findErrorById(errorCode).get().getContent());
+        assertEquals(expectedMessage, findErrorMessageById(errorCode, report).orElse(""));
     }
 
-    protected void assertHasWarning(SimpleReport report, String warningCode, String expectedMessage) {
-        assertEquals(expectedMessage, report.findWarningById(warningCode).get().getContent());
+    protected void assertHasWarning(QualifiedReport report, String warningCode, String expectedMessage) {
+        assertEquals(expectedMessage, findWarningMessageById(warningCode, report).orElse(""));
     }
 
-    protected void assertAllSignaturesAreValid(SimpleReport report) {
+    protected void assertAllSignaturesAreValid(QualifiedReport report) {
         assertTrue(report.getSignaturesCount() == report.getValidSignaturesCount());
     }
 
-    protected void assertSomeSignaturesAreValid(SimpleReport report, int expectedValidSignatures) {
+    protected void assertSomeSignaturesAreValid(QualifiedReport report, int expectedValidSignatures) {
         assertTrue(expectedValidSignatures == report.getValidSignaturesCount());
     }
 
-    protected void assertAllSignaturesAreInvalid(SimpleReport report) {
+    protected void assertAllSignaturesAreInvalid(QualifiedReport report) {
         assertTrue(report.getValidSignaturesCount() == 0);
+    }
+
+    protected Optional<String> findErrorMessageById(String errorCode, QualifiedReport report) {
+        return report.getSignatures()
+                .stream()
+                .filter(sig -> sig.getErrors() != null && !sig.getErrors().isEmpty())
+                .map(SignatureValidationData::getErrors)
+                .flatMap(Collection::stream)
+                .filter(error -> StringUtils.equals(errorCode, error.getNameId()))
+                .map(Error::getContent).findFirst();
+    }
+
+    protected Optional<String> findWarningMessageById(String warningCode, QualifiedReport report) {
+        return report.getSignatures()
+                .stream()
+                .filter(sig -> sig.getWarnings() != null && !sig.getWarnings().isEmpty())
+                .map(SignatureValidationData::getWarnings)
+                .flatMap(Collection::stream)
+                .filter(warning -> StringUtils.equals(warningCode, warning.getNameId()))
+                .map(Warning::getDescription).findFirst();
     }
 
     private static byte[] readFileFromPath(String pathName) {

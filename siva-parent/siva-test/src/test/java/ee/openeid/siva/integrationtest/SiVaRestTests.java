@@ -43,6 +43,7 @@ public abstract class SiVaRestTests {
 
     private static final String PROJECT_SUBMODULE_NAME =  "siva-test";
     private static final String VALIDATION_ENDPOINT = "/validate";
+    private static final boolean PRINT_RESPONSE = false;
 
     @Value("${local.server.port}")
     private int serverPort;
@@ -60,12 +61,23 @@ public abstract class SiVaRestTests {
                 .post(VALIDATION_ENDPOINT);
     }
 
+    /**
+     * Override to enable/disable printing the response per class
+     * @return
+     */
+    protected boolean shouldPrintResponse() {
+        return PRINT_RESPONSE;
+    }
+
     protected QualifiedReport postForReport(String file) {
-        try {
-            return new ObjectMapper().readValue(post(validationRequestFor(file, "simple")).andReturn().body().asString(), QualifiedReport.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if (shouldPrintResponse()) {
+            return postForReportAndPrintResponse(file);
         }
+        return mapToReport(post(validationRequestFor(file, "simple")).andReturn().body().asString());
+    }
+
+    protected QualifiedReport postForReportAndPrintResponse(String file) {
+        return mapToReport(post(validationRequestFor(file, "simple")).andReturn().body().prettyPrint());
     }
 
     protected String validationRequestFor(String file, String reportType) {
@@ -123,6 +135,14 @@ public abstract class SiVaRestTests {
                 .flatMap(Collection::stream)
                 .filter(warning -> StringUtils.equals(warningCode, warning.getNameId()))
                 .map(Warning::getDescription).findFirst();
+    }
+
+    private QualifiedReport mapToReport(String json) {
+        try {
+            return new ObjectMapper().readValue(json, QualifiedReport.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static byte[] readFileFromPath(String pathName) {

@@ -19,7 +19,7 @@ import static org.hamcrest.Matchers.hasItems;
 
 
 @Category(IntegrationTest.class)
-public class SimpleReportJsonStructureVerification extends SiVaRestTests {
+public class ValidationReportJsonStructureVerification extends SiVaRestTests {
 
     @Before
     public void DirectoryBackToDefault() {

@@ -16,6 +16,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONObject;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -53,6 +54,11 @@ public abstract class SiVaRestTests {
         RestAssured.port = serverPort;
     }
 
+    @BeforeClass
+    public static void oneTimeSetUp() {
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+    }
+
     protected Response post(String request) {
         return given()
                 .body(request)
@@ -86,6 +92,15 @@ public abstract class SiVaRestTests {
         jsonObject.put("filename", file);
         jsonObject.put("documentType", parseFileExtension(file));
         jsonObject.put("reportType", reportType);
+        return jsonObject.toString();
+    }
+
+    protected String validationRequestForExtended(String documentKey, String encodedString,String filenameKey, String file, String documentTypeKey, String documentType, String reportTypeKey, String reportType) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(documentKey, encodedString);
+        jsonObject.put(filenameKey, file);
+        jsonObject.put(documentTypeKey, documentType);
+        jsonObject.put(reportTypeKey, reportType);
         return jsonObject.toString();
     }
 

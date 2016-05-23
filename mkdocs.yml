@@ -30,4 +30,4 @@ pages:
         - Appendix 2 - Functional Requirements: siva/appendix/functional_requirements.md
         - Appendix 3 - Validation Policy: siva/appendix/validation_policy.md
         - Appendix 4 - Validation Constraint Configuration: siva/appendix/validation_constraints.md
-		- Appendix 5 - Test Case Descriptions: siva/appendix/test_cases.md
+        - Appendix 5 - Test Case Descriptions: siva/appendix/test_cases.md

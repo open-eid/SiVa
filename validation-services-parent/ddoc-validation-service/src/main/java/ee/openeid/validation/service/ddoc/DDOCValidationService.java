@@ -3,6 +3,7 @@ package ee.openeid.validation.service.ddoc;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.service.ValidationService;
+import ee.openeid.validation.service.ddoc.report.DDOCQualifiedReportBuilder;
 import ee.sk.digidoc.DigiDocException;
 import ee.sk.digidoc.SignedDoc;
 import ee.sk.digidoc.factory.DigiDocFactory;
@@ -17,6 +18,7 @@ import javax.annotation.PostConstruct;
 import java.io.*;
 import java.security.Security;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -50,17 +52,22 @@ public class DDOCValidationService implements ValidationService {
 
         synchronized (lock) {
             SignedDoc signedDoc;
-            List<DigiDocException> errors = new ArrayList<>();
+
+            List<DigiDocException> signedDocInitializationErrors = new ArrayList<>();
 
             try {
                 DigiDocFactory digiDocFactory = ConfigManager.instance().getDigiDocFactory();
-                signedDoc = digiDocFactory.readSignedDocFromStreamOfType(new ByteArrayInputStream(validationDocument.getBytes()), false, errors);
-
+                signedDoc = digiDocFactory.readSignedDocFromStreamOfType(new ByteArrayInputStream(validationDocument.getBytes()), false, signedDocInitializationErrors);
                 if (signedDoc == null) {
                     throw new RuntimeException(); // this should be replaced with something like "validationexception" in the future
                 }
 
-                return new DDOCValidationResult(signedDoc).getQualifiedReport();
+                List<DigiDocException> signedDocValidationErrors = signedDoc.validate(true);
+
+                Date validationTime = new Date();
+
+                DDOCQualifiedReportBuilder reportBuilder = new DDOCQualifiedReportBuilder(signedDoc, validationDocument.getName(), validationTime);
+                return reportBuilder.build();
             } catch (DigiDocException e) {
                 LOGGER.warn("Unexpected exception when validating DDOC document: " + e.getMessage(), e);
                 throw new RuntimeException(e); // this should be replaced with something like "validationexception" in the future

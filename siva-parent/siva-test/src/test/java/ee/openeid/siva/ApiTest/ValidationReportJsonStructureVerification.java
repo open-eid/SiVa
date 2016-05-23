@@ -79,7 +79,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
      ***/
-    @Test
+    @Test @Ignore //TODO: VAL-202
     public void BdocAllElementsArePresentValidMultipleSignatures() {
         post(validationRequestFor("Valid_IDCard_MobID_signatures.bdoc", "simple"))
                 .then()
@@ -124,7 +124,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      * File: test1-bdoc-unknown.bdoc
      *
      ***/
-    @Test
+    @Test @Ignore //TODO: VAL-202
     public void BdocAllElementsArePresentIndeterminateSignature() {
         post(validationRequestFor("test1-bdoc-unknown.bdoc", "simple"))
                 .then()
@@ -144,7 +144,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * Expected Result: All required elements are present according to SimpleReportSchema.json
      *
-     * File: Valid_ID_sig.bdoc
+     * File: hellopades-lt-sha256-ec256.pdf
      *
      ***/
     @Test
@@ -167,10 +167,10 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * Expected Result: All required elements are present according to SimpleReportSchema.json
      *
-     * File: Valid_ID_sig.bdoc
+     * File:
      *
      ***/
-    @Test
+    @Test @Ignore //TODO: need pdf file with multiple valid signatures
     public void PdfAllElementsArePresentValidmultipleSignatures() {
         setTestFilesDirectory("");
         post(validationRequestFor("needfile", "simple"))
@@ -191,12 +191,12 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * Expected Result: All required elements are present according to SimpleReportSchema.json
      *
-     * File: hellopades-lt-b.bdoc
+     * File: hellopades-lt-b.pdf
      *
      ***/
-    @Test
+    @Test @Ignore //TODO: VAL-202
     public void PdfAllElementsArePresentInvalidSignature() {
-        setTestFilesDirectory("baseline_profile_test_files/");
+        setTestFilesDirectory("pdf/baseline_profile_test_files/");
         post(validationRequestFor("hellopades-lt-b.pdf", "simple"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
@@ -215,13 +215,13 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * Expected Result: All required elements are present according to SimpleReportSchema.json
      *
-     * File: Valid_ID_sig.bdoc
+     * File: hellopades-lt-rsa1024-sha1-expired.pdf
      *
      ***/
 
-    @Test
+    @Test @Ignore //TODO: VAL-202
     public void PdfAllElementsArePresentIndeterminateSignature() {
-        setTestFilesDirectory("signing_certifacte_test_files/");
+        setTestFilesDirectory("pdf/signing_certifacte_test_files/");
         post(validationRequestFor("hellopades-lt-rsa1024-sha1-expired.pdf", "simple"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
@@ -240,10 +240,10 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * Expected Result: All required elements are present according to SimpleReportSchema.json
      *
-     * File: Valid_ID_sig.bdoc
+     * File: 18912.ddoc
      *
      ***/
-    @Test @Ignore //Ddoc not supported yet
+    @Test @Ignore //TODO: Ddoc not supported yet
     public void DdocAllElementsArePresentValidSignature() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("18912.ddoc", "simple"))
@@ -263,10 +263,10 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * Expected Result: All required elements are present according to SimpleReportSchema.json
      *
-     * File: Valid_ID_sig.bdoc
+     * File: igasugust1.1.ddoc
      *
      ***/
-    @Test @Ignore //Ddoc not supported yet
+    @Test @Ignore //TODO: Ddoc not supported yet
     public void DdocAllElementsArePresentValidMultipleSignatures() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("igasugust1.1.ddoc", "simple"))
@@ -287,10 +287,10 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * Expected Result: All required elements are present according to SimpleReportSchema.json
      *
-     * File: hellopades-lt-b.bdoc
+     * File: test1-ddoc-revoked.ddoc
      *
      ***/
-    @Test @Ignore //ddoc not yet supported
+    @Test @Ignore //TODO: ddoc not yet supported
     public void DdocAllElementsArePresentInvalidSignature() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("test1-ddoc-revoked.ddoc", "simple"))
@@ -311,11 +311,11 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * Expected Result: All required elements are present according to SimpleReportSchema.json
      *
-     * File: Valid_ID_sig.bdoc
+     * File: test1-ddoc-unknown.ddoc
      *
      ***/
 
-    @Test @Ignore //Ddoc not supported yet
+    @Test @Ignore //TODO: Ddoc not supported yet
     public void DdocAllElementsArePresentIndeterminateSignature() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("test1-ddoc-unknown.ddoc", "simple"))

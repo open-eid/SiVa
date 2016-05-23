@@ -59,9 +59,9 @@ public class DocumentFormatTests extends SiVaRestTests {
      ***/
     @Test
     public void AdESDocumentShouldPass() {
-        SimpleReport report = postForSimpleReport("Valid_IDCard_MobID_signatures.bdoc");
+        QualifiedReport report = postForReport("Valid_IDCard_MobID_signatures.bdoc");
         assertAllSignaturesAreValid(report);
-        assertEquals("PAdES_BASELINE_LT", report.getSignatures().get(0).getSignatureFormat());
+        assertEquals("XAdES_BASELINE_LT_TM", report.getSignatures().get(0).getSignatureFormat());
     }
 
     /***

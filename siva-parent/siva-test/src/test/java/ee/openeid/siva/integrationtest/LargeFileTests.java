@@ -86,7 +86,7 @@ public class LargeFileTests extends SiVaRestTests{
      *
      * File: digidocservice-signed-lta-1-2mb.pdf
      */
-    @Test //@Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
+    @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
     public void oneMegabyteFilesWithLtaSignatureAreAccepted () {
         assertSomeSignaturesAreValid(postForReport("digidocservice-signed-lta-1-2mb.pdf"), 1);
     }

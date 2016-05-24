@@ -27,7 +27,7 @@ public final class ValidationReportUtils {
             final Integer validSignatureCount = JsonPath.read(reportJSON, "$.validSignaturesCount");
             final Integer totalSignatureCount = JsonPath.read(reportJSON, "$.signaturesCount");
             if (validSignatureCount == null || totalSignatureCount == null) {
-                return "INVALID";
+                return INVALID_CONTAINER;
             }
 
             return validSignatureCount.equals(totalSignatureCount) && totalSignatureCount > 0 ?  "VALID" : INVALID_CONTAINER;

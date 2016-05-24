@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -66,5 +67,34 @@ public class UploadControllerTest {
         mockMvc.perform(fileUpload("/upload").file(uploadFile))
                 .andExpect(status().is(302))
                 .andExpect(content().string(""));
+    }
+
+    @Test
+    public void fileUploadFailedRedirectedBackToStartPage() throws Exception {
+        given(fileUploadService.getUploadedFile(any(MultipartFile.class)))
+                .willThrow(new IOException("File upload failed"));
+
+        final MockMultipartFile uploadFile = new MockMultipartFile(
+                "file",
+                "random.bdoc",
+                "application/vnd.etsi.asic-e+zip",
+                "bdoc content".getBytes()
+        );
+
+        mockMvc.perform(fileUpload("/upload").file(uploadFile))
+                .andExpect(status().is(302));
+    }
+
+    @Test
+    public void emptyFileUploadedRedirectsBackToStartPage() throws Exception {
+        final MockMultipartFile uploadFile = new MockMultipartFile(
+                "file",
+                "random.bdoc",
+                "application/vnd.etsi.asic-e+zip",
+                "".getBytes()
+        );
+
+        mockMvc.perform(fileUpload("/upload").file(uploadFile))
+                .andExpect(status().is(302));
     }
 }

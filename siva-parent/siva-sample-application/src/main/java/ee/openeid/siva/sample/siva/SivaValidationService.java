@@ -19,6 +19,10 @@ public class SivaValidationService {
     private RestTemplate restTemplate;
 
     public String validateDocument(final File file) throws IOException {
+        if (file == null) {
+            throw new IOException("Invalid file object given");
+        }
+
         final String base64EncodedFile = Base64.encodeBase64String(FileUtils.readFileToByteArray(file));
 
         final ValidationRequest validationRequest = new ValidationRequest();

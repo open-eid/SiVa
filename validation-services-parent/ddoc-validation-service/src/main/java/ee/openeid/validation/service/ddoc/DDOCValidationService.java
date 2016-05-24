@@ -23,19 +23,17 @@ import java.util.List;
 
 @Service
 public class DDOCValidationService implements ValidationService {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(DDOCValidationService.class);
-
     private static final String JDIGIDOC_CONF_FILE = "/jdigidoc.cfg";
 
     private final Object lock = new Object();
 
     @PostConstruct
     protected void initConfig() throws DigiDocException, IOException {
-        InputStream inputStream = getClass().getResourceAsStream(JDIGIDOC_CONF_FILE);
-        File file = File.createTempFile("jdigidoc", "cfg");
+        final InputStream inputStream = getClass().getResourceAsStream(JDIGIDOC_CONF_FILE);
+        final File file = File.createTempFile("jdigidoc", "cfg");
         file.deleteOnExit();
-        OutputStream outputStream = new FileOutputStream(file);
+        final OutputStream outputStream = new FileOutputStream(file);
 
         IOUtils.copy(inputStream, outputStream);
         outputStream.close();

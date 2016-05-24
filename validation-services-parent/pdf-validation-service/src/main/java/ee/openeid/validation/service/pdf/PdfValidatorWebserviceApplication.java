@@ -4,8 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class PdfValidatorWebservice {
+public class PdfValidatorWebserviceApplication {
     public static void main(String... args) {
-        SpringApplication.run(PdfValidatorWebservice.class,args);
+        SpringApplication.run(PdfValidatorWebserviceApplication.class,args);
     }
 }

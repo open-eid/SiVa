@@ -76,7 +76,7 @@ public class DDOCQualifiedReportBuilder {
     }
 
     private String getSignatureFormat() {
-        return signedDoc.getFormat() + "_" + signedDoc.getVersion();
+        return signedDoc.getFormat().replaceAll("-", "_") + "_" + signedDoc.getVersion();
     }
 
     private List<Error> getErrors(Signature signature) {

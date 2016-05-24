@@ -39,10 +39,12 @@ public class DummyValidationDocumentBuilder {
         String fileExtension = filename.substring(filename.lastIndexOf(".") + 1);
         if (StringUtils.equalsIgnoreCase(fileExtension, "pdf")) {
             return MimeType.PDF;
-        }
-        else if (StringUtils.equalsIgnoreCase(fileExtension, "bdoc") || StringUtils.equalsIgnoreCase(fileExtension, "asice")) {
+        } else if (StringUtils.equalsIgnoreCase(fileExtension, "bdoc") || StringUtils.equalsIgnoreCase(fileExtension, "asice")) {
             return MimeType.ASICE;
+        } else if (StringUtils.equalsIgnoreCase(fileExtension, "ddoc")) {
+            return MimeType.XML;
         }
+
         return MimeType.fromFileName(filename);
 
     }

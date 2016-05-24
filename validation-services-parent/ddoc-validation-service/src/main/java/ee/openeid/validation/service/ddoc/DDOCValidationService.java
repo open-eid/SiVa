@@ -31,7 +31,7 @@ public class DDOCValidationService implements ValidationService {
     private final Object lock = new Object();
 
     @PostConstruct
-    private void initConfig() throws DigiDocException, IOException {
+    protected void initConfig() throws DigiDocException, IOException {
         InputStream inputStream = getClass().getResourceAsStream(JDIGIDOC_CONF_FILE);
         File file = File.createTempFile("jdigidoc", "cfg");
         file.deleteOnExit();

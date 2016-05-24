@@ -44,7 +44,7 @@
                 <version>0.7.6.201602180812</version>
                 <configuration>
                     <excludes>
-                        <exclude>**/Application.*</exclude>
+                        <exclude>**/*Application.*</exclude>
                         <exclude>**/*Configuration.*</exclude>
                         <exclude>**/extra-jars/**</exclude>
                     </excludes>

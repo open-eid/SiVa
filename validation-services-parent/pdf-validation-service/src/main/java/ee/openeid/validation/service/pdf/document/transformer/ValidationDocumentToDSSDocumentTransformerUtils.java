@@ -25,9 +25,9 @@ import eu.europa.esig.dss.DSSDocument;
 import eu.europa.esig.dss.InMemoryDocument;
 import eu.europa.esig.dss.MimeType;
 
-public class ValidationDocumentToDSSDocumentTransformer {
+public final class ValidationDocumentToDSSDocumentTransformerUtils {
 
-	private ValidationDocumentToDSSDocumentTransformer() {
+	private ValidationDocumentToDSSDocumentTransformerUtils() {
 	}
 
 	public static DSSDocument createDssDocument(final ValidationDocument ValidationDocument) {

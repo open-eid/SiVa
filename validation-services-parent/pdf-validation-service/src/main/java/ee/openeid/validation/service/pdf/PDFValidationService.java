@@ -23,7 +23,7 @@ package ee.openeid.validation.service.pdf;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.service.ValidationService;
-import ee.openeid.validation.service.pdf.document.transformer.ValidationDocumentToDSSDocumentTransformer;
+import ee.openeid.validation.service.pdf.document.transformer.ValidationDocumentToDSSDocumentTransformerUtils;
 import ee.openeid.validation.service.pdf.validator.EstonianPDFDocumentValidator;
 import ee.openeid.validation.service.pdf.validator.report.PDFQualifiedReportBuilder;
 import eu.europa.esig.dss.DSSDocument;
@@ -63,7 +63,7 @@ public class PDFValidationService implements ValidationService {
                 throw new SOAPException("No request document found");
             }
 
-            final DSSDocument dssDocument = ValidationDocumentToDSSDocumentTransformer.createDssDocument(validationDocument);
+            final DSSDocument dssDocument = ValidationDocumentToDSSDocumentTransformerUtils.createDssDocument(validationDocument);
 
 
             if (!new EstonianPDFDocumentValidator().isSupported(dssDocument)) {

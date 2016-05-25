@@ -49,20 +49,28 @@
             "items": {
               "type": "object",
               "properties": {
-                "scope": {
-                  "type": "string"
-                },
-                "name": {
-                  "type": "string"
-                },
-                "content": {
-                  "type": "string"
+                "signatureScope": {
+                  "type": "array",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "type": "string"
+                    },
+                    "scope": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "scope",
+                    "name",
+                    "content"
+                  ]
                 }
               },
               "required": [
-                "scope",
-                "name",
-                "content"
+                "signatureScope"
               ]
             }
           },
@@ -72,16 +80,22 @@
           "indication": {
             "type": "string"
           },
+          "subindication": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "errors": {
             "type": "array",
             "items": {
               "type": "object",
               "properties": {
-                "certificateId": {
-                },
                 "nameId": {
+                  "type": "string"
                 },
                 "content": {
+                  "type": "string"
                 }
               }
             }
@@ -97,24 +111,23 @@
               }
             },
             "required": [
-              "nameId",
               "bestSignatureTime"
             ]
           }
-        },
-        "required": [
-          "signatureFormat",
-          "signedBy",
-          "claimedSigningTime",
-          "signatureLevel",
-          "warnings",
-          "signatureScopes",
-          "id",
-          "indication",
-          "errors",
-          "info"
-        ]
-      }
+        }
+      },
+      "required": [
+        "signatureFormat",
+        "signedBy",
+        "claimedSigningTime",
+        "signatureLevel",
+        "signatureScopes",
+        "id",
+        "indication",
+        "errors",
+        "info"
+      ]
+
     },
     "policy": {
       "type": "object",
@@ -127,14 +140,19 @@
         },
         "policyName": {
           "type": "string"
+        },
+        "policyVersion": {
+          "type": "string"
         }
       },
       "required": [
         "policyDescription",
         "policyUrl",
-        "policyName"
+        "policyName",
+        "policyVersion"
       ]
     }
+
   },
   "required": [
     "validationTime",

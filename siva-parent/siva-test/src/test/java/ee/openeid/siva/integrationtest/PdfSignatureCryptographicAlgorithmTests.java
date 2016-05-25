@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 @Category(IntegrationTest.class)
-public class SignatureCryptographicAlgorithmTests extends SiVaRestTests{
+public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
 
     private static final String TEST_FILES_DIRECTORY = "pdf/signature_cryptographic_algorithm_test_files/";
 

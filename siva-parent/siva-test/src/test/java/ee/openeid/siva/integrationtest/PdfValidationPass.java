@@ -7,31 +7,12 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 @Category(IntegrationTest.class)
-public class SigningCertificateTests extends SiVaRestTests{
+public class PdfValidationPass extends SiVaRestTests{
 
     private static final String TEST_FILES_DIRECTORY = "pdf/signing_certifacte_test_files/";
 
-    /**
-     * TestCaseID: PDF-Cert-1
-     *
-     * TestType: Automated
-     *
-     * RequirementID:
-     *
-     * Title: The PDF-file has been signed with certificate that is expired before signing (PAdES Baseline LT)
-     *
-     * Expected Result: Document signed with certificate that expired before signing should fail.
-     *
-     * File: hellopades-lt-rsa1024-sha1-expired.pdf
-     */
-    @Test
-    public void certificateExpiredBeforeDocumentSigningShouldFail() {
-        QualifiedReport report = postForReport("hellopades-lt-rsa1024-sha1-expired.pdf");
-        assertInvalidWithError(report, "BBB_XCV_ICTIVRSC_ANS", "The current time is not in the validity range of the signer's certificate.");
-    }
-
-    /**
-     * TestCaseID: PDF-Cert-2
+    /***
+     * TestCaseID: PDF-ValidationPass-1
      *
      * TestType: Automated
      *
@@ -42,14 +23,14 @@ public class SigningCertificateTests extends SiVaRestTests{
      * Expected Result: Document signed with certificate that expired after signing should pass.
      *
      * File: hellopades-lt-sha256-rsa1024-not-expired.pdf
-     */
+     ***/
     @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
     public void validSignaturesRemainValidAfterSigningCertificateExpires() {
         assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-rsa1024-not-expired.pdf"));
     }
 
-    /**
-     * TestCaseID: PDF-Cert-3
+    /***
+     * TestCaseID: PDF-ValidationPass-2
      *
      * TestType: Automated
      *
@@ -60,90 +41,14 @@ public class SigningCertificateTests extends SiVaRestTests{
      * Expected Result: Document signed with certificate that expired after signing should pass.
      *
      * File: hellopades-lt-sha256-rsa2048-7d.pdf
-     */
+     ***/
     @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
     public void certificateExpired7DaysAfterDocumentSigningShouldPass() {
         assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-rsa2048-7d.pdf"));
     }
 
-    /**
-     * TestCaseID: PDF-Cert-4
-     *
-     * TestType: Automated
-     *
-     * RequirementID:
-     *
-     * Title: The PDF-file has been signed with expired certificate (PAdES Baseline LT)
-     *
-     * Expected Result: Document signed with certificate that is expired should fail.
-     *
-     * File: IB-3691_bdoc21-TS-old-cert.bdoc
-     */
-    @Ignore("TODO: when we get a PDF file for the same test case, use that one instead of this ASiC file")
-    @Test
-    public void signaturesMadeWithExpiredSigningCertificatesAreInvalid() {
-        assertAllSignaturesAreInvalid(postForReport("IB-3691_bdoc21-TS-old-cert.bdoc"));
-    }
-
-    /**
-     * TestCaseID: PDF-Cert-5
-     *
-     * TestType: Automated
-     *
-     * RequirementID:
-     *
-     * Title: The PDF-file has been signed with revoked certificate (PAdES Baseline LT)
-     *
-     * Expected Result: Document signed with certificate that is revoked should fail.
-     *
-     * File: hellopades-lt-sha256-revoked.pdf
-     */
-    @Ignore // current test file's signature doesn't contain ocsp
-    @Test
-    public void documentSignedWithRevokedCertificateShouldFail() {
-        assertAllSignaturesAreInvalid(postForReport("hellopades-lt-sha256-revoked.pdf"));
-    }
-
-    /**
-     * TestCaseID: PDF-Cert-6
-     *
-     * TestType: Automated
-     *
-     * RequirementID:
-     *
-     * Title: The PDF-file has been signed with certificate that missing signed attribute (PAdES Baseline LT)
-     *
-     * Expected Result: PDF-file validation should fail
-     *
-     * File: missing_signing_certificate_attribute.pdf
-     */
-    @Test
-    public void missingSignedAttributeForSigningCertificate() {
-        QualifiedReport report = postForReport("missing_signing_certificate_attribute.pdf");
-        assertInvalidWithError(report, "BBB_ICS_ISASCP_ANS", "The signed attribute: 'signing-certificate' is absent!");
-    }
-
-    /**
-     * TestCaseID: PDF-Cert-7
-     *
-     * TestType: Automated
-     *
-     * RequirementID:
-     *
-     * Title: The PDF-file has been signed with certificate which has no non repudiation key usage attribute (PAdES Baseline LT)
-     *
-     * Expected Result: The PDF-file validation should fail with error.
-     *
-     * File: hellopades-pades-lt-sha256-auth.pdf
-     */
-    @Test
-    public void signingCertificateWithoutNonRepudiationKeyUsageAttributeShouldFail() {
-        QualifiedReport report = postForReport("hellopades-pades-lt-sha256-auth.pdf");
-        assertInvalidWithError(report, "BBB_XCV_ISCGKU_ANS", "The signer's certificate has not expected key-usage!");
-    }
-
-    /**
-     * TestCaseID: PDF-Cert-8
+    /***
+     * TestCaseID: PDF-ValidationPass-3
      *
      * TestType: Automated
      *
@@ -154,7 +59,7 @@ public class SigningCertificateTests extends SiVaRestTests{
      * Expected Result: The PDF-file validation should pass
      *
      * File: hellopades-lt-sha256-ocsp-15min1s.pdf
-     */
+     ***/
     @Test @Ignore
     public void certificateContentsAreIncludedInResponse() {
         /* TODO: We currently don't know how the certificates will be included in the report - fix the test when we do
@@ -169,63 +74,6 @@ public class SigningCertificateTests extends SiVaRestTests{
                 "MIIEnTCCA4WgAwIBAgIQURtcmP07BjlUmR1RPIeGCTANBgkqhkiG9w0BAQUFADBkMQswCQYDVQQGEwJFRTEiMCAGA1UECgwZQVMgU2VydGlmaXRzZWVyaW1pc2tlc2t1czEXMBUGA1UEAwwORVNURUlELVNLIDIwMTExGDAWBgkqhkiG9w0BCQEWCXBraUBzay5lZTAeFw0xNDEyMjMwNzQ0MTdaFw0xOTEyMjIyMTU5NTlaMIGWMQswCQYDVQQGEwJFRTEPMA0GA1UECgwGRVNURUlEMRowGAYDVQQLDBFkaWdpdGFsIHNpZ25hdHVyZTEiMCAGA1UEAwwZU0lOSVZFRSxWRUlLTywzNjcwNjAyMDIxMDEQMA4GA1UEBAwHU0lOSVZFRTEOMAwGA1UEKgwFVkVJS08xFDASBgNVBAUTCzM2NzA2MDIwMjEwMIIBITANBgkqhkiG9w0BAQEFAAOCAQ4AMIIBCQKCAQCXenu4kxXVFaVpxUfs7PGBC37WgP1oCpFOujGBiWFQiPgSWX8BtcxUIQaGpXMG31BtotSUVhalNDNszjU+ANRMOfeHKZploOV5R+Pm09B/XwRF1D+mK1lG3q+hz0aSt0DWXxFw4UAieTd5tVCDM/WhPFUD7ZinQayejNdRDo4Q7WS0wqp4YBNm3VCg1YPp/1Y86T28nxGKSewquVs089VOU92O0UUmNYy8AHu7Sod+DCNO5eVz6uSpJBRJRyvMbMxxIDfwtQI5YuttKN26IYXtjgOZeNKTV9eW0neO+T5P351odNSKulWzaAYKaI+E/9lfnY6fhygXgd7tmBqBIrOhAgMBAAGjggEXMIIBEzAJBgNVHRMEAjAAMA4GA1UdDwEB/wQEAwIGQDBQBgNVHSAESTBHMEUGCisGAQQBzh8BAQQwNzASBggrBgEFBQcCAjAGGgRub25lMCEGCCsGAQUFBwIBFhVodHRwOi8vd3d3LnNrLmVlL2Nwcy8wHQYDVR0OBBYEFCcVGdX3X/moNIYusvO958F/gbj0MCIGCCsGAQUFBwEDBBYwFDAIBgYEAI5GAQEwCAYGBACORgEEMB8GA1UdIwQYMBaAFHtq8lVQXLjZegiHQa76ois9W1d2MEAGA1UdHwQ5MDcwNaAzoDGGL2h0dHA6Ly93d3cuc2suZWUvcmVwb3NpdG9yeS9jcmxzL2VzdGVpZDIwMTEuY3JsMA0GCSqGSIb3DQEBBQUAA4IBAQCJSoo6h+4Dgu2+0C2ehtqYYEvMBIyLldWP88uWKgxw6HujsF5HRRk/zWAU8jGDN/LNzDNYDz0jg2212mn+neVBgo+U8W1Urkw9zgTsSwqnP7CoGw0nG65gnybrT4K+eX1ykyVmj1RAzfShVgwuOrMCDmguq6jFRj9V1oOmiMDpmzQ7Qo22le7qkkKoQ+PTLRfi5vpN+CQOg6kleeXaVwtdlP0ETfJIrdDBKKBKi8bn5b60300V1dMmsQAxdwXsKcuKPtG1YKO5Rf+OIUdAuOayYboeShGTlXlAswoxcfGZajxF8MCe9B4y0Rse8X1Q9C+F2rgloa5W6+JXeGrY8sUL",
                 certificateContentsById("8835667315fdcf9681222d6b4aeaa69cd1ab5693ff3aa1a59a4c4288e4ac7842", diagnosticData(httpBody)));
         */
-    }
-
-    /**
-     * TestCaseID: PDF-Cert-9
-     *
-     * TestType: Automated
-     *
-     * RequirementID:
-     *
-     * Title: hellopadess been signed with an expired certificate, where signing time is within the original validity
-     *                  period of the certificate, but OCSP confirmation and Time Stamp are current date (PAdES Baseline LT).
-     *
-     * Expected Result: Document signed with expired certificate should fail
-     *
-     * File: hellopades-lt-sha256-rsa2048-expired.pdf
-     */
-    @Test
-    public void documentSignedWithExpiredRsa2048CertificateShouldFail() {
-        assertAllSignaturesAreInvalid(postForReport("hellopades-lt-sha256-rsa2048-expired.pdf"));
-    }
-
-    /**
-     * TestCaseID: PDF-Cert-10
-     *
-     * TestType: Automated
-     *
-     * RequirementID:
-     *
-     * Title: hellopadess been signed with an expired certificate, where signing time is within the original validity
-     *                  period of the certificate, but OCSP confirmation and Time Stamp are current date (PAdES Baseline LT).
-     *
-     * Expected Result: Document signed with expired certificate should fail
-     *
-     * File: hellopades-lt-sha256-rsa1024-expired2.pdf
-     */
-    @Test
-    public void documentSignedWithExpiredRsa1024CertificateShouldFail() {
-        assertAllSignaturesAreInvalid(postForReport("hellopades-lt-sha256-rsa1024-expired2.pdf"));
-    }
-
-    /**
-     * TestCaseID: PDF-Cert-11
-     *
-     * TestType: Automated
-     *
-     * RequirementID:
-     *
-     * Title: hellopadess been signed with an expired certificate, where signing time is within the original validity
-     *                  period of the certificate, but OCSP confirmation and Time Stamp are current date (PAdES Baseline LT).
-     *                  
-     * Expected Result: Document signed with expired certificate should fail
-     *
-     * File: hellopades-lt-sha1-rsa1024-expired2.pdf
-     */
-    @Test
-    public void documentSignedWithExpiredSha1CertificateShouldFail() {
-        assertAllSignaturesAreInvalid(postForReport("hellopades-lt-sha1-rsa1024-expired2.pdf"));
     }
 
     @Override

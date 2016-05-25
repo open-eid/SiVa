@@ -1,4 +1,4 @@
-package ee.openeid.siva.ApiTest;
+package ee.openeid.siva.restAPItest;
 
 import com.jayway.restassured.RestAssured;
 import ee.openeid.siva.integrationtest.SiVaRestTests;
@@ -9,13 +9,9 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.json.JSONObject;
 
 
 import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItems;
 
 
 @Category(IntegrationTest.class)
@@ -42,7 +38,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationReport-1
+     * TestCaseID: Bdoc-ValidationReport-1
      *
      * TestType: Automated
      *
@@ -55,18 +51,16 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      * File: Valid_ID_sig.bdoc
      *
      ***/
-    @Test
+    @Test @Ignore //TODO: VAL-203
     public void BdocAllElementsArePresentValidSingleSignature() {
          post(validationRequestFor("Valid_ID_sig.bdoc", "simple"))
             .then()
                  .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }
 
-
-
     /***
      *
-     * TestCaseID: ValidationReport-2
+     * TestCaseID: Bdoc-ValidationReport-2
      *
      * TestType: Automated
      *
@@ -79,7 +73,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
      ***/
-    @Test @Ignore //TODO: VAL-202
+    @Test @Ignore //TODO: VAL-202 & VAL-203
     public void BdocAllElementsArePresentValidMultipleSignatures() {
         post(validationRequestFor("Valid_IDCard_MobID_signatures.bdoc", "simple"))
                 .then()
@@ -88,7 +82,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationReport-3
+     * TestCaseID: Bdoc-ValidationReport-3
      *
      * TestType: Automated
      *
@@ -101,17 +95,16 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      * File: IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc
      *
      ***/
-    @Test
+    @Test @Ignore //TODO: VAL-203
     public void BdocAllElementsArePresentInvalidSignature() {
         post(validationRequestFor("IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc", "simple"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }
 
-
     /***
      *
-     * TestCaseID: ValidationReport-4
+     * TestCaseID: Bdoc-ValidationReport-4
      *
      * TestType: Automated
      *
@@ -124,17 +117,66 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      * File: test1-bdoc-unknown.bdoc
      *
      ***/
-    @Test @Ignore //TODO: VAL-202
+    @Test @Ignore //TODO: VAL-202 & VAL-203
     public void BdocAllElementsArePresentIndeterminateSignature() {
         post(validationRequestFor("test1-bdoc-unknown.bdoc", "simple"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }
 
+    /***
+     *
+     * TestCaseID: Bdoc-ValidationReport-5
+     *
+     * TestType: Automated
+     *
+     * RequirementID: Validation report - WIP (TBD)
+     *
+     * Title: Check for optional subindication and error elements
+     *
+     * Expected Result: Error and subindication elements are present
+     *
+     * File: IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc
+     *
+     ***/
+    @Test @Ignore //TODO: VAL-202 & VAL-203
+    public void BdocOptionalSubindicationAndErrorElementsArePresent() {
+        setTestFilesDirectory("bdoc/live/timemark/");
+        post(validationRequestFor("IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc", "simple"))
+                .then()
+                .body("signatures.indication", Matchers.hasItem("TOTAL-FAILED"))
+                .body("signatures.subindication", Matchers.hasItem("need value for this"))
+                .body("signatures.errors.nameId", Matchers.hasItem("BBB_CV_ISI_ANS"))
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
+    }
 
     /***
      *
-     * TestCaseID: ValidationReport-5
+     * TestCaseID: Bdoc-ValidationReport-6
+     *
+     * TestType: Automated
+     *
+     * RequirementID: Validation report - WIP (TBD)
+     *
+     * Title: Check for optional warning element
+     *
+     * Expected Result: Warning element is present
+     *
+     * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
+     *
+     ***/
+    @Test @Ignore //TODO: VAL-202 & VAL-203 FIle is needed!
+    public void BdocOptionalWarningElementIsPresent() {
+        post(validationRequestFor("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc", "simple"))
+                .then()
+                .body("signatures.indication", Matchers.hasItem("TOTAL-PASSED"))
+                .body("signatures.warnings.nameId[0]", Matchers.hasItem("BBB_XCV_CMDCIQC_ANS"))
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
+    }
+
+    /***
+     *
+     * TestCaseID: Pdf-ValidationReport-7
      *
      * TestType: Automated
      *
@@ -147,7 +189,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      * File: hellopades-lt-sha256-ec256.pdf
      *
      ***/
-    @Test
+    @Test @Ignore //TODO: VAL-203
     public void PdfAllElementsArePresentValidSignature() {
         setTestFilesDirectory("pdf/signature_cryptographic_algorithm_test_files/");
         post(validationRequestFor("hellopades-lt-sha256-ec256.pdf", "simple"))
@@ -157,7 +199,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationReport-6
+     * TestCaseID: Pdf-ValidationReport-8
      *
      * TestType: Automated
      *
@@ -178,10 +220,9 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }
 
-
     /***
      *
-     * TestCaseID: ValidationReport-7
+     * TestCaseID: Pdf-ValidationReport-9
      *
      * TestType: Automated
      *
@@ -194,7 +235,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      * File: hellopades-lt-b.pdf
      *
      ***/
-    @Test @Ignore //TODO: VAL-202
+    @Test @Ignore //TODO: VAL-202 & VAL-203
     public void PdfAllElementsArePresentInvalidSignature() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         post(validationRequestFor("hellopades-lt-b.pdf", "simple"))
@@ -202,10 +243,9 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }
 
-
     /***
      *
-     * TestCaseID: ValidationReport-8
+     * TestCaseID: Pdf-ValidationReport-10
      *
      * TestType: Automated
      *
@@ -218,8 +258,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      * File: hellopades-lt-rsa1024-sha1-expired.pdf
      *
      ***/
-
-    @Test @Ignore //TODO: VAL-202
+    @Test @Ignore //TODO: VAL-202 & VAL-203
     public void PdfAllElementsArePresentIndeterminateSignature() {
         setTestFilesDirectory("pdf/signing_certifacte_test_files/");
         post(validationRequestFor("hellopades-lt-rsa1024-sha1-expired.pdf", "simple"))
@@ -227,10 +266,9 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }
 
-
     /***
      *
-     * TestCaseID: ValidationReport-9
+     * TestCaseID: Ddoc-ValidationReport-11
      *
      * TestType: Automated
      *
@@ -243,7 +281,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      * File: 18912.ddoc
      *
      ***/
-    @Test @Ignore //TODO: Ddoc not supported yet
+    @Test @Ignore //TODO: VAL-202 & VAL-203
     public void DdocAllElementsArePresentValidSignature() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("18912.ddoc", "simple"))
@@ -253,7 +291,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationReport-10
+     * TestCaseID: Ddoc-ValidationReport-12
      *
      * TestType: Automated
      *
@@ -266,7 +304,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      * File: igasugust1.1.ddoc
      *
      ***/
-    @Test @Ignore //TODO: Ddoc not supported yet
+    @Test @Ignore //TODO: VAL-202 & VAL-203
     public void DdocAllElementsArePresentValidMultipleSignatures() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("igasugust1.1.ddoc", "simple"))
@@ -277,7 +315,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationReport-11
+     * TestCaseID: Ddoc-ValidationReport-13
      *
      * TestType: Automated
      *
@@ -290,7 +328,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      * File: test1-ddoc-revoked.ddoc
      *
      ***/
-    @Test @Ignore //TODO: ddoc not yet supported
+    @Test @Ignore //TODO: VAL-202 & VAL-203
     public void DdocAllElementsArePresentInvalidSignature() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("test1-ddoc-revoked.ddoc", "simple"))
@@ -301,7 +339,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationReport-12
+     * TestCaseID: Ddoc-ValidationReport-14
      *
      * TestType: Automated
      *
@@ -314,13 +352,61 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      * File: test1-ddoc-unknown.ddoc
      *
      ***/
-
-    @Test @Ignore //TODO: Ddoc not supported yet
+    @Test @Ignore //TODO: VAL-202 & VAL-203. This file needs to be changed, its TOTAL-Failed not indeterminate
     public void DdocAllElementsArePresentIndeterminateSignature() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("test1-ddoc-unknown.ddoc", "simple"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
+    }
+
+    /***
+     *
+     * TestCaseID: Ddoc-ValidationReport-15
+     *
+     * TestType: Automated
+     *
+     * RequirementID: Validation report - WIP (TBD)
+     *
+     * Title: Check for optional subindication and error elements
+     *
+     * Expected Result: Error and subindication elements are present
+     *
+     * File: test1-ddoc-unknown.ddoc
+     *
+     ***/
+    @Test @Ignore //TODO: VAL-202 & VAL-203
+    public void DdocOptionalSubindicationAndErrorElementsArePresent() {
+        setTestFilesDirectory("ddoc/live/timemark/");
+        post(validationRequestFor("test1-ddoc-unknown.ddoc", "simple"))
+                .then()
+                .body("signatures.indication", Matchers.hasItem("TOTAL-FAILED"))
+                .body("signatures.subindication", Matchers.hasItem("need value for this"))
+                .body("signatures.errors.nameId", Matchers.hasItem("70"));
+    }
+
+    /***
+     *
+     * TestCaseID: Ddoc-ValidationReport-16
+     *
+     * TestType: Automated
+     *
+     * RequirementID: Validation report - WIP (TBD)
+     *
+     * Title: Check for optional warning element
+     *
+     * Expected Result: Warning element is present
+     *
+     * File: test1-ddoc-unknown.ddoc
+     *
+     ***/
+    @Test @Ignore //TODO: VAL-202 & VAL-203 FIle is needed!
+    public void DdocOptionalWarningElementIsPresent() {
+        setTestFilesDirectory("ddoc/live/timemark/");
+        post(validationRequestFor("NeedFile.ddoc", "simple"))
+                .then()
+                .body("signatures.indication", Matchers.hasItem(""))
+                .body("signatures.warnings.nameId", Matchers.hasItem("need value for this"));
     }
 
     @Override

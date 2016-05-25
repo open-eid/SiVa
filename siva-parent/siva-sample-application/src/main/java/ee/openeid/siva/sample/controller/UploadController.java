@@ -14,7 +14,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 
 import static ee.openeid.siva.sample.siva.ValidationReportUtils.getOverallValidationResult;
 import static ee.openeid.siva.sample.siva.ValidationReportUtils.getValidateFilename;
@@ -46,7 +45,7 @@ class UploadController {
             final String validationResult = validationService.validateDocument(new File(fullFilename));
 
             setModelFlashAttributes(redirectAttributes, validationResult);
-            fileUploadService.deleteUploadedFile(Paths.get(fullFilename));
+            fileUploadService.deleteUploadedFile(file.getOriginalFilename());
         } catch (final IOException e) {
             LOGGER.warn("File upload problem", e);
             redirectAttributes.addFlashAttribute("File upload failed with message: " + e.getMessage());

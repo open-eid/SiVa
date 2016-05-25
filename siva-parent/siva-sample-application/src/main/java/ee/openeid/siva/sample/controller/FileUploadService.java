@@ -1,5 +1,6 @@
 package ee.openeid.siva.sample.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
@@ -19,7 +20,7 @@ class FileUploadService {
 
     String getUploadedFile(final MultipartFile file) throws IOException {
         if (file == null) {
-            return "";
+            return StringUtils.EMPTY;
         }
 
         final Path uploadDir = getUploadDirectory();
@@ -32,6 +33,7 @@ class FileUploadService {
                 new FileOutputStream(new File(fullFilename))
         );
         FileCopyUtils.copy(file.getInputStream(), stream);
+
         return fullFilename;
     }
 
@@ -39,12 +41,12 @@ class FileUploadService {
         return Paths.get(uploadDirectory).toAbsolutePath();
     }
 
-    void deleteUploadedFile(final Path filename) throws IOException {
-        Files.deleteIfExists(filename);
+    void deleteUploadedFile(final String filename) throws IOException {
+        Files.deleteIfExists(Paths.get(uploadDirectory + File.separator + filename));
     }
 
     @Value("${siva.uploadDirectory}")
-    public void setUploadDirectory(String uploadDirectory) {
+    public void setUploadDirectory(final String uploadDirectory) {
         this.uploadDirectory = uploadDirectory;
     }
 }

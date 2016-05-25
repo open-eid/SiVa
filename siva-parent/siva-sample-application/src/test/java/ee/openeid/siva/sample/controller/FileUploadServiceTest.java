@@ -64,7 +64,7 @@ public class FileUploadServiceTest {
     public void deleteUploadedFileWhenPresentWithoutErrors() throws Exception {
         final MultipartFile file = createFile();
         final String uploadedFile = fileUploadService.getUploadedFile(file);
-        fileUploadService.deleteUploadedFile(Paths.get(uploadedFile));
+        fileUploadService.deleteUploadedFile(file.getOriginalFilename());
 
         assertThat(Files.notExists(Paths.get(uploadedFile))).isTrue();
     }

@@ -41,7 +41,7 @@
       	font-style: normal;
       }
     </style>
-    <link rel="stylesheet" href="../../assets/stylesheets/application-54f87043f3.css">
+    <link rel="stylesheet" href="../../assets/stylesheets/application-0dac3e5884.css">
     
       <link rel="stylesheet" href="../../assets/stylesheets/palettes-05ab2406df.css">
     
@@ -355,13 +355,11 @@ configured via the standard Logback configuration file. By default,
 logging works on the <code>INFO</code> level and logs are directed to the system
 console as well as a log file.</p>
 <p>The logback xml configuration file can be found at:</p>
-<div class="codehilite"><pre><span></span>pdfValidator/pdf-validator-webapp/src/main/resources/logback.xml
-</pre></div>
+<pre class="codehilite"><code>pdfValidator/pdf-validator-webapp/src/main/resources/logback.xml</code></pre>
 
 
 <p>and when compiled the file will reside at </p>
-<div class="codehilite"><pre><span></span>WEB-INF/classes/logback.xml
-</pre></div>
+<pre class="codehilite"><code>WEB-INF/classes/logback.xml</code></pre>
 
 
 <p>within the packaged war. There is also a possibility to set the location
@@ -369,8 +367,7 @@ of the default configuration file with a system
 property <code>logback.configurationFile</code> as a JVM argument. The value of
 this property can be a URL, a resource on the class path or a path to a
 file external to the application.</p>
-<div class="codehilite"><pre><span></span>java -Dlogback.configurationFile<span class="o">=</span>/path/to/config.xml
-</pre></div>
+<pre class="codehilite"><code class="language-bash">java -Dlogback.configurationFile=/path/to/config.xml</code></pre>
 
 
 <p>In this configuration file there are three appenders: <code>STDOUT</code> (logs to
@@ -380,25 +377,24 @@ commenting out its <code>appender-ref</code> is sufficient, but it is <em>recomm
 that the appender itself should also be commented out. For example to
 disable <code>SYSLOG</code> appender (which is the default configuration), then one
 can use following configuration:</p>
-<div class="codehilite"><pre><span></span><span class="c">&lt;!--</span>
-<span class="c">&lt;appender name=&quot;SYSLOG&quot; class=&quot;ch.qos.logback.classic.net.SyslogAppender&quot;&gt;</span>
-<span class="c">    &lt;syslogHost&gt;enter\_ip\_or\_hostname\_here&lt;/syslogHost&gt;</span>
-<span class="c">    &lt;port&gt;514&lt;/port&gt;</span>
-<span class="c">    &lt;facility&gt;USER&lt;/facility&gt;</span>
-<span class="c">    &lt;filter class=&quot;ch.qos.logback.classic.filter.ThresholdFilter&quot;&gt;</span>
-<span class="c">        &lt;level&gt;INFO&lt;/level&gt;</span>
-<span class="c">    &lt;/filter&gt;</span>
-<span class="c">    &lt;suffixPattern&gt;%-5level %logger{0}:%L \[%thread\] - %msg&lt;/suffixPattern&gt;</span>
-<span class="c">&lt;/appender&gt;</span>
-<span class="c">--&gt;</span>
+<pre class="codehilite"><code class="language-xml">&lt;!--
+&lt;appender name=&quot;SYSLOG&quot; class=&quot;ch.qos.logback.classic.net.SyslogAppender&quot;&gt;
+    &lt;syslogHost&gt;enter\_ip\_or\_hostname\_here&lt;/syslogHost&gt;
+    &lt;port&gt;514&lt;/port&gt;
+    &lt;facility&gt;USER&lt;/facility&gt;
+    &lt;filter class=&quot;ch.qos.logback.classic.filter.ThresholdFilter&quot;&gt;
+        &lt;level&gt;INFO&lt;/level&gt;
+    &lt;/filter&gt;
+    &lt;suffixPattern&gt;%-5level %logger{0}:%L \[%thread\] - %msg&lt;/suffixPattern&gt;
+&lt;/appender&gt;
+--&gt;
 
-<span class="nt">&lt;root</span> <span class="na">level=</span><span class="s">&quot;DEBUG&quot;</span><span class="nt">&gt;</span>
-<span class="nt">&lt;appender-ref</span> <span class="na">ref=</span><span class="s">&quot;STDOUT&quot;</span><span class="nt">/&gt;</span>
-<span class="nt">&lt;appender-ref</span> <span class="na">ref=</span><span class="s">&quot;FILE&quot;</span><span class="nt">/&gt;</span>
-<span class="c">&lt;!--&lt;appender-ref ref=&quot;SYSLOG&quot;/&gt;--&gt;</span>
+&lt;root level=&quot;DEBUG&quot;&gt;
+&lt;appender-ref ref=&quot;STDOUT&quot;/&gt;
+&lt;appender-ref ref=&quot;FILE&quot;/&gt;
+&lt;!--&lt;appender-ref ref=&quot;SYSLOG&quot;/&gt;--&gt;
 
-<span class="nt">&lt;/root&gt;</span>
-</pre></div>
+&lt;/root&gt;</code></pre>
 
 
 <p>Logback configuration manual: <a href="http://logback.qos.ch/manual/">http://logback.qos.ch/manual/</a></p>
@@ -419,13 +415,11 @@ can use following configuration:</p>
   currently working directory, i.e. where the application was started.
   (Current day's logfile path: <code>logs/pdf-validator-webapp.log</code>,
   prievious days pattern: </p>
-<div class="codehilite"><pre><span></span>    logs/pdf-validator-webapp.%d{yyyy-MM-dd}.log)
-</pre></div>
+<pre class="codehilite"><code>    logs/pdf-validator-webapp.%d{yyyy-MM-dd}.log)</code></pre>
 
 
 <ul>
-<li>Appender output pattern is:  <code>%d{HH:mm:ss.SSS} %-5level %logger{0}:%L \[%thread\] - %msg%n</code><div class="codehilite"><pre><span></span>-Dlogback.configurationFile=config.xml
-</pre></div>
+<li>Appender output pattern is:  <code>%d{HH:mm:ss.SSS} %-5level %logger{0}:%L \[%thread\] - %msg%n</code><pre class="codehilite"><code>-Dlogback.configurationFile=config.xml</code></pre>
 
 
 </li>

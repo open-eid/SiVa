@@ -8,7 +8,6 @@ import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import org.digidoc4j.Configuration;
 import org.digidoc4j.Container;
 import org.digidoc4j.ContainerBuilder;
-import org.digidoc4j.ValidationResult;
 import org.digidoc4j.impl.bdoc.tsl.TSLCertificateSourceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,9 +18,7 @@ import java.util.Date;
 
 @Service
 public class BDOCValidationService implements ValidationService {
-
     private TrustedListsCertificateSource trustedListSource;
-
     private Configuration configuration;
 
     @Override
@@ -30,15 +27,13 @@ public class BDOCValidationService implements ValidationService {
         initConfiguration();
 
         InputStream containerInputStream = new ByteArrayInputStream(validationDocument.getBytes());
-
         Container container = ContainerBuilder.
                 aContainer().
                 withConfiguration(configuration).
                 fromStream(containerInputStream).
                 build();
 
-        ValidationResult validationResult = container.validate();
-
+        container.validate();
         Date validationTime = new Date();
 
         BDOCQualifiedReportBuilder reportBuilder = new BDOCQualifiedReportBuilder(container, validationDocument.getName(), validationTime);
@@ -57,6 +52,7 @@ public class BDOCValidationService implements ValidationService {
 
     /**
      * allow setting the configuration manually for testing purposes
+     *
      * @param configuration
      */
     void setConfiguration(Configuration configuration) {

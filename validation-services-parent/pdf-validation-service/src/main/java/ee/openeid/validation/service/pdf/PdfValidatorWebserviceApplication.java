@@ -6,6 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class PdfValidatorWebserviceApplication {
     public static void main(String... args) {
-        SpringApplication.run(PdfValidatorWebserviceApplication.class,args);
+        SpringApplication.run(PdfValidatorWebserviceApplication.class, args);
     }
 }

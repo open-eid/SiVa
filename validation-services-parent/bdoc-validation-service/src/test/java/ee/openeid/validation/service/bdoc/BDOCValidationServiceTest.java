@@ -1,7 +1,6 @@
 package ee.openeid.validation.service.bdoc;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.document.report.SignatureScope;
@@ -14,10 +13,6 @@ import static org.junit.Assert.*;
 
 public class BDOCValidationServiceTest {
 
-    private static final String TEST_FILES_LOCATION = "test-files/";
-    private static final String VALID_BDOC_TM_2_SIGNATURES = "bdoc_tm_valid_2_signatures.bdoc";
-    private static final String TS_NO_MANIFEST = "asic-e-baseline-lt_allan_live_no_manifest.bdoc";
-
     private static BDOCValidationService validationService = new BDOCValidationServiceSpy();
     private static QualifiedReport validationResult2Signatures;
     private static QualifiedReport validationResultSignedNoManifest;
@@ -26,6 +21,14 @@ public class BDOCValidationServiceTest {
     public static void setUpClass() throws Exception {
         validationResult2Signatures = validationService.validateDocument(bdocValid2Signatures());
         validationResultSignedNoManifest = validationService.validateDocument(bdocTSIndeterminateNoManifest());
+    }
+
+    private static ValidationDocument bdocValid2Signatures() throws Exception {
+        return BDOCTestUtils.buildValidationDocument(BDOCTestUtils.VALID_BDOC_TM_2_SIGNATURES);
+    }
+
+    private static ValidationDocument bdocTSIndeterminateNoManifest() throws Exception {
+        return BDOCTestUtils.buildValidationDocument(BDOCTestUtils.TS_NO_MANIFEST);
     }
 
     @Test
@@ -37,7 +40,7 @@ public class BDOCValidationServiceTest {
     public void qualifiedReportShouldIncludeRequiredFields() throws Exception {
         assertNotNull(validationResult2Signatures.getPolicy());
         assertNotNull(validationResult2Signatures.getValidationTime());
-        assertEquals(VALID_BDOC_TM_2_SIGNATURES, validationResult2Signatures.getDocumentName());
+        assertEquals(BDOCTestUtils.VALID_BDOC_TM_2_SIGNATURES, validationResult2Signatures.getDocumentName());
         assertTrue(validationResult2Signatures.getSignatures().size() == 2);
         assertTrue(validationResult2Signatures.getValidSignaturesCount() == 2);
         assertTrue(validationResult2Signatures.getSignaturesCount() == 2);
@@ -98,22 +101,6 @@ public class BDOCValidationServiceTest {
         Error error = sig.getErrors().get(0);
         assertEquals("BBB_XCV_IRDTFC_ANS", error.getNameId());
         assertEquals(sig.getIndication(), SignatureValidationData.Indication.INDETERMINATE.toString());
-    }
-
-    private static ValidationDocument bdocValid2Signatures() throws Exception {
-        return buildValidationDocument(VALID_BDOC_TM_2_SIGNATURES);
-    }
-
-    private static ValidationDocument bdocTSIndeterminateNoManifest() throws Exception {
-        return buildValidationDocument(TS_NO_MANIFEST);
-    }
-
-    private static ValidationDocument buildValidationDocument(String testFile) throws Exception {
-        return DummyValidationDocumentBuilder
-                .aValidationDocument()
-                .withDocument(TEST_FILES_LOCATION + testFile)
-                .withName(testFile)
-                .build();
     }
 
     private static class BDOCValidationServiceSpy extends BDOCValidationService {

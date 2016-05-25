@@ -6,7 +6,6 @@ import eu.europa.esig.dss.XmlDom;
 import eu.europa.esig.dss.validation.policy.ProcessParameters;
 import eu.europa.esig.dss.validation.policy.XmlNode;
 import eu.europa.esig.dss.validation.policy.rules.*;
-import eu.europa.esig.dss.validation.process.BasicBuildingBlocks;
 import eu.europa.esig.dss.validation.process.BasicValidation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +49,7 @@ public class EstonianBasicValidation {
 
     /**
      * This method runs the Basic validation process.
-     *
+     * <p>
      * 6.2 Inputs<br>
      * Signature ..................... Mandatory<br>
      * Signed data object (s) ........ Optional<br>
@@ -58,16 +57,16 @@ public class EstonianBasicValidation {
      * Trusted-status Service Lists .. Optional<br>
      * Signature Validation Policies . Optional<br>
      * Local configuration ...........Optional<br>
-     *
+     * <p>
      * 6.3 Outputs<br>
      * The main output of the signature validation is a status indicating the validity of the signature. This status may
      * be accompanied by additional information (see clause 4).<br>
-     *
+     * <p>
      * 6.4 Processing<br>
      * NOTE 1: Since processing is largely implementation dependent, the steps listed in this clause are not necessarily
      * to be processed exactly in the order given. Any ordering that produces the same results can be used, even parallel
      * processing is possible.<br>
-     *
+     * <p>
      * The following steps shall be performed:
      *
      * @param params

@@ -30,7 +30,7 @@ public class DDOCQualifiedReportBuilder {
         this.signedDoc = signedDoc;
         this.documentName = documentName;
         this.validationTime = validationTime;
-        }
+    }
 
     public QualifiedReport build() {
         QualifiedReport qualifiedReport = new QualifiedReport();
@@ -52,7 +52,7 @@ public class DDOCQualifiedReportBuilder {
         SimpleDateFormat sdf = new SimpleDateFormat(DEFAULT_DATE_TIME_FORMAT);
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         return sdf;
-        }
+    }
 
     @SuppressWarnings("unchecked")
     private List<SignatureValidationData> createSignaturesForReport(SignedDoc signedDoc) {

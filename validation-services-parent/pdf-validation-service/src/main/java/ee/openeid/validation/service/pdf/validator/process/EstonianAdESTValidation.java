@@ -94,6 +94,30 @@ public class EstonianAdESTValidation {
 
     private Date bestSignatureTime;
 
+    private static Date getLatestDate(Date firstDate, final Date secondDate) {
+
+        if ((firstDate != null) && (secondDate != null)) {
+            if (firstDate.before(secondDate)) {
+                firstDate = secondDate;
+            }
+        } else if (secondDate != null) {
+            firstDate = secondDate;
+        }
+        return firstDate;
+    }
+
+    private static Date getEarliestDate(Date firstDate, final Date secondDate) {
+
+        if ((firstDate != null) && (secondDate != null)) {
+            if (firstDate.after(secondDate)) {
+                firstDate = secondDate;
+            }
+        } else if (secondDate != null) {
+            firstDate = secondDate;
+        }
+        return firstDate;
+    }
+
     private void prepareParameters(final XmlNode mainNode, final ProcessParameters params) {
 
         this.diagnosticData = params.getDiagnosticData();
@@ -141,7 +165,7 @@ public class EstonianAdESTValidation {
 
     /**
      * This method runs the AdES-T validation process.
-     *
+     * <p>
      * 8.2 Inputs<br>
      * - Signature ..................... Mandatory<br>
      * - Signed data object (s) ........ Optional<br>
@@ -149,11 +173,11 @@ public class EstonianAdESTValidation {
      * - Signature Validation Policies . Optional<br>
      * - Local configuration ........... Optional<br>
      * - Signer's Certificate .......... Optional<br>
-     *
+     * <p>
      * 8.3 Outputs<BR>
      * The main output of the signature validation is a status indicating the validity of the signature. This status may
      * be accompanied by additional information (see clause 4).
-     *
+     * <p>
      * 8.4 Processing<BR>
      * The following steps shall be performed:
      *
@@ -373,10 +397,10 @@ public class EstonianAdESTValidation {
     /**
      * b) Time-stamp token validation: For each time-stamp token remaining in the set of signature time-stamp
      * tokens, the SVA shall perform the time-stamp validation process (see clause 7):<br/>
-     *
+     * <p>
      * 􀀀 If VALID is returned and if the returned generation time is before best-signature-time, set
      * best-signature-time to this date and try the next token.<br/>
-     *
+     * <p>
      * 􀀀 In all remaining cases, remove the time-stamp token from the set of signature time-stamp tokens and try
      * the next token.<br/>
      *
@@ -477,18 +501,18 @@ public class EstonianAdESTValidation {
 
     /**
      * Check of: the result of the basic validation process
-     *
+     * <p>
      * NOTE 2: We continue the process in the case INDETERMINATE/REVOKED_NO_POE, because a proof that the signing
      * occurred before the revocation date may help to go from INDETERMINATE to VALID (step 5-a).
-     *
+     * <p>
      * NOTE 3: We continue the process in the case INDETERMINATE/OUT_OF_BOUNDS_NO_POE, because a proof that the
      * signing occurred before the issuance date (notBefore) of the signer's certificate may help to go from
      * INDETERMINATE to INVALID (step 5-b).
-     *
+     * <p>
      * NOTE 4: We continue the process in the case INDETERMINATE/CRYPTO_CONSTRAINTS_FAILURE_NO_POE, because a proof
      * that the signing occurred before the time one of the algorithms used was no longer considered secure may help
      * to go from INDETERMINATE to VALID (step 5-c).
-     *
+     * <p>
      * AT: Problem of the revocation of the certificate after signing time --> Following the Austrian's laws the signature is still valid because the timestamps are not
      * mandatory, what is an aberration. To obtain the validity of such a signature the rule which checks the revocation data should be set as WARN. Then here VALID
      * indication is obtained.
@@ -514,9 +538,9 @@ public class EstonianAdESTValidation {
 
     /**
      * Check of: is the timestamp message imprint data found
-     *
+     * <p>
      * 4) Signature time-stamp validation: Perform the following steps:
-     *
+     * <p>
      * a) Message imprint verification: For each time-stamp token in the set of signature time-stamp tokens, do the
      * message imprint verification as specified in clauses 8.4.1 or 8.4.2 depending on the type of the signature.
      * If the verification fails, remove the token from the set.
@@ -589,7 +613,7 @@ public class EstonianAdESTValidation {
 
     /**
      * Check of: Is revocation time posterior to best-signature-time?
-     *
+     * <p>
      * a) If step 2 returned INDETERMINATE/REVOKED_NO_POE: If the returned revocation time is posterior to
      * best-signature-time, perform step 5d. Otherwise, terminate with INDETERMINATE/REVOKED_NO_POE. In addition to
      * the data items returned in steps 1 and 2, the SVA should notify the DA with the reason of the failure.
@@ -620,10 +644,10 @@ public class EstonianAdESTValidation {
 
     /**
      * Check of: best-signature-time against the signing certificate issuance date.
-     *
+     * <p>
      * b) If step 2 returned INDETERMINATE/OUT_OF_BOUNDS_NO_POE: If best-signature-time is before the issuance date
      * of the signer's certificate, terminate with INVALID/NOT_YET_VALID.
-     *
+     * <p>
      * NOTE 5: In the algorithm above, the signature-time-stamp protects the signature against the revocation of
      * the signer's certificate (step 5-a) but not against expiration. The latter case requires validating the
      * signer's certificate in the past (see clause 9).
@@ -656,11 +680,11 @@ public class EstonianAdESTValidation {
 
     /**
      * Check of: best-signature-time against the signing certificate issuance date.
-     *
+     * <p>
      * b) If step 2 returned INDETERMINATE/OUT_OF_BOUNDS_NO_POE: If best-signature-time is not before the issuance date
      * of the signer's certificate terminate with INDETERMINATE/OUT_OF_BOUNDS_NO_POE. In addition to the data items returned
      * in steps 1 and 2, the SVA should notify the DA with the reason of the failure.
-     *
+     * <p>
      * NOTE 5: In the algorithm above, the signature-time-stamp protects the signature against the revocation of
      * the signer's certificate (step 5-a) but not against expiration. The latter case requires validating the
      * signer's certificate in the past (see clause 9).
@@ -690,7 +714,7 @@ public class EstonianAdESTValidation {
 
     /**
      * Check of: best-signature-time against the signing certificate issuance date.
-     *
+     * <p>
      * c) If step 2 returned INDETERMINATE/CRYPTO_CONSTRAINTS_FAILURE_NO_POE and the material concerned by this
      * failure is the signature value or a signed attribute, check, if the algorithm(s) concerned were still
      * considered reliable at best-signature-time, continue with step d. Otherwise, terminate with
@@ -829,35 +853,11 @@ public class EstonianAdESTValidation {
         return constraint.check();
     }
 
-    private static Date getLatestDate(Date firstDate, final Date secondDate) {
-
-        if ((firstDate != null) && (secondDate != null)) {
-            if (firstDate.before(secondDate)) {
-                firstDate = secondDate;
-            }
-        } else if (secondDate != null) {
-            firstDate = secondDate;
-        }
-        return firstDate;
-    }
-
-    private static Date getEarliestDate(Date firstDate, final Date secondDate) {
-
-        if ((firstDate != null) && (secondDate != null)) {
-            if (firstDate.after(secondDate)) {
-                firstDate = secondDate;
-            }
-        } else if (secondDate != null) {
-            firstDate = secondDate;
-        }
-        return firstDate;
-    }
-
     /**
      * Check of: Time-stamp delay.
-     *
+     * <p>
      * 6) Handling Time-stamp delay: If the validation constraints specify a time-stamp delay, do the following:
-     *
+     * <p>
      * a) If no signing-time property/attribute is present, fail with INDETERMINATE and an explanation that the
      * validation failed due to the absence of claimed signing time.
      *
@@ -881,7 +881,7 @@ public class EstonianAdESTValidation {
 
     /**
      * Check of: Time-stamp delay.
-     *
+     * <p>
      * b) If a signing-time property/attribute is present, check that the claimed time in the attribute plus the
      * timestamp delay is after the best-signature-time. If the check is successful, go to the next step.
      * Otherwise, fail with INVALID/SIG_CONSTRAINTS_FAILURE and an explanation that the validation failed due to

@@ -21,7 +21,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-@SpringBootTest( classes = PDFValidationServiceTest.TestTslLoaderConfiguration.class)
+@SpringBootTest(classes = PDFValidationServiceTest.TestTslLoaderConfiguration.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 public class PDFValidationServiceTest {
 
@@ -71,14 +71,14 @@ public class PDFValidationServiceTest {
 
         @Bean
         public YamlPropertiesFactoryBean yamlProperties() {
-            YamlPropertiesFactoryBean  yamlProperties = new YamlPropertiesFactoryBean();
+            YamlPropertiesFactoryBean yamlProperties = new YamlPropertiesFactoryBean();
             yamlProperties.setResources(new ClassPathResource("test-tsl-loader-props.yml"));
             return yamlProperties;
         }
 
         @Bean
         public PropertyPlaceholderConfigurer propertyPlaceholderConfigurer(YamlPropertiesFactoryBean yamlProperties) {
-            PropertyPlaceholderConfigurer ppc =  new PropertyPlaceholderConfigurer();
+            PropertyPlaceholderConfigurer ppc = new PropertyPlaceholderConfigurer();
             ppc.setProperties(yamlProperties.getObject());
             return ppc;
         }

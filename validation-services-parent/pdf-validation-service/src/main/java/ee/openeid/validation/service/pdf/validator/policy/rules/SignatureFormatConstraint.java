@@ -12,12 +12,12 @@ public class SignatureFormatConstraint extends EstonianConstraint {
         super(level);
     }
 
-    public void setCurrentSignatureLevel(final String policyId) {
-        currentSignatureLevel = policyId;
-    }
-
     public String getCurrentSignatureLevel() {
         return currentSignatureLevel;
+    }
+
+    public void setCurrentSignatureLevel(final String policyId) {
+        currentSignatureLevel = policyId;
     }
 
     /**

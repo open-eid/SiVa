@@ -4,7 +4,6 @@ import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import org.apache.commons.lang.StringUtils;
-import org.apache.pdfbox.util.StringUtil;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -43,7 +42,7 @@ public class PDFWithInvalidSignaturesTest extends PDFValidationServiceTest {
     }
 
     @Test
-    public void validatingPdfSignedWithUnqualifiedCertificateReturnsReportWithError() throws Exception{
+    public void validatingPdfSignedWithUnqualifiedCertificateReturnsReportWithError() throws Exception {
         QualifiedReport report = validationService.validateDocument(
                 buildValidationDocument(PDF_SIGNED_WITH_UNQUALIFIED_CERTIFICATE));
         assertNotNull(report);

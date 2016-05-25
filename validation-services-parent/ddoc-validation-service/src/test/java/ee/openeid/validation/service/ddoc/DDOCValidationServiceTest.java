@@ -6,17 +6,13 @@ import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.document.report.SignatureScope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.sk.digidoc.DigiDocException;
-
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class DDOCValidationServiceTest {
 
@@ -31,6 +27,18 @@ public class DDOCValidationServiceTest {
     public static void setUpClass() throws Exception {
         validationService.initConfig();
         validationResult2Signatures = validationService.validateDocument(ddocValid2Signatures());
+    }
+
+    private static ValidationDocument ddocValid2Signatures() throws Exception {
+        return buildValidationDocument(VALID_DDOC_2_SIGNATURES);
+    }
+
+    private static ValidationDocument buildValidationDocument(String testFile) throws Exception {
+        return DummyValidationDocumentBuilder
+                .aValidationDocument()
+                .withDocument(TEST_FILES_LOCATION + testFile)
+                .withName(testFile)
+                .build();
     }
 
     @Test
@@ -92,18 +100,6 @@ public class DDOCValidationServiceTest {
         assertNull(scope.getScope());
         assertEquals("2009-02-13T09:22:49Z", sig2.getClaimedSigningTime());
         assertNull(sig2.getInfo());
-    }
-
-    private static ValidationDocument ddocValid2Signatures() throws Exception {
-        return buildValidationDocument(VALID_DDOC_2_SIGNATURES);
-    }
-
-    private static ValidationDocument buildValidationDocument(String testFile) throws Exception {
-        return DummyValidationDocumentBuilder
-                .aValidationDocument()
-                .withDocument(TEST_FILES_LOCATION + testFile)
-                .withName(testFile)
-                .build();
     }
 
     private static class DDOCValidationServiceSpy extends DDOCValidationService {

@@ -1,7 +1,7 @@
 package ee.openeid.validation.service.pdf.validator.report;
 
-import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.document.report.Error;
+import ee.openeid.siva.validation.document.report.*;
 import eu.europa.esig.dss.XmlDom;
 import eu.europa.esig.dss.validation.policy.rules.Indication;
 import eu.europa.esig.dss.validation.report.Conclusion;
@@ -12,18 +12,16 @@ import org.apache.commons.lang.StringUtils;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class PDFQualifiedReportBuilder {
 
-    private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     public static final String NAME_ID_ATTRIBUTE = "NameId";
     public static final String NAME_ATTRIBUTE = "name";
     public static final String SCOPE_ATTRIBUTE = "scope";
     public static final String BEST_SIGNATURE_TIME_ATTRIBUTE = "BestSignatureTime";
-
+    private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private Reports dssReports;
     private SimpleReport simpleReport;
     private QualifiedReport report;

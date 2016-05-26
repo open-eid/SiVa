@@ -41,7 +41,7 @@ public class DdocValidationPass extends SiVaRestTests{
      *
      * File: DigiDoc_1.0_Tartu_ja_Tallinna_koostooleping.ddoc
      ***/
-    @Test
+    @Test @Ignore
     public void validMultipleSignaturesV10() {
         assertAllSignaturesAreValid(postForReport("DigiDoc_1.0_Tartu_ja_Tallinna_koostooleping.ddoc"));
     }

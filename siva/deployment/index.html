@@ -41,7 +41,7 @@
       	font-style: normal;
       }
     </style>
-    <link rel="stylesheet" href="../../assets/stylesheets/application-0dac3e5884.css">
+    <link rel="stylesheet" href="../../assets/stylesheets/application-54f87043f3.css">
     
       <link rel="stylesheet" href="../../assets/stylesheets/palettes-05ab2406df.css">
     
@@ -69,6 +69,9 @@
   
   
   <body class="palette-primary-light-green palette-accent-lime">
+    
+      
+      
     
     <div class="backdrop">
       <div class="backdrop-paper"></div>
@@ -120,7 +123,7 @@
       <div class="drawer">
         <nav aria-label="Navigation">
   
-  <a href="/" class="project">
+  <a href="https://github.com/open-eid/SiVa" class="project">
     <div class="banner">
       
       <div class="name">
@@ -131,11 +134,30 @@
           </span>
         </strong>
         
+          <br>
+          open-eid/SiVa
+        
       </div>
     </div>
   </a>
   <div class="scrollable">
     <div class="wrapper">
+      
+        <ul class="repo">
+          <li class="repo-download">
+            
+            <a href="https://github.com/open-eid/SiVa/archive/master.zip" target="_blank" title="Download" data-action="download">
+              <i class="icon icon-download"></i> Download
+            </a>
+          </li>
+          <li class="repo-stars">
+            <a href="https://github.com/open-eid/SiVa/stargazers" target="_blank" title="Stargazers" data-action="star">
+              <i class="icon icon-star"></i> Stars
+              <span class="count">&ndash;</span>
+            </a>
+          </li>
+        </ul>
+        <hr>
       
       <div class="toc">
         <ul>
@@ -357,18 +379,21 @@ web service:</p>
 </ul>
 <h2 id="building-siva-validation-web-service-on-ubuntu-1604">Building SiVa validation web service on Ubuntu 16.04</h2>
 <p>First we need to install Git and Java SDK 8 by issuing below commands:</p>
-<pre class="codehilite"><code class="language-bash">sudo apt-get update
+<div class="codehilite"><pre><span></span>sudo apt-get update
 sudo apt-get install git -y
-sudo apt-get install default-jdk -y</code></pre>
+sudo apt-get install default-jdk -y
+</pre></div>
 
 
 <p>Next we need to clone the SiVa Github repository:</p>
-<pre class="codehilite"><code class="language-bash">git clone https://github.com/open-eid/SiVa.git --branch develop</code></pre>
+<div class="codehilite"><pre><span></span>git clone https://github.com/open-eid/SiVa.git --branch develop
+</pre></div>
 
 
 <p>Final step is building the SiVa project using Maven Wrapper</p>
-<pre class="codehilite"><code class="language-bash">cd SiVa
-./mvnw install</code></pre>
+<div class="codehilite"><pre><span></span><span class="nb">cd</span> SiVa
+./mvnw install
+</pre></div>
           <aside class="copyright" role="note">
             
             Documentation built with
@@ -438,7 +463,7 @@ sudo apt-get install default-jdk -y</code></pre>
     </main>
     <script>
       var base_url = '../..';
-      var repo_id  = '';
+      var repo_id  = 'open-eid/SiVa';
     </script>
     <script src="../../assets/javascripts/application-997097ee0c.js"></script>
     

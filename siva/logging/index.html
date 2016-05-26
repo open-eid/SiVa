@@ -41,7 +41,7 @@
       	font-style: normal;
       }
     </style>
-    <link rel="stylesheet" href="../../assets/stylesheets/application-0dac3e5884.css">
+    <link rel="stylesheet" href="../../assets/stylesheets/application-54f87043f3.css">
     
       <link rel="stylesheet" href="../../assets/stylesheets/palettes-05ab2406df.css">
     
@@ -69,6 +69,9 @@
   
   
   <body class="palette-primary-light-green palette-accent-lime">
+    
+      
+      
     
     <div class="backdrop">
       <div class="backdrop-paper"></div>
@@ -120,7 +123,7 @@
       <div class="drawer">
         <nav aria-label="Navigation">
   
-  <a href="/" class="project">
+  <a href="https://github.com/open-eid/SiVa" class="project">
     <div class="banner">
       
       <div class="name">
@@ -131,11 +134,30 @@
           </span>
         </strong>
         
+          <br>
+          open-eid/SiVa
+        
       </div>
     </div>
   </a>
   <div class="scrollable">
     <div class="wrapper">
+      
+        <ul class="repo">
+          <li class="repo-download">
+            
+            <a href="https://github.com/open-eid/SiVa/archive/master.zip" target="_blank" title="Download" data-action="download">
+              <i class="icon icon-download"></i> Download
+            </a>
+          </li>
+          <li class="repo-stars">
+            <a href="https://github.com/open-eid/SiVa/stargazers" target="_blank" title="Stargazers" data-action="star">
+              <i class="icon icon-star"></i> Stars
+              <span class="count">&ndash;</span>
+            </a>
+          </li>
+        </ul>
+        <hr>
       
       <div class="toc">
         <ul>
@@ -355,11 +377,13 @@ configured via the standard Logback configuration file. By default,
 logging works on the <code>INFO</code> level and logs are directed to the system
 console as well as a log file.</p>
 <p>The logback xml configuration file can be found at:</p>
-<pre class="codehilite"><code>pdfValidator/pdf-validator-webapp/src/main/resources/logback.xml</code></pre>
+<div class="codehilite"><pre><span></span>pdfValidator/pdf-validator-webapp/src/main/resources/logback.xml
+</pre></div>
 
 
 <p>and when compiled the file will reside at </p>
-<pre class="codehilite"><code>WEB-INF/classes/logback.xml</code></pre>
+<div class="codehilite"><pre><span></span>WEB-INF/classes/logback.xml
+</pre></div>
 
 
 <p>within the packaged war. There is also a possibility to set the location
@@ -367,7 +391,8 @@ of the default configuration file with a system
 property <code>logback.configurationFile</code> as a JVM argument. The value of
 this property can be a URL, a resource on the class path or a path to a
 file external to the application.</p>
-<pre class="codehilite"><code class="language-bash">java -Dlogback.configurationFile=/path/to/config.xml</code></pre>
+<div class="codehilite"><pre><span></span>java -Dlogback.configurationFile<span class="o">=</span>/path/to/config.xml
+</pre></div>
 
 
 <p>In this configuration file there are three appenders: <code>STDOUT</code> (logs to
@@ -377,24 +402,25 @@ commenting out its <code>appender-ref</code> is sufficient, but it is <em>recomm
 that the appender itself should also be commented out. For example to
 disable <code>SYSLOG</code> appender (which is the default configuration), then one
 can use following configuration:</p>
-<pre class="codehilite"><code class="language-xml">&lt;!--
-&lt;appender name=&quot;SYSLOG&quot; class=&quot;ch.qos.logback.classic.net.SyslogAppender&quot;&gt;
-    &lt;syslogHost&gt;enter\_ip\_or\_hostname\_here&lt;/syslogHost&gt;
-    &lt;port&gt;514&lt;/port&gt;
-    &lt;facility&gt;USER&lt;/facility&gt;
-    &lt;filter class=&quot;ch.qos.logback.classic.filter.ThresholdFilter&quot;&gt;
-        &lt;level&gt;INFO&lt;/level&gt;
-    &lt;/filter&gt;
-    &lt;suffixPattern&gt;%-5level %logger{0}:%L \[%thread\] - %msg&lt;/suffixPattern&gt;
-&lt;/appender&gt;
---&gt;
+<div class="codehilite"><pre><span></span><span class="c">&lt;!--</span>
+<span class="c">&lt;appender name=&quot;SYSLOG&quot; class=&quot;ch.qos.logback.classic.net.SyslogAppender&quot;&gt;</span>
+<span class="c">    &lt;syslogHost&gt;enter\_ip\_or\_hostname\_here&lt;/syslogHost&gt;</span>
+<span class="c">    &lt;port&gt;514&lt;/port&gt;</span>
+<span class="c">    &lt;facility&gt;USER&lt;/facility&gt;</span>
+<span class="c">    &lt;filter class=&quot;ch.qos.logback.classic.filter.ThresholdFilter&quot;&gt;</span>
+<span class="c">        &lt;level&gt;INFO&lt;/level&gt;</span>
+<span class="c">    &lt;/filter&gt;</span>
+<span class="c">    &lt;suffixPattern&gt;%-5level %logger{0}:%L \[%thread\] - %msg&lt;/suffixPattern&gt;</span>
+<span class="c">&lt;/appender&gt;</span>
+<span class="c">--&gt;</span>
 
-&lt;root level=&quot;DEBUG&quot;&gt;
-&lt;appender-ref ref=&quot;STDOUT&quot;/&gt;
-&lt;appender-ref ref=&quot;FILE&quot;/&gt;
-&lt;!--&lt;appender-ref ref=&quot;SYSLOG&quot;/&gt;--&gt;
+<span class="nt">&lt;root</span> <span class="na">level=</span><span class="s">&quot;DEBUG&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;appender-ref</span> <span class="na">ref=</span><span class="s">&quot;STDOUT&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;appender-ref</span> <span class="na">ref=</span><span class="s">&quot;FILE&quot;</span><span class="nt">/&gt;</span>
+<span class="c">&lt;!--&lt;appender-ref ref=&quot;SYSLOG&quot;/&gt;--&gt;</span>
 
-&lt;/root&gt;</code></pre>
+<span class="nt">&lt;/root&gt;</span>
+</pre></div>
 
 
 <p>Logback configuration manual: <a href="http://logback.qos.ch/manual/">http://logback.qos.ch/manual/</a></p>
@@ -415,11 +441,13 @@ can use following configuration:</p>
   currently working directory, i.e. where the application was started.
   (Current day's logfile path: <code>logs/pdf-validator-webapp.log</code>,
   prievious days pattern: </p>
-<pre class="codehilite"><code>    logs/pdf-validator-webapp.%d{yyyy-MM-dd}.log)</code></pre>
+<div class="codehilite"><pre><span></span>    logs/pdf-validator-webapp.%d{yyyy-MM-dd}.log)
+</pre></div>
 
 
 <ul>
-<li>Appender output pattern is:  <code>%d{HH:mm:ss.SSS} %-5level %logger{0}:%L \[%thread\] - %msg%n</code><pre class="codehilite"><code>-Dlogback.configurationFile=config.xml</code></pre>
+<li>Appender output pattern is:  <code>%d{HH:mm:ss.SSS} %-5level %logger{0}:%L \[%thread\] - %msg%n</code><div class="codehilite"><pre><span></span>-Dlogback.configurationFile=config.xml
+</pre></div>
 
 
 </li>
@@ -501,7 +529,7 @@ can use following configuration:</p>
     </main>
     <script>
       var base_url = '../..';
-      var repo_id  = '';
+      var repo_id  = 'open-eid/SiVa';
     </script>
     <script src="../../assets/javascripts/application-997097ee0c.js"></script>
     

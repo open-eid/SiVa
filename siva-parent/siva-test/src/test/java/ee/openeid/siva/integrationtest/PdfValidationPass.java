@@ -2,6 +2,7 @@ package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -9,9 +10,20 @@ import org.junit.experimental.categories.Category;
 @Category(IntegrationTest.class)
 public class PdfValidationPass extends SiVaRestTests{
 
-    private static final String TEST_FILES_DIRECTORY = "pdf/signing_certifacte_test_files/";
+    @Before
+    public void DirectoryBackToDefault() {
+        setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
+    }
 
-    /***
+    private static final String DEFAULT_TEST_FILES_DIRECTORY = "pdf/signing_certifacte_test_files/";
+
+    private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
+
+    public void setTestFilesDirectory(String testFilesDirectory) {
+        this.testFilesDirectory = testFilesDirectory;
+    }
+
+     /***
      * TestCaseID: PDF-ValidationPass-1
      *
      * TestType: Automated
@@ -76,8 +88,27 @@ public class PdfValidationPass extends SiVaRestTests{
         */
     }
 
+    /***
+     * TestCaseID: PDF-ValidationPass-4
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Pdf with single valid signature
+     *
+     * Expected Result: Document should pass.
+     *
+     * File: PdfValidSingleSignature.pdf
+     ***/
+    @Test
+    public void validSignature() {
+        setTestFilesDirectory("document_format_test_files/");
+        assertAllSignaturesAreValid(postForReport("PdfValidSingleSignature.pdf"));
+    }
+
     @Override
     protected String getTestFilesDirectory() {
-        return TEST_FILES_DIRECTORY;
+        return testFilesDirectory;
     }
 }

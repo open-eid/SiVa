@@ -51,11 +51,11 @@ public class DdocValidationFail extends SiVaRestTests{
      *
      * Expected Result: The document should fail the validation
      *
-     * File:
+     * File: multipleInvalidSignatures.ddoc
      ***/
-    @Test @Ignore
+    @Test
     public void InvalidMultipleSignatures() {
-        assertAllSignaturesAreInvalid(postForReport("needfile.ddoc"));
+        assertAllSignaturesAreInvalid(postForReport("multipleInvalidSignatures.ddoc"));
     }
 
     /***
@@ -69,11 +69,11 @@ public class DdocValidationFail extends SiVaRestTests{
      *
      * Expected Result: The document should fail the validation
      *
-     * File:
+     * File: multipleValidAndInvalidSignatures.ddoc
      ***/
-    @Test @Ignore
+    @Test
     public void InvalidAndValidMultipleSignatures() {
-        assertSomeSignaturesAreValid(postForReport("needfile.ddoc"),1);
+        assertSomeSignaturesAreValid(postForReport("multipleValidAndInvalidSignatures.ddoc"),2);
     }
 
     /***

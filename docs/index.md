@@ -40,5 +40,5 @@ SiVa architecture document will cover:
 
 ## Download documentation
 
-* [**Download SiVa documentation as PDF**](../pdf-files/siva.pdf)
+* [**Download SiVa documentation as PDF**](http://open-eid.github.io/SiVa/pdf-files/siva.pdf)
 

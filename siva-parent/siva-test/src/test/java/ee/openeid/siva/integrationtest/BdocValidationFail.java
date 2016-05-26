@@ -53,11 +53,12 @@ public class BdocValidationFail extends SiVaRestTests{
      *
      * Expected Result: The document should fail the validation
      *
-     * File:
+     * File: BdocMultipleSignaturesInvalid.bdoc
      ***/
-    @Test @Ignore
+    @Test
     public void InvalidMultipleSignatures() {
-        assertAllSignaturesAreInvalid(postForReport("needfile.bdoc"));
+        setTestFilesDirectory("bdoc/test/timemark/");
+        assertAllSignaturesAreInvalid(postForReport("BdocMultipleSignaturesInvalid.bdoc"));
     }
 
     /***

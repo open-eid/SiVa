@@ -442,7 +442,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * Expected Result: Warning element is present
      *
-     * File: test1-ddoc-unknown.ddoc
+     * File:
      *
      ***/
     @Test @Ignore //TODO: VAL-202 & VAL-203 FIle is needed!

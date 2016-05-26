@@ -17,7 +17,7 @@ List of Test Cases
   * RequirementID:
   * Title: Bdoc with multiple invalid signatures
   * Expected Result: The document should fail the validation
-  * File:
+  * File: BdocMultipleSignaturesInvalid.bdoc
 
 **TestCaseID: Bdoc-ValidationFail-3**
 
@@ -79,7 +79,7 @@ List of Test Cases
   * RequirementID:
   * Title: Ddoc with multiple invalid signatures
   * Expected Result: The document should fail the validation
-  * File:
+  * File: multipleInvalidSignatures.ddoc
 
 **TestCaseID: Ddoc-ValidationFail-3**
 
@@ -87,7 +87,7 @@ List of Test Cases
   * RequirementID:
   * Title: Ddoc with multiple signatures both valid and invalid
   * Expected Result: The document should fail the validation
-  * File:
+  * File: multipleValidAndInvalidSignatures.ddoc
 
 **TestCaseID: Ddoc-ValidationFail-4**
 
@@ -674,7 +674,7 @@ List of Test Cases
   * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
   * Title: Check for optional warning element
   * Expected Result: Warning element is present
-  * File: test1-ddoc-unknown.ddoc
+  * File:
 
 **TestCaseID: Ddoc-ValidationReport-19**
 

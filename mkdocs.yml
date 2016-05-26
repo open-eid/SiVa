@@ -1,5 +1,6 @@
 site_name: SiVa - Validation Service Documentation
 theme: material
+repo_url: https://github.com/open-eid/SiVa
 extra:
   font:
     code: 'Roboto Mono'

@@ -38,10 +38,7 @@ import org.springframework.stereotype.Service;
 import javax.xml.soap.SOAPException;
 import java.time.LocalDateTime;
 
-/**
- * Implementation of the Interface for the Contract of the Validation Web Service.
- */
-@Service
+@Service("pdf-validator")
 public class PDFValidationService implements ValidationService {
 
     private static final Logger logger = LoggerFactory.getLogger(PDFValidationService.class);

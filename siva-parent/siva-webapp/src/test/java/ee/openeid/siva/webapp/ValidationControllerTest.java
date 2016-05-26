@@ -1,7 +1,7 @@
 package ee.openeid.siva.webapp;
 
+import ee.openeid.siva.proxy.ValidationProxy;
 import ee.openeid.siva.proxy.document.ProxyDocument;
-import ee.openeid.siva.proxy.service.ValidationProxyService;
 import ee.openeid.siva.webapp.request.ValidationRequest;
 import ee.openeid.siva.webapp.transformer.ValidationRequestToProxyDocumentTransformer;
 import org.hamcrest.Matchers;
@@ -12,9 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -23,7 +21,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 
 public class ValidationControllerTest {
 
-    private ValidationProxyServiceSpy validationProxyServiceSpy = new ValidationProxyServiceSpy();
+    private ValidationProxySpy validationProxyServiceSpy = new ValidationProxySpy();
     private ValidationRequestToProxyDocumentTransformerSpy transformerSpy = new ValidationRequestToProxyDocumentTransformerSpy();
 
     private MockMvc mockMvc;
@@ -221,7 +219,7 @@ public class ValidationControllerTest {
         return jsonObject;
     }
 
-    private class ValidationProxyServiceSpy extends ValidationProxyService {
+    private class ValidationProxySpy extends ValidationProxy {
 
         private ProxyDocument document;
 

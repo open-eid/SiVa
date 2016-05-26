@@ -176,7 +176,30 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: Pdf-ValidationReport-7
+     * TestCaseID: Bdoc-ValidationReport-7
+     *
+     * TestType: Automated
+     *
+     * RequirementID: Validation report - WIP (TBD)
+     *
+     * Title:  Bdoc report with no signatures
+     *
+     * Expected Result: Report is returned with required elements
+     *
+     * File:BdocContainerNoSignature.bdoc
+     *
+     ***/
+    @Test @Ignore //TODO: VAL-202 & VAL-203
+    public void BdocNoSignature() {
+        setTestFilesDirectory("document_format_test_files/");
+        post(validationRequestFor("BdocContainerNoSignature.bdoc", "simple"))
+                .then()
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
+    }
+
+    /***
+     *
+     * TestCaseID: Pdf-ValidationReport-8
      *
      * TestType: Automated
      *
@@ -199,7 +222,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: Pdf-ValidationReport-8
+     * TestCaseID: Pdf-ValidationReport-9
      *
      * TestType: Automated
      *
@@ -222,7 +245,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: Pdf-ValidationReport-9
+     * TestCaseID: Pdf-ValidationReport-10
      *
      * TestType: Automated
      *
@@ -245,7 +268,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: Pdf-ValidationReport-10
+     * TestCaseID: Pdf-ValidationReport-11
      *
      * TestType: Automated
      *
@@ -268,7 +291,30 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: Ddoc-ValidationReport-11
+     * TestCaseID: Pdf-ValidationReport-12
+     *
+     * TestType: Automated
+     *
+     * RequirementID: Validation report - WIP (TBD)
+     *
+     * Title:  Pdf report with no signatures
+     *
+     * Expected Result: Report is returned with required elements
+     *
+     * File: PdfNoSignature.pdf
+     *
+     ***/
+    @Test @Ignore //TODO: VAL-202 & VAL-203
+    public void PdfNoSignature() {
+        setTestFilesDirectory("document_format_test_files/");
+        post(validationRequestFor("PdfNoSignature.pdf", "simple"))
+                .then()
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
+    }
+
+    /***
+     *
+     * TestCaseID: Ddoc-ValidationReport-13
      *
      * TestType: Automated
      *
@@ -291,7 +337,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: Ddoc-ValidationReport-12
+     * TestCaseID: Ddoc-ValidationReport-14
      *
      * TestType: Automated
      *
@@ -312,10 +358,9 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }
 
-
     /***
      *
-     * TestCaseID: Ddoc-ValidationReport-13
+     * TestCaseID: Ddoc-ValidationReport-15
      *
      * TestType: Automated
      *
@@ -336,10 +381,9 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }
 
-
     /***
      *
-     * TestCaseID: Ddoc-ValidationReport-14
+     * TestCaseID: Ddoc-ValidationReport-16
      *
      * TestType: Automated
      *
@@ -362,7 +406,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: Ddoc-ValidationReport-15
+     * TestCaseID: Ddoc-ValidationReport-17
      *
      * TestType: Automated
      *
@@ -387,7 +431,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: Ddoc-ValidationReport-16
+     * TestCaseID: Ddoc-ValidationReport-18
      *
      * TestType: Automated
      *
@@ -407,6 +451,29 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
                 .then()
                 .body("signatures.indication", Matchers.hasItem(""))
                 .body("signatures.warnings.nameId", Matchers.hasItem("need value for this"));
+    }
+
+    /***
+     *
+     * TestCaseID: Ddoc-ValidationReport-19
+     *
+     * TestType: Automated
+     *
+     * RequirementID: Validation report - WIP (TBD)
+     *
+     * Title:  Ddoc report with no signatures
+     *
+     * Expected Result: Report is returned with required elements
+     *
+     * File: DdocContainerNoSignature.ddoc
+     *
+     ***/
+    @Test @Ignore //TODO: VAL-202 & VAL-203 & VAL-209
+    public void DdocNoSignature() {
+        setTestFilesDirectory("document_format_test_files/");
+        post(validationRequestFor("DdocContainerNoSignature.ddoc", "simple"))
+                .then()
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }
 
     @Override

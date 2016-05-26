@@ -79,6 +79,25 @@ public class BdocValidationFail extends SiVaRestTests{
         assertSomeSignaturesAreValid(postForReport("BdocMultipleSignaturesMixedWithValidAndInvalid.bdoc"),2);
     }
 
+    /***
+     * TestCaseID: Bdoc-ValidationFail-4
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Bdoc with no signatures
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: BdocContainerNoSignature.bdoc
+     ***/
+    @Test
+    public void NoSignatures() {
+        setTestFilesDirectory("document_format_test_files/");
+        assertAllSignaturesAreInvalid(postForReport("BdocContainerNoSignature.bdoc"));
+    }
+
 
     @Override
     protected String getTestFilesDirectory() {

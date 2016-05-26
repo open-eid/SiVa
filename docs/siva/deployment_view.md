@@ -1,6 +1,6 @@
 # Deployment view
 
-![SiVa Deployment view](/img/siva/uml_siva_deployment_diagram.png)
+![SiVa Deployment view](../img/siva/uml_siva_deployment_diagram.png)
 
 ## Load balancer
 

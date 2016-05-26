@@ -53,11 +53,12 @@ public class BdocValidationFail extends SiVaRestTests{
      *
      * Expected Result: The document should fail the validation
      *
-     * File:
+     * File: BdocMultipleSignaturesInvalid.bdoc
      ***/
-    @Test @Ignore
+    @Test
     public void InvalidMultipleSignatures() {
-        assertAllSignaturesAreInvalid(postForReport("needfile.bdoc"));
+        setTestFilesDirectory("bdoc/test/timemark/");
+        assertAllSignaturesAreInvalid(postForReport("BdocMultipleSignaturesInvalid.bdoc"));
     }
 
     /***
@@ -77,6 +78,25 @@ public class BdocValidationFail extends SiVaRestTests{
     public void InvalidAndValidMultipleSignatures() {
         setTestFilesDirectory("bdoc/test/timemark/");
         assertSomeSignaturesAreValid(postForReport("BdocMultipleSignaturesMixedWithValidAndInvalid.bdoc"),2);
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationFail-4
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Bdoc with no signatures
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: BdocContainerNoSignature.bdoc
+     ***/
+    @Test
+    public void NoSignatures() {
+        setTestFilesDirectory("document_format_test_files/");
+        assertAllSignaturesAreInvalid(postForReport("BdocContainerNoSignature.bdoc"));
     }
 
 

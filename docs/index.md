@@ -37,3 +37,8 @@ SiVa architecture document will cover:
   SiVa web service
 * [**Logging**](siva/logging) - how to configure and setup SiVa validation 
   service logging support
+
+## Download documentation
+
+* [**Download SiVa documentation as PDF**](http://open-eid.github.io/SiVa/pdf-files/siva.pdf)
+

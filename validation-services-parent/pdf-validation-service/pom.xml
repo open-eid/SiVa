@@ -10,8 +10,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>pdf-validation-service</artifactId>
-    <name>SK PDF Validator: Web Service</name>
-    <description>SK PDF Validator: Validator WSDL Web Service</description>
+    <name>PDF Validation Service</name>
+    <description>Validates digitally signed PDF files</description>
 
     <properties>
         <cxf.version>3.0.6</cxf.version>

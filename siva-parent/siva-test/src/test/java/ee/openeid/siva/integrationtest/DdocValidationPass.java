@@ -1,6 +1,7 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -34,15 +35,69 @@ public class DdocValidationPass extends SiVaRestTests{
      *
      * RequirementID:
      *
-     * Title: Ddoc with multiple valid signatures
+     * Title: Ddoc v1.0 with multiple valid signatures
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: DigiDoc_1.0_Tartu_ja_Tallinna_koostooleping.ddoc
+     ***/
+    @Test @Ignore
+    public void validMultipleSignaturesV10() {
+        assertAllSignaturesAreValid(postForReport("DigiDoc_1.0_Tartu_ja_Tallinna_koostooleping.ddoc"));
+    }
+
+    /***
+     * TestCaseID: Ddoc-ValidationPass-3
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Ddoc v1.1 with multiple valid signatures v1.1
      *
      * Expected Result: The document should pass the validation
      *
      * File: igasugust1.1.ddoc
      ***/
     @Test
-    public void validMultipleSignatures() {
+    public void validMultipleSignaturesV11() {
         assertAllSignaturesAreValid(postForReport("igasugust1.1.ddoc"));
+    }
+
+    /***
+     * TestCaseID: Ddoc-ValidationPass-4
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Ddoc v1.2 with multiple valid signatures
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: igasugust1.2.ddoc
+     ***/
+    @Test
+    public void validMultipleSignaturesV12() {
+        assertAllSignaturesAreValid(postForReport("igasugust1.2.ddoc"));
+    }
+
+    /***
+     * TestCaseID: Ddoc-ValidationPass-5
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Ddoc v1.3 with multiple valid signatures
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: igasugust1.3.ddoc
+     ***/
+    @Test
+    public void validMultipleSignaturesV13() {
+        assertAllSignaturesAreValid(postForReport("igasugust1.3.ddoc"));
     }
 
     @Override

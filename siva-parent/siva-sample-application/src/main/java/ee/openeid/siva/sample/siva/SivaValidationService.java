@@ -48,7 +48,7 @@ public class SivaValidationService {
 
     }
 
-    @Value("${siva.service.url}")
+    @Value("${siva.serviceUrl}")
     public void setSivaBaseUrl(final String sivaBaseUrl) {
         this.sivaBaseUrl = sivaBaseUrl;
     }

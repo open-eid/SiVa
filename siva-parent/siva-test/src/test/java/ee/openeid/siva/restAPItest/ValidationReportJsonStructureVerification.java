@@ -42,7 +42,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: JSON structure has all elements (Bdoc valid single signature)
      *
@@ -64,7 +64,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: JSON structure has all elements (Bdoc valid multiple signatures)
      *
@@ -86,7 +86,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: JSON structure has all elements (Bdoc invalid single signature)
      *
@@ -108,7 +108,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: JSON structure has all elements (Bdoc indeterminate status)
      *
@@ -130,7 +130,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: Check for optional subindication and error elements
      *
@@ -156,7 +156,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: Check for optional warning element
      *
@@ -176,11 +176,34 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: Pdf-ValidationReport-7
+     * TestCaseID: Bdoc-ValidationReport-7
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title:  Bdoc report with no signatures
+     *
+     * Expected Result: Report is returned with required elements
+     *
+     * File:BdocContainerNoSignature.bdoc
+     *
+     ***/
+    @Test @Ignore //TODO: VAL-202 & VAL-203
+    public void BdocNoSignature() {
+        setTestFilesDirectory("document_format_test_files/");
+        post(validationRequestFor("BdocContainerNoSignature.bdoc", "simple"))
+                .then()
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
+    }
+
+    /***
+     *
+     * TestCaseID: Pdf-ValidationReport-8
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: JSON structure has all elements (Pdf valid single signature)
      *
@@ -199,11 +222,11 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: Pdf-ValidationReport-8
+     * TestCaseID: Pdf-ValidationReport-9
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: JSON structure has all elements (Pdf valid Multiple signatures)
      *
@@ -222,11 +245,11 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: Pdf-ValidationReport-9
+     * TestCaseID: Pdf-ValidationReport-10
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: JSON structure has all elements (Pdf invalid signature)
      *
@@ -245,11 +268,11 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: Pdf-ValidationReport-10
+     * TestCaseID: Pdf-ValidationReport-11
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: JSON structure has all elements (Pdf indeterminate status)
      *
@@ -268,11 +291,34 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: Ddoc-ValidationReport-11
+     * TestCaseID: Pdf-ValidationReport-12
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title:  Pdf report with no signatures
+     *
+     * Expected Result: Report is returned with required elements
+     *
+     * File: PdfNoSignature.pdf
+     *
+     ***/
+    @Test @Ignore //TODO: VAL-202 & VAL-203
+    public void PdfNoSignature() {
+        setTestFilesDirectory("document_format_test_files/");
+        post(validationRequestFor("PdfNoSignature.pdf", "simple"))
+                .then()
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
+    }
+
+    /***
+     *
+     * TestCaseID: Ddoc-ValidationReport-13
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: JSON structure has all elements (ddoc valid single signature)
      *
@@ -291,11 +337,11 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: Ddoc-ValidationReport-12
+     * TestCaseID: Ddoc-ValidationReport-14
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: JSON structure has all elements (ddoc valid Multiple signatures)
      *
@@ -312,14 +358,13 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }
 
-
     /***
      *
-     * TestCaseID: Ddoc-ValidationReport-13
+     * TestCaseID: Ddoc-ValidationReport-15
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: JSON structure has all elements (ddoc invalid signature)
      *
@@ -336,14 +381,13 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }
 
-
     /***
      *
-     * TestCaseID: Ddoc-ValidationReport-14
+     * TestCaseID: Ddoc-ValidationReport-16
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: JSON structure has all elements (ddoc indeterminate status)
      *
@@ -362,11 +406,11 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: Ddoc-ValidationReport-15
+     * TestCaseID: Ddoc-ValidationReport-17
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: Check for optional subindication and error elements
      *
@@ -382,22 +426,23 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
                 .then()
                 .body("signatures.indication", Matchers.hasItem("TOTAL-FAILED"))
                 .body("signatures.subindication", Matchers.hasItem("need value for this"))
-                .body("signatures.errors.nameId", Matchers.hasItem("70"));
+                .body("signatures.errors.nameId", Matchers.hasItem("70"))
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }
 
     /***
      *
-     * TestCaseID: Ddoc-ValidationReport-16
+     * TestCaseID: Ddoc-ValidationReport-18
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: Check for optional warning element
      *
      * Expected Result: Warning element is present
      *
-     * File: test1-ddoc-unknown.ddoc
+     * File:
      *
      ***/
     @Test @Ignore //TODO: VAL-202 & VAL-203 FIle is needed!
@@ -406,7 +451,31 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
         post(validationRequestFor("NeedFile.ddoc", "simple"))
                 .then()
                 .body("signatures.indication", Matchers.hasItem(""))
-                .body("signatures.warnings.nameId", Matchers.hasItem("need value for this"));
+                .body("signatures.warnings.nameId", Matchers.hasItem("need value for this"))
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
+    }
+
+    /***
+     *
+     * TestCaseID: Ddoc-ValidationReport-19
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title:  Ddoc report with no signatures
+     *
+     * Expected Result: Report is returned with required elements
+     *
+     * File: DdocContainerNoSignature.ddoc
+     *
+     ***/
+    @Test @Ignore //TODO: VAL-202 & VAL-203 & VAL-209
+    public void DdocNoSignature() {
+        setTestFilesDirectory("document_format_test_files/");
+        post(validationRequestFor("DdocContainerNoSignature.ddoc", "simple"))
+                .then()
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }
 
     @Override

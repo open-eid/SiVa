@@ -121,7 +121,7 @@ public abstract class SiVaRestTests {
     }
 
     protected void assertAllSignaturesAreValid(QualifiedReport report) {
-        assertTrue(report.getSignaturesCount() == report.getValidSignaturesCount());
+        assertTrue(report.getSignaturesCount().equals(report.getValidSignaturesCount()));
     }
 
     protected void assertSomeSignaturesAreValid(QualifiedReport report, int expectedValidSignatures) {

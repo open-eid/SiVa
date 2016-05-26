@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="no-js ie6"><![endif]-->
+<!--[if IE 7 ]><html class="no-js ie7"><![endif]-->
+<!--[if IE 8 ]><html class="no-js ie8"><![endif]-->
+<!--[if IE 9 ]><html class="no-js ie9"><![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1">
+    
+      
+        <title>Appendix 5 - Test Case Descriptions - SiVa - Validation Service Documentation</title>
+      
+      
+      
+      
+    
+    <meta property="og:url" content="None">
+    <meta property="og:title" content="SiVa - Validation Service Documentation">
+    <meta property="og:image" content="None/../../../">
+    <meta name="apple-mobile-web-app-title" content="SiVa - Validation Service Documentation">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    
+    <link rel="shortcut icon" type="image/x-icon" href="../../../None">
+    <link rel="icon" type="image/x-icon" href="../../../None">
+    <style>
+      @font-face {
+      	font-family: 'Icon';
+      	src: url('../../../assets/fonts/icon.eot?52m981');
+      	src: url('../../../assets/fonts/icon.eot?#iefix52m981')
+               format('embedded-opentype'),
+      		   url('../../../assets/fonts/icon.woff?52m981')
+               format('woff'),
+      		   url('../../../assets/fonts/icon.ttf?52m981')
+               format('truetype'),
+      		   url('../../../assets/fonts/icon.svg?52m981#icon')
+               format('svg');
+      	font-weight: normal;
+      	font-style: normal;
+      }
+    </style>
+    <link rel="stylesheet" href="../../../assets/stylesheets/application-0dac3e5884.css">
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/palettes-05ab2406df.css">
+    
+    
+      
+      
+      
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
+      <style>
+        body, input {
+          font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
+        }
+        pre, code {
+          font-family: 'Roboto Mono', 'Courier New', 'Courier', monospace;
+        }
+      </style>
+    
+    
+      <link rel="stylesheet" href="../../../override.css">
+    
+    <script src="../../../assets/javascripts/modernizr-4ab42b99fd.js"></script>
+    
+  </head>
+  
+  
+  
+  <body class="palette-primary-light-green palette-accent-lime">
+    
+    <div class="backdrop">
+      <div class="backdrop-paper"></div>
+    </div>
+    <input class="toggle" type="checkbox" id="toggle-drawer">
+    <input class="toggle" type="checkbox" id="toggle-search">
+    <label class="toggle-button overlay" for="toggle-drawer"></label>
+    <header class="header">
+      <nav aria-label="Header">
+  <div class="bar default">
+    <div class="button button-menu" role="button" aria-label="Menu">
+      <label class="toggle-button icon icon-menu" for="toggle-drawer">
+        <span></span>
+      </label>
+    </div>
+    <div class="stretch">
+      <div class="title">
+        
+          <span class="path">
+            
+              
+                Appendixes <i class="icon icon-link"></i>
+              
+            
+          </span>
+        
+        Appendix 5 - Test Case Descriptions
+      </div>
+    </div>
+    
+    
+    <div class="button button-search" role="button" aria-label="Search">
+      <label class="toggle-button icon icon-search" title="Search" for="toggle-search"></label>
+    </div>
+  </div>
+  <div class="bar search">
+    <div class="button button-close" role="button" aria-label="Close">
+      <label class="toggle-button icon icon-back" for="toggle-search"></label>
+    </div>
+    <div class="stretch">
+      <div class="field">
+        <input class="query" type="text" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck>
+      </div>
+    </div>
+    <div class="button button-reset" role="button" aria-label="Search">
+      <button class="toggle-button icon icon-close" id="reset-search"></button>
+    </div>
+  </div>
+</nav>
+    </header>
+    <main class="main">
+      
+      <div class="drawer">
+        <nav aria-label="Navigation">
+  
+  <a href="/" class="project">
+    <div class="banner">
+      
+      <div class="name">
+        <strong>
+          SiVa - Validation Service Documentation
+          <span class="version">
+            
+          </span>
+        </strong>
+        
+      </div>
+    </div>
+  </a>
+  <div class="scrollable">
+    <div class="wrapper">
+      
+      <div class="toc">
+        <ul>
+          
+            
+  <li>
+    <a class="" title="Introduction" href="../../..">
+      Introduction
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Version info" href="../../version_info/">
+      Version info
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Definitions" href="../../definitions/">
+      Definitions
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="SiVa Service Overview" href="../../overview/">
+      SiVa Service Overview
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Regulatory environment" href="../../regulatory_environment/">
+      Regulatory environment
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Component diagram" href="../../component_diagram/">
+      Component diagram
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Deployment view" href="../../deployment_view/">
+      Deployment view
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Interfaces" href="../../interface_description/">
+      Interfaces
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Database schema" href="../../database_schema/">
+      Database schema
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Use cases" href="../../use_cases/">
+      Use cases
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Deployment" href="../../deployment/">
+      Deployment
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Logging" href="../../logging/">
+      Logging
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="References" href="../../references/">
+      References
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <span class="section">Appendixes</span>
+    <ul>
+      
+        
+  <li>
+    <a class="" title="Appendix 1 - Non-Functional Requirements" href="../none_functional_requirements/">
+      Appendix 1 - Non-Functional Requirements
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="Appendix 2 - Functional Requirements" href="../functional_requirements/">
+      Appendix 2 - Functional Requirements
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="Appendix 3 - Validation Policy" href="../validation_policy/">
+      Appendix 3 - Validation Policy
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="Appendix 4 - Validation Constraint Configuration" href="../validation_constraints/">
+      Appendix 4 - Validation Constraint Configuration
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="current" title="Appendix 5 - Test Case Descriptions" href="./">
+      Appendix 5 - Test Case Descriptions
+    </a>
+    
+      
+        
+      
+      
+        <ul>
+          
+            <li class="anchor">
+              <a title="BdocValidationFail.java" href="#bdocvalidationfailjava">
+                BdocValidationFail.java
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="BdocValidationPass.java" href="#bdocvalidationpassjava">
+                BdocValidationPass.java
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="DdocValidationFail.java" href="#ddocvalidationfailjava">
+                DdocValidationFail.java
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="DdocValidationPass.java" href="#ddocvalidationpassjava">
+                DdocValidationPass.java
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="DocumentFormatTests.java" href="#documentformattestsjava">
+                DocumentFormatTests.java
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="LargeFileTests.java" href="#largefiletestsjava">
+                LargeFileTests.java
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="PdfBaselineProfileTests.java" href="#pdfbaselineprofiletestsjava">
+                PdfBaselineProfileTests.java
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="PdfSignatureCryptographicAlgorithmTests.java" href="#pdfsignaturecryptographicalgorithmtestsjava">
+                PdfSignatureCryptographicAlgorithmTests.java
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="PdfValidationFail.java" href="#pdfvalidationfailjava">
+                PdfValidationFail.java
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="PdfValidationPass.java" href="#pdfvalidationpassjava">
+                PdfValidationPass.java
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="SignatureRevocationValueTests.java" href="#signaturerevocationvaluetestsjava">
+                SignatureRevocationValueTests.java
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="ValidationReportJsonStructureVerification.java" href="#validationreportjsonstructureverificationjava">
+                ValidationReportJsonStructureVerification.java
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="ValidationRequestTests.java" href="#validationrequesttestsjava">
+                ValidationRequestTests.java
+              </a>
+            </li>
+          
+        </ul>
+      
+    
+  </li>
+
+      
+    </ul>
+  </li>
+
+          
+        </ul>
+        
+      </div>
+    </div>
+  </div>
+</nav>
+      </div>
+      <article class="article">
+        <div class="wrapper">
+          
+          <h1 id="list-of-test-cases">List of Test Cases</h1>
+<h2 id="bdocvalidationfailjava">BdocValidationFail.java</h2>
+<p><strong>TestCaseID: Bdoc-ValidationFail-1</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: Bdoc with single invalid signature</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc</li>
+</ul>
+<p><strong>TestCaseID: Bdoc-ValidationFail-2</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: Bdoc with multiple invalid signatures</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File:</li>
+</ul>
+<p><strong>TestCaseID: Bdoc-ValidationFail-3</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: Bdoc with multiple signatures both valid and invalid</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: BdocMultipleSignaturesMixedWithValidAndInvalid.bdoc</li>
+</ul>
+<h2 id="bdocvalidationpassjava">BdocValidationPass.java</h2>
+<p><strong>TestCaseID: Bdoc-ValidationPass-1</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: Bdoc with single valid signature</li>
+<li>Expected Result: The document should pass the validation</li>
+<li>File: Valid_ID_sig.bdoc</li>
+</ul>
+<p><strong>TestCaseID: Bdoc-ValidationPass-2</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: Bdoc with multiple valid signatures</li>
+<li>Expected Result: The document should pass the validation</li>
+<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
+</ul>
+<h2 id="ddocvalidationfailjava">DdocValidationFail.java</h2>
+<p><strong>TestCaseID: Ddoc-ValidationFail-1</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: Ddoc with single invalid signature</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File:</li>
+</ul>
+<p><strong>TestCaseID: Ddoc-ValidationFail-2</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: Ddoc with multiple invalid signatures</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File:</li>
+</ul>
+<p><strong>TestCaseID: Ddoc-ValidationFail-3</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: Ddoc with multiple signatures both valid and invalid</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File:</li>
+</ul>
+<h2 id="ddocvalidationpassjava">DdocValidationPass.java</h2>
+<p><strong>TestCaseID: Ddoc-ValidationPass-1</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: Ddoc with single valid signature</li>
+<li>Expected Result: The document should pass the validation</li>
+<li>File: 23734-ddoc13-13basn1.ddoc</li>
+</ul>
+<p><strong>TestCaseID: Ddoc-ValidationPass-2</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: Ddoc with multiple valid signatures</li>
+<li>Expected Result: The document should pass the validation</li>
+<li>File: igasugust1.1.ddoc</li>
+</ul>
+<h2 id="documentformattestsjava">DocumentFormatTests.java</h2>
+<p><strong>TestCaseID: DocumentFormat-1</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:  (TBD)</li>
+<li>Title: Validation of pdf document acceptance</li>
+<li>Expected Result: Pdf is accepted and correct signature validation is given</li>
+<li>File: hellopades-pades-lt-sha256-sign.pdf</li>
+</ul>
+<p><strong>TestCaseID: DocumentFormat-2</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:  (TBD)</li>
+<li>Title: Validation of bdoc document acceptance</li>
+<li>Expected Result: Bdoc is accepted and correct signature validation is given</li>
+<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
+</ul>
+<p><strong>TestCaseID: DocumentFormat-3</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:  (TBD)</li>
+<li>Title: Validation of txt document rejection</li>
+<li>Expected Result: Txt document is rejected and proper error message is given</li>
+<li>File: hellopades-pades-lt-sha256-sign.txt</li>
+</ul>
+<p><strong>TestCaseID: DocumentFormat-4</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:  (TBD)</li>
+<li>Title: Validation of p7s document rejection</li>
+<li>Expected Result: P7s document is rejected and proper error message is given</li>
+<li>File: hellocades.p7s</li>
+</ul>
+<p><strong>TestCaseID: DocumentFormat-5</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:  (TBD)</li>
+<li>Title: Validation of zip document rejection</li>
+<li>Expected Result: Zip document is rejected and proper error message is given</li>
+<li>File: 42.zip</li>
+</ul>
+<p><strong>TestCaseID: DocumentFormat-6</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:  (TBD)</li>
+<li>Title: Validation of doc document rejection</li>
+<li>Expected Result: Doc document is rejected and proper error message is given</li>
+<li>File: hellopades-pades-lt-sha256-sign.doc</li>
+</ul>
+<p><strong>TestCaseID: DocumentFormat-7</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:  (TBD)</li>
+<li>Title: Validation of XML document rejection</li>
+<li>Expected Result: XML document is rejected and proper error message is given</li>
+<li>File: XML.xml</li>
+</ul>
+<p><strong>TestCaseID: DocumentFormat-8</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:  (TBD)</li>
+<li>Title: Validation of png document rejection</li>
+<li>Expected Result: Png document is rejected and proper error message is given</li>
+<li>File: Picture.png</li>
+</ul>
+<h2 id="largefiletestsjava">LargeFileTests.java</h2>
+<p><strong>TestCaseID: PDF-LargeFiles-1</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: Larger signed PDF files (PAdES Baseline LT).</li>
+<li>Expected Result: Bigger documents with valid signature should pass</li>
+<li>File: scout_x4-manual-signed_lt_9mb.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-LargeFiles-2</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: Larger signed PDF files (PAdES Baseline LT).</li>
+<li>Expected Result: Bigger documents with valid signature should pass</li>
+<li>File: scout_x4-manual-signed_lta_9mb.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-LargeFiles-3</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: Larger signed PDF files (PAdES Baseline LT).</li>
+<li>Expected Result: Bigger documents with valid signature should pass</li>
+<li>File: digidocservice-signed-lt-1-2mb.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-LargeFiles-4</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: Larger signed PDF files (PAdES Baseline LT).</li>
+<li>Expected Result: Bigger documents with valid signature should pass</li>
+<li>File: digidocservice-signed-lta-1-2mb.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-LargeFiles-5</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: Larger signed PDF files (PAdES Baseline LT).</li>
+<li>Expected Result: Bigger documents with valid signature should pass</li>
+<li>File: egovernment-benchmark-lt-3-8mb.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-LargeFiles-6</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: Larger signed PDF files (PAdES Baseline LT).</li>
+<li>Expected Result: Bigger documents with valid signature should pass</li>
+<li>File: egovenrment-benchmark-lta-3-8mb.pdf</li>
+</ul>
+<h2 id="pdfbaselineprofiletestsjava">PdfBaselineProfileTests.java</h2>
+<p><strong>TestCaseID: PDF-BaselineProfile-1</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: The PDF has PAdES-B profile signature</li>
+<li>Expected Result: Document validation should fail</li>
+<li>File: hellopades-pades-b-sha256-auth.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-BaselineProfile-2</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: The PDF has PAdES-T profile signature</li>
+<li>Expected Result: Document validation should fail</li>
+<li>File: some_file.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-BaselineProfile-3</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: The PDF has PAdES-LT profile signature</li>
+<li>Expected Result: Document validation should pass</li>
+<li>File: hellopades-pades-lt-sha256-sign.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-BaselineProfile-4</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: The PDF has PAdES-LTA profile signature</li>
+<li>Expected Result: Document validation should pass</li>
+<li>File: some_file.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-BaselineProfile-5</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: The PDF has PAdES-LTA profile signature</li>
+<li>Expected Result: Document validation should pass</li>
+<li>File: some_file.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-BaselineProfile-6</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: PDF document message digest attribute value does not match calculate value</li>
+<li>Expected Result: Document validation should fail</li>
+<li>File: hellopades-lt1-lt2-wrongDigestValue.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-BaselineProfile-7</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: DSS-SIG-MULTISIG</li>
+<li>Title: PDF file with a serial signature</li>
+<li>Expected Result: Document signed with multiple signers with serial signatures should pass</li>
+<li>File: hellopades-lt1-lt2-Serial.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-BaselineProfile-8</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: PDF document signed with multiple signers parallel signature</li>
+<li>Expected Result: Document with parallel signatures should pass</li>
+<li>File: hellopades-lt1-lt2-parallel3.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-BaselineProfile-9</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: PDF document signed with multiple signers parallel signature without Sscd</li>
+<li>Expected Result: Document with no qualified and without SSCD should fail</li>
+<li>File: hellopades-lt1-lt2-parallel3.pdf</li>
+</ul>
+<h2 id="pdfsignaturecryptographicalgorithmtestsjava">PdfSignatureCryptographicAlgorithmTests.java</h2>
+<p><strong>TestCaseID: PDF-SigCryptoAlg-1</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: DSS-CRY-ALGOEXP</li>
+<li>Title: SHA512 algorithms (PAdES Baseline LT)</li>
+<li>Expected Result: Document signed with SHA512 algorithm should pass</li>
+<li>File: hellopades-lt-sha512.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-SigCryptoAlg-2</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: DSS-CRY-ALGOEXP</li>
+<li>Title: SHA1 algorithms (PAdES Baseline LT)</li>
+<li>Expected Result: Document signed with SHA1 algorithm should pass</li>
+<li>File: hellopades-lt-sha1.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-SigCryptoAlg-3</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: DSS-CRY-ALGOEXP</li>
+<li>Title: ECDSA algorithms (PAdES Baseline LT)</li>
+<li>Expected Result: Document signed with ECDSA algorithm should pass</li>
+<li>File: hellopades-ecdsa.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-SigCryptoAlg-4</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: DSS-CRY-ALGOEXP</li>
+<li>Title: ECDSA224 algorithms (PAdES Baseline LT)</li>
+<li>Expected Result: Document signed with ECDSA224 algorithm should pass</li>
+<li>File: hellopades-lt-sha256-ec224.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-SigCryptoAlg-5</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: DSS-CRY-ALGOEXP</li>
+<li>Title: ECDSA256 algorithms (PAdES Baseline LT)</li>
+<li>Expected Result: Document signed with ECDSA256 algorithm should pass</li>
+<li>File: hellopades-lt-sha256-ec256.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-SigCryptoAlg-6</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: DSS-CRY-ALGOEXP</li>
+<li>Title: RSA1024 algorithms (PAdES Baseline LT)</li>
+<li>Expected Result: Document signed with RSA1024 algorithm should pass</li>
+<li>File: hellopades-lt-sha256-rsa1024.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-SigCryptoAlg-7</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: DSS-CRY-ALGOEXP</li>
+<li>Title: RSA1023 algorithms (PAdES Baseline LT)</li>
+<li>Expected Result: Document signed with RSA1023 algorithm should pass</li>
+<li>File: hellopades-lt-sha256-rsa1023.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-SigCryptoAlg-8</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: DSS-CRY-ALGOEXP</li>
+<li>Title: RSA2047 algorithms (PAdES Baseline LT)</li>
+<li>Expected Result: Document signed with RSA2047 algorithm should pass</li>
+<li>File: hellopades-lt-sha256-rsa2047.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-SigCryptoAlg-9</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: DSS-CRY-ALGOEXP</li>
+<li>Title: RSA2048 algorithms (PAdES Baseline LT)</li>
+<li>Expected Result: Document signed with RSA2048 algorithm should pass</li>
+<li>File: hellopades-lt-sha256-rsa2048.pdf</li>
+</ul>
+<h2 id="pdfvalidationfailjava">PdfValidationFail.java</h2>
+<p><strong>TestCaseID: PDF-ValidationFail-1</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: The PDF-file has been signed with certificate that is expired before signing (PAdES Baseline LT)</li>
+<li>Expected Result: Document signed with certificate that expired before signing should fail.</li>
+<li>File: hellopades-lt-rsa1024-sha1-expired.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-ValidationFail-2</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: The PDF-file has been signed with expired certificate (PAdES Baseline LT)</li>
+<li>Expected Result: Document signed with certificate that is expired should fail.</li>
+<li>File: IB-3691_bdoc21-TS-old-cert.bdoc</li>
+</ul>
+<p><strong>TestCaseID: PDF-ValidationFail-3</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: The PDF-file has been signed with revoked certificate (PAdES Baseline LT)</li>
+<li>Expected Result: Document signed with certificate that is revoked should fail.</li>
+<li>File: hellopades-lt-sha256-revoked.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-ValidationFail-4</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: The PDF-file has been signed with certificate that missing signed attribute (PAdES Baseline LT)</li>
+<li>Expected Result: PDF-file validation should fail</li>
+<li>File: missing_signing_certificate_attribute.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-ValidationFail-5</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: The PDF-file has been signed with certificate which has no non repudiation key usage attribute (PAdES Baseline LT)</li>
+<li>Expected Result: The PDF-file validation should fail with error.</li>
+<li>File: hellopades-pades-lt-sha256-auth.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-ValidationFail-6</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: hellopadess been signed with an expired certificate, where signing time is within the original validity</li>
+<li>Expected Result: Document signed with expired certificate should fail</li>
+<li>File: hellopades-lt-sha256-rsa2048-expired.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-ValidationFail-7</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: hellopadess been signed with an expired certificate, where signing time is within the original validity</li>
+<li>Expected Result: Document signed with expired certificate should fail</li>
+<li>File: hellopades-lt-sha256-rsa1024-expired2.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-ValidationFail-8</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: hellopadess been signed with an expired certificate, where signing time is within the original validity</li>
+<li>Expected Result: Document signed with expired certificate should fail</li>
+<li>File: hellopades-lt-sha1-rsa1024-expired2.pdf</li>
+</ul>
+<h2 id="pdfvalidationpassjava">PdfValidationPass.java</h2>
+<p><strong>TestCaseID: PDF-ValidationPass-1</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: The PDF-file has been signed with certificate that is expired after signing (PAdES Baseline LT)</li>
+<li>Expected Result: Document signed with certificate that expired after signing should pass.</li>
+<li>File: hellopades-lt-sha256-rsa1024-not-expired.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-ValidationPass-2</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: The PDF-file has been signed with certificate that will expire in 7 days after signing (PAdES Baseline LT)</li>
+<li>Expected Result: Document signed with certificate that expired after signing should pass.</li>
+<li>File: hellopades-lt-sha256-rsa2048-7d.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-ValidationPass-3</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: Certificate contents are include in response (PAdES Baseline LT)</li>
+<li>Expected Result: The PDF-file validation should pass</li>
+<li>File: hellopades-lt-sha256-ocsp-15min1s.pdf</li>
+</ul>
+<h2 id="signaturerevocationvaluetestsjava">SignatureRevocationValueTests.java</h2>
+<p><strong>TestCaseID: PDF-SigRevocVal-1</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: DSS-SIG-OCSP-TS-WARN</li>
+<li>Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation that is more than 15 minutes later than the signatures Time Stamp.</li>
+<li>Expected Result: Document with ocsp over 15 min delay should pass but warn</li>
+<li>File: hellopades-lt-sha256-ocsp-15min1s.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-SigRevocVal-2</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: DSS-SIG-OCSP-TS-WARN</li>
+<li>Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation that is more than 15 minutes later than the signatures Time Stamp.</li>
+<li>Expected Result: Document with ocsp over 15 min delay should pass but warn</li>
+<li>File: hellopades-lt-sha256-ocsp-15min1s.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-SigRevocVal-3</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: DSS-SIG-OCSP-TS-ERROR</li>
+<li>Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation more than 24 hours later than the signatures Time Stamp.</li>
+<li>Expected Result: Document with over 24h delay should fail</li>
+<li>File: hellopades-lt-sha256-ocsp-28h.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-SigRevocVal-4</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: DSS-SIG-OCSP-TS-ERROR</li>
+<li>Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation more than 24 hours later than the signatures Time Stamp.</li>
+<li>Expected Result: Document with over 24h delay should fail</li>
+<li>File: hellopades-lt-sha256-ocsp-28h.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-SigRevocVal-5</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: The PDF-file has been signed with PAdES Baseline LTA profile signature, the signature contains CRL.</li>
+<li>Expected Result: Document with no ocsp or crl in signature should fail</li>
+<li>File: hellopades-lta-no-ocsp.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-SigRevocVal-6</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: PDF signature has OCSP confirmation before Time Stamp</li>
+<li>Expected Result: Document signed with ocsp time value before best signature time should fail</li>
+<li>File: hellopades-lt-sha256-rsa2048-ocsp-before-ts.pdf</li>
+</ul>
+<h2 id="validationreportjsonstructureverificationjava">ValidationReportJsonStructureVerification.java</h2>
+<p><strong>TestCaseID: Bdoc-ValidationReport-1</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: Validation report - WIP (TBD)</li>
+<li>Title: JSON structure has all elements (Bdoc valid single signature)</li>
+<li>Expected Result: All required elements are present according to BdocDocSimpleReportSchema.json</li>
+<li>File: Valid_ID_sig.bdoc</li>
+</ul>
+<p><strong>TestCaseID: Bdoc-ValidationReport-2</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: Validation report - WIP (TBD)</li>
+<li>Title: JSON structure has all elements (Bdoc valid multiple signatures)</li>
+<li>Expected Result: All required elements are present according to SimpleReportSchema.json</li>
+<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
+</ul>
+<p><strong>TestCaseID: Bdoc-ValidationReport-3</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: Validation report - WIP (TBD)</li>
+<li>Title: JSON structure has all elements (Bdoc invalid single signature)</li>
+<li>Expected Result: All required elements are present according to BdocDocSimpleReportSchema.json</li>
+<li>File: IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc</li>
+</ul>
+<p><strong>TestCaseID: Bdoc-ValidationReport-4</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: Validation report - WIP (TBD)</li>
+<li>Title: JSON structure has all elements (Bdoc indeterminate status)</li>
+<li>Expected Result: All required elements are present according to BdocDocSimpleReportSchema.json</li>
+<li>File: test1-bdoc-unknown.bdoc</li>
+</ul>
+<p><strong>TestCaseID: Bdoc-ValidationReport-5</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: Validation report - WIP (TBD)</li>
+<li>Title: Check for optional subindication and error elements</li>
+<li>Expected Result: Error and subindication elements are present</li>
+<li>File: IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc</li>
+</ul>
+<p><strong>TestCaseID: Bdoc-ValidationReport-6</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: Validation report - WIP (TBD)</li>
+<li>Title: Check for optional warning element</li>
+<li>Expected Result: Warning element is present</li>
+<li>File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc</li>
+</ul>
+<p><strong>TestCaseID: Pdf-ValidationReport-7</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: Validation report - WIP (TBD)</li>
+<li>Title: JSON structure has all elements (Pdf valid single signature)</li>
+<li>Expected Result: All required elements are present according to SimpleReportSchema.json</li>
+<li>File: hellopades-lt-sha256-ec256.pdf</li>
+</ul>
+<p><strong>TestCaseID: Pdf-ValidationReport-8</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: Validation report - WIP (TBD)</li>
+<li>Title: JSON structure has all elements (Pdf valid Multiple signatures)</li>
+<li>Expected Result: All required elements are present according to SimpleReportSchema.json</li>
+<li>File:</li>
+</ul>
+<p><strong>TestCaseID: Pdf-ValidationReport-9</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: Validation report - WIP (TBD)</li>
+<li>Title: JSON structure has all elements (Pdf invalid signature)</li>
+<li>Expected Result: All required elements are present according to SimpleReportSchema.json</li>
+<li>File: hellopades-lt-b.pdf</li>
+</ul>
+<p><strong>TestCaseID: Pdf-ValidationReport-10</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: Validation report - WIP (TBD)</li>
+<li>Title: JSON structure has all elements (Pdf indeterminate status)</li>
+<li>Expected Result: All required elements are present according to SimpleReportSchema.json</li>
+<li>File: hellopades-lt-rsa1024-sha1-expired.pdf</li>
+</ul>
+<p><strong>TestCaseID: Ddoc-ValidationReport-11</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: Validation report - WIP (TBD)</li>
+<li>Title: JSON structure has all elements (ddoc valid single signature)</li>
+<li>Expected Result: All required elements are present according to SimpleReportSchema.json</li>
+<li>File: 18912.ddoc</li>
+</ul>
+<p><strong>TestCaseID: Ddoc-ValidationReport-12</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: Validation report - WIP (TBD)</li>
+<li>Title: JSON structure has all elements (ddoc valid Multiple signatures)</li>
+<li>Expected Result: All required elements are present according to SimpleReportSchema.json</li>
+<li>File: igasugust1.1.ddoc</li>
+</ul>
+<p><strong>TestCaseID: Ddoc-ValidationReport-13</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: Validation report - WIP (TBD)</li>
+<li>Title: JSON structure has all elements (ddoc invalid signature)</li>
+<li>Expected Result: All required elements are present according to SimpleReportSchema.json</li>
+<li>File: test1-ddoc-revoked.ddoc</li>
+</ul>
+<p><strong>TestCaseID: Ddoc-ValidationReport-14</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: Validation report - WIP (TBD)</li>
+<li>Title: JSON structure has all elements (ddoc indeterminate status)</li>
+<li>Expected Result: All required elements are present according to SimpleReportSchema.json</li>
+<li>File: test1-ddoc-unknown.ddoc</li>
+</ul>
+<p><strong>TestCaseID: Ddoc-ValidationReport-15</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: Validation report - WIP (TBD)</li>
+<li>Title: Check for optional subindication and error elements</li>
+<li>Expected Result: Error and subindication elements are present</li>
+<li>File: test1-ddoc-unknown.ddoc</li>
+</ul>
+<p><strong>TestCaseID: Ddoc-ValidationReport-16</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: Validation report - WIP (TBD)</li>
+<li>Title: Check for optional warning element</li>
+<li>Expected Result: Warning element is present</li>
+<li>File: test1-ddoc-unknown.ddoc</li>
+</ul>
+<h2 id="validationrequesttestsjava">ValidationRequestTests.java</h2>
+<p><strong>TestCaseID: ValidationRequest-1</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:(TBD)</li>
+<li>Title: Input random base64 string as document</li>
+<li>Expected Result: Error is returned stating problem in document</li>
+<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
+</ul>
+<p><strong>TestCaseID: ValidationRequest-2</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:(TBD)</li>
+<li>Title: Input a request with empty values</li>
+<li>Expected Result: Errors are returned stating the missing values</li>
+<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
+</ul>
+<p><strong>TestCaseID: ValidationRequest-3</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:(TBD)</li>
+<li>Title: Request with not base64 string as document</li>
+<li>Expected Result: Error is returned stating encoding problem</li>
+<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
+</ul>
+<p><strong>TestCaseID: ValidationRequest-4</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:(TBD)</li>
+<li>Title: Verification of wrong report type as input</li>
+<li>Expected Result: Error is returned stating wrong report type</li>
+<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
+</ul>
+<p><strong>TestCaseID: ValidationRequest-5</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:(TBD)</li>
+<li>Title: Verification of valid (but not simple) report type as input</li>
+<li>Expected Result: Correct report is returned (currently simple report is returned in all cases)</li>
+<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
+</ul>
+<p><strong>TestCaseID: ValidationRequest-6</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:(TBD)</li>
+<li>Title: Verification of wrong document type as input</li>
+<li>Expected Result: Correct error code is returned</li>
+<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
+</ul>
+<p><strong>TestCaseID: ValidationRequest-7</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:(TBD)</li>
+<li>Title: Mismatch in documentType and actual document (bdoc and pdf)</li>
+<li>Expected Result: Error is returned</li>
+<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
+</ul>
+<p><strong>TestCaseID: ValidationRequest-8</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:(TBD)</li>
+<li>Title: Mismatch in documentType and actual document (asice and bdoc)</li>
+<li>Expected Result: Error is returned</li>
+<li>File: TS-11_23634_TS_2_timestamps.asice</li>
+</ul>
+<p><strong>TestCaseID: ValidationRequest-9</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:(TBD)</li>
+<li>Title: Verification of case insensitivity in document type</li>
+<li>Expected Result: Report is returned</li>
+<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
+</ul>
+<p><strong>TestCaseID: ValidationRequest-10</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:(TBD)</li>
+<li>Title: Verification of filename value (filename do not match the actual file)</li>
+<li>Expected Result: The same filename is returned as sent in the request</li>
+<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
+</ul>
+<p><strong>TestCaseID: ValidationRequest-11</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:(TBD)</li>
+<li>Title: Request has invalid character in filename</li>
+<li>Expected Result: Correct error code is returned</li>
+<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
+</ul>
+<p><strong>TestCaseID: ValidationRequest-12</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:(TBD)</li>
+<li>Title: Request has invalid key on document position</li>
+<li>Expected Result: Error is returned</li>
+<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
+</ul>
+<p><strong>TestCaseID: ValidationRequest-13</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:(TBD)</li>
+<li>Title: Request has wrong key on report type position</li>
+<li>Expected Result: Error is returned</li>
+<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
+</ul>
+<p><strong>TestCaseID: ValidationRequest-14</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:(TBD)</li>
+<li>Title: Request has XML as document type (special case, XML is similar to ddoc)</li>
+<li>Expected Result: Error is given</li>
+<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
+</ul>
+<p><strong>TestCaseID: ValidationRequest-15</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:(TBD)</li>
+<li>Title: Request has long (38784 characters) in filename field</li>
+<li>Expected Result: Report is returned with the same filename</li>
+<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
+</ul>
+<p><strong>TestCaseID: ValidationRequest-16</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:(TBD)</li>
+<li>Title: Totally empty request body is sent</li>
+<li>Expected Result: Error is given</li>
+<li>File: None</li>
+</ul>
+<p><strong>TestCaseID: ValidationRequest-17</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:(TBD)</li>
+<li>Title: Request with more parameters than expected is sent</li>
+<li>Expected Result: Error is given or extra parameters are ignored?</li>
+<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
+</ul>
+<p><strong>TestCaseID: ValidationRequest-18</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:(TBD)</li>
+<li>Title: Request with special chars is sent</li>
+<li>Expected Result: Validation report is returned</li>
+<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
+</ul>
+          <aside class="copyright" role="note">
+            
+            Documentation built with
+            <a href="http://www.mkdocs.org" target="_blank">MkDocs</a>
+            using the
+            <a href="http://squidfunk.github.io/mkdocs-material/" target="_blank">
+              Material
+            </a>
+            theme.
+          </aside>
+          
+            <footer class="footer">
+              
+  <nav class="pagination" aria-label="Footer">
+    <div class="previous">
+      
+        <a href="../validation_constraints/" title="Appendix 4 - Validation Constraint Configuration">
+          <span class="direction">
+            Previous
+          </span>
+          <div class="page">
+            <div class="button button-previous" role="button" aria-label="Previous">
+              <i class="icon icon-back"></i>
+            </div>
+            <div class="stretch">
+              <div class="title">
+                Appendix 4 - Validation Constraint Configuration
+              </div>
+            </div>
+          </div>
+        </a>
+      
+    </div>
+    <div class="next">
+      
+    </div>
+  </nav>
+
+            </footer>
+          
+        </div>
+      </article>
+      <div class="results" role="status" aria-live="polite">
+        <div class="scrollable">
+          <div class="wrapper">
+            <div class="meta"></div>
+            <div class="list"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script>
+      var base_url = '../../..';
+      var repo_id  = '';
+    </script>
+    <script src="../../../assets/javascripts/application-997097ee0c.js"></script>
+    
+    
+  </body>
+</html>

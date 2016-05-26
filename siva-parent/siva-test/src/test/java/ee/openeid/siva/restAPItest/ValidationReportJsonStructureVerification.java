@@ -42,7 +42,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: JSON structure has all elements (Bdoc valid single signature)
      *
@@ -64,7 +64,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: JSON structure has all elements (Bdoc valid multiple signatures)
      *
@@ -86,7 +86,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: JSON structure has all elements (Bdoc invalid single signature)
      *
@@ -108,7 +108,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: JSON structure has all elements (Bdoc indeterminate status)
      *
@@ -130,7 +130,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: Check for optional subindication and error elements
      *
@@ -156,7 +156,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: Check for optional warning element
      *
@@ -180,7 +180,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title:  Bdoc report with no signatures
      *
@@ -203,7 +203,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: JSON structure has all elements (Pdf valid single signature)
      *
@@ -226,7 +226,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: JSON structure has all elements (Pdf valid Multiple signatures)
      *
@@ -249,7 +249,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: JSON structure has all elements (Pdf invalid signature)
      *
@@ -272,7 +272,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: JSON structure has all elements (Pdf indeterminate status)
      *
@@ -295,7 +295,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title:  Pdf report with no signatures
      *
@@ -318,7 +318,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: JSON structure has all elements (ddoc valid single signature)
      *
@@ -341,7 +341,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: JSON structure has all elements (ddoc valid Multiple signatures)
      *
@@ -364,7 +364,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: JSON structure has all elements (ddoc invalid signature)
      *
@@ -387,7 +387,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: JSON structure has all elements (ddoc indeterminate status)
      *
@@ -410,7 +410,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: Check for optional subindication and error elements
      *
@@ -426,7 +426,8 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
                 .then()
                 .body("signatures.indication", Matchers.hasItem("TOTAL-FAILED"))
                 .body("signatures.subindication", Matchers.hasItem("need value for this"))
-                .body("signatures.errors.nameId", Matchers.hasItem("70"));
+                .body("signatures.errors.nameId", Matchers.hasItem("70"))
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }
 
     /***
@@ -435,7 +436,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: Check for optional warning element
      *
@@ -450,7 +451,8 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
         post(validationRequestFor("NeedFile.ddoc", "simple"))
                 .then()
                 .body("signatures.indication", Matchers.hasItem(""))
-                .body("signatures.warnings.nameId", Matchers.hasItem("need value for this"));
+                .body("signatures.warnings.nameId", Matchers.hasItem("need value for this"))
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }
 
     /***
@@ -459,7 +461,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: Validation report - WIP (TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title:  Ddoc report with no signatures
      *

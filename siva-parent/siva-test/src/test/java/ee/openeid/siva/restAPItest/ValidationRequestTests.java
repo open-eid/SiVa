@@ -51,7 +51,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:(TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: Input random base64 string as document
      *
@@ -76,7 +76,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:(TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: Input a request with empty values
      *
@@ -106,7 +106,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:(TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: Request with not base64 string as document
      *
@@ -131,7 +131,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:(TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: Verification of wrong report type as input
      *
@@ -156,7 +156,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:(TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: Verification of valid (but not simple) report type as input
      *
@@ -180,7 +180,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:(TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: Verification of wrong document type as input
      *
@@ -205,7 +205,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:(TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: Mismatch in documentType and actual document (bdoc and pdf)
      *
@@ -230,7 +230,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:(TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: Mismatch in documentType and actual document (asice and bdoc)
      *
@@ -255,7 +255,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:(TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: Verification of case insensitivity in document type
      *
@@ -279,7 +279,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:(TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: Verification of filename value (filename do not match the actual file)
      *
@@ -303,7 +303,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:(TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: Request has invalid character in filename
      *
@@ -329,7 +329,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:(TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: Request has invalid key on document position
      *
@@ -355,7 +355,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:(TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: Request has wrong key on report type position
      *
@@ -380,7 +380,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:(TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: Request has XML as document type (special case, XML is similar to ddoc)
      *
@@ -406,7 +406,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:(TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: Request has long (38784 characters) in filename field
      *
@@ -431,7 +431,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:(TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: Totally empty request body is sent
      *
@@ -456,7 +456,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:(TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: Request with more parameters than expected is sent
      *
@@ -487,7 +487,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:(TBD)
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
      * Title: Request with special chars is sent
      *

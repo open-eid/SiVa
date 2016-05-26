@@ -2,7 +2,6 @@ server:
   port: 9000
 siva:
   uploadDirectory: "upload-dir"
-  service:
-    url: "http://localhost:8080/validate"
+  serviceUrl: "http://localhost:8080/validate"
 multipart:
   max-file-size: 10MB

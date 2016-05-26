@@ -1,6 +1,6 @@
 # Component diagram
 
-![SiVa component diagram](/img/siva/siva_module_diagram.png)
+![SiVa component diagram](../img/siva/siva_module_diagram.png)
 
 * Web API is standard Spring MVC module it will take in JSON or SOAP requests sent by
   systems that integrate with SIVA web service API

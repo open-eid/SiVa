@@ -8,6 +8,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>siva-validation-proxy</artifactId>
+    <name>SiVa validation service proxy</name>
+    <description>
+        SiVa validation proxy selects digitally signed document validation service based on
+        incoming validation request
+    </description>
 
     <dependencies>
         <dependency>

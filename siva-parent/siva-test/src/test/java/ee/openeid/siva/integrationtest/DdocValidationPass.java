@@ -39,11 +39,11 @@ public class DdocValidationPass extends SiVaRestTests{
      *
      * Expected Result: The document should pass the validation
      *
-     * File: needfile1.0.ddoc
+     * File: DigiDoc_1.0_Tartu_ja_Tallinna_koostooleping.ddoc
      ***/
-    @Test @Ignore //TODO Need ddoc v1.0 file
+    @Test
     public void validMultipleSignaturesV10() {
-        assertAllSignaturesAreValid(postForReport("needfile.ddoc"));
+        assertAllSignaturesAreValid(postForReport("DigiDoc_1.0_Tartu_ja_Tallinna_koostooleping.ddoc"));
     }
 
     /***

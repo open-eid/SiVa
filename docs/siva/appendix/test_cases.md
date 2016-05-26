@@ -112,9 +112,33 @@ List of Test Cases
 
   * TestType: Automated
   * RequirementID:
-  * Title: Ddoc with multiple valid signatures
+  * Title: Ddoc v1.0 with multiple valid signatures
+  * Expected Result: The document should pass the validation
+  * File: DigiDoc_1.0_Tartu_ja_Tallinna_koostooleping.ddoc
+
+**TestCaseID: Ddoc-ValidationPass-3**
+
+  * TestType: Automated
+  * RequirementID:
+  * Title: Ddoc v1.1 with multiple valid signatures v1.1
   * Expected Result: The document should pass the validation
   * File: igasugust1.1.ddoc
+
+**TestCaseID: Ddoc-ValidationPass-4**
+
+  * TestType: Automated
+  * RequirementID:
+  * Title: Ddoc v1.2 with multiple valid signatures
+  * Expected Result: The document should pass the validation
+  * File: igasugust1.2.ddoc
+
+**TestCaseID: Ddoc-ValidationPass-5**
+
+  * TestType: Automated
+  * RequirementID:
+  * Title: Ddoc v1.3 with multiple valid signatures
+  * Expected Result: The document should pass the validation
+  * File: igasugust1.3.ddoc
 
 
 ## DocumentFormatTests.java
@@ -477,6 +501,14 @@ List of Test Cases
   * Title: Certificate contents are include in response (PAdES Baseline LT)
   * Expected Result: The PDF-file validation should pass
   * File: hellopades-lt-sha256-ocsp-15min1s.pdf
+
+**TestCaseID: PDF-ValidationPass-4**
+
+  * TestType: Automated
+  * RequirementID:
+  * Title: Pdf with single valid signature
+  * Expected Result: Document should pass.
+  * File: PdfValidSingleSignature.pdf
 
 
 ## SignatureRevocationValueTests.java

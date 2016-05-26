@@ -41,7 +41,7 @@
       	font-style: normal;
       }
     </style>
-    <link rel="stylesheet" href="../../assets/stylesheets/application-0dac3e5884.css">
+    <link rel="stylesheet" href="../../assets/stylesheets/application-54f87043f3.css">
     
       <link rel="stylesheet" href="../../assets/stylesheets/palettes-05ab2406df.css">
     
@@ -357,18 +357,21 @@ web service:</p>
 </ul>
 <h2 id="building-siva-validation-web-service-on-ubuntu-1604">Building SiVa validation web service on Ubuntu 16.04</h2>
 <p>First we need to install Git and Java SDK 8 by issuing below commands:</p>
-<pre class="codehilite"><code class="language-bash">sudo apt-get update
+<div class="codehilite"><pre><span></span>sudo apt-get update
 sudo apt-get install git -y
-sudo apt-get install default-jdk -y</code></pre>
+sudo apt-get install default-jdk -y
+</pre></div>
 
 
 <p>Next we need to clone the SiVa Github repository:</p>
-<pre class="codehilite"><code class="language-bash">git clone https://github.com/open-eid/SiVa.git --branch develop</code></pre>
+<div class="codehilite"><pre><span></span>git clone https://github.com/open-eid/SiVa.git --branch develop
+</pre></div>
 
 
 <p>Final step is building the SiVa project using Maven Wrapper</p>
-<pre class="codehilite"><code class="language-bash">cd SiVa
-./mvnw install</code></pre>
+<div class="codehilite"><pre><span></span><span class="nb">cd</span> SiVa
+./mvnw install
+</pre></div>
           <aside class="copyright" role="note">
             
             Documentation built with

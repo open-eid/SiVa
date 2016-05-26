@@ -41,7 +41,7 @@
       	font-style: normal;
       }
     </style>
-    <link rel="stylesheet" href="../../../assets/stylesheets/application-0dac3e5884.css">
+    <link rel="stylesheet" href="../../../assets/stylesheets/application-54f87043f3.css">
     
       <link rel="stylesheet" href="../../../assets/stylesheets/palettes-05ab2406df.css">
     
@@ -438,6 +438,14 @@
 <li>Expected Result: The document should fail the validation</li>
 <li>File: BdocMultipleSignaturesMixedWithValidAndInvalid.bdoc</li>
 </ul>
+<p><strong>TestCaseID: Bdoc-ValidationFail-4</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: Bdoc with no signatures</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: BdocContainerNoSignature.bdoc</li>
+</ul>
 <h2 id="bdocvalidationpassjava">BdocValidationPass.java</h2>
 <p><strong>TestCaseID: Bdoc-ValidationPass-1</strong></p>
 <ul>
@@ -455,6 +463,14 @@
 <li>Expected Result: The document should pass the validation</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
 </ul>
+<p><strong>TestCaseID: Bdoc-ValidationPass-3</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: Bdoc with warning on signature</li>
+<li>Expected Result: The document should pass the validation but warning should be returned</li>
+<li>File: 23147_weak-warning-sha1.bdoc</li>
+</ul>
 <h2 id="ddocvalidationfailjava">DdocValidationFail.java</h2>
 <p><strong>TestCaseID: Ddoc-ValidationFail-1</strong></p>
 <ul>
@@ -462,7 +478,7 @@
 <li>RequirementID:</li>
 <li>Title: Ddoc with single invalid signature</li>
 <li>Expected Result: The document should fail the validation</li>
-<li>File:</li>
+<li>File: test1-ddoc-revoked.ddoc</li>
 </ul>
 <p><strong>TestCaseID: Ddoc-ValidationFail-2</strong></p>
 <ul>
@@ -479,6 +495,14 @@
 <li>Title: Ddoc with multiple signatures both valid and invalid</li>
 <li>Expected Result: The document should fail the validation</li>
 <li>File:</li>
+</ul>
+<p><strong>TestCaseID: Ddoc-ValidationFail-4</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID:</li>
+<li>Title: Ddoc with no signatures</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: DdocContainerNoSignature.bdoc</li>
 </ul>
 <h2 id="ddocvalidationpassjava">DdocValidationPass.java</h2>
 <p><strong>TestCaseID: Ddoc-ValidationPass-1</strong></p>
@@ -900,7 +924,7 @@
 <p><strong>TestCaseID: Bdoc-ValidationReport-1</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID: Validation report - WIP (TBD)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
 <li>Title: JSON structure has all elements (Bdoc valid single signature)</li>
 <li>Expected Result: All required elements are present according to BdocDocSimpleReportSchema.json</li>
 <li>File: Valid_ID_sig.bdoc</li>
@@ -908,7 +932,7 @@
 <p><strong>TestCaseID: Bdoc-ValidationReport-2</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID: Validation report - WIP (TBD)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
 <li>Title: JSON structure has all elements (Bdoc valid multiple signatures)</li>
 <li>Expected Result: All required elements are present according to SimpleReportSchema.json</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
@@ -916,7 +940,7 @@
 <p><strong>TestCaseID: Bdoc-ValidationReport-3</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID: Validation report - WIP (TBD)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
 <li>Title: JSON structure has all elements (Bdoc invalid single signature)</li>
 <li>Expected Result: All required elements are present according to BdocDocSimpleReportSchema.json</li>
 <li>File: IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc</li>
@@ -924,7 +948,7 @@
 <p><strong>TestCaseID: Bdoc-ValidationReport-4</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID: Validation report - WIP (TBD)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
 <li>Title: JSON structure has all elements (Bdoc indeterminate status)</li>
 <li>Expected Result: All required elements are present according to BdocDocSimpleReportSchema.json</li>
 <li>File: test1-bdoc-unknown.bdoc</li>
@@ -932,7 +956,7 @@
 <p><strong>TestCaseID: Bdoc-ValidationReport-5</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID: Validation report - WIP (TBD)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
 <li>Title: Check for optional subindication and error elements</li>
 <li>Expected Result: Error and subindication elements are present</li>
 <li>File: IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc</li>
@@ -940,96 +964,120 @@
 <p><strong>TestCaseID: Bdoc-ValidationReport-6</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID: Validation report - WIP (TBD)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
 <li>Title: Check for optional warning element</li>
 <li>Expected Result: Warning element is present</li>
 <li>File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc</li>
 </ul>
-<p><strong>TestCaseID: Pdf-ValidationReport-7</strong></p>
+<p><strong>TestCaseID: Bdoc-ValidationReport-7</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID: Validation report - WIP (TBD)</li>
-<li>Title: JSON structure has all elements (Pdf valid single signature)</li>
-<li>Expected Result: All required elements are present according to SimpleReportSchema.json</li>
-<li>File: hellopades-lt-sha256-ec256.pdf</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
+<li>Title:  Bdoc report with no signatures</li>
+<li>Expected Result: Report is returned with required elements</li>
+<li>File:BdocContainerNoSignature.bdoc</li>
 </ul>
 <p><strong>TestCaseID: Pdf-ValidationReport-8</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID: Validation report - WIP (TBD)</li>
-<li>Title: JSON structure has all elements (Pdf valid Multiple signatures)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
+<li>Title: JSON structure has all elements (Pdf valid single signature)</li>
 <li>Expected Result: All required elements are present according to SimpleReportSchema.json</li>
-<li>File:</li>
+<li>File: hellopades-lt-sha256-ec256.pdf</li>
 </ul>
 <p><strong>TestCaseID: Pdf-ValidationReport-9</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID: Validation report - WIP (TBD)</li>
-<li>Title: JSON structure has all elements (Pdf invalid signature)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
+<li>Title: JSON structure has all elements (Pdf valid Multiple signatures)</li>
 <li>Expected Result: All required elements are present according to SimpleReportSchema.json</li>
-<li>File: hellopades-lt-b.pdf</li>
+<li>File:</li>
 </ul>
 <p><strong>TestCaseID: Pdf-ValidationReport-10</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID: Validation report - WIP (TBD)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
+<li>Title: JSON structure has all elements (Pdf invalid signature)</li>
+<li>Expected Result: All required elements are present according to SimpleReportSchema.json</li>
+<li>File: hellopades-lt-b.pdf</li>
+</ul>
+<p><strong>TestCaseID: Pdf-ValidationReport-11</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
 <li>Title: JSON structure has all elements (Pdf indeterminate status)</li>
 <li>Expected Result: All required elements are present according to SimpleReportSchema.json</li>
 <li>File: hellopades-lt-rsa1024-sha1-expired.pdf</li>
 </ul>
-<p><strong>TestCaseID: Ddoc-ValidationReport-11</strong></p>
+<p><strong>TestCaseID: Pdf-ValidationReport-12</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID: Validation report - WIP (TBD)</li>
-<li>Title: JSON structure has all elements (ddoc valid single signature)</li>
-<li>Expected Result: All required elements are present according to SimpleReportSchema.json</li>
-<li>File: 18912.ddoc</li>
-</ul>
-<p><strong>TestCaseID: Ddoc-ValidationReport-12</strong></p>
-<ul>
-<li>TestType: Automated</li>
-<li>RequirementID: Validation report - WIP (TBD)</li>
-<li>Title: JSON structure has all elements (ddoc valid Multiple signatures)</li>
-<li>Expected Result: All required elements are present according to SimpleReportSchema.json</li>
-<li>File: igasugust1.1.ddoc</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
+<li>Title:  Pdf report with no signatures</li>
+<li>Expected Result: Report is returned with required elements</li>
+<li>File: PdfNoSignature.pdf</li>
 </ul>
 <p><strong>TestCaseID: Ddoc-ValidationReport-13</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID: Validation report - WIP (TBD)</li>
-<li>Title: JSON structure has all elements (ddoc invalid signature)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
+<li>Title: JSON structure has all elements (ddoc valid single signature)</li>
 <li>Expected Result: All required elements are present according to SimpleReportSchema.json</li>
-<li>File: test1-ddoc-revoked.ddoc</li>
+<li>File: 18912.ddoc</li>
 </ul>
 <p><strong>TestCaseID: Ddoc-ValidationReport-14</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID: Validation report - WIP (TBD)</li>
-<li>Title: JSON structure has all elements (ddoc indeterminate status)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
+<li>Title: JSON structure has all elements (ddoc valid Multiple signatures)</li>
 <li>Expected Result: All required elements are present according to SimpleReportSchema.json</li>
-<li>File: test1-ddoc-unknown.ddoc</li>
+<li>File: igasugust1.1.ddoc</li>
 </ul>
 <p><strong>TestCaseID: Ddoc-ValidationReport-15</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID: Validation report - WIP (TBD)</li>
-<li>Title: Check for optional subindication and error elements</li>
-<li>Expected Result: Error and subindication elements are present</li>
-<li>File: test1-ddoc-unknown.ddoc</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
+<li>Title: JSON structure has all elements (ddoc invalid signature)</li>
+<li>Expected Result: All required elements are present according to SimpleReportSchema.json</li>
+<li>File: test1-ddoc-revoked.ddoc</li>
 </ul>
 <p><strong>TestCaseID: Ddoc-ValidationReport-16</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID: Validation report - WIP (TBD)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
+<li>Title: JSON structure has all elements (ddoc indeterminate status)</li>
+<li>Expected Result: All required elements are present according to SimpleReportSchema.json</li>
+<li>File: test1-ddoc-unknown.ddoc</li>
+</ul>
+<p><strong>TestCaseID: Ddoc-ValidationReport-17</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
+<li>Title: Check for optional subindication and error elements</li>
+<li>Expected Result: Error and subindication elements are present</li>
+<li>File: test1-ddoc-unknown.ddoc</li>
+</ul>
+<p><strong>TestCaseID: Ddoc-ValidationReport-18</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
 <li>Title: Check for optional warning element</li>
 <li>Expected Result: Warning element is present</li>
 <li>File: test1-ddoc-unknown.ddoc</li>
+</ul>
+<p><strong>TestCaseID: Ddoc-ValidationReport-19</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
+<li>Title:  Ddoc report with no signatures</li>
+<li>Expected Result: Report is returned with required elements</li>
+<li>File: DdocContainerNoSignature.ddoc</li>
 </ul>
 <h2 id="validationrequesttestsjava">ValidationRequestTests.java</h2>
 <p><strong>TestCaseID: ValidationRequest-1</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID:(TBD)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
 <li>Title: Input random base64 string as document</li>
 <li>Expected Result: Error is returned stating problem in document</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
@@ -1037,7 +1085,7 @@
 <p><strong>TestCaseID: ValidationRequest-2</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID:(TBD)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
 <li>Title: Input a request with empty values</li>
 <li>Expected Result: Errors are returned stating the missing values</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
@@ -1045,7 +1093,7 @@
 <p><strong>TestCaseID: ValidationRequest-3</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID:(TBD)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
 <li>Title: Request with not base64 string as document</li>
 <li>Expected Result: Error is returned stating encoding problem</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
@@ -1053,7 +1101,7 @@
 <p><strong>TestCaseID: ValidationRequest-4</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID:(TBD)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
 <li>Title: Verification of wrong report type as input</li>
 <li>Expected Result: Error is returned stating wrong report type</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
@@ -1061,7 +1109,7 @@
 <p><strong>TestCaseID: ValidationRequest-5</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID:(TBD)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
 <li>Title: Verification of valid (but not simple) report type as input</li>
 <li>Expected Result: Correct report is returned (currently simple report is returned in all cases)</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
@@ -1069,7 +1117,7 @@
 <p><strong>TestCaseID: ValidationRequest-6</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID:(TBD)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
 <li>Title: Verification of wrong document type as input</li>
 <li>Expected Result: Correct error code is returned</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
@@ -1077,7 +1125,7 @@
 <p><strong>TestCaseID: ValidationRequest-7</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID:(TBD)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
 <li>Title: Mismatch in documentType and actual document (bdoc and pdf)</li>
 <li>Expected Result: Error is returned</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
@@ -1085,7 +1133,7 @@
 <p><strong>TestCaseID: ValidationRequest-8</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID:(TBD)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
 <li>Title: Mismatch in documentType and actual document (asice and bdoc)</li>
 <li>Expected Result: Error is returned</li>
 <li>File: TS-11_23634_TS_2_timestamps.asice</li>
@@ -1093,7 +1141,7 @@
 <p><strong>TestCaseID: ValidationRequest-9</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID:(TBD)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
 <li>Title: Verification of case insensitivity in document type</li>
 <li>Expected Result: Report is returned</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
@@ -1101,7 +1149,7 @@
 <p><strong>TestCaseID: ValidationRequest-10</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID:(TBD)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
 <li>Title: Verification of filename value (filename do not match the actual file)</li>
 <li>Expected Result: The same filename is returned as sent in the request</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
@@ -1109,7 +1157,7 @@
 <p><strong>TestCaseID: ValidationRequest-11</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID:(TBD)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
 <li>Title: Request has invalid character in filename</li>
 <li>Expected Result: Correct error code is returned</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
@@ -1117,7 +1165,7 @@
 <p><strong>TestCaseID: ValidationRequest-12</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID:(TBD)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
 <li>Title: Request has invalid key on document position</li>
 <li>Expected Result: Error is returned</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
@@ -1125,7 +1173,7 @@
 <p><strong>TestCaseID: ValidationRequest-13</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID:(TBD)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
 <li>Title: Request has wrong key on report type position</li>
 <li>Expected Result: Error is returned</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
@@ -1133,7 +1181,7 @@
 <p><strong>TestCaseID: ValidationRequest-14</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID:(TBD)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
 <li>Title: Request has XML as document type (special case, XML is similar to ddoc)</li>
 <li>Expected Result: Error is given</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
@@ -1141,7 +1189,7 @@
 <p><strong>TestCaseID: ValidationRequest-15</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID:(TBD)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
 <li>Title: Request has long (38784 characters) in filename field</li>
 <li>Expected Result: Report is returned with the same filename</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
@@ -1149,7 +1197,7 @@
 <p><strong>TestCaseID: ValidationRequest-16</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID:(TBD)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
 <li>Title: Totally empty request body is sent</li>
 <li>Expected Result: Error is given</li>
 <li>File: None</li>
@@ -1157,7 +1205,7 @@
 <p><strong>TestCaseID: ValidationRequest-17</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID:(TBD)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
 <li>Title: Request with more parameters than expected is sent</li>
 <li>Expected Result: Error is given or extra parameters are ignored?</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
@@ -1165,7 +1213,7 @@
 <p><strong>TestCaseID: ValidationRequest-18</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>RequirementID:(TBD)</li>
+<li>RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/</li>
 <li>Title: Request with special chars is sent</li>
 <li>Expected Result: Validation report is returned</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>

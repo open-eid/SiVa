@@ -1,6 +1,7 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -8,7 +9,18 @@ import org.junit.experimental.categories.Category;
 @Category(IntegrationTest.class)
 public class DdocValidationFail extends SiVaRestTests{
 
-    private static final String TEST_FILES_DIRECTORY = "ddoc/live/timemark/";
+    @Before
+    public void DirectoryBackToDefault() {
+        setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
+    }
+
+    private static final String DEFAULT_TEST_FILES_DIRECTORY = "ddoc/live/timemark/";
+
+    private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
+
+    public void setTestFilesDirectory(String testFilesDirectory) {
+        this.testFilesDirectory = testFilesDirectory;
+    }
 
     /***
      * TestCaseID: Ddoc-ValidationFail-1
@@ -21,7 +33,7 @@ public class DdocValidationFail extends SiVaRestTests{
      *
      * Expected Result: The document should fail the validation
      *
-     * File:
+     * File: test1-ddoc-revoked.ddoc
      ***/
     @Test
     public void InvalidSignature() {
@@ -64,9 +76,27 @@ public class DdocValidationFail extends SiVaRestTests{
         assertSomeSignaturesAreValid(postForReport("needfile.ddoc"),1);
     }
 
+    /***
+     * TestCaseID: Ddoc-ValidationFail-4
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Ddoc with no signatures
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: DdocContainerNoSignature.bdoc
+     ***/
+    @Test @Ignore //TODO: VAL-209
+    public void NoSignatures() {
+        setTestFilesDirectory("document_format_test_files/");
+        assertAllSignaturesAreInvalid(postForReport("DdocContainerNoSignature.ddoc"));
+    }
 
     @Override
     protected String getTestFilesDirectory() {
-        return TEST_FILES_DIRECTORY;
+        return testFilesDirectory;
     }
 }

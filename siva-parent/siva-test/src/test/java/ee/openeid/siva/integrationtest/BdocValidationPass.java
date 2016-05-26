@@ -1,6 +1,7 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -43,6 +44,24 @@ public class BdocValidationPass extends SiVaRestTests{
     @Test
     public void validMultipleSignatures() {
         assertAllSignaturesAreValid(postForReport("Valid_IDCard_MobID_signatures.bdoc"));
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationPass-3
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Bdoc with warning on signature
+     *
+     * Expected Result: The document should pass the validation but warning should be returned
+     *
+     * File: 23147_weak-warning-sha1.bdoc
+     ***/
+    @Test @Ignore //TODO: VAL-207
+    public void validSignatureWithWarning() {
+        assertAllSignaturesAreValid(postForReport("23147_weak-warning-sha1.bdoc"));
     }
 
     @Override

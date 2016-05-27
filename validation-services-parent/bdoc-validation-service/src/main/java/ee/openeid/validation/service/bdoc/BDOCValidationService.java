@@ -16,9 +16,11 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Date;
 
-@Service
+@Service("bdoc-validator")
 public class BDOCValidationService implements ValidationService {
+
     private TrustedListsCertificateSource trustedListSource;
+
     private Configuration configuration;
 
     @Override

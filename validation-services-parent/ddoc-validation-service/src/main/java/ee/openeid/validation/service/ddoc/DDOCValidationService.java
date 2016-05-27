@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Service
+@Service("ddoc-validator")
 public class DDOCValidationService implements ValidationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DDOCValidationService.class);
     private static final String JDIGIDOC_CONF_FILE = "/jdigidoc.cfg";

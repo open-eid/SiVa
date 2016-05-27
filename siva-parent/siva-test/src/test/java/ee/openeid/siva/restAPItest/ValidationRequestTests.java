@@ -66,8 +66,8 @@ public class ValidationRequestTests extends SiVaRestTests {
         post(validationRequestForExtended("document", encodedString,
                 "filename", "Valid_IDCard_MobID_signatures.bdoc","documentType", "bdoc", "reportType", "simple"))
                 .then()
-                .body("requestErrors[0].field", Matchers.is("document"))
-                .body("requestErrors[0].message", Matchers.containsString("document not encoded in base64"));
+                .body("requestErrors[0].key", Matchers.is("document"))
+                .body("requestErrors[0].message", Matchers.containsString("not valid base64 encoded string"));
     }
 
     /***
@@ -90,13 +90,14 @@ public class ValidationRequestTests extends SiVaRestTests {
         String json = post(validationRequestForExtended("document", "",
                 "filename", "","documentType", "", "reportType", "")).asString();
 
-        assertTrue("documentType error or corresponding message was not in the response",getRequestErrorsCount(json, "documentType", "invalid documentType")==1);
-        assertTrue("reportType error or corresponding message was not in the response",getRequestErrorsCount(json, "reportType", "invalid reportType")==1);
+        assertTrue("documentType error or corresponding message was not in the response",getRequestErrorsCount(json, "documentType", "invalid document type")==1);
+        assertTrue("reportType error or corresponding message was not in the response",getRequestErrorsCount(json, "reportType", "invalid report type")==1);
         assertTrue("filename error or corresponding message was not in the response",getRequestErrorsCount(json, "filename", "invalid filename")==1);
-        assertTrue("document error or corresponding message was not in the response",getRequestErrorsCount(json, "document", "document cannot be empty")==1);
+        assertTrue("document error or corresponding message was not in the response",getRequestErrorsCount(json, "document", "may not be empty")==1);
     }
+
     private int getRequestErrorsCount(String json, String field, String message) {
-        List<Map> errors = from(json).get("requestErrors.findAll { requestError -> requestError.field == '"+field+"' && requestError.message=='"+message+"' }");
+        List<Map> errors = from(json).get("requestErrors.findAll { requestError -> requestError.key == '"+field+"' && requestError.message=='"+message+"' }");
         return errors.size();
     }
 
@@ -121,8 +122,8 @@ public class ValidationRequestTests extends SiVaRestTests {
         post(validationRequestForExtended("document", encodedString,
                 "filename", "Valid_IDCard_MobID_signatures.bdoc","documentType", "bdoc", "reportType", "simple"))
                 .then()
-                .body("requestErrors[0].field", Matchers.is("document"))
-                .body("requestErrors[0].message", Matchers.containsString("document not encoded in base64"));
+                .body("requestErrors[0].key", Matchers.is("document"))
+                .body("requestErrors[0].message", Matchers.containsString("not valid base64 encoded string"));
     }
 
     /***
@@ -146,8 +147,8 @@ public class ValidationRequestTests extends SiVaRestTests {
         post(validationRequestForExtended("document", encodedString,
                 "filename", "Valid_IDCard_MobID_signatures.bdoc","documentType", "bdoc", "reportType", "Complicated"))
                 .then()
-                .body("requestErrors[0].field", Matchers.is("reportType"))
-                .body("requestErrors[0].message", Matchers.containsString("invalid reportType"));
+                .body("requestErrors[0].key", Matchers.is("reportType"))
+                .body("requestErrors[0].message", Matchers.containsString("invalid report type"));
     }
 
     /***
@@ -195,8 +196,8 @@ public class ValidationRequestTests extends SiVaRestTests {
         post(validationRequestForExtended("document", encodedString,
                 "filename", "Valid_IDCard_MobID_signatures.bdoc","documentType", "cdoc", "reportType", "simple"))
                 .then()
-                .body("requestErrors[0].field", Matchers.is("documentType"))
-                .body("requestErrors[0].message", Matchers.containsString("invalid documentType"));
+                .body("requestErrors[0].key", Matchers.is("documentType"))
+                .body("requestErrors[0].message", Matchers.containsString("invalid document type"));
     }
 
     /***
@@ -220,8 +221,8 @@ public class ValidationRequestTests extends SiVaRestTests {
         post(validationRequestForExtended("document", encodedString,
                 "filename", "Valid_IDCard_MobID_signatures.bdoc","documentType", "pdf", "reportType", "simple"))
                 .then()
-                .body("requestErrors[0].field", Matchers.is("documentType"))
-                .body("requestErrors[0].message", Matchers.containsString("invalid documentType"));
+                .body("requestErrors[0].key", Matchers.is("documentType"))
+                .body("requestErrors[0].message", Matchers.containsString("invalid document type"));
     }
 
     /***
@@ -245,8 +246,8 @@ public class ValidationRequestTests extends SiVaRestTests {
         post(validationRequestForExtended("document", encodedString,
                 "filename", "Valid_IDCard_MobID_signatures.bdoc","documentType", "BDOC", "reportType", "simple"))
                 .then()
-                .body("requestErrors[0].field", Matchers.is("documentType"))
-                .body("requestErrors[0].message", Matchers.containsString("invalid documentType"));
+                .body("requestErrors[0].key", Matchers.is("documentType"))
+                .body("requestErrors[0].message", Matchers.containsString("invalid document type"));
     }
 
     /***
@@ -318,7 +319,7 @@ public class ValidationRequestTests extends SiVaRestTests {
         post(validationRequestForExtended("document", encodedString,
                 "filename", "*.exe","documentType", "BDOC", "reportType", "simple"))
                 .then()
-                .body("requestErrors[0].field", Matchers.is("filename"))
+                .body("requestErrors[0].key", Matchers.is("filename"))
                 .body("requestErrors[0].message", Matchers.containsString("invalid filename"));
     }
 
@@ -338,14 +339,14 @@ public class ValidationRequestTests extends SiVaRestTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
      ***/
-    @Test @Ignore //TODO: VAL-194
+    @Test
     public void ValidationRequestInvalidDocumentKey() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestForExtended("Document", encodedString,
-                "filename", "*.exe","documentType", "BDOC", "reportType", "simple"))
-                .then()
-                .body("requestErrors[0].field", Matchers.is("filename"))
-                .body("requestErrors[0].message", Matchers.containsString("invalid filename"));
+        String response = post(validationRequestForExtended("Document", encodedString,
+                "filename", "*.exe","documentType", "BDOC", "reportType", "simple")).asString();
+
+        assertTrue("document error or corresponding message was not in the response", getRequestErrorsCount(response, "document", "may not be empty") == 1);
+        assertTrue("document error or corresponding message was not in the response", getRequestErrorsCount(response, "document", "not valid base64 encoded string") == 1);
     }
 
 
@@ -364,14 +365,15 @@ public class ValidationRequestTests extends SiVaRestTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
      ***/
-    @Test @Ignore //TODO: VAL-194
+    @Test
     public void ValidationRequestInvalidReportTypeKey() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestForExtended("document", encodedString,
-                "filename", "Valid_IDCard_MobID_signatures.bdoc","documentType", "BDOC", "WrongreportType", "simple"))
-                .then()
-                .body("requestErrors[0].field", Matchers.is("filename"))
-                .body("requestErrors[0].message", Matchers.containsString("invalid filename"));
+        String repsonse = post(validationRequestForExtended("document", encodedString,
+                "filename", "Valid_IDCard_MobID_signatures.bdoc","documentType", "BDOC", "WrongreportType", "simple")).asString();
+
+        assertTrue("document error or corresponding message was not in the response", getRequestErrorsCount(repsonse, "reportType", "may not be empty") == 1);
+        assertTrue("document error or corresponding message was not in the response", getRequestErrorsCount(repsonse, "reportType", "invalid report type") == 1);
+
     }
 
     /***
@@ -395,7 +397,7 @@ public class ValidationRequestTests extends SiVaRestTests {
         post(validationRequestForExtended("document", encodedString,
                 "filename", "Valid_IDCard_MobID_signatures.bdoc","documentType", "xml", "reportType", "simple"))
                 .then()
-                .body("requestErrors[0].field", Matchers.is("documentType"))
+                .body("requestErrors[0].key", Matchers.is("documentType"))
                 .body("requestErrors[0].message", Matchers.containsString("invalid documentType"));
 
     }
@@ -445,8 +447,8 @@ public class ValidationRequestTests extends SiVaRestTests {
         JSONObject jsonObject = new JSONObject();
         post(jsonObject.toString())
                 .then()
-                .body("requestErrors[0].field", Matchers.is("documentType"))
-                .body("requestErrors[0].message", Matchers.containsString("invalid documentType"));
+                .body("requestErrors[0].key", Matchers.is("documentType"))
+                .body("requestErrors[0].message", Matchers.containsString("invalid document type"));
 
     }
 

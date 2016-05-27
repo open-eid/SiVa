@@ -9,6 +9,9 @@ import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.service.ValidationService;
+import ee.openeid.validation.service.bdoc.BDOCValidationService;
+import ee.openeid.validation.service.ddoc.DDOCValidationService;
+import ee.openeid.validation.service.pdf.PDFValidationService;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -48,8 +51,8 @@ public class ValidationProxyTest {
     @Test
     public void ProxyDocumentWithASICEDocumentTypeShouldThrowValidationServiceNotFoundException() {
         exception.expect(ValidatonServiceNotFoundException.class);
-        exception.expectMessage("asice-validator not found");
-        when(applicationContext.getBean("asice-validator")).thenThrow(new ValidatonServiceNotFoundException("asice-validator not found"));
+        exception.expectMessage("ASICEValidationService not found");
+        when(applicationContext.getBean("ASICEValidationService")).thenThrow(new ValidatonServiceNotFoundException("ASICEValidationService not found"));
 
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.ASICE, RequestProtocol.JSON);
         validationProxy.validate(proxyDocument);
@@ -57,7 +60,7 @@ public class ValidationProxyTest {
 
     @Test
     public void ProxyDocumentWithBDOCDocumentTypeAndJSONRequestProtocolShouldReturnQualifiedReportInJSON() throws Exception {
-        when(applicationContext.getBean("bdoc-validator")).thenReturn(validationServiceSpy);
+        when(applicationContext.getBean(BDOCValidationService.class.getSimpleName())).thenReturn(validationServiceSpy);
 
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.BDOC, RequestProtocol.JSON);
         String report = validationProxy.validate(proxyDocument);
@@ -66,7 +69,7 @@ public class ValidationProxyTest {
 
     @Test
     public void ProxyDocumentWithPDFDocumentTypeAndJSONRequestProtocolShouldReturnQualifiedReportInJSON() throws Exception {
-        when(applicationContext.getBean("pdf-validator")).thenReturn(validationServiceSpy);
+        when(applicationContext.getBean(PDFValidationService.class.getSimpleName())).thenReturn(validationServiceSpy);
 
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.PDF, RequestProtocol.JSON);
         String report = validationProxy.validate(proxyDocument);
@@ -75,7 +78,7 @@ public class ValidationProxyTest {
 
     @Test
     public void ProxyDocumentWithDDOCDocumentTypeAndJSONRequestProtocolShouldReturnQualifiedReportInJSON() throws Exception {
-        when(applicationContext.getBean("ddoc-validator")).thenReturn(validationServiceSpy);
+        when(applicationContext.getBean(DDOCValidationService.class.getSimpleName())).thenReturn(validationServiceSpy);
 
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.DDOC, RequestProtocol.JSON);
         String report = validationProxy.validate(proxyDocument);

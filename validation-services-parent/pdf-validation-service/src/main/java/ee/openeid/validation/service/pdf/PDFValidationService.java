@@ -40,12 +40,9 @@ import org.springframework.stereotype.Service;
 import javax.xml.soap.SOAPException;
 import java.time.LocalDateTime;
 
-import static ee.openeid.validation.service.pdf.PDFValidationService.VALIDATOR_NAME;
-
-@Service(VALIDATOR_NAME)
+@Service
 public class PDFValidationService implements ValidationService {
 
-    static final String VALIDATOR_NAME = "pdf-validator";
     private static final Logger logger = LoggerFactory.getLogger(PDFValidationService.class);
 
     private static final String POLICY_CONSTRAINTS_LOCATION = "/constraint.xml";
@@ -93,7 +90,7 @@ public class PDFValidationService implements ValidationService {
             throw e;
         } catch (Exception e) {
             endExceptionally(e);
-            throw new ValidationServiceException(VALIDATOR_NAME, e);
+            throw new ValidationServiceException(getClass().getSimpleName(), e);
         }
     }
 

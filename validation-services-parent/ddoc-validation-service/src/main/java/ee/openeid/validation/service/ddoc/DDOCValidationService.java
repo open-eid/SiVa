@@ -23,11 +23,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static ee.openeid.validation.service.ddoc.DDOCValidationService.VALIDATOR_NAME;
-
-@Service(VALIDATOR_NAME)
+@Service
 public class DDOCValidationService implements ValidationService {
-    static final String VALIDATOR_NAME = "ddoc-validator";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(DDOCValidationService.class);
     private static final String JDIGIDOC_CONF_FILE = "/jdigidoc.cfg";
 
@@ -73,7 +71,7 @@ public class DDOCValidationService implements ValidationService {
                 return reportBuilder.build();
             } catch (DigiDocException e) {
                 LOGGER.warn("Unexpected exception when validating DDOC document: " + e.getMessage(), e);
-                throw new ValidationServiceException(VALIDATOR_NAME, e);
+                throw new ValidationServiceException(getClass().getSimpleName(), e);
             }
         }
     }

@@ -51,7 +51,7 @@ public class ValidationProxy {
     }
 
     private String constructValidatorName(DocumentType documentType) {
-        return documentType.name().toLowerCase() + "-validator";
+        return documentType.name() + "ValidationService";
     }
 
     private ValidationDocument createValidationDocument(ProxyDocument proxyDocument) {

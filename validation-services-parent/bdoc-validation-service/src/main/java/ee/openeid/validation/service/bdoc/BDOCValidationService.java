@@ -21,12 +21,9 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Date;
 
-import static ee.openeid.validation.service.bdoc.BDOCValidationService.VALIDATOR_NAME;
-
-@Service(VALIDATOR_NAME)
+@Service
 public class BDOCValidationService implements ValidationService {
 
-    static final String VALIDATOR_NAME = "bdoc-validator";
     private static final Logger logger = LoggerFactory.getLogger(BDOCValidationService.class);
     private TrustedListsCertificateSource trustedListSource;
 
@@ -50,7 +47,7 @@ public class BDOCValidationService implements ValidationService {
             return reportBuilder.build();
         } catch (Exception e) {
             logger.error("Error occured during validation", e);
-            throw new ValidationServiceException(VALIDATOR_NAME, e);
+            throw new ValidationServiceException(getClass().getSimpleName(), e);
         }
     }
 

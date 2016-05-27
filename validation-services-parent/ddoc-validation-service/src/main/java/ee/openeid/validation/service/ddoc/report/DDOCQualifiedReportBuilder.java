@@ -1,9 +1,7 @@
 package ee.openeid.validation.service.ddoc.report;
 
+import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.document.report.Error;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
-import ee.openeid.siva.validation.document.report.SignatureScope;
-import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.sk.digidoc.DataFile;
 import ee.sk.digidoc.DigiDocException;
 import ee.sk.digidoc.Signature;
@@ -34,6 +32,7 @@ public class DDOCQualifiedReportBuilder {
 
     public QualifiedReport build() {
         QualifiedReport qualifiedReport = new QualifiedReport();
+        qualifiedReport.setPolicy(Policy.SIVA_DEFAULT);
         qualifiedReport.setValidationTime(getDateFormatterWithGMTZone().format(validationTime));
         qualifiedReport.setDocumentName(documentName);
         qualifiedReport.setSignaturesCount(signedDoc.getSignatures().size());

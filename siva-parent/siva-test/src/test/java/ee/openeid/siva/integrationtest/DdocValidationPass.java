@@ -1,6 +1,7 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -41,6 +42,7 @@ public class DdocValidationPass extends SiVaRestTests{
      * File: DigiDoc_1.0_Tartu_ja_Tallinna_koostooleping.ddoc
      ***/
     @Test
+    @Ignore
     public void validMultipleSignaturesV10() {
         assertAllSignaturesAreValid(postForReport("DigiDoc_1.0_Tartu_ja_Tallinna_koostooleping.ddoc"));
     }

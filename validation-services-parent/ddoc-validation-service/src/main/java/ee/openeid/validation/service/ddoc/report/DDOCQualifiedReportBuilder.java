@@ -10,6 +10,7 @@ import org.apache.commons.lang.StringUtils;
 import org.cryptacular.util.CertUtil;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -35,7 +36,7 @@ public class DDOCQualifiedReportBuilder {
         qualifiedReport.setPolicy(Policy.SIVA_DEFAULT);
         qualifiedReport.setValidationTime(getDateFormatterWithGMTZone().format(validationTime));
         qualifiedReport.setDocumentName(documentName);
-        qualifiedReport.setSignaturesCount(signedDoc.getSignatures().size());
+        qualifiedReport.setSignaturesCount(getSignatures(signedDoc).size());
         qualifiedReport.setSignatures(createSignaturesForReport(signedDoc));
         qualifiedReport.setValidSignaturesCount(
                 qualifiedReport.getSignatures()
@@ -53,9 +54,16 @@ public class DDOCQualifiedReportBuilder {
         return sdf;
     }
 
+    private List<Signature> getSignatures(SignedDoc signedDoc) {
+        if (signedDoc.getSignatures() == null) {
+            return new ArrayList<>();
+        }
+        return signedDoc.getSignatures();
+    }
+
     @SuppressWarnings("unchecked")
     private List<SignatureValidationData> createSignaturesForReport(SignedDoc signedDoc) {
-        List<Signature> signatures = (List<Signature>) signedDoc.getSignatures();
+        List<Signature> signatures = getSignatures(signedDoc);
         return signatures.stream().map(this::createSignatureValidationData).collect(Collectors.toList());
     }
 

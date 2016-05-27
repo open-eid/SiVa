@@ -5,20 +5,18 @@ import ee.openeid.siva.integrationtest.SiVaRestTests;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.json.JSONObject;
-
 
 import java.util.List;
 import java.util.Map;
 
 import static com.jayway.restassured.path.json.JsonPath.from;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItems;
 import static org.junit.Assert.assertTrue;
 
 
@@ -391,14 +389,14 @@ public class ValidationRequestTests extends SiVaRestTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
      ***/
-    @Test @Ignore //TODO: VAL-198
+    @Test
     public void ValidationRequestXmlDocument() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForExtended("document", encodedString,
                 "filename", "Valid_IDCard_MobID_signatures.bdoc","documentType", "xml", "reportType", "simple"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is("documentType"))
-                .body("requestErrors[0].message", Matchers.containsString("invalid documentType"));
+                .body("requestErrors[0].message", Matchers.is("invalid document type"));
 
     }
 

@@ -168,12 +168,13 @@ public abstract class SiVaRestTests {
         }
     }
 
-    private DocumentType parseFileExtension(final String filename) {
+    private String parseFileExtension(final String filename) {
         String fileExtension = filename.substring(filename.lastIndexOf(".") + 1);
-        return Arrays.asList(DocumentType.values()).stream()
+        DocumentType documentType = Arrays.asList(DocumentType.values()).stream()
                 .filter(fileType -> fileType.name().equalsIgnoreCase(fileExtension))
                 .findFirst()
                 .orElse(null);
+        return documentType != null ? documentType.name() : fileExtension;
     }
 
     private static String getProjectBaseDirectory() {

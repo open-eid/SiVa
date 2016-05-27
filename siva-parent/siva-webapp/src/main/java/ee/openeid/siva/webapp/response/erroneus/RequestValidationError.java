@@ -15,8 +15,8 @@ public class RequestValidationError {
     @Getter
     private final List<RequestFieldValidationError> requestErrors = new ArrayList<>();
 
-    public void addFieldError(String field, String message) {
-        requestErrors.add(new RequestFieldValidationError(field, message));
+    public void addFieldError(String key, String message) {
+        requestErrors.add(new RequestFieldValidationError(key, message));
     }
 
 }

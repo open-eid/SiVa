@@ -8,6 +8,6 @@ import lombok.ToString;
 @Getter
 @ToString
 public class RequestFieldValidationError {
-    private String field;
+    private String key;
     private String message;
 }

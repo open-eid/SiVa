@@ -63,7 +63,7 @@ public class DDOCValidationServiceTest {
 
     @Test
     public void qualifiedReportShouldIncludeRequiredFields() throws Exception {
-        assertNull(validationResult2Signatures.getPolicy());
+        assertNotNull(validationResult2Signatures.getPolicy());
         assertNotNull(validationResult2Signatures.getValidationTime());
         assertEquals(VALID_DDOC_2_SIGNATURES, validationResult2Signatures.getDocumentName());
         assertTrue(validationResult2Signatures.getSignatures().size() == 2);

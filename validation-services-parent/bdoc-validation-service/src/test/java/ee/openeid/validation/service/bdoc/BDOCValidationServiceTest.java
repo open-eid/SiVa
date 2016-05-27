@@ -1,10 +1,12 @@
 package ee.openeid.validation.service.bdoc;
 
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.document.report.SignatureScope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import org.digidoc4j.Configuration;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -29,6 +31,19 @@ public class BDOCValidationServiceTest {
 
     private static ValidationDocument bdocTSIndeterminateNoManifest() throws Exception {
         return BDOCTestUtils.buildValidationDocument(BDOCTestUtils.TS_NO_MANIFEST);
+    }
+
+    @Test
+    public void validatingABDOCWithMalformedBytesResultsInMalformedDocumentException() throws Exception {
+        ValidationDocument validationDocument = BDOCTestUtils.buildValidationDocument(BDOCTestUtils.TS_NO_MANIFEST);
+        validationDocument.setBytes(Base64.decode("ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA=="));
+        String message = "";
+        try {
+            validationService.validateDocument(validationDocument);
+        } catch (MalformedDocumentException e) {
+            message = e.getMessage();
+        }
+        assertEquals("the document is malformed", message);
     }
 
     @Test

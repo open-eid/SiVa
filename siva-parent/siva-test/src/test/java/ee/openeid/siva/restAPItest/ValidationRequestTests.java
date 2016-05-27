@@ -11,6 +11,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.Map;
@@ -45,27 +46,80 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-1
+     * TestCaseID: ValidationRequest-1.1
      *
      * TestType: Automated
      *
      * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
-     * Title: Input random base64 string as document
+     * Title: Input random base64 string as document with bdoc document type
      *
      * Expected Result: Error is returned stating problem in document
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
      ***/
-    @Test @Ignore //TODO: VAL-195
-    public void ValidationRequestRandomInputAsDocument() {
+    @Test
+    public void ValidationRequestRandomInputAsBdocDocument() {
         String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
         post(validationRequestForExtended("document", encodedString,
                 "filename", "Valid_IDCard_MobID_signatures.bdoc","documentType", "bdoc", "reportType", "simple"))
                 .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is("document"))
-                .body("requestErrors[0].message", Matchers.containsString("not valid base64 encoded string"));
+                .body("requestErrors[0].message", Matchers.containsString("document malformed or not matching documentType"));
+    }
+
+    /***
+     *
+     * TestCaseID: ValidationRequest-1.2
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Input random base64 string as document with pdf document type
+     *
+     * Expected Result: Error is returned stating problem in document
+     *
+     * File: Valid_IDCard_MobID_signatures.bdoc
+     *
+     ***/
+    @Test
+    public void ValidationRequestRandomInputAsPdfDocument() {
+        String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
+        post(validationRequestForExtended("document", encodedString,
+                "filename", "some_pdf.pdf","documentType", "pdf", "reportType", "simple"))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is("document"))
+                .body("requestErrors[0].message", Matchers.containsString("document malformed or not matching documentType"));
+    }
+
+    /***
+     *
+     * TestCaseID: ValidationRequest-1.3
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Input random base64 string as document with ddoc document type
+     *
+     * Expected Result: Error is returned stating problem in document
+     *
+     * File: Valid_IDCard_MobID_signatures.bdoc
+     *
+     ***/
+    @Test
+    public void ValidationRequestRandomInputAsDdocDocument() {
+        String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
+        post(validationRequestForExtended("document", encodedString,
+                "filename", "some_pdf.ddoc","documentType", "ddoc", "reportType", "simple"))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is("document"))
+                .body("requestErrors[0].message", Matchers.containsString("document malformed or not matching documentType"));
     }
 
     /***
@@ -213,14 +267,15 @@ public class ValidationRequestTests extends SiVaRestTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
      ***/
-    @Test @Ignore //TODO: VAL-196
+    @Test
     public void ValidationRequestNotMatchingDocumentTypeAndActualFile() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForExtended("document", encodedString,
                 "filename", "Valid_IDCard_MobID_signatures.bdoc","documentType", "pdf", "reportType", "simple"))
                 .then()
-                .body("requestErrors[0].key", Matchers.is("documentType"))
-                .body("requestErrors[0].message", Matchers.containsString("invalid document type"));
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is("document"))
+                .body("requestErrors[0].message", Matchers.containsString("document malformed or not matching documentType"));
     }
 
     /***

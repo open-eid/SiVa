@@ -11,8 +11,17 @@ install: true
 script:
   - ./mvnw clean install
 after_success:
-  - blah
   - ./mvnw clean test jacoco:report coveralls:report -Dcoveralls.repo.token=$COVERALLS_REPO_TOKEN
+deploy:
+  provider: s3
+  access_key_id: AKIAJPTKESQQK3GFXN2Q
+  bucket: open-eid-siva-travis
+  skip_cleanup: true
+  local_dir: siva-parent/siva-distribution/target
+  upload-dir: travis-build/${TRAVIS_BUILD_NUMBER}
+  region: eu-central-1
+  secrect_access_key:
+    secure: hAQE7znogd/EthGSfpxNUcEGBo58AO4nFedlMW+2DrYv+6Qy9Hx0qpROFq1CLQYTHFdFr199jpTyvORF9uq4oN+bEGVsAcTafi8H1TdHbpSrCBH5aSKCCl6cnbDPC6s1lTSIerGjGzI0TVGq9r3quPkHqFeNsOw/c3PKCjDLgm/X6O8H6K1jAK8qGIE3/725a5R5P6PGfXyWoLMhgBmrO1h6XvuqsWnCiwtXh4SbVzgSzQ6ctkagrhJTvCAeF289UXSdOd8wIq6x4gvyE1eT6IslfZ4hehr4p6Au8cfduEo6FsbYs2iJqCBRjUjnbilhRUwLSlfABc8Zje4wraJTm7NICgR8BxjP4ymPuRiJS2eeGiCZ1q305a6fTodmiTgJ+kQT0cWzd0UsGx6G8jSLHmyKJTCDyajfRMxTpRKVTEXzU1KznEIrfcsmRXu2bNvfL1cAc2SHzbsL1L13bMpeeQQQ8D7aMR8fwWbZdERxi5SNPEDjz/xDYOJBNmeNGZuWn760Fe+xNEBlj8tC8MuekFifJwmbkMCRsZNoaXVb7vUM2+9pjuiYFbPcLHgdPGFHbvmEjoeU06P/tIQJNpw+T64Ru9FbjHRt86QocEGYWGQxwSy56OWswY/o+myVNUNhY5Qwxw3m9X9hj2kEveP5qocrQvrVOUW+Edf4krZOxgs=
 notifications:
   email:
     recipients:

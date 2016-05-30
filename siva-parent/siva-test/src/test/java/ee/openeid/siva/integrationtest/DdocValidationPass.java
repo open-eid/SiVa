@@ -24,7 +24,7 @@ public class DdocValidationPass extends SiVaRestTests{
      * File: 23734-ddoc13-13basn1.ddoc
      ***/
     @Test
-    public void validSingleSignature() {
+    public void ddocValidSingleSignature() {
         assertAllSignaturesAreValid(postForReport("23734-ddoc13-13basn1.ddoc"));
     }
 
@@ -42,7 +42,7 @@ public class DdocValidationPass extends SiVaRestTests{
      * File: DigiDoc_1.0_Tartu_ja_Tallinna_koostooleping.ddoc
      ***/
     @Test @Ignore //TODO: Travis fails the test, although in maven it passes
-    public void validMultipleSignaturesV1_0() {
+    public void ddocValidMultipleSignaturesV1_0() {
         assertAllSignaturesAreValid(postForReport("DigiDoc_1.0_Tartu_ja_Tallinna_koostooleping.ddoc"));
     }
 
@@ -60,7 +60,7 @@ public class DdocValidationPass extends SiVaRestTests{
      * File: igasugust1.1.ddoc
      ***/
     @Test
-    public void validMultipleSignaturesV1_1() {
+    public void ddocValidMultipleSignaturesV1_1() {
         assertAllSignaturesAreValid(postForReport("igasugust1.1.ddoc"));
     }
 
@@ -78,7 +78,7 @@ public class DdocValidationPass extends SiVaRestTests{
      * File: igasugust1.2.ddoc
      ***/
     @Test
-    public void validMultipleSignaturesV1_2() {
+    public void ddocValidMultipleSignaturesV1_2() {
         assertAllSignaturesAreValid(postForReport("igasugust1.2.ddoc"));
     }
 
@@ -96,7 +96,7 @@ public class DdocValidationPass extends SiVaRestTests{
      * File: igasugust1.3.ddoc
      ***/
     @Test
-    public void validMultipleSignaturesV1_3() {
+    public void ddocValidMultipleSignaturesV1_3() {
         assertAllSignaturesAreValid(postForReport("igasugust1.3.ddoc"));
     }
 

@@ -36,7 +36,7 @@ public class DdocValidationFail extends SiVaRestTests{
      * File: test1-ddoc-revoked.ddoc
      ***/
     @Test
-    public void InvalidSignature() {
+    public void ddocInvalidSignature() {
         assertAllSignaturesAreInvalid(postForReport("test1-ddoc-revoked.ddoc"));
     }
 
@@ -54,7 +54,7 @@ public class DdocValidationFail extends SiVaRestTests{
      * File: multipleInvalidSignatures.ddoc
      ***/
     @Test
-    public void InvalidMultipleSignatures() {
+    public void ddocInvalidMultipleSignatures() {
         assertAllSignaturesAreInvalid(postForReport("multipleInvalidSignatures.ddoc"));
     }
 
@@ -72,7 +72,7 @@ public class DdocValidationFail extends SiVaRestTests{
      * File: multipleValidAndInvalidSignatures.ddoc
      ***/
     @Test
-    public void InvalidAndValidMultipleSignatures() {
+    public void ddocInvalidAndValidMultipleSignatures() {
         assertSomeSignaturesAreValid(postForReport("multipleValidAndInvalidSignatures.ddoc"),2);
     }
 
@@ -89,8 +89,8 @@ public class DdocValidationFail extends SiVaRestTests{
      *
      * File: DdocContainerNoSignature.bdoc
      ***/
-    @Test @Ignore //TODO: VAL-209
-    public void NoSignatures() {
+    @Test
+    public void ddocNoSignatures() {
         setTestFilesDirectory("document_format_test_files/");
         assertAllSignaturesAreInvalid(postForReport("DdocContainerNoSignature.ddoc"));
     }

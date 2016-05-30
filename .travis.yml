@@ -11,7 +11,7 @@ install: true
 script:
   - ./mvnw clean install
 after_success:
-  - ./mvnw clean test jacoco:report coveralls:report -Dcoveralls.repo.token=$COVERALLS_REPO_TOKEN
+  - ./mvnw jacoco:report coveralls:report -Dcoveralls.repo.token=$COVERALLS_REPO_TOKEN
 deploy:
   provider: s3
   access_key_id: AKIAJPTKESQQK3GFXN2Q

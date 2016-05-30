@@ -470,7 +470,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      * File: DdocContainerNoSignature.ddoc
      *
      ***/
-    @Test @Ignore //TODO: VAL-202 & VAL-203 & VAL-209
+    @Test @Ignore //TODO: VAL-202 & VAL-203
     public void DdocNoSignature() {
         setTestFilesDirectory("document_format_test_files/");
         post(validationRequestFor("DdocContainerNoSignature.ddoc", "simple"))

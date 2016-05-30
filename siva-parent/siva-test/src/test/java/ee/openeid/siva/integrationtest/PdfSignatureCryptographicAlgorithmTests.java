@@ -1,6 +1,7 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -8,7 +9,19 @@ import org.junit.experimental.categories.Category;
 @Category(IntegrationTest.class)
 public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
 
-    private static final String TEST_FILES_DIRECTORY = "pdf/signature_cryptographic_algorithm_test_files/";
+    @Before
+    public void DirectoryBackToDefault() {
+        setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
+    }
+
+    private static final String DEFAULT_TEST_FILES_DIRECTORY = "pdf/signature_cryptographic_algorithm_test_files/";
+
+    private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
+
+    public void setTestFilesDirectory(String testFilesDirectory) {
+        this.testFilesDirectory = testFilesDirectory;
+    }
+
 
     /**
      * TestCaseID: PDF-SigCryptoAlg-1
@@ -166,15 +179,16 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * Expected Result: Document signed with RSA2048 algorithm should pass
      *
-     * File: hellopades-lt-sha256-rsa2048.pdf
+     * File: PdfValidSingleSignature
      */
-    @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
+    @Test
     public void documentSignedWithRsa2048AlgoShouldPass() {
-        assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-rsa2048.pdf"));
+        setTestFilesDirectory("document_format_test_files/");
+        assertAllSignaturesAreValid(postForReport("PdfValidSingleSignature.pdf"));
     }
 
     @Override
     protected String getTestFilesDirectory() {
-        return TEST_FILES_DIRECTORY;
+        return testFilesDirectory;
     }
 }

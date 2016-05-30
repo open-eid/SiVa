@@ -46,7 +46,7 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-1.1
+     * TestCaseID: ValidationRequest-1
      *
      * TestType: Automated
      *
@@ -72,7 +72,7 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-1.2
+     * TestCaseID: ValidationRequest-2
      *
      * TestType: Automated
      *
@@ -98,7 +98,7 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-1.3
+     * TestCaseID: ValidationRequest-3
      *
      * TestType: Automated
      *
@@ -124,7 +124,7 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-2
+     * TestCaseID: ValidationRequest-4
      *
      * TestType: Automated
      *
@@ -155,7 +155,7 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-3
+     * TestCaseID: ValidationRequest-5
      *
      * TestType: Automated
      *
@@ -180,7 +180,7 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-4
+     * TestCaseID: ValidationRequest-6
      *
      * TestType: Automated
      *
@@ -205,7 +205,7 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-5
+     * TestCaseID: ValidationRequest-7
      *
      * TestType: Automated
      *
@@ -229,7 +229,7 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-6
+     * TestCaseID: ValidationRequest-8
      *
      * TestType: Automated
      *
@@ -254,7 +254,7 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-7
+     * TestCaseID: ValidationRequest-9
      *
      * TestType: Automated
      *
@@ -280,7 +280,7 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-8
+     * TestCaseID: ValidationRequest-10
      *
      * TestType: Automated
      *
@@ -305,7 +305,7 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-9
+     * TestCaseID: ValidationRequest-11
      *
      * TestType: Automated
      *
@@ -329,7 +329,7 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-10
+     * TestCaseID: ValidationRequest-12
      *
      * TestType: Automated
      *
@@ -353,7 +353,7 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-11
+     * TestCaseID: ValidationRequest-13
      *
      * TestType: Automated
      *
@@ -379,7 +379,7 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-12
+     * TestCaseID: ValidationRequest-14
      *
      * TestType: Automated
      *
@@ -405,7 +405,7 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-13
+     * TestCaseID: ValidationRequest-15
      *
      * TestType: Automated
      *
@@ -431,7 +431,7 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-14
+     * TestCaseID: ValidationRequest-16
      *
      * TestType: Automated
      *
@@ -457,7 +457,7 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-15
+     * TestCaseID: ValidationRequest-17
      *
      * TestType: Automated
      *
@@ -482,7 +482,7 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-16
+     * TestCaseID: ValidationRequest-18
      *
      * TestType: Automated
      *
@@ -507,7 +507,7 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-17
+     * TestCaseID: ValidationRequest-19
      *
      * TestType: Automated
      *
@@ -538,7 +538,7 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-18
+     * TestCaseID: ValidationRequest-20
      *
      * TestType: Automated
      *

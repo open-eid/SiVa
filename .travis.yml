@@ -21,7 +21,7 @@ deploy:
   skip_cleanup: true
   local_dir: "${TRAVIS_BUILD_DIR}/siva-parent/siva-distribution/target"
   upload-dir: travis-build/${TRAVIS_BUILD_NUMBER}
-  region: eu-central-1
+  region: Ireland
   on:
     branch: develop
 notifications:

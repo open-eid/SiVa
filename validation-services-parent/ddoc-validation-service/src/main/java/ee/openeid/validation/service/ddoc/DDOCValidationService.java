@@ -2,6 +2,8 @@ package ee.openeid.validation.service.ddoc;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.exception.MalformedDocumentException;
+import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.validation.service.ddoc.report.DDOCQualifiedReportBuilder;
 import ee.sk.digidoc.DigiDocException;
@@ -21,8 +23,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Service("ddoc-validator")
+@Service
 public class DDOCValidationService implements ValidationService {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(DDOCValidationService.class);
     private static final String JDIGIDOC_CONF_FILE = "/jdigidoc.cfg";
 
@@ -57,7 +60,7 @@ public class DDOCValidationService implements ValidationService {
                 DigiDocFactory digiDocFactory = ConfigManager.instance().getDigiDocFactory();
                 signedDoc = digiDocFactory.readSignedDocFromStreamOfType(new ByteArrayInputStream(validationDocument.getBytes()), false, signedDocInitializationErrors);
                 if (signedDoc == null) {
-                    throw new RuntimeException(); // this should be replaced with something like "validationexception" in the future
+                    throw new MalformedDocumentException();
                 }
 
                 List<DigiDocException> signedDocValidationErrors = signedDoc.validate(true);
@@ -68,7 +71,7 @@ public class DDOCValidationService implements ValidationService {
                 return reportBuilder.build();
             } catch (DigiDocException e) {
                 LOGGER.warn("Unexpected exception when validating DDOC document: " + e.getMessage(), e);
-                throw new RuntimeException(e); // this should be replaced with something like "validationexception" in the future
+                throw new ValidationServiceException(getClass().getSimpleName(), e);
             }
         }
     }

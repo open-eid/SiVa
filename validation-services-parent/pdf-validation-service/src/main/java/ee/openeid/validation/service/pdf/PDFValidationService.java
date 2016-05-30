@@ -22,6 +22,8 @@ package ee.openeid.validation.service.pdf;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.exception.MalformedDocumentException;
+import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.validation.service.pdf.document.transformer.ValidationDocumentToDSSDocumentTransformerUtils;
 import ee.openeid.validation.service.pdf.validator.EstonianPDFDocumentValidator;
@@ -38,7 +40,7 @@ import org.springframework.stereotype.Service;
 import javax.xml.soap.SOAPException;
 import java.time.LocalDateTime;
 
-@Service("pdf-validator")
+@Service
 public class PDFValidationService implements ValidationService {
 
     private static final Logger logger = LoggerFactory.getLogger(PDFValidationService.class);
@@ -49,8 +51,6 @@ public class PDFValidationService implements ValidationService {
 
     @Override
     public QualifiedReport validateDocument(ValidationDocument validationDocument) throws DSSException {
-
-        String exceptionMessage;
         try {
             if (logger.isInfoEnabled()) {
                 logger.info("WsValidateDocument: begin");
@@ -64,7 +64,7 @@ public class PDFValidationService implements ValidationService {
 
 
             if (!new EstonianPDFDocumentValidator().isSupported(dssDocument)) {
-                throw new DSSException("Document format not recognized/handled");
+                throw new MalformedDocumentException();
             }
 
             EstonianPDFDocumentValidator validator = new EstonianPDFDocumentValidator(dssDocument);
@@ -85,12 +85,18 @@ public class PDFValidationService implements ValidationService {
             PDFQualifiedReportBuilder reportBuilder = new PDFQualifiedReportBuilder(reports, validationTime, validationDocument.getName());
             return reportBuilder.build();
 
+        } catch (MalformedDocumentException e) {
+            endExceptionally(e);
+            throw e;
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-            exceptionMessage = e.getMessage();
+            endExceptionally(e);
+            throw new ValidationServiceException(getClass().getSimpleName(), e);
         }
+    }
+
+    private void endExceptionally(Exception e) {
+        logger.error(e.getMessage(), e);
         logger.info("WsValidateDocument: end with exception");
-        throw new DSSException(exceptionMessage);
     }
 
     @Autowired

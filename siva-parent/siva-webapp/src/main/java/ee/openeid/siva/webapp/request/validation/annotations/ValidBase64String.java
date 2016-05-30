@@ -10,13 +10,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@NotBlank(message = "document cannot be empty")
+@NotBlank
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy=ValidBase64ConstraintValidator.class)
 public @interface ValidBase64String {
 
-    String message() default "document not encoded in base64";
+    String message() default "{validation.error.message.base64}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

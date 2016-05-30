@@ -11,7 +11,7 @@ public class ValidBase64ConstraintValidator implements ConstraintValidator<Valid
    public void initialize(ValidBase64String constraint) {
    }
 
-   public boolean isValid(String obj, ConstraintValidatorContext context) {
-       return Base64.isBase64(obj);
+   public boolean isValid(String base64Text, ConstraintValidatorContext context) {
+       return base64Text != null && Base64.isBase64(base64Text);
    }
 }

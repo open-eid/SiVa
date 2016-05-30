@@ -1,7 +1,7 @@
 package ee.openeid.siva.webapp.request.validation.annotations;
 
-import ee.openeid.siva.webapp.request.validation.validators.AcceptValuesConstraintValidator;
 import ee.openeid.siva.webapp.request.validation.AcceptedValue;
+import ee.openeid.siva.webapp.request.validation.validators.AcceptValuesConstraintValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -10,13 +10,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ElementType.FIELD, ElementType.ANNOTATION_TYPE})
+@Target(ElementType.ANNOTATION_TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy=AcceptValuesConstraintValidator.class)
 public @interface AcceptValues {
 
     AcceptedValue value();
-    String message() default "invalid field value";
+    String message() default "{validation.error.message.general}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

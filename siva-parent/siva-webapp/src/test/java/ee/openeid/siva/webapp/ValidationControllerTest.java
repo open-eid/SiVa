@@ -54,8 +54,8 @@ public class ValidationControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.requestErrors", Matchers.hasSize(1)))
-                .andExpect(jsonPath("$.requestErrors[0].field", is("reportType")))
-                .andExpect(jsonPath("$.requestErrors[0].message", containsString("invalid reportType")));
+                .andExpect(jsonPath("$.requestErrors[0].key", is("reportType")))
+                .andExpect(jsonPath("$.requestErrors[0].message", containsString("invalid report type")));
     }
 
     @Test
@@ -66,8 +66,8 @@ public class ValidationControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.requestErrors", Matchers.hasSize(1)))
-                .andExpect(jsonPath("$.requestErrors[0].field", is("documentType")))
-                .andExpect(jsonPath("$.requestErrors[0].message", containsString("invalid documentType")));
+                .andExpect(jsonPath("$.requestErrors[0].key", is("documentType")))
+                .andExpect(jsonPath("$.requestErrors[0].message", containsString("invalid document type")));
     }
 
     @Test
@@ -78,8 +78,8 @@ public class ValidationControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.requestErrors", Matchers.hasSize(1)))
-                .andExpect(jsonPath("$.requestErrors[0].field", is("document")))
-                .andExpect(jsonPath("$.requestErrors[0].message", containsString("document not encoded in base64")));
+                .andExpect(jsonPath("$.requestErrors[0].key", is("document")))
+                .andExpect(jsonPath("$.requestErrors[0].message", containsString("not valid base64 encoded string")));
     }
 
     @Test
@@ -90,13 +90,36 @@ public class ValidationControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.requestErrors", Matchers.hasSize(1)))
-                .andExpect(jsonPath("$.requestErrors[0].field", is("document")))
-                .andExpect(jsonPath("$.requestErrors[0].message", containsString("document cannot be empty")));
+                .andExpect(jsonPath("$.requestErrors[0].key", is("document")))
+                .andExpect(jsonPath("$.requestErrors[0].message", containsString("may not be empty")));
+    }
+
+    @Test
+    public void requestWithInvalidKeysShouldBeRejectedWithError() throws Exception {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("reportType", "simple");
+        jsonObject.put("filename", "filename.exe");
+        jsonObject.put("documentType", "BDOC");
+        jsonObject.put("Document", "QVNE");
+        String responseContent = mockMvc.perform(post("/validate")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonObject.toString().getBytes()))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        System.out.println(responseContent);
     }
 
     @Test
     public void requestWithEmptyFilenameReturnsErroneousResponse() throws Exception {
-        testIllegalFilename("");
+        mockMvc.perform(post("/validate")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestWithFilename("").toString().getBytes()))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.requestErrors", Matchers.hasSize(2)))
+                .andExpect(jsonPath("$.requestErrors[*].key", containsInAnyOrder("filename", "filename")))
+                .andExpect(jsonPath("$.requestErrors[*].message", containsInAnyOrder("invalid filename", "may not be empty")));
     }
 
     @Test
@@ -152,8 +175,30 @@ public class ValidationControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.requestErrors", Matchers.hasSize(4)))
-                .andExpect(jsonPath("$.requestErrors[*].field", containsInAnyOrder("filename", "documentType", "reportType", "document")))
-                .andExpect(jsonPath("$.requestErrors[*].message", containsInAnyOrder("invalid filename", "invalid documentType", "invalid reportType", "document not encoded in base64")));
+                .andExpect(jsonPath("$.requestErrors[*].key", containsInAnyOrder("filename", "documentType", "reportType", "document")))
+                .andExpect(jsonPath("$.requestErrors[*].message", containsInAnyOrder("invalid filename", "invalid document type", "invalid report type", "not valid base64 encoded string")));
+    }
+
+    @Test
+    public void aRequestWithNoRequiredKeysReturnsAllErrorsForEachMissingKey() throws Exception {
+        mockMvc.perform(post("/validate")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(blankRequest().toString().getBytes()))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.requestErrors", Matchers.hasSize(8)))
+                .andExpect(jsonPath("$.requestErrors[*].key", containsInAnyOrder("filename",
+                        "documentType", "reportType", "document", "filename", "documentType", "reportType", "document")))
+                .andExpect(jsonPath("$.requestErrors[*].message", containsInAnyOrder(
+                        "invalid filename",
+                        "invalid document type",
+                        "invalid report type",
+                        "not valid base64 encoded string",
+                        "may not be empty",
+                        "may not be empty",
+                        "may not be empty",
+                        "may not be empty"
+                )));
     }
 
     private String filenameWithIllegalCharacter(String illegalCharacter) {
@@ -167,8 +212,14 @@ public class ValidationControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.requestErrors", Matchers.hasSize(1)))
-                .andExpect(jsonPath("$.requestErrors[0].field", is("filename")))
+                .andExpect(jsonPath("$.requestErrors[0].key", is("filename")))
                 .andExpect(jsonPath("$.requestErrors[0].message", containsString("invalid filename")));
+    }
+
+    private JSONObject blankRequest() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("filename", "");
+        return jsonObject;
     }
 
     private JSONObject validRequest() {

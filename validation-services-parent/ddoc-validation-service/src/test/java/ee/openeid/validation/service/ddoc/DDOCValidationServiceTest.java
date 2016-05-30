@@ -1,10 +1,12 @@
 package ee.openeid.validation.service.ddoc;
 
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.document.report.SignatureScope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.sk.digidoc.DigiDocException;
 import org.junit.After;
 import org.junit.BeforeClass;
@@ -42,13 +44,26 @@ public class DDOCValidationServiceTest {
     }
 
     @Test
+    public void validatingADDOCWithMalformedBytesResultsInMalformedDocumentException() throws Exception {
+        ValidationDocument validationDocument = buildValidationDocument(VALID_DDOC_2_SIGNATURES);
+        validationDocument.setBytes(Base64.decode("ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA=="));
+        String message = "";
+        try {
+            validationService.validateDocument(validationDocument);
+        } catch (MalformedDocumentException e) {
+            message = e.getMessage();
+        }
+        assertEquals("the document is malformed", message);
+    }
+
+    @Test
     public void ddocValidationResultShouldIncludeQualifiedReportPOJO() throws Exception {
         assertNotNull(validationResult2Signatures);
     }
 
     @Test
     public void qualifiedReportShouldIncludeRequiredFields() throws Exception {
-        assertNull(validationResult2Signatures.getPolicy());
+        assertNotNull(validationResult2Signatures.getPolicy());
         assertNotNull(validationResult2Signatures.getValidationTime());
         assertEquals(VALID_DDOC_2_SIGNATURES, validationResult2Signatures.getDocumentName());
         assertTrue(validationResult2Signatures.getSignatures().size() == 2);

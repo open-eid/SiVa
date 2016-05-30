@@ -3,6 +3,8 @@ package ee.openeid.siva.integrationtest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.config.EncoderConfig;
+import com.jayway.restassured.config.RestAssuredConfig;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import ee.openeid.siva.SivaWebApplication;
@@ -66,6 +68,7 @@ public abstract class SiVaRestTests {
 
     protected Response post(String request) {
         return given()
+                .config(RestAssuredConfig.config().encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8")))
                 .body(request)
                 .contentType(ContentType.JSON)
                 .when()

@@ -123,6 +123,14 @@ public class ValidationControllerTest {
     }
 
     @Test
+    public void requestWithUnusualButLegalCharacterInFilenameShouldBeValid() throws Exception {
+        mockMvc.perform(post("/validate")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestWithFilename("üõäöžš.pdf").toString().getBytes()));
+        assertEquals("üõäöžš.pdf", transformerSpy.validationRequest.getFilename());
+    }
+
+    @Test
     public void requestWithForwardSlashInFilenameReturnsErroneousResponse() throws Exception {
         testIllegalFilename(filenameWithIllegalCharacter("/"));
     }

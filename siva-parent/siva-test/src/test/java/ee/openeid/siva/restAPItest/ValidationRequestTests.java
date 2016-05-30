@@ -559,12 +559,12 @@ public class ValidationRequestTests extends SiVaRestTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
      ***/
-    @Test @Ignore //TODO: VAL-201 Proper error message handling is needed for the test after the fix.
+    @Test
     public void ValidationRequestUnusualChars() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "ÕValid_IDCard_MobID_signatures.bdocÄÖÜ", "bdoc", "simple"))
                 .then()
-                .body("documentName",equalTo("TotallyRandomFilename.exe"));
+                .body("documentName",equalTo("ÕValid_IDCard_MobID_signatures.bdocÄÖÜ"));
     }
 
     @Override

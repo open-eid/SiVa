@@ -17,7 +17,7 @@ deploy:
   access_key_id: AKIAJPTKESQQK3GFXN2Q
   bucket: open-eid-siva-travis
   skip_cleanup: true
-  local_dir: siva-parent/siva-distribution/target
+  local_dir: ${TRAVIS_BUILD_DIR}/siva-parent/siva-distribution/target
   upload-dir: travis-build/${TRAVIS_BUILD_NUMBER}
   region: eu-central-1
   secrect_access_key:

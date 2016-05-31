@@ -17,12 +17,13 @@
         <module>siva-webapp</module>
         <module>siva-sample-application</module>
         <module>siva-test</module>
+        <module>siva-distribution</module>
     </modules>
 
     <properties>
         <project.encoding>UTF-8</project.encoding>
         <language.level>1.8</language.level>
-        <spring.boot.version>1.4.0.M2</spring.boot.version>
+        <spring.boot.version>1.4.0.M3</spring.boot.version>
         <junit.version>4.12</junit.version>
         <mockito.version>2.0.2-beta</mockito.version>
         <powermock.version>1.6.2</powermock.version>
@@ -194,14 +195,6 @@
             <id>java.net</id>
             <url>http://download.java.net/maven/2/</url>
         </repository>
-        <!--<repository>
-            <id>joinup-mocca-thirparty</id>
-            <url>http://joinup.ec.europa.eu/site/mocca/m2/repository/</url>
-        </repository>
-        <repository>
-            <id>joinup-dss-thirdparty</id>
-            <url>http://joinup.ec.europa.eu/site/sd-dss/maven2</url>
-        </repository>-->
         <repository>
             <id>spring-snapshots</id>
             <url>http://repo.spring.io/snapshot</url>
@@ -227,8 +220,8 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
-
     </repositories>
+
     <pluginRepositories>
         <pluginRepository>
             <id>spring-snapshots</id>

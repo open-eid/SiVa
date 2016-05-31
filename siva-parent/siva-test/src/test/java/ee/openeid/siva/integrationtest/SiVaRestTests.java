@@ -3,6 +3,8 @@ package ee.openeid.siva.integrationtest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.config.EncoderConfig;
+import com.jayway.restassured.config.RestAssuredConfig;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import ee.openeid.siva.SivaWebApplication;
@@ -46,6 +48,11 @@ public abstract class SiVaRestTests {
     private static final String VALIDATION_ENDPOINT = "/validate";
     private static final boolean PRINT_RESPONSE = false;
 
+    protected static final String DOCUMENT_TYPE = "documentType";
+    protected static final String REPORT_TYPE = "reportType";
+    protected static final String FILENAME = "filename";
+    protected static final String DOCUMENT = "document";
+
     @Value("${local.server.port}")
     private int serverPort;
 
@@ -61,6 +68,7 @@ public abstract class SiVaRestTests {
 
     protected Response post(String request) {
         return given()
+                .config(RestAssuredConfig.config().encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8")))
                 .body(request)
                 .contentType(ContentType.JSON)
                 .when()
@@ -95,13 +103,25 @@ public abstract class SiVaRestTests {
         return jsonObject.toString();
     }
 
-    protected String validationRequestForExtended(String documentKey, String encodedString,String filenameKey, String file, String documentTypeKey, String documentType, String reportTypeKey, String reportType) {
+    protected String validationRequestForExtended(String documentKey, String encodedDocument,
+                                                  String filenameKey, String file,
+                                                  String documentTypeKey, String documentType,
+                                                  String reportTypeKey, String reportType) {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put(documentKey, encodedString);
+        jsonObject.put(documentKey, encodedDocument);
         jsonObject.put(filenameKey, file);
         jsonObject.put(documentTypeKey, documentType);
         jsonObject.put(reportTypeKey, reportType);
         return jsonObject.toString();
+    }
+
+    protected String validationRequestWithValidKeys(String encodedString, String filename, String documentType, String reportType) {
+        return validationRequestForExtended(
+                DOCUMENT, encodedString,
+                FILENAME, filename,
+                DOCUMENT_TYPE, documentType,
+                REPORT_TYPE, reportType
+        );
     }
 
     protected byte[] readFileFromTestResources(String fileName) {

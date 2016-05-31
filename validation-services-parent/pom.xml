@@ -23,15 +23,12 @@
         <project.encoding>UTF-8</project.encoding>
         <language.level>1.8</language.level>
         <dss.version>4.6.d4j.2</dss.version>
-        <spring.boot.version>1.4.0.M2</spring.boot.version>
+        <spring.boot.version>1.4.0.M3</spring.boot.version>
         <digidoc4j.version>1.0.3</digidoc4j.version>
-
-        <!--<spring.boot.version>1.4.0.BUILD-SNAPSHOT</spring.boot.version>-->
     </properties>
 
     <dependencyManagement>
         <dependencies>
-
             <!-- Spring boot -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>

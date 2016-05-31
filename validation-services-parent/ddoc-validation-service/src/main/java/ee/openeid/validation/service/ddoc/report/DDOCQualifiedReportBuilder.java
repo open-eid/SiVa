@@ -54,6 +54,7 @@ public class DDOCQualifiedReportBuilder {
         return sdf;
     }
 
+    @SuppressWarnings("unchecked")
     private List<Signature> getSignatures(SignedDoc signedDoc) {
         if (signedDoc.getSignatures() == null) {
             return new ArrayList<>();
@@ -86,6 +87,7 @@ public class DDOCQualifiedReportBuilder {
         return signedDoc.getFormat().replaceAll("-", "_") + "_" + signedDoc.getVersion();
     }
 
+    @SuppressWarnings("unchecked")
     private List<Error> getErrors(Signature signature) {
         List<DigiDocException> signatureValidationErrors = signature.validate();
         List<DigiDocException> signatureVerificationErrors = signature.verify(signedDoc, true, true);
@@ -110,8 +112,9 @@ public class DDOCQualifiedReportBuilder {
         return error;
     }
 
+    @SuppressWarnings("unchecked")
     private List<SignatureScope> getSignatureScopes() {
-        List<DataFile> dataFiles = (List<DataFile>) signedDoc.getDataFiles();
+        List<DataFile> dataFiles = signedDoc.getDataFiles();
 
         return dataFiles
                 .stream()
@@ -128,6 +131,7 @@ public class DDOCQualifiedReportBuilder {
 
     private SignatureValidationData.Indication getIndication(Signature signature) {
         if (!signature.validate().isEmpty()) {
+            // TODO: Should we always return 'INDETERMINATE' in this case or are there cases when we should give here 'TOTAL_FAILED'?
             return SignatureValidationData.Indication.INDETERMINATE;
         } else if (!signature.verify(signedDoc, true, true).isEmpty()) {
             return SignatureValidationData.Indication.TOTAL_FAILED;

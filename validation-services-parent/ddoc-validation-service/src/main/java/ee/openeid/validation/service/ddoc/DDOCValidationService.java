@@ -63,6 +63,7 @@ public class DDOCValidationService implements ValidationService {
                     throw new MalformedDocumentException();
                 }
 
+                // TODO: Perhaps we should react to these exceptions? Or at least to those which aren't warnings?
                 List<DigiDocException> signedDocValidationErrors = signedDoc.validate(true);
 
                 Date validationTime = new Date();

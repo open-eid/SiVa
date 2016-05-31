@@ -108,7 +108,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      *
      * Expected Result: Error is returned stating problem in document
      *
-     * File: Valid_IDCard_MobID_signatures.bdoc
+     * File:
      *
      ***/
     @Test

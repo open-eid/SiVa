@@ -25,8 +25,8 @@ import java.io.StringWriter;
 
 @Service
 public class ValidationProxy {
-
-    private static final Logger log = LoggerFactory.getLogger(ValidationProxy.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ValidationProxy.class);
+    private static final String SERVICE_BEAN_NAME_POSTFIX = "ValidationService";
 
     private ApplicationContext applicationContext;
 
@@ -42,16 +42,15 @@ public class ValidationProxy {
     private ValidationService getServiceForType(DocumentType documentType) {
         String validatorName = constructValidatorName(documentType);
         try {
-            ValidationService validationService = (ValidationService) applicationContext.getBean(validatorName);
-            return validationService;
+            return (ValidationService) applicationContext.getBean(validatorName);
         } catch (NoSuchBeanDefinitionException e) {
-            log.error("{} not found", validatorName, e);
+            LOGGER.error("{} not found", validatorName, e);
             throw new ValidatonServiceNotFoundException(validatorName + " not found");
         }
     }
 
-    private String constructValidatorName(DocumentType documentType) {
-        return documentType.name() + "ValidationService";
+    private static String constructValidatorName(DocumentType documentType) {
+        return documentType.name() + SERVICE_BEAN_NAME_POSTFIX;
     }
 
     private ValidationDocument createValidationDocument(ProxyDocument proxyDocument) {
@@ -62,24 +61,24 @@ public class ValidationProxy {
         return validationDocument;
     }
 
-    private String toXML(QualifiedReport report) {
+    private static String toXML(QualifiedReport report) {
         try {
-            Marshaller jaxbMarshaller = JAXBContext.newInstance(QualifiedReport.class).createMarshaller();
+            final Marshaller xmlMarshaller = JAXBContext.newInstance(QualifiedReport.class).createMarshaller();
             StringWriter sw = new StringWriter();
-            jaxbMarshaller.marshal(report, sw);
+            xmlMarshaller.marshal(report, sw);
             return sw.toString();
         } catch (JAXBException e) {
-            log.error("creating xml from qualified report failed", e);
+            LOGGER.error("creating xml from qualified report failed", e);
             throw new ReportToXMLMarshallingException(e);
         }
     }
 
-    private String toJSON(QualifiedReport report) {
-        ObjectMapper mapper = new ObjectMapper();
+    private static String toJSON(QualifiedReport report) {
+        final ObjectMapper jsonObjectMapper = new ObjectMapper();
         try {
-            return mapper.writeValueAsString(report);
+            return jsonObjectMapper.writeValueAsString(report);
         } catch (JsonProcessingException e) {
-            log.error("creating json from qualified report failed", e);
+            LOGGER.error("creating json from qualified report failed", e);
             throw new ReportToJSONMarshallingException(e);
         }
     }

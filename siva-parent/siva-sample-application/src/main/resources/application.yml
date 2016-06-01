@@ -3,5 +3,7 @@ server:
 siva:
   uploadDirectory: "upload-dir"
   serviceUrl: "http://localhost:8080/validate"
-multipart:
-  max-file-size: 10MB
+spring:
+  http:
+    multipart:
+      max-file-size: "10Mb"

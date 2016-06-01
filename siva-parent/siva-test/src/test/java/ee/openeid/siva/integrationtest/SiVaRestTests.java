@@ -56,7 +56,7 @@ public abstract class SiVaRestTests {
 
     private static final String PROJECT_SUBMODULE_NAME =  "siva-test";
     private static final String VALIDATION_ENDPOINT = "/validate";
-    private static final boolean PRINT_RESPONSE = true;
+    private static final boolean PRINT_RESPONSE = false;
 
     @Value("${local.server.port}")
     private int serverPort;

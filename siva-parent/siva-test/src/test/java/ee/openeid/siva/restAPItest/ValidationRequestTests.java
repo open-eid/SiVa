@@ -651,7 +651,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      * File: igasugust1.3.ddoc
      *
      ***/
-    @Test @Ignore //TODO: VAL-196
+    @Test
     public void BdocValidationRequestNotMatchingDocumentTypeAndActualFileDdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
         post(validationRequestWithValidKeys(encodedString, "igasugust1.3.ddoc", "bdoc", "simple"))

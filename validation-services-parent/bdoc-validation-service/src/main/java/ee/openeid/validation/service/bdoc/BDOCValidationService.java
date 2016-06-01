@@ -8,6 +8,7 @@ import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.validation.service.bdoc.report.BDOCQualifiedReportBuilder;
 import eu.europa.esig.dss.DSSException;
 import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
+import org.apache.commons.lang.StringUtils;
 import org.digidoc4j.Configuration;
 import org.digidoc4j.Container;
 import org.digidoc4j.ContainerBuilder;
@@ -26,8 +27,10 @@ import java.util.Date;
 public class BDOCValidationService implements ValidationService {
 
     private static final Logger logger = LoggerFactory.getLogger(BDOCValidationService.class);
-    private TrustedListsCertificateSource trustedListSource;
 
+    private static final String CONTAINER_TYPE_DDOC = "DDOC";
+
+    private TrustedListsCertificateSource trustedListSource;
     private Configuration configuration;
 
     @Override
@@ -40,6 +43,7 @@ public class BDOCValidationService implements ValidationService {
             logger.error("Unable to create container from validation document", e);
             throw new MalformedDocumentException(e);
         }
+        verifyContainerTypeNotDDOC(container.getType());
 
         try {
             container.validate();
@@ -71,6 +75,12 @@ public class BDOCValidationService implements ValidationService {
                 build();
     }
 
+    private void verifyContainerTypeNotDDOC(String containerType) {
+        if (StringUtils.equalsIgnoreCase(containerType, CONTAINER_TYPE_DDOC)) {
+            logger.error("DDOC container passed to BDOC validator");
+            throw new MalformedDocumentException();
+        }
+    }
     /**
      * allow setting the configuration manually for testing purposes
      *

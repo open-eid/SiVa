@@ -1,12 +1,11 @@
 package ee.openeid.siva.integrationtest;
 
-import com.jayway.restassured.RestAssured;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+import org.hamcrest.Matchers;
 import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.springframework.http.HttpStatus;
 
 @Category(IntegrationTest.class)
 public class BdocValidationFail extends SiVaRestTests{
@@ -97,6 +96,28 @@ public class BdocValidationFail extends SiVaRestTests{
     public void NoSignatures() {
         setTestFilesDirectory("document_format_test_files/");
         assertAllSignaturesAreInvalid(postForReport("BdocContainerNoSignature.bdoc"));
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationFail-5
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Bdoc with invalid mimetype in manifest
+     *
+     * Expected Result: document malformed error should be returned
+     *
+     * File: 23147_weak-warning-sha1-invalid-mimetype-in-manifest.bdoc
+     ***/
+    @Test
+    public void malformedBdocWithInvalidMimetypeInManifest() {
+        post(validationRequestFor("23147_weak-warning-sha1-invalid-mimetype-in-manifest.bdoc", "simple"))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
+                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
 

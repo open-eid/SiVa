@@ -1,6 +1,0 @@
-server:
-  port: 9000
-siva:
-  serviceUrl: "http://siva-open-eid.azurewebsites.net/validate"
-multipart:
-  max-file-size: 10MB

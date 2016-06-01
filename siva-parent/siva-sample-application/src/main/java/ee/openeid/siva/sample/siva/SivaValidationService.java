@@ -17,6 +17,7 @@ public class SivaValidationService {
 
     private String sivaBaseUrl;
     private RestTemplate restTemplate;
+    private SivaValidationServiceErrorHandler errorHandler;
 
     public String validateDocument(final File file) throws IOException {
         if (file == null) {
@@ -32,6 +33,7 @@ public class SivaValidationService {
         validationRequest.setFilename(filename);
         setValidationDocumentType(validationRequest, filename);
 
+        restTemplate.setErrorHandler(errorHandler);
         return restTemplate.postForObject(sivaBaseUrl, validationRequest, String.class);
     }
 
@@ -56,5 +58,10 @@ public class SivaValidationService {
     @Autowired
     public void setRestTemplate(final RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
+    }
+
+    @Autowired
+    public void setErrorHandler(SivaValidationServiceErrorHandler errorHandler) {
+        this.errorHandler = errorHandler;
     }
 }

@@ -24,13 +24,6 @@ import static org.junit.Assert.assertTrue;
 @Category(IntegrationTest.class)
 public class ValidationRequestTests extends SiVaRestTests {
 
-    private static final String DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE = "document malformed or not matching documentType";
-    private static final String INVALID_DOCUMENT_TYPE = "invalid document type";
-    private static final String INVALID_REPORT_TYPE = "invalid report type";
-    private static final String INVALID_FILENAME = "invalid filename";
-    private static final String MAY_NOT_BE_EMPTY = "may not be empty";
-    private static final String INVALID_BASE_64 = "not valid base64 encoded string";
-
     @Before
     public void DirectoryBackToDefault() {
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);

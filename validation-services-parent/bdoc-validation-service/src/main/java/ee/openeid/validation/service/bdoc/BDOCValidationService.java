@@ -6,6 +6,7 @@ import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.validation.service.bdoc.report.BDOCQualifiedReportBuilder;
+import eu.europa.esig.dss.DSSException;
 import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import org.digidoc4j.Configuration;
 import org.digidoc4j.Container;
@@ -35,7 +36,7 @@ public class BDOCValidationService implements ValidationService {
         Container container;
         try {
             container = createContainer(validationDocument);
-        } catch (DigiDoc4JException e) {
+        } catch (DigiDoc4JException | DSSException e) {
             logger.error("Unable to create container from validation document", e);
             throw new MalformedDocumentException(e);
         }

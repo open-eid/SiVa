@@ -43,14 +43,20 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @SpringBootTest(classes = SivaWebApplication.class, webEnvironment=RANDOM_PORT)
 public abstract class SiVaRestTests {
 
-    private static final String PROJECT_SUBMODULE_NAME =  "siva-test";
-    private static final String VALIDATION_ENDPOINT = "/validate";
-    private static final boolean PRINT_RESPONSE = false;
-
+    protected static final String DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE = "document malformed or not matching documentType";
+    protected static final String INVALID_DOCUMENT_TYPE = "invalid document type";
+    protected static final String INVALID_REPORT_TYPE = "invalid report type";
+    protected static final String INVALID_FILENAME = "invalid filename";
+    protected static final String MAY_NOT_BE_EMPTY = "may not be empty";
+    protected static final String INVALID_BASE_64 = "not valid base64 encoded string";
     protected static final String DOCUMENT_TYPE = "documentType";
     protected static final String REPORT_TYPE = "reportType";
     protected static final String FILENAME = "filename";
     protected static final String DOCUMENT = "document";
+
+    private static final String PROJECT_SUBMODULE_NAME =  "siva-test";
+    private static final String VALIDATION_ENDPOINT = "/validate";
+    private static final boolean PRINT_RESPONSE = true;
 
     @Value("${local.server.port}")
     private int serverPort;

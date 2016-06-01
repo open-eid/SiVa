@@ -1,9 +1,13 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+import ee.openeid.siva.validation.document.report.QualifiedReport;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @Category(IntegrationTest.class)
 public class BdocValidationPass extends SiVaRestTests{
@@ -57,11 +61,13 @@ public class BdocValidationPass extends SiVaRestTests{
      *
      * Expected Result: The document should pass the validation but warning should be returned
      *
-     * File: 23147_weak-warning-sha1.bdoc
+     * File: bdoc_weak-warning-sha1.bdoc
      ***/
-    @Test @Ignore //TODO: VAL-207
+    @Test @Ignore //TODO: VAL-207 should show warning - further investigation required
     public void validSignatureWithWarning() {
-        assertAllSignaturesAreValid(postForReport("23147_weak-warning-sha1.bdoc"));
+        QualifiedReport report = postForReport("bdoc_weak_warning_sha1.bdoc");
+        assertEquals(report.getSignaturesCount(), report.getValidSignaturesCount());
+        assertTrue(report.getSignatures().get(0).getWarnings().size() > 0);
     }
 
     @Override

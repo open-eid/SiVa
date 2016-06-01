@@ -5,6 +5,7 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
@@ -33,8 +34,13 @@ public class SivaValidationService {
         validationRequest.setFilename(filename);
         setValidationDocumentType(validationRequest, filename);
 
-        restTemplate.setErrorHandler(errorHandler);
-        return restTemplate.postForObject(sivaBaseUrl, validationRequest, String.class);
+        try {
+            restTemplate.setErrorHandler(errorHandler);
+            return restTemplate.postForObject(sivaBaseUrl, validationRequest, String.class);
+        } catch (ResourceAccessException ce) {
+            return "{\"error\": \"Connection to web service failed. Make sure You have configured SiVa web service correctly\"}";
+        }
+
     }
 
     private static void setValidationDocumentType(final ValidationRequest validationRequest, final String filename) {

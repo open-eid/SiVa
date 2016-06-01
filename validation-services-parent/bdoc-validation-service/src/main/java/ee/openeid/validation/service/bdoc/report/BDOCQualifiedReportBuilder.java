@@ -27,7 +27,6 @@ public class BDOCQualifiedReportBuilder {
     private static final String XADES_FORMAT_PREFIX = "XAdES_BASELINE_";
     private static final String DSS_BASIC_INFO_NAME_ID = "NameId";
     private static final String DSS_BASIC_INFO_CONTENT = "content";
-    private static final String BDOC_SIGNATURE_INFO = "BDOC_SIGNATURE_INFO";
     private static final String REPORT_INDICATION_INDETERMINATE = "INDETERMINATE";
 
     private Container container;
@@ -76,6 +75,7 @@ public class BDOCQualifiedReportBuilder {
         signatureValidationData.setWarnings(getWarnings(bDocSignature));
         signatureValidationData.setInfo(getInfo(bDocSignature));
         signatureValidationData.setIndication(getIndication(bDocSignature));
+        signatureValidationData.setSubIndication(getSubIndication(bDocSignature));
 
         return signatureValidationData;
 
@@ -106,9 +106,15 @@ public class BDOCQualifiedReportBuilder {
         }
     }
 
+    private String getSubIndication(BDocSignature bDocSignature) {
+        if (getIndication(bDocSignature) == SignatureValidationData.Indication.TOTAL_PASSED) {
+            return null;
+        }
+        return bDocSignature.getDssValidationReport().getReport().getSimpleReport().getSubIndication(bDocSignature.getId());
+    }
+
     private Info getInfo(BDocSignature bDocSignature) {
         Info info = new Info();
-        info.setNameId(BDOC_SIGNATURE_INFO); //TODO: what's actually meant here? is it necessary?
         Date trustedTime = bDocSignature.getTrustedSigningTime();
         if (trustedTime != null) {
             info.setBestSignatureTime(getDateFormatterWithGMTZone().format(trustedTime));

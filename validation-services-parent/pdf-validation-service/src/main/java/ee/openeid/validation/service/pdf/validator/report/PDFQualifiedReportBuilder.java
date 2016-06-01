@@ -65,6 +65,7 @@ public class PDFQualifiedReportBuilder {
         signatureValidationData.setSignatureLevel(simpleReport.getSignatureLevel(signatureId).name());
         signatureValidationData.setSignedBy(parseSignedBy(signatureId));
         signatureValidationData.setIndication(parseIndication(signatureId));
+        signatureValidationData.setSubIndication(parseSubIndication(signatureId));
         signatureValidationData.setClaimedSigningTime(parseClaimedSigningTime(signatureId));
         signatureValidationData.setSignatureScopes(parseSignatureScopes(signatureId));
         signatureValidationData.setErrors(parseSignatureErrors(signatureId));
@@ -77,7 +78,6 @@ public class PDFQualifiedReportBuilder {
         Info info = new Info();
         List<Conclusion.BasicInfo> dssInfo = simpleReport.getInfo(signatureId);
         if (dssInfo != null && !dssInfo.isEmpty()) {
-            info.setNameId(dssInfo.get(0).getAttributeValue(NAME_ID_ATTRIBUTE));
             info.setBestSignatureTime(dssInfo.get(0).getAttributeValue(BEST_SIGNATURE_TIME_ATTRIBUTE));
         }
         return info;
@@ -139,6 +139,13 @@ public class PDFQualifiedReportBuilder {
         } else {
             return SignatureValidationData.Indication.INDETERMINATE;
         }
+    }
+
+    private String parseSubIndication(String signatureId) {
+        if (parseIndication(signatureId) == SignatureValidationData.Indication.TOTAL_PASSED) {
+            return null;
+        }
+        return simpleReport.getSubIndication(signatureId);
     }
 
     private String parseSignedBy(String signatureId) {

@@ -6,6 +6,5 @@ import lombok.Data;
 public class Info {
 
     private String bestSignatureTime;
-    private String nameId;
 
 }

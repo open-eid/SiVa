@@ -13,6 +13,7 @@ public class SignatureValidationData {
     private String signatureLevel;
     private String signedBy;
     private Indication indication;
+    private String subIndication;
     private List<Error> errors;
     private List<SignatureScope> signatureScopes;
     private String claimedSigningTime;

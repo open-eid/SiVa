@@ -142,7 +142,6 @@ public class ValidationProxyTest {
         private Info createDummySignatureInfo() {
             Info info = new Info();
             info.setBestSignatureTime("BestSignatureTime");
-            info.setNameId("NameId");
             return info;
         }
 

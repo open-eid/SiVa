@@ -10,12 +10,14 @@ public class Policy {
     private String policyDescription;
     private String policyName;
     private String policyUrl;
+    private String policyVersion;
 
     private static Policy sivaDefaultPolicy() {
         Policy policy = new Policy();
         policy.policyDescription = "SiVa validation policy";
         policy.policyName = "SiVa validation policy";
         policy.policyUrl = "http://open-eid.github.io/SiVa/siva/appendix/validation_policy/";
+        policy.policyVersion = "1.0";
         return policy;
     }
 }

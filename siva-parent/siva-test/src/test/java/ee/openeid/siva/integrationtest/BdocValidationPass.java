@@ -61,9 +61,9 @@ public class BdocValidationPass extends SiVaRestTests{
      *
      * Expected Result: The document should pass the validation but warning should be returned
      *
-     * File: bdoc_weak-warning-sha1.bdoc
+     * File: Need a file that will generate warnings
      ***/
-    @Test @Ignore //TODO: VAL-207 should show warning - further investigation required
+    @Test @Ignore //TODO: VAL-207 we need a file that actually shows warning, sha-1 does not
     public void validSignatureWithWarning() {
         QualifiedReport report = postForReport("bdoc_weak_warning_sha1.bdoc");
         assertEquals(report.getSignaturesCount(), report.getValidSignaturesCount());

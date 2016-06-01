@@ -11,7 +11,7 @@
         <dependencySet>
             <useProjectArtifact>false</useProjectArtifact>
             <useTransitiveDependencies>false</useTransitiveDependencies>
-            <outputDirectory>bin</outputDirectory>
+            <outputDirectory>/</outputDirectory>
             <unpack>false</unpack>
         </dependencySet>
     </dependencySets>

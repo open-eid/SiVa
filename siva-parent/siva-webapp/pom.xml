@@ -47,7 +47,11 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>1.3.3.RELEASE</version>
+                <version>1.3.5.RELEASE</version>
+                <configuration>
+                    <executable>true</executable>
+                    <outputDirectory>${project.build.directory}/executable</outputDirectory>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>

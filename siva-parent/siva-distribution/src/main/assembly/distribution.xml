@@ -6,6 +6,13 @@
     <formats>
         <format>zip</format>
     </formats>
+    <files>
+        <file>
+            <source>src/main/resources/install.sh</source>
+            <outputDirectory>/</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+    </files>
     <includeBaseDirectory>false</includeBaseDirectory>
     <dependencySets>
         <dependencySet>

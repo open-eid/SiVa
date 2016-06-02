@@ -9,11 +9,11 @@ block content
                     input(type="file", name="file")
                 .form-group
                     button(type="submit")#validate-btn.btn.btn-primary Validate
-    if overallValidationResult != null
+    if overallValidationResult != null && !documentName.isEmpty()
         .row
             .col-md-12
                 h1 Overall validation result
-                p Document
+                p Document&nbsp;
                     strong= documentName
                     |&nbsp;is&nbsp;
                     strong(class="validation-result "  + overallValidationResult.toLowerCase())= overallValidationResult

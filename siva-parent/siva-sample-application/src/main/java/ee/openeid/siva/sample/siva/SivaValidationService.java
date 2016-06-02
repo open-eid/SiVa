@@ -1,5 +1,6 @@
 package ee.openeid.siva.sample.siva;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import java.util.Arrays;
 @Service
 public class SivaValidationService {
     private static final String FILENAME_EXTENSION_SEPARATOR = ".";
+    private static final int GENERIC_ERROR_CODE = 101;
 
     private String sivaBaseUrl;
     private RestTemplate restTemplate;
@@ -38,7 +40,8 @@ public class SivaValidationService {
             restTemplate.setErrorHandler(errorHandler);
             return restTemplate.postForObject(sivaBaseUrl, validationRequest, String.class);
         } catch (ResourceAccessException ce) {
-            return "{\"error\": \"Connection to web service failed. Make sure You have configured SiVa web service correctly\"}";
+            String errorMessage = "Connection to web service failed. Make sure You have configured SiVa web service correctly";
+            return new ObjectMapper().writer().writeValueAsString(new ServiceError(GENERIC_ERROR_CODE, errorMessage));
         }
 
     }
@@ -49,7 +52,7 @@ public class SivaValidationService {
     }
 
     private static FileType parseFileExtension(final String fileExtension) {
-        return Arrays.asList(FileType.values()).stream()
+        return Arrays.stream(FileType.values())
                 .filter(fileType -> fileType.name().equalsIgnoreCase(fileExtension))
                 .findFirst()
                 .orElse(null);
@@ -67,7 +70,7 @@ public class SivaValidationService {
     }
 
     @Autowired
-    public void setErrorHandler(SivaValidationServiceErrorHandler errorHandler) {
+    public void setErrorHandler(final SivaValidationServiceErrorHandler errorHandler) {
         this.errorHandler = errorHandler;
     }
 }

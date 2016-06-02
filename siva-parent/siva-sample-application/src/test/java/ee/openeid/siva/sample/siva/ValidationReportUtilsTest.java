@@ -57,7 +57,7 @@ public class ValidationReportUtilsTest {
     @Test
     public void overallValidationRequiredKeysPresentValuesNullReturnsInvalid() throws Exception {
         final String json = "{\"validSignaturesCount\": null, \"signaturesCount\": null}";
-        assertEquals("INVALID", ValidationReportUtils.getOverallValidationResult(json));
+        assertEquals("ERROR", ValidationReportUtils.getOverallValidationResult(json));
     }
 
     @Test

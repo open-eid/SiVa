@@ -13,11 +13,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Base64Utils;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.io.IOException;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
@@ -77,6 +79,21 @@ public class SivaValidationServiceTest {
 
         sivaValidationService.validateDocument(null);
     }
+
+    @Test
+    public void givenRestServiceIsUnreachableReturnsGenericSystemError() throws Exception {
+        final File file = getFile("simple file", "testing.bdoc");
+        given(restTemplate.postForObject(anyString(), any(ValidationRequest.class), any()))
+                .willThrow(new ResourceAccessException("Failed to connect to SiVa REST"));
+
+        String result = sivaValidationService.validateDocument(file);
+        verify(restTemplate).postForObject(anyString(), validationRequestCaptor.capture(), any());
+
+        assertThat(result).contains("errorCode");
+        assertThat(result).contains("errorMessage");
+    }
+
+
 
     private File getFile(String fileContents, String fileName) throws IOException {
         final File inputFile = testingFolder.newFile(fileName);

@@ -2,6 +2,7 @@ package ee.openeid.siva.webapp;
 
 import ee.openeid.siva.proxy.ValidationProxy;
 import ee.openeid.siva.proxy.document.ProxyDocument;
+import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.webapp.request.ValidationRequest;
 import ee.openeid.siva.webapp.transformer.ValidationRequestToProxyDocumentTransformer;
 import org.hamcrest.Matchers;
@@ -277,7 +278,7 @@ public class ValidationControllerTest {
         private ProxyDocument document;
 
         @Override
-        public String validate(ProxyDocument document) {
+        public QualifiedReport validate(ProxyDocument document) {
             this.document = document;
             return null;
         }

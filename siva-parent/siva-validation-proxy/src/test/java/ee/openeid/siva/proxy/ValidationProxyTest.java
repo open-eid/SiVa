@@ -1,9 +1,7 @@
 package ee.openeid.siva.proxy;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.proxy.document.ProxyDocument;
-import ee.openeid.siva.proxy.document.RequestProtocol;
 import ee.openeid.siva.proxy.exception.ValidatonServiceNotFoundException;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Error;
@@ -54,47 +52,45 @@ public class ValidationProxyTest {
         exception.expectMessage("ASICEValidationService not found");
         when(applicationContext.getBean("ASICEValidationService")).thenThrow(new ValidatonServiceNotFoundException("ASICEValidationService not found"));
 
-        ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.ASICE, RequestProtocol.JSON);
+        ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.ASICE);
         validationProxy.validate(proxyDocument);
     }
 
     @Test
-    public void ProxyDocumentWithBDOCDocumentTypeAndJSONRequestProtocolShouldReturnQualifiedReportInJSON() throws Exception {
+    public void ProxyDocumentWithBDOCDocumentTypeShouldReturnQualifiedReport() throws Exception {
         when(applicationContext.getBean(BDOCValidationService.class.getSimpleName())).thenReturn(validationServiceSpy);
 
-        ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.BDOC, RequestProtocol.JSON);
-        String report = validationProxy.validate(proxyDocument);
-        assertJsonReportRepresentsQualifiedReport(report);
+        ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.BDOC);
+        QualifiedReport report = validationProxy.validate(proxyDocument);
+        assertQualifiedReport(report);
     }
 
     @Test
-    public void ProxyDocumentWithPDFDocumentTypeAndJSONRequestProtocolShouldReturnQualifiedReportInJSON() throws Exception {
+    public void ProxyDocumentWithPDFDocumentTypeShouldReturnQualifiedReport() throws Exception {
         when(applicationContext.getBean(PDFValidationService.class.getSimpleName())).thenReturn(validationServiceSpy);
 
-        ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.PDF, RequestProtocol.JSON);
-        String report = validationProxy.validate(proxyDocument);
-        assertJsonReportRepresentsQualifiedReport(report);
+        ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.PDF);
+        QualifiedReport report = validationProxy.validate(proxyDocument);
+        assertQualifiedReport(report);
     }
 
     @Test
-    public void ProxyDocumentWithDDOCDocumentTypeAndJSONRequestProtocolShouldReturnQualifiedReportInJSON() throws Exception {
+    public void ProxyDocumentWithDDOCDocumentTypeShouldReturnQualifiedReport() throws Exception {
         when(applicationContext.getBean(DDOCValidationService.class.getSimpleName())).thenReturn(validationServiceSpy);
 
-        ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.DDOC, RequestProtocol.JSON);
-        String report = validationProxy.validate(proxyDocument);
-        assertJsonReportRepresentsQualifiedReport(report);
+        ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.DDOC);
+        QualifiedReport report = validationProxy.validate(proxyDocument);
+        assertQualifiedReport(report);
     }
 
-    private ProxyDocument mockProxyDocumentWithDocument(DocumentType documentType, RequestProtocol requestProtocol) {
+    private ProxyDocument mockProxyDocumentWithDocument(DocumentType documentType) {
         ProxyDocument proxyDocument = new ProxyDocument();
         proxyDocument.setDocumentType(documentType);
-        proxyDocument.setRequestProtocol(requestProtocol);
         return proxyDocument;
     }
 
-    private void assertJsonReportRepresentsQualifiedReport(String jsonReport) throws IOException {
-        QualifiedReport qualifiedReport = new ObjectMapper().readValue(jsonReport, QualifiedReport.class);
-        assertEquals(validationServiceSpy.qualifiedReport, qualifiedReport);
+    private void assertQualifiedReport(QualifiedReport report) throws IOException {
+        assertEquals(validationServiceSpy.qualifiedReport, report);
     }
 
     private class ValidationServiceSpy implements ValidationService {

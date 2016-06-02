@@ -15,6 +15,4 @@ public class ProxyDocument {
 
     private ReportType reportType;
 
-    private RequestProtocol requestProtocol;
-
 }

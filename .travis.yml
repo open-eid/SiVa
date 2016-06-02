@@ -2,6 +2,8 @@ language: java
 sudo: false
 jdk:
 - oraclejdk8
+addons:
+  ssh_known_hosts: demoapps.eu
 before_install:
 - openssl aes-256-cbc -K $encrypted_befc5bd7f29f_key -iv $encrypted_befc5bd7f29f_iv
   -in ci-deploy-key.enc -out ci-deploy-key -d

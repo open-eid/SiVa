@@ -5,7 +5,7 @@ sudo systemctl stop siva-sample-app
 sudo systemctl stop siva-webapp
 
 # Build new version of SiVa
-./mvnw clean package
+./mvnw clean package -q
 
 # Start up services again
 sudo systemctl start siva-sample-app

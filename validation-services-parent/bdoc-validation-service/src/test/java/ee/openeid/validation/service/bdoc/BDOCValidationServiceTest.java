@@ -7,6 +7,7 @@ import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.document.report.SignatureScope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
+import org.apache.commons.lang.StringUtils;
 import org.digidoc4j.Configuration;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -73,7 +74,7 @@ public class BDOCValidationServiceTest {
         assertEquals("QES", sig1.getSignatureLevel());
         assertEquals("JUHANSON,ALLAN,38608014910", sig1.getSignedBy());
         assertEquals(SignatureValidationData.Indication.TOTAL_PASSED.toString(), sig1.getIndication());
-        assertNull(sig1.getSubIndication());
+        assertTrue(StringUtils.isEmpty(sig1.getSubIndication()));
         assertTrue(sig1.getErrors().size() == 0);
         assertTrue(sig1.getWarnings().size() == 0);
         assertTrue(sig1.getSignatureScopes().size() == 1);
@@ -97,7 +98,7 @@ public class BDOCValidationServiceTest {
         assertEquals("QES", sig2.getSignatureLevel());
         assertEquals("VOLL,ANDRES,39004170346", sig2.getSignedBy());
         assertEquals(SignatureValidationData.Indication.TOTAL_PASSED.toString(), sig2.getIndication());
-        assertNull(sig2.getSubIndication());
+        assertTrue(StringUtils.isEmpty(sig2.getSubIndication()));
         assertTrue(sig2.getErrors().size() == 0);
         assertTrue(sig2.getWarnings().size() == 0);
         assertTrue(sig2.getSignatureScopes().size() == 1);

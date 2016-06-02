@@ -8,6 +8,7 @@ import ee.openeid.siva.validation.document.report.SignatureScope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.sk.digidoc.DigiDocException;
+import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -80,18 +81,19 @@ public class DDOCValidationServiceTest {
                 .get();
 
         assertEquals("DIGIDOC_XML_1.3", sig1.getSignatureFormat());
-        assertNull(sig1.getSignatureLevel());
+        assertTrue(StringUtils.isEmpty(sig1.getSignatureLevel()));
         assertEquals("KESKEL,URMO,38002240232", sig1.getSignedBy());
         assertEquals(SignatureValidationData.Indication.TOTAL_PASSED.toString(), sig1.getIndication());
         assertTrue(sig1.getErrors().size() == 0);
-        assertNull(sig1.getWarnings());
+        assertTrue(sig1.getWarnings().isEmpty());
         assertTrue(sig1.getSignatureScopes().size() == 1);
         SignatureScope scope = sig1.getSignatureScopes().get(0);
         assertEquals("Šužlikud sõid ühe õuna ära.txt", scope.getName());
         assertEquals("Full document", scope.getContent());
-        assertNull(scope.getScope());
+        assertTrue(StringUtils.isEmpty(scope.getScope()));
         assertEquals("2005-02-11T16:23:21Z", sig1.getClaimedSigningTime());
-        assertNull(sig1.getInfo());
+        assertNotNull(sig1.getInfo());
+        assertTrue(StringUtils.isEmpty(sig1.getInfo().getBestSignatureTime()));
     }
 
     @Test
@@ -103,18 +105,19 @@ public class DDOCValidationServiceTest {
                 .get();
 
         assertEquals("DIGIDOC_XML_1.3", sig2.getSignatureFormat());
-        assertNull(sig2.getSignatureLevel());
+        assertTrue(StringUtils.isEmpty(sig2.getSignatureLevel()));
         assertEquals("JALUKSE,KRISTJAN,38003080336", sig2.getSignedBy());
         assertEquals(SignatureValidationData.Indication.TOTAL_PASSED.toString(), sig2.getIndication());
         assertTrue(sig2.getErrors().size() == 0);
-        assertNull(sig2.getWarnings());
+        assertTrue(sig2.getWarnings().isEmpty());
         assertTrue(sig2.getSignatureScopes().size() == 1);
         SignatureScope scope = sig2.getSignatureScopes().get(0);
         assertEquals("Šužlikud sõid ühe õuna ära.txt", scope.getName());
         assertEquals("Full document", scope.getContent());
-        assertNull(scope.getScope());
+        assertTrue(StringUtils.isEmpty(scope.getScope()));
         assertEquals("2009-02-13T09:22:49Z", sig2.getClaimedSigningTime());
-        assertNull(sig2.getInfo());
+        assertNotNull(sig2.getInfo());
+        assertTrue(StringUtils.isEmpty(sig2.getInfo().getBestSignatureTime()));
     }
 
     private static class DDOCValidationServiceSpy extends DDOCValidationService {

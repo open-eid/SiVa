@@ -108,9 +108,9 @@ public class BDOCQualifiedReportBuilder {
 
     private String getSubIndication(BDocSignature bDocSignature) {
         if (getIndication(bDocSignature) == SignatureValidationData.Indication.TOTAL_PASSED) {
-            return null;
+            return "";
         }
-        return bDocSignature.getDssValidationReport().getReport().getSimpleReport().getSubIndication(bDocSignature.getId());
+        return emptyWhenNull(bDocSignature.getDssValidationReport().getReport().getSimpleReport().getSubIndication(bDocSignature.getId()));
     }
 
     private Info getInfo(BDocSignature bDocSignature) {
@@ -118,6 +118,8 @@ public class BDOCQualifiedReportBuilder {
         Date trustedTime = bDocSignature.getTrustedSigningTime();
         if (trustedTime != null) {
             info.setBestSignatureTime(getDateFormatterWithGMTZone().format(trustedTime));
+        } else {
+            info.setBestSignatureTime("");
         }
         return info;
     }
@@ -141,15 +143,15 @@ public class BDOCQualifiedReportBuilder {
 
     private Warning mapDssWarning(Conclusion.BasicInfo dssWarning) {
         Warning warning = new Warning();
-        warning.setNameId(dssWarning.getAttributeValue(DSS_BASIC_INFO_NAME_ID));
-        warning.setDescription(dssWarning.getAttributeValue(DSS_BASIC_INFO_CONTENT));
+        warning.setNameId(emptyWhenNull(dssWarning.getAttributeValue(DSS_BASIC_INFO_NAME_ID)));
+        warning.setDescription(emptyWhenNull(dssWarning.getAttributeValue(DSS_BASIC_INFO_CONTENT)));
         return warning;
     }
 
     private Warning mapDigidoc4JWarning(DigiDoc4JException digiDoc4JException) {
         Warning warning = new Warning();
         warning.setNameId(GENERIC);
-        warning.setDescription(digiDoc4JException.getMessage());
+        warning.setDescription(emptyWhenNull(digiDoc4JException.getMessage()));
         return warning;
     }
 
@@ -193,19 +195,23 @@ public class BDOCQualifiedReportBuilder {
 
     private Error mapDssError(Conclusion.BasicInfo dssError) {
         Error error = new Error();
-        error.setNameId(dssError.getAttributeValue(DSS_BASIC_INFO_NAME_ID));
-        error.setContent(dssError.getAttributeValue(DSS_BASIC_INFO_CONTENT));
+        error.setNameId(emptyWhenNull(dssError.getAttributeValue(DSS_BASIC_INFO_NAME_ID)));
+        error.setContent(emptyWhenNull(dssError.getAttributeValue(DSS_BASIC_INFO_CONTENT)));
         return error;
     }
 
     private Error mapDigidoc4JException(DigiDoc4JException digiDoc4JException) {
         Error error = new Error();
         error.setNameId(GENERIC);
-        error.setContent(digiDoc4JException.getMessage());
+        error.setContent(emptyWhenNull(digiDoc4JException.getMessage()));
         return error;
     }
 
     private String getSignatureFormat(SignatureProfile profile) {
         return XADES_FORMAT_PREFIX + profile.name();
+    }
+
+    private String emptyWhenNull(String value) {
+        return value != null ? value : "";
     }
 }

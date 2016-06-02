@@ -9,26 +9,26 @@ import eu.europa.esig.dss.validation.report.Reports;
 import eu.europa.esig.dss.validation.report.SimpleReport;
 import org.apache.commons.lang.StringUtils;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class PDFQualifiedReportBuilder {
 
-    public static final String NAME_ID_ATTRIBUTE = "NameId";
-    public static final String NAME_ATTRIBUTE = "name";
-    public static final String SCOPE_ATTRIBUTE = "scope";
-    public static final String BEST_SIGNATURE_TIME_ATTRIBUTE = "BestSignatureTime";
+    private static final String NAME_ID_ATTRIBUTE = "NameId";
+    private static final String NAME_ATTRIBUTE = "name";
+    private static final String SCOPE_ATTRIBUTE = "scope";
+    private static final String BEST_SIGNATURE_TIME_ATTRIBUTE = "BestSignatureTime";
     private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
     private Reports dssReports;
     private SimpleReport simpleReport;
     private QualifiedReport report;
-    private LocalDateTime validationTime;
+    private ZonedDateTime validationTime;
     private String documentName;
 
-    public PDFQualifiedReportBuilder(Reports dssReports, LocalDateTime validationTime, String documentName) {
+    public PDFQualifiedReportBuilder(Reports dssReports, ZonedDateTime validationTime, String documentName) {
         this.dssReports = dssReports;
         this.simpleReport = dssReports.getSimpleReport();
         this.validationTime = validationTime;
@@ -78,7 +78,8 @@ public class PDFQualifiedReportBuilder {
         Info info = new Info();
         List<Conclusion.BasicInfo> dssInfo = simpleReport.getInfo(signatureId);
         if (dssInfo != null && !dssInfo.isEmpty()) {
-            info.setBestSignatureTime(dssInfo.get(0).getAttributeValue(BEST_SIGNATURE_TIME_ATTRIBUTE));
+            String bestSignatureTime = dssInfo.get(0).getAttributeValue(BEST_SIGNATURE_TIME_ATTRIBUTE);
+            info.setBestSignatureTime(bestSignatureTime != null ? bestSignatureTime : "");
         }
         return info;
     }
@@ -91,9 +92,11 @@ public class PDFQualifiedReportBuilder {
     }
 
     private Error mapDssError(Conclusion.BasicInfo dssError) {
+        String content = dssError.getValue();
+        String nameId = dssError.getAttributeValue(NAME_ID_ATTRIBUTE);
         Error error = new Error();
-        error.setContent(dssError.getValue());
-        error.setNameId(dssError.getAttributeValue(NAME_ID_ATTRIBUTE));
+        error.setContent(content != null ? content : "");
+        error.setNameId(nameId != null ? nameId : "");
         return error;
     }
 
@@ -105,9 +108,11 @@ public class PDFQualifiedReportBuilder {
     }
 
     private Warning mapDssWarning(Conclusion.BasicInfo dssWarning) {
+        String description = dssWarning.getValue();
+        String nameId = dssWarning.getAttributeValue(NAME_ID_ATTRIBUTE);
         Warning warning = new Warning();
-        warning.setDescription(dssWarning.getValue());
-        warning.setNameId(dssWarning.getAttributeValue(NAME_ID_ATTRIBUTE));
+        warning.setDescription(description != null ? description : "");
+        warning.setNameId(nameId != null ? nameId : "");
         return warning;
     }
 
@@ -119,15 +124,20 @@ public class PDFQualifiedReportBuilder {
     }
 
     private SignatureScope parseSignatureScope(XmlDom signatureScopeDom) {
-        SignatureScope scope = new SignatureScope();
-        scope.setContent(signatureScopeDom.getText());
-        scope.setName(signatureScopeDom.getAttribute(NAME_ATTRIBUTE));
-        scope.setScope(signatureScopeDom.getAttribute(SCOPE_ATTRIBUTE));
-        return scope;
+        String content = signatureScopeDom.getText();
+        String name = signatureScopeDom.getAttribute(NAME_ATTRIBUTE);
+        String scope = signatureScopeDom.getAttribute(SCOPE_ATTRIBUTE);
+
+        SignatureScope signatureScope = new SignatureScope();
+        signatureScope.setContent(content != null ? content : "");
+        signatureScope.setName(name != null ? name : "");
+        signatureScope.setScope(scope != null ? scope : "");
+        return signatureScope;
     }
 
     private String parseClaimedSigningTime(String signatureId) {
-        return simpleReport.getValue("/SimpleReport/Signature[@Id='%s']/SigningTime/text()", signatureId);
+        String claimedSigningTime = simpleReport.getValue("/SimpleReport/Signature[@Id='%s']/SigningTime/text()", signatureId);
+        return claimedSigningTime != null ? claimedSigningTime : "";
     }
 
     private SignatureValidationData.Indication parseIndication(String signatureId) {
@@ -143,21 +153,23 @@ public class PDFQualifiedReportBuilder {
 
     private String parseSubIndication(String signatureId) {
         if (parseIndication(signatureId) == SignatureValidationData.Indication.TOTAL_PASSED) {
-            return null;
+            return "";
         }
-        return simpleReport.getSubIndication(signatureId);
+        String subIndication = simpleReport.getSubIndication(signatureId);
+        return subIndication != null ? subIndication : "";
     }
 
     private String parseSignedBy(String signatureId) {
-        return simpleReport.getValue("/SimpleReport/Signature[@Id=\'%s\']/SignedBy/text()", signatureId);
+        String signedBy = simpleReport.getValue("/SimpleReport/Signature[@Id=\'%s\']/SignedBy/text()", signatureId);
+        return signedBy != null ? signedBy : "";
     }
 
     private String parseValidationTimeToString() {
         return getFormattedTimeValue(validationTime);
     }
 
-    private String getFormattedTimeValue(LocalDateTime localDateTime) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT).withZone(ZoneId.of("GMT"));
-        return localDateTime.format(formatter);
+    private String getFormattedTimeValue(ZonedDateTime zonedDateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT);
+        return zonedDateTime.format(formatter);
     }
 }

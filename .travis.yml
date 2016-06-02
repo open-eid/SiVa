@@ -12,6 +12,8 @@ script:
 - "./mvnw clean install -q"
 after_success:
 - "./mvnw jacoco:report coveralls:report -q -Dcoveralls.repo.token=$COVERALLS_REPO_TOKEN"
+- mkdir ${TRAVIS_BUILD_DIR}/artifacts && cp ${TRAVIS_BUILD_DIR}/siva-parent/siva-distribution/target/*.zip artifacts
+- ls -al artifacts
 deploy:
   provider: s3
   access_key_id: AKIAJPTKESQQK3GFXN2Q
@@ -30,5 +32,5 @@ notifications:
     - mihkel.selgal@nortal.com
     - andres.voll@nortal.com
     - allan.juhanson@nortal.com
-    on_success: never
+    on_success: change
     on_failure: always

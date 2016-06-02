@@ -10,10 +10,7 @@ import org.apache.commons.lang.StringUtils;
 import org.cryptacular.util.CertUtil;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class DDOCQualifiedReportBuilder {
@@ -79,8 +76,20 @@ public class DDOCQualifiedReportBuilder {
         signatureValidationData.setClaimedSigningTime(getDateFormatterWithGMTZone().format(signature.getSignedProperties().getSigningTime()));
         signatureValidationData.setIndication(getIndication(signature));
 
+        //report fields that are not applicable for ddoc
+        signatureValidationData.setWarnings(Collections.emptyList());
+        signatureValidationData.setSignatureLevel("");
+        signatureValidationData.setInfo(createEmptySignatureInfo());
+        signatureValidationData.setSubIndication("");
+
         return signatureValidationData;
 
+    }
+
+    private Info createEmptySignatureInfo() {
+        Info info = new Info();
+        info.setBestSignatureTime("");
+        return info;
     }
 
     private String getSignatureFormat() {
@@ -108,7 +117,7 @@ public class DDOCQualifiedReportBuilder {
     private Error mapDigiDocException(DigiDocException dde) {
         Error error = new Error();
         error.setNameId(Integer.toString(dde.getCode()));
-        error.setContent(dde.getMessage());
+        error.setContent(emptyWhenNull(dde.getMessage()));
         return error;
     }
 
@@ -126,6 +135,7 @@ public class DDOCQualifiedReportBuilder {
         SignatureScope signatureScope = new SignatureScope();
         signatureScope.setName(dataFile.getFileName());
         signatureScope.setContent(FULL_DOCUMENT);
+        signatureScope.setScope("");
         return signatureScope;
     }
 
@@ -138,6 +148,10 @@ public class DDOCQualifiedReportBuilder {
         }
 
         return SignatureValidationData.Indication.TOTAL_PASSED;
+    }
+
+    private String emptyWhenNull(String value) {
+        return value != null ? value : "";
     }
 
 }

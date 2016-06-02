@@ -39,6 +39,8 @@ import org.springframework.stereotype.Service;
 
 import javax.xml.soap.SOAPException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 @Service
 public class PDFValidationService implements ValidationService {
@@ -71,7 +73,8 @@ public class PDFValidationService implements ValidationService {
             validator.setCertificateVerifier(certificateVerifier);
 
             final Reports reports = validator.validateDocument(POLICY_CONSTRAINTS_LOCATION);
-            LocalDateTime validationTime = LocalDateTime.now();
+
+            ZonedDateTime validationTimeInGMT = ZonedDateTime.now(ZoneId.of("GMT"));
 
             if (logger.isInfoEnabled()) {
                 logger.info(
@@ -82,7 +85,7 @@ public class PDFValidationService implements ValidationService {
 
                 logger.info("WsValidateDocument: end");
             }
-            PDFQualifiedReportBuilder reportBuilder = new PDFQualifiedReportBuilder(reports, validationTime, validationDocument.getName());
+            PDFQualifiedReportBuilder reportBuilder = new PDFQualifiedReportBuilder(reports, validationTimeInGMT, validationDocument.getName());
             return reportBuilder.build();
 
         } catch (MalformedDocumentException e) {

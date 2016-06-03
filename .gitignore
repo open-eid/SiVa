@@ -1,11 +1,12 @@
 pom.xml.versionsBackup
 dependency-reduced-pom.xml
+
 .*
+!.gitignore
 !.mvn
 !.travis.yml
 *.iml
 .idea
-.svn
 target
 dss-demo-webapp/dss-debug.log
 dss-demo-webapp/log.out
@@ -19,6 +20,7 @@ ansible
 # helper script config files
 helper-scripts.conf
 etc
+upload-dir
 
 apache-tomcat-*
 site

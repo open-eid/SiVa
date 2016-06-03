@@ -1,26 +1,34 @@
-site_name: PDF Validator Documentation 
-theme: readthedocs
+site_name: SiVa - Validation Service Documentation
+theme: material
+repo_url: https://github.com/open-eid/SiVa
+extra:
+  font:
+    code: 'Roboto Mono'
+  palette:
+    primary: 'Light Green'
+    accent: 'Lime'
+markdown_extensions:
+  - codehilite
+  - admonition
+  - grid_tables
+  - def_list
 pages:
-  - PDF Validation Service Overview: index.md
-  - Architecture of the Core Service: architecture.md    
-  - Validation Policy: policy.md
-  - Interface description: interface_description.md
-  - Deploying PDF Validator Web Service: deployment.md
-  - TSL file loading without internet: tsl_downloader.md
-  - Generating keystore for LOTL validation (optional): lotl_keystore.md
-  - Logging: logging.md    
-  - Monitoring Service: monitoring.md
-  - Automation testing: testing.md
-  - Known Issues: issues.md
-  - Documentation updating: documentation.md
+  - Introduction: index.md
+  - Version info: siva/version_info.md
+  - Definitions: siva/definitions.md
+  - SiVa Service Overview: siva/overview.md
+  - Regulatory environment: siva/regulatory_environment.md
+  - Component diagram: siva/component_diagram.md
+  - Deployment view: siva/deployment_view.md
+  - Interfaces: siva/interface_description.md
+  - Database schema: siva/database_schema.md
+  - Use cases: siva/use_cases.md
+  - Deployment: siva/deployment.md
+  - Logging: siva/logging.md
+  - References: siva/references.md
   - Appendixes:
-    - Appendix 1 - Non-Functional Requirements: appendix/appendix-1.md
-    - Appendix 2 - Functional Requirements: appendix/appendix-2.md
-    - Appendix 3 - Validation Policy: appendix/appendix-3.md
-    - Appendix 4 - Validation Constraint Configuration: appendix/appendix-4.md
-    - Appendix 5 - Sample Validation Policy Configuration: appendix/appendix-5.md
-    - Appendix 6 - ValidationService WSDL: appendix/appendix-6.md
-    - Appendix 7 - Sample PDF Validation Service Request: appendix/appendix-7.md
-    - Appendix 8 - Sample Response Data Blocks - positive response: appendix/appendix-8.md
-    - Appendix 9 - Sample Response Data Blocks – negative response: appendix/appendix-9.md
-    - Appendix 10 - Summary of modifications made to the DSS library: appendix/appendix-10.md
+        - Appendix 1 - Non-Functional Requirements: siva/appendix/none_functional_requirements.md
+        - Appendix 2 - Functional Requirements: siva/appendix/functional_requirements.md
+        - Appendix 3 - Validation Policy: siva/appendix/validation_policy.md
+        - Appendix 4 - Validation Constraint Configuration: siva/appendix/validation_constraints.md
+        - Appendix 5 - Test Case Descriptions: siva/appendix/test_cases.md

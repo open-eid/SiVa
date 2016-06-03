@@ -1,20 +1,43 @@
 language: java
-sudo: required
-dist: trusty
+sudo: false
 jdk:
-  - openjdk7
-  - oraclejdk7
-  - oraclejdk8
+- oraclejdk8
+addons:
+  ssh_known_hosts: demoapps.eu
 before_install:
-  - git submodule update --init --recursive
-  - sudo pip install --upgrade pip setuptools && sudo pip install --upgrade httpie
-  - sudo pip install --upgrade pygments
-  - cp helper-scripts.conf.sample helper-scripts.conf
+- openssl aes-256-cbc -K $encrypted_befc5bd7f29f_key -iv $encrypted_befc5bd7f29f_iv
+  -in ci-deploy-key.enc -out ci-deploy-key -d
+- export TZ=Estonia/Tallinn
 branches:
   only:
-    - develop
+  - develop
 install: true
 script:
-  - ./mvnw clean install -Dmaven.test.skip.exec
+- "./mvnw clean install -q"
+after_success:
+- "./mvnw jacoco:report coveralls:report -q -Dcoveralls.repo.token=$COVERALLS_REPO_TOKEN"
+- mkdir ${TRAVIS_BUILD_DIR}/artifacts && cp ${TRAVIS_BUILD_DIR}/siva-parent/siva-distribution/target/*.zip
+  artifacts
+- mv artifacts/*.zip artifacts/distribution.zip && ls -al artifacts
+- "chmod 600 ${TRAVIS_BUILD_DIR}/ci-deploy-key"
+- "${TRAVIS_BUILD_DIR}/deploy.sh"
+deploy:
+  provider: s3
+  access_key_id: AKIAJPTKESQQK3GFXN2Q
+  secret_access_key:
+    secure: mjUPlrP1Bklk6BUpmUY62CXqduCuPI35fv9GWGRx60IL7r+BudyfYyz4Nh4gOzy0agnM80UFpDqokmUUPp4MWQ+YhdwJlEkeoWa28m1W5sjm89g5AFj+cEgVPU7yLREhyY1BqOx8wbBDgqjr/hQvenzbGLg686fOQwXcCnFRwUe+b2toUsR8o5JB3z9pONq7YmJA009fAOoRg/DmL3kTI6AwkJmZOAgaxw9dN4m3UVotirXHuHuda3pVMsm41v+HNjwuqLuNTtbxORzAylseTl9pqB96R6y6JBkkCG5V1um95C6gKJ0L2lvxcFlx/+lMvWE4/O3zQQA5dJhSFP0m7uMd3tN/A8d5OtbpSP7MYt6hC90+2EP6etj/fDIh+BibJFYX/bBs0l5GPOBCY1fzzOZqmY8cxJuLR6/RU8yQm5V8tXoCIzNe4CbKmf96qbwxAzQn7hvV7JClU2DBUC/x0AH+OzRrw2kPlQJ63BBxLq3yvxITkfWsZTmQWb5xbxWhmggx4VyLlt1ne1b7f3y2VV4t19WRIWsa7PqBUyiUi2jMbs6JDhJ10gCqwFvbFmozyEuSk0S04Dc0Fa8WdxZvZCgAPYKFF2GZKrKnZyqUcGZMt2PIyE1exhZ87qwKU3Wugh2pSaqCsMjkhDKQM2JM0mFzG//9bdPvCApZre1mZf4=
+  bucket: open-eid-siva-travis
+  skip_cleanup: true
+  local_dir: "${TRAVIS_BUILD_DIR}/siva-parent/siva-distribution/target"
+  upload-dir: travis-build/${TRAVIS_BUILD_NUMBER}
+  region: eu-west-1
+  on:
+    branch: develop
 notifications:
-  email: false
+  email:
+    recipients:
+    - mihkel.selgal@nortal.com
+    - andres.voll@nortal.com
+    - allan.juhanson@nortal.com
+    on_success: change
+    on_failure: always

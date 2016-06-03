@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>siva</artifactId>
+        <groupId>io.github.openeid.siva</groupId>
+        <version>2.0.2-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>siva-parent</artifactId>
+    <packaging>pom</packaging>
+    <name>SIVa webapp and other core modules</name>
+    <version>2.0.2-SNAPSHOT</version>
+
+    <modules>
+        <module>siva-validation-proxy</module>
+        <module>siva-webapp</module>
+        <module>siva-sample-application</module>
+        <module>siva-test</module>
+        <module>siva-distribution</module>
+    </modules>
+
+    <properties>
+        <project.encoding>UTF-8</project.encoding>
+        <language.level>1.8</language.level>
+        <spring.boot.version>1.4.0.M3</spring.boot.version>
+        <junit.version>4.12</junit.version>
+        <mockito.version>2.0.2-beta</mockito.version>
+        <powermock.version>1.6.2</powermock.version>
+        <dss.version>4.6.d4j.2</dss.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- DSS -->
+            <dependency>
+                <groupId>org.digidoc4j.dss</groupId>
+                <artifactId>dss-document</artifactId>
+                <version>${dss.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.digidoc4j.dss</groupId>
+                <artifactId>dss-service</artifactId>
+                <version>${dss.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.digidoc4j.dss</groupId>
+                <artifactId>dss-webservices</artifactId>
+                <version>${dss.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.digidoc4j.dss</groupId>
+                <artifactId>dss-spi</artifactId>
+                <version>${dss.version}</version>
+            </dependency>
+
+            <!-- Spring boot -->
+            <dependency>
+                <!-- Import dependency management from Spring Boot -->
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.openeid.siva</groupId>
+                <artifactId>validation-commons</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.openeid.siva</groupId>
+                <artifactId>pdf-validation-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.openeid.siva</groupId>
+                <artifactId>bdoc-validation-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.openeid.siva</groupId>
+                <artifactId>ddoc-validation-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.openeid.siva</groupId>
+                <artifactId>tsl-loader</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- Front-end development -->
+            <dependency>
+                <groupId>com.domingosuarez.boot</groupId>
+                <artifactId>spring-boot-starter-jade4j</artifactId>
+                <version>0.3.0</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>de.neuland-bfi</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>de.neuland-bfi</groupId>
+                <artifactId>spring-jade4j</artifactId>
+                <version>1.2.1</version>
+            </dependency>
+            <dependency>
+                <groupId>de.neuland-bfi</groupId>
+                <artifactId>jade4j</artifactId>
+                <version>1.2.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars.bower</groupId>
+                <artifactId>bootstrap</artifactId>
+                <version>4.0.0-alpha.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars.bower</groupId>
+                <artifactId>bootstrap-fileinput</artifactId>
+                <version>4.3.1</version>
+            </dependency>
+
+            <!-- Public Dependencies -->
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>1.6</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>2.4</version>
+            </dependency>
+
+            <!-- Lombok for getters and setters -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.16.8</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>2.7.3</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>2.7.3</version>
+            </dependency>
+            <dependency>
+                <groupId>org.json</groupId>
+                <artifactId>json</artifactId>
+                <version>20160212</version>
+            </dependency>
+
+            <!-- DB for webapp settings -->
+            <dependency>
+                <groupId>org.hsqldb</groupId>
+                <artifactId>hsqldb</artifactId>
+                <version>1.8.0.10</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <encoding>${project.encoding}</encoding>
+                    <source>${language.level}</source>
+                    <target>${language.level}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>jboss-public</id>
+            <url>https://repository.jboss.org/nexus/</url>
+        </repository>
+        <repository>
+            <id>netbeans</id>
+            <url>http://bits.netbeans.org/maven2/</url>
+        </repository>
+        <repository>
+            <id>java.net</id>
+            <url>http://download.java.net/maven/2/</url>
+        </repository>
+        <repository>
+            <id>spring-snapshots</id>
+            <url>http://repo.spring.io/snapshot</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>spring-milestones</id>
+            <url>http://repo.spring.io/milestone</url>
+        </repository>
+        <repository>
+            <id>jCenter</id>
+            <url>http://jcenter.bintray.com/</url>
+        </repository>
+        <repository>
+            <id>apache.snapshots</id>
+            <url>https://repository.apache.org/content/repositories/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-snapshots</id>
+            <url>http://repo.spring.io/snapshot</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>spring-milestones</id>
+            <url>http://repo.spring.io/milestone</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>apache.snapshots</id>
+            <name>Apache Snapshots</name>
+            <url>https://repository.apache.org/content/repositories/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+</project>

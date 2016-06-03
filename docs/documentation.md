@@ -7,9 +7,10 @@ language that we use to write documentation is [Markdown](https://daringfireball
 System requirements
 -------------------
 
-* **Python 2** - All version above 2.6 should work
+* **Python 2 or Python 3** - All version above 2.6 should work
 * **pip** - Python package manager
 * **MkDocs CLI** - to generate and deploy new version of documentation
+* **MkDocs Cinder Theme** - third party MkDocs generated documentation theme
 * **Text Editor** - to edit Markdown documents (i.e [Haroopad](http://pad.haroopress.com/#))
 
 Installing MkDocs
@@ -20,7 +21,8 @@ Installing MkDocs
 Both Ubuntu and Mac OS X come `python` version 2 already installed You only need to install `pip`
 
 1.  Install `pip` on Ubuntu 15.04 `sudo apt-get install python-pip` on Mac OS X `sudo easy_install pip`
-2.  Next up install `mkdocs` using [pip](https://pip.pypa.io/en/stable/): `pip install mkdocs`
+1.  Next up install `mkdocs` using [pip](https://pip.pypa.io/en/stable/): `pip install mkdocs`
+1.  Last step is to install **Cinder** theme for MkDocs `pip install mkdocs-cinder`
 
 ### Windows
 
@@ -40,6 +42,7 @@ Installing Pip:
 Installing Mkdocs:
 
 Install `mkdocs` using [pip](https://pip.pypa.io/en/stable/): `pip install mkdocs`
+and also the theme used by MkDocs `pip install mkdocs-cinder`
 
 Now You're done and can start editing the PDF Validator documentation. 
 
@@ -60,4 +63,4 @@ Deploying changes to GitHub pages
 
 1.  Generate the static site `mkdocs build`
 2.  Deploy the generated site to GitHub Pages: `mkdocs gh-deploy` 
-3.  You are done and can go check the updated documentation at: <http://open-eid.github.io/pdf-validator>
+3.  You are done and can go check the updated documentation at: <http://open-eid.github.io/siva>

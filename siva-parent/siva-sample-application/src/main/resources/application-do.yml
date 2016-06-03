@@ -1,0 +1,8 @@
+server:
+  port: 9000
+siva:
+  serviceUrl: "http://api.demoapps.eu"
+spring:
+  http:
+    multipart:
+      max-file-size: "10Mb"

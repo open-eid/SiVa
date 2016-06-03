@@ -1,0 +1,165 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "validationTime": {
+      "type": "string"
+    },
+    "signaturesCount": {
+      "type": "integer"
+    },
+    "documentName": {
+      "type": "string"
+    },
+    "validSignaturesCount": {
+      "type": "integer"
+    },
+    "signatures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "signatureFormat": {
+            "type": "string"
+          },
+          "signedBy": {
+            "type": "string"
+          },
+          "claimedSigningTime": {
+            "type": "string"
+          },
+          "signatureLevel": {
+            "type": "string"
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "properties": {
+                "nameId": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "signatureScopes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "signatureScope": {
+                  "type": "array",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "type": "string"
+                    },
+                    "scope": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "scope",
+                    "name",
+                    "content"
+                  ]
+                }
+              },
+              "required": [
+                "signatureScope"
+              ]
+            }
+          },
+          "id": {
+            "type": "string"
+          },
+          "indication": {
+            "type": "string"
+          },
+          "subindication": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "nameId": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "info": {
+            "type": "object",
+            "properties": {
+              "nameId": {
+                "type": "string"
+              },
+              "bestSignatureTime": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "bestSignatureTime"
+            ]
+          }
+        }
+      },
+      "required": [
+        "signatureFormat",
+        "signedBy",
+        "claimedSigningTime",
+        "signatureLevel",
+        "signatureScopes",
+        "id",
+        "indication",
+        "errors",
+        "info"
+      ]
+
+    },
+    "policy": {
+      "type": "object",
+      "properties": {
+        "policyDescription": {
+          "type": "string"
+        },
+        "policyUrl": {
+          "type": "string"
+        },
+        "policyName": {
+          "type": "string"
+        },
+        "policyVersion": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "policyDescription",
+        "policyUrl",
+        "policyName",
+        "policyVersion"
+      ]
+    }
+
+  },
+  "required": [
+    "validationTime",
+    "signaturesCount",
+    "documentName",
+    "validSignaturesCount",
+    "signatures",
+    "policy"
+  ]
+}

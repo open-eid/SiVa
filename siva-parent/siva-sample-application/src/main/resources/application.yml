@@ -1,0 +1,9 @@
+server:
+  port: 9000
+siva:
+  uploadDirectory: "upload-dir"
+  serviceUrl: "http://localhost:8080/validate"
+spring:
+  http:
+    multipart:
+      max-file-size: "10Mb"

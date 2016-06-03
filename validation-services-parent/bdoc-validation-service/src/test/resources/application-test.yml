@@ -1,0 +1,7 @@
+trusted:
+  list:
+    source:
+      lotlUrl: https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml
+      lotlCode: EU
+      scheduler:
+        cron: "0 0 3 * * ?"

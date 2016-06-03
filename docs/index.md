@@ -1,52 +1,44 @@
-# PDF Validation Service Overview
+# Introduction
 
-PDF Validation Service (hereinafter – the Service) is a SOAP-based
-service which purpose is to validate signatures in digitally signed
-PDF-files according to laws of the Republic of Estonia (described below
-in the Validation Policy section).
+SiVa is digital signature validation web service that provides SOAP and JSON
+API to validate following file types: 
+ 
+ * Older Estonian digital signature files with DDOC extension
+ * BDOC containers with `TimeMark` and `TimeStamp` signatures
+ * Digitally signed PDF files
+ * X-Road security server ASiCE signature containers
 
-The Service uses
+Architecture document main purpose is to give overview what SiVa is.
+Give an overview of it's internal processes and provide information 
+when deploying it to production environment.
 
-* EU DSS (Digital Signature Service) library as Core Library
-* Customized Validation Policy constraints that will verify the signed
-  PDF-file's conformity to laws of Republic of Estonia.
+## SiVa architecture document sections overview
 
-EU DSS library was chosen as it has already been used in DigiDoc4J
-library (where it was chosen for having the most complete functionality
-compared to other Java libraries). For more information on EU DSS, see
-<https://joinup.ec.europa.eu/asset/sd-dss/description>.
+Below list will give You an overview of what each section of the 
+SiVa architecture document will cover:
 
-The Service will use the following functionalities of EU DSS library:
+* [**Overview**](siva/overview) - gives overview what SiVa is and 
+  it's main features.
+* [**Regulatory environment**](siva/regulatory_environment) - legal analysis 
+  and standards that are used when building SiVa application
+* [**Component diagram**](siva/component_diagram) - gives overview of 
+  main SiVa subsystems and and and base validation Java libraries 
+  used for different validation services
+* [**Deployment view**](siva/deployment_view) - gives general overview of 
+  servers required when deploying SiVa validation web service 
+  into production
+* [**Interfaces**](siva/interface_description) - Description of SiVa 
+  SOAP and JSON API request and response
+* [**Database schema**](siva/database_schema) - description of SiVa 
+  validation administration service database 
+* [**Use cases**](siva/use_cases) - describes main processes in SiVa 
+  validation web service 
+* [**Deploying**](siva/deployment) - how to build, deploy and configure 
+  SiVa web service
+* [**Logging**](siva/logging) - how to configure and setup SiVa validation 
+  service logging support
 
-* Validation Functionality
+## Download documentation
 
-Main features of the Service:
-
-- EU DSS SOAP API with some additional information (Signer’s
-  certificate etc).
-- The Service handles files in PDF-format version 1.7 and later,
-  signed with PadES-profile signatures.
-- Multiple Signatures are supported.
-- The Service uses European Commission’s TSL (Trusted Service
-  Status List) for certificate chain validation.
-	- European Commission’s TSL contains references to TSLs of
-	  European Union’s member states and members of the European
-	  Economic Area. This allows the PDF Validator to validate
-	  signature that has been signed with certificates issued in any
-	  of European Union’s member states.
-	- During the Validation Process, a Certificate Chain is created
-	  from Signer’s Certificate up to the Trust Anchor (national Trust
-	  List referenced by the central European Commission's Trust List)
-	  for all certificates included in the signature (i.e. the
-	  signer's certificate, OCSP Service's certificate, time-stamping
-	  Service's certificate).
-- Signatures with PadES-LT and PadES-LTA profile are supported.
-- The Signature must contain OCSP confirmation that meets the
-  Service’s requirements.
-
-At the time of creating the current documentation, it is expected that
-the Service will be used by the following applications:
-
-- DigiDoc3 Client application
-- Third party document management applications
+* [**Download SiVa documentation as PDF**](http://open-eid.github.io/SiVa/pdf-files/siva.pdf)
 

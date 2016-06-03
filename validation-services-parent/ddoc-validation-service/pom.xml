@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>validation-services-parent</artifactId>
+        <groupId>io.github.openeid.siva</groupId>
+        <version>2.0.2-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>ddoc-validation-service</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>io.github.openeid.siva</groupId>
+            <artifactId>validation-commons</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>iaik.pkcs</groupId>
+            <artifactId>iaikPkcs11Wrapper</artifactId>
+            <version>1.2.16</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/extra-jars/iaikPkcs11Wrapper.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>ee.sk.digidoc</groupId>
+            <artifactId>jdigidoc</artifactId>
+            <version>3.12.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>iaik.pkcs</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.cryptacular</groupId>
+            <artifactId>cryptacular</artifactId>
+        </dependency>
+
+        <!-- Testing -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

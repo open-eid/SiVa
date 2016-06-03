@@ -118,6 +118,7 @@ public class BDOCValidationServiceTest {
 
         Error error = sig.getErrors().get(0);
         assertEquals("BBB_XCV_IRDTFC_ANS", error.getNameId());
+        assertEquals("The revocation data for the certificate is not trusted!", error.getContent());
         assertEquals(sig.getIndication(), SignatureValidationData.Indication.INDETERMINATE.toString());
     }
 

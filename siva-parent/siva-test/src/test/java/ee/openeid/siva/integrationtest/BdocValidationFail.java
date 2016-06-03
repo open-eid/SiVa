@@ -1,11 +1,14 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+import ee.openeid.siva.validation.document.report.QualifiedReport;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
+
+import static org.junit.Assert.assertTrue;
 
 @Category(IntegrationTest.class)
 public class BdocValidationFail extends SiVaRestTests{
@@ -38,7 +41,9 @@ public class BdocValidationFail extends SiVaRestTests{
      ***/
     @Test
     public void InvalidSingleSignature() {
-        assertAllSignaturesAreInvalid(postForReport("IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc"));
+        QualifiedReport report = postForReport("IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc");
+        assertAllSignaturesAreInvalid(report);
+        assertTrue(report.getSignatures().get(0).getErrors().size() == 2);
     }
 
     /***

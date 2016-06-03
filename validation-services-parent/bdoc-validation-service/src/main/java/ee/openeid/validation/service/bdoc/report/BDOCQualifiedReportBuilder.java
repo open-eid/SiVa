@@ -186,7 +186,7 @@ public class BDOCQualifiedReportBuilder {
         //Add additional digidoc4j errors
         bDocSignature.validateSignature().getErrors()
                 .stream()
-                .filter(e -> dssErrorMessages.contains(e.getMessage()))
+                .filter(e -> !isRepeatingError(dssErrorMessages, e.getMessage()))
                 .map(this::mapDigidoc4JException)
                 .forEach(errors::add);
 
@@ -196,8 +196,17 @@ public class BDOCQualifiedReportBuilder {
     private Error mapDssError(Conclusion.BasicInfo dssError) {
         Error error = new Error();
         error.setNameId(emptyWhenNull(dssError.getAttributeValue(DSS_BASIC_INFO_NAME_ID)));
-        error.setContent(emptyWhenNull(dssError.getAttributeValue(DSS_BASIC_INFO_CONTENT)));
+        error.setContent(emptyWhenNull(dssError.getValue()));
         return error;
+    }
+
+    private boolean isRepeatingError(List<String> dssErrorMessages, String digidoc4jExceptionMessage) {
+        for (String dssMessage : dssErrorMessages) {
+            if (digidoc4jExceptionMessage.contains(dssMessage)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private Error mapDigidoc4JException(DigiDoc4JException digiDoc4JException) {

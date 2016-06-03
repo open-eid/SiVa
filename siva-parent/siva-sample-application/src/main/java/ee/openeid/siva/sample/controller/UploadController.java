@@ -34,7 +34,7 @@ class UploadController {
     public String getUploadedFile(
             @RequestParam("file") final MultipartFile file,
             final RedirectAttributes redirectAttributes
-    ) {
+    ) throws IOException {
         if (file.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "File upload failed");
             return REDIRECT_PATH;
@@ -45,10 +45,11 @@ class UploadController {
             final String validationResult = validationService.validateDocument(new File(fullFilename));
 
             setModelFlashAttributes(redirectAttributes, validationResult);
-            fileUploadService.deleteUploadedFile(file.getOriginalFilename());
         } catch (final IOException e) {
             LOGGER.warn("File upload problem", e);
             redirectAttributes.addFlashAttribute("File upload failed with message: " + e.getMessage());
+        } finally {
+            fileUploadService.deleteUploadedFile(file.getOriginalFilename());
         }
 
         return REDIRECT_PATH;

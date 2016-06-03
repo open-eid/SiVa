@@ -70,7 +70,7 @@ application.
 
 Now point Your browser to URL: http://localhost:9000
 
-![Sample of validation result](https://raw.githubusercontent.com/open-eid/SiVa/develop/docs/img/siva_sample_validation.png)
+![Sample of validation result](https://raw.githubusercontent.com/open-eid/SiVa/develop/docs/img/siva_demo_validation.png)
 
 ## Documentation
 

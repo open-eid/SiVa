@@ -76,11 +76,13 @@ public class PDFQualifiedReportBuilder {
     }
 
     private Info parseSignatureInfo(String signatureId) {
-        Info info = new Info();
         List<Conclusion.BasicInfo> dssInfo = simpleReport.getInfo(signatureId);
+        String bestSignatureTime = "";
         if (dssInfo != null && !dssInfo.isEmpty()) {
-            info.setBestSignatureTime(emptyWhenNull(dssInfo.get(0).getAttributeValue(BEST_SIGNATURE_TIME_ATTRIBUTE)));
+            bestSignatureTime = emptyWhenNull(dssInfo.get(0).getAttributeValue(BEST_SIGNATURE_TIME_ATTRIBUTE));
         }
+        Info info = new Info();
+        info.setBestSignatureTime(bestSignatureTime);
         return info;
     }
 

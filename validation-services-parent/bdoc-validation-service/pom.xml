@@ -8,6 +8,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>bdoc-validation-service</artifactId>
+    <name>BDOC Validation Service</name>
+    <description>
+        Digitally signed BDOC containers validation service supports both TimeStamped and TimeMark containers
+    </description>
     <dependencies>
         <dependency>
             <groupId>io.github.openeid.siva</groupId>

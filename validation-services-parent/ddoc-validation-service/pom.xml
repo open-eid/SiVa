@@ -10,6 +10,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>ddoc-validation-service</artifactId>
+    <name>DDOC Validation Service</name>
+    <description>
+        Validate old Estonian digitally signature files called DDOC
+    </description>
     <dependencies>
         <dependency>
             <groupId>io.github.openeid.siva</groupId>

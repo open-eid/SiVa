@@ -1,49 +1,80 @@
 package ee.openeid.tsl;
 
-
+import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
 import eu.europa.esig.dss.DSSUtils;
+import eu.europa.esig.dss.client.http.commons.CommonsDataLoader;
 import eu.europa.esig.dss.tsl.ServiceInfo;
 import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
+import eu.europa.esig.dss.tsl.service.TSLRepository;
 import eu.europa.esig.dss.tsl.service.TSLValidationJob;
 import eu.europa.esig.dss.x509.CertificateToken;
+import eu.europa.esig.dss.x509.KeyStoreCertificateSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
-public class CustomTSLValidationJob extends TSLValidationJob {
+@Component
+public class TSLLoader {
 
-    private static final Logger logger = LoggerFactory.getLogger(CustomTSLValidationJob.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TSLLoader.class);
 
-    TrustedListsCertificateSource trustedListSource;
+    private TSLValidationJob tslValidationJob;
+
+    private TrustedListsCertificateSource trustedListSource;
+
+    private TSLLoaderConfigurationProperties configurationProperties;
+
+    private KeyStoreCertificateSource keyStoreCertificateSource;
 
     @PostConstruct
     public void init() {
-        // TSLValidationJob.initRepository() is triggered beforehand by its PostConstruct annotation, which loads TSL from cache.
-        // If the cache is empty no certificates weren't loaded by TSLValidationJob.initRepository() -> Load TSL (also into filesystem cache) over the network.
-        // TODO: Maybe we should always force TSL loading over network at startup
-        if (trustedListSource.getCertificates().isEmpty()) {
-            logger.info("No certificates were loaded from cache, loading TSL over the network");
-            refresh();
-        }
-
+        initTslValidatonJob();
+        loadTSL();
         addEstonianTestCertificates(trustedListSource);
     }
 
-    @Override
-    @Scheduled(cron = "${trusted.list.source.scheduler.cron}")
-    public void refresh() {
-        super.refresh();
+    private void initTslValidatonJob() {
+        TSLValidationJob tslValidationJob = new TSLValidationJob();
+        tslValidationJob.setDataLoader(new CommonsDataLoader());
+        TSLRepository tslRepository = new TSLRepository();
+        tslRepository.setTrustedListsCertificateSource(trustedListSource);
+        tslValidationJob.setRepository(tslRepository);
+        tslValidationJob.setLotlUrl(configurationProperties.getUrl());
+        tslValidationJob.setLotlCode(configurationProperties.getCode());
+        tslValidationJob.setDssKeyStore(keyStoreCertificateSource);
+        tslValidationJob.setCheckLOTLSignature(true);
+        tslValidationJob.setCheckTSLSignatures(true);
+        this.tslValidationJob = tslValidationJob;
+    }
+
+    private void loadTSL() {
+        if (configurationProperties.isLoadAlwaysFromCache()) {
+            LOGGER.info("Loading TSL from cache");
+            tslValidationJob.initRepository();
+            LOGGER.info("Finished loading TSL from cache");
+        } else {
+            LOGGER.info("Loading TSL over the network");
+            tslValidationJob.refresh();
+            LOGGER.info("Finished loading TSL from cache");
+        }
+    }
+
+    @Scheduled(cron = "${tsl.schedulerCron}")
+    public void refreshTSL() {
+        loadTSL();
+        addEstonianTestCertificates(trustedListSource);
     }
 
     private void addEstonianTestCertificates(TrustedListsCertificateSource tlCertSource) {
-        logger.info("Loading Estonian Test Certificates");
-        CertificateToken cerToken;
+        LOGGER.info("Loading Estonian Test Certificates");
+        CertificateToken certToken;
 
         // TEST of EE Certification Centre Root CA
-        CertificateToken certToken = DSSUtils.loadCertificateFromBase64EncodedString(
+        certToken = DSSUtils.loadCertificateFromBase64EncodedString(
                 "MIIEEzCCAvugAwIBAgIQc/jtqiMEFERMtVvsSsH7sjANBgkqhkiG9w0BAQUFADB9" +
                         "MQswCQYDVQQGEwJFRTEiMCAGA1UECgwZQVMgU2VydGlmaXRzZWVyaW1pc2tlc2t1" +
                         "czEwMC4GA1UEAwwnVEVTVCBvZiBFRSBDZXJ0aWZpY2F0aW9uIENlbnRyZSBSb290" +
@@ -241,7 +272,7 @@ public class CustomTSLValidationJob extends TSLValidationJob {
 
         tlCertSource.addCertificate(certToken, getCAServiceInfo(certToken));
 
-        logger.info("Loaded Estonian Test Certificates");
+        LOGGER.info("Finished Loading Estonian Test Certificates");
     }
 
     private ServiceInfo getCAServiceInfo(CertificateToken certToken) {
@@ -265,5 +296,14 @@ public class CustomTSLValidationJob extends TSLValidationJob {
         this.trustedListSource = trustedListSource;
     }
 
-}
+    @Autowired
+    public void setTslLoaderConfigurationProperties(TSLLoaderConfigurationProperties configurationProperties) {
+        this.configurationProperties = configurationProperties;
+    }
 
+    @Autowired
+    public void setKeyStoreCertificateSource(KeyStoreCertificateSource keyStoreCertificateSource) {
+        this.keyStoreCertificateSource = keyStoreCertificateSource;
+    }
+
+}

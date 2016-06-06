@@ -1,10 +1,8 @@
-trusted:
-  list:
-    source:
-      lotlUrl: https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml
-      lotlCode: EU
-      scheduler:
-        cron: "0 0 3 * * ?"
+tsl:
+  loadAlwaysFromCache: false
+  url: https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml
+  code: EU
+  schedulerCron: "0 0 3 * * ?"
 
 keystore:
   type: JKS

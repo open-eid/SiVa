@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
 import static org.digidoc4j.X509Cert.SubjectName.CN;
 
 
@@ -26,7 +27,6 @@ public class BDOCQualifiedReportBuilder {
     private static final String GENERIC = "GENERIC";
     private static final String XADES_FORMAT_PREFIX = "XAdES_BASELINE_";
     private static final String DSS_BASIC_INFO_NAME_ID = "NameId";
-    private static final String DSS_BASIC_INFO_CONTENT = "content";
     private static final String REPORT_INDICATION_INDETERMINATE = "INDETERMINATE";
 
     private Container container;
@@ -134,7 +134,7 @@ public class BDOCQualifiedReportBuilder {
 
         bDocSignature.validateSignature().getWarnings()
                 .stream()
-                .filter(e -> dssWarningMessages.contains(e.getMessage()))
+                .filter(e -> !isRepeatingMessage(dssWarningMessages, e.getMessage()))
                 .map(this::mapDigidoc4JWarning)
                 .forEach(warnings::add);
 
@@ -144,7 +144,7 @@ public class BDOCQualifiedReportBuilder {
     private Warning mapDssWarning(Conclusion.BasicInfo dssWarning) {
         Warning warning = new Warning();
         warning.setNameId(emptyWhenNull(dssWarning.getAttributeValue(DSS_BASIC_INFO_NAME_ID)));
-        warning.setDescription(emptyWhenNull(dssWarning.getAttributeValue(DSS_BASIC_INFO_CONTENT)));
+        warning.setDescription(emptyWhenNull(dssWarning.getValue()));
         return warning;
     }
 
@@ -186,7 +186,7 @@ public class BDOCQualifiedReportBuilder {
         //Add additional digidoc4j errors
         bDocSignature.validateSignature().getErrors()
                 .stream()
-                .filter(e -> !isRepeatingError(dssErrorMessages, e.getMessage()))
+                .filter(e -> !isRepeatingMessage(dssErrorMessages, e.getMessage()))
                 .map(this::mapDigidoc4JException)
                 .forEach(errors::add);
 
@@ -200,8 +200,8 @@ public class BDOCQualifiedReportBuilder {
         return error;
     }
 
-    private boolean isRepeatingError(List<String> dssErrorMessages, String digidoc4jExceptionMessage) {
-        for (String dssMessage : dssErrorMessages) {
+    private boolean isRepeatingMessage(List<String> dssMessages, String digidoc4jExceptionMessage) {
+        for (String dssMessage : dssMessages) {
             if (digidoc4jExceptionMessage.contains(dssMessage)) {
                 return true;
             }
@@ -218,9 +218,5 @@ public class BDOCQualifiedReportBuilder {
 
     private String getSignatureFormat(SignatureProfile profile) {
         return XADES_FORMAT_PREFIX + profile.name();
-    }
-
-    private String emptyWhenNull(String value) {
-        return value != null ? value : "";
     }
 }

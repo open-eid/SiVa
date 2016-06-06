@@ -21,6 +21,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.File;
@@ -41,6 +42,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @Category(IntegrationTest.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = SivaWebApplication.class, webEnvironment=RANDOM_PORT)
+@ActiveProfiles("test")
 public abstract class SiVaRestTests {
 
     protected static final String DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE = "document malformed or not matching documentType";

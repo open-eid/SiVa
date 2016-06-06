@@ -35,7 +35,7 @@ These are minimum requirements to build and develop SiVa project:
 * **Oracle Java** - to compile and run SiVa applications. Download link for [Oracle Java JDK](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 * **IDE** - to develop SiVa. We recommend to use [JetBrains IntelliJ](https://www.jetbrains.com/idea/)
 * **2 GB of RAM** the RAM requirement is here because when building the project the integration tests take up a lot of memory
-* Optionally You can also install **Maven** but it is not needed because SiVaa project uses Maven wrapper to install maven
+* Optionally You can also install **Maven** but it is not needed because SiVa project uses Maven wrapper to install maven
 
 ## How to build
 

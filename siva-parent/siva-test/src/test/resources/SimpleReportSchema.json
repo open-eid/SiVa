@@ -47,33 +47,24 @@
           "signatureScopes": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "signatureScope": {
-                  "type": "array",
-                  "properties": {
-                    "name": {
-                      "type": "string"
-                    },
-                    "content": {
-                      "type": "string"
-                    },
-                    "scope": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "scope",
-                    "name",
-                    "content"
-                  ]
-                }
-              },
-              "required": [
-                "signatureScope"
-              ]
-            }
-          },
+			  "properties": {
+                "name": {
+                  "type": "string"
+				},
+				"content": {
+				  "type": "string"
+				},
+				"scope": {
+				  "type": "string"
+				}
+			  }
+			},
+            "required": [
+              "scope",
+              "name",
+              "content"
+            ]
+		  },
           "id": {
             "type": "string"
           },

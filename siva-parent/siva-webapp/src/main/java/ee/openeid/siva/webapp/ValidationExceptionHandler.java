@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ValidationExceptionHandler {
 
-    @Autowired
     private MessageSource messageSource;
 
     @ExceptionHandler(MalformedDocumentException.class)
@@ -32,6 +31,11 @@ public class ValidationExceptionHandler {
 
     private String getMessage(String key) {
         return messageSource.getMessage(key, null, null);
+    }
+
+    @Autowired
+    public void setMessageSource(MessageSource messageSource) {
+        this.messageSource = messageSource;
     }
 
 }

@@ -14,6 +14,7 @@ before_install:
   -in ci-deploy-key.enc -out ci-deploy-key -d
 - export TZ=Estonia/Tallinn
 - easy_install3 --user pyyaml
+- easy_install3 --user requests
 branchespython-dev:
   only:
   - develop

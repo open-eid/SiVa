@@ -6,4 +6,5 @@ import lombok.Data;
 public class GitHubInfo {
     String url;
     String shortHash;
+    String authorName;
 }

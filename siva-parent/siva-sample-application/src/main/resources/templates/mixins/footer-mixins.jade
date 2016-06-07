@@ -1,0 +1,11 @@
+mixin footerBuildInfo
+    if buildInfo.github != null
+        .row.footer
+            .col-md-12
+                hr
+                span Git commit:&nbsp;
+                    a(href=buildInfo.github.url, target="_blank")= buildInfo.github.shortHash
+                    | &nbsp;by&nbsp;
+                span=buildInfo.github.authorName
+                span &nbsp;. TravisCI build number:&nbsp;
+                    a(href=buildInfo.travisCi.buildUrl, target="_blank")= buildInfo.travisCi.buildNumber

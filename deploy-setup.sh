@@ -9,6 +9,7 @@ find . -name "siva-webapp*.jar" -exec sh -c 'mv "$1" "siva-webapp.jar"' _ {} \;
 find . -name "siva-sample-application*.jar" -exec sh -c 'mv "$1" "siva-sample-application.jar"' _ {} \;
 
 # Copy JAR files to apps directory
+mv ci-build-info.yml /var/apps
 mv *.jar /var/apps
 ls -al /var/apps
 

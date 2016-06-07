@@ -1,7 +1,7 @@
 package ee.openeid.validation.service.ddoc.report;
 
-import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.document.report.Error;
+import ee.openeid.siva.validation.document.report.*;
 import ee.sk.digidoc.DataFile;
 import ee.sk.digidoc.DigiDocException;
 import ee.sk.digidoc.Signature;
@@ -12,6 +12,8 @@ import org.cryptacular.util.CertUtil;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
 
 public class DDOCQualifiedReportBuilder {
 
@@ -124,7 +126,6 @@ public class DDOCQualifiedReportBuilder {
     @SuppressWarnings("unchecked")
     private List<SignatureScope> getSignatureScopes() {
         List<DataFile> dataFiles = signedDoc.getDataFiles();
-
         return dataFiles
                 .stream()
                 .map(this::mapDataFile)
@@ -149,9 +150,4 @@ public class DDOCQualifiedReportBuilder {
 
         return SignatureValidationData.Indication.TOTAL_PASSED;
     }
-
-    private String emptyWhenNull(String value) {
-        return value != null ? value : "";
-    }
-
 }

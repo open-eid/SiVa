@@ -3,10 +3,13 @@ package ee.openeid.validation.service.pdf;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.tsl.CustomCertificatesLoader;
+import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
 import eu.europa.esig.dss.validation.CertificateVerifier;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +18,9 @@ import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.junit.Assert.assertNotNull;
@@ -37,6 +42,7 @@ public class PDFValidationServiceTest {
         validationService = new PDFValidationService();
         validationService.setCertificateVerifier(certificateVerifier);
     }
+
 
     @Test
     public void testConfiguration() {
@@ -81,6 +87,15 @@ public class PDFValidationServiceTest {
             PropertyPlaceholderConfigurer ppc = new PropertyPlaceholderConfigurer();
             ppc.setProperties(yamlProperties.getObject());
             return ppc;
+        }
+
+        @Bean public TSLLoader tslLoader() {
+            return new TSLLoader();
+        }
+
+        @Bean
+        public CustomCertificatesLoader customCertificatesLoader() {
+            return new CustomCertificatesLoader();
         }
 
     }

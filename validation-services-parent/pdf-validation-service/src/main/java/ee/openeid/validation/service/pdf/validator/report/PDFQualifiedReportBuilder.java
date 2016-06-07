@@ -14,6 +14,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
+
 public class PDFQualifiedReportBuilder {
 
     private static final String NAME_ID_ATTRIBUTE = "NameId";
@@ -24,7 +26,6 @@ public class PDFQualifiedReportBuilder {
 
     private Reports dssReports;
     private SimpleReport simpleReport;
-    private QualifiedReport report;
     private ZonedDateTime validationTime;
     private String documentName;
 
@@ -36,7 +37,7 @@ public class PDFQualifiedReportBuilder {
     }
 
     public QualifiedReport build() {
-        report = new QualifiedReport();
+        QualifiedReport report = new QualifiedReport();
         report.setPolicy(Policy.SIVA_DEFAULT);
         report.setValidationTime(parseValidationTimeToString());
         report.setDocumentName(documentName);
@@ -75,12 +76,13 @@ public class PDFQualifiedReportBuilder {
     }
 
     private Info parseSignatureInfo(String signatureId) {
-        Info info = new Info();
         List<Conclusion.BasicInfo> dssInfo = simpleReport.getInfo(signatureId);
+        String bestSignatureTime = "";
         if (dssInfo != null && !dssInfo.isEmpty()) {
-            String bestSignatureTime = dssInfo.get(0).getAttributeValue(BEST_SIGNATURE_TIME_ATTRIBUTE);
-            info.setBestSignatureTime(bestSignatureTime != null ? bestSignatureTime : "");
+            bestSignatureTime = emptyWhenNull(dssInfo.get(0).getAttributeValue(BEST_SIGNATURE_TIME_ATTRIBUTE));
         }
+        Info info = new Info();
+        info.setBestSignatureTime(bestSignatureTime);
         return info;
     }
 
@@ -92,11 +94,9 @@ public class PDFQualifiedReportBuilder {
     }
 
     private Error mapDssError(Conclusion.BasicInfo dssError) {
-        String content = dssError.getValue();
-        String nameId = dssError.getAttributeValue(NAME_ID_ATTRIBUTE);
         Error error = new Error();
-        error.setContent(content != null ? content : "");
-        error.setNameId(nameId != null ? nameId : "");
+        error.setContent(emptyWhenNull(dssError.getValue()));
+        error.setNameId(emptyWhenNull(dssError.getAttributeValue(NAME_ID_ATTRIBUTE)));
         return error;
     }
 
@@ -108,11 +108,9 @@ public class PDFQualifiedReportBuilder {
     }
 
     private Warning mapDssWarning(Conclusion.BasicInfo dssWarning) {
-        String description = dssWarning.getValue();
-        String nameId = dssWarning.getAttributeValue(NAME_ID_ATTRIBUTE);
         Warning warning = new Warning();
-        warning.setDescription(description != null ? description : "");
-        warning.setNameId(nameId != null ? nameId : "");
+        warning.setDescription(emptyWhenNull(dssWarning.getValue()));
+        warning.setNameId(emptyWhenNull(dssWarning.getAttributeValue(NAME_ID_ATTRIBUTE)));
         return warning;
     }
 
@@ -124,20 +122,15 @@ public class PDFQualifiedReportBuilder {
     }
 
     private SignatureScope parseSignatureScope(XmlDom signatureScopeDom) {
-        String content = signatureScopeDom.getText();
-        String name = signatureScopeDom.getAttribute(NAME_ATTRIBUTE);
-        String scope = signatureScopeDom.getAttribute(SCOPE_ATTRIBUTE);
-
         SignatureScope signatureScope = new SignatureScope();
-        signatureScope.setContent(content != null ? content : "");
-        signatureScope.setName(name != null ? name : "");
-        signatureScope.setScope(scope != null ? scope : "");
+        signatureScope.setContent(emptyWhenNull(signatureScopeDom.getText()));
+        signatureScope.setName(emptyWhenNull(signatureScopeDom.getAttribute(NAME_ATTRIBUTE)));
+        signatureScope.setScope(emptyWhenNull(signatureScopeDom.getAttribute(SCOPE_ATTRIBUTE)));
         return signatureScope;
     }
 
     private String parseClaimedSigningTime(String signatureId) {
-        String claimedSigningTime = simpleReport.getValue("/SimpleReport/Signature[@Id='%s']/SigningTime/text()", signatureId);
-        return claimedSigningTime != null ? claimedSigningTime : "";
+        return emptyWhenNull(simpleReport.getValue("/SimpleReport/Signature[@Id='%s']/SigningTime/text()", signatureId));
     }
 
     private SignatureValidationData.Indication parseIndication(String signatureId) {
@@ -155,13 +148,11 @@ public class PDFQualifiedReportBuilder {
         if (parseIndication(signatureId) == SignatureValidationData.Indication.TOTAL_PASSED) {
             return "";
         }
-        String subIndication = simpleReport.getSubIndication(signatureId);
-        return subIndication != null ? subIndication : "";
+        return emptyWhenNull(simpleReport.getSubIndication(signatureId));
     }
 
     private String parseSignedBy(String signatureId) {
-        String signedBy = simpleReport.getValue("/SimpleReport/Signature[@Id=\'%s\']/SignedBy/text()", signatureId);
-        return signedBy != null ? signedBy : "";
+        return emptyWhenNull(simpleReport.getValue("/SimpleReport/Signature[@Id=\'%s\']/SignedBy/text()", signatureId));
     }
 
     private String parseValidationTimeToString() {

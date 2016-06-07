@@ -22,3 +22,12 @@ block content
             h1 Validation report
             if validationResult != null
                 pre.prettyprint= validationResult
+    if buildInfo.github != null
+        .row.footer
+            .col-md-12
+                hr
+                span Git commit:&nbsp;
+                    a(href=buildInfo.github.url)= buildInfo.github.shortHash
+                span &nbsp;TravisCI build number:&nbsp;
+                    a(href=buildInfo.travisCi.buildUrl)= buildInfo.travisCi.buildNumber
+

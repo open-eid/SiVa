@@ -13,3 +13,8 @@ body {
 .validation-result.invalid {
     color: red;
 }
+
+.footer {
+    font-size: .8em;
+    color: #999
+}

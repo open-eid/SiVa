@@ -8,6 +8,7 @@ before_install:
 - openssl aes-256-cbc -K $encrypted_befc5bd7f29f_key -iv $encrypted_befc5bd7f29f_iv
   -in ci-deploy-key.enc -out ci-deploy-key -d
 - export TZ=Estonia/Tallinn
+- pip install pyyaml
 branches:
   only:
   - develop
@@ -21,6 +22,7 @@ after_success:
 - mv artifacts/*.zip artifacts/distribution.zip && ls -al artifacts
 - "chmod 600 ${TRAVIS_BUILD_DIR}/ci-deploy-key"
 - "${TRAVIS_BUILD_DIR}/deploy.sh"
+- "${TRAVIS_BUILD_DIR}/buildinfo_yml_builder.py ${TRAVIS_COMMIT} ${TRAVIS_JOB_ID} ${TRAVIS_BUILD_NUMBER}"
 deploy:
   provider: s3
   access_key_id: AKIAJPTKESQQK3GFXN2Q

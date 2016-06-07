@@ -1,11 +1,13 @@
 package ee.openeid.siva.sample.controller;
 
+import ee.openeid.siva.sample.ci.info.BuildInfoService;
 import ee.openeid.siva.sample.siva.SivaValidationService;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,13 +23,18 @@ import static ee.openeid.siva.sample.siva.ValidationReportUtils.getValidateFilen
 @Controller
 class UploadController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UploadController.class);
+
     private static final String REDIRECT_PATH = "redirect:/";
+    private static final String START_PAGE_VIEW_NAME = "index";
+
     private SivaValidationService validationService;
     private FileUploadService fileUploadService;
+    private BuildInfoService infoService;
 
     @RequestMapping("/")
-    public String startPage() {
-        return "index";
+    public String startPage(final Model model) {
+        model.addAttribute(infoService.loadBuildInfo());
+        return START_PAGE_VIEW_NAME;
     }
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
@@ -59,6 +66,11 @@ class UploadController {
         redirectAttributes.addFlashAttribute("validationResult", new JSONObject(validationResult).toString(4));
         redirectAttributes.addFlashAttribute("documentName", getValidateFilename(validationResult));
         redirectAttributes.addFlashAttribute("overallValidationResult", getOverallValidationResult(validationResult));
+    }
+
+    @Autowired
+    public void setInfoService(BuildInfoService infoService) {
+        this.infoService = infoService;
     }
 
     @Autowired

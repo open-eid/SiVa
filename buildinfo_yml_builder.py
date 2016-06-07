@@ -17,9 +17,9 @@ build_info = dict(
     ),
     travisCi=dict(
         buildUrl=travis_base_url + travis_job_id,
-        buildNumber=travis_build_number
+        buildNumber='#' + travis_build_number
     )
 )
 
 with open('ci-build-info.yml', 'w') as outfile:
-    outfile.write( yaml.dump(build_info, default_flow_style=False))
+    outfile.write(yaml.dump(build_info, default_flow_style=False))

@@ -27,7 +27,7 @@ block content
             .col-md-12
                 hr
                 span Git commit:&nbsp;
-                    a(href=buildInfo.github.url)= buildInfo.github.shortHash
+                    a(href=buildInfo.github.url, target="_blank")= buildInfo.github.shortHash
                 span &nbsp;TravisCI build number:&nbsp;
-                    a(href=buildInfo.travisCi.buildUrl)= buildInfo.travisCi.buildNumber
+                    a(href=buildInfo.travisCi.buildUrl, target="_blank")= buildInfo.travisCi.buildNumber
 

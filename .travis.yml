@@ -26,7 +26,7 @@ after_success:
   artifacts
 - mv artifacts/*.zip artifacts/distribution.zip && ls -al artifacts
 - "chmod 600 ${TRAVIS_BUILD_DIR}/ci-deploy-key"
-- "${TRAVIS_BUILD_DIR}/buildinfo_yml_builder.py ${TRAVIS_COMMIT} ${TRAVIS_JOB_ID} ${TRAVIS_BUILD_NUMBER}"
+- "${TRAVIS_BUILD_DIR}/buildinfo_yml_builder.py ${TRAVIS_COMMIT} ${TRAVIS_BUILD_ID} ${TRAVIS_BUILD_NUMBER}"
 - "${TRAVIS_BUILD_DIR}/deploy.sh"
 deploy:
   provider: s3

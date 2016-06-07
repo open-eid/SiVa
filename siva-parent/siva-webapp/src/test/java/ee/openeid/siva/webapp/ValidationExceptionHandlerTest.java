@@ -51,6 +51,7 @@ public class ValidationExceptionHandlerTest {
         mockMvc = standaloneSetup(validationController).setControllerAdvice(validationExceptionHandler).build();
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testMalformedDocumentExceptionOnValidationExceptionHandler() throws Exception {
         when(validationProxy.validate(any(ProxyDocument.class))).thenThrow(MalformedDocumentException.class);
@@ -59,10 +60,12 @@ public class ValidationExceptionHandlerTest {
                 .content(request().toString().getBytes()))
                 .andExpect(status().isBadRequest())
                 .andReturn();
+
         String content = result.getResponse().getContentAsString();
         assertEquals(content, "{\"requestErrors\":[{\"key\":\"document\",\"message\":\"document malformed or not matching documentType\"}]}");
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testValidationServiceExceptionOnValidationExceptionHandler() throws Exception {
         when(validationProxy.validate(any(ProxyDocument.class))).thenThrow(ValidationServiceException.class);
@@ -71,6 +74,7 @@ public class ValidationExceptionHandlerTest {
                 .content(request().toString().getBytes()))
                 .andExpect(status().isInternalServerError())
                 .andReturn();
+
         String content = result.getResponse().getContentAsString();
         assertEquals(content, "unfortunately there was an error validating your document");
     }

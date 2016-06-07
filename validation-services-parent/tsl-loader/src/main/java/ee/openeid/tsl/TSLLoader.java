@@ -59,7 +59,7 @@ public class TSLLoader {
         }
     }
 
-    @Scheduled(cron = "${tsl.schedulerCron}")
+    @Scheduled(cron = "${tsl.loader.schedulerCron}")
     public void refreshTSL() {
         loadTSL();
     }

@@ -31,7 +31,7 @@ public class CustomCertificatesLoader {
         loadEstonianTestCertificates(trustedListSource);
     }
 
-    @Scheduled(cron = "${tsl.schedulerCron}")
+    @Scheduled(cron = "${tsl.loader.schedulerCron}")
     public void refreshTSL() {
         loadEstonianTestCertificates(trustedListSource);
     }

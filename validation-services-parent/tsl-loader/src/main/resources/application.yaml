@@ -1,8 +1,9 @@
 tsl:
-  loadFromCache: false
-  url: https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml
-  code: EU
-  schedulerCron: "0 0 3 * * ?"
+  loader:
+    loadFromCache: false
+    url: https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml
+    code: EU
+    schedulerCron: "0 0 3 * * ?"
 
 keystore:
   type: JKS

@@ -4,11 +4,17 @@ jdk:
 - oraclejdk8
 addons:
   ssh_known_hosts: demoapps.eu
+  apt:
+    packages:
+      - python3
+      - python3-dev
+      - python3-setuptools
 before_install:
 - openssl aes-256-cbc -K $encrypted_befc5bd7f29f_key -iv $encrypted_befc5bd7f29f_iv
   -in ci-deploy-key.enc -out ci-deploy-key -d
 - export TZ=Estonia/Tallinn
-branches:
+- easy_install3 --user pyyaml
+branchespython-dev:
   only:
   - develop
 install: true
@@ -20,6 +26,7 @@ after_success:
   artifacts
 - mv artifacts/*.zip artifacts/distribution.zip && ls -al artifacts
 - "chmod 600 ${TRAVIS_BUILD_DIR}/ci-deploy-key"
+- "${TRAVIS_BUILD_DIR}/buildinfo_yml_builder.py ${TRAVIS_COMMIT} ${TRAVIS_BUILD_ID} ${TRAVIS_BUILD_NUMBER}"
 - "${TRAVIS_BUILD_DIR}/deploy.sh"
 deploy:
   provider: s3

@@ -6,7 +6,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
-@EnableConfigurationProperties(SivaConfigurationProperties.class)
+@EnableConfigurationProperties({
+    SivaConfigurationProperties.class,
+    BuildInfoProperties.class
+})
 public class DemoApplicationConfiguration {
 
     @Bean

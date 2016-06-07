@@ -1,8 +1,11 @@
 server:
   port: 9000
 siva:
-  uploadDirectory: "upload-dir"
-  serviceUrl: "http://localhost:8080/validate"
+  build:
+    infoFile: "ci-build-info.yml"
+  service:
+    uploadDirectory: "upload-dir"
+    serviceUrl: "http://localhost:8080/validate"
 spring:
   http:
     multipart:

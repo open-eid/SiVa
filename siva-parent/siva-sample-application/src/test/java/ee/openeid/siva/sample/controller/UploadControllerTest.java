@@ -3,7 +3,10 @@ package ee.openeid.siva.sample.controller;
 import com.domingosuarez.boot.autoconfigure.jade4j.Jade4JAutoConfiguration;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import ee.openeid.siva.sample.ci.info.BuildInfo;
+import ee.openeid.siva.sample.ci.info.BuildInfoService;
 import ee.openeid.siva.sample.siva.SivaValidationService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +40,19 @@ public class UploadControllerTest {
     private WebClient webClient;
 
     @MockBean
+    private BuildInfoService infoService;
+
+    @MockBean
     private SivaValidationService sivaValidationService;
 
     @MockBean
     private FileUploadService fileUploadService;
+
+    @Before
+    public void setUp() throws Exception {
+        given(infoService.loadBuildInfo()).willReturn(new BuildInfo());
+
+    }
 
     @Test
     public void displayStartPageCheckPresenceOfUploadForm() throws Exception {

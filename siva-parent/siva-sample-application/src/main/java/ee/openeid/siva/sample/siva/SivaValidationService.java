@@ -1,10 +1,10 @@
 package ee.openeid.siva.sample.siva;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ee.openeid.siva.sample.configuration.SivaConfigurationProperties;
 import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
@@ -18,7 +18,7 @@ public class SivaValidationService {
     private static final String FILENAME_EXTENSION_SEPARATOR = ".";
     private static final int GENERIC_ERROR_CODE = 101;
 
-    private String sivaBaseUrl;
+    private SivaConfigurationProperties properties;
     private RestTemplate restTemplate;
     private SivaValidationServiceErrorHandler errorHandler;
 
@@ -38,7 +38,7 @@ public class SivaValidationService {
 
         try {
             restTemplate.setErrorHandler(errorHandler);
-            return restTemplate.postForObject(sivaBaseUrl, validationRequest, String.class);
+            return restTemplate.postForObject(properties.getServiceUrl(), validationRequest, String.class);
         } catch (ResourceAccessException ce) {
             String errorMessage = "Connection to web service failed. Make sure You have configured SiVa web service correctly";
             return new ObjectMapper().writer().writeValueAsString(new ServiceError(GENERIC_ERROR_CODE, errorMessage));
@@ -59,9 +59,9 @@ public class SivaValidationService {
 
     }
 
-    @Value("${siva.serviceUrl}")
-    public void setSivaBaseUrl(final String sivaBaseUrl) {
-        this.sivaBaseUrl = sivaBaseUrl;
+    @Autowired
+    public void setProperties(SivaConfigurationProperties properties) {
+        this.properties = properties;
     }
 
     @Autowired

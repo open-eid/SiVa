@@ -6,10 +6,11 @@ import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.tsl.CustomCertificatesLoader;
 import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
+import ee.openeid.validation.service.pdf.configuration.PDFPolicySettings;
+import ee.openeid.validation.service.pdf.configuration.PDFValidationServiceConfiguration;
 import eu.europa.esig.dss.validation.CertificateVerifier;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +19,12 @@ import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
-@SpringBootTest(classes = PDFValidationServiceTest.TestTslLoaderConfiguration.class)
+@SpringBootTest(classes = PDFValidationServiceTest.TestConfiguration.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 public class PDFValidationServiceTest {
 
@@ -37,17 +35,21 @@ public class PDFValidationServiceTest {
     @Autowired
     private CertificateVerifier certificateVerifier;
 
+    @Autowired
+    private PDFPolicySettings policySettings;
+
     @Before
     public void setUp() {
         validationService = new PDFValidationService();
         validationService.setCertificateVerifier(certificateVerifier);
+        validationService.setPolicySettings(policySettings);
     }
-
 
     @Test
     public void testConfiguration() {
         assertNotNull(certificateVerifier);
         assertTrue(certificateVerifier instanceof CommonCertificateVerifier);
+        assertEquals("/pdf_constraint.xml", policySettings.getPolicy());
     }
 
     void assertNoErrorsOrWarnings(SignatureValidationData signatureValidationData) {
@@ -72,13 +74,13 @@ public class PDFValidationServiceTest {
     }
 
 
-    @Import(TSLLoaderConfiguration.class)
-    public static class TestTslLoaderConfiguration {
+    @Import({TSLLoaderConfiguration.class, PDFValidationServiceConfiguration.class})
+    public static class TestConfiguration {
 
         @Bean
         public YamlPropertiesFactoryBean yamlProperties() {
             YamlPropertiesFactoryBean yamlProperties = new YamlPropertiesFactoryBean();
-            yamlProperties.setResources(new ClassPathResource("test-tsl-loader-props.yml"));
+            yamlProperties.setResources(new ClassPathResource("application-test.yml"));
             return yamlProperties;
         }
 
@@ -89,7 +91,8 @@ public class PDFValidationServiceTest {
             return ppc;
         }
 
-        @Bean public TSLLoader tslLoader() {
+        @Bean
+        public TSLLoader tslLoader() {
             return new TSLLoader();
         }
 

@@ -1,7 +1,14 @@
-trusted:
-  list:
-    source:
-      lotlUrl: https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml
-      lotlCode: EU
-      scheduler:
-        cron: "0 0 3 * * ?"
+tsl:
+  loadFromCache: false
+  url: https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml
+  code: EU
+  schedulerCron: "0 0 3 * * ?"
+
+keystore:
+  type: JKS
+  filename: test-siva-keystore.jks
+  password: siva-keystore-password
+
+siva:
+  bdoc:
+    policy: /bdoc_constraint.xml

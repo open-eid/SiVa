@@ -7,13 +7,11 @@ import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.validation.service.bdoc.report.BDOCQualifiedReportBuilder;
 import eu.europa.esig.dss.DSSException;
-import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import org.apache.commons.lang.StringUtils;
 import org.digidoc4j.Configuration;
 import org.digidoc4j.Container;
 import org.digidoc4j.ContainerBuilder;
 import org.digidoc4j.exceptions.DigiDoc4JException;
-import org.digidoc4j.impl.bdoc.tsl.TSLCertificateSourceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +28,10 @@ public class BDOCValidationService implements ValidationService {
 
     private static final String CONTAINER_TYPE_DDOC = "DDOC";
 
-    private TrustedListsCertificateSource trustedListSource;
     private Configuration configuration;
 
     @Override
     public QualifiedReport validateDocument(ValidationDocument validationDocument) {
-        initConfiguration();
         Container container;
         try {
             container = createContainer(validationDocument);
@@ -56,16 +52,6 @@ public class BDOCValidationService implements ValidationService {
         }
     }
 
-    public void initConfiguration() {
-        if (configuration == null) {
-            configuration = new Configuration();
-
-            TSLCertificateSourceImpl tslCertificateSource = new TSLCertificateSourceImpl();
-            trustedListSource.getCertificates().stream().forEach(certToken -> tslCertificateSource.addTSLCertificate(certToken.getCertificate()));
-            configuration.setTSL(tslCertificateSource);
-        }
-    }
-
     private Container createContainer(ValidationDocument validationDocument) {
         InputStream containerInputStream = new ByteArrayInputStream(validationDocument.getBytes());
         return ContainerBuilder.
@@ -81,18 +67,10 @@ public class BDOCValidationService implements ValidationService {
             throw new MalformedDocumentException();
         }
     }
-    /**
-     * allow setting the configuration manually for testing purposes
-     *
-     * @param configuration
-     */
-    void setConfiguration(Configuration configuration) {
-        this.configuration = configuration;
-    }
 
     @Autowired
-    public void setTrustedListSource(TrustedListsCertificateSource trustedListSource) {
-        this.trustedListSource = trustedListSource;
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
     }
 
 }

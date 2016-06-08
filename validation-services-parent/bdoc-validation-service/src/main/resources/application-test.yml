@@ -1,0 +1,4 @@
+siva:
+  bdoc:
+    policy: /bdoc_constraint.xml
+

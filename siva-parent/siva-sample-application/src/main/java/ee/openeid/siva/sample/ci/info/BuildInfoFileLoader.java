@@ -17,8 +17,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Component
-public class BuildInfoService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BuildInfoService.class);
+public class BuildInfoFileLoader {
+    private static final Logger LOGGER = LoggerFactory.getLogger(BuildInfoFileLoader.class);
     private static final byte[] EMPTY_CONTENT = new byte[0];
     private BuildInfoProperties properties;
 
@@ -26,7 +26,7 @@ public class BuildInfoService {
         try {
             final byte[] yamlFile = loadYamlFile();
             return mapToBuildInfo(yamlFile);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             LOGGER.warn("Failed to load build info file: {}", getBuildInfoFilePath(), e);
         }
 

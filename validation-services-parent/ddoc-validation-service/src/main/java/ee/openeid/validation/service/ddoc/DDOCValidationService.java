@@ -57,9 +57,9 @@ public class DDOCValidationService implements ValidationService {
             List<DigiDocException> signedDocInitializationErrors = new ArrayList<>();
 
             try {
-                if (digiDocFactory == null) {
+//                if (digiDocFactory == null) {
                     digiDocFactory = ConfigManager.instance().getDigiDocFactory();
-                }
+//                }
 
                 signedDoc = digiDocFactory.readSignedDocFromStreamOfType(new ByteArrayInputStream(validationDocument.getBytes()), false, signedDocInitializationErrors);
                 if (signedDoc == null) {

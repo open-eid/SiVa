@@ -30,6 +30,7 @@ public class DDOCValidationService implements ValidationService {
     private static final String JDIGIDOC_CONF_FILE = "/jdigidoc.cfg";
 
     private final Object lock = new Object();
+    private DigiDocFactory digiDocFactory;
 
     @PostConstruct
     protected void initConfig() throws DigiDocException, IOException {
@@ -41,7 +42,6 @@ public class DDOCValidationService implements ValidationService {
         IOUtils.copy(inputStream, outputStream);
         outputStream.close();
 
-//        LOGGER.info("JDigiDoc configuration file path: {}", resource);
         ConfigManager.init(file.getAbsolutePath());
     }
 
@@ -57,7 +57,10 @@ public class DDOCValidationService implements ValidationService {
             List<DigiDocException> signedDocInitializationErrors = new ArrayList<>();
 
             try {
-                DigiDocFactory digiDocFactory = ConfigManager.instance().getDigiDocFactory();
+                if (digiDocFactory == null) {
+                    digiDocFactory = ConfigManager.instance().getDigiDocFactory();
+                }
+
                 signedDoc = digiDocFactory.readSignedDocFromStreamOfType(new ByteArrayInputStream(validationDocument.getBytes()), false, signedDocInitializationErrors);
                 if (signedDoc == null) {
                     throw new MalformedDocumentException();
@@ -75,6 +78,10 @@ public class DDOCValidationService implements ValidationService {
                 throw new ValidationServiceException(getClass().getSimpleName(), e);
             }
         }
+    }
+
+    public void setDigiDocFactory(DigiDocFactory digiDocFactory) {
+        this.digiDocFactory = digiDocFactory;
     }
 
 }

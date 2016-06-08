@@ -7,29 +7,45 @@ import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.document.report.SignatureScope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
+import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.sk.digidoc.DigiDocException;
+import ee.sk.digidoc.factory.DigiDocFactory;
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class DDOCValidationServiceTest {
+
+    @Mock
+    private DigiDocFactory signedDoc;
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     private static final String TEST_FILES_LOCATION = "test-files/";
     private static final String VALID_DDOC_2_SIGNATURES = "ddoc_valid_2_signatures.ddoc";
 
-    private static DDOCValidationService validationService = new DDOCValidationServiceSpy();
+    private static DDOCValidationService validationService = new DDOCValidationService();
 
     private static QualifiedReport validationResult2Signatures;
 
     @BeforeClass
     public static void setUpClass() throws Exception {
         validationService.initConfig();
-        validationResult2Signatures = validationService.validateDocument(ddocValid2Signatures());
     }
 
     private static ValidationDocument ddocValid2Signatures() throws Exception {
@@ -48,22 +64,24 @@ public class DDOCValidationServiceTest {
     public void validatingADDOCWithMalformedBytesResultsInMalformedDocumentException() throws Exception {
         ValidationDocument validationDocument = buildValidationDocument(VALID_DDOC_2_SIGNATURES);
         validationDocument.setBytes(Base64.decode("ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA=="));
-        String message = "";
-        try {
-            validationService.validateDocument(validationDocument);
-        } catch (MalformedDocumentException e) {
-            message = e.getMessage();
-        }
-        assertEquals("the document is malformed", message);
+
+        when(signedDoc.readSignedDocFromStreamOfType(any(ByteArrayInputStream.class), anyBoolean(), anyList())).thenReturn(null);
+
+        expectedException.expect(MalformedDocumentException.class);
+        DDOCValidationService validationService = new DDOCValidationService();
+        validationService.setDigiDocFactory(signedDoc);
+        validationService.validateDocument(validationDocument);
     }
 
     @Test
     public void ddocValidationResultShouldIncludeQualifiedReportPOJO() throws Exception {
+        validationResult2Signatures = validationService.validateDocument(ddocValid2Signatures());
         assertNotNull(validationResult2Signatures);
     }
 
     @Test
     public void qualifiedReportShouldIncludeRequiredFields() throws Exception {
+        validationResult2Signatures = validationService.validateDocument(ddocValid2Signatures());
         assertNotNull(validationResult2Signatures.getPolicy());
         assertNotNull(validationResult2Signatures.getValidationTime());
         assertEquals(VALID_DDOC_2_SIGNATURES, validationResult2Signatures.getDocumentName());
@@ -73,7 +91,8 @@ public class DDOCValidationServiceTest {
     }
 
     @Test
-    public void qualifiedReportShouldHaveCorrectSignatureValidationDataForSignature1() {
+    public void qualifiedReportShouldHaveCorrectSignatureValidationDataForSignature1() throws Exception {
+        validationResult2Signatures = validationService.validateDocument(ddocValid2Signatures());
         SignatureValidationData sig1 = validationResult2Signatures.getSignatures()
                 .stream()
                 .filter(sig -> sig.getId().equals("S0"))
@@ -97,7 +116,8 @@ public class DDOCValidationServiceTest {
     }
 
     @Test
-    public void qualifiedReportShouldHaveCorrectSignatureValidationDataForSignature2() {
+    public void qualifiedReportShouldHaveCorrectSignatureValidationDataForSignature2() throws Exception {
+        validationResult2Signatures = validationService.validateDocument(ddocValid2Signatures());
         SignatureValidationData sig2 = validationResult2Signatures.getSignatures()
                 .stream()
                 .filter(sig -> sig.getId().equals("S1"))
@@ -118,6 +138,18 @@ public class DDOCValidationServiceTest {
         assertEquals("2009-02-13T09:22:49Z", sig2.getClaimedSigningTime());
         assertNotNull(sig2.getInfo());
         assertTrue(StringUtils.isEmpty(sig2.getInfo().getBestSignatureTime()));
+    }
+
+    @Test
+    public void validationFailsWithExceptionWillThrowValidationServiceException() throws Exception {
+        ValidationDocument validationDocument = new ValidationDocument();
+        validationDocument.setBytes("".getBytes());
+        when(signedDoc.readSignedDocFromStreamOfType(any(ByteArrayInputStream.class), anyBoolean(), anyList())).thenThrow(new DigiDocException(101, "Testing error", new Exception()));
+
+        expectedException.expect(ValidationServiceException.class);
+
+        validationService.setDigiDocFactory(signedDoc);
+        validationService.validateDocument(validationDocument);
     }
 
     private static class DDOCValidationServiceSpy extends DDOCValidationService {

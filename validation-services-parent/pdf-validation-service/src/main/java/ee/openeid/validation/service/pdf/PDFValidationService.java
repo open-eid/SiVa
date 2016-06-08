@@ -1,23 +1,3 @@
-/**
- * DSS - Digital Signature Services
- * Copyright (C) 2015 European Commission, provided under the CEF programme
- * <p>
- * This file is part of the "DSS - Digital Signature Services" project.
- * <p>
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- * <p>
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * <p>
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- */
 package ee.openeid.validation.service.pdf;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
@@ -32,34 +12,32 @@ import ee.openeid.validation.service.pdf.validator.report.PDFQualifiedReportBuil
 import eu.europa.esig.dss.DSSDocument;
 import eu.europa.esig.dss.DSSException;
 import eu.europa.esig.dss.validation.CertificateVerifier;
+import eu.europa.esig.dss.validation.DocumentValidator;
 import eu.europa.esig.dss.validation.report.Reports;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.xml.soap.SOAPException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 @Service
 public class PDFValidationService implements ValidationService {
-
-    private static final Logger logger = LoggerFactory.getLogger(PDFValidationService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PDFValidationService.class);
 
     private CertificateVerifier certificateVerifier;
-
     private PDFPolicySettings policySettings;
 
     @Override
     public QualifiedReport validateDocument(ValidationDocument validationDocument) throws DSSException {
         try {
-            if (logger.isInfoEnabled()) {
-                logger.info("WsValidateDocument: begin");
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("WsValidateDocument: begin");
             }
 
             if (validationDocument == null) {
-                throw new SOAPException("No request document found");
+                throw new ValidationServiceException(getClass().getSimpleName(), new Exception("No request document found"));
             }
 
             final DSSDocument dssDocument = ValidationDocumentToDSSDocumentTransformerUtils.createDssDocument(validationDocument);
@@ -68,25 +46,28 @@ public class PDFValidationService implements ValidationService {
                 throw new MalformedDocumentException();
             }
 
-            EstonianPDFDocumentValidator validator = new EstonianPDFDocumentValidator(dssDocument);
+            final DocumentValidator validator = new EstonianPDFDocumentValidator(dssDocument);
             validator.setCertificateVerifier(certificateVerifier);
 
             final Reports reports = validator.validateDocument(policySettings.getPolicyDataStream());
 
-            ZonedDateTime validationTimeInGMT = ZonedDateTime.now(ZoneId.of("GMT"));
-
-            if (logger.isInfoEnabled()) {
-                logger.info(
+            final ZonedDateTime validationTimeInGMT = ZonedDateTime.now(ZoneId.of("GMT"));
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info(
                         "Validation completed. Total signature count: {} and valid signature count: {}",
                         reports.getSimpleReport().getElement("//SignaturesCount").getText(),
                         reports.getSimpleReport().getElement("//ValidSignaturesCount").getText()
                 );
 
-                logger.info("WsValidateDocument: end");
+                LOGGER.info("WsValidateDocument: end");
             }
-            PDFQualifiedReportBuilder reportBuilder = new PDFQualifiedReportBuilder(reports, validationTimeInGMT, validationDocument.getName());
-            return reportBuilder.build();
 
+            final PDFQualifiedReportBuilder reportBuilder = new PDFQualifiedReportBuilder(
+                    reports,
+                    validationTimeInGMT,
+                    validationDocument.getName()
+            );
+            return reportBuilder.build();
         } catch (MalformedDocumentException e) {
             endExceptionally(e);
             throw e;
@@ -97,8 +78,8 @@ public class PDFValidationService implements ValidationService {
     }
 
     private void endExceptionally(Exception e) {
-        logger.error(e.getMessage(), e);
-        logger.info("WsValidateDocument: end with exception");
+        LOGGER.error(e.getMessage(), e);
+        LOGGER.info("WsValidateDocument: end with exception");
     }
 
     @Autowired

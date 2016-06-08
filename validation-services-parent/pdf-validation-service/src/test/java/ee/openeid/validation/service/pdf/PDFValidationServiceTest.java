@@ -3,6 +3,7 @@ package ee.openeid.validation.service.pdf;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.tsl.CustomCertificatesLoader;
 import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
@@ -11,7 +12,9 @@ import ee.openeid.validation.service.pdf.configuration.PDFValidationServiceConfi
 import eu.europa.esig.dss.validation.CertificateVerifier;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
@@ -32,6 +35,9 @@ public class PDFValidationServiceTest {
 
     PDFValidationService validationService;
 
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
     @Autowired
     private CertificateVerifier certificateVerifier;
 
@@ -50,6 +56,12 @@ public class PDFValidationServiceTest {
         assertNotNull(certificateVerifier);
         assertTrue(certificateVerifier instanceof CommonCertificateVerifier);
         assertEquals("/pdf_constraint.xml", policySettings.getPolicy());
+    }
+
+    @Test
+    public void givenInvalidPDFFileShouldThrowServiceException() throws Exception {
+        expectedException.expect(ValidationServiceException.class);
+        validationService.validateDocument(new ValidationDocument());
     }
 
     void assertNoErrorsOrWarnings(SignatureValidationData signatureValidationData) {

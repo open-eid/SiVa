@@ -1,6 +1,6 @@
 package ee.openeid.siva.sample.controller;
 
-import ee.openeid.siva.sample.ci.info.BuildInfoService;
+import ee.openeid.siva.sample.ci.info.BuildInfo;
 import ee.openeid.siva.sample.siva.SivaValidationService;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -29,11 +29,11 @@ class UploadController {
 
     private SivaValidationService validationService;
     private FileUploadService fileUploadService;
-    private BuildInfoService infoService;
+    private BuildInfo buildInfo;
 
     @RequestMapping("/")
     public String startPage(final Model model) {
-        model.addAttribute(infoService.loadBuildInfo());
+        model.addAttribute(buildInfo);
         return START_PAGE_VIEW_NAME;
     }
 
@@ -69,8 +69,8 @@ class UploadController {
     }
 
     @Autowired
-    public void setInfoService(BuildInfoService infoService) {
-        this.infoService = infoService;
+    public void setBuildInfo(BuildInfo buildInfo) {
+        this.buildInfo = buildInfo;
     }
 
     @Autowired

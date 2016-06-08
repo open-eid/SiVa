@@ -10,25 +10,27 @@ import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.sk.digidoc.DigiDocException;
 import ee.sk.digidoc.factory.DigiDocFactory;
+import ee.sk.utils.ConfigManager;
 import org.apache.commons.lang.StringUtils;
-import org.junit.*;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 
 import static org.junit.Assert.*;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PowerMockIgnore("javax.security.*")
 public class DDOCValidationServiceTest {
-
-    @Mock
-    private DigiDocFactory signedDoc;
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
@@ -39,6 +41,7 @@ public class DDOCValidationServiceTest {
     private static DDOCValidationService validationService = new DDOCValidationService();
 
     private static QualifiedReport validationResult2Signatures;
+    private Object lock = new Object();
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -58,16 +61,12 @@ public class DDOCValidationServiceTest {
     }
 
     @Test
-    @Ignore
     public void validatingADDOCWithMalformedBytesResultsInMalformedDocumentException() throws Exception {
         ValidationDocument validationDocument = buildValidationDocument(VALID_DDOC_2_SIGNATURES);
         validationDocument.setBytes(Base64.decode("ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA=="));
 
-        when(signedDoc.readSignedDocFromStreamOfType(any(ByteArrayInputStream.class), anyBoolean(), anyList())).thenReturn(null);
-
         expectedException.expect(MalformedDocumentException.class);
         DDOCValidationService validationService = new DDOCValidationService();
-        validationService.setDigiDocFactory(signedDoc);
         validationService.validateDocument(validationDocument);
     }
 
@@ -139,25 +138,21 @@ public class DDOCValidationServiceTest {
     }
 
     @Test
-    @Ignore
+    @PrepareForTest(ConfigManager.class)
     public void validationFailsWithExceptionWillThrowValidationServiceException() throws Exception {
         ValidationDocument validationDocument = new ValidationDocument();
         validationDocument.setBytes("".getBytes());
-        when(signedDoc.readSignedDocFromStreamOfType(any(ByteArrayInputStream.class), anyBoolean(), anyList())).thenThrow(new DigiDocException(101, "Testing error", new Exception()));
 
-        expectedException.expect(ValidationServiceException.class);
+            mockStatic(ConfigManager.class);
+            ConfigManager configManager = mock(ConfigManager.class);
+            DigiDocFactory digiDocFactory = mock(DigiDocFactory.class);
 
-        validationService.setDigiDocFactory(signedDoc);
-        validationService.validateDocument(validationDocument);
+            given(configManager.getDigiDocFactory()).willReturn(digiDocFactory);
+            given(ConfigManager.instance()).willReturn(configManager);
+            when(digiDocFactory.readSignedDocFromStreamOfType(any(ByteArrayInputStream.class), anyBoolean(), anyList())).thenThrow(new DigiDocException(101, "Testing error", new Exception()));
+
+            expectedException.expect(ValidationServiceException.class);
+            validationService.validateDocument(validationDocument);
+
     }
-
-    private static class DDOCValidationServiceSpy extends DDOCValidationService {
-
-        @After
-        @Override
-        protected void initConfig() throws IOException, DigiDocException {
-            super.initConfig();
-        }
-    }
-
 }

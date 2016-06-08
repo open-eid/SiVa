@@ -25,7 +25,7 @@ build_info = dict(
     ),
     travisCi=dict(
         buildUrl=travis_base_url + travis_job_id,
-        buildNumber=travis_build_number
+        buildNumber='#' + travis_build_number
     )
 )
 

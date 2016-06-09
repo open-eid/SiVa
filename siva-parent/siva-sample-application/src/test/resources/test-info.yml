@@ -1,0 +1,7 @@
+github:
+  authorName: Andres Voll
+  shortHash: dfce8a94
+  url: https://github.com/open-eid/SiVa/commit/dfce8a94c54b8d94153807b153baaf56bfd9317e
+travisCi:
+  buildNumber: '#106'
+  buildUrl: https://travis-ci.org/open-eid/SiVa/builds/135787867

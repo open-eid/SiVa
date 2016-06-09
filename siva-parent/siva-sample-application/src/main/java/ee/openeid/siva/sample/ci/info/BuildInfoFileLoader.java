@@ -58,7 +58,12 @@ public class BuildInfoFileLoader {
     }
 
     private Path getBuildInfoFilePath() {
-        return Paths.get(Paths.get("").toAbsolutePath() + File.separator + properties.getInfoFile());
+        String defaultPath = Paths.get("").toAbsolutePath() + File.separator;
+        String infoFilePath = properties.getInfoFile().startsWith("/") ?
+                properties.getInfoFile() :
+                defaultPath + properties.getInfoFile();
+
+        return Paths.get(infoFilePath);
     }
 
     @Autowired

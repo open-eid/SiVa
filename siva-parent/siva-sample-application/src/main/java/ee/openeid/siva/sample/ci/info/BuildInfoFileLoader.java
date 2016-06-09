@@ -40,7 +40,7 @@ public class BuildInfoFileLoader {
         try {
             return mapper.readValue(yamlFile, BuildInfo.class);
         } catch (JsonMappingException ex) {
-            LOGGER.warn("Failed to parse JSON with with message: {}", ex.getMessage());
+            LOGGER.warn("Failed to parse JSON with with message: {}", ex.getMessage(), ex);
         }
 
         return new BuildInfo();

@@ -434,7 +434,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      *
      * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
-     * Title: Request has XML as document type (special case, XML is similar to ddoc)
+     * Title: Request has XML as document type (special case, XML is similar to ddoc and was a accepted document type in earlier versions)
      *
      * Expected Result: Error is given
      *

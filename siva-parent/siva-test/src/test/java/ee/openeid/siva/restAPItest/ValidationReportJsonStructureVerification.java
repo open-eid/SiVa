@@ -73,7 +73,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
      ***/
-    @Test
+    @Test @Ignore //TODO: VAL-244
     public void BdocAllElementsArePresentValidMultipleSignatures() {
         post(validationRequestFor("Valid_IDCard_MobID_signatures.bdoc", "simple"))
                 .then()

@@ -17,20 +17,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Component
-public class BuildInfoService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BuildInfoService.class);
+public class BuildInfoFileLoader {
+    private static final Logger LOGGER = LoggerFactory.getLogger(BuildInfoFileLoader.class);
     private static final byte[] EMPTY_CONTENT = new byte[0];
     private BuildInfoProperties properties;
 
-    public BuildInfo loadBuildInfo() {
-        try {
-            final byte[] yamlFile = loadYamlFile();
-            return mapToBuildInfo(yamlFile);
-        } catch (IOException e) {
-            LOGGER.warn("Failed to load build info file: {}", getBuildInfoFilePath(), e);
-        }
-
-        return new BuildInfo();
+    public BuildInfo loadBuildInfo() throws IOException {
+        final byte[] yamlFile = loadYamlFile();
+        return mapToBuildInfo(yamlFile);
     }
 
     private static BuildInfo mapToBuildInfo(final byte[] yamlFile) throws IOException {
@@ -39,8 +33,8 @@ public class BuildInfoService {
 
         try {
             return mapper.readValue(yamlFile, BuildInfo.class);
-        } catch (JsonMappingException ex) {
-            LOGGER.warn("Failed to parse JSON with with message: {}", ex.getMessage());
+        } catch (final JsonMappingException ex) {
+            LOGGER.warn("Failed to parse JSON with with message: {}", ex.getMessage(), ex);
         }
 
         return new BuildInfo();
@@ -58,7 +52,12 @@ public class BuildInfoService {
     }
 
     private Path getBuildInfoFilePath() {
-        return Paths.get(Paths.get("").toAbsolutePath() + File.separator + properties.getInfoFile());
+        final String defaultPath = Paths.get("").toAbsolutePath() + File.separator;
+        final String infoFilePath = properties.getInfoFile().startsWith("/") ?
+                properties.getInfoFile() :
+                defaultPath + properties.getInfoFile();
+
+        return Paths.get(infoFilePath);
     }
 
     @Autowired

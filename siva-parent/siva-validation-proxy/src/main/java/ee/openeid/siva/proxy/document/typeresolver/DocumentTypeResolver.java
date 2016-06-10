@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import static java.util.Arrays.stream;
 
-public class DocumentTypeResolver {
+public final class DocumentTypeResolver {
 
     private DocumentTypeResolver() {}
 

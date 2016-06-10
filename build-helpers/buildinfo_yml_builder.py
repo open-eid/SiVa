@@ -17,11 +17,22 @@ def git_commit_response():
     req = requests.get(git_commit_api_url + git_commit)
     return req.json()
 
+
+def commit_author():
+    default_author = 'Unknown'
+    api_response = git_commit_response()
+
+    if 'committer' in api_response:
+        return api_response['committer']['name']
+    else:
+        return default_author
+
+
 build_info = dict(
     github=dict(
         url=git_base_url + git_commit,
         shortHash=git_commit[:8],
-        authorName=git_commit_response()['committer']['name']
+        authorName=commit_author()
     ),
     travisCi=dict(
         buildUrl=travis_base_url + travis_job_id,

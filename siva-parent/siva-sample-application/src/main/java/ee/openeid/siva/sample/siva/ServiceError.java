@@ -11,7 +11,7 @@ class ServiceError {
     @Getter
     private int errorCode;
 
-    ServiceError(int errorCode, String errorMessage) {
+    ServiceError(final int errorCode, final String errorMessage) {
         this.errorCode = errorCode;
         this.errorMessage = errorMessage;
     }

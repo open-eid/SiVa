@@ -3,7 +3,6 @@ package ee.openeid.validation.service.bdoc;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
-import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.validation.service.bdoc.report.BDOCQualifiedReportBuilder;
 import eu.europa.esig.dss.DSSException;
@@ -41,15 +40,10 @@ public class BDOCValidationService implements ValidationService {
         }
         verifyContainerTypeNotDDOC(container.getType());
 
-        try {
-            container.validate();
-            Date validationTime = new Date();
-            BDOCQualifiedReportBuilder reportBuilder = new BDOCQualifiedReportBuilder(container, validationDocument.getName(), validationTime);
-            return reportBuilder.build();
-        } catch (Exception e) {
-            logger.error("Error occured during validation", e);
-            throw new ValidationServiceException(getClass().getSimpleName(), e);
-        }
+        container.validate();
+        Date validationTime = new Date();
+        BDOCQualifiedReportBuilder reportBuilder = new BDOCQualifiedReportBuilder(container, validationDocument.getName(), validationTime);
+        return reportBuilder.build();
     }
 
     private Container createContainer(ValidationDocument validationDocument) {

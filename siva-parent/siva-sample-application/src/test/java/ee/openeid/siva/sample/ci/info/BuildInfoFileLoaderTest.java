@@ -15,6 +15,9 @@ public class BuildInfoFileLoaderTest {
 
         assertThat(buildInfo.getTravisCi().getBuildNumber()).isEqualTo("#106");
         assertThat(buildInfo.getGithub().getAuthorName()).isEqualTo("Andres Voll");
+        assertThat(buildInfo.getGithub().getShortHash()).isEqualTo("dfce8a94");
+        assertThat(buildInfo.getGithub().getUrl()).contains("dfce8a94c54b8d94153807b153baaf56bfd9317e");
+        assertThat(buildInfo.getTravisCi().getBuildUrl()).contains("135787867");
     }
 
     @Test

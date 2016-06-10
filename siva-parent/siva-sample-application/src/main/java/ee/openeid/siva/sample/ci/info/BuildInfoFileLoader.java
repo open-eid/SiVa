@@ -22,15 +22,9 @@ public class BuildInfoFileLoader {
     private static final byte[] EMPTY_CONTENT = new byte[0];
     private BuildInfoProperties properties;
 
-    public BuildInfo loadBuildInfo() {
-        try {
-            final byte[] yamlFile = loadYamlFile();
-            return mapToBuildInfo(yamlFile);
-        } catch (final IOException e) {
-            LOGGER.warn("Failed to load build info file: {}", getBuildInfoFilePath(), e);
-        }
-
-        return new BuildInfo();
+    public BuildInfo loadBuildInfo() throws IOException {
+        final byte[] yamlFile = loadYamlFile();
+        return mapToBuildInfo(yamlFile);
     }
 
     private static BuildInfo mapToBuildInfo(final byte[] yamlFile) throws IOException {
@@ -39,7 +33,7 @@ public class BuildInfoFileLoader {
 
         try {
             return mapper.readValue(yamlFile, BuildInfo.class);
-        } catch (JsonMappingException ex) {
+        } catch (final JsonMappingException ex) {
             LOGGER.warn("Failed to parse JSON with with message: {}", ex.getMessage(), ex);
         }
 
@@ -58,8 +52,8 @@ public class BuildInfoFileLoader {
     }
 
     private Path getBuildInfoFilePath() {
-        String defaultPath = Paths.get("").toAbsolutePath() + File.separator;
-        String infoFilePath = properties.getInfoFile().startsWith("/") ?
+        final String defaultPath = Paths.get("").toAbsolutePath() + File.separator;
+        final String infoFilePath = properties.getInfoFile().startsWith("/") ?
                 properties.getInfoFile() :
                 defaultPath + properties.getInfoFile();
 

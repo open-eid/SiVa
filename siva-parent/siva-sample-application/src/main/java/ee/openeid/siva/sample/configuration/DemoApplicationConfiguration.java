@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
+
 @Configuration
 @EnableConfigurationProperties({
     SivaConfigurationProperties.class,
@@ -22,7 +24,7 @@ public class DemoApplicationConfiguration {
     }
 
     @Bean
-    public BuildInfo displayBuildInfo() {
+    public BuildInfo displayBuildInfo() throws IOException {
         final BuildInfoFileLoader buildInfoFileLoader = new BuildInfoFileLoader();
         buildInfoFileLoader.setProperties(properties);
         return buildInfoFileLoader.loadBuildInfo();

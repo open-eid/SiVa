@@ -35,6 +35,14 @@ List of Test Cases
   * Expected Result: The document should fail the validation
   * File: BdocContainerNoSignature.bdoc
 
+**TestCaseID: Bdoc-ValidationFail-5**
+
+  * TestType: Automated
+  * RequirementID: []()
+  * Title: Bdoc with invalid mimetype in manifest
+  * Expected Result: document malformed error should be returned
+  * File: 23147_weak-warning-sha1-invalid-mimetype-in-manifest.bdoc
+
 
 ## BdocValidationPass.java
 
@@ -60,7 +68,7 @@ List of Test Cases
   * RequirementID: []()
   * Title: Bdoc with warning on signature
   * Expected Result: The document should pass the validation but warning should be returned
-  * File: 23147_weak-warning-sha1.bdoc
+  * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
 
 
 ## DdocValidationFail.java
@@ -115,6 +123,8 @@ List of Test Cases
   * Title: Ddoc v1.0 with multiple valid signatures
   * Expected Result: The document should pass the validation
   * File: DigiDoc_1.0_Tartu_ja_Tallinna_koostooleping.ddoc
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: Ddoc-ValidationPass-3**
 
@@ -218,6 +228,8 @@ List of Test Cases
   * Expected Result: Bigger documents with valid signature should pass
   * File: scout_x4-manual-signed_lt_9mb.pdf
 
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
 **TestCaseID: PDF-LargeFiles-2**
 
   * TestType: Automated
@@ -225,6 +237,8 @@ List of Test Cases
   * Title: Larger signed PDF files (PAdES Baseline LT).
   * Expected Result: Bigger documents with valid signature should pass
   * File: scout_x4-manual-signed_lta_9mb.pdf
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: PDF-LargeFiles-3**
 
@@ -242,6 +256,8 @@ List of Test Cases
   * Expected Result: Bigger documents with valid signature should pass
   * File: digidocservice-signed-lta-1-2mb.pdf
 
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
 **TestCaseID: PDF-LargeFiles-5**
 
   * TestType: Automated
@@ -257,6 +273,8 @@ List of Test Cases
   * Title: Larger signed PDF files (PAdES Baseline LT).
   * Expected Result: Bigger documents with valid signature should pass
   * File: egovenrment-benchmark-lta-3-8mb.pdf
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 
 ## PdfBaselineProfileTests.java
@@ -277,6 +295,8 @@ List of Test Cases
   * Expected Result: Document validation should fail
   * File: some_file.pdf
 
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
 **TestCaseID: PDF-BaselineProfile-3**
 
   * TestType: Automated
@@ -292,6 +312,8 @@ List of Test Cases
   * Title: The PDF has PAdES-LTA profile signature
   * Expected Result: Document validation should pass
   * File: some_file.pdf
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: PDF-BaselineProfile-5**
 
@@ -309,6 +331,8 @@ List of Test Cases
   * Expected Result: Document validation should fail
   * File: hellopades-lt1-lt2-wrongDigestValue.pdf
 
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
 **TestCaseID: PDF-BaselineProfile-7**
 
   * TestType: Automated
@@ -317,6 +341,8 @@ List of Test Cases
   * Expected Result: Document signed with multiple signers with serial signatures should pass
   * File: hellopades-lt1-lt2-Serial.pdf
 
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
 **TestCaseID: PDF-BaselineProfile-8**
 
   * TestType: Automated
@@ -324,6 +350,8 @@ List of Test Cases
   * Title: PDF document signed with multiple signers parallel signature
   * Expected Result: Document with parallel signatures should pass
   * File: hellopades-lt1-lt2-parallel3.pdf
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: PDF-BaselineProfile-9**
 
@@ -360,6 +388,8 @@ List of Test Cases
   * Expected Result: Document signed with ECDSA algorithm should pass
   * File: hellopades-ecdsa.pdf
 
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
 **TestCaseID: PDF-SigCryptoAlg-4**
 
   * TestType: Automated
@@ -384,6 +414,8 @@ List of Test Cases
   * Expected Result: Document signed with RSA1024 algorithm should pass
   * File: hellopades-lt-sha256-rsa1024.pdf
 
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
 **TestCaseID: PDF-SigCryptoAlg-7**
 
   * TestType: Automated
@@ -392,6 +424,8 @@ List of Test Cases
   * Expected Result: Document signed with RSA1023 algorithm should pass
   * File: hellopades-lt-sha256-rsa1023.pdf
 
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
 **TestCaseID: PDF-SigCryptoAlg-8**
 
   * TestType: Automated
@@ -399,6 +433,8 @@ List of Test Cases
   * Title: RSA2047 algorithms (PAdES Baseline LT)
   * Expected Result: Document signed with RSA2047 algorithm should pass
   * File: hellopades-lt-sha256-rsa2047.pdf
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: PDF-SigCryptoAlg-9**
 
@@ -427,6 +463,8 @@ List of Test Cases
   * Expected Result: Document signed with certificate that is expired should fail.
   * File: IB-3691_bdoc21-TS-old-cert.bdoc
 
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
 **TestCaseID: PDF-ValidationFail-3**
 
   * TestType: Automated
@@ -434,6 +472,8 @@ List of Test Cases
   * Title: The PDF-file has been signed with revoked certificate (PAdES Baseline LT)
   * Expected Result: Document signed with certificate that is revoked should fail.
   * File: hellopades-lt-sha256-revoked.pdf
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: PDF-ValidationFail-4**
 
@@ -486,6 +526,8 @@ List of Test Cases
   * Expected Result: Document signed with certificate that expired after signing should pass.
   * File: hellopades-lt-sha256-rsa1024-not-expired.pdf
 
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
 **TestCaseID: PDF-ValidationPass-2**
 
   * TestType: Automated
@@ -494,6 +536,8 @@ List of Test Cases
   * Expected Result: Document signed with certificate that expired after signing should pass.
   * File: hellopades-lt-sha256-rsa2048-7d.pdf
 
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
 **TestCaseID: PDF-ValidationPass-3**
 
   * TestType: Automated
@@ -501,6 +545,8 @@ List of Test Cases
   * Title: Certificate contents are include in response (PAdES Baseline LT)
   * Expected Result: The PDF-file validation should pass
   * File: hellopades-lt-sha256-ocsp-15min1s.pdf
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: PDF-ValidationPass-4**
 
@@ -529,6 +575,8 @@ List of Test Cases
   * Expected Result: Document with ocsp over 15 min delay should pass but warn
   * File: hellopades-lt-sha256-ocsp-15min1s.pdf
 
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
 **TestCaseID: PDF-SigRevocVal-3**
 
   * TestType: Automated
@@ -553,6 +601,8 @@ List of Test Cases
   * Expected Result: Document with no ocsp or crl in signature should fail
   * File: hellopades-lta-no-ocsp.pdf
 
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
 **TestCaseID: PDF-SigRevocVal-6**
 
   * TestType: Automated
@@ -560,6 +610,8 @@ List of Test Cases
   * Title: PDF signature has OCSP confirmation before Time Stamp
   * Expected Result: Document signed with ocsp time value before best signature time should fail
   * File: hellopades-lt-sha256-rsa2048-ocsp-before-ts.pdf
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 
 ## ValidationReportJsonStructureVerification.java
@@ -579,6 +631,8 @@ List of Test Cases
   * Title: JSON structure has all elements (Bdoc valid multiple signatures)
   * Expected Result: All required elements are present according to SimpleReportSchema.json
   * File: Valid_IDCard_MobID_signatures.bdoc
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: Bdoc-ValidationReport-3**
 
@@ -636,6 +690,8 @@ List of Test Cases
   * Expected Result: All required elements are present according to SimpleReportSchema.json
   * File:
 
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
 **TestCaseID: Pdf-ValidationReport-10**
 
   * TestType: Automated
@@ -644,6 +700,8 @@ List of Test Cases
   * Expected Result: All required elements are present according to SimpleReportSchema.json
   * File: hellopades-lt-b.pdf
 
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
 **TestCaseID: Pdf-ValidationReport-11**
 
   * TestType: Automated
@@ -651,6 +709,8 @@ List of Test Cases
   * Title: JSON structure has all elements (Pdf indeterminate status)
   * Expected Result: All required elements are present according to SimpleReportSchema.json
   * File: hellopades-lt-rsa1024-sha1-expired.pdf
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: Pdf-ValidationReport-12**
 
@@ -707,6 +767,8 @@ List of Test Cases
   * Title: Check for optional warning element
   * Expected Result: Warning element is present
   * File:
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: Ddoc-ValidationReport-19**
 
@@ -799,6 +861,8 @@ List of Test Cases
   * Expected Result: Error is returned
   * File: TS-11_23634_TS_2_timestamps.asice
 
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
 **TestCaseID: ValidationRequest-11**
 
   * TestType: Automated
@@ -843,7 +907,7 @@ List of Test Cases
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
-  * Title: Request has XML as document type (special case, XML is similar to ddoc)
+  * Title: Request has XML as document type (special case, XML is similar to ddoc and was a accepted document type in earlier versions)
   * Expected Result: Error is given
   * File: Valid_IDCard_MobID_signatures.bdoc
 
@@ -877,5 +941,53 @@ List of Test Cases
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
   * Title: Request with special chars is sent
   * Expected Result: Validation report is returned
+  * File: Valid_IDCard_MobID_signatures.bdoc
+
+**TestCaseID: ValidationRequest-21**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Mismatch in documentType and actual document (ddoc and bdoc)
+  * Expected Result: Error is returned
+  * File: Valid_IDCard_MobID_signatures.bdoc
+
+**TestCaseID: ValidationRequest-22**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Mismatch in documentType and actual document (ddoc and pdf)
+  * Expected Result: Error is returned
+  * File: PdfValidSingleSignature.pdf
+
+**TestCaseID: ValidationRequest-23**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Mismatch in documentType and actual document (bdoc and pdf)
+  * Expected Result: Error is returned
+  * File: PdfValidSingleSignature.pdf
+
+**TestCaseID: ValidationRequest-24**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Mismatch in documentType and actual document (bdoc and ddoc)
+  * Expected Result: Error is returned
+  * File: igasugust1.3.ddoc
+
+**TestCaseID: ValidationRequest-25**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Mismatch in documentType and actual document (pdf and ddoc)
+  * Expected Result: Error is returned
+  * File: igasugust1.3.ddoc
+
+**TestCaseID: ValidationRequest-26**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Mismatch in documentType and actual document (pdf and bdoc)
+  * Expected Result: Error is returned
   * File: Valid_IDCard_MobID_signatures.bdoc
 

@@ -26,6 +26,7 @@ pages:
   - Deployment: siva/deployment.md
   - Logging: siva/logging.md
   - References: siva/references.md
+  - Test Plan: siva/test_plan.md
   - Appendixes:
         - Appendix 1 - Non-Functional Requirements: siva/appendix/none_functional_requirements.md
         - Appendix 2 - Functional Requirements: siva/appendix/functional_requirements.md

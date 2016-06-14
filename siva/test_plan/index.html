@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="no-js ie6"><![endif]-->
+<!--[if IE 7 ]><html class="no-js ie7"><![endif]-->
+<!--[if IE 8 ]><html class="no-js ie8"><![endif]-->
+<!--[if IE 9 ]><html class="no-js ie9"><![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1">
+    
+      
+        <title>Test Plan - SiVa - Validation Service Documentation</title>
+      
+      
+      
+      
+    
+    <meta property="og:url" content="None">
+    <meta property="og:title" content="SiVa - Validation Service Documentation">
+    <meta property="og:image" content="None/../../">
+    <meta name="apple-mobile-web-app-title" content="SiVa - Validation Service Documentation">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    
+    <link rel="shortcut icon" type="image/x-icon" href="../../None">
+    <link rel="icon" type="image/x-icon" href="../../None">
+    <style>
+      @font-face {
+      	font-family: 'Icon';
+      	src: url('../../assets/fonts/icon.eot?52m981');
+      	src: url('../../assets/fonts/icon.eot?#iefix52m981')
+               format('embedded-opentype'),
+      		   url('../../assets/fonts/icon.woff?52m981')
+               format('woff'),
+      		   url('../../assets/fonts/icon.ttf?52m981')
+               format('truetype'),
+      		   url('../../assets/fonts/icon.svg?52m981#icon')
+               format('svg');
+      	font-weight: normal;
+      	font-style: normal;
+      }
+    </style>
+    <link rel="stylesheet" href="../../assets/stylesheets/application-54f87043f3.css">
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/palettes-05ab2406df.css">
+    
+    
+      
+      
+      
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
+      <style>
+        body, input {
+          font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
+        }
+        pre, code {
+          font-family: 'Roboto Mono', 'Courier New', 'Courier', monospace;
+        }
+      </style>
+    
+    
+      <link rel="stylesheet" href="../../override.css">
+    
+    <script src="../../assets/javascripts/modernizr-4ab42b99fd.js"></script>
+    
+  </head>
+  
+  
+  
+  <body class="palette-primary-light-green palette-accent-lime">
+    
+      
+      
+    
+    <div class="backdrop">
+      <div class="backdrop-paper"></div>
+    </div>
+    <input class="toggle" type="checkbox" id="toggle-drawer">
+    <input class="toggle" type="checkbox" id="toggle-search">
+    <label class="toggle-button overlay" for="toggle-drawer"></label>
+    <header class="header">
+      <nav aria-label="Header">
+  <div class="bar default">
+    <div class="button button-menu" role="button" aria-label="Menu">
+      <label class="toggle-button icon icon-menu" for="toggle-drawer">
+        <span></span>
+      </label>
+    </div>
+    <div class="stretch">
+      <div class="title">
+        
+          <span class="path">
+            
+          </span>
+        
+        Test Plan
+      </div>
+    </div>
+    
+    
+    <div class="button button-search" role="button" aria-label="Search">
+      <label class="toggle-button icon icon-search" title="Search" for="toggle-search"></label>
+    </div>
+  </div>
+  <div class="bar search">
+    <div class="button button-close" role="button" aria-label="Close">
+      <label class="toggle-button icon icon-back" for="toggle-search"></label>
+    </div>
+    <div class="stretch">
+      <div class="field">
+        <input class="query" type="text" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck>
+      </div>
+    </div>
+    <div class="button button-reset" role="button" aria-label="Search">
+      <button class="toggle-button icon icon-close" id="reset-search"></button>
+    </div>
+  </div>
+</nav>
+    </header>
+    <main class="main">
+      
+      <div class="drawer">
+        <nav aria-label="Navigation">
+  
+  <a href="https://github.com/open-eid/SiVa" class="project">
+    <div class="banner">
+      
+      <div class="name">
+        <strong>
+          SiVa - Validation Service Documentation
+          <span class="version">
+            
+          </span>
+        </strong>
+        
+          <br>
+          open-eid/SiVa
+        
+      </div>
+    </div>
+  </a>
+  <div class="scrollable">
+    <div class="wrapper">
+      
+        <ul class="repo">
+          <li class="repo-download">
+            
+            <a href="https://github.com/open-eid/SiVa/archive/master.zip" target="_blank" title="Download" data-action="download">
+              <i class="icon icon-download"></i> Download
+            </a>
+          </li>
+          <li class="repo-stars">
+            <a href="https://github.com/open-eid/SiVa/stargazers" target="_blank" title="Stargazers" data-action="star">
+              <i class="icon icon-star"></i> Stars
+              <span class="count">&ndash;</span>
+            </a>
+          </li>
+        </ul>
+        <hr>
+      
+      <div class="toc">
+        <ul>
+          
+            
+  <li>
+    <a class="" title="Introduction" href="../..">
+      Introduction
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Version info" href="../version_info/">
+      Version info
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Definitions" href="../definitions/">
+      Definitions
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="SiVa Service Overview" href="../overview/">
+      SiVa Service Overview
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Regulatory environment" href="../regulatory_environment/">
+      Regulatory environment
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Component diagram" href="../component_diagram/">
+      Component diagram
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Deployment view" href="../deployment_view/">
+      Deployment view
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Interfaces" href="../interface_description/">
+      Interfaces
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Database schema" href="../database_schema/">
+      Database schema
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Use cases" href="../use_cases/">
+      Use cases
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Deployment" href="../deployment/">
+      Deployment
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Logging" href="../logging/">
+      Logging
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="References" href="../references/">
+      References
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="current" title="Test Plan" href="./">
+      Test Plan
+    </a>
+    
+      
+        
+      
+      
+        <ul>
+          
+            <li class="anchor">
+              <a title="Integration Test introduction" href="#integration-test-introduction">
+                Integration Test introduction
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Testing of REST API" href="#testing-of-rest-api">
+                Testing of REST API
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Testing of SOAP API" href="#testing-of-soap-api">
+                Testing of SOAP API
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Testing of DDOC signature validation" href="#testing-of-ddoc-signature-validation">
+                Testing of DDOC signature validation
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Testing of BDOC signature validation" href="#testing-of-bdoc-signature-validation">
+                Testing of BDOC signature validation
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Testing of PDF signature validation" href="#testing-of-pdf-signature-validation">
+                Testing of PDF signature validation
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Testing of X-Road ASICE signature validation" href="#testing-of-x-road-asice-signature-validation">
+                Testing of X-Road ASICE signature validation
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="System Test introduction" href="#system-test-introduction">
+                System Test introduction
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="SiVa Sample Application tests" href="#siva-sample-application-tests">
+                SiVa Sample Application tests
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="X-Road Application tests" href="#x-road-application-tests">
+                X-Road Application tests
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Performance Test introduction" href="#performance-test-introduction">
+                Performance Test introduction
+              </a>
+            </li>
+          
+        </ul>
+      
+    
+  </li>
+
+          
+            
+  <li>
+    <span class="section">Appendixes</span>
+    <ul>
+      
+        
+  <li>
+    <a class="" title="Appendix 1 - Non-Functional Requirements" href="../appendix/none_functional_requirements/">
+      Appendix 1 - Non-Functional Requirements
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="Appendix 2 - Functional Requirements" href="../appendix/functional_requirements/">
+      Appendix 2 - Functional Requirements
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="Appendix 3 - Validation Policy" href="../appendix/validation_policy/">
+      Appendix 3 - Validation Policy
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="Appendix 4 - Validation Constraint Configuration" href="../appendix/validation_constraints/">
+      Appendix 4 - Validation Constraint Configuration
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="Appendix 5 - Test Case Descriptions" href="../appendix/test_cases/">
+      Appendix 5 - Test Case Descriptions
+    </a>
+    
+  </li>
+
+      
+    </ul>
+  </li>
+
+          
+        </ul>
+        
+      </div>
+    </div>
+  </div>
+</nav>
+      </div>
+      <article class="article">
+        <div class="wrapper">
+          
+          <div class="admonition development">
+<p class="admonition-title">Development</p>
+<p><strong> Unclear items that are not yet present in the plan </strong></p>
+<ul>
+<li>Testing of logs</li>
+<li>Testing of user statistics</li>
+<li>Testing of signing the validation report</li>
+<li>Configuration/administration of the service</li>
+<li>SOAP API testing</li>
+<li>System Testing of X-Road service</li>
+<li>Performance testing</li>
+</ul>
+</div>
+<h1 id="siva-test-plan">SiVa Test Plan</h1>
+<p>This is living document and will be constantly updated as the project evolves. The aim of the document is to describe what is tested during SiVa Web Apllication development.</p>
+<h2 id="integration-test-introduction">Integration Test introduction</h2>
+<p>Overview of the SiVa (Signature Validation) web service can be found in the <a href="../../siva/overview/">Overview</a> section of the document.</p>
+<p>This section of the document gives overview of Integration Testing carried out on SiVa web service.</p>
+<p>Integration testing is using RestAssured library v2.5.0 to implement automatic checks for REST/SOAP based tests.</p>
+<p>The testing of the SiVa web service is divided into sections based on the software architecture and functionalities provided to the users. The sections are:</p>
+<ul>
+<li>REST API</li>
+<li>SOAP API</li>
+<li>DDOC signature validation</li>
+<li>BDOC signature validation</li>
+<li>PDF signature validation</li>
+<li>X-Road ASICE signature validation</li>
+</ul>
+<p>The goal is to focus testing on functionalities implemented in SiVa application. Functionalities provided by <a href="../../siva/overview/#validation-libraries">Validation libraries</a> are not explicitly tested.</p>
+<h2 id="testing-of-rest-api">Testing of REST API</h2>
+<p>The goal of the REST API testing is to check that the API is accepting the requests based on the specification and the output result (Validation Report) is in correct format and has all the required elements.</p>
+<h3 id="validation-rest-api-tests">Validation REST API tests</h3>
+<p>Following areas are tested on input:</p>
+<ul>
+<li>Wrong (not accepted) values in input parameters</li>
+<li>Empty values in input paramters</li>
+<li>Too many parameters</li>
+<li>Too few parameters</li>
+<li>Inconsistencies on stated parameters and actual data (wrong document type)</li>
+<li>Case insensitivity on parameter names</li>
+<li>Empty request</li>
+<li>Simultaneous validation requests</li>
+</ul>
+<p>In all of the negative cases correctness of returned error message is checked.</p>
+<p>Specific test cases and input files can be found in <a href="../../siva/appendix/test_cases/">Appendix 5 - Test Case Descriptions</a></p>
+<h3 id="validation-report-tests">Validation Report tests</h3>
+<p>SiVa web service returns uniform Validation Report on all the supported document types. This also includes correct document types without actual signature (for example PDF document without signature).</p>
+<p>Following areas are tested on output (Validation Report):</p>
+<ul>
+<li>JSON structure on DDOC, BDOC, PDF and ASICE document types</li>
+<li>Presence of the mandatory elements on DDOC, BDOC, PDF and ASICE document types</li>
+<li>Presence of optional elements on DDOC, BDOC, PDF and ASICE document types</li>
+<li>JSON structure on containers without signatures</li>
+</ul>
+<p><strong>What is not tested:</strong></p>
+<ul>
+<li>Correctness of the values in the report is not in scope on these tests</li>
+</ul>
+<h2 id="testing-of-soap-api">Testing of SOAP API</h2>
+<div class="admonition development">
+<p class="admonition-title">Development</p>
+<p>Will be covered when SOAP API is implemented</p>
+</div>
+<h2 id="testing-of-ddoc-signature-validation">Testing of DDOC signature validation</h2>
+<p>The goal of the DDOC signature validation testing is to check that the validation results given by JDigiDoc library are properly presented in validation report.</p>
+<p>The testing of DDOC signatures consists of following main cases:</p>
+<ul>
+<li>Containers with valid signature(s) are validated.</li>
+<li>Containers with invalid signature(s) or no signature are validated</li>
+<li>Containers sizes near maximum are validated</li>
+<li>Containers with DDOC v1.0 - 1.3 are validated</li>
+</ul>
+<p>Specific test cases and input files can be found in <a href="../../siva/appendix/test_cases/">Appendix 5 - Test Case Descriptions</a></p>
+<p><strong>What is not tested:</strong></p>
+<ul>
+<li>Verification of different causes in container for invalid result is out of scope.</li>
+</ul>
+<div class="admonition development">
+<p class="admonition-title">Development</p>
+<p>Insert links to JDOC repos where these were tested.</p>
+</div>
+<h2 id="testing-of-bdoc-signature-validation">Testing of BDOC signature validation</h2>
+<p>The goal of the BDOC signature validation testing is to check that the validation results given by DigiDoc4J library are properly presented in validation report.</p>
+<p>The testing of BDOC signatures consists of following main cases:</p>
+<ul>
+<li>Containers with valid signature(s) are validated (how many signatures are acceptable?)</li>
+<li>Containers with invalid signature(s) or no signature are validated</li>
+<li>Containers sizes near maximum are validated</li>
+</ul>
+<p>Specific test cases and input files can be found in <a href="../../siva/appendix/test_cases/">Appendix 5 - Test Case Descriptions</a></p>
+<p><strong>What is not tested:</strong></p>
+<ul>
+<li>Verification of different causes in container for invalid result is out of scope.</li>
+</ul>
+<div class="admonition development">
+<p class="admonition-title">Development</p>
+<p>Insert links where Digidoc4J repos where these were tested.</p>
+</div>
+<h2 id="testing-of-pdf-signature-validation">Testing of PDF signature validation</h2>
+<p>Portion of the validation rules for PDF documents are implemented in SiVa web apllication itself. Therefor different test area selection is used for PDF compared to other containers.</p>
+<p>The testing of PDF signatures consists of following main cases:</p>
+<ul>
+<li>Containers with invalid signature(s) (different reasons for failure) are validated</li>
+<li>Containers with no signature are validated</li>
+<li>Containers sizes near maximum are validated</li>
+<li>Containers with different baseline profiles are validated</li>
+<li>Containers with serial and parallel signatures are validated</li>
+<li>Containers with different signature cryptocaphic algorithms are validated</li>
+<li>Containers with OCSP values inside and outside bounds are validated</li>
+</ul>
+<h2 id="testing-of-x-road-asice-signature-validation">Testing of X-Road ASICE signature validation</h2>
+<p>The goal of the ASICE signature validation testing is to check that the validation results given by X-Road signature validation utility are properly presented in validation report.</p>
+<p>It is possible to validate ASICE containers both via SOAP and REST interface. The same test cases are used for both interfaces.</p>
+<p>The testing of ASICE signatures consists of following main cases:</p>
+<ul>
+<li>Containers with valid signature(s) are validated</li>
+<li>Containers with invalid signature(s) and no signature are validated</li>
+<li>Containers sizes near maximum are validated</li>
+</ul>
+<p>Specific test cases and input files can be found in <a href="../../siva/appendix/test_cases/">Appendix 5 - Test Case Descriptions</a></p>
+<p><strong>What is not tested:</strong></p>
+<ul>
+<li>Verification of different causes in container for invalid result is out of scope.</li>
+</ul>
+<h2 id="system-test-introduction">System Test introduction</h2>
+<div class="admonition development">
+<p class="admonition-title">Development</p>
+<p>Will be covered before System Test start</p>
+</div>
+<p>While Integration Tests were carried out automatically then System Testing will be done manually.</p>
+<p>System testing is carried out using two access points:</p>
+<ul>
+<li>Testing through SiVa Sample Application</li>
+<li>Testing through X-Road Security Server</li>
+</ul>
+<p>The goal is to test the whole validation process.</p>
+<h2 id="siva-sample-application-tests">SiVa Sample Application tests</h2>
+<p>In addition to testing the service as such SiVa Sample Application itself is tested. The main cases are:</p>
+<ul>
+<li>Cross browser usage (IE, Edge, Chrome, Firefox and Safari)</li>
+<li>File upload (different sizes, suported and unsupported file types)</li>
+<li>Displayment of Validation Report</li>
+</ul>
+<h2 id="x-road-application-tests">X-Road Application tests</h2>
+<div class="admonition development">
+<p class="admonition-title">Development</p>
+<p>Will be covered on System Test phase</p>
+</div>
+<h2 id="performance-test-introduction">Performance Test introduction</h2>
+<div class="admonition development">
+<p class="admonition-title">Development</p>
+<p>Will be defined on Performance Testing phase</p>
+</div>
+          <aside class="copyright" role="note">
+            
+            Documentation built with
+            <a href="http://www.mkdocs.org" target="_blank">MkDocs</a>
+            using the
+            <a href="http://squidfunk.github.io/mkdocs-material/" target="_blank">
+              Material
+            </a>
+            theme.
+          </aside>
+          
+            <footer class="footer">
+              
+  <nav class="pagination" aria-label="Footer">
+    <div class="previous">
+      
+        <a href="../references/" title="References">
+          <span class="direction">
+            Previous
+          </span>
+          <div class="page">
+            <div class="button button-previous" role="button" aria-label="Previous">
+              <i class="icon icon-back"></i>
+            </div>
+            <div class="stretch">
+              <div class="title">
+                References
+              </div>
+            </div>
+          </div>
+        </a>
+      
+    </div>
+    <div class="next">
+      
+        <a href="../appendix/none_functional_requirements/" title="Appendix 1 - Non-Functional Requirements">
+          <span class="direction">
+            Next
+          </span>
+          <div class="page">
+            <div class="stretch">
+              <div class="title">
+                Appendix 1 - Non-Functional Requirements
+              </div>
+            </div>
+            <div class="button button-next" role="button" aria-label="Next">
+              <i class="icon icon-forward"></i>
+            </div>
+          </div>
+        </a>
+      
+    </div>
+  </nav>
+
+            </footer>
+          
+        </div>
+      </article>
+      <div class="results" role="status" aria-live="polite">
+        <div class="scrollable">
+          <div class="wrapper">
+            <div class="meta"></div>
+            <div class="list"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script>
+      var base_url = '../..';
+      var repo_id  = 'open-eid/SiVa';
+    </script>
+    <script src="../../assets/javascripts/application-997097ee0c.js"></script>
+    
+    
+  </body>
+</html>

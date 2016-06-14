@@ -21,9 +21,9 @@ public class TSLLoader {
 
     private TSLValidationJob tslValidationJob;
 
-    private TrustedListsCertificateSource trustedListSource;
-
     private TSLLoaderConfigurationProperties configurationProperties;
+
+    private TrustedListsCertificateSource trustedListSource;
 
     private KeyStoreCertificateSource keyStoreCertificateSource;
 
@@ -65,11 +65,6 @@ public class TSLLoader {
     }
 
     @Autowired
-    public void setTrustedListsCertificateSource(TrustedListsCertificateSource trustedListSource) {
-        this.trustedListSource = trustedListSource;
-    }
-
-    @Autowired
     public void setTslLoaderConfigurationProperties(TSLLoaderConfigurationProperties configurationProperties) {
         this.configurationProperties = configurationProperties;
     }
@@ -77,6 +72,11 @@ public class TSLLoader {
     @Autowired
     public void setKeyStoreCertificateSource(KeyStoreCertificateSource keyStoreCertificateSource) {
         this.keyStoreCertificateSource = keyStoreCertificateSource;
+    }
+
+    @Autowired
+    public void setTrustedListsCertificateSource(TrustedListsCertificateSource trustedListSource) {
+        this.trustedListSource = trustedListSource;
     }
 
 }

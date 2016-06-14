@@ -21,11 +21,6 @@ public class CustomCertificatesLoader {
 
     private TrustedListsCertificateSource trustedListSource;
 
-    @Autowired
-    public void setTrustedListsCertificateSource(TrustedListsCertificateSource trustedListSource) {
-        this.trustedListSource = trustedListSource;
-    }
-
     @PostConstruct
     public void init() {
         loadEstonianTestCertificates(trustedListSource);
@@ -256,6 +251,11 @@ public class CustomCertificatesLoader {
         serviceInfo.setType("http://uri.etsi.org/TrstSvc/Svctype/OCSP/QC");
         serviceInfo.setStatusStartDate(certToken.getCertificate().getNotBefore());
         return serviceInfo;
+    }
+
+    @Autowired
+    public void setTrustedListsCertificateSource(TrustedListsCertificateSource trustedListSource) {
+        this.trustedListSource = trustedListSource;
     }
 
 }

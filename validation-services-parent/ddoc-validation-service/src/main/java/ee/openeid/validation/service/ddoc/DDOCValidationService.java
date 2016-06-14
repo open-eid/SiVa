@@ -54,6 +54,7 @@ public class DDOCValidationService implements ValidationService {
         synchronized (lock) {
             SignedDoc signedDoc;
 
+            //TODO: Why are we not using initialization errors? VAL-257
             List<DigiDocException> signedDocInitializationErrors = new ArrayList<>();
 
             try {

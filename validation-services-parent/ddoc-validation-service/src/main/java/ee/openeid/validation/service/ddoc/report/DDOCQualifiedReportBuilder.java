@@ -126,6 +126,9 @@ public class DDOCQualifiedReportBuilder {
     @SuppressWarnings("unchecked")
     private List<SignatureScope> getSignatureScopes() {
         List<DataFile> dataFiles = signedDoc.getDataFiles();
+        if (dataFiles == null) {
+            return Collections.emptyList();
+        }
         return dataFiles
                 .stream()
                 .map(this::mapDataFile)

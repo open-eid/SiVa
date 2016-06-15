@@ -34,7 +34,7 @@ public class TSLLoader {
     }
 
     private void initTslValidatonJob() {
-        TSLValidationJob tslValidationJob = new TSLValidationJob();
+        tslValidationJob = new TSLValidationJob();
         tslValidationJob.setDataLoader(new CommonsDataLoader());
         TSLRepository tslRepository = new TSLRepository();
         tslRepository.setTrustedListsCertificateSource(trustedListSource);
@@ -44,7 +44,6 @@ public class TSLLoader {
         tslValidationJob.setDssKeyStore(keyStoreCertificateSource);
         tslValidationJob.setCheckLOTLSignature(true);
         tslValidationJob.setCheckTSLSignatures(true);
-        this.tslValidationJob = tslValidationJob;
     }
 
     private void loadTSL() {

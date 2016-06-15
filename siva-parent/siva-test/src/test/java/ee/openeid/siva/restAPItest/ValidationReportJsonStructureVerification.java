@@ -258,7 +258,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      * File: hellopades-lt-b.pdf
      *
      ***/
-    @Test @Ignore //TODO: VAL-202
+    @Test
     public void PdfAllElementsArePresentInvalidSignature() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         post(validationRequestFor("hellopades-lt-b.pdf", "simple"))
@@ -281,7 +281,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      * File: hellopades-lt-rsa1024-sha1-expired.pdf
      *
      ***/
-    @Test @Ignore //TODO: VAL-202
+    @Test
     public void PdfAllElementsArePresentIndeterminateSignature() {
         setTestFilesDirectory("pdf/signing_certifacte_test_files/");
         post(validationRequestFor("hellopades-lt-rsa1024-sha1-expired.pdf", "simple"))

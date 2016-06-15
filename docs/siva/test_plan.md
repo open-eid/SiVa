@@ -7,7 +7,6 @@
     * Configuration/administration of the service
     * SOAP API testing
     * System Testing of X-Road service
-    * Performance testing
 
 # SiVa Test Plan
 
@@ -180,5 +179,26 @@ In addition to testing the service as such SiVa Sample Application itself is tes
 
 ## Performance Test introduction
 
-!!! development
-    Will be defined on Performance Testing phase
+Performance testing will be carried out on following environments:
+
+  * Local machine (processor: memory: )
+  * Amazon cloud? (processor: memory: )
+  * RIA test enviroment? (processor: memory: )
+
+Jmeter v2.13 is used to carry out the testing.
+
+The goal is to measure throughput-latency of the service with different file types and sizes. The performance testing is carried out on REST interface. SOAP interface is used only for one testrun for comparison between SOAP and REST interface. It is assessed that the interface itself does not have considerable impact on throughput or latency compared to the validation process.
+
+Following cases will be covered on all supported file types (BDOC, DDOC, ASICE, PDF) with steps of 5, 10, 20, 30, 50 and 60 requests per second:
+
+  * The service is loaded with valid under 1MB containers
+  * The service is loaded with valid around 5MB containers
+  * The service is loaded with valid near 10MB containers
+  * The service is loaded with valid containers with many (how many?) signatures
+  * The service is loaded with invalid signature under 1MB containers
+
+In addition, following case will be covered to simulate the real life enviroment with steps of 5, 10, 20, 30, 50 and 60 requests per second:
+
+  * The service is loaded with mixture of different file types and valid/invalid signatures
+
+These tests run for a X? hour/minutes each. The results are presented as throughput-latency graphs for each run.

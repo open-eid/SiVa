@@ -129,7 +129,7 @@ public class PdfBaselineProfileTests extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: DSS-SIG-MULTISIG
+     * RequirementID:
      *
      * Title: PDF file with a serial signature
      *

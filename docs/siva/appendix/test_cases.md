@@ -336,7 +336,7 @@ List of Test Cases
 **TestCaseID: PDF-BaselineProfile-7**
 
   * TestType: Automated
-  * RequirementID: [SS-SIG-MULTISIG](SS-SIG-MULTISIG)
+  * RequirementID: []()
   * Title: PDF file with a serial signature
   * Expected Result: Document signed with multiple signers with serial signatures should pass
   * File: hellopades-lt1-lt2-Serial.pdf
@@ -367,7 +367,7 @@ List of Test Cases
 **TestCaseID: PDF-SigCryptoAlg-1**
 
   * TestType: Automated
-  * RequirementID: [SS-CRY-ALGOEXP](SS-CRY-ALGOEXP)
+  * RequirementID: []()
   * Title: SHA512 algorithms (PAdES Baseline LT)
   * Expected Result: Document signed with SHA512 algorithm should pass
   * File: hellopades-lt-sha512.pdf
@@ -375,7 +375,7 @@ List of Test Cases
 **TestCaseID: PDF-SigCryptoAlg-2**
 
   * TestType: Automated
-  * RequirementID: [SS-CRY-ALGOEXP](SS-CRY-ALGOEXP)
+  * RequirementID: []()
   * Title: SHA1 algorithms (PAdES Baseline LT)
   * Expected Result: Document signed with SHA1 algorithm should pass
   * File: hellopades-lt-sha1.pdf
@@ -383,7 +383,7 @@ List of Test Cases
 **TestCaseID: PDF-SigCryptoAlg-3**
 
   * TestType: Automated
-  * RequirementID: [SS-CRY-ALGOEXP](SS-CRY-ALGOEXP)
+  * RequirementID: []()
   * Title: ECDSA algorithms (PAdES Baseline LT)
   * Expected Result: Document signed with ECDSA algorithm should pass
   * File: hellopades-ecdsa.pdf
@@ -393,7 +393,7 @@ List of Test Cases
 **TestCaseID: PDF-SigCryptoAlg-4**
 
   * TestType: Automated
-  * RequirementID: [SS-CRY-ALGOEXP](SS-CRY-ALGOEXP)
+  * RequirementID: []()
   * Title: ECDSA224 algorithms (PAdES Baseline LT)
   * Expected Result: Document signed with ECDSA224 algorithm should pass
   * File: hellopades-lt-sha256-ec224.pdf
@@ -401,7 +401,7 @@ List of Test Cases
 **TestCaseID: PDF-SigCryptoAlg-5**
 
   * TestType: Automated
-  * RequirementID: [SS-CRY-ALGOEXP](SS-CRY-ALGOEXP)
+  * RequirementID: []()
   * Title: ECDSA256 algorithms (PAdES Baseline LT)
   * Expected Result: Document signed with ECDSA256 algorithm should pass
   * File: hellopades-lt-sha256-ec256.pdf
@@ -409,7 +409,7 @@ List of Test Cases
 **TestCaseID: PDF-SigCryptoAlg-6**
 
   * TestType: Automated
-  * RequirementID: [SS-CRY-ALGOEXP](SS-CRY-ALGOEXP)
+  * RequirementID: []()
   * Title: RSA1024 algorithms (PAdES Baseline LT)
   * Expected Result: Document signed with RSA1024 algorithm should pass
   * File: hellopades-lt-sha256-rsa1024.pdf
@@ -419,7 +419,7 @@ List of Test Cases
 **TestCaseID: PDF-SigCryptoAlg-7**
 
   * TestType: Automated
-  * RequirementID: [SS-CRY-ALGOEXP](SS-CRY-ALGOEXP)
+  * RequirementID: []()
   * Title: RSA1023 algorithms (PAdES Baseline LT)
   * Expected Result: Document signed with RSA1023 algorithm should pass
   * File: hellopades-lt-sha256-rsa1023.pdf
@@ -429,7 +429,7 @@ List of Test Cases
 **TestCaseID: PDF-SigCryptoAlg-8**
 
   * TestType: Automated
-  * RequirementID: [SS-CRY-ALGOEXP](SS-CRY-ALGOEXP)
+  * RequirementID: []()
   * Title: RSA2047 algorithms (PAdES Baseline LT)
   * Expected Result: Document signed with RSA2047 algorithm should pass
   * File: hellopades-lt-sha256-rsa2047.pdf
@@ -439,7 +439,7 @@ List of Test Cases
 **TestCaseID: PDF-SigCryptoAlg-9**
 
   * TestType: Automated
-  * RequirementID: [SS-CRY-ALGOEXP](SS-CRY-ALGOEXP)
+  * RequirementID: []()
   * Title: RSA2048 algorithms (PAdES Baseline LT)
   * Expected Result: Document signed with RSA2048 algorithm should pass
   * File: PdfValidSingleSignature
@@ -562,7 +562,7 @@ List of Test Cases
 **TestCaseID: PDF-SigRevocVal-1**
 
   * TestType: Automated
-  * RequirementID: [SS-SIG-OCSP-TS-WARN](SS-SIG-OCSP-TS-WARN)
+  * RequirementID: []()
   * Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation that is more than 15 minutes later than the signatures Time Stamp.
   * Expected Result: Document with ocsp over 15 min delay should pass but warn
   * File: hellopades-lt-sha256-ocsp-15min1s.pdf
@@ -570,7 +570,7 @@ List of Test Cases
 **TestCaseID: PDF-SigRevocVal-2**
 
   * TestType: Automated
-  * RequirementID: [SS-SIG-OCSP-TS-WARN](SS-SIG-OCSP-TS-WARN)
+  * RequirementID: []()
   * Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation that is more than 15 minutes later than the signatures Time Stamp.
   * Expected Result: Document with ocsp over 15 min delay should pass but warn
   * File: hellopades-lt-sha256-ocsp-15min1s.pdf
@@ -580,7 +580,7 @@ List of Test Cases
 **TestCaseID: PDF-SigRevocVal-3**
 
   * TestType: Automated
-  * RequirementID: [SS-SIG-OCSP-TS-ERROR](SS-SIG-OCSP-TS-ERROR)
+  * RequirementID: []()
   * Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation more than 24 hours later than the signatures Time Stamp.
   * Expected Result: Document with over 24h delay should fail
   * File: hellopades-lt-sha256-ocsp-28h.pdf
@@ -588,7 +588,7 @@ List of Test Cases
 **TestCaseID: PDF-SigRevocVal-4**
 
   * TestType: Automated
-  * RequirementID: [SS-SIG-OCSP-TS-ERROR](SS-SIG-OCSP-TS-ERROR)
+  * RequirementID: []()
   * Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation more than 24 hours later than the signatures Time Stamp.
   * Expected Result: Document with over 24h delay should fail
   * File: hellopades-lt-sha256-ocsp-28h.pdf
@@ -700,8 +700,6 @@ List of Test Cases
   * Expected Result: All required elements are present according to SimpleReportSchema.json
   * File: hellopades-lt-b.pdf
 
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
 **TestCaseID: Pdf-ValidationReport-11**
 
   * TestType: Automated
@@ -709,8 +707,6 @@ List of Test Cases
   * Title: JSON structure has all elements (Pdf indeterminate status)
   * Expected Result: All required elements are present according to SimpleReportSchema.json
   * File: hellopades-lt-rsa1024-sha1-expired.pdf
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: Pdf-ValidationReport-12**
 

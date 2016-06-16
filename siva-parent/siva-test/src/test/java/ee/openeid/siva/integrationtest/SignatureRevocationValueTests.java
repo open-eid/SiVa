@@ -16,7 +16,7 @@ public class SignatureRevocationValueTests extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: DSS-SIG-OCSP-TS-WARN
+     * RequirementID:
      *
      * Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation that is more than 15 minutes later than the signatures Time Stamp.
      *
@@ -34,7 +34,7 @@ public class SignatureRevocationValueTests extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: DSS-SIG-OCSP-TS-WARN
+     * RequirementID:
      *
      * Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation that is more than 15 minutes later than the signatures Time Stamp.
      *
@@ -53,7 +53,7 @@ public class SignatureRevocationValueTests extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: DSS-SIG-OCSP-TS-ERROR
+     * RequirementID:
      *
      * Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation more than 24 hours later than the signatures Time Stamp.
      *
@@ -71,7 +71,7 @@ public class SignatureRevocationValueTests extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: DSS-SIG-OCSP-TS-ERROR
+     * RequirementID:
      *
      * Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation more than 24 hours later than the signatures Time Stamp.
      *

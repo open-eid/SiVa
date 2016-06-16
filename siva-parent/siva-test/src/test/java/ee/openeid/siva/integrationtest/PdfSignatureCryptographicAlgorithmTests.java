@@ -28,7 +28,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: DSS-CRY-ALGOEXP
+     * RequirementID:
      *
      * Title: SHA512 algorithms (PAdES Baseline LT)
      *
@@ -46,7 +46,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: DSS-CRY-ALGOEXP
+     * RequirementID:
      *
      * Title: SHA1 algorithms (PAdES Baseline LT)
      *
@@ -64,7 +64,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: DSS-CRY-ALGOEXP
+     * RequirementID:
      *
      * Title: ECDSA algorithms (PAdES Baseline LT)
      *
@@ -83,7 +83,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: DSS-CRY-ALGOEXP
+     * RequirementID:
      *
      * Title: ECDSA224 algorithms (PAdES Baseline LT)
      *
@@ -101,7 +101,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: DSS-CRY-ALGOEXP
+     * RequirementID:
      *
      * Title: ECDSA256 algorithms (PAdES Baseline LT)
      *
@@ -119,7 +119,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: DSS-CRY-ALGOEXP
+     * RequirementID:
      *
      * Title: RSA1024 algorithms (PAdES Baseline LT)
      *
@@ -137,7 +137,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: DSS-CRY-ALGOEXP
+     * RequirementID:
      *
      * Title: RSA1023 algorithms (PAdES Baseline LT)
      *
@@ -155,7 +155,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: DSS-CRY-ALGOEXP
+     * RequirementID:
      *
      * Title: RSA2047 algorithms (PAdES Baseline LT)
      *
@@ -173,7 +173,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: DSS-CRY-ALGOEXP
+     * RequirementID:
      *
      * Title: RSA2048 algorithms (PAdES Baseline LT)
      *

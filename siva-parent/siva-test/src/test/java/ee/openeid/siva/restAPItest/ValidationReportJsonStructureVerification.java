@@ -167,6 +167,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      ***/
     @Test
     public void BdocOptionalWarningElementIsPresent() {
+        setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc", "simple"))
                 .then()
                 .body("signatures.indication", Matchers.hasItem("TOTAL-PASSED"))

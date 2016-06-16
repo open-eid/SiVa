@@ -775,6 +775,41 @@ List of Test Cases
   * File: DdocContainerNoSignature.ddoc
 
 
+## ValidationReportValueVerification.java
+
+**TestCaseID: Bdoc-ValidationReportValue-1**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of values in Validation Report XAdES_BASELINE_LT_TM, QES, FullSignatureScope
+  * Expected Result: All required elements are present and meet the expected values.
+  * File: Valid_ID_sig.bdoc
+
+**TestCaseID: Bdoc-ValidationReportValue-2**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of values in Validation Report XAdES_BASELINE_LT, QES, FullSignatureScope
+  * Expected Result: All required elements are present and meet the expected values.
+  * File: 23635_bdoc_ts_OCSP_random_nonce.bdoc
+
+**TestCaseID: Bdoc-ValidationReportValue-3**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of values in Validation Report XAdES_BASELINE_LT, AdES, FullSignatureScope
+  * Expected Result: All required elements are present and meet the expected values.
+  * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
+
+**TestCaseID: Bdoc-ValidationReportValue-4**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of values in Validation Report XAdES_BASELINE_LT_TM, AdESqc, FullSignatureScope
+  * Expected Result: All required elements are present and meet the expected values.
+  * File: ICT_MoU_FI-EE_10dec2013OneSignature.bdoc
+
+
 ## ValidationRequestTests.java
 
 **TestCaseID: ValidationRequest-1**

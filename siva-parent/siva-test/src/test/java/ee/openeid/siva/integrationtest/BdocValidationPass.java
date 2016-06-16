@@ -1,7 +1,10 @@
 package ee.openeid.siva.integrationtest;
 
+import com.jayway.restassured.RestAssured;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -11,8 +14,25 @@ import static org.junit.Assert.assertTrue;
 
 @Category(IntegrationTest.class)
 public class BdocValidationPass extends SiVaRestTests{
+    @Before
+    public void DirectoryBackToDefault() {
+        setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
+    }
 
-    private static final String TEST_FILES_DIRECTORY = "bdoc/live/timemark/";
+    @BeforeClass
+    public static void oneTimeSetUp() {
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+    }
+
+
+    private static final String DEFAULT_TEST_FILES_DIRECTORY = "bdoc/live/timemark/";
+
+    private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
+
+    public void setTestFilesDirectory(String testFilesDirectory) {
+        this.testFilesDirectory = testFilesDirectory;
+    }
+
 
     /***
      * TestCaseID: Bdoc-ValidationPass-1
@@ -65,6 +85,7 @@ public class BdocValidationPass extends SiVaRestTests{
      ***/
     @Test
     public void validSignatureWithWarning() {
+        setTestFilesDirectory("bdoc/test/timemark/");
         QualifiedReport report = postForReport("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc");
         assertEquals(report.getSignaturesCount(), report.getValidSignaturesCount());
         assertTrue(report.getSignatures().get(0).getWarnings().size() > 0);
@@ -72,6 +93,6 @@ public class BdocValidationPass extends SiVaRestTests{
 
     @Override
     protected String getTestFilesDirectory() {
-        return TEST_FILES_DIRECTORY;
+        return testFilesDirectory;
     }
 }

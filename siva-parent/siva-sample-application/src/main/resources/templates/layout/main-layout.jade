@@ -2,9 +2,10 @@ html
     head
         title SiVa Demo application
         link(rel="stylesheet", href="/webjars/bootstrap/4.0.0-alpha.2/dist/css/bootstrap.css")
+        link(rel="stylesheet", href="/webjars/dropzone/4.2.0/dropzone.css")
+        link(rel="stylesheet", href="/webjars/highlightjs/9.4.0/styles/dark.css")
         link(rel="stylesheet", href="/css/desert.css")
         link(rel="stylesheet", href="/css/custom.css")
-        script(src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js")
     body
         nav.navbar.navbar-fixed-top.navbar-dark.bg-inverse
             a.navbar-brand(href="/") SiVa Sample Application
@@ -12,3 +13,7 @@ html
             .row
                 .col-md-12.col-lg-12
                     block content
+        script(src="/webjars/jquery/2.0.0/jquery.js")
+        script(src="/webjars/dropzone/4.2.0/dropzone.js")
+        script(src="/webjars/highlightjs/9.4.0/highlight.pack.js")
+        script(src="/js/custom.js")

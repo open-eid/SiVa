@@ -5,6 +5,7 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import ee.openeid.siva.sample.ci.info.BuildInfo;
 import ee.openeid.siva.sample.siva.SivaValidationService;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,7 @@ public class UploadControllerTest {
     private FileUploadService fileUploadService;
 
     @Test
+    @Ignore
     public void displayStartPageCheckPresenceOfUploadForm() throws Exception {
         final HtmlPage startPage = webClient.getPage("/");
 

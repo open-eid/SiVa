@@ -5,23 +5,20 @@ block content
     .row
         .col-md-12
             h1 Upload a digitally signed file
-            form(action="/upload", method="POST", enctype="multipart/form-data")
+            form#siva-dropzone.dropzone(action="/upload", method="POST", enctype="multipart/form-data")
                 .form-group
-                    input(type="file", name="file")
-                .form-group
-                    button(type="submit")#validate-btn.btn.btn-primary Validate
-    if overallValidationResult != null && !documentName.isEmpty()
-        .row
-            .col-md-12
-                h1 Overall validation result
-                p Document&nbsp;
-                    strong= documentName
-                    |&nbsp;is&nbsp;
-                    strong(class="validation-result "  + overallValidationResult.toLowerCase())= overallValidationResult
-    .row
+                    input.hide(type="file", name="file")
+    .row.hide#validation-summery
+        .col-md-12
+            h1 Overall validation result
+            p Document&nbsp;
+                strong#document-name
+                |&nbsp;is&nbsp;
+                strong#overall-validation-result.validation-result
+    .row.hide#result-area
         .col-md-12
             h1 Validation report
-            if validationResult != null
-                pre.prettyprint= validationResult
+            pre
+                code.json#validation-report
     +footerBuildInfo
 

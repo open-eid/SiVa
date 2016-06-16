@@ -2,6 +2,10 @@ body {
     padding-top: 5rem;
 }
 
+.hide {
+    display: none;
+}
+
 .validation-result {
     font-size: 1.3em;
 }

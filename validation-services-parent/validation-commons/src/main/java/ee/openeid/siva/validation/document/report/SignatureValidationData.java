@@ -36,7 +36,7 @@ public class SignatureValidationData {
 
         private final String stringRepresentation;
 
-        private Indication(String stringRepresentation) {
+        Indication(String stringRepresentation) {
             this.stringRepresentation = stringRepresentation;
         }
 

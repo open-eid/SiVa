@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -24,7 +25,7 @@ import static ee.openeid.siva.sample.siva.ValidationReportUtils.getValidateFilen
 class UploadController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UploadController.class);
 
-    private static final String REDIRECT_PATH = "redirect:/";
+    private static final String REDIRECT_PATH = "redirect:/validation-response";
     private static final String START_PAGE_VIEW_NAME = "index";
 
     private SivaValidationService validationService;
@@ -35,6 +36,12 @@ class UploadController {
     public String startPage(final Model model) {
         model.addAttribute(buildInfo);
         return START_PAGE_VIEW_NAME;
+    }
+
+    @ResponseBody
+    @RequestMapping("/validation-response")
+    public ValidationResponse validationResponse(final Model model) {
+        return  (ValidationResponse) model.asMap().get("validationResponse");
     }
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
@@ -63,13 +70,16 @@ class UploadController {
     }
 
     private static void setModelFlashAttributes(final RedirectAttributes redirectAttributes, final String validationResult) {
-        redirectAttributes.addFlashAttribute("validationResult", new JSONObject(validationResult).toString(4));
-        redirectAttributes.addFlashAttribute("documentName", getValidateFilename(validationResult));
-        redirectAttributes.addFlashAttribute("overallValidationResult", getOverallValidationResult(validationResult));
+        final ValidationResponse response = new ValidationResponse();
+        response.setFilename(getValidateFilename(validationResult));
+        response.setOverAllValidationResult(getOverallValidationResult(validationResult));
+        response.setValidationResult(new JSONObject(validationResult).toString(4));
+
+        redirectAttributes.addFlashAttribute(response);
     }
 
     @Autowired
-    public void setBuildInfo(BuildInfo buildInfo) {
+    public void setBuildInfo(final BuildInfo buildInfo) {
         this.buildInfo = buildInfo;
     }
 

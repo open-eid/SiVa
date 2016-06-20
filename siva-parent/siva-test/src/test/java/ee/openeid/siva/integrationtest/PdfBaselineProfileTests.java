@@ -94,14 +94,14 @@ public class PdfBaselineProfileTests extends SiVaRestTests{
      *
      * RequirementID:
      *
-     * Title: The PDF has PAdES-LTA profile signature
+     * Title: The PDF has PAdES-LT and B profile signature
      *
-     * Expected Result: Document validation should pass
+     * Expected Result: Document validation should fail
      *
-     * File: some_file.pdf
+     * File: hellopades-lt-b.pdf
      */
     @Test
-    public void documentWithBaselineProfilesBAndLTASignaturesShouldPass() {
+    public void documentWithBaselineProfilesBAndLTSignaturesShouldFail() {
         QualifiedReport report = postForReport("hellopades-lt-b.pdf");
         assertSomeSignaturesAreValid(report, 1);
     }

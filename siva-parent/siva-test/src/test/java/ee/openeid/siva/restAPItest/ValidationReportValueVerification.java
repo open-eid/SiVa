@@ -6,6 +6,7 @@ import ee.openeid.siva.integrationtest.SiVaRestTests;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -70,7 +71,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      ***/
     @Test
-    public void BdocCorrectValuesArePresentInvalidLtSignature() {
+    public void BdocCorrectValuesArePresentValidLtSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("23635_bdoc_ts_OCSP_random_nonce.bdoc", "simple"))
                 .then()
@@ -97,7 +98,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      ***/
     @Test
-    public void BdocCorrectValuesArePresentInvalidLtSignatureAdes() {
+    public void BdocCorrectValuesArePresentValidLtSignatureAdes() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc", "simple"))
                 .then()
@@ -124,7 +125,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      ***/
     @Test
-    public void BdocCorrectValuesArePresentInvalidLtSignatureAdesqc() {
+    public void BdocCorrectValuesArePresentValidLtSignatureAdesqc() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("ICT_MoU_FI-EE_10dec2013OneSignature.bdoc", "simple"))
                 .then()
@@ -134,6 +135,148 @@ public class ValidationReportValueVerification extends SiVaRestTests{
                 .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"));
     }
+
+    /***
+     *
+     * TestCaseID: Bdoc-ValidationReportValue-5
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Verification of values in Validation Report XAdES_BASELINE_LTA, QES, FullSignatureScope
+     *
+     * Expected Result: All required elements are present and meet the expected values.
+     *
+     * File: EE_SER-AEX-B-LTA-V-24.pdf
+     *
+     ***/
+    @Test
+    public void BdocCorrectValuesArePresentInvalidLtSignatureAdesqc() {
+        setTestFilesDirectory("bdoc/live/timestamp/");
+        post(validationRequestFor("EE_SER-AEX-B-LTA-V-24.bdoc", "simple"))
+                .then()
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LTA"))
+                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"));
+    }
+
+    /***
+     *
+     * TestCaseID: Ddoc-ValidationReportValue-6
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Verification of values in Validation Report, xml v1.0, checks for missing info
+     *
+     * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
+     *
+     * File: ICT_MoU_FI-EE_10dec2013OneSignature.bdoc
+     *
+     ***/
+    @Test
+    public void DdocCorrectValuesArePresentV1_0() {
+        setTestFilesDirectory("ddoc/live/timemark/");
+        post(validationRequestFor("DigiDoc_1.0_Tartu_ja_Tallinna_koostooleping.ddoc", "simple"))
+                .then()
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"))
+                .body("signatures[0].signatureFormat", Matchers.is("SK_XML_1.0"))
+                .body("signatures[0].signatureLevel", Matchers.is(""))
+                .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
+                .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"));
+    }
+
+    /***
+     *
+     * TestCaseID: Ddoc-ValidationReportValue-7
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Verification of values in Validation Report, xml v1.1, checks for missing info
+     *
+     * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
+     *
+     * File: Igasugust1.1.ddoc
+     *
+     ***/
+    @Test
+    public void DdocCorrectValuesArePresentV1_1() {
+        setTestFilesDirectory("ddoc/live/timemark/");
+        post(validationRequestFor("Igasugust1.1.ddoc", "simple"))
+                .then()
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"))
+                .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.1"))
+                .body("signatures[0].signatureLevel", Matchers.is(""))
+                .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
+                .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"));
+    }
+
+    /***
+     *
+     * TestCaseID: Ddoc-ValidationReportValue-8
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Verification of values in Validation Report, xml v1.2, checks for missing info
+     *
+     * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
+     *
+     * File: Igasugust1.2.ddoc
+     *
+     ***/
+    @Test
+    public void DdocCorrectValuesArePresentV1_2() {
+        setTestFilesDirectory("ddoc/live/timemark/");
+        post(validationRequestFor("Igasugust1.2.ddoc", "simple"))
+                .then()
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"))
+                .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.2"))
+                .body("signatures[0].signatureLevel", Matchers.is(""))
+                .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
+                .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"));
+    }
+
+    /***
+     *
+     * TestCaseID: Ddoc-ValidationReportValue-9
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Verification of values in Validation Report, xml v1.3, checks for missing info
+     *
+     * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
+     *
+     * File: Igasugust1.3.ddoc
+     *
+     ***/
+    @Test
+    public void DdocCorrectValuesArePresentV1_3() {
+        setTestFilesDirectory("ddoc/live/timemark/");
+        post(validationRequestFor("Igasugust1.3.ddoc", "simple"))
+                .then()
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"))
+                .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("signatures[0].signatureLevel", Matchers.is(""))
+                .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
+                .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"));
+    }
+
 
     @Override
     protected String getTestFilesDirectory() {

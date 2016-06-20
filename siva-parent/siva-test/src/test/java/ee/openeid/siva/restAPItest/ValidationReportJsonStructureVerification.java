@@ -259,7 +259,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      * File: hellopades-lt-b.pdf
      *
      ***/
-    @Test
+    @Test @Ignore //TODO: VAL-242
     public void PdfAllElementsArePresentInvalidSignature() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         post(validationRequestFor("hellopades-lt-b.pdf", "simple"))
@@ -333,7 +333,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("18912.ddoc", "simple"))
                 .then()
-                .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"));
     }
 
     /***
@@ -356,7 +356,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("igasugust1.1.ddoc", "simple"))
                 .then()
-                .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"));
     }
 
     /***
@@ -379,7 +379,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("test1-ddoc-revoked.ddoc", "simple"))
                 .then()
-                .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"));
     }
 
     /***
@@ -402,7 +402,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("test1-ddoc-unknown.ddoc", "simple"))
                 .then()
-                .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"));
     }
 
     /***
@@ -428,7 +428,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
                 .body("signatures.indication", Matchers.hasItem("TOTAL-FAILED"))
                 .body("signatures.subIndication", Matchers.hasItem(""))
                 .body("signatures.errors.nameId[0]", Matchers.hasItem("70"))
-                .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"));
     }
 
     /***

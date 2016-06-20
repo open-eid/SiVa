@@ -319,9 +319,9 @@ List of Test Cases
 
   * TestType: Automated
   * RequirementID: []()
-  * Title: The PDF has PAdES-LTA profile signature
-  * Expected Result: Document validation should pass
-  * File: some_file.pdf
+  * Title: The PDF has PAdES-LT and B profile signature
+  * Expected Result: Document validation should fail
+  * File: hellopades-lt-b.pdf
 
 **TestCaseID: PDF-BaselineProfile-6**
 
@@ -700,6 +700,8 @@ List of Test Cases
   * Expected Result: All required elements are present according to SimpleReportSchema.json
   * File: hellopades-lt-b.pdf
 
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
 **TestCaseID: Pdf-ValidationReport-11**
 
   * TestType: Automated
@@ -808,6 +810,46 @@ List of Test Cases
   * Title: Verification of values in Validation Report XAdES_BASELINE_LT_TM, AdESqc, FullSignatureScope
   * Expected Result: All required elements are present and meet the expected values.
   * File: ICT_MoU_FI-EE_10dec2013OneSignature.bdoc
+
+**TestCaseID: Bdoc-ValidationReportValue-5**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of values in Validation Report XAdES_BASELINE_LTA, QES, FullSignatureScope
+  * Expected Result: All required elements are present and meet the expected values.
+  * File: EE_SER-AEX-B-LTA-V-24.pdf
+
+**TestCaseID: Ddoc-ValidationReportValue-6**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of values in Validation Report, xml v1.0, checks for missing info
+  * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
+  * File: ICT_MoU_FI-EE_10dec2013OneSignature.bdoc
+
+**TestCaseID: Ddoc-ValidationReportValue-7**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of values in Validation Report, xml v1.1, checks for missing info
+  * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
+  * File: Igasugust1.1.ddoc
+
+**TestCaseID: Ddoc-ValidationReportValue-8**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of values in Validation Report, xml v1.2, checks for missing info
+  * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
+  * File: Igasugust1.2.ddoc
+
+**TestCaseID: Ddoc-ValidationReportValue-9**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of values in Validation Report, xml v1.3, checks for missing info
+  * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
+  * File: Igasugust1.3.ddoc
 
 
 ## ValidationRequestTests.java

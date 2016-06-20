@@ -34,8 +34,7 @@
 			"minLength": 1
           },
           "signatureLevel": {
-            "type": "string",
-			"minLength": 1
+            "type": "string"
           },
           "warnings": {
             "type": "array",
@@ -64,8 +63,7 @@
 				  "minLength": 1
 				},
 				"scope": {
-				  "type": "string",
-				  "minLength": 1
+				  "type": "string"
 				}
 			  },
               "required": [
@@ -96,13 +94,10 @@
               "type": "object",
               "properties": {
                 "nameId": {
-                  "type": "string",
-				  "minLength": 1
-				  
+                  "type": "string"
                 },
                 "content": {
-                  "type": "string",
-				  "minLength": 1
+                  "type": "string"
                 }
               }
             }

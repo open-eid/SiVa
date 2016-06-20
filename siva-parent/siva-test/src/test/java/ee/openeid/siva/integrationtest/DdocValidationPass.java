@@ -41,7 +41,7 @@ public class DdocValidationPass extends SiVaRestTests{
      *
      * File: DigiDoc_1.0_Tartu_ja_Tallinna_koostooleping.ddoc
      ***/
-    @Test @Ignore //TODO: Travis fails the test, although in maven it passes
+    @Test @Ignore //TODO:  VAL-238 Travis fails the test, although in local machine it passes
     public void ddocValidMultipleSignaturesV1_0() {
         assertAllSignaturesAreValid(postForReport("DigiDoc_1.0_Tartu_ja_Tallinna_koostooleping.ddoc"));
     }

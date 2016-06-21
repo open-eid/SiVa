@@ -3,6 +3,7 @@ package ee.openeid.validation.service.bdoc.report;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
 import eu.europa.esig.dss.validation.report.Conclusion;
+import eu.europa.esig.dss.validation.report.SimpleReport;
 import org.apache.commons.lang.StringUtils;
 import org.apache.xml.security.signature.Reference;
 import org.digidoc4j.*;
@@ -28,6 +29,7 @@ public class BDOCQualifiedReportBuilder {
     private static final String XADES_FORMAT_PREFIX = "XAdES_BASELINE_";
     private static final String DSS_BASIC_INFO_NAME_ID = "NameId";
     private static final String REPORT_INDICATION_INDETERMINATE = "INDETERMINATE";
+    private static final String GREENWICH_MEAN_TIME = "Etc/GMT";
 
     private Container container;
     private String documentName;
@@ -83,7 +85,7 @@ public class BDOCQualifiedReportBuilder {
 
     private SimpleDateFormat getDateFormatterWithGMTZone() {
         SimpleDateFormat sdf = new SimpleDateFormat(DEFAULT_DATE_TIME_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        sdf.setTimeZone(TimeZone.getTimeZone(GREENWICH_MEAN_TIME));
         return sdf;
     }
 
@@ -92,14 +94,18 @@ public class BDOCQualifiedReportBuilder {
     }
 
     private String getSignatureLevel(BDocSignature bDocSignature) {
-        return bDocSignature.getDssValidationReport().getReport().getSimpleReport().getSignatureLevel(bDocSignature.getId()).name();
+        return getDssSimpleReport(bDocSignature).getSignatureLevel(bDocSignature.getId()).name();
+    }
+
+    private SimpleReport getDssSimpleReport(BDocSignature bDocSignature) {
+        return bDocSignature.getDssValidationReport().getReport().getSimpleReport();
     }
 
     private SignatureValidationData.Indication getIndication(BDocSignature bDocSignature) {
         SignatureValidationResult validationResult = bDocSignature.validateSignature();
         if (validationResult.isValid()) {
             return SignatureValidationData.Indication.TOTAL_PASSED;
-        } else if (REPORT_INDICATION_INDETERMINATE.equals(bDocSignature.getDssValidationReport().getReport().getSimpleReport().getIndication(bDocSignature.getId()))) {
+        } else if (REPORT_INDICATION_INDETERMINATE.equals(getDssSimpleReport(bDocSignature).getIndication(bDocSignature.getId()))) {
             return SignatureValidationData.Indication.INDETERMINATE;
         } else {
             return SignatureValidationData.Indication.TOTAL_FAILED;
@@ -110,7 +116,7 @@ public class BDOCQualifiedReportBuilder {
         if (getIndication(bDocSignature) == SignatureValidationData.Indication.TOTAL_PASSED) {
             return "";
         }
-        return emptyWhenNull(bDocSignature.getDssValidationReport().getReport().getSimpleReport().getSubIndication(bDocSignature.getId()));
+        return emptyWhenNull(getDssSimpleReport(bDocSignature).getSubIndication(bDocSignature.getId()));
     }
 
     private Info getInfo(BDocSignature bDocSignature) {
@@ -125,9 +131,9 @@ public class BDOCQualifiedReportBuilder {
     }
 
     private List<Warning> getWarnings(BDocSignature bDocSignature) {
-        List<Warning> warnings = bDocSignature.getDssValidationReport().getReport().getSimpleReport().getWarnings(bDocSignature.getId())
+        List<Warning> warnings = getDssSimpleReport(bDocSignature).getWarnings(bDocSignature.getId())
                 .stream()
-                .map(this::mapDssWarning)
+                .map(BDOCQualifiedReportBuilder::mapDssWarning)
                 .collect(Collectors.toList());
 
         List<String> dssWarningMessages = warnings.stream().map(Warning::getDescription).collect(Collectors.toList());
@@ -135,20 +141,20 @@ public class BDOCQualifiedReportBuilder {
         bDocSignature.validateSignature().getWarnings()
                 .stream()
                 .filter(e -> !isRepeatingMessage(dssWarningMessages, e.getMessage()))
-                .map(this::mapDigidoc4JWarning)
+                .map(BDOCQualifiedReportBuilder::mapDigidoc4JWarning)
                 .forEach(warnings::add);
 
         return warnings;
     }
 
-    private Warning mapDssWarning(Conclusion.BasicInfo dssWarning) {
+    private static Warning mapDssWarning(Conclusion.BasicInfo dssWarning) {
         Warning warning = new Warning();
         warning.setNameId(emptyWhenNull(dssWarning.getAttributeValue(DSS_BASIC_INFO_NAME_ID)));
         warning.setDescription(emptyWhenNull(dssWarning.getValue()));
         return warning;
     }
 
-    private Warning mapDigidoc4JWarning(DigiDoc4JException digiDoc4JException) {
+    private static Warning mapDigidoc4JWarning(DigiDoc4JException digiDoc4JException) {
         Warning warning = new Warning();
         warning.setNameId(GENERIC);
         warning.setDescription(emptyWhenNull(digiDoc4JException.getMessage()));
@@ -159,11 +165,11 @@ public class BDOCQualifiedReportBuilder {
         return bDocSignature.getOrigin().getReferences()
                 .stream()
                 .filter(r -> dataFileNames.contains(r.getURI())) //filters out Signed Properties
-                .map(this::mapDssReference)
+                .map(BDOCQualifiedReportBuilder::mapDssReference)
                 .collect(Collectors.toList());
     }
 
-    private SignatureScope mapDssReference(Reference reference) {
+    private static SignatureScope mapDssReference(Reference reference) {
         SignatureScope signatureScope = new SignatureScope();
         signatureScope.setName(reference.getURI());
         signatureScope.setScope(FULL_SIGNATURE_SCOPE);
@@ -173,9 +179,9 @@ public class BDOCQualifiedReportBuilder {
 
     private List<Error> getErrors(BDocSignature bDocSignature) {
         //First get DSS errors as they have error codes
-        List<Error> errors = bDocSignature.getDssValidationReport().getReport().getSimpleReport().getErrors(bDocSignature.getId())
+        List<Error> errors = getDssSimpleReport(bDocSignature).getErrors(bDocSignature.getId())
                 .stream()
-                .map(this::mapDssError)
+                .map(BDOCQualifiedReportBuilder::mapDssError)
                 .collect(Collectors.toList());
 
         List<String> dssErrorMessages = errors
@@ -187,20 +193,20 @@ public class BDOCQualifiedReportBuilder {
         bDocSignature.validateSignature().getErrors()
                 .stream()
                 .filter(e -> !isRepeatingMessage(dssErrorMessages, e.getMessage()))
-                .map(this::mapDigidoc4JException)
+                .map(BDOCQualifiedReportBuilder::mapDigidoc4JException)
                 .forEach(errors::add);
 
         return errors;
     }
 
-    private Error mapDssError(Conclusion.BasicInfo dssError) {
+    private static Error mapDssError(Conclusion.BasicInfo dssError) {
         Error error = new Error();
         error.setNameId(emptyWhenNull(dssError.getAttributeValue(DSS_BASIC_INFO_NAME_ID)));
         error.setContent(emptyWhenNull(dssError.getValue()));
         return error;
     }
 
-    private boolean isRepeatingMessage(List<String> dssMessages, String digidoc4jExceptionMessage) {
+    private static boolean isRepeatingMessage(List<String> dssMessages, String digidoc4jExceptionMessage) {
         for (String dssMessage : dssMessages) {
             if (digidoc4jExceptionMessage.contains(dssMessage)) {
                 return true;
@@ -209,7 +215,7 @@ public class BDOCQualifiedReportBuilder {
         return false;
     }
 
-    private Error mapDigidoc4JException(DigiDoc4JException digiDoc4JException) {
+    private static Error mapDigidoc4JException(DigiDoc4JException digiDoc4JException) {
         Error error = new Error();
         error.setNameId(GENERIC);
         error.setContent(emptyWhenNull(digiDoc4JException.getMessage()));

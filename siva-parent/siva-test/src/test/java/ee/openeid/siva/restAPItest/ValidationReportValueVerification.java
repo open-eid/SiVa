@@ -1,7 +1,6 @@
 package ee.openeid.siva.restAPItest;
 
 
-import com.jayway.restassured.RestAssured;
 import ee.openeid.siva.integrationtest.SiVaRestTests;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.hamcrest.Matchers;
@@ -131,7 +130,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("signatures[0].signatureLevel", Matchers.is("AdESqc"))
+                .body("signatures[0].signatureLevel", Matchers.is("QES"))
                 .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"));
     }

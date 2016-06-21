@@ -84,11 +84,13 @@
                 <jmeter.host.port>8080</jmeter.host.port>
                 <jmeter.host.endpoint>/validate</jmeter.host.endpoint>
                 <jmeter.host.timeoutInMillis>60000</jmeter.host.timeoutInMillis>
-                <jmeter.thread.count>10</jmeter.thread.count>
-                <jmeter.thread.rampupPeriodInSecs>1</jmeter.thread.rampupPeriodInSecs>
-                <jmeter.test.durationInSecs>60</jmeter.test.durationInSecs>
                 <jmeter.testfiles.dir>${project.basedir}/src/test/jmeter/test-files</jmeter.testfiles.dir>
-                <jmeter.errors.dir>${project.build.directory}/jmeter/results/errors</jmeter.errors.dir>
+                <jmeter.testPlan.constant.thread.count>10</jmeter.testPlan.constant.thread.count>
+                <jmeter.testPlan.constant.durationInSecs>60</jmeter.testPlan.constant.durationInSecs>
+                <jmeter.testPlan.increasing.thread.init.count>1</jmeter.testPlan.increasing.thread.init.count>
+                <jmeter.testPlan.increasing.thread.max.count>50</jmeter.testPlan.increasing.thread.max.count>
+                <jmeter.testPlan.increasing.thread.increment.count>2</jmeter.testPlan.increasing.thread.increment.count>
+                <jmeter.testPlan.increasing.thread.increment.intervalInSecs>30</jmeter.testPlan.increasing.thread.increment.intervalInSecs>
             </properties>
             <build>
                 <plugins>
@@ -110,11 +112,14 @@
                                         <host.port>${jmeter.host.port}</host.port>
                                         <host.endpoint>${jmeter.host.endpoint}</host.endpoint>
                                         <host.timeout>${jmeter.host.timeoutInMillis}</host.timeout>
-                                        <thread.count>${jmeter.thread.count}</thread.count>
-                                        <thread.rampup>${jmeter.thread.rampupPeriodInSecs}</thread.rampup>
-                                        <test.duration>${jmeter.test.durationInSecs}</test.duration>
                                         <testfiles.dir>${jmeter.testfiles.dir}</testfiles.dir>
-                                        <errors.dir>${jmeter.errors.dir}</errors.dir>
+                                        <errors.dir>${project.build.directory}/jmeter/results/errors</errors.dir>
+                                        <testPlan.constant.thread.count>${jmeter.testPlan.constant.thread.count}</testPlan.constant.thread.count>
+                                        <testPlan.constant.duration>${jmeter.testPlan.constant.durationInSecs}</testPlan.constant.duration>
+                                        <testPlan.increasing.thread.init.count>${jmeter.testPlan.increasing.thread.init.count}</testPlan.increasing.thread.init.count>
+                                        <testPlan.increasing.thread.max.count>${jmeter.testPlan.increasing.thread.max.count}</testPlan.increasing.thread.max.count>
+                                        <testPlan.increasing.thread.increment.count>${jmeter.testPlan.increasing.thread.increment.count}</testPlan.increasing.thread.increment.count>
+                                        <testPlan.increasing.thread.increment.interval>${jmeter.testPlan.increasing.thread.increment.intervalInSecs}</testPlan.increasing.thread.increment.interval>
                                     </propertiesUser>
                                     <jmeterPlugins>
                                         <plugin>
@@ -164,9 +169,9 @@
                                     <goal>analyze</goal>
                                 </goals>
                                 <configuration>
-                                    <source>${project.build.directory}/jmeter/results/*.jtl</source>
+                                    <source>${project.build.directory}/jmeter/results/*constant-load-test-plan.jtl</source>
                                     <processAllFilesFound>true</processAllFilesFound>
-                                    <targetDirectory>${project.build.directory}/jmeter/results/reports</targetDirectory>
+                                    <targetDirectory>${project.build.directory}/jmeter/results/constant-load-reports</targetDirectory>
                                     <sampleNames>
                                         <sampleName>httpSample</sampleName>
                                     </sampleNames>
@@ -178,6 +183,38 @@
                                         <com.lazerycode.jmeter.analyzer.writer.DetailsToHtmlWriter/>
                                         <com.lazerycode.jmeter.analyzer.writer.ChartWriter/>
                                     </writers>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>com.github.Cka3o4Huk</groupId>
+                        <artifactId>jmeter-graph-maven-plugin</artifactId>
+                        <version>0.1.1</version>
+                        <executions>
+                            <execution>
+                                <id>create-graphs</id>
+                                <goals>
+                                    <goal>create-graph</goal>
+                                </goals>
+                                <phase>verify</phase>
+                                <configuration>
+                                    <inputFilePattern>${project.build.directory}/jmeter/results/*increasing-load-test-plan.jtl</inputFilePattern>
+                                    <graphs>
+                                        <graph>
+                                            <pluginType>ThroughputVsThreads</pluginType>
+                                            <width>950</width>
+                                            <height>500</height>
+                                            <outputFilePattern>${project.build.directory}/jmeter/results/increasing-load-reports/%FILENAME%-ThroughputVsThreads.png</outputFilePattern>
+                                        </graph>
+                                        <graph>
+                                            <pluginType>TimesVsThreads</pluginType>
+                                            <width>950</width>
+                                            <height>500</height>
+                                            <outputFilePattern>${project.build.directory}/jmeter/results/increasing-load-reports/%FILENAME%-TimesVsThreads.png</outputFilePattern>
+                                        </graph>
+                                    </graphs>
                                 </configuration>
                             </execution>
                         </executions>

@@ -340,14 +340,14 @@
             </li>
           
             <li class="anchor">
-              <a title="SiVa Sample Application tests" href="#siva-sample-application-tests">
-                SiVa Sample Application tests
+              <a title="Additional features" href="#additional-features">
+                Additional features
               </a>
             </li>
           
             <li class="anchor">
-              <a title="X-Road Application tests" href="#x-road-application-tests">
-                X-Road Application tests
+              <a title="SiVa Sample Application tests" href="#siva-sample-application-tests">
+                SiVa Sample Application tests
               </a>
             </li>
           
@@ -433,11 +433,9 @@
 <ul>
 <li>Testing of logs</li>
 <li>Testing of user statistics</li>
-<li>Testing of signing the validation report</li>
 <li>Configuration/administration of the service</li>
 <li>SOAP API testing</li>
 <li>System Testing of X-Road service</li>
-<li>Performance testing</li>
 </ul>
 </div>
 <h1 id="siva-test-plan">SiVa Test Plan</h1>
@@ -471,7 +469,11 @@
 <li>Simultaneous validation requests</li>
 </ul>
 <p>In all of the negative cases correctness of returned error message is checked.</p>
-<p>Specific test cases and input files can be found in <a href="../../siva/appendix/test_cases/">Appendix 5 - Test Case Descriptions</a></p>
+<p>Specific test cases and input files can be found in:</p>
+<ul>
+<li><a href="../../siva/appendix/test_cases/#validationrequesttestsjava">Appendix 5 - ValidationRequestTests.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#documentformattestsjava">Appendix 5 - DocumentFormatTests.java</a></li>
+</ul>
 <h3 id="validation-report-tests">Validation Report tests</h3>
 <p>SiVa web service returns uniform Validation Report on all the supported document types. This also includes correct document types without actual signature (for example PDF document without signature).</p>
 <p>Following areas are tested on output (Validation Report):</p>
@@ -484,6 +486,10 @@
 <p><strong>What is not tested:</strong></p>
 <ul>
 <li>Correctness of the values in the report is not in scope on these tests</li>
+</ul>
+<p>Specific test cases and input files can be found in:</p>
+<ul>
+<li><a href="../../siva/appendix/test_cases/#validationreportjsonstructureverificationjava">Appendix 5 - ValidationReportJsonStructureVerification.java</a></li>
 </ul>
 <h2 id="testing-of-soap-api">Testing of SOAP API</h2>
 <div class="admonition development">
@@ -499,7 +505,12 @@
 <li>Containers sizes near maximum are validated</li>
 <li>Containers with DDOC v1.0 - 1.3 are validated</li>
 </ul>
-<p>Specific test cases and input files can be found in <a href="../../siva/appendix/test_cases/">Appendix 5 - Test Case Descriptions</a></p>
+<p>Specific test cases and input files can be found in:</p>
+<ul>
+<li><a href="../../siva/appendix/test_cases/#ddocvalidationfailjava">Appendix 5 - DdocValidationFail.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#ddocvalidationpassjava">Appendix 5 - DdocValidationPass.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#largefiletestsjava">Appendix 5 - LargeFileTests.java</a></li>
+</ul>
 <p><strong>What is not tested:</strong></p>
 <ul>
 <li>Verification of different causes in container for invalid result is out of scope.</li>
@@ -516,7 +527,12 @@
 <li>Containers with invalid signature(s) or no signature are validated</li>
 <li>Containers sizes near maximum are validated</li>
 </ul>
-<p>Specific test cases and input files can be found in <a href="../../siva/appendix/test_cases/">Appendix 5 - Test Case Descriptions</a></p>
+<p>Specific test cases and input files can be found in:</p>
+<ul>
+<li><a href="../../siva/appendix/test_cases/#bdocvalidationfailjava">Appendix 5 - BdocValidationFail.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#bdocvalidationpassjava">Appendix 5 - BdocValidationPass.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#largefiletestsjava">Appendix 5 - LargeFileTests.java</a></li>
+</ul>
 <p><strong>What is not tested:</strong></p>
 <ul>
 <li>Verification of different causes in container for invalid result is out of scope.</li>
@@ -536,6 +552,15 @@
 <li>Containers with serial and parallel signatures are validated</li>
 <li>Containers with different signature cryptocaphic algorithms are validated</li>
 <li>Containers with OCSP values inside and outside bounds are validated</li>
+</ul>
+<p>Specific test cases and input files can be found in:</p>
+<ul>
+<li><a href="../../siva/appendix/test_cases/#pdfbaselineprofiletestsjava">Appendix 5 - PdfBaselineProfileTests.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#pdfsignaturecryptographicalgorithmtestsjava">Appendix 5 - PdfSignatureCryptographicAlgorithmTests.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#pdfvalidationfailjava">Appendix 5 - PdfValidationFail.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#pdfvalidationpassjava">Appendix 5 - PdfValidationPass.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#signaturerevocationvaluetestsjava">Appendix 5 - SignatureRevocationValueTests.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#largefiletestsjava">Appendix 5 - LargeFileTests.java</a></li>
 </ul>
 <h2 id="testing-of-x-road-asice-signature-validation">Testing of X-Road ASICE signature validation</h2>
 <p>The goal of the ASICE signature validation testing is to check that the validation results given by X-Road signature validation utility are properly presented in validation report.</p>
@@ -563,23 +588,40 @@
 <li>Testing through X-Road Security Server</li>
 </ul>
 <p>The goal is to test the whole validation process.</p>
+<h2 id="additional-features">Additional features</h2>
+<ul>
+<li>"Offline" mode of SiVa web apllication</li>
+<li>Configuration of validation policy</li>
+</ul>
 <h2 id="siva-sample-application-tests">SiVa Sample Application tests</h2>
-<p>In addition to testing the service as such SiVa Sample Application itself is tested. The main cases are:</p>
+<p>In addition to testing the service as such, SiVa Sample Application itself is tested. The main cases are:</p>
 <ul>
 <li>Cross browser usage (IE, Edge, Chrome, Firefox and Safari)</li>
 <li>File upload (different sizes, suported and unsupported file types)</li>
 <li>Displayment of Validation Report</li>
 </ul>
-<h2 id="x-road-application-tests">X-Road Application tests</h2>
-<div class="admonition development">
-<p class="admonition-title">Development</p>
-<p>Will be covered on System Test phase</p>
-</div>
 <h2 id="performance-test-introduction">Performance Test introduction</h2>
-<div class="admonition development">
-<p class="admonition-title">Development</p>
-<p>Will be defined on Performance Testing phase</p>
-</div>
+<p>Performance testing will be carried out on following environments:</p>
+<ul>
+<li>Local machine (processor: memory: )</li>
+<li>Amazon cloud? (processor: memory: )</li>
+<li>RIA test enviroment? (processor: memory: )</li>
+</ul>
+<p>Jmeter v2.13 is used to carry out the testing.</p>
+<p>The goal is to measure throughput-latency of the service with different file types and sizes. The performance testing is carried out on REST interface. SOAP interface is used only for one testrun for comparison between SOAP and REST interface. It is assessed that the interface itself does not have considerable impact on throughput or latency compared to the validation process.</p>
+<p>Following cases will be covered on all supported file types (BDOC, DDOC, ASICE, PDF) with steps of 5, 10, 20, 30, 50 and 60 requests per second:</p>
+<ul>
+<li>The service is loaded with valid under 1MB containers</li>
+<li>The service is loaded with valid around 5MB containers</li>
+<li>The service is loaded with valid near 10MB containers</li>
+<li>The service is loaded with valid containers with many (how many?) signatures</li>
+<li>The service is loaded with invalid signature under 1MB containers</li>
+</ul>
+<p>In addition, following case will be covered to simulate the real life enviroment with steps of 5, 10, 20, 30, 50 and 60 requests per second:</p>
+<ul>
+<li>The service is loaded with mixture of different file types and valid/invalid signatures</li>
+</ul>
+<p>These tests run for a X? hour/minutes each. The results are presented as throughput-latency graphs for each run.</p>
           <aside class="copyright" role="note">
             
             Documentation built with

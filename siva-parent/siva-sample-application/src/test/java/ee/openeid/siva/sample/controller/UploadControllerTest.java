@@ -5,6 +5,8 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import ee.openeid.siva.sample.ci.info.BuildInfo;
 import ee.openeid.siva.sample.siva.SivaValidationService;
+import ee.openeid.siva.sample.upload.UploadFileCacheService;
+import ee.openeid.siva.sample.upload.UploadedFile;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,12 +19,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -45,7 +47,7 @@ public class UploadControllerTest {
     private BuildInfo buildInfo;
 
     @MockBean
-    private FileUploadService fileUploadService;
+    private UploadFileCacheService hazelcastUploadFileCacheService;
 
     @Test
     @Ignore
@@ -58,10 +60,13 @@ public class UploadControllerTest {
 
     @Test
     public void uploadPageWithFileReturnsValidationResult() throws Exception {
-        given(sivaValidationService.validateDocument(any(File.class)))
+        given(sivaValidationService.validateDocument(any(UploadedFile.class)))
                 .willReturn("{\"documentName\": \"random.bdoc\", \"validSignaturesCount\": 1, \"signaturesCount\": 1}");
-        given(fileUploadService.getUploadedFile(any(MultipartFile.class)))
-                .willReturn("random.bdoc");
+
+        UploadedFile uploadedFile = new UploadedFile();
+        uploadedFile.setFilename("random.bdoc");
+        given(hazelcastUploadFileCacheService.addUploadedFile(anyLong(), any(MultipartFile.class)))
+                .willReturn(uploadedFile);
 
         final MockMultipartFile uploadFile = new MockMultipartFile(
                 "file",
@@ -77,7 +82,7 @@ public class UploadControllerTest {
 
     @Test
     public void fileUploadFailedRedirectedBackToStartPage() throws Exception {
-        given(fileUploadService.getUploadedFile(any(MultipartFile.class)))
+        given(hazelcastUploadFileCacheService.addUploadedFile(anyLong(), any(MultipartFile.class)))
                 .willThrow(new IOException("File upload failed"));
 
         final MockMultipartFile uploadFile = new MockMultipartFile(

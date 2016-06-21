@@ -2,14 +2,12 @@ package ee.openeid.siva.sample.siva;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ee.openeid.siva.sample.configuration.SivaConfigurationProperties;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.FileUtils;
+import ee.openeid.siva.sample.upload.UploadedFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -22,17 +20,17 @@ public class SivaValidationService {
     private RestTemplate restTemplate;
     private SivaValidationServiceErrorHandler errorHandler;
 
-    public String validateDocument(final File file) throws IOException {
+    public String validateDocument(final UploadedFile file) throws IOException {
         if (file == null) {
             throw new IOException("Invalid file object given");
         }
 
-        final String base64EncodedFile = Base64.encodeBase64String(FileUtils.readFileToByteArray(file));
+        final String base64EncodedFile = file.getEncodedFile();
 
         final ValidationRequest validationRequest = new ValidationRequest();
         validationRequest.setDocument(base64EncodedFile);
 
-        final String filename = file.getName();
+        final String filename = file.getFilename();
         validationRequest.setFilename(filename);
         setValidationDocumentType(validationRequest, filename);
 
@@ -52,11 +50,20 @@ public class SivaValidationService {
     }
 
     private static FileType parseFileExtension(final String fileExtension) {
-        return Arrays.stream(FileType.values())
+        FileType foundMatch = Arrays.stream(FileType.values())
                 .filter(fileType -> fileType.name().equalsIgnoreCase(fileExtension))
                 .findFirst()
                 .orElse(null);
 
+        if (isAsiceFileExtension(foundMatch)) {
+            foundMatch = FileType.BDOC;
+        }
+
+        return foundMatch;
+    }
+
+    private static boolean isAsiceFileExtension(final FileType foundMatch) {
+        return foundMatch != null && foundMatch == FileType.ASICE;
     }
 
     @Autowired

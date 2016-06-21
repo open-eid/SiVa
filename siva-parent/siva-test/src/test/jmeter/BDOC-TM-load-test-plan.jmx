@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jmeterTestPlan version="1.2" properties="2.9" jmeter="3.0 r1743807">
+<jmeterTestPlan version="1.2" properties="2.8" jmeter="2.13 r1665067">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="BDOC-TM Load Test Plan" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
@@ -33,26 +33,103 @@
             <stringProp name="Argument.value">${__P(host.timeout,60000)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
+          <elementProp name="THREAD_COUNT" elementType="Argument">
+            <stringProp name="Argument.name">THREAD_COUNT</stringProp>
+            <stringProp name="Argument.value">${__P(thread.count,10)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="THREAD_RAMPUP" elementType="Argument">
+            <stringProp name="Argument.name">THREAD_RAMPUP</stringProp>
+            <stringProp name="Argument.value">${__P(thread.rampup,1)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="TEST_DURATION" elementType="Argument">
+            <stringProp name="Argument.name">TEST_DURATION</stringProp>
+            <stringProp name="Argument.value">${__P(test.duration,60)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="TESTFILES_DIR" elementType="Argument">
+            <stringProp name="Argument.name">TESTFILES_DIR</stringProp>
+            <stringProp name="Argument.value">${__P(testfiles.dir,)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="TESTFILE" elementType="Argument">
+            <stringProp name="Argument.name">TESTFILE</stringProp>
+            <stringProp name="Argument.value">BDOC-TM.bdoc</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
           <elementProp name="ERRORS_DIR" elementType="Argument">
             <stringProp name="Argument.name">ERRORS_DIR</stringProp>
-            <stringProp name="Argument.value">${__P(errors.dir,/jmeter/errors)}</stringProp>
+            <stringProp name="Argument.value">${__P(errors.dir,errors)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
       </Arguments>
       <hashTree/>
+      <SetupThreadGroup guiclass="SetupThreadGroupGui" testclass="SetupThreadGroup" testname="setUp Thread Group" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">stoptestnow</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1466505870000</longProp>
+        <longProp name="ThreadGroup.end_time">1466505870000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </SetupThreadGroup>
+      <hashTree>
+        <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="Testfile to base64" enabled="true">
+          <stringProp name="TestPlan.comments">Save testfile contents in base64 as a property</stringProp>
+          <stringProp name="BeanShellSampler.query">import java.io.File;
+import java.io.FileNotFoundException;
+import java.lang.RuntimeException;
+import java.lang.Exception;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.jmeter.util.JMeterUtils;
+
+try {
+    String testFilesDir = vars.get(&quot;TESTFILES_DIR&quot;);
+    String testFileName = vars.get(&quot;TESTFILE&quot;);
+    File testFile = new File(testFilesDir + File.separator + testFileName);
+    if (!testFile.exists()) {
+    	   throw new FileNotFoundException(testFile.toPath().toString() + &quot; not found&quot;);
+    }
+    byte[] testFileContentBytes = Files.readAllBytes(testFile.toPath());
+    if (testFileContentBytes == null || testFileContentBytes.length == 0) {
+    	   throw new RuntimeException(testFile.toPath().toString() + &quot; has no content&quot;);
+    }
+    String testFileContentsBase64 = new String(Base64.encodeBase64(testFileContentBytes));
+    JMeterUtils.setProperty(&quot;TESTFILE_BASE64&quot;, testFileContentsBase64);
+} catch (Exception e) {
+    log.error(&quot;BeanShell failed with exception: &quot;, e);
+    log.info(&quot;Stopping test&quot;);
+    throw e;
+}</stringProp>
+          <stringProp name="BeanShellSampler.filename"></stringProp>
+          <stringProp name="BeanShellSampler.parameters"></stringProp>
+          <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+        </BeanShellSampler>
+        <hashTree/>
+      </hashTree>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="validate BDOC-TM" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <intProp name="LoopController.loops">-1</intProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__P(threadCount, 10)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__P(rampUp, 1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${THREAD_COUNT}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${THREAD_RAMPUP}</stringProp>
         <longProp name="ThreadGroup.start_time">1465392625000</longProp>
         <longProp name="ThreadGroup.end_time">1465392625000</longProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">${__P(testDuration, 60)}</stringProp>
+        <stringProp name="ThreadGroup.duration">${TEST_DURATION}</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
@@ -72,8 +149,8 @@
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
-	&quot;document&quot; :  &quot;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&quot;,&#xd;
-	&quot;filename&quot; : &quot;sample.bdoc&quot;,&#xd;
+	&quot;document&quot; :  &quot;${__property(TESTFILE_BASE64)}&quot;,&#xd;
+	&quot;filename&quot; : &quot;${TESTFILE}&quot;,&#xd;
 	&quot;documentType&quot; : &quot;BDOC&quot;,&#xd;
 	&quot;reportType&quot;: &quot;simple&quot;&#xd;
 }&#xd;
@@ -97,7 +174,24 @@
           <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
         </HTTPSamplerProxy>
-        <hashTree/>
+        <hashTree>
+          <com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.JSONPathAssertion guiclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.gui.JSONPathAssertionGui" testclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.JSONPathAssertion" testname="Validate signatures count" enabled="true">
+            <stringProp name="JSON_PATH">$.signaturesCount</stringProp>
+            <stringProp name="EXPECTED_VALUE">1</stringProp>
+            <boolProp name="JSONVALIDATION">true</boolProp>
+            <boolProp name="EXPECT_NULL">false</boolProp>
+            <boolProp name="INVERT">false</boolProp>
+          </com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.JSONPathAssertion>
+          <hashTree/>
+          <com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.JSONPathAssertion guiclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.gui.JSONPathAssertionGui" testclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.JSONPathAssertion" testname="Validate valid signatures count" enabled="true">
+            <stringProp name="JSON_PATH">$.validSignaturesCount</stringProp>
+            <stringProp name="EXPECTED_VALUE">1</stringProp>
+            <boolProp name="JSONVALIDATION">true</boolProp>
+            <boolProp name="EXPECT_NULL">false</boolProp>
+            <boolProp name="INVERT">false</boolProp>
+          </com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.JSONPathAssertion>
+          <hashTree/>
+        </hashTree>
       </hashTree>
       <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
         <boolProp name="ResultCollector.error_logging">true</boolProp>
@@ -116,21 +210,20 @@
             <encoding>false</encoding>
             <assertions>true</assertions>
             <subresults>true</subresults>
-            <responseData>false</responseData>
-            <samplerData>false</samplerData>
-            <xml>false</xml>
-            <fieldNames>true</fieldNames>
+            <responseData>true</responseData>
+            <samplerData>true</samplerData>
+            <xml>true</xml>
+            <fieldNames>false</fieldNames>
             <responseHeaders>false</responseHeaders>
             <requestHeaders>false</requestHeaders>
             <responseDataOnError>false</responseDataOnError>
-            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+            <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
             <assertionsResultsToSave>0</assertionsResultsToSave>
             <bytes>true</bytes>
             <threadCounts>true</threadCounts>
-            <idleTime>true</idleTime>
           </value>
         </objProp>
-        <stringProp name="filename">${ERRORS_DIR}.jtl</stringProp>
+        <stringProp name="filename">${ERRORS_DIR}/BDOC-TM-load-test-plan-errors.jtl</stringProp>
       </ResultCollector>
       <hashTree/>
       <ResultSaver guiclass="ResultSaverGui" testclass="ResultSaver" testname="Save Responses to a file" enabled="true">

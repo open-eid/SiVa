@@ -186,19 +186,19 @@ System testing is carried out using two access points:
 
 The goal is to test the whole validation process.
 
+## Additional features
+
+  * "Offline" mode of SiVa web apllication
+  * Configuration of validation policy
+
 ## SiVa Sample Application tests
 
-In addition to testing the service as such SiVa Sample Application itself is tested. The main cases are:
+In addition to testing the service as such, SiVa Sample Application itself is tested. The main cases are:
 
   * Cross browser usage (IE, Edge, Chrome, Firefox and Safari)
   * File upload (different sizes, suported and unsupported file types)
   * Displayment of Validation Report
 
-## X-Road Application tests
-
-
-!!! development
-    Will be covered on System Test phase
 
 ## Performance Test introduction
 

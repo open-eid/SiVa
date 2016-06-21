@@ -166,6 +166,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      ***/
     @Test
+    @Ignore
     public void BdocOptionalWarningElementIsPresent() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc", "simple"))

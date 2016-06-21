@@ -84,6 +84,7 @@ public class BdocValidationPass extends SiVaRestTests{
      * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
      ***/
     @Test
+    @Ignore
     public void validSignatureWithWarning() {
         setTestFilesDirectory("bdoc/test/timemark/");
         QualifiedReport report = postForReport("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc");

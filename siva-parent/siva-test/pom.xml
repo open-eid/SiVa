@@ -167,6 +167,9 @@
                                     <source>${project.build.directory}/jmeter/results/*.jtl</source>
                                     <processAllFilesFound>true</processAllFilesFound>
                                     <targetDirectory>${project.build.directory}/jmeter/results/reports</targetDirectory>
+                                    <sampleNames>
+                                        <sampleName>httpSample</sampleName>
+                                    </sampleNames>
                                     <writers>
                                         <com.lazerycode.jmeter.analyzer.writer.SummaryTextToStdOutWriter/>
                                         <com.lazerycode.jmeter.analyzer.writer.SummaryTextToFileWriter/>

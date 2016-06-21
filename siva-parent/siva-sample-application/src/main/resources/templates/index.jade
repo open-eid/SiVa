@@ -5,9 +5,9 @@ block content
     .row
         .col-md-12
             h1 Upload a digitally signed file
-            form#siva-dropzone.dropzone(action="/upload", method="POST", enctype="multipart/form-data")
-                .form-group
-                    input.hide(type="file", name="file")
+            p Supported file types are: BDOC, DDOC and PDF
+            form#siva-dropzone.dropzone(action="/upload", style="width: 100%", method="POST", enctype="multipart/form-data")
+                input.hide(type="file", name="file")
     .row.hide#validation-summery
         .col-md-12
             h1 Overall validation result

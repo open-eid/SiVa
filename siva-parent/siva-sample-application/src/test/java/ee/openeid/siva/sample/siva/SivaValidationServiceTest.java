@@ -1,5 +1,7 @@
 package ee.openeid.siva.sample.siva;
 
+import ee.openeid.siva.sample.upload.UploadedFile;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.junit.Rule;
 import org.junit.Test;
@@ -19,7 +21,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.File;
 import java.io.IOException;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
@@ -50,7 +52,7 @@ public class SivaValidationServiceTest {
         final String mockResponse = mockServiceResponse();
         final String fileContents = "Hello Testing World";
         final String fileName = "testing.bdoc";
-        final File inputFile = getFile(fileContents, fileName);
+        final UploadedFile inputFile = getFile(fileContents, fileName);
 
         final String result = sivaValidationService.validateDocument(inputFile);
         assertEquals(mockResponse, result);
@@ -65,7 +67,7 @@ public class SivaValidationServiceTest {
     public void invalidFileTypeGivenRequestDocumentTypeIsNull() throws Exception {
         mockServiceResponse();
 
-        final File file = getFile("error in file", "testing.exe");
+        final UploadedFile file = getFile("error in file", "testing.exe");
         sivaValidationService.validateDocument(file);
 
         verify(restTemplate).postForObject(anyString(), validationRequestCaptor.capture(), any());
@@ -82,7 +84,7 @@ public class SivaValidationServiceTest {
 
     @Test
     public void givenRestServiceIsUnreachableReturnsGenericSystemError() throws Exception {
-        final File file = getFile("simple file", "testing.bdoc");
+        final UploadedFile file = getFile("simple file", "testing.bdoc");
         given(restTemplate.postForObject(anyString(), any(ValidationRequest.class), any()))
                 .willThrow(new ResourceAccessException("Failed to connect to SiVa REST"));
 
@@ -95,10 +97,15 @@ public class SivaValidationServiceTest {
 
 
 
-    private File getFile(String fileContents, String fileName) throws IOException {
+    private UploadedFile getFile(String fileContents, String fileName) throws IOException {
         final File inputFile = testingFolder.newFile(fileName);
         FileUtils.writeStringToFile(inputFile, fileContents);
-        return inputFile;
+
+        UploadedFile uploadedFile = new UploadedFile();
+        uploadedFile.setFilename(inputFile.getName());
+        uploadedFile.setEncodedFile(Base64.encodeBase64String(FileUtils.readFileToByteArray(inputFile)));
+
+        return uploadedFile;
     }
 
     private String mockServiceResponse() {

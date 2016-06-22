@@ -19,7 +19,11 @@ import java.nio.file.Paths;
 @Component
 public class BuildInfoFileLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger(BuildInfoFileLoader.class);
+
     private static final byte[] EMPTY_CONTENT = new byte[0];
+    private static final String UNIX_PATH_START = "/";
+    private static final String WINDOWS_DRIVE_LETTER_POSTFIX = ":";
+
     private BuildInfoProperties properties;
 
     public BuildInfo loadBuildInfo() throws IOException {
@@ -27,7 +31,7 @@ public class BuildInfoFileLoader {
         return mapToBuildInfo(yamlFile);
     }
 
-    private static BuildInfo mapToBuildInfo(final byte[] yamlFile) throws IOException {
+    private static BuildInfo mapToBuildInfo(byte[] yamlFile) throws IOException {
         final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
@@ -53,9 +57,10 @@ public class BuildInfoFileLoader {
 
     private Path getBuildInfoFilePath() {
         final String defaultPath = Paths.get("").toAbsolutePath() + File.separator;
-        final String infoFilePath = properties.getInfoFile().startsWith("/") ?
-                properties.getInfoFile() :
-                defaultPath + properties.getInfoFile();
+        final String infoFile = properties.getInfoFile();
+        final String infoFilePath = infoFile.startsWith(UNIX_PATH_START) || infoFile.contains(WINDOWS_DRIVE_LETTER_POSTFIX) ?
+                infoFile :
+                defaultPath + infoFile;
 
         return Paths.get(infoFilePath);
     }

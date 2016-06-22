@@ -1,17 +1,54 @@
 package ee.openeid.siva.sample.ci.info;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.classic.spi.LoggingEvent;
+import ch.qos.logback.core.Appender;
 import ee.openeid.siva.sample.configuration.BuildInfoProperties;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
+@RunWith(MockitoJUnitRunner.class)
 public class BuildInfoFileLoaderTest {
     private BuildInfoFileLoader loader = new BuildInfoFileLoader();
+
+    @Mock
+    private Appender<ILoggingEvent> mockAppender;
+
+    @Captor
+    private ArgumentCaptor<LoggingEvent> captorLoggingEvent;
+
+    @Before
+    public void setUp() throws Exception {
+        final Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+        logger.addAppender(mockAppender);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        final Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+        logger.detachAppender(mockAppender);
+    }
 
     @Test
     public void givenValidInfoFileWillReturnCorrectBuildInfo() throws Exception {
         loader.setProperties(createBuildProperties("/test-info.yml"));
-        BuildInfo buildInfo = loader.loadBuildInfo();
+        final BuildInfo buildInfo = loader.loadBuildInfo();
 
         assertThat(buildInfo.getTravisCi().getBuildNumber()).isEqualTo("#106");
         assertThat(buildInfo.getGithub().getAuthorName()).isEqualTo("Andres Voll");
@@ -41,11 +78,28 @@ public class BuildInfoFileLoaderTest {
         assertThat(buildInfo.getTravisCi().getBuildNumber()).isEqualTo("#106");
     }
 
+    @Test
+    public void givenInvalidWindowsBuildInfoFilePathWillReturnEmptyBuildInfo() throws Exception {
+        BuildInfoProperties properties = new BuildInfoProperties();
+        properties.setInfoFile("C:\\invalid-build-info-path.yml");
+
+        loader.setProperties(properties);
+        BuildInfo buildInfo = loader.loadBuildInfo();
+
+        verify(mockAppender, times(2)).doAppend(captorLoggingEvent.capture());
+        final List<LoggingEvent> loggingEvent = captorLoggingEvent.getAllValues();
+
+        assertThat(loggingEvent.get(0).getLevel()).isEqualTo(Level.WARN);
+        assertThat(loggingEvent.get(0).getFormattedMessage()).contains("No such file exists: C:\\invalid-build-info-path.yml");
+        assertThat(buildInfo.getGithub()).isNull();
+    }
+
     private BuildInfoProperties createBuildProperties(String filePath) {
-        final String infoFilePath = getClass().getResource(filePath).getPath();
+        final String infoFilePath = getClass().getResource(filePath).getFile();
+        File file = new File(infoFilePath);
 
         BuildInfoProperties properties = new BuildInfoProperties();
-        properties.setInfoFile(infoFilePath);
+        properties.setInfoFile(file.getAbsolutePath());
         return properties;
     }
 }

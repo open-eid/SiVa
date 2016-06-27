@@ -89,7 +89,7 @@
                 <jmeter.testPlan.constant.durationInSecs>60</jmeter.testPlan.constant.durationInSecs>
                 <jmeter.testPlan.increasing.thread.init.count>1</jmeter.testPlan.increasing.thread.init.count>
                 <jmeter.testPlan.increasing.thread.max.count>50</jmeter.testPlan.increasing.thread.max.count>
-                <jmeter.testPlan.increasing.thread.increment.count>2</jmeter.testPlan.increasing.thread.increment.count>
+                <jmeter.testPlan.increasing.thread.increment.count>1</jmeter.testPlan.increasing.thread.increment.count>
                 <jmeter.testPlan.increasing.thread.increment.intervalInSecs>30</jmeter.testPlan.increasing.thread.increment.intervalInSecs>
             </properties>
             <build>

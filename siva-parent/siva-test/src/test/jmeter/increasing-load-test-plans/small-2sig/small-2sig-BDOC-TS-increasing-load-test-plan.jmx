@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jmeterTestPlan version="1.2" properties="2.8" jmeter="2.13 r1665067">
   <hashTree>
-    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="DDOC Increasing Load Test Plan" enabled="true">
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="BDOC-TS Increasing Load Test Plan" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
       <boolProp name="TestPlan.functional_mode">false</boolProp>
       <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
@@ -40,7 +40,7 @@
           </elementProp>
           <elementProp name="MAX_THREAD_COUNT" elementType="Argument">
             <stringProp name="Argument.name">MAX_THREAD_COUNT</stringProp>
-            <stringProp name="Argument.value">${__P(testPlan.increasing.thread.max.count,20)}</stringProp>
+            <stringProp name="Argument.value">${__P(testPlan.increasing.thread.max.count,50)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="INCREMENT_THREAD_COUNT" elementType="Argument">
@@ -53,14 +53,19 @@
             <stringProp name="Argument.value">${__P(testPlan.increasing.thread.increment.interval,30)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
-          <elementProp name="TESTFILES_DIR" elementType="Argument">
-            <stringProp name="Argument.name">TESTFILES_DIR</stringProp>
-            <stringProp name="Argument.value">${__P(testfiles.dir,/Users/andres/workspace/SiVa/siva-parent/siva-test/src/test/jmeter/test-files)}</stringProp>
+          <elementProp name="TESTFILES_ROOT_DIR" elementType="Argument">
+            <stringProp name="Argument.name">TESTFILES_ROOT_DIR</stringProp>
+            <stringProp name="Argument.value">${__P(testfiles.dir,)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="TESTFILE_DIR" elementType="Argument">
+            <stringProp name="Argument.name">TESTFILE_DIR</stringProp>
+            <stringProp name="Argument.value">small-2sig</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="TESTFILE" elementType="Argument">
             <stringProp name="Argument.name">TESTFILE</stringProp>
-            <stringProp name="Argument.value">DDOC.ddoc</stringProp>
+            <stringProp name="Argument.value">BDOC-TS.bdoc</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="ERRORS_DIR" elementType="Argument">
@@ -77,8 +82,8 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">1</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <stringProp name="ThreadGroup.num_threads">0</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1466505870000</longProp>
         <longProp name="ThreadGroup.end_time">1466505870000</longProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
@@ -100,9 +105,10 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.jmeter.util.JMeterUtils;
 
 try {
-    String testFilesDir = vars.get(&quot;TESTFILES_DIR&quot;);
+    String testFilesRootDir = vars.get(&quot;TESTFILES_ROOT_DIR&quot;);
+    String testFileDir = vars.get(&quot;TESTFILE_DIR&quot;);
     String testFileName = vars.get(&quot;TESTFILE&quot;);
-    File testFile = new File(testFilesDir + File.separator + testFileName);
+    File testFile = new File(testFilesRootDir + File.separator + testFileDir + File.separator + testFileName);
     if (!testFile.exists()) {
     	   throw new FileNotFoundException(testFile.toPath().toString() + &quot; not found&quot;);
     }
@@ -123,7 +129,7 @@ try {
         </BeanShellSampler>
         <hashTree/>
       </hashTree>
-      <kg.apc.jmeter.threads.SteppingThreadGroup guiclass="kg.apc.jmeter.threads.SteppingThreadGroupGui" testclass="kg.apc.jmeter.threads.SteppingThreadGroup" testname="validate DDOC Stepping Thread Group" enabled="true">
+      <kg.apc.jmeter.threads.SteppingThreadGroup guiclass="kg.apc.jmeter.threads.SteppingThreadGroupGui" testclass="kg.apc.jmeter.threads.SteppingThreadGroup" testname="validate BDOC-TS Stepping Thread Group" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <stringProp name="ThreadGroup.num_threads">${MAX_THREAD_COUNT}</stringProp>
         <stringProp name="Threads initial delay">0</stringProp>
@@ -158,7 +164,7 @@ try {
                 <stringProp name="Argument.value">{&#xd;
 	&quot;document&quot; :  &quot;${__property(TESTFILE_BASE64)}&quot;,&#xd;
 	&quot;filename&quot; : &quot;${TESTFILE}&quot;,&#xd;
-	&quot;documentType&quot; : &quot;DDOC&quot;,&#xd;
+	&quot;documentType&quot; : &quot;BDOC&quot;,&#xd;
 	&quot;reportType&quot;: &quot;simple&quot;&#xd;
 }&#xd;
 </stringProp>
@@ -184,7 +190,7 @@ try {
         <hashTree>
           <com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.JSONPathAssertion guiclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.gui.JSONPathAssertionGui" testclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.JSONPathAssertion" testname="Validate signatures count" enabled="true">
             <stringProp name="JSON_PATH">$.signaturesCount</stringProp>
-            <stringProp name="EXPECTED_VALUE">1</stringProp>
+            <stringProp name="EXPECTED_VALUE">2</stringProp>
             <boolProp name="JSONVALIDATION">true</boolProp>
             <boolProp name="EXPECT_NULL">false</boolProp>
             <boolProp name="INVERT">false</boolProp>
@@ -192,7 +198,7 @@ try {
           <hashTree/>
           <com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.JSONPathAssertion guiclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.gui.JSONPathAssertionGui" testclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.JSONPathAssertion" testname="Validate valid signatures count" enabled="true">
             <stringProp name="JSON_PATH">$.validSignaturesCount</stringProp>
-            <stringProp name="EXPECTED_VALUE">1</stringProp>
+            <stringProp name="EXPECTED_VALUE">2</stringProp>
             <boolProp name="JSONVALIDATION">true</boolProp>
             <boolProp name="EXPECT_NULL">false</boolProp>
             <boolProp name="INVERT">false</boolProp>
@@ -230,7 +236,7 @@ try {
             <threadCounts>true</threadCounts>
           </value>
         </objProp>
-        <stringProp name="filename">${ERRORS_DIR}/DDOC-increasing-load-test-plan-errors.jtl</stringProp>
+        <stringProp name="filename">${ERRORS_DIR}/BDOC-TS-increasing-load-test-plan-errors.jtl</stringProp>
       </ResultCollector>
       <hashTree/>
       <ResultSaver guiclass="ResultSaverGui" testclass="ResultSaver" testname="Save Responses to a file" enabled="true">

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jmeterTestPlan version="1.2" properties="2.8" jmeter="2.13 r1665067">
   <hashTree>
-    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="BDOC-TM Constant Load Test Plan" enabled="true">
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="BDOC-TM Increasing Load Test Plan" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
       <boolProp name="TestPlan.functional_mode">false</boolProp>
       <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
@@ -33,19 +33,34 @@
             <stringProp name="Argument.value">${__P(host.timeout,60000)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
-          <elementProp name="THREAD_COUNT" elementType="Argument">
-            <stringProp name="Argument.name">THREAD_COUNT</stringProp>
-            <stringProp name="Argument.value">${__P(testPlan.constant.thread.count,10)}</stringProp>
+          <elementProp name="INIT_THREAD_COUNT" elementType="Argument">
+            <stringProp name="Argument.name">INIT_THREAD_COUNT</stringProp>
+            <stringProp name="Argument.value">${__P(testPlan.increasing.thread.init.count,1)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
-          <elementProp name="TEST_DURATION" elementType="Argument">
-            <stringProp name="Argument.name">TEST_DURATION</stringProp>
-            <stringProp name="Argument.value">${__P(testPlan.constant.duration,60)}</stringProp>
+          <elementProp name="MAX_THREAD_COUNT" elementType="Argument">
+            <stringProp name="Argument.name">MAX_THREAD_COUNT</stringProp>
+            <stringProp name="Argument.value">${__P(testPlan.increasing.thread.max.count,50)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
-          <elementProp name="TESTFILES_DIR" elementType="Argument">
-            <stringProp name="Argument.name">TESTFILES_DIR</stringProp>
+          <elementProp name="INCREMENT_THREAD_COUNT" elementType="Argument">
+            <stringProp name="Argument.name">INCREMENT_THREAD_COUNT</stringProp>
+            <stringProp name="Argument.value">${__P(testPlan.increasing.thread.increment.count,1)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="INCREMENT_INTERVAL" elementType="Argument">
+            <stringProp name="Argument.name">INCREMENT_INTERVAL</stringProp>
+            <stringProp name="Argument.value">${__P(testPlan.increasing.thread.increment.interval,30)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="TESTFILES_ROOT_DIR" elementType="Argument">
+            <stringProp name="Argument.name">TESTFILES_ROOT_DIR</stringProp>
             <stringProp name="Argument.value">${__P(testfiles.dir,)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="TESTFILE_DIR" elementType="Argument">
+            <stringProp name="Argument.name">TESTFILE_DIR</stringProp>
+            <stringProp name="Argument.value">small-2sig</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="TESTFILE" elementType="Argument">
@@ -67,8 +82,8 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">1</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <stringProp name="ThreadGroup.num_threads">0</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1466505870000</longProp>
         <longProp name="ThreadGroup.end_time">1466505870000</longProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
@@ -90,9 +105,10 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.jmeter.util.JMeterUtils;
 
 try {
-    String testFilesDir = vars.get(&quot;TESTFILES_DIR&quot;);
+    String testFilesRootDir = vars.get(&quot;TESTFILES_ROOT_DIR&quot;);
+    String testFileDir = vars.get(&quot;TESTFILE_DIR&quot;);
     String testFileName = vars.get(&quot;TESTFILE&quot;);
-    File testFile = new File(testFilesDir + File.separator + testFileName);
+    File testFile = new File(testFilesRootDir + File.separator + testFileDir + File.separator + testFileName);
     if (!testFile.exists()) {
     	   throw new FileNotFoundException(testFile.toPath().toString() + &quot; not found&quot;);
     }
@@ -113,20 +129,22 @@ try {
         </BeanShellSampler>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="validate BDOC-TM Thread Group" enabled="true">
+      <kg.apc.jmeter.threads.SteppingThreadGroup guiclass="kg.apc.jmeter.threads.SteppingThreadGroupGui" testclass="kg.apc.jmeter.threads.SteppingThreadGroup" testname="validate BDOC-TM Stepping Thread Group" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${MAX_THREAD_COUNT}</stringProp>
+        <stringProp name="Threads initial delay">0</stringProp>
+        <stringProp name="Start users count">${INCREMENT_THREAD_COUNT}</stringProp>
+        <stringProp name="Start users count burst">${INIT_THREAD_COUNT}</stringProp>
+        <stringProp name="Start users period">${INCREMENT_INTERVAL}</stringProp>
+        <stringProp name="Stop users count">1</stringProp>
+        <stringProp name="Stop users period">0</stringProp>
+        <stringProp name="flighttime">0</stringProp>
+        <stringProp name="rampUp">0</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <intProp name="LoopController.loops">-1</intProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${THREAD_COUNT}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">0</stringProp>
-        <longProp name="ThreadGroup.start_time">1465392625000</longProp>
-        <longProp name="ThreadGroup.end_time">1465392625000</longProp>
-        <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">${TEST_DURATION}</stringProp>
-        <stringProp name="ThreadGroup.delay"></stringProp>
-      </ThreadGroup>
+      </kg.apc.jmeter.threads.SteppingThreadGroup>
       <hashTree>
         <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
           <collectionProp name="HeaderManager.headers">
@@ -172,7 +190,7 @@ try {
         <hashTree>
           <com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.JSONPathAssertion guiclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.gui.JSONPathAssertionGui" testclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.JSONPathAssertion" testname="Validate signatures count" enabled="true">
             <stringProp name="JSON_PATH">$.signaturesCount</stringProp>
-            <stringProp name="EXPECTED_VALUE">1</stringProp>
+            <stringProp name="EXPECTED_VALUE">2</stringProp>
             <boolProp name="JSONVALIDATION">true</boolProp>
             <boolProp name="EXPECT_NULL">false</boolProp>
             <boolProp name="INVERT">false</boolProp>
@@ -180,7 +198,7 @@ try {
           <hashTree/>
           <com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.JSONPathAssertion guiclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.gui.JSONPathAssertionGui" testclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.JSONPathAssertion" testname="Validate valid signatures count" enabled="true">
             <stringProp name="JSON_PATH">$.validSignaturesCount</stringProp>
-            <stringProp name="EXPECTED_VALUE">1</stringProp>
+            <stringProp name="EXPECTED_VALUE">2</stringProp>
             <boolProp name="JSONVALIDATION">true</boolProp>
             <boolProp name="EXPECT_NULL">false</boolProp>
             <boolProp name="INVERT">false</boolProp>
@@ -218,7 +236,7 @@ try {
             <threadCounts>true</threadCounts>
           </value>
         </objProp>
-        <stringProp name="filename">${ERRORS_DIR}/BDOC-TM-constant-load-test-plan-errors.jtl</stringProp>
+        <stringProp name="filename">${ERRORS_DIR}/BDOC-TM-increasing-load-test-plan-errors.jtl</stringProp>
       </ResultCollector>
       <hashTree/>
       <ResultSaver guiclass="ResultSaverGui" testclass="ResultSaver" testname="Save Responses to a file" enabled="true">
@@ -229,6 +247,88 @@ try {
         <boolProp name="FileSaver.successonly">false</boolProp>
         <boolProp name="FileSaver.addTimstamp">true</boolProp>
       </ResultSaver>
+      <hashTree/>
+      <kg.apc.jmeter.vizualizers.CorrectedResultCollector guiclass="kg.apc.jmeter.vizualizers.ThroughputVsThreadsGui" testclass="kg.apc.jmeter.vizualizers.CorrectedResultCollector" testname="jp@gc - Transaction Throughput vs Threads" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>false</xml>
+            <fieldNames>false</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+            <threadCounts>true</threadCounts>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+        <longProp name="interval_grouping">500</longProp>
+        <boolProp name="graph_aggregated">false</boolProp>
+        <stringProp name="include_sample_labels"></stringProp>
+        <stringProp name="exclude_sample_labels"></stringProp>
+        <stringProp name="start_offset"></stringProp>
+        <stringProp name="end_offset"></stringProp>
+        <boolProp name="include_checkbox_state">false</boolProp>
+        <boolProp name="exclude_checkbox_state">false</boolProp>
+      </kg.apc.jmeter.vizualizers.CorrectedResultCollector>
+      <hashTree/>
+      <kg.apc.jmeter.vizualizers.CorrectedResultCollector guiclass="kg.apc.jmeter.vizualizers.TimesVsThreadsGui" testclass="kg.apc.jmeter.vizualizers.CorrectedResultCollector" testname="jp@gc - Response Times vs Threads" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>false</xml>
+            <fieldNames>false</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+            <threadCounts>true</threadCounts>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+        <longProp name="interval_grouping">500</longProp>
+        <boolProp name="graph_aggregated">false</boolProp>
+        <stringProp name="include_sample_labels"></stringProp>
+        <stringProp name="exclude_sample_labels"></stringProp>
+        <stringProp name="start_offset"></stringProp>
+        <stringProp name="end_offset"></stringProp>
+        <boolProp name="include_checkbox_state">false</boolProp>
+        <boolProp name="exclude_checkbox_state">false</boolProp>
+      </kg.apc.jmeter.vizualizers.CorrectedResultCollector>
       <hashTree/>
     </hashTree>
   </hashTree>

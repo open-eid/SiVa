@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jmeterTestPlan version="1.2" properties="2.8" jmeter="2.13 r1665067">
   <hashTree>
-    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="DDOC Constant Load Test Plan" enabled="true">
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="BDOC-TM Constant Load Test Plan" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
       <boolProp name="TestPlan.functional_mode">false</boolProp>
       <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
@@ -43,14 +43,19 @@
             <stringProp name="Argument.value">${__P(testPlan.constant.duration,60)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
-          <elementProp name="TESTFILES_DIR" elementType="Argument">
-            <stringProp name="Argument.name">TESTFILES_DIR</stringProp>
+          <elementProp name="TESTFILES_ROOT_DIR" elementType="Argument">
+            <stringProp name="Argument.name">TESTFILES_ROOT_DIR</stringProp>
             <stringProp name="Argument.value">${__P(testfiles.dir,)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="TESTFILE_DIR" elementType="Argument">
+            <stringProp name="Argument.name">TESTFILE_DIR</stringProp>
+            <stringProp name="Argument.value">small-1sig</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="TESTFILE" elementType="Argument">
             <stringProp name="Argument.name">TESTFILE</stringProp>
-            <stringProp name="Argument.value">DDOC.ddoc</stringProp>
+            <stringProp name="Argument.value">BDOC-TM.bdoc</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="ERRORS_DIR" elementType="Argument">
@@ -90,9 +95,10 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.jmeter.util.JMeterUtils;
 
 try {
-    String testFilesDir = vars.get(&quot;TESTFILES_DIR&quot;);
+    String testFilesRootDir = vars.get(&quot;TESTFILES_ROOT_DIR&quot;);
+    String testFileDir = vars.get(&quot;TESTFILE_DIR&quot;);
     String testFileName = vars.get(&quot;TESTFILE&quot;);
-    File testFile = new File(testFilesDir + File.separator + testFileName);
+    File testFile = new File(testFilesRootDir + File.separator + testFileDir + File.separator + testFileName);
     if (!testFile.exists()) {
     	   throw new FileNotFoundException(testFile.toPath().toString() + &quot; not found&quot;);
     }
@@ -113,7 +119,7 @@ try {
         </BeanShellSampler>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="validate DDOC Thread Group" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="validate BDOC-TM Thread Group" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -146,7 +152,7 @@ try {
                 <stringProp name="Argument.value">{&#xd;
 	&quot;document&quot; :  &quot;${__property(TESTFILE_BASE64)}&quot;,&#xd;
 	&quot;filename&quot; : &quot;${TESTFILE}&quot;,&#xd;
-	&quot;documentType&quot; : &quot;DDOC&quot;,&#xd;
+	&quot;documentType&quot; : &quot;BDOC&quot;,&#xd;
 	&quot;reportType&quot;: &quot;simple&quot;&#xd;
 }&#xd;
 </stringProp>
@@ -218,7 +224,7 @@ try {
             <threadCounts>true</threadCounts>
           </value>
         </objProp>
-        <stringProp name="filename">${ERRORS_DIR}/DDOC-constant-load-test-plan-errors.jtl</stringProp>
+        <stringProp name="filename">${ERRORS_DIR}/BDOC-TM-constant-load-test-plan-errors.jtl</stringProp>
       </ResultCollector>
       <hashTree/>
       <ResultSaver guiclass="ResultSaverGui" testclass="ResultSaver" testname="Save Responses to a file" enabled="true">

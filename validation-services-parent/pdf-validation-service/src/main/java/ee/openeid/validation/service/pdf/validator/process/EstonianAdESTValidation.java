@@ -916,7 +916,8 @@ public class EstonianAdESTValidation {
     private boolean checkRevocationIssuingTime(Conclusion conclusion) {
         if (constraintData instanceof EstonianEtsiValidationPolicy) {
             EstonianEtsiValidationPolicy constraintdata = (EstonianEtsiValidationPolicy) constraintData;
-            final String ocspIssuingTime = diagnosticData.getValue("./UsedCertificates/Certificate/Revocation/IssuingTime/text()");
+            final String signingCertificateId = signatureXmlDom.getValue("./SigningCertificate/@Id");
+            final String ocspIssuingTime = diagnosticData.getValue("./UsedCertificates/Certificate[@Id=\'%s\']/Revocation/IssuingTime/text()", new Object[]{signingCertificateId});
             if (ocspIssuingTime == null) {
                 return true;
             }

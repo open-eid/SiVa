@@ -38,6 +38,7 @@ public class XROADValidationService implements ValidationService {
 
             QualifiedReport outputReport = new QualifiedReport();
             outputReport.setPolicy(Policy.SIVA_DEFAULT);
+            outputReport.setDocumentName(wsDocument.getName());
 
             return outputReport;
         } catch (Exception e) {

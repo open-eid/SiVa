@@ -2,6 +2,7 @@ package ee.openeid.siva.sample.siva;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ee.openeid.siva.sample.configuration.SivaConfigurationProperties;
+import ee.openeid.siva.sample.controller.ValidationServiceUtils;
 import ee.openeid.siva.sample.upload.UploadedFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,11 +10,9 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 @Service
 public class SivaValidationService {
-    private static final String FILENAME_EXTENSION_SEPARATOR = ".";
     private static final int GENERIC_ERROR_CODE = 101;
 
     private SivaConfigurationProperties properties;
@@ -32,7 +31,7 @@ public class SivaValidationService {
 
         final String filename = file.getFilename();
         validationRequest.setFilename(filename);
-        setValidationDocumentType(validationRequest, filename);
+        setValidationDocumentType(validationRequest);
 
         try {
             restTemplate.setErrorHandler(errorHandler);
@@ -41,29 +40,11 @@ public class SivaValidationService {
             String errorMessage = "Connection to web service failed. Make sure You have configured SiVa web service correctly";
             return new ObjectMapper().writer().writeValueAsString(new ServiceError(GENERIC_ERROR_CODE, errorMessage));
         }
-
     }
 
-    private static void setValidationDocumentType(final ValidationRequest validationRequest, final String filename) {
-        final String uploadedFileExtension = filename.substring(filename.lastIndexOf(FILENAME_EXTENSION_SEPARATOR) + 1);
-        validationRequest.setDocumentType(parseFileExtension(uploadedFileExtension));
-    }
-
-    private static FileType parseFileExtension(final String fileExtension) {
-        FileType foundMatch = Arrays.stream(FileType.values())
-                .filter(fileType -> fileType.name().equalsIgnoreCase(fileExtension))
-                .findFirst()
-                .orElse(null);
-
-        if (isAsiceFileExtension(foundMatch)) {
-            foundMatch = FileType.BDOC;
-        }
-
-        return foundMatch;
-    }
-
-    private static boolean isAsiceFileExtension(final FileType foundMatch) {
-        return foundMatch != null && foundMatch == FileType.ASICE;
+    private static void setValidationDocumentType(final ValidationRequest validationRequest) {
+        final FileType uploadedFileExtension = ValidationServiceUtils.getValidationServiceType(validationRequest);
+        validationRequest.setDocumentType(uploadedFileExtension);
     }
 
     @Autowired

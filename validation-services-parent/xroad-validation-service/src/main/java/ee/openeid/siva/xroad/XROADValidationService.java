@@ -38,6 +38,7 @@ public class XROADValidationService implements ValidationService {
 
             QualifiedReport outputReport = new QualifiedReport();
             outputReport.setPolicy(Policy.SIVA_DEFAULT);
+            outputReport.setDocumentName(wsDocument.getName());
 
             return outputReport;
         } catch (Exception e) {
@@ -52,14 +53,12 @@ public class XROADValidationService implements ValidationService {
         String confPath = getClass().getResource("/verificationconf").getPath();
         System.setProperty(SystemProperties.CONFIGURATION_PATH, confPath);
 
-        LOGGER.info("Loading configuration from " + "." + "...");
-        System.out.println("logging random stuff");
+        LOGGER.info("Loading configuration from path: {}", confPath);
         try {
             GlobalConf.reload();
 //            verifyConfPathCorrectness();
         } catch (CodedException e) {
-            System.err.println("Unable to load configuration: "
-                    + e);
+            LOGGER.error("Unable to load configuration: ", e);
         }
     }
 
@@ -73,7 +72,6 @@ public class XROADValidationService implements ValidationService {
 
     private void onVerificationSucceeded(AsicContainerVerifier verifier) throws IOException {
         LOGGER.info(AsicUtils.buildSuccessOutput(verifier));
-//        LOGGER.info("\nWould you like to extract the signed files? (y/n) ");
 
         AsicContainer asic = verifier.getAsic();
         StringBuilder builder = new StringBuilder();
@@ -95,8 +93,6 @@ public class XROADValidationService implements ValidationService {
         builder.append("    Date: " + verifier.getTimestampDate() + "\n");
 
 //        writeToFile(AsicContainerEntries.ENTRY_MESSAGE, asic.getMessage());
-        System.out.println(builder);
-        System.out.println("Files successfully extracted.");
 //        LOGGER.info("");
     }
 }

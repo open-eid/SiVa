@@ -48,6 +48,12 @@
             <artifactId>commons-codec</artifactId>
             <version>1.10</version>
         </dependency>
+        <dependency>
+            <groupId>org.zeroturnaround</groupId>
+            <artifactId>zt-zip</artifactId>
+            <version>1.9</version>
+            <type>jar</type>
+        </dependency>
 
         <!-- Bower Webjars -->
         <dependency>
@@ -55,14 +61,16 @@
             <artifactId>bootstrap</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>jquery</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>dropzone</artifactId>
-            <version>4.2.0</version>
         </dependency>
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>highlightjs</artifactId>
-            <version>9.4.0</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>

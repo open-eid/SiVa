@@ -83,11 +83,9 @@ public class BdocValidationPass extends SiVaRestTests{
      *
      * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
      ***/
-    @Test
-    @Ignore
+    @Test @Ignore //TODO: need file with warnings
     public void validSignatureWithWarning() {
-        setTestFilesDirectory("bdoc/test/timemark/");
-        QualifiedReport report = postForReport("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc");
+        QualifiedReport report = postForReport("warning.bdoc");
         assertEquals(report.getSignaturesCount(), report.getValidSignaturesCount());
         assertTrue(report.getSignatures().get(0).getWarnings().size() > 0);
     }

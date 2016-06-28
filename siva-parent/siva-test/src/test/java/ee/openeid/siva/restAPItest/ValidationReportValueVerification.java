@@ -3,6 +3,7 @@ package ee.openeid.siva.restAPItest;
 
 import ee.openeid.siva.integrationtest.SiVaRestTests;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -120,19 +121,20 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      * Expected Result: All required elements are present and meet the expected values.
      *
-     * File: ICT_MoU_FI-EE_10dec2013OneSignature.bdoc
+     * File: 23200_weakdigest-wrong-nonce.asice
      *
      ***/
-    @Test
+    @Test //@Ignore //TODO: replace the mockup bdoc/asice mixture with "normal"  asice call when asice support is implemented properly
     public void BdocCorrectValuesArePresentValidLtSignatureAdesqc() {
-        setTestFilesDirectory("bdoc/live/timemark/");
-        post(validationRequestFor("ICT_MoU_FI-EE_10dec2013OneSignature.bdoc", "simple"))
+        setTestFilesDirectory("bdoc/test/timemark/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("23200_weakdigest-wrong-nonce.asice"));
+        post(validationRequestWithValidKeys(encodedString, "23200_weakdigest-wrong-nonce.asice", "bdoc", "simple"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].signatureLevel", Matchers.is("AdESqc"))
                 .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"));
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"));
     }
 
     /***

@@ -3,6 +3,7 @@ package ee.openeid.siva.restAPItest;
 import com.jayway.restassured.RestAssured;
 import ee.openeid.siva.integrationtest.SiVaRestTests;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -165,14 +166,14 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
      *
      ***/
-    @Test
-    @Ignore
+    @Test //TODO: this file gives different result in digidoc4j utility. Needs investigation.
     public void BdocOptionalWarningElementIsPresent() {
         setTestFilesDirectory("bdoc/test/timemark/");
-        post(validationRequestFor("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc", "simple"))
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("23200_weakdigest-wrong-nonce.asice"));
+        post(validationRequestWithValidKeys(encodedString, "23200_weakdigest-wrong-nonce.asice", "bdoc", "simple"))
                 .then()
-                .body("signatures.indication", Matchers.hasItem("TOTAL-PASSED"))
-                .body("signatures.warnings.nameId[0]", Matchers.hasItem("BBB_XCV_CMDCIQC_ANS"))
+                .body("signatures.indication", Matchers.hasItem("TOTAL-FAILED"))
+                .body("signatures.warnings.nameId[0]", Matchers.hasItem("BBB_XCV_CMDCISSCD_ANS"))
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }
 

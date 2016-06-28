@@ -4,20 +4,12 @@ import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Policy;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.service.ValidationService;
-import ee.ria.xroad.common.CodedException;
-import ee.ria.xroad.common.SystemProperties;
-import ee.ria.xroad.common.asic.AsicContainer;
-import ee.ria.xroad.common.asic.AsicContainerVerifier;
-import ee.ria.xroad.common.asic.AsicUtils;
-import ee.ria.xroad.common.conf.globalconf.GlobalConf;
-import ee.ria.xroad.common.signature.Signature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.security.cert.X509Certificate;
 
@@ -30,11 +22,11 @@ public class XROADValidationService implements ValidationService {
         final InputStream inputStream = new ByteArrayInputStream(wsDocument.getBytes());
 
         try {
-            final AsicContainer container = AsicContainer.read(inputStream);
-            final AsicContainerVerifier verifier = new AsicContainerVerifier(container);
+//            final AsicContainer container = AsicContainer.read(inputStream);
+//            final AsicContainerVerifier verifier = new AsicContainerVerifier(container);
 
-            verifier.verify();
-            onVerificationSucceeded(verifier);
+//            verifier.verify();
+//            onVerificationSucceeded(verifier);
 
             QualifiedReport outputReport = new QualifiedReport();
             outputReport.setPolicy(Policy.SIVA_DEFAULT);
@@ -51,15 +43,15 @@ public class XROADValidationService implements ValidationService {
     @PostConstruct
     private void loadConf() {
         String confPath = getClass().getResource("/verificationconf").getPath();
-        System.setProperty(SystemProperties.CONFIGURATION_PATH, confPath);
+//        System.setProperty(SystemProperties.CONFIGURATION_PATH, confPath);
 
         LOGGER.info("Loading configuration from path: {}", confPath);
-        try {
-            GlobalConf.reload();
+//        try {
+//            GlobalConf.reload();
 //            verifyConfPathCorrectness();
-        } catch (CodedException e) {
-            LOGGER.error("Unable to load configuration: ", e);
-        }
+//        } catch (CodedException e) {
+//            LOGGER.error("Unable to load configuration: ", e);
+//        }
     }
 
     private static void appendCert(StringBuilder builder, X509Certificate cert) {
@@ -70,29 +62,29 @@ public class XROADValidationService implements ValidationService {
         builder.append("        Valid until: " + cert.getNotAfter() + "\n");
     }
 
-    private void onVerificationSucceeded(AsicContainerVerifier verifier) throws IOException {
-        LOGGER.info(AsicUtils.buildSuccessOutput(verifier));
-
-        AsicContainer asic = verifier.getAsic();
-        StringBuilder builder = new StringBuilder();
-
-        Signature signature = verifier.getSignature();
-
-        builder.append("Verification successful.\n");
-        builder.append("Signer\n");
-        builder.append("    Certificate:\n");
-        appendCert(builder, verifier.getSignerCert());
-        builder.append("    ID: " + verifier.getSignerName() + "\n");
-        builder.append("OCSP response\n");
-        builder.append("    Signed by:\n");
-        appendCert(builder, verifier.getOcspCert());
-        builder.append("    Produced at: " + verifier.getOcspDate() + "\n");
-        builder.append("Timestamp\n");
-        builder.append("    Signed by:\n");
-        appendCert(builder, verifier.getTimestampCert());
-        builder.append("    Date: " + verifier.getTimestampDate() + "\n");
+//    private void onVerificationSucceeded(AsicContainerVerifier verifier) throws IOException {
+//        LOGGER.info(AsicUtils.buildSuccessOutput(verifier));
+//
+//        AsicContainer asic = verifier.getAsic();
+//        StringBuilder builder = new StringBuilder();
+//
+//        Signature signature = verifier.getSignature();
+//
+//        builder.append("Verification successful.\n");
+//        builder.append("Signer\n");
+//        builder.append("    Certificate:\n");
+//        appendCert(builder, verifier.getSignerCert());
+//        builder.append("    ID: " + verifier.getSignerName() + "\n");
+//        builder.append("OCSP response\n");
+//        builder.append("    Signed by:\n");
+//        appendCert(builder, verifier.getOcspCert());
+//        builder.append("    Produced at: " + verifier.getOcspDate() + "\n");
+//        builder.append("Timestamp\n");
+//        builder.append("    Signed by:\n");
+//        appendCert(builder, verifier.getTimestampCert());
+//        builder.append("    Date: " + verifier.getTimestampDate() + "\n");
 
 //        writeToFile(AsicContainerEntries.ENTRY_MESSAGE, asic.getMessage());
 //        LOGGER.info("");
-    }
+//    }
 }

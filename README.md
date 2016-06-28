@@ -91,7 +91,7 @@ Web application has to be started before the tests are executed.
 > **Note**: PDF load test files contain test certificates. In order for PDF load tests to succeed 
 > SiVa application should be started with test certificates preloaded.
 
-To load trusted test certificates in addition to LOTL add spring profile parameter to the command.
+To load trusted test certificates in addition to TSL add spring profile parameter to the command.
 
 ```bash
 java -Dspring.profiles.active=test -jar siva-webapp-2.0.2-SNAPSHOT.jar
@@ -115,7 +115,7 @@ It is possible to configure following parameters in performance test:
   * `jmeter.thread.increment.count` - step of thread count incrementation, dedault is 5
   * `jmeter.thread.increment.intervalInSecs` - time between incrementations, default is 180
 
-The default values can be changed `siva-test/pom.xml` file. It is also possible to run the tests with modifying the parameters on execution.
+The default values can be changed inside `siva-test/pom.xml` file. It is also possible to run the tests with modifying the parameters on execution.
 
 To run the tests with modified parameters:
 

@@ -59,8 +59,8 @@ project by issuing below commands:
 ./siva-parent/siva-webapp/target/executable/siva-webapp-2.0.2-SNAPSHOT.jar
 ```
 
-The service by default runs on port **8080**. Easiest way to test out validation is run SiVa demo 
-application. 
+The service by default runs on port **8080**. Easiest way to test out validation is run SiVa demo
+application.
 
 **Start SiVa Demo Application**
 
@@ -76,8 +76,6 @@ Now point Your browser to URL: http://localhost:9000
 
 Unit and integration tests are integral part of the SiVa code base. The tests are automatically executed every time the application is built. The build will fail if any of the tests fail.
 
-We recommend using JetBrains IntelliJ IDE for developing and executing individual tests.
-
 To execute the tests from command line after application is built use:
 
 ```bash
@@ -86,47 +84,44 @@ To execute the tests from command line after application is built use:
 
 ### How to run performance tests
 
-Performance tests can be started with disabling the performance test skiping. All unit and integration tests will be executed prior the performance tests. When executing the performance tests for localhost, SiVa Web application has to be started before the tests.
+Performance tests are disabled by default, but can be enabled with maven parameter **-Drun.load.tests=true**. All unit and integration tests will be executed prior the performance tests. When executing the performance tests, SiVa Web application has to be started before the tests are executed.
+
+* Note: PDF load test files contain test certificates. In order for PDF load tests to succeed SiVa application should be started with test certificates preloaded.
+
+
+To load trusted test certificates in addition to LOTL add spring profile parameter to the command.
 
 ```bash
-./siva-parent/siva-webapp/target/executable/siva-webapp-2.0.2-SNAPSHOT.jar
+java -Dspring.profile.active=test -jar siva-webapp-2.0.2-SNAPSHOT.jar
 ```
 
 To run the performance tests:
 
 ```bash
-./mvnw verify -Dskip.load.test=false
+./mvnw verify -Drun.load.tests=true
 ```
 
 It is possible to configure following parameters in performance test:
 
-  * jmeter.host.name - target against what the tests are executed, default is localhost
-  * jmeter.host.port - target port, default is 8080
-  * jmeter.host.endpoint - name of endpoint (what are the values?)
+  * jmeter.host.name - target webapp host against what the tests are executed, default is localhost
+  * jmeter.host.port - target port of the webapp host , default is 8080
+  * jmeter.host.endpoint - name of endpoint, default is /validate
   * jmeter.host.timeoutInMillis - response waiting timeout, default is 60000
   * jmeter.testfiles.dir - directory of the test files, default is ${project.basedir}/src/test/jmeter/test-files
-  * jmeter.testPlan.increasing.thread.init.count - start thread count, default is 5
-  * jmeter.testPlan.increasing.thread.max.count - max thread count, default is 60
-  * jmeter.testPlan.increasing.thread.increment.count - step of thread count incrementation, dedault is 5
-  * jmeter.testPlan.increasing.thread.increment.intervalInSecs - time between incrementations, default is 300
+  * jmeter.thread.init.count - start thread count, default is 5
+  * jmeter.thread.max.count - max thread count, default is 50
+  * jmeter.thread.increment.count - step of thread count incrementation, dedault is 5
+  * jmeter.thread.increment.intervalInSecs - time between incrementations, default is 180
 
 The default values can be changed siva-test/pom.xml file. It is also possible to run the tests with modifying the parameters on execution.
 
 To run the tests with modified parameters:
 
 ```bash
-./mvnw verify -Dskip.load.test=false -Djmeter.host.port=9090
+./mvnw verify -Drun.load.tests=true -Djmeter.host.port=9090
 ```
 
-Test results will be available at /siva-parent/siva-test/target/jmeter/results/increasing-load-reports/ folder
-
-### How to use test TSL
-
-To use test certificates with SiVa web application add spring profile parameter to the command. Without the parameter live TSL is used by default.
-
-```bash
-./siva-parent/siva-webapp/target/executable/siva-webapp-2.0.2-SNAPSHOT.jar -Dspring.profiles.active=test
-```
+Test results will be available at /siva-parent/siva-test/target/jmeter/results/reports/ folder
 
 ## Documentation
 

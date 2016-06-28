@@ -448,7 +448,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      * File:
      *
      ***/
-    @Test @Ignore //TODO: VAL-202 & VAL-203 FIle is needed!
+    @Test @Ignore //TODO: File is needed!
     public void DdocOptionalWarningElementIsPresent() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("NeedFile.ddoc", "simple"))

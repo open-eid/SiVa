@@ -68,7 +68,7 @@ application.
 ./siva-parent/siva-sample-application/target/siva-sample-application-2.0.2-SNAPSHOT.jar
 ```
 
-Now point Your browser to URL: http://localhost:9000
+Now point Your browser to URL: [http://localhost:9000]
 
 ![Sample of validation result](https://raw.githubusercontent.com/open-eid/SiVa/develop/docs/img/siva_demo_validation.png)
 
@@ -84,10 +84,12 @@ To execute the tests from command line after application is built use:
 
 ### How to run performance tests
 
-Performance tests are disabled by default, but can be enabled with maven parameter **-Drun.load.tests=true**. All unit and integration tests will be executed prior the performance tests. When executing the performance tests, SiVa Web application has to be started before the tests are executed.
+Performance tests are disabled by default, but can be enabled with maven parameter `-Drun.load.tests=true`. All unit 
+and integration tests will be executed prior the performance tests. When executing the performance tests, SiVa 
+Web application has to be started before the tests are executed.
 
-* Note: PDF load test files contain test certificates. In order for PDF load tests to succeed SiVa application should be started with test certificates preloaded.
-
+> **Note**: PDF load test files contain test certificates. In order for PDF load tests to succeed 
+> SiVa application should be started with test certificates preloaded.
 
 To load trusted test certificates in addition to LOTL add spring profile parameter to the command.
 
@@ -103,17 +105,17 @@ To run the performance tests:
 
 It is possible to configure following parameters in performance test:
 
-  * jmeter.host.name - target webapp host against what the tests are executed, default is localhost
-  * jmeter.host.port - target port of the webapp host , default is 8080
-  * jmeter.host.endpoint - name of endpoint, default is /validate
-  * jmeter.host.timeoutInMillis - response waiting timeout, default is 60000
-  * jmeter.testfiles.dir - directory of the test files, default is ${project.basedir}/src/test/jmeter/test-files
-  * jmeter.thread.init.count - start thread count, default is 5
-  * jmeter.thread.max.count - max thread count, default is 50
-  * jmeter.thread.increment.count - step of thread count incrementation, dedault is 5
-  * jmeter.thread.increment.intervalInSecs - time between incrementations, default is 180
+  * `jmeter.host.name` - target webapp host against what the tests are executed, default is localhost
+  * `jmeter.host.port` - target port of the webapp host , default is 8080
+  * `jmeter.host.endpoint` - name of endpoint, default is /validate
+  * `jmeter.host.timeoutInMillis` - response waiting timeout, default is 60000
+  * `jmeter.testfiles.dir` - directory of the test files, default is ${project.basedir}/src/test/jmeter/test-files
+  * `jmeter.thread.init.count` - start thread count, default is 5
+  * `jmeter.thread.max.count` - max thread count, default is 50
+  * `jmeter.thread.increment.count` - step of thread count incrementation, dedault is 5
+  * `jmeter.thread.increment.intervalInSecs` - time between incrementations, default is 180
 
-The default values can be changed siva-test/pom.xml file. It is also possible to run the tests with modifying the parameters on execution.
+The default values can be changed `siva-test/pom.xml` file. It is also possible to run the tests with modifying the parameters on execution.
 
 To run the tests with modified parameters:
 
@@ -121,7 +123,7 @@ To run the tests with modified parameters:
 ./mvnw verify -Drun.load.tests=true -Djmeter.host.port=9090
 ```
 
-Test results will be available at /siva-parent/siva-test/target/jmeter/results/reports/ folder
+Test results will be available at `/siva-parent/siva-test/target/jmeter/results/reports/`` folder
 
 ## Documentation
 

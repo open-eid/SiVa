@@ -75,7 +75,7 @@
             <id>load-test</id>
             <activation>
                 <property>
-                    <name>run.load.tests</name>
+                    <name>runLoadTests</name>
                     <value>true</value>
                 </property>
             </activation>

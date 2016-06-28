@@ -84,7 +84,7 @@ To execute the tests from command line after application is built use:
 
 ### How to run performance tests
 
-Performance tests are disabled by default, but can be enabled with maven parameter `-Drun.load.tests=true`. By default all unit
+Performance tests are disabled by default, but can be enabled with maven parameter `-DrunLoadTests=true`. By default all unit
 and integration tests will be executed prior the performance tests, but it is possible to skip them. When executing the performance tests, SiVa
 Web application has to be started before the tests are executed.
 
@@ -100,13 +100,13 @@ java -Dspring.profiles.active=test -jar siva-webapp-2.0.2-SNAPSHOT.jar
 To run performance tests after unit and integration tests:
 
 ```bash
-./mvnw verify -Drun.load.tests=true
+./mvnw verify -DrunLoadTests=true
 ```
 
 To run performance tests only:
 
 ```bash
-./mvnw verify -DskipTests=true -Drun.load.tests=true
+./mvnw verify -DskipTests=true -DrunLoadTests=true
 ```
 
 It is possible to configure following parameters in performance test:

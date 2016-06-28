@@ -97,10 +97,16 @@ To load trusted test certificates in addition to TSL add spring profile paramete
 java -Dspring.profiles.active=test -jar siva-webapp-2.0.2-SNAPSHOT.jar
 ```
 
-To run the performance tests:
+To run performance tests after unit and integration tests:
 
 ```bash
 ./mvnw verify -Drun.load.tests=true
+```
+
+To run performance tests only:
+
+```bash
+./mvnw verify -DskipTests=true -Drun.load.tests=true
 ```
 
 It is possible to configure following parameters in performance test:

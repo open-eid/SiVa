@@ -94,7 +94,7 @@ Web application has to be started before the tests are executed.
 To load trusted test certificates in addition to LOTL add spring profile parameter to the command.
 
 ```bash
-java -Dspring.profile.active=test -jar siva-webapp-2.0.2-SNAPSHOT.jar
+java -Dspring.profiles.active=test -jar siva-webapp-2.0.2-SNAPSHOT.jar
 ```
 
 To run the performance tests:

@@ -17,7 +17,7 @@ public final class ValidationServiceUtils {
     private ValidationServiceUtils() {
     }
 
-    public static FileType getValidationServiceType(ValidationRequest validationRequest) {
+    public static FileType getValidationServiceType(ValidationRequest validationRequest) throws IOException {
         final String filename = validationRequest.getFilename();
         FileType parsedFileType = parseFileExtension(filename.substring(filename.lastIndexOf(FILENAME_EXTENSION_SEPARATOR) + 1));
 
@@ -32,8 +32,13 @@ public final class ValidationServiceUtils {
         return parsedFileType;
     }
 
-    public static boolean isXroadAsiceContainer(ValidationRequest validationRequest) {
-        try (InputStream stream = new ByteArrayInputStream(Base64.decodeBase64(validationRequest.getDocument().getBytes()))) {
+    public static boolean isXroadAsiceContainer(ValidationRequest validationRequest) throws IOException {
+        String document = validationRequest.getDocument();
+        if (document == null) {
+            return false;
+        }
+
+        try (InputStream stream = new ByteArrayInputStream(Base64.decodeBase64(document.getBytes()))) {
             byte[] fileContents = ZipUtil.unpackEntry(stream, "message.xml");
             if (fileContents == null) {
                 return false;
@@ -41,8 +46,6 @@ public final class ValidationServiceUtils {
 
             String messageFile = new String(fileContents);
             return messageFile.contains(XROAD_XSD);
-        } catch (IOException e) {
-            return false;
         }
     }
 

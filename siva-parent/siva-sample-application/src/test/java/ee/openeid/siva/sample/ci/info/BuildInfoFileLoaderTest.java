@@ -6,6 +6,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.Appender;
 import ee.openeid.siva.sample.configuration.BuildInfoProperties;
+import ee.openeid.siva.sample.test.utils.TestFileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -95,8 +96,7 @@ public class BuildInfoFileLoaderTest {
     }
 
     private BuildInfoProperties createBuildProperties(String filePath) {
-        final String infoFilePath = getClass().getResource(filePath).getFile();
-        File file = new File(infoFilePath);
+        File file = TestFileUtils.loadTestFile(filePath);
 
         BuildInfoProperties properties = new BuildInfoProperties();
         properties.setInfoFile(file.getAbsolutePath());

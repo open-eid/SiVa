@@ -42,7 +42,7 @@ public class SivaValidationService {
         }
     }
 
-    private static void setValidationDocumentType(final ValidationRequest validationRequest) {
+    private static void setValidationDocumentType(final ValidationRequest validationRequest) throws IOException {
         final FileType uploadedFileExtension = ValidationServiceUtils.getValidationServiceType(validationRequest);
         validationRequest.setDocumentType(uploadedFileExtension);
     }

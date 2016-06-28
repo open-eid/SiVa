@@ -47,6 +47,8 @@ public class SivaValidationServiceTest {
     @MockBean
     private RestTemplate restTemplate;
 
+    private final long TIMESTAMP = System.currentTimeMillis() / 1000L;
+
     @Test
     public void validRequestReturnsCorrectValidationResult() throws Exception {
         final String mockResponse = mockServiceResponse();
@@ -103,6 +105,7 @@ public class SivaValidationServiceTest {
 
         UploadedFile uploadedFile = new UploadedFile();
         uploadedFile.setFilename(inputFile.getName());
+        uploadedFile.setTimestamp(TIMESTAMP);
         uploadedFile.setEncodedFile(Base64.encodeBase64String(FileUtils.readFileToByteArray(inputFile)));
 
         return uploadedFile;

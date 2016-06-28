@@ -32,6 +32,7 @@ public class HazelcastUploadFileCacheServiceTest {
         final UploadedFile uploadedFile = fileUploadService.addUploadedFile(timestamp, file);
 
         assertThat(uploadedFile.getFilename()).contains(uploadFilename);
+        assertThat(uploadedFile.getTimestamp()).isEqualTo(timestamp);
     }
 
     @Test

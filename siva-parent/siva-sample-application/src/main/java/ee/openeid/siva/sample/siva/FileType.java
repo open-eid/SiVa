@@ -1,5 +1,5 @@
 package ee.openeid.siva.sample.siva;
 
-enum FileType {
+public enum FileType {
     PDF, BDOC, DDOC, ASICE, XROAD
 }

@@ -16,6 +16,12 @@ public enum DocumentType {
             return MimeType.ASICE;
         }
     },
+    XROAD {
+        @Override
+        public MimeType getMimeType() {
+            return MimeType.ASICE;
+        }
+    },
     BDOC {
         @Override
         public MimeType getMimeType() {

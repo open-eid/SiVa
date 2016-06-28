@@ -84,8 +84,8 @@ To execute the tests from command line after application is built use:
 
 ### How to run performance tests
 
-Performance tests are disabled by default, but can be enabled with maven parameter `-Drun.load.tests=true`. All unit 
-and integration tests will be executed prior the performance tests. When executing the performance tests, SiVa 
+Performance tests are disabled by default, but can be enabled with maven parameter `-Drun.load.tests=true`. By default all unit
+and integration tests will be executed prior the performance tests, but it is possible to skip them. When executing the performance tests, SiVa
 Web application has to be started before the tests are executed.
 
 > **Note**: PDF load test files contain test certificates. In order for PDF load tests to succeed 

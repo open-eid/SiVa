@@ -73,6 +73,11 @@
             <stringProp name="Argument.value">${__P(errors.dir,errors)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
+          <elementProp name="FILETYPE" elementType="Argument">
+            <stringProp name="Argument.name">FILETYPE</stringProp>
+            <stringProp name="Argument.value">PDF</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
         </collectionProp>
       </Arguments>
       <hashTree/>
@@ -147,7 +152,7 @@ try {
                 <stringProp name="Argument.value">{&#xd;
 	&quot;document&quot; :  &quot;${__property(TESTFILE_BASE64)}&quot;,&#xd;
 	&quot;filename&quot; : &quot;${TESTFILE}&quot;,&#xd;
-	&quot;documentType&quot; : &quot;PDF&quot;,&#xd;
+	&quot;documentType&quot; : &quot;${FILETYPE}&quot;,&#xd;
 	&quot;reportType&quot;: &quot;simple&quot;&#xd;
 }&#xd;
 </stringProp>
@@ -224,7 +229,7 @@ try {
       <hashTree/>
       <ResultSaver guiclass="ResultSaverGui" testclass="ResultSaver" testname="Save Responses to a file" enabled="true">
         <stringProp name="FileSaver.filename">${ERRORS_DIR}</stringProp>
-        <boolProp name="FileSaver.errorsonly">true</boolProp>
+        <boolProp name="FileSaver.errorsonly">false</boolProp>
         <boolProp name="FileSaver.skipautonumber">false</boolProp>
         <boolProp name="FileSaver.skipsuffix">false</boolProp>
         <boolProp name="FileSaver.successonly">false</boolProp>

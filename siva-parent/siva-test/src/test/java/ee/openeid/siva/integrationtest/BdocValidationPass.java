@@ -81,7 +81,7 @@ public class BdocValidationPass extends SiVaRestTests{
      *
      * Expected Result: The document should pass the validation but warning should be returned
      *
-     * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
+     * File:
      ***/
     @Test @Ignore //TODO: need file with warnings
     public void validSignatureWithWarning() {

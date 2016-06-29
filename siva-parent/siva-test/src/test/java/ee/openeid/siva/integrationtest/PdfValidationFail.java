@@ -41,12 +41,12 @@ public class PdfValidationFail extends SiVaRestTests{
      *
      * Expected Result: Document signed with certificate that is expired should fail.
      *
-     * File: IB-3691_bdoc21-TS-old-cert.bdoc
+     * File: hellopades-lt-rsa1024-sha1-expired.pdf
      ***/
-    @Ignore("TODO: when we get a PDF file for the same test case, use that one instead of this ASiC file")
     @Test
     public void signaturesMadeWithExpiredSigningCertificatesAreInvalid() {
-        assertAllSignaturesAreInvalid(postForReport("IB-3691_bdoc21-TS-old-cert.bdoc"));
+        QualifiedReport report = postForReport("hellopades-lt-rsa1024-sha1-expired.pdf");
+        assertInvalidWithError(report, "BBB_XCV_ICTIVRSC_ANS", "The current time is not in the validity range of the signer's certificate.");
     }
 
     /***
@@ -60,12 +60,12 @@ public class PdfValidationFail extends SiVaRestTests{
      *
      * Expected Result: Document signed with certificate that is revoked should fail.
      *
-     * File: hellopades-lt-sha256-revoked.pdf
+     * File: pades_lt_revoked.pdf
      ***/
-    @Ignore // current test file's signature doesn't contain ocsp
     @Test
     public void documentSignedWithRevokedCertificateShouldFail() {
-        assertAllSignaturesAreInvalid(postForReport("hellopades-lt-sha256-revoked.pdf"));
+        QualifiedReport report = postForReport("pades_lt_revoked.pdf");
+        assertInvalidWithError(report, "BBB_XCV_ISCR_ANS", "The certificate is revoked!");
     }
 
     /***

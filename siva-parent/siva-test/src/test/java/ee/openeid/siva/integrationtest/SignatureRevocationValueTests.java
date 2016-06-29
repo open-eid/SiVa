@@ -42,7 +42,7 @@ public class SignatureRevocationValueTests extends SiVaRestTests {
      *
      * File: hellopades-lt-sha256-ocsp-15min1s.pdf
      */
-    @Test @Ignore //TODO: warnings are not included in report currently, turn this test on when or if they are included
+    @Test @Ignore //TODO: VAL-246 warnings are not included in report currently
     public void documentWithOcspOver15MinDelayShouldHaveCorrectWarningInReport() {
         QualifiedReport report = postForReport("hellopades-lt-sha256-ocsp-15min1s.pdf");
         assertHasWarning(report, "ADEST_IOTNLABST_ANS", "The validation failed, because OCSP is too long after the best-signature-time!");
@@ -98,8 +98,7 @@ public class SignatureRevocationValueTests extends SiVaRestTests {
      *
      * File: hellopades-lta-no-ocsp.pdf
      */
-    @Test
-    @Ignore("VAL-98 File size limit exeeded with thsi file")
+    @Test @Ignore //TODO: VAL-98 File size limit exceeded with this file
     public void documentWithNoOcspNorCrlInSignatureShouldFail() {
         assertAllSignaturesAreInvalid(postForReport("hellopades-lta-no-ocsp.pdf"));
     }
@@ -117,7 +116,7 @@ public class SignatureRevocationValueTests extends SiVaRestTests {
      *
      * File: hellopades-lt-sha256-rsa2048-ocsp-before-ts.pdf
      */
-    @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
+    @Test @Ignore //TODO: new test file is needed; the current one has issues with QC / SSCD
     public void documentSignedWithOcspTimeValueBeforeBestSignatureTimeShouldFail() {
         QualifiedReport report = postForReport("hellopades-lt-sha256-rsa2048-ocsp-before-ts.pdf");
         assertInvalidWithError(report, "ADEST_IOABST_ANS", "The validation failed, because OCSP is before the best-signature-time!");

@@ -4,6 +4,7 @@ import com.jayway.restassured.RestAssured;
 import ee.openeid.siva.integrationtest.SiVaRestTests;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.apache.commons.codec.binary.Base64;
+import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -13,6 +14,7 @@ import org.junit.experimental.categories.Category;
 
 
 import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import static org.hamcrest.Matchers.equalTo;
 
 
 @Category(IntegrationTest.class)
@@ -71,12 +73,12 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      *
      * Expected Result: All required elements are present according to SimpleReportSchema.json
      *
-     * File: Valid_IDCard_MobID_signatures.bdoc
+     * File: Baltic MoU digital signing_EST_LT_LV.bdoc
      *
      ***/
-    @Test @Ignore //TODO: VAL-244
+    @Test @Ignore//TODO: VAL-244 was found with Valid_IDCard_MobID_signatures.bdoc file.
     public void BdocAllElementsArePresentValidMultipleSignatures() {
-        post(validationRequestFor("Valid_IDCard_MobID_signatures.bdoc", "simple"))
+        post(validationRequestFor("Baltic MoU digital signing_EST_LT_LV.bdoc", "simple"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }
@@ -238,12 +240,13 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      * File:
      *
      ***/
-    @Test @Ignore //TODO: need pdf file with multiple valid signatures
+    @Test
     public void PdfAllElementsArePresentValidmultipleSignatures() {
-        setTestFilesDirectory("");
-        post(validationRequestFor("needfile", "simple"))
+        setTestFilesDirectory("pdf/baseline_profile_test_files/");
+        post(validationRequestFor("pades_lt_two_valid_sig.pdf", "simple"))
                 .then()
-                .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
+                .body("validSignaturesCount",equalTo(2));
     }
 
     /***

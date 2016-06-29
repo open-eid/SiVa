@@ -36,7 +36,7 @@ public class PdfValidationPass extends SiVaRestTests{
      *
      * File: hellopades-lt-sha256-rsa1024-not-expired.pdf
      ***/
-    @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
+    @Test @Ignore //TODO: new test file is needed; the current one has issues with QC / SSCD
     public void validSignaturesRemainValidAfterSigningCertificateExpires() {
         assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-rsa1024-not-expired.pdf"));
     }
@@ -54,7 +54,7 @@ public class PdfValidationPass extends SiVaRestTests{
      *
      * File: hellopades-lt-sha256-rsa2048-7d.pdf
      ***/
-    @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
+    @Test @Ignore //TODO: new test file is needed; the current one has issues with QC / SSCD
     public void certificateExpired7DaysAfterDocumentSigningShouldPass() {
         assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-rsa2048-7d.pdf"));
     }

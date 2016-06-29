@@ -68,7 +68,9 @@ List of Test Cases
   * RequirementID: []()
   * Title: Bdoc with warning on signature
   * Expected Result: The document should pass the validation but warning should be returned
-  * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
+  * File:
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 
 ## DdocValidationFail.java
@@ -293,7 +295,7 @@ List of Test Cases
   * RequirementID: []()
   * Title: The PDF has PAdES-T profile signature
   * Expected Result: Document validation should fail
-  * File: some_file.pdf
+  * File:
 
   **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
@@ -311,7 +313,7 @@ List of Test Cases
   * RequirementID: []()
   * Title: The PDF has PAdES-LTA profile signature
   * Expected Result: Document validation should pass
-  * File: some_file.pdf
+  * File:
 
   **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
@@ -461,9 +463,7 @@ List of Test Cases
   * RequirementID: []()
   * Title: The PDF-file has been signed with expired certificate (PAdES Baseline LT)
   * Expected Result: Document signed with certificate that is expired should fail.
-  * File: IB-3691_bdoc21-TS-old-cert.bdoc
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+  * File: hellopades-lt-rsa1024-sha1-expired.pdf
 
 **TestCaseID: PDF-ValidationFail-3**
 
@@ -471,9 +471,7 @@ List of Test Cases
   * RequirementID: []()
   * Title: The PDF-file has been signed with revoked certificate (PAdES Baseline LT)
   * Expected Result: Document signed with certificate that is revoked should fail.
-  * File: hellopades-lt-sha256-revoked.pdf
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+  * File: pades_lt_revoked.pdf
 
 **TestCaseID: PDF-ValidationFail-4**
 
@@ -630,7 +628,7 @@ List of Test Cases
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
   * Title: JSON structure has all elements (Bdoc valid multiple signatures)
   * Expected Result: All required elements are present according to SimpleReportSchema.json
-  * File: Valid_IDCard_MobID_signatures.bdoc
+  * File: Baltic MoU digital signing_EST_LT_LV.bdoc
 
   **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
@@ -689,8 +687,6 @@ List of Test Cases
   * Title: JSON structure has all elements (Pdf valid Multiple signatures)
   * Expected Result: All required elements are present according to SimpleReportSchema.json
   * File:
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: Pdf-ValidationReport-10**
 
@@ -809,7 +805,9 @@ List of Test Cases
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
   * Title: Verification of values in Validation Report XAdES_BASELINE_LT_TM, AdESqc, FullSignatureScope
   * Expected Result: All required elements are present and meet the expected values.
-  * File: ICT_MoU_FI-EE_10dec2013OneSignature.bdoc
+  * File: 23200_weakdigest-wrong-nonce.asice
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: Bdoc-ValidationReportValue-5**
 
@@ -826,6 +824,8 @@ List of Test Cases
   * Title: Verification of values in Validation Report, xml v1.0, checks for missing info
   * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
   * File: ICT_MoU_FI-EE_10dec2013OneSignature.bdoc
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: Ddoc-ValidationReportValue-7**
 

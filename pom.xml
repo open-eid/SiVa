@@ -56,6 +56,7 @@
         <coveralls.repo.token>NA</coveralls.repo.token>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.root>${basedir}</project.root>
     </properties>
 
     <reporting>
@@ -146,6 +147,29 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.commonjava.maven.plugins</groupId>
+                <artifactId>directory-maven-plugin</artifactId>
+                <version>0.1</version>
+                <executions>
+                    <execution>
+                        <id>directories</id>
+                        <goals>
+                            <goal>directory-of</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <property>siva.basedir</property>
+                            <project>
+                                <groupId>io.github.openeid.siva</groupId>
+                                <artifactId>siva</artifactId>
+                            </project>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
+
+
 </project>

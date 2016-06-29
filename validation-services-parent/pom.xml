@@ -17,7 +17,6 @@
         <module>ddoc-validation-service</module>
         <module>xroad-validation-service</module>
         <module>tsl-loader</module>
-        <module>xroad-asice-verifier</module>
     </modules>
 
     <properties>

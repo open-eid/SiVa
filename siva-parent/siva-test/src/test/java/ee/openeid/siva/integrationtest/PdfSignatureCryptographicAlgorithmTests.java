@@ -72,8 +72,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * File: hellopades-ecdsa.pdf
      */
-    @Ignore("TODO - current test file's signature doesn't contain ocsp")
-    @Test
+    @Test    @Ignore //TODO: current test file's signature doesn't contain ocsp
     public void documentSignedWithSha256EcdsaAlgoShouldPass() {
         assertAllSignaturesAreValid(postForReport("hellopades-ecdsa.pdf"));
     }
@@ -127,7 +126,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * File: hellopades-lt-sha256-rsa1024.pdf
      */
-    @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
+    @Test @Ignore //TODO: new test file is needed; the current one has issues with QC / SSCD
     public void documentSignedWithSha256Rsa1024AlgoShouldPass() {
         assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-rsa1024.pdf"));
     }
@@ -145,7 +144,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * File: hellopades-lt-sha256-rsa1023.pdf
      */
-    @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
+    @Test @Ignore //TODO: new test file is needed; the current one has issues with QC / SSCD
     public void documentSignedWithRsa1023AlgoShouldPass() {
         assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-rsa1023.pdf"));
     }
@@ -163,7 +162,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * File: hellopades-lt-sha256-rsa2047.pdf
      */
-    @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
+    @Test @Ignore //TODO - a new test file is needed; the current one has issues with QC / SSCD
     public void documentSignedWithRsa2047AlgoShouldPass() {
         assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-rsa2047.pdf"));
     }

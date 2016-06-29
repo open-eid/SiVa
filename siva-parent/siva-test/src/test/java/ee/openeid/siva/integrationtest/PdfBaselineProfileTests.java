@@ -41,10 +41,10 @@ public class PdfBaselineProfileTests extends SiVaRestTests{
      *
      * Expected Result: Document validation should fail
      *
-     * File: some_file.pdf
+     * File:
      */
     @Ignore
-    @Test // need non-plugtest test file
+    @Test //TODO: need test file
     public void baselineProfileTDocumentShouldFail() {
         QualifiedReport report = postForReport("some_file.pdf");
         assertInvalidWithError(report, "BBB_VCI_ISFC_ANS_1", "The signature format is not allowed by the validation policy constraint!");
@@ -79,10 +79,9 @@ public class PdfBaselineProfileTests extends SiVaRestTests{
      *
      * Expected Result: Document validation should pass
      *
-     * File: some_file.pdf
+     * File:
      */
-    @Ignore
-    @Test // need non-plugtest test file
+    @Test @Ignore //TODO: need test file
     public void baselineProfileLTADocumentShouldPass() {
         assertAllSignaturesAreValid(postForReport("some_file.pdf"));
     }
@@ -119,7 +118,7 @@ public class PdfBaselineProfileTests extends SiVaRestTests{
      *
      * File: hellopades-lt1-lt2-wrongDigestValue.pdf
      */
-    @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
+    @Test @Ignore //TODO: new test file is needed; the current one has issues with QC / SSCD
     public void documentMessageDigestAttributeValueDoesNotMatchCalculatedValue() {
         assertAllSignaturesAreInvalid(postForReport("hellopades-lt1-lt2-wrongDigestValue.pdf"));
     }
@@ -137,7 +136,7 @@ public class PdfBaselineProfileTests extends SiVaRestTests{
      *
      * File: hellopades-lt1-lt2-Serial.pdf
      */
-    @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
+    @Test @Ignore //TODO - a new test file is needed; the current one has issues with QC / SSCD
     public void documentSignedWithMultipleSignersSerialSignature() {
         assertAllSignaturesAreValid(postForReport("hellopades-lt1-lt2-Serial.pdf"));
     }
@@ -155,7 +154,7 @@ public class PdfBaselineProfileTests extends SiVaRestTests{
      *
      * File: hellopades-lt1-lt2-parallel3.pdf
      */
-    @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
+    @Test @Ignore //TODO: new test file is needed; the current one has issues with QC / SSCD
     public void documentSignedWithMultipleSignersParallelSignature() {
         assertAllSignaturesAreValid(postForReport("hellopades-lt1-lt2-parallel3.pdf"));
     }

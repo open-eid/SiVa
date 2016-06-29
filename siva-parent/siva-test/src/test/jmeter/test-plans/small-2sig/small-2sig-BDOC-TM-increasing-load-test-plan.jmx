@@ -309,15 +309,6 @@ try {
         <boolProp name="exclude_checkbox_state">false</boolProp>
       </kg.apc.jmeter.vizualizers.CorrectedResultCollector>
       <hashTree/>
-      <ResultSaver guiclass="ResultSaverGui" testclass="ResultSaver" testname="Save Responses to a file" enabled="true">
-        <stringProp name="FileSaver.filename">${ERRORS_DIR}</stringProp>
-        <boolProp name="FileSaver.errorsonly">false</boolProp>
-        <boolProp name="FileSaver.skipautonumber">false</boolProp>
-        <boolProp name="FileSaver.skipsuffix">false</boolProp>
-        <boolProp name="FileSaver.successonly">false</boolProp>
-        <boolProp name="FileSaver.addTimstamp">true</boolProp>
-      </ResultSaver>
-      <hashTree/>
     </hashTree>
   </hashTree>
 </jmeterTestPlan>

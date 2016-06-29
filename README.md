@@ -118,7 +118,7 @@ It is possible to configure following parameters in performance test:
   * `jmeter.testfiles.dir` - directory of the test files, default is ${project.basedir}/src/test/jmeter/test-files
   * `jmeter.thread.init.count` - start thread count, default is 5
   * `jmeter.thread.max.count` - max thread count, default is 50
-  * `jmeter.thread.increment.count` - step of thread count incrementation, dedault is 5
+  * `jmeter.thread.increment.count` - step of thread count incrementation, default is 5
   * `jmeter.thread.increment.intervalInSecs` - time between incrementations, default is 180
 
 The default values can be changed inside `siva-test/pom.xml` file. It is also possible to run the tests with modifying the parameters on execution.
@@ -129,7 +129,7 @@ To run the tests with modified parameters:
 ./mvnw verify -Drun.load.tests=true -Djmeter.host.port=9090
 ```
 
-Test results will be available at `/siva-parent/siva-test/target/jmeter/results/reports/`` folder
+Test results will be available at `/siva-parent/siva-test/target/jmeter/results/reports/` folder
 
 ## Documentation
 

@@ -1,5 +1,6 @@
 package ee.openeid.siva.sample.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import ee.openeid.siva.sample.ci.info.BuildInfo;
 import ee.openeid.siva.sample.siva.SivaValidationService;
 import ee.openeid.siva.sample.upload.UploadFileCacheService;
@@ -20,8 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 
-import static ee.openeid.siva.sample.siva.ValidationReportUtils.getOverallValidationResult;
-import static ee.openeid.siva.sample.siva.ValidationReportUtils.getValidateFilename;
+import static ee.openeid.siva.sample.siva.ValidationReportUtils.*;
 
 @Controller
 class UploadController {
@@ -72,11 +72,13 @@ class UploadController {
         return REDIRECT_PATH;
     }
 
-    private static void setModelFlashAttributes(final RedirectAttributes redirectAttributes, final String validationResult) {
+    private static void setModelFlashAttributes(final RedirectAttributes redirectAttributes, final String validationResult) throws JsonProcessingException {
         final ValidationResponse response = new ValidationResponse();
         response.setFilename(getValidateFilename(validationResult));
         response.setOverAllValidationResult(getOverallValidationResult(validationResult));
-        response.setValidationResult(new JSONObject(validationResult).toString(4));
+
+        final String output = isJSONNull(validationResult) ? handleMissingJSON() : validationResult;
+        response.setValidationResult(new JSONObject(output).toString(4));
 
         redirectAttributes.addFlashAttribute(response);
     }

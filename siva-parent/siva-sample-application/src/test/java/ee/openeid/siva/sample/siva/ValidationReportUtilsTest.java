@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -64,5 +65,31 @@ public class ValidationReportUtilsTest {
     public void overallValidationRequiredKeysNotPresentReturnsInvalid() throws Exception {
         final String json = "{\"randomKey\": \"randomValue\"}";
         assertEquals("INVALID", ValidationReportUtils.getOverallValidationResult(json));
+    }
+
+    @Test
+    public void givenNullToValidateFilenameReturnsEmptyString() throws Exception {
+        assertThat(ValidationReportUtils.getValidateFilename(null)).isEqualTo("");
+    }
+
+    @Test
+    public void givenNullJSONToOverallValidationResultWillReturnERROR() throws Exception {
+        assertThat(ValidationReportUtils.getOverallValidationResult(null)).isEqualTo("ERROR");
+    }
+
+    @Test
+    public void whenHandleMissingJSONIsCalledErrorJSONWillBeReturned() throws Exception {
+        assertThat(ValidationReportUtils.handleMissingJSON()).contains("errorMessage");
+        assertThat(ValidationReportUtils.handleMissingJSON()).contains("No JSON found in SiVa API response");
+    }
+
+    @Test
+    public void givenNullJSONStringReturnsTrue() throws Exception {
+        assertThat(ValidationReportUtils.isJSONNull(null)).isTrue();
+    }
+
+    @Test
+    public void givenStringToIsJSONNullReturnsFalse() throws Exception {
+        assertThat(ValidationReportUtils.isJSONNull("random string")).isFalse();
     }
 }

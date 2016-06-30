@@ -2,6 +2,7 @@ package ee.openeid.siva.sample.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import ee.openeid.siva.sample.ci.info.BuildInfo;
+import ee.openeid.siva.sample.configuration.GoogleAnalyticsProperties;
 import ee.openeid.siva.sample.siva.SivaValidationService;
 import ee.openeid.siva.sample.upload.UploadFileCacheService;
 import ee.openeid.siva.sample.upload.UploadedFile;
@@ -32,11 +33,13 @@ class UploadController {
 
     private SivaValidationService validationService;
     private UploadFileCacheService fileUploadService;
+    private GoogleAnalyticsProperties googleAnalyticsProperties;
     private BuildInfo buildInfo;
 
     @RequestMapping("/")
     public String startPage(final Model model) {
         model.addAttribute(buildInfo);
+        model.addAttribute("googleTrackingId", googleAnalyticsProperties.getTrackingId());
         return START_PAGE_VIEW_NAME;
     }
 
@@ -81,6 +84,11 @@ class UploadController {
         response.setValidationResult(new JSONObject(output).toString(4));
 
         redirectAttributes.addFlashAttribute(response);
+    }
+
+    @Autowired
+    public void setGoogleAnalyticsProperties(GoogleAnalyticsProperties googleAnalyticsProperties) {
+        this.googleAnalyticsProperties = googleAnalyticsProperties;
     }
 
     @Autowired

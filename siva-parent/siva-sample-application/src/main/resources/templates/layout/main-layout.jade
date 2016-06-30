@@ -19,8 +19,9 @@ html
         script(src="/webjars/dropzone/4.2.0/dropzone.js")
         script(src="/webjars/highlightjs/9.4.0/highlight.pack.js")
         script(src="/js/custom.js")
-        //script(src="/js/google-tracking-init.js")
-        //script.
-        //    var trackingId = '';
-        //    ga('create', trackingId, 'auto');
-        //    ga('send', 'pageview');
+        if googleTrackingId != null
+            script(src="/js/google-tracking-init.js")
+            script.
+                var trackingId = '#{googleTrackingId}';
+                ga('create', trackingId, 'auto');
+                ga('send', 'pageview');

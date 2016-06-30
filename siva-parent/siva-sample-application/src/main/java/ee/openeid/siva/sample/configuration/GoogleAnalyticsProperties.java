@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Data
-@ConfigurationProperties(prefix = "siva.service")
-public class SivaConfigurationProperties {
-    private String serviceUrl;
+@ConfigurationProperties(prefix = "siva.google-analytics")
+public class GoogleAnalyticsProperties {
+    private String trackingId;
 }

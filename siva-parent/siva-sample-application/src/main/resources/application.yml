@@ -1,10 +1,12 @@
 server:
   port: 9000
 siva:
+  google-analytics:
+    # TODO: Remove before release
+    tracking-id: UA-80132229-1
   build:
     infoFile: "ci-build-info.yml"
   service:
-    uploadDirectory: "upload-dir"
     serviceUrl: "http://localhost:8080/validate"
 spring:
   http:

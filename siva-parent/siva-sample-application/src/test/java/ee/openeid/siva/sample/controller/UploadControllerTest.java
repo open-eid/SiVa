@@ -4,9 +4,11 @@ import com.domingosuarez.boot.autoconfigure.jade4j.Jade4JAutoConfiguration;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import ee.openeid.siva.sample.ci.info.BuildInfo;
+import ee.openeid.siva.sample.configuration.GoogleAnalyticsProperties;
 import ee.openeid.siva.sample.siva.SivaValidationService;
 import ee.openeid.siva.sample.upload.UploadFileCacheService;
 import ee.openeid.siva.sample.upload.UploadedFile;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,6 +50,14 @@ public class UploadControllerTest {
 
     @MockBean
     private UploadFileCacheService hazelcastUploadFileCacheService;
+
+    @MockBean
+    private GoogleAnalyticsProperties googleAnalyticsProperties;
+
+    @Before
+    public void setUp() throws Exception {
+        given(googleAnalyticsProperties.getTrackingId()).willReturn("random-tracking-id");
+    }
 
     @Test
     @Ignore

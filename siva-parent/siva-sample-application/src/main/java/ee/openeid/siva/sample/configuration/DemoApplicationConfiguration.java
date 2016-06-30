@@ -15,7 +15,8 @@ import java.nio.charset.Charset;
 @Configuration
 @EnableConfigurationProperties({
     SivaConfigurationProperties.class,
-    BuildInfoProperties.class
+    BuildInfoProperties.class,
+    GoogleAnalyticsProperties.class
 })
 public class DemoApplicationConfiguration {
     private BuildInfoProperties properties;

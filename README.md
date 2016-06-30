@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/open-eid/SiVa.svg?branch=develop)](https://travis-ci.org/open-eid/SiVa)
 [![Coverage Status](https://coveralls.io/repos/github/open-eid/SiVa/badge.svg?branch=develop)](https://coveralls.io/github/open-eid/SiVa?branch=develop)
+[![GitHub license](https://img.shields.io/badge/license-GPLv2-blue.svg)](https://raw.githubusercontent.com/open-eid/SiVa/develop/LICENSE.md)
 
 SiVa is digitally signed documents validations web service with REST JSON API
 built with [Spring Boot](http://projects.spring.io/spring-boot/). Supported digitally

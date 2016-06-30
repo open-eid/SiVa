@@ -13,6 +13,7 @@ import java.util.Arrays;
 public final class ValidationServiceUtils {
     private static final String FILENAME_EXTENSION_SEPARATOR = ".";
     private static final String XROAD_XSD = "http://x-road.eu/xsd/xroad.xsd";
+    private static final String UNIQUE_XROAD_ASICE_FILE = "message.xml";
 
     private ValidationServiceUtils() {
     }
@@ -32,14 +33,14 @@ public final class ValidationServiceUtils {
         return parsedFileType;
     }
 
-    public static boolean isXroadAsiceContainer(ValidationRequest validationRequest) throws IOException {
+    static boolean isXroadAsiceContainer(ValidationRequest validationRequest) throws IOException {
         String document = validationRequest.getDocument();
         if (document == null) {
             return false;
         }
 
         try (InputStream stream = new ByteArrayInputStream(Base64.decodeBase64(document.getBytes()))) {
-            byte[] fileContents = ZipUtil.unpackEntry(stream, "message.xml");
+            byte[] fileContents = ZipUtil.unpackEntry(stream, UNIQUE_XROAD_ASICE_FILE);
             if (fileContents == null) {
                 return false;
             }
@@ -49,7 +50,7 @@ public final class ValidationServiceUtils {
         }
     }
 
-    public static FileType parseFileExtension(String fileExtension) {
+    static FileType parseFileExtension(String fileExtension) {
         return Arrays.stream(FileType.values())
                 .filter(fileType -> fileType.name().equalsIgnoreCase(fileExtension))
                 .findFirst()

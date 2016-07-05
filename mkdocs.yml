@@ -25,8 +25,9 @@ pages:
   - Use cases: siva/use_cases.md
   - Deployment: siva/deployment.md
   - Logging: siva/logging.md
-  - References: siva/references.md
+  - QA Strategy: siva/qa_strategy.md
   - Test Plan: siva/test_plan.md
+  - References: siva/references.md
   - Appendixes:
         - Appendix 1 - Non-Functional Requirements: siva/appendix/none_functional_requirements.md
         - Appendix 2 - Functional Requirements: siva/appendix/functional_requirements.md

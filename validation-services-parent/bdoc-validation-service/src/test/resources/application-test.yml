@@ -1,5 +1,5 @@
 tsl:
-  loadFromCache: false
+  loadFromCache: true
   url: https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml
   code: EU
   schedulerCron: "0 0 3 * * ?"

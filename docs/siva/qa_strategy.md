@@ -94,7 +94,7 @@ SonarLint is used to validate code automatically. It integrates both suggested t
 
 Testing follows the principles described in reference document   [1]
 
-The goal is to automate as much of the testing as possible, however some aspects of the testing will be carried out manually.
+The goal is to automate as much of the testing process as possible, however some aspects of the testing will be carried out manually.
 
 As the development is carried out validation module by validation module, testing will follow the same principle. The tests will be developed in iterations for each validation module.
 

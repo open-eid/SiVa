@@ -2,6 +2,8 @@ language: java
 sudo: false
 jdk:
 - oraclejdk8
+env:
+  - TMPDIR=/tmp
 addons:
   ssh_known_hosts: demoapps.eu
   apt:

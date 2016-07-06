@@ -1,7 +1,6 @@
 package ee.openeid.siva.xroad;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.report.Policy;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.siva.xroad.configuration.XROADValidationServiceProperties;
@@ -22,6 +21,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.cert.X509Certificate;
+import java.util.Date;
 
 @Service
 public class XROADValidationService implements ValidationService {
@@ -39,11 +39,8 @@ public class XROADValidationService implements ValidationService {
             verifier.verify();
             onVerificationSucceeded(verifier);
 
-            QualifiedReport outputReport = new QualifiedReport();
-            outputReport.setPolicy(Policy.SIVA_DEFAULT);
-            outputReport.setDocumentName(wsDocument.getName());
-
-            return outputReport;
+            return new XROADQualifiedReportBuilder(verifier, wsDocument.getName(), new Date())
+                    .build();
         } catch (Exception e) {
             e.printStackTrace();
         }

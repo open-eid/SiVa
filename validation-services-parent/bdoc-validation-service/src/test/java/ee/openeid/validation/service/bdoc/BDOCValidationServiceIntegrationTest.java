@@ -38,7 +38,7 @@ public class BDOCValidationServiceIntegrationTest {
 
     @Test
     public void verifyCorrectPolicyIsLoadedToD4JConfiguration() throws Exception {
-        assertTrue(configuration.getValidationPolicy().contains("bdoc_constraint"));
+        assertTrue(configuration.getValidationPolicy().contains("EE_constraint"));
     }
 
     @Test

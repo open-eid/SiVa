@@ -1,9 +1,6 @@
 package ee.openeid.siva.webapp.request;
 
-import ee.openeid.siva.webapp.request.validation.annotations.ValidBase64String;
-import ee.openeid.siva.webapp.request.validation.annotations.ValidDocumentType;
-import ee.openeid.siva.webapp.request.validation.annotations.ValidFilename;
-import ee.openeid.siva.webapp.request.validation.annotations.ValidReportType;
+import ee.openeid.siva.webapp.request.validation.annotations.*;
 import lombok.Data;
 
 @Data
@@ -17,6 +14,9 @@ public class JSONValidationRequest implements ValidationRequest {
 
     @ValidDocumentType
     private String documentType;
+
+    @ValidSignaturePolicy
+    private String signaturePolicy;
 
     @ValidReportType
     private String reportType;

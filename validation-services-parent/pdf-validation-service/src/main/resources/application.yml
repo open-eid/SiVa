@@ -1,3 +1,6 @@
 siva:
   pdf:
-    policy: /pdf_constraint.xml
+    signaturePolicy:
+      policies:
+        EE: pdf_constraint.xml
+      defaultPolicy: EE

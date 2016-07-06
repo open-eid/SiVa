@@ -13,6 +13,7 @@ public class MockValidationRequestBuilder {
     public static final String DEFAULT_TYPE = "pdf";
     public static final String DEFAULT_REPORT = "simple";
     public static final String DEFAULT_DOCUMENT = "ABC";
+    public static final String DEFAULT_SIGNATURE_POLICY = null;
 
     private MockValidationRequest validationRequest;
 
@@ -56,6 +57,7 @@ public class MockValidationRequestBuilder {
         private String document = DEFAULT_DOCUMENT;
         private String filename = DEFAULT_FILENAME;
         private String type = DEFAULT_TYPE;
+        private String signaturePolicy = DEFAULT_SIGNATURE_POLICY;
         private String reportType = DEFAULT_REPORT;
 
         @Override
@@ -71,6 +73,11 @@ public class MockValidationRequestBuilder {
         @Override
         public String getDocumentType() {
             return type;
+        }
+
+        @Override
+        public String getSignaturePolicy() {
+            return signaturePolicy;
         }
 
         @Override

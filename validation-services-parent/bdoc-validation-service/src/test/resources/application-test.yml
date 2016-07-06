@@ -11,4 +11,7 @@ keystore:
 
 siva:
   bdoc:
-    policy: /bdoc_constraint.xml
+    signaturePolicy:
+      policies:
+        EE: bdoc_constraint.xml
+      defaultPolicy: EE

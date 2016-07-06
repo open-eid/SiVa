@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SignedDoc format="DIGIDOC-XML" version="1.3" xmlns="http://www.sk.ee/DigiDoc/v1.3.0#">
+<DataFile ContentType="EMBEDDED_BASE64" Filename="testime.txt" Id="D0" MimeType="text/plain" Size="15" xmlns="http://www.sk.ee/DigiDoc/v1.3.0#">dGVzdHRlc3R0ZXN0MTIz
+</DataFile>
+<Signature Id="S0" xmlns="http://www.w3.org/2000/09/xmldsig#">
+<SignedInfo xmlns="http://www.w3.org/2000/09/xmldsig#">
+<CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315">
+</CanonicalizationMethod>
+<SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1">
+</SignatureMethod>
+<Reference URI="#D0">
+<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1">
+</DigestMethod>
+<DigestValue>ZXzu1xyqBjmTw+WAxUlwV8cc/A8=</DigestValue>
+</Reference>
+<Reference Type="http://uri.etsi.org/01903/v1.1.1#SignedProperties" URI="#S0-SignedProperties">
+<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1">
+</DigestMethod>
+<DigestValue>beHewmHznLpn7qo8bYSFi0/R9SM=
+</DigestValue>
+</Reference>
+</SignedInfo><SignatureValue Id="S0-SIG">
+O3LdMSZac6Gf65brxA69XuWxHjmIq7Ufr924At24hl4ICWSlYl+2J9TSkBhKNAnl
+Pmge5olCE6Mh69rQIe7dEmUvfDJS6Ebyt9pBus4PG27u3AYVspXTJjtfKNy954Gj
+cLEevRSBHngEwqoSfzriK97LCDmehZgp7p0yXg15lc8=
+</SignatureValue>
+<KeyInfo>
+<KeyValue>
+<RSAKeyValue>
+<Modulus>+jOh8trcoHks45skHWH1rQ5RyvJk/Q9ggddCA59JVxdybXr34Z80NnjwZiBizQ/a
+wSF14VvJgS/VkwVyoJ5vLqey679rQkCV3grmkGWjvD3rSY89CkdNYXx3Hf5nDzER
+lUcFfjz4j8PJTm3C+nD2F5+DPXWQDKQO+NzvAg3xeOU=</Modulus>
+<Exponent>Ls2N</Exponent>
+</RSAKeyValue>
+</KeyValue>
+<X509Data><X509Certificate>
+MIID/TCCAuWgAwIBAgIERZ5YOjANBgkqhkiG9w0BAQUFADB8MRgwFgYJKoZIhvcN
+AQkBFglwa2lAc2suZWUxCzAJBgNVBAYTAkVFMSIwIAYDVQQKExlBUyBTZXJ0aWZp
+dHNlZXJpbWlza2Vza3VzMQ8wDQYDVQQLEwZFU1RFSUQxCjAIBgNVBAQTATExEjAQ
+BgNVBAMTCUVTVEVJRC1TSzAeFw0wNzAxMDUyMjAwMDBaFw0xMjAxMDIyMjAwMDBa
+MIGaMQswCQYDVQQGEwJFRTEPMA0GA1UEChMGRVNURUlEMRowGAYDVQQLExFkaWdp
+dGFsIHNpZ25hdHVyZTEkMCIGA1UEAxMbTUFSS1ZBUkRULE1BSUxJLDQ4MjExMjM2
+NTE4MRIwEAYDVQQEEwlNQVJLVkFSRFQxDjAMBgNVBCoTBU1BSUxJMRQwEgYDVQQF
+Ews0ODIxMTIzNjUxODCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEA+jOh8trc
+oHks45skHWH1rQ5RyvJk/Q9ggddCA59JVxdybXr34Z80NnjwZiBizQ/awSF14VvJ
+gS/VkwVyoJ5vLqey679rQkCV3grmkGWjvD3rSY89CkdNYXx3Hf5nDzERlUcFfjz4
+j8PJTm3C+nD2F5+DPXWQDKQO+NzvAg3xeOUCAy7NjaOB6zCB6DAOBgNVHQ8BAf8E
+BAMCBkAwOAYDVR0fBDEwLzAtoCugKYYnaHR0cDovL3d3dy5zay5lZS9jcmxzL2Vz
+dGVpZC9lc3RlaWQuY3JsMFEGA1UdIARKMEgwRgYLKwYBBAHOHwEBAQEwNzASBggr
+BgEFBQcCAjAGGgRub25lMCEGCCsGAQUFBwIBFhVodHRwOi8vd3d3LnNrLmVlL2Nw
+cy8wHwYDVR0jBBgwFoAUeBe1BfmzWM1ZjN5nXkQGTHWGaV0wHQYDVR0OBBYEFEvy
+7gEgGL422l1AfyItma7yYp4GMAkGA1UdEwQCMAAwDQYJKoZIhvcNAQEFBQADggEB
+AG+uJ8a1TUpxns7md/Z/3xU0nzI3781xbZNZDx8jmeMam2GWVB5y5M3sc6ryEX3m
+3bmDYUK1ApjJG7H8Dgdo5/ZabZRXH41JyLsCWcg0SCwUR9LFGAN5/5Tc5mFst/z1
+0zkYzcflIZuMsQ9oP+36fGeedAreNFtaxyNA46wmXSnrg7g9FrvcyyVYO7ch+N6B
+5r0iJvXZuJuwtxltsQ99m4qWNjRUpgDi5VdhOjHfax6Eo9B/DDbI4Imr11CGYjOO
+PQkA1pt3UB3UrJW0RkZCzOU/eRsdmFunFv5Mk0edMZlEJWe11vkpkH7g2Aw60IVA
+BpOQtdsEYUhjGzTaPawB224=</X509Certificate></X509Data></KeyInfo>
+<Object><QualifyingProperties xmlns="http://uri.etsi.org/01903/v1.1.1#" Target="#S0">
+Ls2N<SignedProperties xmlns="http://uri.etsi.org/01903/v1.1.1#" Id="S0-SignedProperties">
+<SignedSignatureProperties>
+<SigningTime>2009-04-25T17:39:52Z</SigningTime>
+<SigningCertificate>
+<Cert>
+<CertDigest>
+<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1">
+</DigestMethod>
+<DigestValue>2kvsavdmrFtM50QAOvLpQsK+vQU=</DigestValue>
+</CertDigest>
+<IssuerSerial>
+<X509IssuerName xmlns="http://www.w3.org/2000/09/xmldsig#">/emailAddress=pki@sk.ee/C=EE/O=AS Sertifitseerimiskeskus/OU=ESTEID/SN=1/CN=ESTEID-SK</X509IssuerName>
+<X509SerialNumber xmlns="http://www.w3.org/2000/09/xmldsig#">1168005178</X509SerialNumber>
+</IssuerSerial></Cert></SigningCertificate>
+<SignaturePolicyIdentifier>
+<SignaturePolicyImplied>
+</SignaturePolicyImplied>
+</SignaturePolicyIdentifier>
+<SignatureProductionPlace>
+<City> </City>
+<StateOrProvince> </StateOrProvince>
+<PostalCode> </PostalCode>
+<CountryName> </CountryName>
+</SignatureProductionPlace>
+<SignerRole>
+<ClaimedRoles>
+<ClaimedRole>testime</ClaimedRole>
+</ClaimedRoles>
+</SignerRole>
+</SignedSignatureProperties>
+<SignedDataObjectProperties>
+</SignedDataObjectProperties>
+</SignedProperties><UnsignedProperties>
+<UnsignedSignatureProperties><CompleteCertificateRefs><CertRefs><Cert><CertDigest><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<DigestValue>gkBzQxlGGptYR4pniNVJEGsgDio=
+</DigestValue>
+</CertDigest>
+<IssuerSerial>
+<X509IssuerName xmlns="http://www.w3.org/2000/09/xmldsig#">C=EE/O=ESTEID/OU=OCSP/CN=ESTEID-SK OCSP RESPONDER 2005/emailAddress=pki@sk.ee</X509IssuerName>
+<X509SerialNumber xmlns="http://www.w3.org/2000/09/xmldsig#">1110287041</X509SerialNumber>
+</IssuerSerial>
+</Cert></CertRefs></CompleteCertificateRefs><CompleteRevocationRefs>
+<OCSPRefs>
+<OCSPRef>
+<OCSPIdentifier URI="#N0"><ResponderID>/C=EE/O=ESTEID/OU=OCSP/CN=ESTEID-SK OCSP RESPONDER 2005/emailAddress=pki@sk.ee</ResponderID>
+<ProducedAt>2009-04-25T17:40:05Z</ProducedAt>
+</OCSPIdentifier>
+<DigestAlgAndValue>
+<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></DigestMethod>
+<DigestValue>Hbw1tPj1Le1hPI/XhjqxpHrGu0k=</DigestValue>
+</DigestAlgAndValue></OCSPRef>
+</OCSPRefs>
+</CompleteRevocationRefs>
+<CertificateValues>
+<EncapsulatedX509Certificate Id="S0-RESPONDER_CERT">
+MIIDPDCCAiSgAwIBAgIEQi2iwTANBgkqhkiG9w0BAQUFADB8MRgwFgYJKoZIhvcN
+AQkBFglwa2lAc2suZWUxCzAJBgNVBAYTAkVFMSIwIAYDVQQKExlBUyBTZXJ0aWZp
+dHNlZXJpbWlza2Vza3VzMQ8wDQYDVQQLEwZFU1RFSUQxCjAIBgNVBAQTATExEjAQ
+BgNVBAMTCUVTVEVJRC1TSzAeFw0wNTAzMDgxMzA0MDFaFw0xMjAxMTIxMzA0MDFa
+MG8xCzAJBgNVBAYTAkVFMQ8wDQYDVQQKEwZFU1RFSUQxDTALBgNVBAsTBE9DU1Ax
+JjAkBgNVBAMTHUVTVEVJRC1TSyBPQ1NQIFJFU1BPTkRFUiAyMDA1MRgwFgYJKoZI
+hvcNAQkBFglwa2lAc2suZWUwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAI8m
+LeLkRHLxMNCB5Pz8R5DnvPdVxBS91PoHboLnbhjlp1ecByVosjwGpXCGu8tUPuv8
+1Azgqq97AsSugM1J7Pu0gj4bg0Mf6O/9XyoT7RI7H0BuEn4KJQlFcw7tXizI5KUW
+FFZ4Qg8kfg0xwrDrLIjusBtRbeRARG3DhH8dgZBpAgMBAAGjVzBVMBMGA1UdJQQM
+MAoGCCsGAQUFBwMJMB8GA1UdIwQYMBaAFHgXtQX5s1jNWYzeZ15EBkx1hmldMB0G
+A1UdDgQWBBRM+GJhloJeOPpJDgvA0clxQXdnVTANBgkqhkiG9w0BAQUFAAOCAQEA
+fD8dP+swtSeigLxL3uUXV/tmQkjre7Ww39Uey71LdtxQ6zC7MDjcsLW13JaU0pRu
+u/p/eGe6h4/w46tSMsBx/U+D1WnHeCj1ED9SFWwfNQFVz9FkM5JEkPDm7lw5hHox
+IghRHAC3NMbR3sCrVQA2YELf2WypslROoz8XlRT1LN4pwVehpBeWO7xbQPUtoaxK
+rSCGumtxtxA3KRJ7POHPTAH4cvipxaZhS1ZcXbKtxsesGW+7KLZirpTBT17ICXEA
+1CFXDWmJ8MHRhbeNWK3G1PERgTiGtBQV7Z00CzmJPHmb1yfcT27+WZ1W9tRQsjhG
+EWyMVkNnZooWHIjLpNucQA==</EncapsulatedX509Certificate>
+</CertificateValues>
+<RevocationValues><OCSPValues><EncapsulatedOCSPValue Id="N0">
+MIIBtgoBAKCCAa8wggGrBgkrBgEFBQcwAQEEggGcMIIBmDCCAQGhcTBvMQswCQYD
+VQQGEwJFRTEPMA0GA1UEChMGRVNURUlEMQ0wCwYDVQQLEwRPQ1NQMSYwJAYDVQQD
+Ex1FU1RFSUQtU0sgT0NTUCBSRVNQT05ERVIgMjAwNTEYMBYGCSqGSIb3DQEJARYJ
+cGtpQHNrLmVlGA8yMDA5MDQyNTE3NDAwNVowVDBSMD0wCQYFKw4DAhoFAAQUJk2D
+09/TR+gqtxo/O5Aq31AEQNwEFHgXtQX5s1jNWYzeZ15EBkx1hmldAgRFnlg6gAAY
+DzIwMDkwNDI1MTc0MDA1WqElMCMwIQYJKwYBBQUHMAECBBTsnL7KSH8+8ysBasqi
+/VaxqdRKCDANBgkqhkiG9w0BAQUFAAOBgQBRnxRHiDqycCQhXwy0xEhEdn7lIAvo
+f0jo6LuHT6wMYSMmZCRJpmjaRqTcmRhu/YU7sypHsEdv9dLG/XQIrN5AzXTJ6+y+
+GJ/6e/udpGJAV9J+Y4IVqCBQrzb/R0R11EOdCMiJC3rwWGIAOwDWkPxXtzZu1a8/
+7VHCKdk39C9BzQ==
+</EncapsulatedOCSPValue>
+</OCSPValues></RevocationValues></UnsignedSignatureProperties>
+</UnsignedProperties></QualifyingProperties></Object>
+</Signature>
+</SignedDoc>

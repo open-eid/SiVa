@@ -1,4 +1,4 @@
-package ee.openeid.siva.validation.service.properties;
+package ee.openeid.siva.validation.service.signature.policy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,7 @@ public class PolicySchemaValidator {
             Validator validator = schemaFactory.newSchema(xsdSource).newValidator();
             validator.validate(xmlSource);
         } catch (SAXException | IOException e) {
-            log.error("not a valid policy", e);
+            log.error("Not a valid policy", e);
             throw new PolicyValidationException(e);
         }
     }

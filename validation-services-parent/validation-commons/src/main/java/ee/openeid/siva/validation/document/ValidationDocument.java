@@ -41,6 +41,16 @@ public class ValidationDocument {
     protected ValidationDocument nextDocument;
     private byte[] bytes;
     private String name;
+
+    public String getSignaturePolicy() {
+        return signaturePolicy;
+    }
+
+    public void setSignaturePolicy(String signaturePolicy) {
+        this.signaturePolicy = signaturePolicy;
+    }
+
+    private String signaturePolicy;
     private String absolutePath = "WSDocument";
 
     /**

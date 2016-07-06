@@ -1,5 +1,7 @@
 package ee.openeid.validation.service.bdoc.configuration;
 
+import ee.openeid.validation.service.bdoc.signature.policy.BDOCSignaturePolicyService;
+import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
 import eu.europa.esig.dss.tsl.ServiceInfo;
 import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import org.digidoc4j.Configuration;
@@ -12,13 +14,18 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootConfiguration
 @EnableAutoConfiguration
-@EnableConfigurationProperties(BDOCPolicySettings.class)
+@EnableConfigurationProperties(BDOCSignaturePolicySettings.class)
 public class BDOCValidationServiceConfiguration {
 
     @Bean
-    public Configuration configuration(TrustedListsCertificateSource trustedListSource, BDOCPolicySettings policySettings) {
+    public BDOCSignaturePolicyService bdocSignaturePolicyService(BDOCSignaturePolicySettings bdocPolicySettings) {
+        return new BDOCSignaturePolicyService(bdocPolicySettings);
+    }
+
+    @Bean
+    public Configuration configuration(TrustedListsCertificateSource trustedListSource, BDOCSignaturePolicyService bdocSignaturePolicyService) {
         Configuration configuration = new Configuration();
-        configuration.setValidationPolicy(policySettings.getAbsolutePath());
+        configuration.setValidationPolicy(bdocSignaturePolicyService.getAbsolutePath(null));
         TSLCertificateSource tslCertificateSource = new TSLCertificateSourceImpl();
 
         trustedListSource.getCertificates()
@@ -33,4 +40,5 @@ public class BDOCValidationServiceConfiguration {
         configuration.setTSL(tslCertificateSource);
         return configuration;
     }
+
 }

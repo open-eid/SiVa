@@ -1,4 +1,4 @@
-package ee.openeid.siva.validation.service.properties;
+package ee.openeid.siva.validation.service.signature.policy;
 
 public class PolicyValidationException extends RuntimeException {
     PolicyValidationException(Exception e) {

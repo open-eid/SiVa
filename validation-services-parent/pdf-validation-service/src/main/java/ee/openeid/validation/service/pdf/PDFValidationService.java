@@ -5,8 +5,9 @@ import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.ValidationService;
-import ee.openeid.validation.service.pdf.configuration.PDFPolicySettings;
+import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import ee.openeid.validation.service.pdf.document.transformer.ValidationDocumentToDSSDocumentTransformerUtils;
+import ee.openeid.validation.service.pdf.signature.policy.PDFSignaturePolicyService;
 import ee.openeid.validation.service.pdf.validator.EstonianPDFDocumentValidator;
 import ee.openeid.validation.service.pdf.validator.report.PDFQualifiedReportBuilder;
 import eu.europa.esig.dss.DSSDocument;
@@ -24,10 +25,11 @@ import java.time.ZonedDateTime;
 
 @Service
 public class PDFValidationService implements ValidationService {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(PDFValidationService.class);
 
     private CertificateVerifier certificateVerifier;
-    private PDFPolicySettings policySettings;
+    private PDFSignaturePolicyService pdfSignaturePolicyService;
 
     @Override
     public QualifiedReport validateDocument(ValidationDocument validationDocument) throws DSSException {
@@ -49,7 +51,7 @@ public class PDFValidationService implements ValidationService {
             final DocumentValidator validator = new EstonianPDFDocumentValidator(dssDocument);
             validator.setCertificateVerifier(certificateVerifier);
 
-            final Reports reports = validator.validateDocument(policySettings.getPolicyDataStream());
+            final Reports reports = validator.validateDocument(pdfSignaturePolicyService.getPolicyDataStreamFromPolicy(validationDocument.getSignaturePolicy()));
 
             final ZonedDateTime validationTimeInGMT = ZonedDateTime.now(ZoneId.of("GMT"));
             if (LOGGER.isInfoEnabled()) {
@@ -71,6 +73,9 @@ public class PDFValidationService implements ValidationService {
         } catch (MalformedDocumentException e) {
             endExceptionally(e);
             throw e;
+        } catch (InvalidPolicyException e) {
+            endExceptionally(e);
+            throw e;
         } catch (Exception e) {
             endExceptionally(e);
             throw new ValidationServiceException(getClass().getSimpleName(), e);
@@ -83,14 +88,13 @@ public class PDFValidationService implements ValidationService {
     }
 
     @Autowired
-    public void setPolicySettings(PDFPolicySettings policySettings) {
-        this.policySettings = policySettings;
-    }
-
-    @Autowired
     public void setCertificateVerifier(CertificateVerifier certificateVerifier) {
         this.certificateVerifier = certificateVerifier;
     }
 
+    @Autowired
+    public void setPDFSignaturePolicyService(PDFSignaturePolicyService pdfSignaturePolicyService) {
+        this.pdfSignaturePolicyService = pdfSignaturePolicyService;
+    }
 
 }

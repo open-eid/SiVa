@@ -5,6 +5,7 @@ import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.validation.service.bdoc.report.BDOCQualifiedReportBuilder;
+import ee.openeid.validation.service.bdoc.signature.policy.BDOCSignaturePolicyService;
 import eu.europa.esig.dss.DSSException;
 import org.apache.commons.lang.StringUtils;
 import org.digidoc4j.Configuration;
@@ -29,6 +30,8 @@ public class BDOCValidationService implements ValidationService {
 
     private Configuration configuration;
 
+    private BDOCSignaturePolicyService bdocSignaturePolicyService;
+
     @Override
     public QualifiedReport validateDocument(ValidationDocument validationDocument) {
         Container container;
@@ -47,6 +50,9 @@ public class BDOCValidationService implements ValidationService {
     }
 
     private Container createContainer(ValidationDocument validationDocument) {
+        Configuration configuration = this.configuration.copy();
+        configuration.setValidationPolicy(bdocSignaturePolicyService.getAbsolutePath(validationDocument.getSignaturePolicy()));
+
         InputStream containerInputStream = new ByteArrayInputStream(validationDocument.getBytes());
         return ContainerBuilder.
                 aContainer().
@@ -65,6 +71,11 @@ public class BDOCValidationService implements ValidationService {
     @Autowired
     public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
+    }
+
+    @Autowired
+    public void setBDOCSignaturePolicyService(BDOCSignaturePolicyService bdocSignaturePolicyService) {
+        this.bdocSignaturePolicyService = bdocSignaturePolicyService;
     }
 
 }

@@ -1,5 +1,5 @@
 tsl:
-  loadFromCache: false
+  loadFromCache: true
   url: https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml
   code: EU
   schedulerCron: "0 0 3 * * ?"
@@ -11,4 +11,7 @@ keystore:
 
 siva:
   bdoc:
-    policy: /bdoc_constraint.xml
+    signaturePolicy:
+      policies:
+        EE: bdoc_constraint.xml
+      defaultPolicy: EE

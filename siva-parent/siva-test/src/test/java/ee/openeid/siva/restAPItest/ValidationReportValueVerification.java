@@ -153,6 +153,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      ***/
     @Test
+    @Ignore
     public void BdocCorrectValuesArePresentInvalidLtSignatureAdesqc() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LTA-V-24.bdoc", "simple"))

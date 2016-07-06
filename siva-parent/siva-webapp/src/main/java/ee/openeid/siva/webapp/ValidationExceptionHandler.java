@@ -2,6 +2,7 @@ package ee.openeid.siva.webapp;
 
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
+import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import ee.openeid.siva.webapp.response.erroneus.RequestValidationError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -27,6 +28,14 @@ public class ValidationExceptionHandler {
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleValidationServiceException(ValidationServiceException e) {
         return getMessage("validation.service.error.message");
+    }
+
+    @ExceptionHandler(InvalidPolicyException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public RequestValidationError handleInvalidPolicyException(InvalidPolicyException e) {
+        RequestValidationError requestValidationError = new RequestValidationError();
+        requestValidationError.addFieldError("signaturePolicy", e.getMessage());
+        return requestValidationError;
     }
 
     private String getMessage(String key) {

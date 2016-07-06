@@ -19,7 +19,7 @@ signed document formats are: BDOC, DDOC and PDF files with at least signature le
 
 ### Libraries used in validation services
 
-Below is list of Java libraries we use and for which digital signed file we use it for:
+Below is list of Java libraries we use and for which digitally signed document format we use it for:
 
 * [JDigiDoc](https://github.com/open-eid/jdigidoc) - is used to validate Estonian older digital 
   signature format called DDOC
@@ -92,7 +92,7 @@ Web application has to be started before the tests are executed.
 > **Note**: PDF load test files contain test certificates. In order for PDF load tests to succeed 
 > SiVa application should be started with test certificates preloaded.
 
-To load trusted test certificates in addition to TSL add spring profile parameter to the command.
+To load trusted test certificates in addition to TSL "test" spring profile should be activated at startup, for example:
 
 ```bash
 java -Dspring.profiles.active=test -jar siva-webapp-2.0.2-SNAPSHOT.jar

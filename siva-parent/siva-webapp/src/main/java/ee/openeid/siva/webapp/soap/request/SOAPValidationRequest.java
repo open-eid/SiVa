@@ -1,7 +1,6 @@
 package ee.openeid.siva.webapp.soap.request;
 
 import ee.openeid.siva.proxy.document.DocumentType;
-import ee.openeid.siva.proxy.document.ReportType;
 import ee.openeid.siva.webapp.request.ValidationRequest;
 import lombok.Data;
 
@@ -24,18 +23,11 @@ public class SOAPValidationRequest implements ValidationRequest {
     @XmlElement(name = "DocumentType", required = true)
     private DocumentType documentType;
 
-    @XmlElement(name = "ReportType", required = true)
-    private ReportType reportType;
-
     @XmlElement(name = "SignaturePolicy")
     private String signaturePolicy;
 
     public String getDocumentType() {
         return documentType.name();
-    }
-
-    public String getReportType() {
-        return reportType.name();
     }
 
 }

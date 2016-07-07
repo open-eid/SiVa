@@ -152,8 +152,7 @@ try {
                 <stringProp name="Argument.value">{&#xd;
 	&quot;document&quot; :  &quot;${__property(TESTFILE_BASE64)}&quot;,&#xd;
 	&quot;filename&quot; : &quot;${TESTFILE}&quot;,&#xd;
-	&quot;documentType&quot; : &quot;${FILETYPE}&quot;,&#xd;
-	&quot;reportType&quot;: &quot;simple&quot;&#xd;
+	&quot;documentType&quot; : &quot;${FILETYPE}&quot;&#xd;
 }&#xd;
 </stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>

@@ -115,7 +115,7 @@ public class DdocValidationFail extends SiVaRestTests{
     @Test
     public void ddocSignatureValueChanged() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestFor("test-inv-sig-inf.ddoc", "simple"))
+        post(validationRequestFor("test-inv-sig-inf.ddoc"))
                 .then()
                 .body("signatures[0].errors[0].nameId", Matchers.is("81"))
                 .body("signatures[0].errors[0].content", Matchers.containsString("Invalid signature value!"))
@@ -139,7 +139,7 @@ public class DdocValidationFail extends SiVaRestTests{
     @Test
     public void ddocDataFileHashMismatch() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestFor("AndmefailiAtribuudidMuudetud.ddoc", "simple"))
+        post(validationRequestFor("AndmefailiAtribuudidMuudetud.ddoc"))
                 .then()
                 .body("signatures[0].errors[0].nameId", Matchers.is("79"))
                 .body("signatures[0].errors[0].content", Matchers.containsString("Bad digest for DataFile: D0"))
@@ -163,7 +163,7 @@ public class DdocValidationFail extends SiVaRestTests{
     @Test
     public void ddocNoOCSPResponse() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestFor("ilma_kehtivuskinnituseta.ddoc", "simple"))
+        post(validationRequestFor("ilma_kehtivuskinnituseta.ddoc"))
                 .then()
                 .body("signatures[0].errors.nameId", Matchers.hasItems("90"))
                 .body("signatures[0].errors.content", Matchers.hasItems("Signature has no OCSP confirmation!"))
@@ -187,7 +187,7 @@ public class DdocValidationFail extends SiVaRestTests{
     @Test
     public void ddocNoNonRepudiationKey() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestFor("test-non-repu1.ddoc", "simple"))
+        post(validationRequestFor("test-non-repu1.ddoc"))
                 .then()
                 .body("signatures[0].errors.nameId", Matchers.hasItems("162"))
                 .body("signatures[0].errors.content", Matchers.hasItems("Signers cert does not have non-repudiation bit set!"))
@@ -211,7 +211,7 @@ public class DdocValidationFail extends SiVaRestTests{
     @Test //TODO: If this test returns failure it could be because of hardcoded signatures position in returned report. Expectation is that this position is always same.
     public void ddocSignersCertNotTrusted() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestFor("Belgia_kandeavaldus_LIV.ddoc", "simple"))
+        post(validationRequestFor("Belgia_kandeavaldus_LIV.ddoc"))
                 .then()
                 .body("signatures[1].errors.nameId", Matchers.hasItems("39"))
                 .body("signatures[1].errors.content", Matchers.hasItems("Signers cert not trusted, missing CA cert!"))
@@ -235,7 +235,7 @@ public class DdocValidationFail extends SiVaRestTests{
     @Test //TODO: The error message content is not checked currently as it is really sloppy
     public void ddocOCSPNotTrusted() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestFor("Tundmatu_OCSP_responder.ddoc", "simple"))
+        post(validationRequestFor("Tundmatu_OCSP_responder.ddoc"))
                 .then()
                 .body("signatures[0].errors.nameId", Matchers.hasItems("70"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
@@ -258,7 +258,7 @@ public class DdocValidationFail extends SiVaRestTests{
     @Test
     public void ddocNonSignedFile() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestFor("lisatud_andmefail.ddoc", "simple"))
+        post(validationRequestFor("lisatud_andmefail.ddoc"))
                 .then()
                 .body("signatures[0].errors.nameId", Matchers.hasItems("81"))
                 .body("signatures[0].errors.content", Matchers.hasItems("Missing Reference for file: testfail2.txt"))
@@ -282,7 +282,7 @@ public class DdocValidationFail extends SiVaRestTests{
     @Test
     public void ddocFileRemoved() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestFor("faileemald1.ddoc", "simple"))
+        post(validationRequestFor("faileemald1.ddoc"))
                 .then()
                 .body("signatures[0].errors.nameId", Matchers.hasItems("81"))
                 .body("signatures[0].errors.content", Matchers.hasItems("Missing DataFile for signature: S0 reference #D0"))

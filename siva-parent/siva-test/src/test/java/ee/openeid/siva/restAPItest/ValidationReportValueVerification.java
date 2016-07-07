@@ -46,7 +46,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      ***/
     @Test
     public void BdocCorrectValuesArePresentValidLtTmSignature() {
-        post(validationRequestFor("Valid_ID_sig.bdoc", "simple"))
+        post(validationRequestFor("Valid_ID_sig.bdoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
@@ -73,7 +73,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
     @Test
     public void BdocCorrectValuesArePresentValidLtSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
-        post(validationRequestFor("23635_bdoc_ts_OCSP_random_nonce.bdoc", "simple"))
+        post(validationRequestFor("23635_bdoc_ts_OCSP_random_nonce.bdoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
@@ -100,7 +100,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
     @Test
     public void BdocCorrectValuesArePresentValidLtSignatureAdes() {
         setTestFilesDirectory("bdoc/test/timemark/");
-        post(validationRequestFor("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc", "simple"))
+        post(validationRequestFor("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
@@ -128,7 +128,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
     public void BdocCorrectValuesArePresentValidLtSignatureAdesqc() {
         setTestFilesDirectory("bdoc/test/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("23200_weakdigest-wrong-nonce.asice"));
-        post(validationRequestWithValidKeys(encodedString, "23200_weakdigest-wrong-nonce.asice", "bdoc", "simple"))
+        post(validationRequestWithValidKeys(encodedString, "23200_weakdigest-wrong-nonce.asice", "bdoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
@@ -156,7 +156,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
     @Ignore
     public void BdocCorrectValuesArePresentInvalidLtSignatureAdesqc() {
         setTestFilesDirectory("bdoc/live/timestamp/");
-        post(validationRequestFor("EE_SER-AEX-B-LTA-V-24.bdoc", "simple"))
+        post(validationRequestFor("EE_SER-AEX-B-LTA-V-24.bdoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LTA"))
@@ -183,7 +183,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
     @Test @Ignore //TODO: VAL-238 Travis fails the test, although in local machine it passes
     public void DdocCorrectValuesArePresentV1_0() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestFor("DigiDoc_1.0_Tartu_ja_Tallinna_koostooleping.ddoc", "simple"))
+        post(validationRequestFor("DigiDoc_1.0_Tartu_ja_Tallinna_koostooleping.ddoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"))
                 .body("signatures[0].signatureFormat", Matchers.is("SK_XML_1.0"))
@@ -212,7 +212,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
     @Test
     public void DdocCorrectValuesArePresentV1_1() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestFor("igasugust1.1.ddoc", "simple"))
+        post(validationRequestFor("igasugust1.1.ddoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"))
                 .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.1"))
@@ -241,7 +241,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
     @Test
     public void DdocCorrectValuesArePresentV1_2() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestFor("igasugust1.2.ddoc", "simple"))
+        post(validationRequestFor("igasugust1.2.ddoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"))
                 .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.2"))
@@ -269,7 +269,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
     @Test
     public void DdocCorrectValuesArePresentV1_3() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestFor("igasugust1.3.ddoc", "simple"))
+        post(validationRequestFor("igasugust1.3.ddoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"))
                 .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))

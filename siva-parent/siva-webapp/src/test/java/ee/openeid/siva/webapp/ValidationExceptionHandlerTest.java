@@ -84,7 +84,6 @@ public class ValidationExceptionHandlerTest {
         jsonObject.put("document", "dGVzdA0K");
         jsonObject.put("filename", "file.bdoc");
         jsonObject.put("documentType", "BDOC");
-        jsonObject.put("reportType", "simple");
         return jsonObject;
     }
 

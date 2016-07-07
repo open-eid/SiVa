@@ -44,19 +44,6 @@ public class ValidationControllerTest {
         assertEquals("filename.asd", transformerSpy.validationRequest.getFilename());
         assertEquals("QVNE", transformerSpy.validationRequest.getDocument());
         assertEquals("PDF" , transformerSpy.validationRequest.getDocumentType());
-        assertEquals("simple" , transformerSpy.validationRequest.getReportType());
-    }
-
-    @Test
-    public void requestWithInvalidReportTypeReturnsErroneousResponse() throws Exception {
-        mockMvc.perform(post("/validate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestWithInvalidReportType().toString().getBytes()))
-                .andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.requestErrors", Matchers.hasSize(1)))
-                .andExpect(jsonPath("$.requestErrors[0].key", is("reportType")))
-                .andExpect(jsonPath("$.requestErrors[0].message", containsString("invalid report type")));
     }
 
     @Test
@@ -98,7 +85,6 @@ public class ValidationControllerTest {
     @Test
     public void requestWithInvalidKeysShouldBeRejectedWithError() throws Exception {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("reportType", "simple");
         jsonObject.put("filename", "filename.exe");
         jsonObject.put("documentType", "BDOC");
         jsonObject.put("Document", "QVNE");
@@ -183,9 +169,9 @@ public class ValidationControllerTest {
                 .content(invalidRequest().toString().getBytes()))
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.requestErrors", Matchers.hasSize(4)))
-                .andExpect(jsonPath("$.requestErrors[*].key", containsInAnyOrder("filename", "documentType", "reportType", "document")))
-                .andExpect(jsonPath("$.requestErrors[*].message", containsInAnyOrder("invalid filename", "invalid document type", "invalid report type", "not valid base64 encoded string")));
+                .andExpect(jsonPath("$.requestErrors", Matchers.hasSize(3)))
+                .andExpect(jsonPath("$.requestErrors[*].key", containsInAnyOrder("filename", "documentType", "document")))
+                .andExpect(jsonPath("$.requestErrors[*].message", containsInAnyOrder("invalid filename", "invalid document type", "not valid base64 encoded string")));
     }
 
     @Test
@@ -195,15 +181,13 @@ public class ValidationControllerTest {
                 .content(new JSONObject().toString().getBytes()))
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.requestErrors", Matchers.hasSize(8)))
+                .andExpect(jsonPath("$.requestErrors", Matchers.hasSize(6)))
                 .andExpect(jsonPath("$.requestErrors[*].key", containsInAnyOrder("filename",
-                        "documentType", "reportType", "document", "filename", "documentType", "reportType", "document")))
+                        "documentType", "document", "filename", "documentType", "document")))
                 .andExpect(jsonPath("$.requestErrors[*].message", containsInAnyOrder(
                         "invalid filename",
                         "invalid document type",
-                        "invalid report type",
                         "not valid base64 encoded string",
-                        "may not be empty",
                         "may not be empty",
                         "may not be empty",
                         "may not be empty"
@@ -230,13 +214,6 @@ public class ValidationControllerTest {
         jsonObject.put("document", "QVNE");
         jsonObject.put("filename", "filename.asd");
         jsonObject.put("documentType", "PDF");
-        jsonObject.put("reportType", "simple");
-        return jsonObject;
-    }
-
-    private JSONObject requestWithInvalidReportType() {
-        JSONObject jsonObject = validRequest();
-        jsonObject.put("reportType", "asd");
         return jsonObject;
     }
 

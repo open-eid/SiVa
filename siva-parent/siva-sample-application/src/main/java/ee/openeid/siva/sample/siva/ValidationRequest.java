@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class ValidationRequest {
-    private ReportType reportType = ReportType.SIMPLE;
     private FileType documentType;
     private String filename;
     private String document;

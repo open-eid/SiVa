@@ -18,7 +18,4 @@ public class JSONValidationRequest implements ValidationRequest {
     @ValidSignaturePolicy
     private String signaturePolicy;
 
-    @ValidReportType
-    private String reportType;
-
 }

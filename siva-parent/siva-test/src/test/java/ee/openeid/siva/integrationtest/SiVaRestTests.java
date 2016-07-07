@@ -32,12 +32,10 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
 
     protected static final String DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE = "document malformed or not matching documentType";
     protected static final String INVALID_DOCUMENT_TYPE = "invalid document type";
-    protected static final String INVALID_REPORT_TYPE = "invalid report type";
     protected static final String INVALID_FILENAME = "invalid filename";
     protected static final String MAY_NOT_BE_EMPTY = "may not be empty";
     protected static final String INVALID_BASE_64 = "not valid base64 encoded string";
     protected static final String DOCUMENT_TYPE = "documentType";
-    protected static final String REPORT_TYPE = "reportType";
     protected static final String FILENAME = "filename";
     protected static final String DOCUMENT = "document";
 
@@ -65,7 +63,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         if (shouldPrintResponse()) {
             return postForReportAndPrintResponse(file, signaturePolicy);
         }
-        return mapToReport(post(validationRequestFor(file, "simple", signaturePolicy)).andReturn().body().asString());
+        return mapToReport(post(validationRequestFor(file, signaturePolicy)).andReturn().body().asString());
     }
 
     @Override
@@ -74,10 +72,10 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
     }
 
     protected QualifiedReport postForReportAndPrintResponse(String file, String signaturePolicy) {
-        return mapToReport(post(validationRequestFor(file, "simple", signaturePolicy)).andReturn().body().prettyPrint());
+        return mapToReport(post(validationRequestFor(file, signaturePolicy)).andReturn().body().prettyPrint());
     }
 
-    protected String validationRequestFor(String file, String reportType, String signaturePolicy) {
+    protected String validationRequestFor(String file, String signaturePolicy) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("document", Base64.encodeBase64String(readFileFromTestResources(file)));
         jsonObject.put("filename", file);
@@ -85,32 +83,28 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         if (signaturePolicy != null) {
             jsonObject.put("signaturePolicy", signaturePolicy);
         }
-        jsonObject.put("reportType", reportType);
         return jsonObject.toString();
     }
 
-    protected String validationRequestFor(String file, String reportType) {
-        return validationRequestFor(file, reportType, null);
+    protected String validationRequestFor(String file) {
+        return validationRequestFor(file, null);
     }
 
     protected String validationRequestForExtended(String documentKey, String encodedDocument,
                                                   String filenameKey, String file,
-                                                  String documentTypeKey, String documentType,
-                                                  String reportTypeKey, String reportType) {
+                                                  String documentTypeKey, String documentType) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(documentKey, encodedDocument);
         jsonObject.put(filenameKey, file);
         jsonObject.put(documentTypeKey, documentType);
-        jsonObject.put(reportTypeKey, reportType);
         return jsonObject.toString();
     }
 
-    protected String validationRequestWithValidKeys(String encodedString, String filename, String documentType, String reportType) {
+    protected String validationRequestWithValidKeys(String encodedString, String filename, String documentType) {
         return validationRequestForExtended(
-                DOCUMENT, encodedString,
-                FILENAME, filename,
-                DOCUMENT_TYPE, documentType,
-                REPORT_TYPE, reportType
+            DOCUMENT, encodedString,
+            FILENAME, filename,
+            DOCUMENT_TYPE, documentType
         );
     }
 

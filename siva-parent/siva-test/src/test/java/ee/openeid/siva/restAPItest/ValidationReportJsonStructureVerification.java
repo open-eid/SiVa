@@ -56,7 +56,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      ***/
     @Test
     public void BdocAllElementsArePresentValidSingleSignature() {
-         post(validationRequestFor("Valid_ID_sig.bdoc", "simple"))
+         post(validationRequestFor("Valid_ID_sig.bdoc"))
             .then()
                  .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }
@@ -78,7 +78,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      ***/
     @Test @Ignore//TODO: VAL-244 was found with Valid_IDCard_MobID_signatures.bdoc file.
     public void BdocAllElementsArePresentValidMultipleSignatures() {
-        post(validationRequestFor("Baltic MoU digital signing_EST_LT_LV.bdoc", "simple"))
+        post(validationRequestFor("Baltic MoU digital signing_EST_LT_LV.bdoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }
@@ -100,7 +100,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      ***/
     @Test
     public void BdocAllElementsArePresentInvalidSignature() {
-        post(validationRequestFor("IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc", "simple"))
+        post(validationRequestFor("IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }
@@ -122,7 +122,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      ***/
     @Test
     public void BdocAllElementsArePresentIndeterminateSignature() {
-        post(validationRequestFor("test1-bdoc-unknown.bdoc", "simple"))
+        post(validationRequestFor("test1-bdoc-unknown.bdoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }
@@ -145,7 +145,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
     @Test
     public void BdocOptionalSubindicationAndErrorElementsArePresent() {
         setTestFilesDirectory("bdoc/live/timemark/");
-        post(validationRequestFor("IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc", "simple"))
+        post(validationRequestFor("IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc"))
                 .then()
                 .body("signatures.indication", Matchers.hasItem("TOTAL-FAILED"))
                 .body("signatures.subIndication", Matchers.hasItem("SIG_CRYPTO_FAILURE"))
@@ -172,7 +172,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
     public void BdocOptionalWarningElementIsPresent() {
         setTestFilesDirectory("bdoc/test/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("23200_weakdigest-wrong-nonce.asice"));
-        post(validationRequestWithValidKeys(encodedString, "23200_weakdigest-wrong-nonce.asice", "bdoc", "simple"))
+        post(validationRequestWithValidKeys(encodedString, "23200_weakdigest-wrong-nonce.asice", "bdoc"))
                 .then()
                 .body("signatures.indication", Matchers.hasItem("TOTAL-FAILED"))
                 .body("signatures.warnings.nameId[0]", Matchers.hasItem("BBB_XCV_CMDCISSCD_ANS"))
@@ -197,7 +197,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
     @Test
     public void BdocNoSignature() {
         setTestFilesDirectory("document_format_test_files/");
-        post(validationRequestFor("BdocContainerNoSignature.bdoc", "simple"))
+        post(validationRequestFor("BdocContainerNoSignature.bdoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }
@@ -220,7 +220,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
     @Test
     public void PdfAllElementsArePresentValidSignature() {
         setTestFilesDirectory("pdf/signature_cryptographic_algorithm_test_files/");
-        post(validationRequestFor("hellopades-lt-sha256-ec256.pdf", "simple"))
+        post(validationRequestFor("hellopades-lt-sha256-ec256.pdf"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }
@@ -243,7 +243,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
     @Test
     public void PdfAllElementsArePresentValidmultipleSignatures() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
-        post(validationRequestFor("pades_lt_two_valid_sig.pdf", "simple"))
+        post(validationRequestFor("pades_lt_two_valid_sig.pdf"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
                 .body("validSignaturesCount",equalTo(2));
@@ -267,7 +267,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
     @Test @Ignore //TODO: VAL-242
     public void PdfAllElementsArePresentInvalidSignature() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
-        post(validationRequestFor("hellopades-lt-b.pdf", "simple"))
+        post(validationRequestFor("hellopades-lt-b.pdf"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }
@@ -290,7 +290,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
     @Test
     public void PdfAllElementsArePresentIndeterminateSignature() {
         setTestFilesDirectory("pdf/signing_certifacte_test_files/");
-        post(validationRequestFor("hellopades-lt-rsa1024-sha1-expired.pdf", "simple"))
+        post(validationRequestFor("hellopades-lt-rsa1024-sha1-expired.pdf"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }
@@ -313,7 +313,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
     @Test
     public void PdfNoSignature() {
         setTestFilesDirectory("document_format_test_files/");
-        post(validationRequestFor("PdfNoSignature.pdf", "simple"))
+        post(validationRequestFor("PdfNoSignature.pdf"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }
@@ -336,7 +336,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
     @Test
     public void DdocAllElementsArePresentValidSignature() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestFor("18912.ddoc", "simple"))
+        post(validationRequestFor("18912.ddoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"));
     }
@@ -359,7 +359,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
     @Test
     public void DdocAllElementsArePresentValidMultipleSignatures() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestFor("igasugust1.1.ddoc", "simple"))
+        post(validationRequestFor("igasugust1.1.ddoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"));
     }
@@ -382,7 +382,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
     @Test
     public void DdocAllElementsArePresentInvalidSignature() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestFor("test1-ddoc-revoked.ddoc", "simple"))
+        post(validationRequestFor("test1-ddoc-revoked.ddoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"));
     }
@@ -405,7 +405,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
     @Test
     public void DdocAllElementsArePresentIndeterminateSignature() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestFor("test1-ddoc-unknown.ddoc", "simple"))
+        post(validationRequestFor("test1-ddoc-unknown.ddoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"));
     }
@@ -428,7 +428,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
     @Test
     public void DdocOptionalSubindicationAndErrorElementsArePresent() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestFor("test1-ddoc-unknown.ddoc", "simple"))
+        post(validationRequestFor("test1-ddoc-unknown.ddoc"))
                 .then()
                 .body("signatures.indication", Matchers.hasItem("TOTAL-FAILED"))
                 .body("signatures.subIndication", Matchers.hasItem(""))
@@ -454,7 +454,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
     @Test @Ignore //TODO: File is needed!
     public void DdocOptionalWarningElementIsPresent() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestFor("NeedFile.ddoc", "simple"))
+        post(validationRequestFor("NeedFile.ddoc"))
                 .then()
                 .body("signatures.indication", Matchers.hasItem(""))
                 .body("signatures.warnings.nameId", Matchers.hasItem("need value for this"))
@@ -479,7 +479,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
     @Test
     public void DdocNoSignature() {
         setTestFilesDirectory("document_format_test_files/");
-        post(validationRequestFor("DdocContainerNoSignature.ddoc", "simple"))
+        post(validationRequestFor("DdocContainerNoSignature.ddoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }

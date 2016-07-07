@@ -28,7 +28,6 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
                 "            <Document>" + base64Document + "</Document>\n" +
                 "            <Filename>" + filename + "</Filename>\n" +
                 "            <DocumentType>" + documentType + "</DocumentType>\n" +
-                "            <ReportType>SIMPLE</ReportType>\n" +
                 "         </soap:ValidationRequest>\n" +
                 "      </soap:ValidateDocument>\n" +
                 "   </soapenv:Body>\n" +

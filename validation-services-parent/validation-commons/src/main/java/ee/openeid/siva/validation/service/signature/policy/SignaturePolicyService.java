@@ -36,26 +36,6 @@ public abstract class SignaturePolicyService {
         return new ByteArrayInputStream(policyData);
     }
 
-    protected void loadSignaturePolicies(SignaturePolicySettings signaturePolicySettings) {
-        signaturePolicySettings.getPolicies().forEach((policy, policyPath) -> {
-            log.info("Validating policy: " + policy);
-            try {
-                byte[] policyData = getContentFromPolicyPath(policyPath);
-                InputStream policyDataStream = new ByteArrayInputStream(policyData);
-                validateAgainstSchema(policyDataStream);
-                signaturePolicies.put(policy, policyData);
-                log.info("Policy: " + policy + " loaded successfully");
-            } catch (Exception e) {
-                log.error("Could not load policy " + policy + " due to: " + e);
-            }
-        });
-
-        if (!signaturePolicies.containsKey(signaturePolicySettings.getDefaultPolicy())) {
-            throw new InvalidPolicyException("Default policy is not defined in signature policies.");
-        }
-        this.defaultPolicy = signaturePolicySettings.getDefaultPolicy();
-    }
-
     protected byte[] getContentFromPolicyPath(String policyPath) throws IOException {
         InputStream policyDataStream = null;
         if (new File(policyPath).isAbsolute()) {
@@ -75,7 +55,27 @@ public abstract class SignaturePolicyService {
         return IOUtils.toByteArray(policyDataStream);
     }
 
-    protected void validateAgainstSchema(InputStream policyDataStream) {
+    private void loadSignaturePolicies(SignaturePolicySettings signaturePolicySettings) {
+        signaturePolicySettings.getPolicies().forEach((policy, policyPath) -> {
+            log.info("Loading policy: " + policy);
+            try {
+                byte[] policyData = getContentFromPolicyPath(policyPath);
+                InputStream policyDataStream = new ByteArrayInputStream(policyData);
+                validateAgainstSchema(policyDataStream);
+                signaturePolicies.put(policy, policyData);
+                log.info("Policy: " + policy + " loaded successfully");
+            } catch (Exception e) {
+                log.error("Could not load policy " + policy + " due to: " + e);
+            }
+        });
+
+        if (!signaturePolicies.containsKey(signaturePolicySettings.getDefaultPolicy())) {
+            throw new InvalidPolicyException("Default policy is not defined in signature policies.");
+        }
+        this.defaultPolicy = signaturePolicySettings.getDefaultPolicy();
+    }
+
+    private void validateAgainstSchema(InputStream policyDataStream) {
         PolicySchemaValidator.validate(policyDataStream);
     }
 

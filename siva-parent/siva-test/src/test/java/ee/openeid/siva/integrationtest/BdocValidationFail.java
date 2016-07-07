@@ -118,7 +118,7 @@ public class BdocValidationFail extends SiVaRestTests{
      ***/
     @Test
     public void malformedBdocWithInvalidMimetypeInManifest() {
-        post(validationRequestFor("23147_weak-warning-sha1-invalid-mimetype-in-manifest.bdoc", "simple"))
+        post(validationRequestFor("23147_weak-warning-sha1-invalid-mimetype-in-manifest.bdoc"))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))

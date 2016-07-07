@@ -152,10 +152,8 @@ public void baselineProfileLTDocumentShouldPass(){
     String filename = "hellopades-lt-b.pdf";
     String encodeFile = Base64.encodeBase64String(readFile(filename));
     String document = encodeFile;
-    final ReportType sivaReportType = getReportTypeFromRequest(reportType);
     ValidationRequest validationRequest = new ValidationRequest();
     validationRequest.setDocumentType(parseFileExtension(filename.substring(filename.lastIndexOf(".") + 1)));
-    validationRequest.setReportType(sivaReportType);
     validationRequest.setDocument(document);
     restTemplate.postForObject(sivaBaseUrl, validationRequest, String.class);
 }

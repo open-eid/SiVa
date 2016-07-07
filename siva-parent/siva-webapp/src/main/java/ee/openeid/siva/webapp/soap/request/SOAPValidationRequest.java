@@ -27,6 +27,9 @@ public class SOAPValidationRequest implements ValidationRequest {
     @XmlElement(name = "ReportType", required = true)
     private ReportType reportType;
 
+    @XmlElement(name = "SignaturePolicy")
+    private String signaturePolicy;
+
     public String getDocumentType() {
         return documentType.name();
     }

@@ -53,6 +53,7 @@ public abstract class SiVaIntegrationTestsBase {
     }
 
     protected abstract String getTestFilesDirectory();
+
     protected abstract QualifiedReport postForReport(String filename);
 
     protected byte[] readFileFromTestResources(String fileName) {

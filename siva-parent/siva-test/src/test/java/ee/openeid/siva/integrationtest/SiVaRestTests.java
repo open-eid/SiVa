@@ -61,24 +61,36 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         return PRINT_RESPONSE;
     }
 
-    protected QualifiedReport postForReport(String file) {
+    protected QualifiedReport postForReport(String file, String signaturePolicy) {
         if (shouldPrintResponse()) {
-            return postForReportAndPrintResponse(file);
+            return postForReportAndPrintResponse(file, signaturePolicy);
         }
-        return mapToReport(post(validationRequestFor(file, "simple")).andReturn().body().asString());
+        return mapToReport(post(validationRequestFor(file, "simple", signaturePolicy)).andReturn().body().asString());
     }
 
-    protected QualifiedReport postForReportAndPrintResponse(String file) {
-        return mapToReport(post(validationRequestFor(file, "simple")).andReturn().body().prettyPrint());
+    @Override
+    protected QualifiedReport postForReport(String file) {
+        return postForReport(file, null);
     }
 
-    protected String validationRequestFor(String file, String reportType) {
+    protected QualifiedReport postForReportAndPrintResponse(String file, String signaturePolicy) {
+        return mapToReport(post(validationRequestFor(file, "simple", signaturePolicy)).andReturn().body().prettyPrint());
+    }
+
+    protected String validationRequestFor(String file, String reportType, String signaturePolicy) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("document", Base64.encodeBase64String(readFileFromTestResources(file)));
         jsonObject.put("filename", file);
         jsonObject.put("documentType", parseFileExtension(file));
+        if (signaturePolicy != null) {
+            jsonObject.put("signaturePolicy", signaturePolicy);
+        }
         jsonObject.put("reportType", reportType);
         return jsonObject.toString();
+    }
+
+    protected String validationRequestFor(String file, String reportType) {
+        return validationRequestFor(file, reportType, null);
     }
 
     protected String validationRequestForExtended(String documentKey, String encodedDocument,

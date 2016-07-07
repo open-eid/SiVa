@@ -80,4 +80,5 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
     protected QualifiedReport postForReport(String filename) {
         return getQualifiedReportFromDom(extractReportDom(post(validationRequestForDocument(filename)).andReturn().body().asString()));
     }
+
 }

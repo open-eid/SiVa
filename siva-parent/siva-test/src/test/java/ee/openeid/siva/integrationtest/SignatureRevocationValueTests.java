@@ -80,7 +80,7 @@ public class SignatureRevocationValueTests extends SiVaRestTests {
      * File: hellopades-lt-sha256-ocsp-28h.pdf
      */
     @Test
-    public void documentWithOcspOver24hDelayShouldDailWithCorrectErrorInReport() {
+    public void documentWithOcspOver24hDelayShouldFailWithCorrectErrorInReport() {
         QualifiedReport report = postForReport("hellopades-lt-sha256-ocsp-28h.pdf");
         assertAllSignaturesAreInvalid(report);
     }

@@ -86,7 +86,7 @@
                 <jmeter.host.timeoutInMillis>60000</jmeter.host.timeoutInMillis>
                 <jmeter.testfiles.dir>${project.basedir}/src/test/jmeter/test-files</jmeter.testfiles.dir>
                 <jmeter.thread.init.count>5</jmeter.thread.init.count>
-                <jmeter.thread.max.count>51</jmeter.thread.max.count>
+                <jmeter.thread.max.count>50</jmeter.thread.max.count>
                 <jmeter.thread.increment.count>5</jmeter.thread.increment.count>
                 <jmeter.thread.increment.intervalInSecs>180</jmeter.thread.increment.intervalInSecs>
             </properties>

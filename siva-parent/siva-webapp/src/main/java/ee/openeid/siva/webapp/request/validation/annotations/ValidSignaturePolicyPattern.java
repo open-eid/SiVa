@@ -19,7 +19,7 @@ import static ee.openeid.siva.webapp.request.validation.annotations.ValidSignatu
 @ReportAsSingleViolation
 public @interface ValidSignaturePolicyPattern {
 
-    String PATTERN = "^[A-Za-z0-9_]*$";
+    String PATTERN = "^[A-Za-z0-9_ ]*$";
 
     String message() default "{validation.error.message.signaturePolicy}";
     Class<?>[] groups() default {};

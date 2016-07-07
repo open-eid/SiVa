@@ -13,8 +13,6 @@ public class ProxyDocument {
 
     private String signaturePolicy;
 
-    private String absolutePath = "WSDocument";
-
     private ReportType reportType;
 
 }

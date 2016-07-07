@@ -6,12 +6,13 @@ import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
-import ee.openeid.validation.service.pdf.document.transformer.ValidationDocumentToDSSDocumentTransformerUtils;
 import ee.openeid.validation.service.pdf.signature.policy.PDFSignaturePolicyService;
 import ee.openeid.validation.service.pdf.validator.EstonianPDFDocumentValidator;
 import ee.openeid.validation.service.pdf.validator.report.PDFQualifiedReportBuilder;
 import eu.europa.esig.dss.DSSDocument;
 import eu.europa.esig.dss.DSSException;
+import eu.europa.esig.dss.InMemoryDocument;
+import eu.europa.esig.dss.MimeType;
 import eu.europa.esig.dss.validation.CertificateVerifier;
 import eu.europa.esig.dss.validation.DocumentValidator;
 import eu.europa.esig.dss.validation.report.Reports;
@@ -42,7 +43,7 @@ public class PDFValidationService implements ValidationService {
                 throw new ValidationServiceException(getClass().getSimpleName(), new Exception("No request document found"));
             }
 
-            final DSSDocument dssDocument = ValidationDocumentToDSSDocumentTransformerUtils.createDssDocument(validationDocument);
+            final DSSDocument dssDocument = createDssDocument(validationDocument);
 
             if (!new EstonianPDFDocumentValidator().isSupported(dssDocument)) {
                 throw new MalformedDocumentException();
@@ -80,6 +81,18 @@ public class PDFValidationService implements ValidationService {
             endExceptionally(e);
             throw new ValidationServiceException(getClass().getSimpleName(), e);
         }
+    }
+
+    private DSSDocument createDssDocument(final ValidationDocument ValidationDocument) {
+        if (ValidationDocument == null) {
+            return null;
+        }
+        final InMemoryDocument dssDocument = new InMemoryDocument(ValidationDocument.getBytes());
+        dssDocument.setName(ValidationDocument.getName());
+        final MimeType mimeType = ValidationDocument.getMimeType();
+        dssDocument.setMimeType(mimeType);
+
+        return dssDocument;
     }
 
     private void endExceptionally(Exception e) {

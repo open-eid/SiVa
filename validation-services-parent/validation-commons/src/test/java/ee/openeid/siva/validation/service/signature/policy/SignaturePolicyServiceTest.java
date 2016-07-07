@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 
 public class SignaturePolicyServiceTest {
 
-    private static final String POLICY = "EE";
+    private static final String POLICY_PREFIX = "policy-";
 
     private static final String VALID_CLASSPATH_CONSTRAINT = "valid-constraint.xml";
     private static final String INVALID_CLASSPATH_CONSTRAINT = "invalid-constraint.xml";
@@ -32,91 +32,99 @@ public class SignaturePolicyServiceTest {
     public ExpectedException expectedException = ExpectedException.none();
 
     @Test
+    public void whenSignaturePolicesDoNotContainDefaultPolicyThenThrowException() {
+        expectedException.expect(InvalidPolicyException.class);
+        expectedException.expectMessage("Default policy is not defined in signature policies.");
+
+        SignaturePolicyService signaturePolicyService = createSignaturePolicyService("RANDOM_PREFIX" + VALID_CLASSPATH_CONSTRAINT, VALID_CLASSPATH_CONSTRAINT);
+        signaturePolicyService.getPolicyDataStreamFromPolicy(POLICY_PREFIX + VALID_CLASSPATH_CONSTRAINT);
+    }
+
+    @Test
     public void settingValidPolicyFromClasspathResourceGetsLoaded() {
-        SignaturePolicyService signaturePolicyService = createSignaturePolicyServiceFromPolicyPaths(VALID_CLASSPATH_CONSTRAINT);
+        SignaturePolicyService signaturePolicyService = createSignaturePolicyService(POLICY_PREFIX + VALID_CLASSPATH_CONSTRAINT, VALID_CLASSPATH_CONSTRAINT);
 
         assertEquals(1, signaturePolicyService.getSignaturePolicies().size());
-        assertNotNull(signaturePolicyService.getPolicyDataStreamFromPolicy(POLICY + "1"));
+        assertNotNull(signaturePolicyService.getPolicyDataStreamFromPolicy(POLICY_PREFIX + VALID_CLASSPATH_CONSTRAINT));
     }
 
     @Test
     public void settingInvalidPolicyFromClasspathResourceGetsNotLoaded() {
         expectedException.expect(InvalidPolicyException.class);
 
-        SignaturePolicyService signaturePolicyService = createSignaturePolicyServiceFromPolicyPaths(INVALID_CLASSPATH_CONSTRAINT);
+        SignaturePolicyService signaturePolicyService = createSignaturePolicyService(POLICY_PREFIX + INVALID_CLASSPATH_CONSTRAINT, INVALID_CLASSPATH_CONSTRAINT);
 
         assertEquals(0, signaturePolicyService.getSignaturePolicies().size());
-        signaturePolicyService.getPolicyDataStreamFromPolicy(POLICY + "1");
+        signaturePolicyService.getPolicyDataStreamFromPolicy(POLICY_PREFIX + INVALID_CLASSPATH_CONSTRAINT);
     }
 
     @Test
     public void settingValidPolicyFromAbsolutePathGetsLoaded() {
-        SignaturePolicyService signaturePolicyService = createSignaturePolicyServiceFromPolicyPaths(VALID_ABSOLUTE_PATH_CONSTRAINT);
+        SignaturePolicyService signaturePolicyService = createSignaturePolicyService(POLICY_PREFIX + VALID_ABSOLUTE_PATH_CONSTRAINT, VALID_ABSOLUTE_PATH_CONSTRAINT);
 
         assertEquals(1, signaturePolicyService.getSignaturePolicies().size());
-        assertNotNull(signaturePolicyService.getPolicyDataStreamFromPolicy(POLICY + "1"));
+        assertNotNull(signaturePolicyService.getPolicyDataStreamFromPolicy(POLICY_PREFIX + VALID_ABSOLUTE_PATH_CONSTRAINT));
     }
 
     @Test
     public void settingInValidPolicyFromAbsolutePathGetsNotLoaded() {
         expectedException.expect(InvalidPolicyException.class);
 
-        SignaturePolicyService signaturePolicyService = createSignaturePolicyServiceFromPolicyPaths(INVALID_ABSOLUTE_PATH_CONSTRAINT);
+        SignaturePolicyService signaturePolicyService = createSignaturePolicyService(POLICY_PREFIX + INVALID_ABSOLUTE_PATH_CONSTRAINT, INVALID_ABSOLUTE_PATH_CONSTRAINT);
 
         assertEquals(0, signaturePolicyService.getSignaturePolicies().size());
-        signaturePolicyService.getPolicyDataStreamFromPolicy(POLICY + "1");
+        signaturePolicyService.getPolicyDataStreamFromPolicy(POLICY_PREFIX + INVALID_ABSOLUTE_PATH_CONSTRAINT);
     }
 
     @Test
     public void settingNonExistingPolicyFromClasspathGetsNotLoaded() {
         expectedException.expect(InvalidPolicyException.class);
 
-        SignaturePolicyService signaturePolicyService = createSignaturePolicyServiceFromPolicyPaths(NON_EXISITNG_CLASSPATH_CONSTRAINT);
+        SignaturePolicyService signaturePolicyService = createSignaturePolicyService(POLICY_PREFIX + NON_EXISITNG_CLASSPATH_CONSTRAINT, NON_EXISITNG_CLASSPATH_CONSTRAINT);
 
         assertEquals(0, signaturePolicyService.getSignaturePolicies().size());
-        signaturePolicyService.getPolicyDataStreamFromPolicy(POLICY + "1");
+        signaturePolicyService.getPolicyDataStreamFromPolicy(POLICY_PREFIX + NON_EXISITNG_CLASSPATH_CONSTRAINT);
     }
 
     @Test
     public void settingNonExistingPolicyFromAbsolutePathGetsNotLoaded() {
         expectedException.expect(InvalidPolicyException.class);
 
-        SignaturePolicyService signaturePolicyService = createSignaturePolicyServiceFromPolicyPaths(NON_EXISITNG_ABSOLUTE_PATH_CONSTRAINT);
+        SignaturePolicyService signaturePolicyService = createSignaturePolicyService(POLICY_PREFIX + NON_EXISITNG_ABSOLUTE_PATH_CONSTRAINT, NON_EXISITNG_ABSOLUTE_PATH_CONSTRAINT);
 
         assertEquals(0, signaturePolicyService.getSignaturePolicies().size());
-        signaturePolicyService.getPolicyDataStreamFromPolicy(POLICY + "1");
+        signaturePolicyService.getPolicyDataStreamFromPolicy(POLICY_PREFIX + NON_EXISITNG_ABSOLUTE_PATH_CONSTRAINT);
     }
 
     @Test
     public void settingMultipleValidPoliciesResultsInAllGetLoaded() throws IOException {
-        SignaturePolicyService signaturePolicyService = createSignaturePolicyServiceFromPolicyPaths(VALID_CLASSPATH_CONSTRAINT, VALID_ABSOLUTE_PATH_CONSTRAINT);
+        SignaturePolicyService signaturePolicyService = createSignaturePolicyService(POLICY_PREFIX + VALID_CLASSPATH_CONSTRAINT, VALID_CLASSPATH_CONSTRAINT, VALID_ABSOLUTE_PATH_CONSTRAINT);
 
         assertEquals(2, signaturePolicyService.getSignaturePolicies().size());
-        assertNotNull(signaturePolicyService.getPolicyDataStreamFromPolicy(POLICY + "1"));
-        assertNotNull(signaturePolicyService.getPolicyDataStreamFromPolicy(POLICY + "2"));
+        assertNotNull(signaturePolicyService.getPolicyDataStreamFromPolicy(POLICY_PREFIX + VALID_CLASSPATH_CONSTRAINT));
+        assertNotNull(signaturePolicyService.getPolicyDataStreamFromPolicy(POLICY_PREFIX + VALID_ABSOLUTE_PATH_CONSTRAINT));
     }
 
     @Test
     public void settingValidAndInvalidPoliciesResultsInOneGetsLoaded() {
         expectedException.expect(InvalidPolicyException.class);
 
-        SignaturePolicyService signaturePolicyService = createSignaturePolicyServiceFromPolicyPaths(VALID_CLASSPATH_CONSTRAINT, INVALID_CLASSPATH_CONSTRAINT);
+        SignaturePolicyService signaturePolicyService = createSignaturePolicyService(POLICY_PREFIX + VALID_CLASSPATH_CONSTRAINT, VALID_CLASSPATH_CONSTRAINT, INVALID_CLASSPATH_CONSTRAINT);
 
         assertEquals(1, signaturePolicyService.getSignaturePolicies().size());
-        assertNotNull(signaturePolicyService.getPolicyDataStreamFromPolicy(POLICY + "1"));
-        signaturePolicyService.getPolicyDataStreamFromPolicy(POLICY + "2");
+        assertNotNull(signaturePolicyService.getPolicyDataStreamFromPolicy(POLICY_PREFIX + VALID_CLASSPATH_CONSTRAINT));
+        signaturePolicyService.getPolicyDataStreamFromPolicy(POLICY_PREFIX + INVALID_CLASSPATH_CONSTRAINT);
     }
 
-    private SignaturePolicyService createSignaturePolicyServiceFromPolicyPaths(String... policyPaths) {
+    private SignaturePolicyService createSignaturePolicyService(String defaultPolicy, String... policyPaths) {
         Map<String, String> policies = new HashMap<>();
-        int i = 1;
         for (String policyPath : policyPaths) {
-            policies.put(POLICY + i++, policyPath);
+            policies.put(POLICY_PREFIX + policyPath, policyPath);
 
         }
         SignaturePolicySettings signaturePolicySettings = new SignaturePolicySettings();
         signaturePolicySettings.setPolicies(policies);
-        signaturePolicySettings.setDefaultPolicy(POLICY + "1");
+        signaturePolicySettings.setDefaultPolicy(defaultPolicy);
 
         return new SignaturePolicyServiceImpl(signaturePolicySettings);
     }

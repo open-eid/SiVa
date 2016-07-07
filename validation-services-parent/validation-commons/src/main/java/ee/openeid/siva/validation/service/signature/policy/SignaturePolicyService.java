@@ -21,8 +21,22 @@ public abstract class SignaturePolicyService {
     protected Map<String, byte[]> signaturePolicies = new HashMap<>();
 
     public SignaturePolicyService(SignaturePolicySettings signaturePolicySettings) {
+        log.info("Loading signature policies for: " + signaturePolicySettings.getClass().getSimpleName());
+        loadSignaturePolicies(signaturePolicySettings);
+    }
 
-        log.info("Validating signature policies for: " + signaturePolicySettings.getClass().getSimpleName());
+    public InputStream getPolicyDataStreamFromPolicy(String policy) {
+        if (StringUtils.isEmpty(policy)) {
+            policy = defaultPolicy;
+        }
+        byte[] policyData = signaturePolicies.get(policy);
+        if (policyData == null) {
+            throw new InvalidPolicyException("Invalid signature policy: " + policy + "; Available policies: " + signaturePolicies.keySet() );
+        }
+        return new ByteArrayInputStream(policyData);
+    }
+
+    protected void loadSignaturePolicies(SignaturePolicySettings signaturePolicySettings) {
         signaturePolicySettings.getPolicies().forEach((policy, policyPath) -> {
             log.info("Validating policy: " + policy);
             try {
@@ -40,17 +54,6 @@ public abstract class SignaturePolicyService {
             throw new InvalidPolicyException("Default policy is not defined in signature policies.");
         }
         this.defaultPolicy = signaturePolicySettings.getDefaultPolicy();
-    }
-
-    public InputStream getPolicyDataStreamFromPolicy(String policy) {
-        if (StringUtils.isEmpty(policy)) {
-            policy = defaultPolicy;
-        }
-        byte[] policyData = signaturePolicies.get(policy);
-        if (policyData == null) {
-            throw new InvalidPolicyException("Invalid signature policy: " + policy + "; Available policies: " + signaturePolicies.keySet() );
-        }
-        return new ByteArrayInputStream(policyData);
     }
 
     protected byte[] getContentFromPolicyPath(String policyPath) throws IOException {

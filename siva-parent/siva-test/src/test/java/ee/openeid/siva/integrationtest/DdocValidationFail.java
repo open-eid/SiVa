@@ -282,7 +282,7 @@ public class DdocValidationFail extends SiVaRestTests{
     @Test
     public void ddocFileRemoved() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestFor("KS-02_tyhi.ddoc", "simple"))
+        post(validationRequestFor("faileemald1.ddoc", "simple"))
                 .then()
                 .body("signatures[0].errors.nameId", Matchers.hasItems("81"))
                 .body("signatures[0].errors.content", Matchers.hasItems("Missing DataFile for signature: S0 reference #D0"))

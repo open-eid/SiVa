@@ -111,11 +111,10 @@ public abstract class SiVaIntegrationTestsBase {
 
     protected String parseFileExtension(final String filename) {
         String fileExtension = filename.substring(filename.lastIndexOf(".") + 1);
-        DocumentType documentType = Arrays.asList(DocumentType.values()).stream()
-                .filter(fileType -> fileType.name().equalsIgnoreCase(fileExtension))
-                .findFirst()
-                .orElse(null);
-        return documentType != null ? documentType.name() : fileExtension;
+        if (isAsicExtension(fileExtension)) {
+            return DocumentType.BDOC.name();
+        }
+        return resolveDocumentType(fileExtension);
     }
 
     protected String getProjectBaseDirectory() {
@@ -124,6 +123,18 @@ public abstract class SiVaIntegrationTestsBase {
         pathLength = pathLength == -1 ? path.length() : pathLength;
         path = path.substring(0 , pathLength);
         return path + File.separator + PROJECT_SUBMODULE_NAME + File.separator;
+    }
+
+    private boolean isAsicExtension(String fileExtension) {
+        return StringUtils.equalsIgnoreCase(DocumentType.ASICE.name(), fileExtension);
+    }
+
+    private String resolveDocumentType(String fileExtension) {
+        DocumentType documentType = Arrays.asList(DocumentType.values()).stream()
+                .filter(fileType -> fileType.name().equalsIgnoreCase(fileExtension))
+                .findFirst()
+                .orElse(null);
+        return documentType != null ? documentType.name() : fileExtension;
     }
 
 

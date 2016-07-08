@@ -13,6 +13,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class TSLLoader {
@@ -26,6 +28,8 @@ public class TSLLoader {
     private TrustedListsCertificateSource trustedListSource;
 
     private KeyStoreCertificateSource keyStoreCertificateSource;
+
+    private static final List<String> DEFAULT_TRUESTED_TERRITORIES = Arrays.asList("AT", "BE", "BG", "CY", "CZ",/*"DE",*/"DK", "EE", "ES", "FI", "FR", "GR", "HU",/*"HR",*/"IE", "IS", "IT", "LT", "LU", "LV", "LI", "MT",/*"NO",*/"NL", "PL", "PT", "RO", "SE", "SI", "SK", "UK");
 
     @PostConstruct
     public void init() {
@@ -42,6 +46,7 @@ public class TSLLoader {
         tslValidationJob.setLotlUrl(configurationProperties.getUrl());
         tslValidationJob.setLotlCode(configurationProperties.getCode());
         tslValidationJob.setDssKeyStore(keyStoreCertificateSource);
+        tslValidationJob.setFilterTerritories(DEFAULT_TRUESTED_TERRITORIES);
         tslValidationJob.setCheckLOTLSignature(true);
         tslValidationJob.setCheckTSLSignatures(true);
     }

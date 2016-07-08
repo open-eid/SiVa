@@ -18,7 +18,6 @@ before_install:
 - export TZ=Estonia/Tallinn
 - easy_install3 --user pyyaml
 - easy_install3 --user requests
-- cp ${TRAVIS_BUILD_DIR}/build-helpers/dss-cache-tsl.zip ${TMPDIR} && unzip ${TMPDIR}/dss-cache-tsl.zip -d $TMPDIR
 branchespython-dev:
   only:
   - develop

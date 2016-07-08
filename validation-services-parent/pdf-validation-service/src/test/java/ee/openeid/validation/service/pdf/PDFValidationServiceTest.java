@@ -91,7 +91,6 @@ public class PDFValidationServiceTest {
                 .build();
     }
 
-
     @Import({TSLLoaderConfiguration.class, PDFValidationServiceConfiguration.class})
     public static class TestConfiguration {
 

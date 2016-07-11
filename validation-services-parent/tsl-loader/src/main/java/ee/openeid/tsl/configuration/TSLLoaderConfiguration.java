@@ -1,6 +1,5 @@
 package ee.openeid.tsl.configuration;
 
-import ee.openeid.tsl.TSLRefresher;
 import ee.openeid.tsl.keystore.DSSKeyStoreFactoryBean;
 import eu.europa.esig.dss.client.http.commons.CommonsDataLoader;
 import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
@@ -12,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
-import org.springframework.scheduling.support.CronTrigger;
 
 @Configuration
 @EnableScheduling
@@ -26,16 +22,6 @@ import org.springframework.scheduling.support.CronTrigger;
 public class TSLLoaderConfiguration {
 
     private TSLValidationKeystoreProperties keystoreProperties;
-    private TSLLoaderConfigurationProperties loaderConfigurationProperties;
-    private TSLRefresher refresher;
-
-    @Bean
-    public TaskScheduler tslRefreshTask() {
-        final TaskScheduler scheduler = new ConcurrentTaskScheduler();
-        scheduler.schedule(refresher, new CronTrigger(loaderConfigurationProperties.getSchedulerCron()));
-
-        return scheduler;
-    }
 
     @Bean
     public DSSKeyStoreFactoryBean dssKeyStore() {
@@ -72,15 +58,5 @@ public class TSLLoaderConfiguration {
     @Autowired
     public void setKeystoreProperties(TSLValidationKeystoreProperties keystoreProperties) {
         this.keystoreProperties = keystoreProperties;
-    }
-
-    @Autowired
-    public void setRefresher(TSLRefresher refresher) {
-        this.refresher = refresher;
-    }
-
-    @Autowired
-    public void setLoaderConfigurationProperties(TSLLoaderConfigurationProperties loaderConfigurationProperties) {
-        this.loaderConfigurationProperties = loaderConfigurationProperties;
     }
 }

@@ -6,9 +6,7 @@ import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.tsl.CustomCertificatesLoader;
 import ee.openeid.tsl.TSLLoader;
-import ee.openeid.tsl.TSLRefresher;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
-import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
 import ee.openeid.tsl.configuration.TSLValidationKeystoreProperties;
 import ee.openeid.validation.service.pdf.configuration.PDFSignaturePolicySettings;
 import ee.openeid.validation.service.pdf.configuration.PDFValidationServiceConfiguration;
@@ -31,7 +29,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.junit.Assert.*;
 
-@SpringBootTest(classes = PDFValidationServiceTest.TestConfiguration.class)
+@SpringBootTest(classes = {PDFValidationServiceTest.TestConfiguration.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class PDFValidationServiceTest {
 
@@ -94,11 +92,12 @@ public class PDFValidationServiceTest {
                 .build();
     }
 
-    @Import({TSLLoaderConfiguration.class, PDFValidationServiceConfiguration.class})
+    @Import({
+        TSLLoaderConfiguration.class,
+        PDFValidationServiceConfiguration.class
+    })
     public static class TestConfiguration {
         private TSLValidationKeystoreProperties keystoreProperties;
-        private TSLLoaderConfigurationProperties loaderConfigurationProperties;
-        private TSLRefresher refresher;
 
         @Bean
         public YamlPropertiesFactoryBean yamlProperties() {
@@ -120,11 +119,6 @@ public class PDFValidationServiceTest {
         }
 
         @Bean
-        public TSLRefresher tslRefresher() {
-            return new TSLRefresher();
-        }
-
-        @Bean
         public CustomCertificatesLoader customCertificatesLoader() {
             return new CustomCertificatesLoader();
         }
@@ -132,16 +126,6 @@ public class PDFValidationServiceTest {
         @Autowired
         public void setKeystoreProperties(TSLValidationKeystoreProperties keystoreProperties) {
             this.keystoreProperties = keystoreProperties;
-        }
-
-        @Autowired
-        public void setLoaderConfigurationProperties(TSLLoaderConfigurationProperties loaderConfigurationProperties) {
-            this.loaderConfigurationProperties = loaderConfigurationProperties;
-        }
-
-        @Autowired
-        public void setRefresher(TSLRefresher refresher) {
-            this.refresher = refresher;
         }
     }
 

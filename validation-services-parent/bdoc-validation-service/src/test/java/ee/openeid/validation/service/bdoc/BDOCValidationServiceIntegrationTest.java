@@ -7,7 +7,6 @@ import ee.openeid.siva.validation.document.report.SignatureScope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.tsl.TSLLoader;
-import ee.openeid.tsl.TSLRefresher;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
 import ee.openeid.validation.service.bdoc.configuration.BDOCValidationServiceConfiguration;
 import org.apache.commons.lang.StringUtils;
@@ -26,7 +25,6 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
     TSLLoaderConfiguration.class,
-    TSLRefresher.class,
     TSLLoader.class,
     BDOCValidationServiceConfiguration.class,
     BDOCValidationService.class

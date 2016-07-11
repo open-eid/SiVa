@@ -4,4 +4,3 @@ siva:
       policies:
         EE: bdoc_constraint.xml
       defaultPolicy: EE
-

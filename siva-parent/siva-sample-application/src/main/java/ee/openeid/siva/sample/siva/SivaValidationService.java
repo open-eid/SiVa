@@ -1,7 +1,7 @@
 package ee.openeid.siva.sample.siva;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ee.openeid.siva.sample.configuration.SivaConfigurationProperties;
+import ee.openeid.siva.sample.configuration.SivaRESTWebServiceConfigurationProperties;
 import ee.openeid.siva.sample.controller.ValidationServiceUtils;
 import ee.openeid.siva.sample.upload.UploadedFile;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +12,14 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 
 @Service
-public class SivaValidationService {
+public class SivaValidationService implements ValidationService {
     private static final int GENERIC_ERROR_CODE = 101;
 
-    private SivaConfigurationProperties properties;
+    private SivaRESTWebServiceConfigurationProperties properties;
     private RestTemplate restTemplate;
     private SivaValidationServiceErrorHandler errorHandler;
 
+    @Override
     public String validateDocument(final UploadedFile file) throws IOException {
         if (file == null) {
             throw new IOException("Invalid file object given");
@@ -48,7 +49,7 @@ public class SivaValidationService {
     }
 
     @Autowired
-    public void setProperties(SivaConfigurationProperties properties) {
+    public void setProperties(SivaRESTWebServiceConfigurationProperties properties) {
         this.properties = properties;
     }
 

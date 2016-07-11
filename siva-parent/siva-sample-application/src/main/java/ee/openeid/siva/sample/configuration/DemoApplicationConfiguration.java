@@ -14,7 +14,7 @@ import java.nio.charset.Charset;
 
 @Configuration
 @EnableConfigurationProperties({
-    SivaConfigurationProperties.class,
+    SivaRESTWebServiceConfigurationProperties.class,
     BuildInfoProperties.class,
     GoogleAnalyticsProperties.class
 })

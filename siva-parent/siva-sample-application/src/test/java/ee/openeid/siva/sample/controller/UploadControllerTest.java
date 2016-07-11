@@ -5,7 +5,7 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import ee.openeid.siva.sample.ci.info.BuildInfo;
 import ee.openeid.siva.sample.configuration.GoogleAnalyticsProperties;
-import ee.openeid.siva.sample.siva.SivaValidationService;
+import ee.openeid.siva.sample.siva.ValidationService;
 import ee.openeid.siva.sample.upload.UploadFileCacheService;
 import ee.openeid.siva.sample.upload.UploadedFile;
 import org.junit.Before;
@@ -43,7 +43,7 @@ public class UploadControllerTest {
     private WebClient webClient;
 
     @MockBean
-    private SivaValidationService sivaValidationService;
+    private ValidationService validationService;
 
     @MockBean
     private BuildInfo buildInfo;
@@ -70,7 +70,7 @@ public class UploadControllerTest {
 
     @Test
     public void uploadPageWithFileReturnsValidationResult() throws Exception {
-        given(sivaValidationService.validateDocument(any(UploadedFile.class)))
+        given(validationService.validateDocument(any(UploadedFile.class)))
                 .willReturn("{\"documentName\": \"random.bdoc\", \"validSignaturesCount\": 1, \"signaturesCount\": 1}");
 
         UploadedFile uploadedFile = new UploadedFile();

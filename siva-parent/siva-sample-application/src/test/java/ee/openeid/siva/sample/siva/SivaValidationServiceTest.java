@@ -33,7 +33,7 @@ import static org.mockito.Mockito.verify;
 public class SivaValidationServiceTest {
 
     @Autowired
-    private SivaValidationService sivaValidationService;
+    private ValidationService validationService;
 
     @Rule
     public TemporaryFolder testingFolder = new TemporaryFolder();
@@ -56,7 +56,7 @@ public class SivaValidationServiceTest {
         final String fileName = "testing.bdoc";
         final UploadedFile inputFile = getFile(fileContents, fileName);
 
-        final String result = sivaValidationService.validateDocument(inputFile);
+        final String result = validationService.validateDocument(inputFile);
         assertEquals(mockResponse, result);
 
         verify(restTemplate).postForObject(anyString(), validationRequestCaptor.capture(), any());
@@ -70,7 +70,7 @@ public class SivaValidationServiceTest {
         mockServiceResponse();
 
         final UploadedFile file = getFile("error in file", "testing.exe");
-        sivaValidationService.validateDocument(file);
+        validationService.validateDocument(file);
 
         verify(restTemplate).postForObject(anyString(), validationRequestCaptor.capture(), any());
         assertEquals(null, validationRequestCaptor.getValue().getDocumentType());
@@ -81,7 +81,7 @@ public class SivaValidationServiceTest {
         exception.expect(IOException.class);
         exception.expectMessage("Invalid file object given");
 
-        sivaValidationService.validateDocument(null);
+        validationService.validateDocument(null);
     }
 
     @Test
@@ -90,7 +90,7 @@ public class SivaValidationServiceTest {
         given(restTemplate.postForObject(anyString(), any(ValidationRequest.class), any()))
                 .willThrow(new ResourceAccessException("Failed to connect to SiVa REST"));
 
-        String result = sivaValidationService.validateDocument(file);
+        String result = validationService.validateDocument(file);
         verify(restTemplate).postForObject(anyString(), validationRequestCaptor.capture(), any());
 
         assertThat(result).contains("errorCode");

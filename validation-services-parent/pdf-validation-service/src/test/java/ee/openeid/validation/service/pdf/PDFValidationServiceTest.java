@@ -7,7 +7,6 @@ import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.tsl.CustomCertificatesLoader;
 import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
-import ee.openeid.tsl.configuration.TSLValidationKeystoreProperties;
 import ee.openeid.validation.service.pdf.configuration.PDFSignaturePolicySettings;
 import ee.openeid.validation.service.pdf.configuration.PDFValidationServiceConfiguration;
 import ee.openeid.validation.service.pdf.signature.policy.PDFSignaturePolicyService;
@@ -25,12 +24,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.*;
 
 @SpringBootTest(classes = {PDFValidationServiceTest.TestConfiguration.class})
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 public class PDFValidationServiceTest {
 
     private static final String TEST_FILES_LOCATION = "test-files/";
@@ -97,8 +96,6 @@ public class PDFValidationServiceTest {
         PDFValidationServiceConfiguration.class
     })
     public static class TestConfiguration {
-        private TSLValidationKeystoreProperties keystoreProperties;
-
         @Bean
         public YamlPropertiesFactoryBean yamlProperties() {
             YamlPropertiesFactoryBean yamlProperties = new YamlPropertiesFactoryBean();
@@ -121,11 +118,6 @@ public class PDFValidationServiceTest {
         @Bean
         public CustomCertificatesLoader customCertificatesLoader() {
             return new CustomCertificatesLoader();
-        }
-
-        @Autowired
-        public void setKeystoreProperties(TSLValidationKeystoreProperties keystoreProperties) {
-            this.keystoreProperties = keystoreProperties;
         }
     }
 

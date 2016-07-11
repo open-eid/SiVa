@@ -20,7 +20,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
     TSLValidationKeystoreProperties.class
 })
 public class TSLLoaderConfiguration {
-
     private TSLValidationKeystoreProperties keystoreProperties;
 
     @Bean

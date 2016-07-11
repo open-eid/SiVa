@@ -18,12 +18,9 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
-import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.*;
@@ -96,20 +93,6 @@ public class PDFValidationServiceTest {
         PDFValidationServiceConfiguration.class
     })
     public static class TestConfiguration {
-        @Bean
-        public YamlPropertiesFactoryBean yamlProperties() {
-            YamlPropertiesFactoryBean yamlProperties = new YamlPropertiesFactoryBean();
-            yamlProperties.setResources(new ClassPathResource("application-test.yml"));
-            return yamlProperties;
-        }
-
-        @Bean
-        public PropertyPlaceholderConfigurer propertyPlaceholderConfigurer(YamlPropertiesFactoryBean yamlProperties) {
-            PropertyPlaceholderConfigurer ppc = new PropertyPlaceholderConfigurer();
-            ppc.setProperties(yamlProperties.getObject());
-            return ppc;
-        }
-
         @Bean
         public TSLLoader tslLoader() {
             return new TSLLoader();

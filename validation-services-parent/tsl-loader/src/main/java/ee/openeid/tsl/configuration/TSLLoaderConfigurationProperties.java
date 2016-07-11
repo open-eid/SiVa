@@ -6,8 +6,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Data
 @ConfigurationProperties(prefix = "tsl.loader")
 public class TSLLoaderConfigurationProperties {
-    private boolean loadFromCache;
-    private String url;
-    private String code;
-    private String schedulerCron;
+    private boolean loadFromCache = false;
+    private String url = "https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml";
+    private String code = "EU";
+    private String schedulerCron = "0 0 3 * * ?";
 }

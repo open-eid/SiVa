@@ -34,7 +34,7 @@ public class SignaturePolicyServiceTest {
     @Test
     public void whenSignaturePolicesDoNotContainDefaultPolicyThenThrowException() {
         expectedException.expect(PolicyPathNotFoundException.class);
-//        expectedException.expectMessage("Default policy is not defined in signature policies.");
+//        expectedException.expectMessage("Default policy is not defined in signature abstractPolicies.");
 
         SignaturePolicyService signaturePolicyService = createSignaturePolicyService("RANDOM_PREFIX" + VALID_CLASSPATH_CONSTRAINT, VALID_CLASSPATH_CONSTRAINT);
         signaturePolicyService.getPolicyDataStreamFromPolicy(POLICY_PREFIX + VALID_CLASSPATH_CONSTRAINT);
@@ -123,8 +123,8 @@ public class SignaturePolicyServiceTest {
 
         }
         SignaturePolicySettings signaturePolicySettings = new SignaturePolicySettings();
-        signaturePolicySettings.setPolicies(policies);
-        signaturePolicySettings.setDefaultPolicy(defaultPolicy);
+        signaturePolicySettings.setAbstractPolicies(policies);
+        signaturePolicySettings.setAbstractDefaultPolicy(defaultPolicy);
 
         return new SignaturePolicyServiceImpl(signaturePolicySettings);
     }

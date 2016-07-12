@@ -19,14 +19,14 @@ public abstract class SignaturePolicyService {
     protected Map<String, byte[]> signaturePolicies = new HashMap<>();
 
     public SignaturePolicyService(SignaturePolicySettings signaturePolicySettings) {
-        LOGGER.info("Loading signature policies for: " + signaturePolicySettings.getClass().getSimpleName());
+        LOGGER.info("Loading signature abstractPolicies for: " + signaturePolicySettings.getClass().getSimpleName());
         loadSignaturePolicies(signaturePolicySettings);
     }
 
     public InputStream getPolicyDataStreamFromPolicy(String policy) {
         byte[] policyData = StringUtils.isEmpty(policy) ? defaultPolicy : signaturePolicies.get(policy);
         if (policyData == null) {
-            throw new InvalidPolicyException("Invalid signature policy: " + policy + "; Available policies: " + signaturePolicies.keySet() );
+            throw new InvalidPolicyException("Invalid signature policy: " + policy + "; Available abstractPolicies: " + signaturePolicies.keySet() );
         }
 
         return new ByteArrayInputStream(policyData);
@@ -54,7 +54,7 @@ public abstract class SignaturePolicyService {
     }
 
     private void loadSignaturePolicies(SignaturePolicySettings signaturePolicySettings) {
-        signaturePolicySettings.getPolicies().forEach((policy, policyPath) -> {
+        signaturePolicySettings.getAbstractPolicies().forEach((policy, policyPath) -> {
             LOGGER.info("Loading policy: " + policy);
             try {
                 byte[] policyData = getContentFromPolicyPath(policyPath);
@@ -72,13 +72,13 @@ public abstract class SignaturePolicyService {
 
     private void defaultPolicyDataLoading(SignaturePolicySettings signaturePolicySettings) {
         try {
-            defaultPolicy = getContentFromPolicyPath(signaturePolicySettings.getDefaultPolicy());
+            defaultPolicy = getContentFromPolicyPath(signaturePolicySettings.getAbstractDefaultPolicy());
         } catch (IOException e) {
             LOGGER.warn("Failed to load default policy data from file: {} with message: {}",
-                    signaturePolicySettings.getDefaultPolicy(),
+                    signaturePolicySettings.getAbstractDefaultPolicy(),
                     e.getMessage(), e);
 
-            throw new InvalidPolicyException("Default policy is not defined in signature policies.");
+            throw new InvalidPolicyException("Default policy is not defined in signature abstractPolicies.");
         }
     }
 

@@ -7,7 +7,7 @@ import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.tsl.CustomCertificatesLoader;
 import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
-import ee.openeid.validation.service.pdf.configuration.PDFSignaturePolicySettings;
+import ee.openeid.validation.service.pdf.configuration.PDFSignaturePolicyProperties;
 import ee.openeid.validation.service.pdf.configuration.PDFValidationServiceConfiguration;
 import ee.openeid.validation.service.pdf.signature.policy.PDFSignaturePolicyService;
 import eu.europa.esig.dss.validation.CertificateVerifier;
@@ -42,7 +42,7 @@ public class PDFValidationServiceTest {
     private CertificateVerifier certificateVerifier;
 
     @Autowired
-    private PDFSignaturePolicySettings policySettings;
+    private PDFSignaturePolicyProperties policySettings;
 
     @Before
     public void setUp() {

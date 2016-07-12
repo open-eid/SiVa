@@ -6,6 +6,6 @@ import java.util.Map;
 
 @Data
 public class SignaturePolicySettings {
-    private String defaultPolicy;
-    private Map<String, String> policies = new HashMap<>();
+    private String abstractDefaultPolicy;
+    private Map<String, String> abstractPolicies = new HashMap<>();
 }

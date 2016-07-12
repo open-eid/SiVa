@@ -1,17 +1,7 @@
-tsl:
-  loadFromCache: false
-  url: https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml
-  code: EU
-  schedulerCron: "0 0 3 * * ?"
-
-keystore:
-  type: JKS
-  filename: test-siva-keystore.jks
-  password: siva-keystore-password
-
 siva:
   bdoc:
     signaturePolicy:
       policies:
-        EE: bdoc_constraint.xml
-      defaultPolicy: EE
+        ? EE
+        : bdoc_constraint.xml
+      defaultPolicy: bdoc_constraint.xml

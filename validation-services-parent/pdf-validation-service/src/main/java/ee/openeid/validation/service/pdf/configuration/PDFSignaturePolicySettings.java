@@ -5,4 +5,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "siva.pdf.signaturePolicy")
 public class PDFSignaturePolicySettings extends SignaturePolicySettings {
+    
 }

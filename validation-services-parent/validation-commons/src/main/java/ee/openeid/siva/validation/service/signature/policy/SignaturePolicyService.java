@@ -13,66 +13,73 @@ import java.util.Map;
 
 @Data
 public abstract class SignaturePolicyService {
+    protected static final Logger LOGGER = LoggerFactory.getLogger(SignaturePolicyService.class);
 
-    protected static final Logger log = LoggerFactory.getLogger(SignaturePolicyService.class);
-
-    protected String defaultPolicy;
-
+    protected byte[] defaultPolicy;
     protected Map<String, byte[]> signaturePolicies = new HashMap<>();
 
     public SignaturePolicyService(SignaturePolicySettings signaturePolicySettings) {
-        log.info("Loading signature policies for: " + signaturePolicySettings.getClass().getSimpleName());
+        LOGGER.info("Loading signature policies for: " + signaturePolicySettings.getClass().getSimpleName());
         loadSignaturePolicies(signaturePolicySettings);
     }
 
     public InputStream getPolicyDataStreamFromPolicy(String policy) {
-        if (StringUtils.isEmpty(policy)) {
-            policy = defaultPolicy;
-        }
-        byte[] policyData = signaturePolicies.get(policy);
+        byte[] policyData = StringUtils.isEmpty(policy) ? defaultPolicy : signaturePolicies.get(policy);
         if (policyData == null) {
             throw new InvalidPolicyException("Invalid signature policy: " + policy + "; Available policies: " + signaturePolicies.keySet() );
         }
+
         return new ByteArrayInputStream(policyData);
     }
 
     protected byte[] getContentFromPolicyPath(String policyPath) throws IOException {
         InputStream policyDataStream = null;
         if (new File(policyPath).isAbsolute()) {
-            log.info("Reading policy from absolute path: " + policyPath);
+            LOGGER.info("Reading policy from absolute path: " + policyPath);
             try {
                 policyDataStream = new FileInputStream(new File(policyPath));
             } catch (FileNotFoundException e) {
-                log.warn(e.getMessage());
+                LOGGER.warn(e.getMessage());
             }
         } else {
-            log.info("Reading policy from classpath: " + policyPath);
+            LOGGER.info("Reading policy from classpath: " + policyPath);
             policyDataStream = getClass().getClassLoader().getResourceAsStream(policyPath);
         }
+
         if (policyDataStream == null) {
             throw new PolicyPathNotFoundException("Could not find: " + policyPath);
         }
+
         return IOUtils.toByteArray(policyDataStream);
     }
 
     private void loadSignaturePolicies(SignaturePolicySettings signaturePolicySettings) {
         signaturePolicySettings.getPolicies().forEach((policy, policyPath) -> {
-            log.info("Loading policy: " + policy);
+            LOGGER.info("Loading policy: " + policy);
             try {
                 byte[] policyData = getContentFromPolicyPath(policyPath);
                 InputStream policyDataStream = new ByteArrayInputStream(policyData);
                 validateAgainstSchema(policyDataStream);
                 signaturePolicies.put(policy, policyData);
-                log.info("Policy: " + policy + " loaded successfully");
+                LOGGER.info("Policy: " + policy + " loaded successfully");
             } catch (Exception e) {
-                log.error("Could not load policy " + policy + " due to: " + e);
+                LOGGER.error("Could not load policy " + policy + " due to: " + e);
             }
         });
 
-        if (!signaturePolicies.containsKey(signaturePolicySettings.getDefaultPolicy())) {
+        defaultPolicyDataLoading(signaturePolicySettings);
+    }
+
+    private void defaultPolicyDataLoading(SignaturePolicySettings signaturePolicySettings) {
+        try {
+            defaultPolicy = getContentFromPolicyPath(signaturePolicySettings.getDefaultPolicy());
+        } catch (IOException e) {
+            LOGGER.warn("Failed to load default policy data from file: {} with message: {}",
+                    signaturePolicySettings.getDefaultPolicy(),
+                    e.getMessage(), e);
+
             throw new InvalidPolicyException("Default policy is not defined in signature policies.");
         }
-        this.defaultPolicy = signaturePolicySettings.getDefaultPolicy();
     }
 
     private void validateAgainstSchema(InputStream policyDataStream) {

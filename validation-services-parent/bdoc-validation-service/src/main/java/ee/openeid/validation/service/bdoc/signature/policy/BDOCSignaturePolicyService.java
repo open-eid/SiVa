@@ -14,11 +14,11 @@ public class BDOCSignaturePolicyService extends SignaturePolicyService {
     }
 
     public String getAbsolutePath(String policy) {
-        if (StringUtils.isEmpty(policy)) {
-            policy = defaultPolicy;
-        }
-        log.debug("creating policy file from path {}", policy);
-        InputStream inputStream = getPolicyDataStreamFromPolicy(policy);
+        LOGGER.debug("creating policy file from path {}", policy);
+        InputStream inputStream = StringUtils.isEmpty(policy) ?
+                new ByteArrayInputStream(defaultPolicy) :
+                getPolicyDataStreamFromPolicy(policy);
+
         try {
             final File file = File.createTempFile(policy + "_constraint", "xml");
             file.deleteOnExit();
@@ -27,7 +27,7 @@ public class BDOCSignaturePolicyService extends SignaturePolicyService {
             outputStream.close();
             return file.getAbsolutePath();
         } catch (IOException e) {
-            log.error("Unable to create temporary file from bdoc policy resource", e);
+            LOGGER.error("Unable to create temporary file from bdoc policy resource", e);
             throw new BdocPolicyFileCreationException(e);
         }
     }

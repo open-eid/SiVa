@@ -23,7 +23,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {TSLLoaderConfiguration.class, TSLLoader.class, BDOCValidationServiceConfiguration.class, BDOCValidationService.class})
+@SpringBootTest(classes = {
+    TSLLoaderConfiguration.class,
+    TSLLoader.class,
+    BDOCValidationServiceConfiguration.class,
+    BDOCValidationService.class
+})
 @ActiveProfiles("test")
 public class BDOCValidationServiceIntegrationTest {
     

@@ -1,14 +1,11 @@
 server:
   port: 9000
-siva:
-  google-analytics:
-    # TODO: Remove before release
-    tracking-id: UA-80132229-1
-  build:
-    infoFile: "ci-build-info.yml"
-  service:
-    serviceUrl: "http://localhost:8080/validate"
 spring:
   http:
     multipart:
       max-file-size: "10Mb"
+management:
+  context-path: /monitoring
+security:
+  basic:
+    path: /monitoring/**

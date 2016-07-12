@@ -3,7 +3,7 @@ package ee.openeid.siva.sample.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import ee.openeid.siva.sample.ci.info.BuildInfo;
 import ee.openeid.siva.sample.configuration.GoogleAnalyticsProperties;
-import ee.openeid.siva.sample.siva.SivaValidationService;
+import ee.openeid.siva.sample.siva.ValidationService;
 import ee.openeid.siva.sample.upload.UploadFileCacheService;
 import ee.openeid.siva.sample.upload.UploadedFile;
 import org.json.JSONObject;
@@ -31,7 +31,7 @@ class UploadController {
     private static final String REDIRECT_PATH = "redirect:/validation-response";
     private static final String START_PAGE_VIEW_NAME = "index";
 
-    private SivaValidationService validationService;
+    private ValidationService validationService;
     private UploadFileCacheService fileUploadService;
     private GoogleAnalyticsProperties googleAnalyticsProperties;
     private BuildInfo buildInfo;
@@ -97,7 +97,7 @@ class UploadController {
     }
 
     @Autowired
-    public void setValidationService(final SivaValidationService validationService) {
+    public void setValidationService(final ValidationService validationService) {
         this.validationService = validationService;
     }
 

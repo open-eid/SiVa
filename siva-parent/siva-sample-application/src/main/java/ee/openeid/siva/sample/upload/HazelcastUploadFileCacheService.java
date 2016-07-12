@@ -25,12 +25,12 @@ public class HazelcastUploadFileCacheService implements UploadFileCacheService {
         return uploadedFile;
     }
 
-    private void setFileContents(MultipartFile file, UploadedFile uploadedFile) throws IOException {
+    private static void setFileContents(MultipartFile file, UploadedFile uploadedFile) throws IOException {
         final String fileContents = file == null ? null : Base64.encodeBase64String(file.getBytes());
         uploadedFile.setEncodedFile(fileContents);
     }
 
-    private void setFilename(MultipartFile file, UploadedFile uploadedFile) {
+    private static void setFilename(MultipartFile file, UploadedFile uploadedFile) {
         final String filename = file  == null ? "" : file.getOriginalFilename();
         uploadedFile.setFilename(filename);
     }

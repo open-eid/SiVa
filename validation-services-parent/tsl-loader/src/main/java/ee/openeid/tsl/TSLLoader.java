@@ -9,7 +9,6 @@ import eu.europa.esig.dss.x509.KeyStoreCertificateSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -22,11 +21,8 @@ public class TSLLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger(TSLLoader.class);
 
     private TSLValidationJob tslValidationJob;
-
     private TSLLoaderConfigurationProperties configurationProperties;
-
     private TrustedListsCertificateSource trustedListSource;
-
     private KeyStoreCertificateSource keyStoreCertificateSource;
 
     private static final List<String> DEFAULT_TRUESTED_TERRITORIES = Arrays.asList("AT", "BE", "BG", "CY", "CZ",/*"DE",*/"DK", "EE", "ES", "FI", "FR", "GR", "HU",/*"HR",*/"IE", "IS", "IT", "LT", "LU", "LV", "LI", "MT",/*"NO",*/"NL", "PL", "PT", "RO", "SE", "SI", "SK", "UK");
@@ -51,7 +47,7 @@ public class TSLLoader {
         tslValidationJob.setCheckTSLSignatures(true);
     }
 
-    private void loadTSL() {
+    public void loadTSL() {
         if (configurationProperties.isLoadFromCache()) {
             LOGGER.info("Loading TSL from cache");
             tslValidationJob.initRepository();
@@ -61,11 +57,6 @@ public class TSLLoader {
             tslValidationJob.refresh();
             LOGGER.info("Finished loading TSL from cache");
         }
-    }
-
-    @Scheduled(cron = "${tsl.loader.schedulerCron}")
-    public void refreshTSL() {
-        loadTSL();
     }
 
     @Autowired

@@ -7,7 +7,7 @@ import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.x509.KeyStoreCertificateSource;
 import eu.europa.esig.dss.x509.crl.CRLSource;
 import eu.europa.esig.dss.x509.ocsp.OCSPSource;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,24 +15,19 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Configuration
 @EnableScheduling
-@EnableConfigurationProperties(TSLLoaderConfigurationProperties.class)
+@EnableConfigurationProperties({
+    TSLLoaderConfigurationProperties.class,
+    TSLValidationKeystoreProperties.class
+})
 public class TSLLoaderConfiguration {
-
-    @Value("${keystore.type}")
-    String keystoreType;
-
-    @Value("${keystore.filename}")
-    String keystoreFilename;
-
-    @Value("${keystore.password}")
-    String keystorePassword;
+    private TSLValidationKeystoreProperties keystoreProperties;
 
     @Bean
     public DSSKeyStoreFactoryBean dssKeyStore() {
         DSSKeyStoreFactoryBean dssKeyStoreFactoryBean = new DSSKeyStoreFactoryBean();
-        dssKeyStoreFactoryBean.setKeyStoreType(keystoreType);
-        dssKeyStoreFactoryBean.setKeyStoreFilename(keystoreFilename);
-        dssKeyStoreFactoryBean.setKeyStorePassword(keystorePassword);
+        dssKeyStoreFactoryBean.setKeyStoreType(keystoreProperties.getType());
+        dssKeyStoreFactoryBean.setKeyStoreFilename(keystoreProperties.getFilename());
+        dssKeyStoreFactoryBean.setKeyStorePassword(keystoreProperties.getPassword());
         return dssKeyStoreFactoryBean;
     }
 
@@ -59,5 +54,8 @@ public class TSLLoaderConfiguration {
         return trustedListsCertificateSource;
     }
 
-
+    @Autowired
+    public void setKeystoreProperties(TSLValidationKeystoreProperties keystoreProperties) {
+        this.keystoreProperties = keystoreProperties;
+    }
 }

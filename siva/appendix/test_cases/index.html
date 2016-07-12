@@ -276,8 +276,8 @@
           
             
   <li>
-    <a class="" title="References" href="../../references/">
-      References
+    <a class="" title="QA Strategy" href="../../qa_strategy/">
+      QA Strategy
     </a>
     
   </li>
@@ -287,6 +287,15 @@
   <li>
     <a class="" title="Test Plan" href="../../test_plan/">
       Test Plan
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="References" href="../../references/">
+      References
     </a>
     
   </li>
@@ -514,8 +523,9 @@
 <li>RequirementID: <a href=""></a></li>
 <li>Title: Bdoc with warning on signature</li>
 <li>Expected Result: The document should pass the validation but warning should be returned</li>
-<li>File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc</li>
+<li>File:</li>
 </ul>
+<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <h2 id="ddocvalidationfailjava">DdocValidationFail.java</h2>
 <p><strong>TestCaseID: Ddoc-ValidationFail-1</strong></p>
 <ul>
@@ -724,7 +734,7 @@
 <li>RequirementID: <a href=""></a></li>
 <li>Title: The PDF has PAdES-T profile signature</li>
 <li>Expected Result: Document validation should fail</li>
-<li>File: some_file.pdf</li>
+<li>File:</li>
 </ul>
 <p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <p><strong>TestCaseID: PDF-BaselineProfile-3</strong></p>
@@ -741,7 +751,7 @@
 <li>RequirementID: <a href=""></a></li>
 <li>Title: The PDF has PAdES-LTA profile signature</li>
 <li>Expected Result: Document validation should pass</li>
-<li>File: some_file.pdf</li>
+<li>File:</li>
 </ul>
 <p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <p><strong>TestCaseID: PDF-BaselineProfile-5</strong></p>
@@ -879,18 +889,16 @@
 <li>RequirementID: <a href=""></a></li>
 <li>Title: The PDF-file has been signed with expired certificate (PAdES Baseline LT)</li>
 <li>Expected Result: Document signed with certificate that is expired should fail.</li>
-<li>File: IB-3691_bdoc21-TS-old-cert.bdoc</li>
+<li>File: hellopades-lt-rsa1024-sha1-expired.pdf</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <p><strong>TestCaseID: PDF-ValidationFail-3</strong></p>
 <ul>
 <li>TestType: Automated</li>
 <li>RequirementID: <a href=""></a></li>
 <li>Title: The PDF-file has been signed with revoked certificate (PAdES Baseline LT)</li>
 <li>Expected Result: Document signed with certificate that is revoked should fail.</li>
-<li>File: hellopades-lt-sha256-revoked.pdf</li>
+<li>File: pades_lt_revoked.pdf</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <p><strong>TestCaseID: PDF-ValidationFail-4</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -1034,7 +1042,7 @@
 <li>RequirementID: <a href="http://open-eid.github.io/SiVa/siva/interface_description/">http://open-eid.github.io/SiVa/siva/interface_description/</a></li>
 <li>Title: JSON structure has all elements (Bdoc valid multiple signatures)</li>
 <li>Expected Result: All required elements are present according to SimpleReportSchema.json</li>
-<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
+<li>File: Baltic MoU digital signing_EST_LT_LV.bdoc</li>
 </ul>
 <p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <p><strong>TestCaseID: Bdoc-ValidationReport-3</strong></p>
@@ -1093,7 +1101,6 @@
 <li>Expected Result: All required elements are present according to SimpleReportSchema.json</li>
 <li>File:</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <p><strong>TestCaseID: Pdf-ValidationReport-10</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -1207,8 +1214,9 @@
 <li>RequirementID: <a href="http://open-eid.github.io/SiVa/siva/interface_description/">http://open-eid.github.io/SiVa/siva/interface_description/</a></li>
 <li>Title: Verification of values in Validation Report XAdES_BASELINE_LT_TM, AdESqc, FullSignatureScope</li>
 <li>Expected Result: All required elements are present and meet the expected values.</li>
-<li>File: ICT_MoU_FI-EE_10dec2013OneSignature.bdoc</li>
+<li>File: 23200_weakdigest-wrong-nonce.asice</li>
 </ul>
+<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <p><strong>TestCaseID: Bdoc-ValidationReportValue-5</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -1225,6 +1233,7 @@
 <li>Expected Result: All required elements are present and meet the expected values and other values are empty as expected.</li>
 <li>File: ICT_MoU_FI-EE_10dec2013OneSignature.bdoc</li>
 </ul>
+<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <p><strong>TestCaseID: Ddoc-ValidationReportValue-7</strong></p>
 <ul>
 <li>TestType: Automated</li>

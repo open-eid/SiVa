@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="no-js ie6"><![endif]-->
+<!--[if IE 7 ]><html class="no-js ie7"><![endif]-->
+<!--[if IE 8 ]><html class="no-js ie8"><![endif]-->
+<!--[if IE 9 ]><html class="no-js ie9"><![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1">
+    
+      
+        <title>QA Strategy - SiVa - Validation Service Documentation</title>
+      
+      
+      
+      
+    
+    <meta property="og:url" content="None">
+    <meta property="og:title" content="SiVa - Validation Service Documentation">
+    <meta property="og:image" content="None/../../">
+    <meta name="apple-mobile-web-app-title" content="SiVa - Validation Service Documentation">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    
+    <link rel="shortcut icon" type="image/x-icon" href="../../None">
+    <link rel="icon" type="image/x-icon" href="../../None">
+    <style>
+      @font-face {
+      	font-family: 'Icon';
+      	src: url('../../assets/fonts/icon.eot?52m981');
+      	src: url('../../assets/fonts/icon.eot?#iefix52m981')
+               format('embedded-opentype'),
+      		   url('../../assets/fonts/icon.woff?52m981')
+               format('woff'),
+      		   url('../../assets/fonts/icon.ttf?52m981')
+               format('truetype'),
+      		   url('../../assets/fonts/icon.svg?52m981#icon')
+               format('svg');
+      	font-weight: normal;
+      	font-style: normal;
+      }
+    </style>
+    <link rel="stylesheet" href="../../assets/stylesheets/application-54f87043f3.css">
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/palettes-05ab2406df.css">
+    
+    
+      
+      
+      
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
+      <style>
+        body, input {
+          font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
+        }
+        pre, code {
+          font-family: 'Roboto Mono', 'Courier New', 'Courier', monospace;
+        }
+      </style>
+    
+    
+      <link rel="stylesheet" href="../../override.css">
+    
+    <script src="../../assets/javascripts/modernizr-4ab42b99fd.js"></script>
+    
+  </head>
+  
+  
+  
+  <body class="palette-primary-light-green palette-accent-lime">
+    
+      
+      
+    
+    <div class="backdrop">
+      <div class="backdrop-paper"></div>
+    </div>
+    <input class="toggle" type="checkbox" id="toggle-drawer">
+    <input class="toggle" type="checkbox" id="toggle-search">
+    <label class="toggle-button overlay" for="toggle-drawer"></label>
+    <header class="header">
+      <nav aria-label="Header">
+  <div class="bar default">
+    <div class="button button-menu" role="button" aria-label="Menu">
+      <label class="toggle-button icon icon-menu" for="toggle-drawer">
+        <span></span>
+      </label>
+    </div>
+    <div class="stretch">
+      <div class="title">
+        
+          <span class="path">
+            
+          </span>
+        
+        QA Strategy
+      </div>
+    </div>
+    
+    
+    <div class="button button-search" role="button" aria-label="Search">
+      <label class="toggle-button icon icon-search" title="Search" for="toggle-search"></label>
+    </div>
+  </div>
+  <div class="bar search">
+    <div class="button button-close" role="button" aria-label="Close">
+      <label class="toggle-button icon icon-back" for="toggle-search"></label>
+    </div>
+    <div class="stretch">
+      <div class="field">
+        <input class="query" type="text" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck>
+      </div>
+    </div>
+    <div class="button button-reset" role="button" aria-label="Search">
+      <button class="toggle-button icon icon-close" id="reset-search"></button>
+    </div>
+  </div>
+</nav>
+    </header>
+    <main class="main">
+      
+      <div class="drawer">
+        <nav aria-label="Navigation">
+  
+  <a href="https://github.com/open-eid/SiVa" class="project">
+    <div class="banner">
+      
+      <div class="name">
+        <strong>
+          SiVa - Validation Service Documentation
+          <span class="version">
+            
+          </span>
+        </strong>
+        
+          <br>
+          open-eid/SiVa
+        
+      </div>
+    </div>
+  </a>
+  <div class="scrollable">
+    <div class="wrapper">
+      
+        <ul class="repo">
+          <li class="repo-download">
+            
+            <a href="https://github.com/open-eid/SiVa/archive/master.zip" target="_blank" title="Download" data-action="download">
+              <i class="icon icon-download"></i> Download
+            </a>
+          </li>
+          <li class="repo-stars">
+            <a href="https://github.com/open-eid/SiVa/stargazers" target="_blank" title="Stargazers" data-action="star">
+              <i class="icon icon-star"></i> Stars
+              <span class="count">&ndash;</span>
+            </a>
+          </li>
+        </ul>
+        <hr>
+      
+      <div class="toc">
+        <ul>
+          
+            
+  <li>
+    <a class="" title="Introduction" href="../..">
+      Introduction
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Version info" href="../version_info/">
+      Version info
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Definitions" href="../definitions/">
+      Definitions
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="SiVa Service Overview" href="../overview/">
+      SiVa Service Overview
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Regulatory environment" href="../regulatory_environment/">
+      Regulatory environment
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Component diagram" href="../component_diagram/">
+      Component diagram
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Deployment view" href="../deployment_view/">
+      Deployment view
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Interfaces" href="../interface_description/">
+      Interfaces
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Database schema" href="../database_schema/">
+      Database schema
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Use cases" href="../use_cases/">
+      Use cases
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Deployment" href="../deployment/">
+      Deployment
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Logging" href="../logging/">
+      Logging
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="current" title="QA Strategy" href="./">
+      QA Strategy
+    </a>
+    
+      
+        
+      
+      
+        <ul>
+          
+            <li class="anchor">
+              <a title="Introduction" href="#introduction">
+                Introduction
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Environments and infrastructure" href="#environments-and-infrastructure">
+                Environments and infrastructure
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Analysis" href="#analysis">
+                Analysis
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Development" href="#development">
+                Development
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Testing" href="#testing">
+                Testing
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="References" href="#references">
+                References
+              </a>
+            </li>
+          
+        </ul>
+      
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Test Plan" href="../test_plan/">
+      Test Plan
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="References" href="../references/">
+      References
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <span class="section">Appendixes</span>
+    <ul>
+      
+        
+  <li>
+    <a class="" title="Appendix 1 - Non-Functional Requirements" href="../appendix/none_functional_requirements/">
+      Appendix 1 - Non-Functional Requirements
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="Appendix 2 - Functional Requirements" href="../appendix/functional_requirements/">
+      Appendix 2 - Functional Requirements
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="Appendix 3 - Validation Policy" href="../appendix/validation_policy/">
+      Appendix 3 - Validation Policy
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="Appendix 4 - Validation Constraint Configuration" href="../appendix/validation_constraints/">
+      Appendix 4 - Validation Constraint Configuration
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="Appendix 5 - Test Case Descriptions" href="../appendix/test_cases/">
+      Appendix 5 - Test Case Descriptions
+    </a>
+    
+  </li>
+
+      
+    </ul>
+  </li>
+
+          
+        </ul>
+        
+      </div>
+    </div>
+  </div>
+</nav>
+      </div>
+      <article class="article">
+        <div class="wrapper">
+          
+          <h1 id="qa-strategy">QA Strategy</h1>
+<h2 id="introduction">Introduction</h2>
+<p>The goal of this document is to give general overview of the used infrastructure, processes, schedule and actions to ensure good quality delivery. The document describes activities in the whole software development process. Analysis, development and testing are separated for the sake of structure and transparency although they are integral parts of the development cycle.</p>
+<h2 id="environments-and-infrastructure">Environments and infrastructure</h2>
+<p><img alt="Enviroment" src="../../img/siva/qa_strategy/Env.png" /></p>
+<p>There are different test environments for quality assurance, depending on the nature and aim.</p>
+<ol>
+<li>TravisCI environment for public - Platform: Linux</li>
+<li>Test environment for test and performance test - Platform: Linux</li>
+</ol>
+<p>Instructions how to set up test enviroment and run tests together with more info can be found in <a href="https://github.com/open-eid/SiVa">SiVa GitHub page</a></p>
+<p>System requirements:</p>
+<ul>
+<li>At least 2GB of RAM on machine where the build is executed</li>
+<li>Minimum required Java version is Java 8</li>
+<li>SiVa project provided Maven Wrapper (./mvnw)</li>
+</ul>
+<p>Tools used:</p>
+<ul>
+<li>TravisCI – is a continuous integration service used to build and test software projects hosted at GitHub</li>
+<li>Jenkins – is an open source continuous integration tool written in Java.</li>
+<li>JMeter – tool for creating and running performance tests.</li>
+<li>IntelliJ IDEA – is a Java integrated development environment(IDE) for developing automated tests</li>
+<li>Apache Tomcat - is an open source servlet container developed by the Apache Software Foundation.</li>
+<li>Docker – is an open-source project that automates the deployment of applications inside software containers, by providing an additional layer of abstraction and automation of operating-system-level virtualization on Linux.</li>
+<li>Rest-Assured - is a Java DSL(Domain-specific language) for simplifying testing of REST based Services built on top of HTTP Builder.</li>
+</ul>
+<h2 id="analysis">Analysis</h2>
+<p>Analysis will be tagged with identificators to enable cross-reference between requirements and corresponding tests. This includes both functional and non-functional requirements. Analysis of specific tasks must be done before the sprint planning meeting. This will ensure that upcoming sprint is planned in common grounds.</p>
+<p>Reference document [2]. and [3]. (see reference section)</p>
+<h2 id="development">Development</h2>
+<h3 id="development-process">Development process</h3>
+<p>Customized iterative process similar to SCRUM is used in the development. The process consists of following elements:</p>
+<ul>
+<li>Product backlog is maintained</li>
+<li>Sprints are two weeks long</li>
+<li>Sprint planning meetings are held</li>
+<li>Tasks are maintained through JIRA SCRUM board</li>
+<li>Daily team stand-ups are held</li>
+<li>Tasks marked done are developed, tested and ready to be shipped</li>
+<li>Bi-weekly meetings are held to give status on progress and discuss open questions</li>
+<li>Retrospectives are held at least with two month intervals</li>
+</ul>
+<p><img alt="Development process" src="../../img/siva/qa_strategy/DevProcess.png" /></p>
+<h3 id="issue-lifecycle">Issue lifecycle</h3>
+<p>Each ticket (defect, task, ...) in JIRA SCRUM board goes through the following states that correspond the development procedure described in previous chapter.</p>
+<p><img alt="Issue lifecycle" src="../../img/siva/qa_strategy/IssueLifecycle.png" /></p>
+<p>Description of states:</p>
+<ul>
+<li>ToDo - tickets to be dealt with in current sprint (Sprint backlog).</li>
+<li>Analysis -ticket is being analysed. During this stage requirements are refined.</li>
+<li>Development - ticket is being handled (feature coding, document writing, ...).</li>
+<li>In Review - the work done in development stage is being reviewed.</li>
+<li>Test - ticket is being tested.</li>
+<li>Done - ticket has been tested and deemed sufficient for release (Ready features)</li>
+<li>Closed - ticket has been released.</li>
+</ul>
+<h3 id="qa-activities-and-quality-criterias-in-the-development">QA activities and quality criterias in the development</h3>
+<p><strong>Process improvement</strong></p>
+<p>The development process is constantly monitored and adjusted to the changing situations. Retrospective meetings for process feedback are held.</p>
+<p><strong>Unit tests</strong></p>
+<p>It is responsibility of developer to write, maintain and execute the unit tests on developed features. The code must compile and pass unit tests before it is allowed to be submitted to the code repository.  The code of the unit tests is integral part of the source code and is maintained on the same principles.</p>
+<p>Unit tests are also automatically executed on each build, if the unit tests do not pass further test execution is stopped.</p>
+<p><strong>Static testing/code reviews</strong></p>
+<p>All changes (including changes in unit test code) are reviewed by another development team member using GitHub. The code must pass review before it is submitted to testing.</p>
+<p>SonarLint is used to validate code automatically. It integrates both suggested tools mentioned in reference document [3]. (see reference section)</p>
+<h2 id="testing">Testing</h2>
+<h3 id="approach-and-schedule">Approach and schedule</h3>
+<p>Testing follows the principles described in reference document   [1]</p>
+<p>The goal is to automate as much of the testing process as possible, however some aspects of the testing will be carried out manually.</p>
+<p>As the development is carried out validation module by validation module, testing will follow the same principle. The tests will be developed in iterations for each validation module.</p>
+<p>After each iteration test cases, test automation code and test results will be available through GitHub.</p>
+<p>The main focus on testing is on different type of input data, the tests themselves will be based on the same principle for all the modules.</p>
+<p>The schedule of testing can be seen on the image below.</p>
+<p><img alt="Testing schedule" src="../../img/siva/qa_strategy/Schedule.png" /></p>
+<h3 id="testing-process">Testing process</h3>
+<p>All automatic tests, except load tests will follow the same execution process. The tests are ran automatically and all the actions are triggered by Jenkins. The full set of tests (unit, integration and system) will be ran on every test execution.</p>
+<p><img alt="Testing process" src="../../img/siva/qa_strategy/TestProcess.png" /></p>
+<h3 id="test-case-management">Test case management</h3>
+<p>Test cases are handled as integral part of test automation code. The same applies on manual tests, in manual test cases some portion of automation may be used to execute the tests but the results are verified manually. All the test cases and test code will be maintained in the GitHub.</p>
+<p>Test cases are developed and maintained together with test automation code by the QA specialist for Integration and System Testing.</p>
+<p>Following elements will be present in test cases:</p>
+<ul>
+<li>TestCaseID: unique ID that makes possible to identify specific test case</li>
+<li>RequirementID: ID of the requirement that is tested</li>
+<li>Title: Description of the test</li>
+<li>Expected Result: expected outcome of the test (pass criteria for the test)</li>
+<li>File: input test file that is used</li>
+</ul>
+<p><strong>Test case sample</strong></p>
+<p>Automatic and manual test cases will have the same description principles (shown below).</p>
+<div class="codehilite"><pre><span></span>/***
+ *
+ * TestCaseID: PDF-BaselineProfileTests-1
+ *
+ * TestType: Automated/Manual
+ *
+ * RequirementID: SiVa-I-8.1
+ *
+ * Title: The PDF-file has got signatures of two different profiles - Signing profiles PAdES Baseline-B and PAdES-LTA
+ *
+ * Expected Result: Signature profile Baseline - LTA should pass and signature baseline-b should fail
+ *
+ * File: hellopades-lt-b.pdf
+ *
+ ***/
+@Test
+
+public void baselineProfileLTDocumentShouldPass<span class="o">(){</span>
+    String <span class="nv">filename</span> <span class="o">=</span> <span class="s2">&quot;hellopades-lt-b.pdf&quot;</span><span class="p">;</span>
+    String <span class="nv">encodeFile</span> <span class="o">=</span> Base64.encodeBase64String<span class="o">(</span>readFile<span class="o">(</span>filename<span class="o">))</span><span class="p">;</span>
+    String <span class="nv">document</span> <span class="o">=</span> encodeFile<span class="p">;</span>
+    ValidationRequest <span class="nv">validationRequest</span> <span class="o">=</span> new ValidationRequest<span class="o">()</span><span class="p">;</span>
+    validationRequest.setDocumentType<span class="o">(</span>parseFileExtension<span class="o">(</span>filename.substring<span class="o">(</span>filename.lastIndexOf<span class="o">(</span><span class="s2">&quot;.&quot;</span><span class="o">)</span> + 1<span class="o">)))</span><span class="p">;</span>
+    validationRequest.setDocument<span class="o">(</span>document<span class="o">)</span><span class="p">;</span>
+    restTemplate.postForObject<span class="o">(</span>sivaBaseUrl, validationRequest, String.class<span class="o">)</span><span class="p">;</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h3 id="defect-management">Defect management</h3>
+<p>All found defects will be reported and handled in Jira. The defect report will follow similar lifecycle in JIRA SCRUM board as tasks.</p>
+<p>The report will have following elements:</p>
+<ul>
+<li>Title: Short, precise description of the problem</li>
+<li>Details: Type, Priority, Sprint, Epic Link, Fix Version/s</li>
+<li>Description:<ul>
+<li><strong>Steps to reproduce bug</strong> - sequence for reproduction, link to test case if applicable.</li>
+<li><strong>Expected behavior</strong> - expected outcome of the test sequence.</li>
+<li><strong>Actual behavior</strong> - actual result of the test sequence. The description should be thorough enough to enable the debugging of the problem and to give objective base for severity assessment.</li>
+<li><strong>File attachments</strong> - Test files, logs, images, ...</li>
+</ul>
+</li>
+</ul>
+<h3 id="test-levels">Test levels</h3>
+<p><strong>Integration testing</strong></p>
+<p>The scope of the tests is illustrated on the image below. The goal is to test the SiVA application API (both X-Road and REST/JSON) and to test the independent module capability for validation of specific type of file (DDOC, BDOC, PDF or X-Road signature). Both valid and invalid inputs are tested. More info about testing specifics can be found in Test Plan <a href="../../siva/test_plan/#integration-test-introduction">Integration testing</a> section.</p>
+<p><img alt="Integration testing" src="../../img/siva/qa_strategy/IntegrationTest.png" /></p>
+<p><strong>System testing</strong></p>
+<p>The scope of the tests is illustrated on the image below. The goal of the test is to test the entire length of signature validation process and to test supportive functions. In addition REST/JSON Demo application is tested. X-Road application is used to test the flow, but application itself is not tested. More info about testing specifics can be found in Test Plan <a href="../../siva/test_plan/#system-test-introduction">System testing</a> section.</p>
+<p><img alt="System testing" src="../../img/siva/qa_strategy/SystemTest.png" /></p>
+<p><strong>Regression testing</strong></p>
+<p>Regression testing will consist of two parts:
+Running all automated tests (unit, integration and system tests)
+Manual testing of the areas that are not covered by automatic tests based on the regression test checklist</p>
+<h3 id="additional-testing-activities">Additional testing activities</h3>
+<p><strong>Performance testing</strong></p>
+<p>Performance testing will be carried out using JMeter on Test Environment. The testing will be carried out for each type of validation service.</p>
+<p>More info about performance testing specifics can be found in Test Plan <a href="../../siva/test_plan/#performance-test-introduction">Performance testing</a> section.</p>
+<h2 id="references">References</h2>
+<div class="admonition development">
+<p class="admonition-title">Development</p>
+<p>This section will be moved to general reference page</p>
+</div>
+<ul>
+<li>[1] Lisa_6_Osa_I_SiVa_Testimise_korraldus.pdf</li>
+<li>[2] Lisa_4_Osa_I_SiVa_Valideerimisteenuse_analuus MUUDETUD.pdf</li>
+<li>[3] Lisa_3_RIA_Mittefunktsionaalsed_nouded.pdf</li>
+<li>[4] OWASP Testing Guide 4.0</li>
+</ul>
+          <aside class="copyright" role="note">
+            
+            Documentation built with
+            <a href="http://www.mkdocs.org" target="_blank">MkDocs</a>
+            using the
+            <a href="http://squidfunk.github.io/mkdocs-material/" target="_blank">
+              Material
+            </a>
+            theme.
+          </aside>
+          
+            <footer class="footer">
+              
+  <nav class="pagination" aria-label="Footer">
+    <div class="previous">
+      
+        <a href="../logging/" title="Logging">
+          <span class="direction">
+            Previous
+          </span>
+          <div class="page">
+            <div class="button button-previous" role="button" aria-label="Previous">
+              <i class="icon icon-back"></i>
+            </div>
+            <div class="stretch">
+              <div class="title">
+                Logging
+              </div>
+            </div>
+          </div>
+        </a>
+      
+    </div>
+    <div class="next">
+      
+        <a href="../test_plan/" title="Test Plan">
+          <span class="direction">
+            Next
+          </span>
+          <div class="page">
+            <div class="stretch">
+              <div class="title">
+                Test Plan
+              </div>
+            </div>
+            <div class="button button-next" role="button" aria-label="Next">
+              <i class="icon icon-forward"></i>
+            </div>
+          </div>
+        </a>
+      
+    </div>
+  </nav>
+
+            </footer>
+          
+        </div>
+      </article>
+      <div class="results" role="status" aria-live="polite">
+        <div class="scrollable">
+          <div class="wrapper">
+            <div class="meta"></div>
+            <div class="list"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script>
+      var base_url = '../..';
+      var repo_id  = 'open-eid/SiVa';
+    </script>
+    <script src="../../assets/javascripts/application-997097ee0c.js"></script>
+    
+    
+  </body>
+</html>

@@ -2,14 +2,16 @@ language: java
 sudo: false
 jdk:
 - oraclejdk8
-python:
-- "3.4"
 env:
   - TMPDIR=/tmp
 addons:
   ssh_known_hosts: demoapps.eu
   apt:
+    sources:
+      - deadsnakes
     packages:
+      - python3.5
+      - python3.5-dev
       - python3-setuptools
       - unzip
 before_install:

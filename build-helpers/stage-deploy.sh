@@ -11,5 +11,7 @@ find . -name "siva-sample-application*.jar" -exec sh -c 'mv "$1" "siva-sample-ap
 # Copy webapp to testing directory
 cp siva-webapp.jar /var/apps/stage
 
+ls -al /var/apps/stage
+
 # Start test web service
 sudo systemctl start siva-test-webapp

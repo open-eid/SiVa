@@ -20,9 +20,9 @@ before_install:
 - export TZ=Estonia/Tallinn
 - python3 --version
 - easy_install3 --user future
-- easy_install3 --user pyresttest
 - easy_install3 --user pyyaml
 - easy_install3 --user requests
+- easy_install --user pyresttest
 branchespython-dev:
   only:
   - develop

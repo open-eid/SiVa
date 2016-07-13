@@ -29,14 +29,11 @@ branchespython-dev:
 install: true
 script:
 - "./mvnw clean install -q"
-- "pyresttest http://api.demoapps.eu build-helpers/system-test.yml"
+- "${TRAVIS_BUILD_DIR}/build-helpers/system-test.sh"
 after_success:
 - "./mvnw jacoco:report coveralls:report -q -Dcoveralls.repo.token=$COVERALLS_REPO_TOKEN"
-- mkdir ${TRAVIS_BUILD_DIR}/artifacts && cp ${TRAVIS_BUILD_DIR}/siva-parent/siva-distribution/target/*.zip
-  artifacts
-- mv artifacts/*.zip artifacts/distribution.zip && ls -al artifacts
-- "chmod 600 ${TRAVIS_BUILD_DIR}/ci-deploy-key"
 - "${TRAVIS_BUILD_DIR}/build-helpers/buildinfo_yml_builder.py ${TRAVIS_COMMIT} ${TRAVIS_BUILD_ID} ${TRAVIS_BUILD_NUMBER}"
+- "scp -i ci-deploy-key ci-build-info.yml ci-deploy@demoapps.eu:/home/ci-deploy"
 - "${TRAVIS_BUILD_DIR}/build-helpers/deploy.sh"
 deploy:
   provider: s3

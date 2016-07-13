@@ -17,9 +17,6 @@ sudo systemctl start siva-test-webapp
 # Wait for test service to start
 sleep 40
 
-# Run system tests
-pyresttest http://demoapps.eu:7000 ${TRAVIS_BUILD_DIR}build-helpers/system-test.yml
-
 # Remove files after testing
 sudo systemctl stop siva-test-webapp
 rm /var/apps/stage/siva-webapp.jar

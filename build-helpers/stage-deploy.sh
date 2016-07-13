@@ -13,12 +13,3 @@ cp siva-webapp.jar /var/apps/stage
 
 # Start test web service
 sudo systemctl start siva-test-webapp
-
-# Wait for test service to start
-sleep 40
-
-# Remove files after testing
-sudo systemctl stop siva-test-webapp
-rm /var/apps/stage/siva-webapp.jar
-
-rm distribution.zip

@@ -30,8 +30,9 @@ install: true
 script:
 - "./mvnw clean install -q"
 - "${TRAVIS_BUILD_DIR}/build-helpers/system-test-prepare.sh"
-- "pyresttest http://demoapps.eu:7000 ${TRAVIS_BUILD_DIR}build-helpers/system-test.yml"
-- "${TRAVIS_BUILD_DIR}/build-helpers/stage-deploy-cleanup.sh"
+- "sleep 40 && pyresttest http://demoapps.eu:7000 ${TRAVIS_BUILD_DIR}/build-helpers/system-test.yml"
+after_script:
+- ssh -i ci-deploy-key ci-deploy@demoapps.eu "bash -s" < ${TRAVIS_BUILD_DIR}/build-helpers/stage-deploy-cleanup.sh
 after_success:
 - "./mvnw jacoco:report coveralls:report -q -Dcoveralls.repo.token=$COVERALLS_REPO_TOKEN"
 - "${TRAVIS_BUILD_DIR}/build-helpers/buildinfo_yml_builder.py ${TRAVIS_COMMIT} ${TRAVIS_BUILD_ID} ${TRAVIS_BUILD_NUMBER}"

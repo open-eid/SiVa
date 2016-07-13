@@ -2,24 +2,24 @@ language: java
 sudo: false
 jdk:
 - oraclejdk8
+python:
+- "3.4"
 env:
   - TMPDIR=/tmp
 addons:
   ssh_known_hosts: demoapps.eu
   apt:
     packages:
-      - python3.5
-      - python3.5-dev
       - python3-setuptools
       - unzip
 before_install:
 - openssl aes-256-cbc -K $encrypted_befc5bd7f29f_key -iv $encrypted_befc5bd7f29f_iv
   -in ci-deploy-key.enc -out ci-deploy-key -d
 - export TZ=Estonia/Tallinn
-- easy_install3 --user future
-- easy_install3 --user pyresttest
-- easy_install3 --user pyyaml
-- easy_install3 --user requests
+- pip install future
+- pip install pyresttest
+- pip install pyyaml
+- pip install requests
 branchespython-dev:
   only:
   - develop

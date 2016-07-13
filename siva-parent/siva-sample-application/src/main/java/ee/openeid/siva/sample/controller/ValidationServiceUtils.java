@@ -2,6 +2,7 @@ package ee.openeid.siva.sample.controller;
 
 import ee.openeid.siva.sample.siva.FileType;
 import ee.openeid.siva.sample.siva.ValidationRequest;
+import lombok.NoArgsConstructor;
 import org.apache.commons.codec.binary.Base64;
 import org.zeroturnaround.zip.ZipUtil;
 
@@ -10,13 +11,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
+@NoArgsConstructor
 public final class ValidationServiceUtils {
     private static final String FILENAME_EXTENSION_SEPARATOR = ".";
     private static final String XROAD_XSD = "http://x-road.eu/xsd/xroad.xsd";
     private static final String UNIQUE_XROAD_ASICE_FILE = "message.xml";
-
-    private ValidationServiceUtils() {
-    }
 
     public static FileType getValidationServiceType(ValidationRequest validationRequest) throws IOException {
         final String filename = validationRequest.getFilename();

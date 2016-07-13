@@ -16,10 +16,11 @@ before_install:
 - openssl aes-256-cbc -K $encrypted_befc5bd7f29f_key -iv $encrypted_befc5bd7f29f_iv
   -in ci-deploy-key.enc -out ci-deploy-key -d
 - export TZ=Estonia/Tallinn
-- pip install future
-- pip install pyresttest
-- pip install pyyaml
-- pip install requests
+- python3 --version
+- easy_install3 --user future
+- easy_install3 --user pyresttest
+- easy_install3 --user pyyaml
+- easy_install3 --user requests
 branchespython-dev:
   only:
   - develop
@@ -51,7 +52,7 @@ notifications:
   email:
     recipients:
     - mihkel.selgal@nortal.com
-    - andres.voll@nortal.com
-    - allan.juhanson@nortal.com
+#    - andres.voll@nortal.com
+#    - allan.juhanson@nortal.com
     on_success: change
     on_failure: always

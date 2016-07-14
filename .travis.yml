@@ -30,8 +30,8 @@ install: true
 script:
 - "./mvnw clean install -q"
 - "${TRAVIS_BUILD_DIR}/build-helpers/system-test-prepare.sh"
-- sleep 100
-- "pyresttest http://demoapps.eu:7000 ${TRAVIS_BUILD_DIR}/build-helpers/system-test.yml"
+#- sleep 100
+#- "pyresttest http://demoapps.eu:7000 ${TRAVIS_BUILD_DIR}/build-helpers/system-test.yml"
 after_script:
 - ssh -i ci-deploy-key ci-deploy@demoapps.eu "bash -s" < ${TRAVIS_BUILD_DIR}/build-helpers/stage-deploy-cleanup.sh
 after_success:
@@ -55,7 +55,7 @@ notifications:
   email:
     recipients:
     - mihkel.selgal@nortal.com
-#    - andres.voll@nortal.com
-#    - allan.juhanson@nortal.com
+    - andres.voll@nortal.com
+    - allan.juhanson@nortal.com
     on_success: change
     on_failure: always

@@ -76,7 +76,10 @@ class UploadController {
         return REDIRECT_PATH;
     }
 
-    private static void setModelFlashAttributes(final RedirectAttributes redirectAttributes, final String validationResult) throws JsonProcessingException {
+    private static void setModelFlashAttributes(
+            RedirectAttributes redirectAttributes,
+            String validationResult
+    ) throws JsonProcessingException {
         final ValidationResponse response = new ValidationResponse();
         response.setFilename(getValidateFilename(validationResult));
         response.setOverAllValidationResult(getOverallValidationResult(validationResult));

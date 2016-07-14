@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class BuildInfo {
-    GitHubInfo github;
-    TravisCiInfo travisCi;
+    private GitHubInfo github;
+    private TravisCiInfo travisCi;
 }

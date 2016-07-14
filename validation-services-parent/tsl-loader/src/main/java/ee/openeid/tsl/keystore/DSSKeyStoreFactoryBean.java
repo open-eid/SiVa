@@ -14,9 +14,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class DSSKeyStoreFactoryBean extends AbstractFactoryBean<KeyStoreCertificateSource> {
-
-    private static final Logger logger = LoggerFactory.getLogger(DSSKeyStoreFactoryBean.class);
-
+    private static final Logger KEY_STORE_LOGGER = LoggerFactory.getLogger(DSSKeyStoreFactoryBean.class);
     private static final String ENVIRONMENT_VARIABLE_DSS_DATA_FOLDER = "DSS_DATA_FOLDER";
 
     private String keyStoreType;
@@ -39,10 +37,10 @@ public class DSSKeyStoreFactoryBean extends AbstractFactoryBean<KeyStoreCertific
     protected KeyStoreCertificateSource createInstance() throws Exception {
         File keystoreFile = getKeyStoreFile();
         if (keystoreFile.exists()) {
-            logger.info("Keystore file found (" + keystoreFile.getAbsolutePath() + ")");
+            KEY_STORE_LOGGER.info("Keystore file found (" + keystoreFile.getAbsolutePath() + ")");
         } else {
-            logger.info("Keystore file not found on server");
-            logger.info("Copying keystore file from the war");
+            KEY_STORE_LOGGER.info("Keystore file not found on server");
+            KEY_STORE_LOGGER.info("Copying keystore file from the war");
 
             InputStream is = null;
             OutputStream os = null;
@@ -81,17 +79,17 @@ public class DSSKeyStoreFactoryBean extends AbstractFactoryBean<KeyStoreCertific
     private String getDssDataFolder() {
         String dssDataFolder = System.getProperty(ENVIRONMENT_VARIABLE_DSS_DATA_FOLDER);
         if (StringUtils.isNotEmpty(dssDataFolder)) {
-            logger.info(ENVIRONMENT_VARIABLE_DSS_DATA_FOLDER + " found as system property : " + dssDataFolder);
+            KEY_STORE_LOGGER.info(ENVIRONMENT_VARIABLE_DSS_DATA_FOLDER + " found as system property : " + dssDataFolder);
             return dssDataFolder;
         }
 
         dssDataFolder = System.getenv(ENVIRONMENT_VARIABLE_DSS_DATA_FOLDER);
         if (StringUtils.isNotEmpty(dssDataFolder)) {
-            logger.info(ENVIRONMENT_VARIABLE_DSS_DATA_FOLDER + " found as environment variable : " + dssDataFolder);
+            KEY_STORE_LOGGER.info(ENVIRONMENT_VARIABLE_DSS_DATA_FOLDER + " found as environment variable : " + dssDataFolder);
             return dssDataFolder;
         }
 
-        logger.warn(ENVIRONMENT_VARIABLE_DSS_DATA_FOLDER + " not defined (returns 'etc')");
+        KEY_STORE_LOGGER.warn(ENVIRONMENT_VARIABLE_DSS_DATA_FOLDER + " not defined (returns 'etc')");
         return "etc";
     }
 

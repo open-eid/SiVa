@@ -1,7 +1,7 @@
 package ee.openeid.siva.sample.configuration;
 
 import ee.openeid.siva.sample.ci.info.BuildInfo;
-import ee.openeid.siva.sample.ci.info.BuildInfoFileLoader;
+import ee.openeid.siva.sample.ci.info.FilesystemBuildInfoFileLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -32,7 +32,7 @@ public class DemoApplicationConfiguration {
 
     @Bean
     public BuildInfo displayBuildInfo() throws IOException {
-        final BuildInfoFileLoader buildInfoFileLoader = new BuildInfoFileLoader();
+        final FilesystemBuildInfoFileLoader buildInfoFileLoader = new FilesystemBuildInfoFileLoader();
         buildInfoFileLoader.setProperties(properties);
         return buildInfoFileLoader.loadBuildInfo();
     }

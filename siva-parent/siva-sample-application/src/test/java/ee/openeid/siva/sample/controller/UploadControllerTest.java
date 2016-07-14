@@ -42,7 +42,7 @@ public class UploadControllerTest {
     @Autowired
     private WebClient webClient;
 
-    @MockBean
+    @MockBean(name = "sivaJSON")
     private ValidationService validationService;
 
     @MockBean

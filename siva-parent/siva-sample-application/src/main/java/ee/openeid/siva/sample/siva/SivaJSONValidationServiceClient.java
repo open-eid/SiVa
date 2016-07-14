@@ -11,8 +11,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 
-@Service
-public class SivaValidationService implements ValidationService {
+@Service(value = "sivaJSON")
+public class SivaJSONValidationServiceClient implements ValidationService {
     private static final int GENERIC_ERROR_CODE = 101;
 
     private SivaRESTWebServiceConfigurationProperties properties;

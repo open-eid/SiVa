@@ -25,8 +25,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class BuildInfoFileLoaderTest {
-    private BuildInfoFileLoader loader = new BuildInfoFileLoader();
+public class FilesystemBuildInfoFileLoaderTest {
+    private FilesystemBuildInfoFileLoader loader = new FilesystemBuildInfoFileLoader();
 
     @Mock
     private Appender<ILoggingEvent> mockAppender;

@@ -28,7 +28,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SivaValidationServiceErrorHandlerTest {
+public class SivaJSONValidationServiceClientErrorHandlerTest {
     private static final byte[] EMPTY_BODY = new byte[0];
     private ResponseErrorHandler errorHandler = new SivaValidationServiceErrorHandler();
 

@@ -5,7 +5,7 @@ pre.prettyprint {
 }
 
 pre .nocode {
-    background-color: none;
+    background-color: transparent;
     color: #000
 }
 
@@ -85,7 +85,7 @@ li.L1, li.L3, li.L5, li.L7, li.L9 {
 
 @media print {
     pre.prettyprint {
-        background-color: none
+        background-color: transparent;
     }
 
     pre .str, code .str {

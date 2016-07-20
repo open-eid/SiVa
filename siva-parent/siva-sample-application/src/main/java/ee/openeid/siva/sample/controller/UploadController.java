@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import rx.Observable;
 
 import java.io.IOException;
 
@@ -35,11 +36,11 @@ class UploadController {
     private ValidationService validationService;
     private UploadFileCacheService fileUploadService;
     private GoogleAnalyticsProperties googleAnalyticsProperties;
-    private BuildInfo buildInfo;
+    private Observable<BuildInfo> buildInfo;
 
     @RequestMapping("/")
     public String startPage(final Model model) {
-        model.addAttribute(buildInfo);
+        model.addAttribute(buildInfo.toBlocking().single());
         model.addAttribute("googleTrackingId", googleAnalyticsProperties.getTrackingId());
         return START_PAGE_VIEW_NAME;
     }
@@ -63,7 +64,9 @@ class UploadController {
         final long timestamp = System.currentTimeMillis() / 1000L;
         try {
             final UploadedFile uploadedFile = fileUploadService.addUploadedFile(timestamp, file);
-            final String validationResult = validationService.validateDocument(uploadedFile);
+            final String validationResult = validationService.validateDocument(uploadedFile)
+                    .toBlocking()
+                    .first();
 
             setModelFlashAttributes(redirectAttributes, validationResult);
         } catch (final IOException e) {
@@ -96,7 +99,7 @@ class UploadController {
     }
 
     @Autowired
-    public void setBuildInfo(final BuildInfo buildInfo) {
+    public void setBuildInfo(final Observable<BuildInfo> buildInfo) {
         this.buildInfo = buildInfo;
     }
 

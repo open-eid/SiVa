@@ -108,6 +108,24 @@
                 <version>${project.version}</version>
             </dependency>
 
+            <!-- RxJava for Spring Boot -->
+            <dependency>
+                <groupId>io.jmnarloch</groupId>
+                <artifactId>rxjava-spring-boot-starter</artifactId>
+                <version>1.0.0</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>io.reactivex</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>io.reactivex</groupId>
+                <artifactId>rxjava</artifactId>
+                <version>1.1.7</version>
+            </dependency>
+
             <!-- Front-end development -->
             <dependency>
                 <groupId>com.domingosuarez.boot</groupId>

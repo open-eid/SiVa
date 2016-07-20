@@ -20,6 +20,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.multipart.MultipartFile;
+import rx.Observable;
 
 import java.io.IOException;
 
@@ -46,7 +47,7 @@ public class UploadControllerTest {
     private ValidationService validationService;
 
     @MockBean
-    private BuildInfo buildInfo;
+    private Observable<BuildInfo> buildInfo;
 
     @MockBean
     private UploadFileCacheService hazelcastUploadFileCacheService;
@@ -71,7 +72,7 @@ public class UploadControllerTest {
     @Test
     public void uploadPageWithFileReturnsValidationResult() throws Exception {
         given(validationService.validateDocument(any(UploadedFile.class)))
-                .willReturn("{\"documentName\": \"random.bdoc\", \"validSignaturesCount\": 1, \"signaturesCount\": 1}");
+                .willReturn(Observable.just("{\"documentName\": \"random.bdoc\", \"validSignaturesCount\": 1, \"signaturesCount\": 1}"));
 
         UploadedFile uploadedFile = new UploadedFile();
         uploadedFile.setFilename("random.bdoc");

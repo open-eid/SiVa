@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import rx.Observable;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +17,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * Load CI build number and commit hash and commiter name 
+ */
 @Component
 public class FilesystemBuildInfoFileLoader implements BuildInfoFileLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger(FilesystemBuildInfoFileLoader.class);
@@ -27,9 +31,9 @@ public class FilesystemBuildInfoFileLoader implements BuildInfoFileLoader {
     private BuildInfoProperties properties;
 
     @Override
-    public BuildInfo loadBuildInfo() throws IOException {
+    public Observable<BuildInfo> loadBuildInfo() throws IOException {
         final byte[] yamlFile = loadYamlFile();
-        return mapToBuildInfo(yamlFile);
+        return Observable.just(mapToBuildInfo(yamlFile)) ;
     }
 
     private static BuildInfo mapToBuildInfo(byte[] yamlFile) throws IOException {

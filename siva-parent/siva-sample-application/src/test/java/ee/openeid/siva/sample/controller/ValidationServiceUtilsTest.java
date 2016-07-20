@@ -71,14 +71,14 @@ public class ValidationServiceUtilsTest {
         assertThat(ValidationServiceUtils.isXroadAsiceContainer(request)).isFalse();
     }
 
-    private ValidationRequest createXroadValidationRequest(String document, String filename) throws IOException {
+    private static ValidationRequest createXroadValidationRequest(String document, String filename) throws IOException {
         ValidationRequest request = new ValidationRequest();
         request.setDocument(document);
         request.setFilename(filename);
         return request;
     }
 
-    private String loadBase64EncodedFile(String filePath) throws IOException {
+    private static String loadBase64EncodedFile(String filePath) throws IOException {
         File testFile = TestFileUtils.loadTestFile(filePath);
         return Base64.encodeBase64String(Files.readAllBytes(Paths.get(testFile.getAbsolutePath())));
     }

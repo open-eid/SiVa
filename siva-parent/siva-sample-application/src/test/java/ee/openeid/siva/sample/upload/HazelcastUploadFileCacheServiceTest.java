@@ -18,12 +18,13 @@ public class HazelcastUploadFileCacheServiceTest {
     @Autowired
     private UploadFileCacheService fileUploadService;
 
-    private static final String uploadFilename = "random.txt";
+    private static final long SECOND_IN_MILLISECONDS = 1000L;
+    private static final String UPLOAD_FILENAME = "random.txt";
     private long timestamp;
 
     @Before
     public void setUp() throws Exception {
-        timestamp = System.currentTimeMillis() / 1000L;
+        timestamp = System.currentTimeMillis() / SECOND_IN_MILLISECONDS;
     }
 
     @Test
@@ -31,7 +32,7 @@ public class HazelcastUploadFileCacheServiceTest {
         final MockMultipartFile file = createFile();
         final UploadedFile uploadedFile = fileUploadService.addUploadedFile(timestamp, file);
 
-        assertThat(uploadedFile.getFilename()).contains(uploadFilename);
+        assertThat(uploadedFile.getFilename()).contains(UPLOAD_FILENAME);
         assertThat(uploadedFile.getTimestamp()).isEqualTo(timestamp);
     }
 
@@ -50,11 +51,11 @@ public class HazelcastUploadFileCacheServiceTest {
         fileUploadService.deleteUploadedFile(timestamp);
         final UploadedFile shouldBeNull = fileUploadService.getUploadedFile(timestamp);
 
-        assertThat(shouldNotBeNull.getFilename()).isEqualTo(uploadFilename);
+        assertThat(shouldNotBeNull.getFilename()).isEqualTo(UPLOAD_FILENAME);
         assertThat(shouldBeNull.getFilename()).isNull();
     }
 
-    private MockMultipartFile createFile() {
-        return new MockMultipartFile("file", uploadFilename, "txt/plain", "hello".getBytes());
+    private static MockMultipartFile createFile() {
+        return new MockMultipartFile("file", UPLOAD_FILENAME, "txt/plain", "hello".getBytes());
     }
 }

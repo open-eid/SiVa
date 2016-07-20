@@ -1,9 +1,11 @@
 package ee.openeid.siva.sample.siva;
 
 import ee.openeid.siva.sample.upload.UploadedFile;
+import rx.Observable;
 
 import java.io.IOException;
 
+@FunctionalInterface
 public interface ValidationService {
-    String validateDocument(UploadedFile file) throws IOException;
+    Observable<String> validateDocument(UploadedFile file) throws IOException;
 }

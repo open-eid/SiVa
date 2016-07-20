@@ -16,6 +16,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.slf4j.LoggerFactory;
+import rx.Observable;
 
 import java.io.File;
 import java.util.List;
@@ -49,7 +50,8 @@ public class FilesystemBuildInfoFileLoaderTest {
     @Test
     public void givenValidInfoFileWillReturnCorrectBuildInfo() throws Exception {
         loader.setProperties(createBuildProperties("/test-info.yml"));
-        final BuildInfo buildInfo = loader.loadBuildInfo();
+        Observable<BuildInfo> rxBuildInfo = loader.loadBuildInfo();
+        BuildInfo buildInfo = rxBuildInfo.toBlocking().first();
 
         assertThat(buildInfo.getTravisCi().getBuildNumber()).isEqualTo("#106");
         assertThat(buildInfo.getGithub().getAuthorName()).isEqualTo("Andres Voll");
@@ -64,7 +66,9 @@ public class FilesystemBuildInfoFileLoaderTest {
         properties.setInfoFile("wrong.info-file.yml");
 
         loader.setProperties(properties);
-        BuildInfo buildInfo = loader.loadBuildInfo();
+        Observable<BuildInfo> rxBuildInfo = loader.loadBuildInfo();
+        BuildInfo buildInfo = rxBuildInfo.toBlocking().first();
+
 
         assertThat(buildInfo.getGithub()).isNull();
         assertThat(buildInfo.getTravisCi()).isNull();
@@ -73,7 +77,8 @@ public class FilesystemBuildInfoFileLoaderTest {
     @Test
     public void givenInfoFileWithMissingGithubInfoWillReturnBuildInfo() throws Exception {
         loader.setProperties(createBuildProperties("/info-missing-github.yml"));
-        BuildInfo buildInfo = loader.loadBuildInfo();
+        Observable<BuildInfo> rxBuildInfo = loader.loadBuildInfo();
+        BuildInfo buildInfo = rxBuildInfo.toBlocking().first();
 
         assertThat(buildInfo.getGithub()).isNull();
         assertThat(buildInfo.getTravisCi().getBuildNumber()).isEqualTo("#106");
@@ -85,17 +90,17 @@ public class FilesystemBuildInfoFileLoaderTest {
         properties.setInfoFile("C:\\invalid-build-info-path.yml");
 
         loader.setProperties(properties);
-        BuildInfo buildInfo = loader.loadBuildInfo();
+        Observable<BuildInfo> buildInfo = loader.loadBuildInfo();
 
         verify(mockAppender, times(2)).doAppend(captorLoggingEvent.capture());
         final List<LoggingEvent> loggingEvent = captorLoggingEvent.getAllValues();
 
         assertThat(loggingEvent.get(0).getLevel()).isEqualTo(Level.WARN);
         assertThat(loggingEvent.get(0).getFormattedMessage()).contains("No such file exists: C:\\invalid-build-info-path.yml");
-        assertThat(buildInfo.getGithub()).isNull();
+        assertThat(buildInfo.toBlocking().first().getGithub()).isNull();
     }
 
-    private BuildInfoProperties createBuildProperties(String filePath) {
+    private static BuildInfoProperties createBuildProperties(String filePath) {
         File file = TestFileUtils.loadTestFile(filePath);
 
         BuildInfoProperties properties = new BuildInfoProperties();

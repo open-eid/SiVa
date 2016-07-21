@@ -22,3 +22,11 @@ body {
     font-size: .8em;
     color: #999
 }
+
+.dropzone .dz-message {
+    margin: 1em 0;
+    min-height: 10%;
+    padding-top: 10%;
+    background: url("../img/upload-icon.svg") no-repeat top center;
+    background-size: 10%;
+}

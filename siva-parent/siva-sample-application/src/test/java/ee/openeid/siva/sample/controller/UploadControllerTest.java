@@ -5,9 +5,10 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import ee.openeid.siva.sample.ci.info.BuildInfo;
 import ee.openeid.siva.sample.configuration.GoogleAnalyticsProperties;
+import ee.openeid.siva.sample.siva.SivaServiceType;
 import ee.openeid.siva.sample.siva.ValidationService;
-import ee.openeid.siva.sample.upload.UploadFileCacheService;
-import ee.openeid.siva.sample.upload.UploadedFile;
+import ee.openeid.siva.sample.cache.UploadFileCacheService;
+import ee.openeid.siva.sample.cache.UploadedFile;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -43,8 +44,11 @@ public class UploadControllerTest {
     @Autowired
     private WebClient webClient;
 
-    @MockBean(name = "sivaJSON")
+    @MockBean(name = SivaServiceType.JSON_SERVICE)
     private ValidationService validationService;
+
+    @MockBean(name = SivaServiceType.SOAP_SERVICE)
+    private ValidationService soapValidationService;
 
     @MockBean
     private Observable<BuildInfo> buildInfo;

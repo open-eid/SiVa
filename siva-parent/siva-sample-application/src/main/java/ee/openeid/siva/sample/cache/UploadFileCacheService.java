@@ -1,4 +1,4 @@
-package ee.openeid.siva.sample.upload;
+package ee.openeid.siva.sample.cache;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,5 +10,5 @@ public interface UploadFileCacheService {
 
     UploadedFile getUploadedFile(long timestamp);
 
-    void deleteUploadedFile(final long timestamp) throws IOException;
+    void deleteUploadedFile(final long timestamp);
 }

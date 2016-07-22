@@ -3,9 +3,10 @@ package ee.openeid.siva.sample.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import ee.openeid.siva.sample.ci.info.BuildInfo;
 import ee.openeid.siva.sample.configuration.GoogleAnalyticsProperties;
+import ee.openeid.siva.sample.siva.SivaServiceType;
 import ee.openeid.siva.sample.siva.ValidationService;
-import ee.openeid.siva.sample.upload.UploadFileCacheService;
-import ee.openeid.siva.sample.upload.UploadedFile;
+import ee.openeid.siva.sample.cache.UploadFileCacheService;
+import ee.openeid.siva.sample.cache.UploadedFile;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,7 @@ class UploadController {
     private static final String START_PAGE_VIEW_NAME = "index";
 
     private ValidationService validationService;
+    private ValidationService soapValidationService;
     private UploadFileCacheService fileUploadService;
     private GoogleAnalyticsProperties googleAnalyticsProperties;
     private Observable<BuildInfo> buildInfo;
@@ -55,7 +57,7 @@ class UploadController {
     public String getUploadedFile(
             @RequestParam(value = "file") final MultipartFile file,
             final RedirectAttributes redirectAttributes
-    ) throws IOException {
+    ) {
         if (file.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "File upload failed");
             return REDIRECT_PATH;
@@ -104,9 +106,15 @@ class UploadController {
     }
 
     @Autowired
-    @Qualifier(value = "sivaJSON")
+    @Qualifier(value = SivaServiceType.JSON_SERVICE)
     public void setValidationService(final ValidationService validationService) {
         this.validationService = validationService;
+    }
+
+    @Autowired
+    @Qualifier(value = SivaServiceType.SOAP_SERVICE)
+    public void setSoapValidationService(ValidationService soapValidationService) {
+        this.soapValidationService = soapValidationService;
     }
 
     @Autowired

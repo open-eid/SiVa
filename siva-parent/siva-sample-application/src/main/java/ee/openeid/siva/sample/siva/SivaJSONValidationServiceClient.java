@@ -2,8 +2,8 @@ package ee.openeid.siva.sample.siva;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ee.openeid.siva.sample.configuration.SivaRESTWebServiceConfigurationProperties;
-import ee.openeid.siva.sample.controller.ValidationServiceUtils;
-import ee.openeid.siva.sample.upload.UploadedFile;
+import ee.openeid.siva.sample.controller.ValidationRequestUtils;
+import ee.openeid.siva.sample.cache.UploadedFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
@@ -12,7 +12,7 @@ import rx.Observable;
 
 import java.io.IOException;
 
-@Service(value = "sivaJSON")
+@Service(value = SivaServiceType.JSON_SERVICE)
 public class SivaJSONValidationServiceClient implements ValidationService {
     private static final int GENERIC_ERROR_CODE = 101;
 
@@ -45,7 +45,7 @@ public class SivaJSONValidationServiceClient implements ValidationService {
     }
 
     private static void setValidationDocumentType(final ValidationRequest validationRequest) throws IOException {
-        final FileType uploadedFileExtension = ValidationServiceUtils.getValidationServiceType(validationRequest);
+        final FileType uploadedFileExtension = ValidationRequestUtils.getValidationServiceType(validationRequest);
         validationRequest.setDocumentType(uploadedFileExtension);
     }
 

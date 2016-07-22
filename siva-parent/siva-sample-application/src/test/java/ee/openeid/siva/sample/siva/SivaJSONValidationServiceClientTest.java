@@ -1,6 +1,6 @@
 package ee.openeid.siva.sample.siva;
 
-import ee.openeid.siva.sample.upload.UploadedFile;
+import ee.openeid.siva.sample.cache.UploadedFile;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.junit.Rule;

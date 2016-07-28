@@ -36,3 +36,20 @@
     background-color: #FFA726;
 }
 
+table {
+    width: 93%;
+}
+
+.article table th,
+.article table td {
+    padding: 5px 10px;
+}
+
+.article table th p,
+.article table td p {
+    margin: 0;
+}
+
+table td:last-child {
+    width: 100%;
+}

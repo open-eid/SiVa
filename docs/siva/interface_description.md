@@ -30,6 +30,106 @@
 
 ### JSON Response
 
++---------------------------------------+--------+------------------------------------------------------------+
+| Parameter                             | Type   |  Description                                               |
++=======================================+========+============================================================+
+| `policy`                              | Object | Version of SiVa validation policy                          |
++---------------------------------------+--------+------------------------------------------------------------+
+| `policy.policyVersion`                | String | Version of SiVa validation policy                          |
++---------------------------------------+--------+------------------------------------------------------------+
+| `policy.policyName`                   | String | Name of policy used for validation                         |
++---------------------------------------+--------+------------------------------------------------------------+
+| `policy.policyDescription`            | String | Short description of validation used                       |
++---------------------------------------+--------+------------------------------------------------------------+
+| `policy.policyUrl`                    | String | URL where the validation service's signature policy        |
+|                                       |        | document can be downloaded.                                |
+|                                       |        |                                                            |
+|                                       |        | The validation policy document shall include information   |
+|                                       |        | about validation of all the document formats, including    |
+|                                       |        | the different validation policies that are used in         |
+|                                       |        | case of different file formats and base libraries.         |
++---------------------------------------+--------+------------------------------------------------------------+
+| `signaturesCount`                     | Number | Number of signatures found inside digitally signed file    |
++---------------------------------------+--------+------------------------------------------------------------+
+| `validSignaturesCount`                | Number | Signatures count that have validated to `TOTAL-PASSED`     |
++---------------------------------------+--------+------------------------------------------------------------+
+| `validationTime`                      | Date   | Time of validating the signature by the service.           |
++---------------------------------------+--------+------------------------------------------------------------+
+| `documentName`                        | String | Digitally signed document filename                         |
++---------------------------------------+--------+------------------------------------------------------------+
+| `signatures`                          | Array  | Collection of signatures found digitally signed document   |
++---------------------------------------+--------+------------------------------------------------------------+
+| `signatures[0]`                       | Object | Signature information object                               |
++---------------------------------------+--------+------------------------------------------------------------+
+| `signatures[0].claimedSigningTime`    | Data   | Time signature was given                                   |
++---------------------------------------+--------+------------------------------------------------------------+
+| `signatures[0].errors`                | Array  | Information about validation error(s).                     |
+|                                       |        |                                                            |
+|                                       |        | Array of error message, as returned by the base library    |
+|                                       |        | used for signature validation.                             |
++---------------------------------------+--------+------------------------------------------------------------+
+| `signatures[0].id`                    | String | Signature ID                                               |
++---------------------------------------+--------+------------------------------------------------------------+
+| `signatures[0].indication`            | String | Overall result of the respective signature's validation    |
+|                                       |        | process, according to EN 319 102-1 "Table 5: Status        |
+|                                       |        | indications of the signature validation process"           |
+|                                       |        |                                                            |
+|                                       |        | The validation results of different signatures in one      |
+|                                       |        | signature container may vary.                              |
+|                                       |        | See also `validSignaturesCount` and `SignaturesCount`      |
+|                                       |        | fields.                                                    |
++---------------------------------------+--------+------------------------------------------------------------+
+| `signatures[0].info`                  | Object |                                                            |
++---------------------------------------+--------+------------------------------------------------------------+
+| `signatures[0].info.bestSignatureTime`| Date   | Time value that is regarded as trusted signing time,       |
+|                                       |        | denoting the earliest time when it can be trusted by       |
+|                                       |        | the validation application (because proven by some POE     |
+|                                       |        | present in the signature) that a signature has existed:    |
+|                                       |        |                                                            |
+|                                       |        | * in case of signature with time-mark - the producedAt     |
+|                                       |        |   value of the earliest valid time-mark (OCSP confirmation |
+|                                       |        |   of the signer's certificate) in the signature.           |
+|                                       |        | * in case of signature with time-stamp - the getTime       |
+|                                       |        |   value of the earliest valid signature time-stamp         |
+|                                       |        |   token in the signature.                                  |
++---------------------------------------+--------+------------------------------------------------------------+
+| `signatures[0].signatureFormat`       | String | Format (and optionally version) of the container           |
+|                                       |        | containing the signature(s).                               |                                                          |
++---------------------------------------+--------+------------------------------------------------------------+
+| `signatures[0].signatureLevel`        | String | In case of BDOC and PAdES formats: indication whether      |
+|                                       |        | the signature is Advanced electronic Signature (AdES),     |
+|                                       |        | AdES supported by a Qualified Certificate (AdES/QC) or a   |
+|                                       |        | Qualified electronic Signature (QES).                      |
+|                                       |        |                                                            |
+|                                       |        | In case of DIGIDOC-XML 1.0..1.3 formats, empty value       |
+|                                       |        | is used as the signature level is not checked by the       |
+|                                       |        | JDigiDoc base library that is used for validation.         |
++---------------------------------------+--------+------------------------------------------------------------+
+| `signatures[0].signatureScopes`       | Array  | Contains information of the original data that is          |
+|                                       |        | covered by the signature.                                  |
++---------------------------------------+--------+------------------------------------------------------------+
+| `signatures[0].signedBy`              | String | Signers name and identification number                     |
++---------------------------------------+--------+------------------------------------------------------------+
+| `signatures[0].subIndication`         | String | Additional subindication in case of failed or              |
+|                                       |        | indeterminate validation result, according to EN 319 102-1 |
+|                                       |        | "Table 6: Validation Report Structure and Semantics"       |                                                    |
++---------------------------------------+--------+------------------------------------------------------------+
+| `signatures[0].warnings`              | Array  | Block of validation warnings that do not affect            |
+|                                       |        | the overall validation result.                             |
+|                                       |        |                                                            |
+|                                       |        | Known warning situations (according to                     |
+|                                       |        | http://id.ee/public/SK-JDD-PRG-GUIDE.pdf, chap. 5.2.4.1):  |
+|                                       |        |                                                            |
+|                                       |        | * BDOC (and PAdES?): Weaker digest method (SHA-1) has      |
+|                                       |        |   been used than recommended when calculating either or    |
+|                                       |        |   element’s digest value.                                  |
+|                                       |        | * DIGIDOC-XML 1.0-1.3: `DataFile` element’s `xmlns`        |
+|                                       |        |   attribute is missing.                                    |
+|                                       |        | * DIGIDOC-XML 1.0-1.3: `<IssuerSerial><X509IssuerName>`    |
+|                                       |        |   and/or `<IssuerSerial><X509IssuerSerial>` element’s      |
+|                                       |        |   `xmlns` attribute is missing.                            |                              |
++---------------------------------------+--------+------------------------------------------------------------+
+
 #### Sample response
 
 ```json
@@ -83,3 +183,6 @@
 
 
 ### SOAP Response
+
+!!! development
+    Need to add response description

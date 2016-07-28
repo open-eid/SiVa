@@ -23,8 +23,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     
-    <link rel="shortcut icon" type="image/x-icon" href="../../None">
-    <link rel="icon" type="image/x-icon" href="../../None">
+    <link rel="shortcut icon" type="image/x-icon" href="../../assets/images/favicon-e565ddfa3b.ico">
+    <link rel="icon" type="image/x-icon" href="../../assets/images/favicon-e565ddfa3b.ico">
     <style>
       @font-face {
       	font-family: 'Icon';
@@ -41,7 +41,7 @@
       	font-style: normal;
       }
     </style>
-    <link rel="stylesheet" href="../../assets/stylesheets/application-54f87043f3.css">
+    <link rel="stylesheet" href="../../assets/stylesheets/application-a422ff04cc.css">
     
       <link rel="stylesheet" href="../../assets/stylesheets/palettes-05ab2406df.css">
     
@@ -49,7 +49,7 @@
       
       
       
-      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
       <style>
         body, input {
           font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
@@ -68,7 +68,7 @@
   
   
   
-  <body class="palette-primary-light-green palette-accent-lime">
+  <body class="palette-primary-cyan palette-accent-light-blue">
     
       
       
@@ -217,6 +217,40 @@
         
       
       
+        <ul>
+          
+            <li class="anchor">
+              <a title="Web API" href="#web-api">
+                Web API
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Validation proxy service" href="#validation-proxy-service">
+                Validation proxy service
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Validation reporting service" href="#validation-reporting-service">
+                Validation reporting service
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="TSL Loader" href="#tsl-loader">
+                TSL Loader
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Validation services" href="#validation-services">
+                Validation services
+              </a>
+            </li>
+          
+        </ul>
+      
     
   </li>
 
@@ -234,15 +268,6 @@
   <li>
     <a class="" title="Interfaces" href="../interface_description/">
       Interfaces
-    </a>
-    
-  </li>
-
-          
-            
-  <li>
-    <a class="" title="Database schema" href="../database_schema/">
-      Database schema
     </a>
     
   </li>
@@ -368,25 +393,74 @@
           
           <h1 id="component-diagram">Component diagram</h1>
 <p><img alt="SiVa component diagram" src="../../img/siva/siva_module_diagram.png" /></p>
+<h2 id="web-api">Web API</h2>
+<p>Web API is standard Spring Boot Web application module inside SiVa webapp it will take in JSON or SOAP requests sent by
+systems that are integrated with SiVa web service API. The incoming requests will be converted to <strong>SiVa Proxy Module</strong>
+Java request objects. Web API module also does basic validation of incoming requests. Checking that all the required
+fields are present and document type is correct.</p>
+<p>When validation has been completed by proxy selected validation service the returned qualified validation report Java object
+will be marshalled based on incoming request to JSON or SOAP and returned to client that requested the validation.</p>
+<h3 id="external-configuration-resources">External configuration resources</h3>
 <ul>
-<li>Web API is standard Spring MVC module it will take in JSON or SOAP requests sent by
-  systems that integrate with SIVA web service API</li>
-<li>Validation service proxy or validation service selector is Spring module that will choose
-  the appropriate validation service for user request</li>
-<li>TSL loader loads in contents of TSL file from given URL in online mode or from directory when
-  using offline mode in predefined interval.</li>
-<li>PüPKI proxy converts PüPKI DB SQL results to Java objects that validation services,
-  validation service proxy and Web API will use</li>
-<li>Validation services (listed below) validate different digitally signed documents<ul>
-<li>PDF validation service for PDF files will use <strong>DigiDoc4J DSS forked</strong> library</li>
-<li>BDOC for ASiC compliant containers both TM and TS will latest Maven released <strong>DigiDoc4J</strong> library</li>
-<li>DDOC for previous generation digitally signed files will use latest Maven release of <strong>JDigiDoc</strong></li>
-<li>X-Road Signature validation service for X-Road web service signature files will use X-Road Security server project
-   provided X-Road signature validation command line utility.</li>
+<li>Optionally SiVa webapp can load in configuration file (i.e application.yml) at application startup time.
+  Configuration file can control Spring Boot configuration options in addition to SiVa application
+  specific options.</li>
+<li>Optionally SiVa webapp can also load in logging configuration options</li>
 </ul>
-</li>
-<li>PüPKI DB relational database providing client information and client request counting</li>
-<li>PüPKI UI a separate Python application that will provide CRUD operations for clients</li>
+<h2 id="validation-proxy-service">Validation proxy service</h2>
+<p><strong>Validation proxy service</strong> or validation service selector is Spring Boot module that will take the Web API sent
+request object and try to find matching validation service based on the <code>documentType</code>inside the request object.
+When matching validation service have been found the proxy request is converted to validation request and sent to matched
+validation service.</p>
+<p>When no matching validation service has not been found exception is raised and error object is
+returned to Web API module. On successful validation the qualified validation report Java object sent from validation
+service is returned to Web API module.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Validation services can be added dynamically to SiVa by conforming to pattern <code>documentType + "ValidationService"</code> and new
+validation service module must be Maven dependency of <code>siva-validation-proxy</code>. Example
+would be <code>BDOCValidationService</code>.</p>
+</div>
+<h2 id="validation-reporting-service">Validation reporting service</h2>
+<p><strong>Validation reporting service</strong> is optional module that can be turned on or off using configuration file. It's Spring Boot module and
+main purpose is to collect data about: incoming request, validation reports and errors that have been reported during validation process.</p>
+<p>When HTTP authentication header have been set the reporting service will also collect its and adds to required statistics reports.</p>
+<p>After the report object have been created the data will be sent to configured reporting service. SiVa is preconfigured to work with
+Google Analytics.</p>
+<h2 id="tsl-loader">TSL Loader</h2>
+<p>TSL loader loads in contents of TSL file from given URL in online mode or from directory when
+using offline mode in predefined interval.</p>
+<h2 id="validation-services">Validation services</h2>
+<p>All validation services use different Java library to validate given document in request. The used validation
+library is described in each of the validation service section.</p>
+<p>Common process that all validation services do with proxy forwarded validation process is:</p>
+<ul>
+<li>Convert the Base64 encoded document into <code>InputStream</code> byte array</li>
+<li>Check that given document is correct format (i.e valid BDOC). If not then error is thrown and
+  validation process is terminated.</li>
+<li>After validation of signatures has been completed the validation service starts to build
+  qualified validation report</li>
+<li>Validation report is created even validation <code>FAILED</code> or ended with <code>INDETERMINATE</code> result</li>
+</ul>
+<h3 id="pdf-validation-service">PDF Validation service</h3>
+<p>PDF or PaDES as known in DSS validation service uses <a href="https://github.com/open-eid/sd-dss">Digidoc4J DSS fork Java library</a> PaDES validation
+functionality using the validation policy that complies with Estonian laws and regulations.</p>
+<p>Configurable functionality:</p>
+<ul>
+<li>Possibility to add additional validation policies using SiVa <code>application.yml</code> configuration section.</li>
+</ul>
+<h3 id="bdoc-validation-service">BDOC validation service</h3>
+<p>BDOC for ASiC compliant containers both TM and TS will latest Maven released <strong>DigiDoc4J</strong> library</p>
+<h3 id="ddoc-validation-service">DDOC Validation service</h3>
+<p>DDOC for previous generation digitally signed files will use latest Maven release of <strong>JDigiDoc</strong></p>
+<h3 id="x-road-validation-service">X-Road validation service</h3>
+<p>X-Road containers are similar to ASiCE containers but are <strong>not</strong> valid ASiCE containers. There we could not use DSS nor DigiDoc4J provided
+ASiCE validation functionality but need to X-Road developed <code>asicverifier</code> Java command line utility to validate these containers.</p>
+<p>Source code for <code>asicverifier</code> can be found in <a href="https://github.com/vrk-kpa/xroad-public/tree/master/src/asicverifier">GitHub xroad-public repository</a>*[]:
+<code>Asicverfier</code> has been integrated into SiVa as Java library. Making possible to use all the Java libraries packaged into <code>asicverifier</code> fat JAR.</p>
+<p>Configurable functionality:</p>
+<ul>
+<li>In SiVa configuration <code>application.yml</code> file You can define alternative location for <code>globalconf</code> directory to be loaded in using input stream</li>
 </ul>
           <aside class="copyright" role="note">
             

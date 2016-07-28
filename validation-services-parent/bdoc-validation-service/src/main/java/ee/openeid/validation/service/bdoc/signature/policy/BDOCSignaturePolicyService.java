@@ -1,7 +1,7 @@
 package ee.openeid.validation.service.bdoc.signature.policy;
 
 import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
-import ee.openeid.siva.validation.service.signature.policy.properties.SignaturePolicySettings;
+import ee.openeid.siva.validation.service.signature.policy.properties.SignaturePolicyProperties;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -9,8 +9,8 @@ import java.io.*;
 
 public class BDOCSignaturePolicyService extends SignaturePolicyService {
 
-    public BDOCSignaturePolicyService(SignaturePolicySettings signaturePolicySettings) {
-        super(signaturePolicySettings);
+    public BDOCSignaturePolicyService(SignaturePolicyProperties signaturePolicyProperties) {
+        super(signaturePolicyProperties);
     }
 
     public String getAbsolutePath(String policy) {

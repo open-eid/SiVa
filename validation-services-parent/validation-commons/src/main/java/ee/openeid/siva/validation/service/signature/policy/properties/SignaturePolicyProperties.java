@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
-public class SignaturePolicySettings {
+public class SignaturePolicyProperties {
     private String abstractDefaultPolicy;
     private Map<String, String> abstractPolicies = new HashMap<>();
 }

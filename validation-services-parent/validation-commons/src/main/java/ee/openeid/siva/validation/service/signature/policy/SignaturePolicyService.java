@@ -1,6 +1,6 @@
 package ee.openeid.siva.validation.service.signature.policy;
 
-import ee.openeid.siva.validation.service.signature.policy.properties.SignaturePolicySettings;
+import ee.openeid.siva.validation.service.signature.policy.properties.SignaturePolicyProperties;
 import lombok.Data;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -18,9 +18,9 @@ public abstract class SignaturePolicyService {
     protected byte[] defaultPolicy;
     protected Map<String, byte[]> signaturePolicies = new HashMap<>();
 
-    public SignaturePolicyService(SignaturePolicySettings signaturePolicySettings) {
-        LOGGER.info("Loading signature abstractPolicies for: " + signaturePolicySettings.getClass().getSimpleName());
-        loadSignaturePolicies(signaturePolicySettings);
+    public SignaturePolicyService(SignaturePolicyProperties signaturePolicyProperties) {
+        LOGGER.info("Loading signature abstractPolicies for: " + signaturePolicyProperties.getClass().getSimpleName());
+        loadSignaturePolicies(signaturePolicyProperties);
     }
 
     public InputStream getPolicyDataStreamFromPolicy(String policy) {
@@ -53,8 +53,8 @@ public abstract class SignaturePolicyService {
         return IOUtils.toByteArray(policyDataStream);
     }
 
-    private void loadSignaturePolicies(SignaturePolicySettings signaturePolicySettings) {
-        signaturePolicySettings.getAbstractPolicies().forEach((policy, policyPath) -> {
+    private void loadSignaturePolicies(SignaturePolicyProperties signaturePolicyProperties) {
+        signaturePolicyProperties.getAbstractPolicies().forEach((policy, policyPath) -> {
             LOGGER.info("Loading policy: " + policy);
             try {
                 byte[] policyData = getContentFromPolicyPath(policyPath);
@@ -67,15 +67,15 @@ public abstract class SignaturePolicyService {
             }
         });
 
-        defaultPolicyDataLoading(signaturePolicySettings);
+        defaultPolicyDataLoading(signaturePolicyProperties);
     }
 
-    private void defaultPolicyDataLoading(SignaturePolicySettings signaturePolicySettings) {
+    private void defaultPolicyDataLoading(SignaturePolicyProperties signaturePolicyProperties) {
         try {
-            defaultPolicy = getContentFromPolicyPath(signaturePolicySettings.getAbstractDefaultPolicy());
+            defaultPolicy = getContentFromPolicyPath(signaturePolicyProperties.getAbstractDefaultPolicy());
         } catch (IOException e) {
             LOGGER.warn("Failed to load default policy data from file: {} with message: {}",
-                    signaturePolicySettings.getAbstractDefaultPolicy(),
+                    signaturePolicyProperties.getAbstractDefaultPolicy(),
                     e.getMessage(), e);
 
             throw new InvalidPolicyException("Default policy is not defined in signature abstractPolicies.");

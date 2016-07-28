@@ -5,8 +5,8 @@ extra:
   font:
     code: 'Roboto Mono'
   palette:
-    primary: 'Light Green'
-    accent: 'Lime'
+    primary: 'Cyan'
+    accent: 'Light Blue'
 markdown_extensions:
   - codehilite
   - admonition
@@ -21,7 +21,6 @@ pages:
   - Component diagram: siva/component_diagram.md
   - Deployment view: siva/deployment_view.md
   - Interfaces: siva/interface_description.md
-  - Database schema: siva/database_schema.md
   - Use cases: siva/use_cases.md
   - Deployment: siva/deployment.md
   - Logging: siva/logging.md

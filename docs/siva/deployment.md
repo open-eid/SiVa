@@ -7,8 +7,8 @@ web service:
 
 * Java 8 or above Oracle JVM is supported
 * Git version control system version 1.8 or above is recommended
-* 2GB of RAM
-* 1 processor core
+* Minimum 2 GB of RAM. Recommended at least 4 GB of RAM
+* Minimum 1 processor core
 * Open internet connection
 * 1GB of free disk space
 * Supported operating system is Ubuntu 14.04 LTS

@@ -1,7 +1,7 @@
 package ee.openeid.siva.validation.service.signature.policy;
 
 
-import ee.openeid.siva.validation.service.signature.policy.properties.SignaturePolicySettings;
+import ee.openeid.siva.validation.service.signature.policy.properties.SignaturePolicyProperties;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -122,11 +122,11 @@ public class SignaturePolicyServiceTest {
             policies.put(POLICY_PREFIX + policyPath, policyPath);
 
         }
-        SignaturePolicySettings signaturePolicySettings = new SignaturePolicySettings();
-        signaturePolicySettings.setAbstractPolicies(policies);
-        signaturePolicySettings.setAbstractDefaultPolicy(defaultPolicy);
+        SignaturePolicyProperties signaturePolicyProperties = new SignaturePolicyProperties();
+        signaturePolicyProperties.setAbstractPolicies(policies);
+        signaturePolicyProperties.setAbstractDefaultPolicy(defaultPolicy);
 
-        return new SignaturePolicyServiceImpl(signaturePolicySettings);
+        return new SignaturePolicyServiceImpl(signaturePolicyProperties);
     }
 
     private static String getResourceAbsolutePath(String resourceRelativePath) {
@@ -139,8 +139,8 @@ public class SignaturePolicyServiceTest {
     }
 
     private class SignaturePolicyServiceImpl extends SignaturePolicyService {
-        public SignaturePolicyServiceImpl(SignaturePolicySettings signaturePolicySettings) {
-            super(signaturePolicySettings);
+        public SignaturePolicyServiceImpl(SignaturePolicyProperties signaturePolicyProperties) {
+            super(signaturePolicyProperties);
         }
     }
 }

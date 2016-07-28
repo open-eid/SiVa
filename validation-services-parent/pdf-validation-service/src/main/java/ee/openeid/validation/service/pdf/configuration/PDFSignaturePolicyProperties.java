@@ -1,6 +1,6 @@
 package ee.openeid.validation.service.pdf.configuration;
 
-import ee.openeid.siva.validation.service.signature.policy.properties.SignaturePolicySettings;
+import ee.openeid.siva.validation.service.signature.policy.properties.SignaturePolicyProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ConfigurationProperties( prefix = "siva.pdf.signaturePolicy")
-public class PDFSignaturePolicyProperties extends SignaturePolicySettings {
+public class PDFSignaturePolicyProperties extends SignaturePolicyProperties {
     protected static final String DEFAULT_PDF_POLICY = "pdf_constraint.xml";
     private static final Map<String, String> DEFAULT_PDF_POLICIES = Collections.unmodifiableMap(Stream.of(
             new SimpleEntry<>("EE", DEFAULT_PDF_POLICY)

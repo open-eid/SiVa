@@ -1,4 +1,4 @@
-# QA Strategy
+<!--# QA Strategy-->
 
 ## Introduction
 

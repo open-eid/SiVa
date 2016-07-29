@@ -1,6 +1,12 @@
-# Interface description
+<!--# Interface description-->
 
 ## REST JSON validation service
+
+### REST JSON Endpoint
+
+```
+POST https://<server url>/validate
+```
 
 ### JSON Request
 

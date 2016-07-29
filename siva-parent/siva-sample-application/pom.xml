@@ -62,9 +62,9 @@
 
         <!-- Caching in memory file store -->
         <dependency>
-            <groupId>com.hazelcast</groupId>
-            <artifactId>hazelcast-all</artifactId>
-            <version>3.6.3</version>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>2.3.1</version>
         </dependency>
 
         <!-- Apache commons -->

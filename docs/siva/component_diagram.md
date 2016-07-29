@@ -1,4 +1,4 @@
-# Component diagram
+<!--# Component diagram-->
 
 ![SiVa component diagram](../img/siva/siva_module_diagram.png)
 

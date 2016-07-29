@@ -1,5 +1,4 @@
-Logging
-=======
+<!--# Logging-->
 
 Logging functionality is handled by the **SLF4J** logging facade and on top
 of it the **Logback** framework is used. As a result, logging can be
@@ -70,7 +69,7 @@ FILE appender
 - Default log level is set to `INFO`
 - uses RollingFileAppender configured with `TimeBasedRollingPolicy`.
   Current configuration makes a seperate logfile for each day and each
-  file is kept for *30 days*. 
+  file is kept for *30 days*.
 
   *PS!* keep in mind when using relative
   destination file path, then the path is added at the end of the

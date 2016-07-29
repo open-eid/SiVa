@@ -12,7 +12,7 @@ import java.io.IOException;
 
 @Service
 @CacheConfig(cacheNames = "file")
-public class HazelcastUploadFileCacheService implements UploadFileCacheService {
+public class AbstractUploadFileCacheService implements UploadFileCacheService {
 
     @Override
     @CachePut(key = "#timestamp")

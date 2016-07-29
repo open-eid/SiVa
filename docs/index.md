@@ -1,4 +1,4 @@
-# Introduction
+<!--# Introduction-->
 
 SiVa is digital signature validation web service that provides SOAP and JSON
 API to validate following file types:

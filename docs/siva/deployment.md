@@ -1,4 +1,4 @@
-# Deployment
+<!--# Deployment-->
 
 ## System requirements
 
@@ -43,7 +43,7 @@ cd SiVa
 To verify that SiVa project built successfully look for `BUILD SUCCESS` in build compilation output last lines.
 The last lines of build output should look very similar to below image:
 
-```
+```text
 [INFO] Reactor Summary:
 [INFO]
 [INFO] SiVa Digitally signed documents validation service . SUCCESS [ 25.258 s]
@@ -87,7 +87,7 @@ Inside it we need to paste below text. You need and can change few things in ser
 * Second You can change Java JVM options by modifying the `JAVA_OPTS` inside the `siva-webapp.service` file.
 * Also You can change the SiVa application configuration options by modifying `RUN_ARGS` section in file
 
-```
+```ini
 [Unit]
 Description=siva-webapp
 After=syslog.target

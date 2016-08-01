@@ -16,7 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Data
-@ConfigurationProperties(prefix = "xroad.validation.service")
+@ConfigurationProperties(prefix = "siva.xroad.validation.service")
 public class XROADValidationServiceProperties {
     private static final Logger LOGGER = LoggerFactory.getLogger(XROADValidationServiceProperties.class);
 

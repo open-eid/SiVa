@@ -1,6 +1,0 @@
-siva:
-  pdf:
-    signaturePolicy:
-      policies:
-        EE: pdf_constraint.xml
-      defaultPolicy: EE

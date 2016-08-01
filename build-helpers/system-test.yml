@@ -1,0 +1,34 @@
+---
+- config:
+    - testset: SiVa API System tests
+    - timeout: 30
+- test:
+  - name: Validate BDOC with valid signatures
+  - url: "/validate"
+  - method: POST
+  - variable_binds:
+    - 'path': 'bdoc_pass.json'
+  - headers: {Content-Type: application/json}
+  - body: {template: {'file':{'template':'$path'}}}
+  - validators:
+    - compare: {jsonpath_mini: 'validSignaturesCount', expected: 2}
+- test:
+  - name: Validate DDOC with valid signatures
+  - url: "/validate"
+  - method: POST
+  - variable_binds:
+    - 'path': 'ddoc_pass.json'
+  - headers: {Content-Type: application/json}
+  - body: {template: {'file':{'template':'$path'}}}
+  - validators:
+    - compare: {jsonpath_mini: 'validSignaturesCount', expected: 3}
+- test:
+  - name: Validate PDF with valid signatures
+  - url: "/validate"
+  - method: POST
+  - variable_binds:
+    - 'path': 'pdf_pass.json'
+  - headers: {Content-Type: application/json}
+  - body: {template: {'file':{'template':'$path'}}}
+  - validators:
+    - compare: {jsonpath_mini: 'validSignaturesCount', expected: 0}

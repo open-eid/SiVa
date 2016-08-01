@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Data
-@ConfigurationProperties(prefix = "tsl.loader")
+@ConfigurationProperties(prefix = "siva.tsl.loader")
 public class TSLLoaderConfigurationProperties {
     private boolean loadFromCache = false;
     private String url = "https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml";

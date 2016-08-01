@@ -1,3 +1,7 @@
+.wrapper h4 {
+    padding-top: 35px;
+}
+
 .wrapper ul li {
     margin-top: 0;
 }
@@ -36,3 +40,25 @@
     background-color: #FFA726;
 }
 
+table {
+    width: 94%;
+}
+
+.article .data {
+    padding: 0 0 1em 0;
+    margin: 1.5em 0;
+}
+
+.article table th,
+.article table td {
+    padding: 5px 10px;
+}
+
+.article table th p,
+.article table td p {
+    margin: 0;
+}
+
+table td:last-child {
+    width: 100%;
+}

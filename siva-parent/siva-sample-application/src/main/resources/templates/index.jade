@@ -18,7 +18,17 @@ block content
     .row.hide#result-area
         .col-md-12
             h1 Validation report
-            pre
-                code.json#validation-report
+            ul#response-tabs.nav.nav-tabs(role="tablist")
+                li.nav-item(role="presentation")
+                    a.nav-link.active(href="#json", aria-controls="json", role="tab", data-toggle="tab") JSON
+                li.nav-item(role="presentation")
+                    a.nav-link(href="#soap", aria-controls="soap", role="tab", data-toggle="tab") SOAP
+            .tab-content
+                #json.tab-pane.active(role="tabpanel")
+                    pre
+                        code.json#validation-report
+                #soap.tab-pane(role="tabpanel")
+                    pre
+                        code.xml#soap-validation-report
     +footerBuildInfo
 

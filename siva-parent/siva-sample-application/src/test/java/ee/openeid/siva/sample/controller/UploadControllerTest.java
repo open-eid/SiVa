@@ -5,9 +5,10 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import ee.openeid.siva.sample.ci.info.BuildInfo;
 import ee.openeid.siva.sample.configuration.GoogleAnalyticsProperties;
+import ee.openeid.siva.sample.siva.SivaServiceType;
 import ee.openeid.siva.sample.siva.ValidationService;
-import ee.openeid.siva.sample.upload.UploadFileCacheService;
-import ee.openeid.siva.sample.upload.UploadedFile;
+import ee.openeid.siva.sample.cache.UploadFileCacheService;
+import ee.openeid.siva.sample.cache.UploadedFile;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -20,6 +21,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.multipart.MultipartFile;
+import rx.Observable;
 
 import java.io.IOException;
 
@@ -42,11 +44,14 @@ public class UploadControllerTest {
     @Autowired
     private WebClient webClient;
 
-    @MockBean
+    @MockBean(name = SivaServiceType.JSON_SERVICE)
     private ValidationService validationService;
 
+    @MockBean(name = SivaServiceType.SOAP_SERVICE)
+    private ValidationService soapValidationService;
+
     @MockBean
-    private BuildInfo buildInfo;
+    private Observable<BuildInfo> buildInfo;
 
     @MockBean
     private UploadFileCacheService hazelcastUploadFileCacheService;
@@ -71,7 +76,7 @@ public class UploadControllerTest {
     @Test
     public void uploadPageWithFileReturnsValidationResult() throws Exception {
         given(validationService.validateDocument(any(UploadedFile.class)))
-                .willReturn("{\"documentName\": \"random.bdoc\", \"validSignaturesCount\": 1, \"signaturesCount\": 1}");
+                .willReturn(Observable.just("{\"documentName\": \"random.bdoc\", \"validSignaturesCount\": 1, \"signaturesCount\": 1}"));
 
         UploadedFile uploadedFile = new UploadedFile();
         uploadedFile.setFilename("random.bdoc");

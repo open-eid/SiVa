@@ -7,16 +7,16 @@
         dictDefaultMessage: 'Drop files here or click to browse for upload file'
     };
 
-    var sivaDropone = new Dropzone('#siva-dropzone');
-    sivaDropone.on('complete', function () {
-        sivaDropone.removeAllFiles();
+    var sivaDropzone = new Dropzone('#siva-dropzone');
+    sivaDropzone.on('complete', function () {
+        sivaDropzone.removeAllFiles();
     });
 
-    sivaDropone.on('sending', function () {
+    sivaDropzone.on('sending', function () {
         $('#result-area, #validation-summery').addClass("hide");
     });
 
-    sivaDropone.on('success', function (file, response) {
+    sivaDropzone.on('success', function (file, response) {
         $('#result-area').removeClass('hide');
 
         $('#validation-report').text(response.validationResult);

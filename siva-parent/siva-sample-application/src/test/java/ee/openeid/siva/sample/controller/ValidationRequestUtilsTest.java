@@ -15,11 +15,11 @@ import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ValidationServiceUtilsTest {
+public class ValidationRequestUtilsTest {
 
     @Test
     public void testConstructorIsPrivate() throws Exception {
-        final Constructor<ValidationServiceUtils> constructor = ValidationServiceUtils.class.getDeclaredConstructor();
+        final Constructor<ValidationRequestUtils> constructor = ValidationRequestUtils.class.getDeclaredConstructor();
         assertThat(Modifier.isPrivate(constructor.getModifiers())).isTrue();
         constructor.setAccessible(true);
         constructor.newInstance();
@@ -27,12 +27,12 @@ public class ValidationServiceUtilsTest {
 
     @Test
     public void givenInvalidFileExtensionWillReturnNull() throws Exception {
-        assertThat(ValidationServiceUtils.parseFileExtension("random")).isNull();
+        assertThat(ValidationRequestUtils.parseFileExtension("random")).isNull();
     }
 
     @Test
     public void givenBdocFileExtensionWillReturnFileTypeBDOC() throws Exception {
-        assertThat(ValidationServiceUtils.parseFileExtension("bdoc")).isEqualTo(FileType.BDOC);
+        assertThat(ValidationRequestUtils.parseFileExtension("bdoc")).isEqualTo(FileType.BDOC);
     }
 
     @Test
@@ -42,7 +42,7 @@ public class ValidationServiceUtilsTest {
                 "random.asice"
         );
 
-        assertThat(ValidationServiceUtils.getValidationServiceType(request)).isEqualTo(FileType.BDOC);
+        assertThat(ValidationRequestUtils.getValidationServiceType(request)).isEqualTo(FileType.BDOC);
     }
 
     @Test
@@ -52,7 +52,7 @@ public class ValidationServiceUtilsTest {
                 "xroad.asice"
         );
 
-        assertThat(ValidationServiceUtils.isXroadAsiceContainer(request)).isTrue();
+        assertThat(ValidationRequestUtils.isXroadAsiceContainer(request)).isTrue();
     }
 
     @Test
@@ -62,23 +62,23 @@ public class ValidationServiceUtilsTest {
                 "xroad.asice"
         );
 
-        assertThat(ValidationServiceUtils.getValidationServiceType(request)).isEqualTo(FileType.XROAD);
+        assertThat(ValidationRequestUtils.getValidationServiceType(request)).isEqualTo(FileType.XROAD);
     }
 
     @Test
     public void givenInvalidXroadContainerWillReturnFalse() throws Exception {
         ValidationRequest request = createXroadValidationRequest(null, "xroad.asice");
-        assertThat(ValidationServiceUtils.isXroadAsiceContainer(request)).isFalse();
+        assertThat(ValidationRequestUtils.isXroadAsiceContainer(request)).isFalse();
     }
 
-    private ValidationRequest createXroadValidationRequest(String document, String filename) throws IOException {
+    private static ValidationRequest createXroadValidationRequest(String document, String filename) throws IOException {
         ValidationRequest request = new ValidationRequest();
         request.setDocument(document);
         request.setFilename(filename);
         return request;
     }
 
-    private String loadBase64EncodedFile(String filePath) throws IOException {
+    private static String loadBase64EncodedFile(String filePath) throws IOException {
         File testFile = TestFileUtils.loadTestFile(filePath);
         return Base64.encodeBase64String(Files.readAllBytes(Paths.get(testFile.getAbsolutePath())));
     }

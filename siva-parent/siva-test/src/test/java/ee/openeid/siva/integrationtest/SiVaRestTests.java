@@ -1,32 +1,17 @@
 package ee.openeid.siva.integrationtest;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
-import ee.openeid.siva.proxy.document.DocumentType;
-import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
-import ee.openeid.siva.validation.document.report.SignatureValidationData;
-import ee.openeid.siva.validation.document.report.Warning;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.StringUtils;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Optional;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.config.EncoderConfig.encoderConfig;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
 
@@ -83,7 +68,8 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         if (signaturePolicy != null) {
             jsonObject.put("signaturePolicy", signaturePolicy);
         }
-        return jsonObject.toString();
+        String output = jsonObject.toString();
+        return output;
     }
 
     protected String validationRequestFor(String file) {

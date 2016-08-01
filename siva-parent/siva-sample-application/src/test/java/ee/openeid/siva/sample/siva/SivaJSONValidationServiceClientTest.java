@@ -1,6 +1,6 @@
 package ee.openeid.siva.sample.siva;
 
-import ee.openeid.siva.sample.upload.UploadedFile;
+import ee.openeid.siva.sample.cache.UploadedFile;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.junit.Rule;
@@ -11,17 +11,19 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
+import rx.Observable;
 
 import java.io.File;
 import java.io.IOException;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
@@ -30,9 +32,10 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class SivaValidationServiceTest {
+public class SivaJSONValidationServiceClientTest {
 
     @Autowired
+    @Qualifier(value = "sivaJSON")
     private ValidationService validationService;
 
     @Rule
@@ -56,8 +59,8 @@ public class SivaValidationServiceTest {
         final String fileName = "testing.bdoc";
         final UploadedFile inputFile = getFile(fileContents, fileName);
 
-        final String result = validationService.validateDocument(inputFile);
-        assertEquals(mockResponse, result);
+        final Observable<String> result = validationService.validateDocument(inputFile);
+        assertEquals(mockResponse, result.toBlocking().first());
 
         verify(restTemplate).postForObject(anyString(), validationRequestCaptor.capture(), any());
         assertEquals(FileType.BDOC, validationRequestCaptor.getValue().getDocumentType());
@@ -90,14 +93,12 @@ public class SivaValidationServiceTest {
         given(restTemplate.postForObject(anyString(), any(ValidationRequest.class), any()))
                 .willThrow(new ResourceAccessException("Failed to connect to SiVa REST"));
 
-        String result = validationService.validateDocument(file);
+        Observable<String> result = validationService.validateDocument(file);
         verify(restTemplate).postForObject(anyString(), validationRequestCaptor.capture(), any());
 
-        assertThat(result).contains("errorCode");
-        assertThat(result).contains("errorMessage");
+        assertThat(result.toBlocking().first()).contains("errorCode");
+        assertThat(result.toBlocking().first()).contains("errorMessage");
     }
-
-
 
     private UploadedFile getFile(String fileContents, String fileName) throws IOException {
         final File inputFile = testingFolder.newFile(fileName);

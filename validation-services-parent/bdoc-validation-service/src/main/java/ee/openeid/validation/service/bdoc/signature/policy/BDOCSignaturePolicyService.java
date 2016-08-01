@@ -1,7 +1,7 @@
 package ee.openeid.validation.service.bdoc.signature.policy;
 
 import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
-import ee.openeid.siva.validation.service.signature.policy.properties.SignaturePolicySettings;
+import ee.openeid.siva.validation.service.signature.policy.properties.SignaturePolicyProperties;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -9,16 +9,16 @@ import java.io.*;
 
 public class BDOCSignaturePolicyService extends SignaturePolicyService {
 
-    public BDOCSignaturePolicyService(SignaturePolicySettings signaturePolicySettings) {
-        super(signaturePolicySettings);
+    public BDOCSignaturePolicyService(SignaturePolicyProperties signaturePolicyProperties) {
+        super(signaturePolicyProperties);
     }
 
     public String getAbsolutePath(String policy) {
-        if (StringUtils.isEmpty(policy)) {
-            policy = defaultPolicy;
-        }
-        log.debug("creating policy file from path {}", policy);
-        InputStream inputStream = getPolicyDataStreamFromPolicy(policy);
+        LOGGER.debug("creating policy file from path {}", policy);
+        InputStream inputStream = StringUtils.isEmpty(policy) ?
+                new ByteArrayInputStream(defaultPolicy) :
+                getPolicyDataStreamFromPolicy(policy);
+
         try {
             final File file = File.createTempFile(policy + "_constraint", "xml");
             file.deleteOnExit();
@@ -27,7 +27,7 @@ public class BDOCSignaturePolicyService extends SignaturePolicyService {
             outputStream.close();
             return file.getAbsolutePath();
         } catch (IOException e) {
-            log.error("Unable to create temporary file from bdoc policy resource", e);
+            LOGGER.error("Unable to create temporary file from bdoc policy resource", e);
             throw new BdocPolicyFileCreationException(e);
         }
     }

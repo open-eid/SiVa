@@ -1,6 +1,0 @@
-siva:
-  bdoc:
-    signaturePolicy:
-      policies:
-        EE: bdoc_constraint.xml
-      defaultPolicy: EE

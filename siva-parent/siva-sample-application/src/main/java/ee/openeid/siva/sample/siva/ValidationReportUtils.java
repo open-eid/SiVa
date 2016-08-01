@@ -4,18 +4,18 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ValidationReportUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(ValidationReportUtils.class);
     private static final String INVALID_CONTAINER = "INVALID";
     private static final String VALID_CONTAINER = "VALID";
     private static final String ERROR_VALIDATION = "ERROR";
-
-    private ValidationReportUtils() {
-    }
 
     public static String getValidateFilename(final String reportJSON) {
         if (isJSONNull(reportJSON)) {

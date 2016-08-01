@@ -1,3 +1,5 @@
+<!--# SiVa Test Plan-->
+
 !!! development
     ** Unclear items that are not yet present in the plan **
 
@@ -6,8 +8,6 @@
     * Configuration/administration of the service
     * SOAP API testing
     * System Testing of X-Road service
-
-# SiVa Test Plan
 
 This is living document and will be constantly updated as the project evolves. The aim of the document is to describe what is tested during SiVa Web Apllication development.
 

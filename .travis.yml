@@ -7,6 +7,8 @@ env:
 addons:
   ssh_known_hosts: demoapps.eu
   apt:
+    sources:
+      - deadsnakes
     packages:
       - python3
       - python3-dev
@@ -16,21 +18,26 @@ before_install:
 - openssl aes-256-cbc -K $encrypted_befc5bd7f29f_key -iv $encrypted_befc5bd7f29f_iv
   -in ci-deploy-key.enc -out ci-deploy-key -d
 - export TZ=Estonia/Tallinn
+- python3 --version
+- easy_install3 --user future
 - easy_install3 --user pyyaml
 - easy_install3 --user requests
+- easy_install --user pyresttest
 branchespython-dev:
   only:
   - develop
 install: true
 script:
 - "./mvnw clean install -q"
+- "${TRAVIS_BUILD_DIR}/build-helpers/system-test-prepare.sh"
+#- sleep 100
+#- "pyresttest http://demoapps.eu:7000 ${TRAVIS_BUILD_DIR}/build-helpers/system-test.yml"
+after_script:
+- ssh -i ci-deploy-key ci-deploy@demoapps.eu "bash -s" < ${TRAVIS_BUILD_DIR}/build-helpers/stage-deploy-cleanup.sh
 after_success:
 - "./mvnw jacoco:report coveralls:report -q -Dcoveralls.repo.token=$COVERALLS_REPO_TOKEN"
-- mkdir ${TRAVIS_BUILD_DIR}/artifacts && cp ${TRAVIS_BUILD_DIR}/siva-parent/siva-distribution/target/*.zip
-  artifacts
-- mv artifacts/*.zip artifacts/distribution.zip && ls -al artifacts
-- "chmod 600 ${TRAVIS_BUILD_DIR}/ci-deploy-key"
 - "${TRAVIS_BUILD_DIR}/build-helpers/buildinfo_yml_builder.py ${TRAVIS_COMMIT} ${TRAVIS_BUILD_ID} ${TRAVIS_BUILD_NUMBER}"
+- "scp -i ci-deploy-key ci-build-info.yml ci-deploy@demoapps.eu:/home/ci-deploy"
 - "${TRAVIS_BUILD_DIR}/build-helpers/deploy.sh"
 deploy:
   provider: s3

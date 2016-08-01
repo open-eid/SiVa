@@ -1,4 +1,4 @@
-package ee.openeid.siva.sample.upload;
+package ee.openeid.siva.sample.cache;
 
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.cache.annotation.CacheConfig;
@@ -12,7 +12,7 @@ import java.io.IOException;
 
 @Service
 @CacheConfig(cacheNames = "file")
-public class HazelcastUploadFileCacheService implements UploadFileCacheService {
+public class AbstractUploadFileCacheService implements UploadFileCacheService {
 
     @Override
     @CachePut(key = "#timestamp")
@@ -43,6 +43,6 @@ public class HazelcastUploadFileCacheService implements UploadFileCacheService {
 
     @Override
     @CacheEvict(key = "#timestamp")
-    public void deleteUploadedFile(final long timestamp) throws IOException {
+    public void deleteUploadedFile(final long timestamp) {
     }
 }

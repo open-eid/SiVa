@@ -1,4 +1,4 @@
-package ee.openeid.siva.sample.upload;
+package ee.openeid.siva.sample.cache;
 
 import lombok.Data;
 

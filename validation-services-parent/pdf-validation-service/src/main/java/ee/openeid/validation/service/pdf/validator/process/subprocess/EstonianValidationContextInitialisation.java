@@ -100,13 +100,13 @@ public class EstonianValidationContextInitialisation extends ValidationContextIn
 
         /**
          * 5.2.4 Processing
-         If the validation constraints and parameters have been initialized using an allowed set of signature validation policies
-         [i.2], [i.3] and if the signature has been created under one of these policies and also contains a commitment type
+         If the validation constraints and parameters have been initialized using an allowed set of signature validation abstractPolicies
+         [i.2], [i.3] and if the signature has been created under one of these abstractPolicies and also contains a commitment type
          indication property/attribute, the specific commitment defined in the policy shall be selected using this attribute. The
          clauses below describe the processing of these properties/attributes. The processing of additional sources for
          initialization (e.g. local configuration) is out of the scope of the present document.
          This implies that a signature policy referenced in a signature shall be known to the verifier and listed in the set of
-         acceptable policies. If the policy is unknown to the verifier, accepting a commitment type is not possible and may even
+         acceptable abstractPolicies. If the policy is unknown to the verifier, accepting a commitment type is not possible and may even
          be dangerous. In this case, the SVA shall return INVALID/UNKNOWN_COMMITMENT_TYPE.
          If the SVA cannot access a formal policy, the policy is not able to parse the policy file or the SVA cannot process the
          policy for any other reason, it shall return INVALID/POLICY_PROCESSING_ERROR with an appropriate indication.
@@ -175,7 +175,7 @@ public class EstonianValidationContextInitialisation extends ValidationContextIn
      * commitment in the signature. If the commitment is not recognized, the Verifier may select the rules dependant
      * on other sources (e.g. the data being signed). The way used by the signature policy for presenting the rules and
      * their description are out of the scope of the present document. TR 102 038 [i.3] specifies a "XML format for
-     * signature policies" that may be automatically processed.<br/>
+     * signature abstractPolicies" that may be automatically processed.<br/>
      * If the signature policy is implied, and stated so by the signature rules, the SVA shall perform the checks mandated by
      * the implicit signature policy that shall be provided by the verifier by one of the methods described in clause 4.2.
      * NOTE: An implicit policy can in the most general case either be established according to the minimum

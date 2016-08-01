@@ -41,7 +41,6 @@ public class DDOCValidationService implements ValidationService {
         IOUtils.copy(inputStream, outputStream);
         outputStream.close();
 
-//        LOGGER.info("JDigiDoc configuration file path: {}", resource);
         ConfigManager.init(file.getAbsolutePath());
     }
 

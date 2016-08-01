@@ -2,17 +2,18 @@ package ee.openeid.siva.sample.siva;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ee.openeid.siva.sample.configuration.SivaRESTWebServiceConfigurationProperties;
-import ee.openeid.siva.sample.controller.ValidationServiceUtils;
-import ee.openeid.siva.sample.upload.UploadedFile;
+import ee.openeid.siva.sample.controller.ValidationRequestUtils;
+import ee.openeid.siva.sample.cache.UploadedFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
+import rx.Observable;
 
 import java.io.IOException;
 
-@Service
-public class SivaValidationService implements ValidationService {
+@Service(value = SivaServiceType.JSON_SERVICE)
+public class SivaJSONValidationServiceClient implements ValidationService {
     private static final int GENERIC_ERROR_CODE = 101;
 
     private SivaRESTWebServiceConfigurationProperties properties;
@@ -20,7 +21,7 @@ public class SivaValidationService implements ValidationService {
     private SivaValidationServiceErrorHandler errorHandler;
 
     @Override
-    public String validateDocument(final UploadedFile file) throws IOException {
+    public Observable<String> validateDocument(final UploadedFile file) throws IOException {
         if (file == null) {
             throw new IOException("Invalid file object given");
         }
@@ -36,15 +37,15 @@ public class SivaValidationService implements ValidationService {
 
         try {
             restTemplate.setErrorHandler(errorHandler);
-            return restTemplate.postForObject(properties.getServiceUrl(), validationRequest, String.class);
+            return Observable.just(restTemplate.postForObject(properties.getServiceUrl(), validationRequest, String.class));
         } catch (ResourceAccessException ce) {
             String errorMessage = "Connection to web service failed. Make sure You have configured SiVa web service correctly";
-            return new ObjectMapper().writer().writeValueAsString(new ServiceError(GENERIC_ERROR_CODE, errorMessage));
+            return Observable.just(new ObjectMapper().writer().writeValueAsString(new ServiceError(GENERIC_ERROR_CODE, errorMessage)));
         }
     }
 
     private static void setValidationDocumentType(final ValidationRequest validationRequest) throws IOException {
-        final FileType uploadedFileExtension = ValidationServiceUtils.getValidationServiceType(validationRequest);
+        final FileType uploadedFileExtension = ValidationRequestUtils.getValidationServiceType(validationRequest);
         validationRequest.setDocumentType(uploadedFileExtension);
     }
 

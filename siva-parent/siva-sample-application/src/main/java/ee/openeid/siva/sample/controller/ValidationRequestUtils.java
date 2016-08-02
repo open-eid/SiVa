@@ -1,7 +1,7 @@
 package ee.openeid.siva.sample.controller;
 
+import ee.openeid.siva.sample.cache.UploadedFile;
 import ee.openeid.siva.sample.siva.FileType;
-import ee.openeid.siva.sample.siva.ValidationRequest;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.codec.binary.Base64;
@@ -18,7 +18,7 @@ public final class ValidationRequestUtils {
     private static final String XROAD_XSD = "http://x-road.eu/xsd/xroad.xsd";
     private static final String UNIQUE_XROAD_ASICE_FILE = "message.xml";
 
-    public static FileType getValidationServiceType(ValidationRequest validationRequest) throws IOException {
+    public static FileType getValidationServiceType(UploadedFile validationRequest) throws IOException {
         final String filename = validationRequest.getFilename();
         FileType parsedFileType = parseFileExtension(filename.substring(filename.lastIndexOf(FILENAME_EXTENSION_SEPARATOR) + 1));
 
@@ -33,8 +33,8 @@ public final class ValidationRequestUtils {
         return parsedFileType;
     }
 
-    static boolean isXroadAsiceContainer(ValidationRequest validationRequest) throws IOException {
-        String document = validationRequest.getDocument();
+    static boolean isXroadAsiceContainer(UploadedFile validationRequest) throws IOException {
+        String document = validationRequest.getEncodedFile();
         if (document == null) {
             return false;
         }

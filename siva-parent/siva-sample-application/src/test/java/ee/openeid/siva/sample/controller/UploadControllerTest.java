@@ -3,12 +3,10 @@ package ee.openeid.siva.sample.controller;
 import com.domingosuarez.boot.autoconfigure.jade4j.Jade4JAutoConfiguration;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import ee.openeid.siva.sample.ci.info.BuildInfo;
-import ee.openeid.siva.sample.configuration.GoogleAnalyticsProperties;
-import ee.openeid.siva.sample.siva.SivaServiceType;
-import ee.openeid.siva.sample.siva.ValidationService;
 import ee.openeid.siva.sample.cache.UploadFileCacheService;
 import ee.openeid.siva.sample.cache.UploadedFile;
+import ee.openeid.siva.sample.ci.info.BuildInfo;
+import ee.openeid.siva.sample.configuration.GoogleAnalyticsProperties;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -44,11 +42,8 @@ public class UploadControllerTest {
     @Autowired
     private WebClient webClient;
 
-    @MockBean(name = SivaServiceType.JSON_SERVICE)
-    private ValidationService validationService;
-
-    @MockBean(name = SivaServiceType.SOAP_SERVICE)
-    private ValidationService soapValidationService;
+    @MockBean
+    private ValidationTaskRunner taskRunner;
 
     @MockBean
     private Observable<BuildInfo> buildInfo;
@@ -75,8 +70,8 @@ public class UploadControllerTest {
 
     @Test
     public void uploadPageWithFileReturnsValidationResult() throws Exception {
-        given(validationService.validateDocument(any(UploadedFile.class)))
-                .willReturn(Observable.just("{\"documentName\": \"random.bdoc\", \"validSignaturesCount\": 1, \"signaturesCount\": 1}"));
+        given(taskRunner.getValidationResult(any(ValidationResultType.class)))
+                .willReturn("{\"documentName\": \"random.bdoc\", \"validSignaturesCount\": 1, \"signaturesCount\": 1}");
 
         UploadedFile uploadedFile = new UploadedFile();
         uploadedFile.setFilename("random.bdoc");

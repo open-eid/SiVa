@@ -1,7 +1,7 @@
 package ee.openeid.siva.sample.controller;
 
+import ee.openeid.siva.sample.cache.UploadedFile;
 import ee.openeid.siva.sample.siva.FileType;
-import ee.openeid.siva.sample.siva.ValidationRequest;
 import ee.openeid.siva.sample.test.utils.TestFileUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Test;
@@ -37,7 +37,7 @@ public class ValidationRequestUtilsTest {
 
     @Test
     public void givenAsiceValidationRequestWillReturnFileTypeBDOC() throws Exception {
-        ValidationRequest request = createXroadValidationRequest(
+        UploadedFile request = createXroadValidationRequest(
                 Base64.encodeBase64String("random text".getBytes()),
                 "random.asice"
         );
@@ -47,7 +47,7 @@ public class ValidationRequestUtilsTest {
 
     @Test
     public void givenXroadContainerValidationRequestWillReturnTrue() throws Exception {
-        ValidationRequest request = createXroadValidationRequest(
+        UploadedFile request = createXroadValidationRequest(
                 loadBase64EncodedFile("/xroad-container.asice"),
                 "xroad.asice"
         );
@@ -57,7 +57,7 @@ public class ValidationRequestUtilsTest {
 
     @Test
     public void givenXroadContainerWillReturnFileTypeXROAD() throws Exception {
-        ValidationRequest request = createXroadValidationRequest(
+        UploadedFile request = createXroadValidationRequest(
                 loadBase64EncodedFile("/xroad-container.asice"),
                 "xroad.asice"
         );
@@ -67,14 +67,15 @@ public class ValidationRequestUtilsTest {
 
     @Test
     public void givenInvalidXroadContainerWillReturnFalse() throws Exception {
-        ValidationRequest request = createXroadValidationRequest(null, "xroad.asice");
+        UploadedFile request = createXroadValidationRequest(null, "xroad.asice");
         assertThat(ValidationRequestUtils.isXroadAsiceContainer(request)).isFalse();
     }
 
-    private static ValidationRequest createXroadValidationRequest(String document, String filename) throws IOException {
-        ValidationRequest request = new ValidationRequest();
-        request.setDocument(document);
+    private static UploadedFile createXroadValidationRequest(String document, String filename) throws IOException {
+        UploadedFile request = new UploadedFile();
+        request.setEncodedFile(document);
         request.setFilename(filename);
+
         return request;
     }
 

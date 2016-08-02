@@ -1,6 +1,8 @@
 package ee.openeid.siva.sample.cache;
 
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -13,6 +15,7 @@ import java.io.IOException;
 @Service
 @CacheConfig(cacheNames = "file")
 public class AbstractUploadFileCacheService implements UploadFileCacheService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractUploadFileCacheService.class);
 
     @Override
     @CachePut(key = "#timestamp")
@@ -44,5 +47,6 @@ public class AbstractUploadFileCacheService implements UploadFileCacheService {
     @Override
     @CacheEvict(key = "#timestamp")
     public void deleteUploadedFile(final long timestamp) {
+        LOGGER.info("Remove file with timestamp {} form cache", timestamp);
     }
 }

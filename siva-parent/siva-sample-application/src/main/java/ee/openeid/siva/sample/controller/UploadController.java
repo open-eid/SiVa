@@ -1,17 +1,14 @@
 package ee.openeid.siva.sample.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import ee.openeid.siva.sample.ci.info.BuildInfo;
-import ee.openeid.siva.sample.configuration.GoogleAnalyticsProperties;
-import ee.openeid.siva.sample.siva.SivaServiceType;
-import ee.openeid.siva.sample.siva.ValidationService;
 import ee.openeid.siva.sample.cache.UploadFileCacheService;
 import ee.openeid.siva.sample.cache.UploadedFile;
+import ee.openeid.siva.sample.ci.info.BuildInfo;
+import ee.openeid.siva.sample.configuration.GoogleAnalyticsProperties;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,8 +31,7 @@ class UploadController {
     private static final String REDIRECT_PATH = "redirect:/validation-response";
     private static final String START_PAGE_VIEW_NAME = "index";
 
-    private ValidationService validationService;
-    private ValidationService soapValidationService;
+    private ValidationTaskRunner validationTaskRunner;
     private UploadFileCacheService fileUploadService;
     private GoogleAnalyticsProperties googleAnalyticsProperties;
     private Observable<BuildInfo> buildInfo;
@@ -66,14 +62,14 @@ class UploadController {
         final long timestamp = System.currentTimeMillis() / 1000L;
         try {
             final UploadedFile uploadedFile = fileUploadService.addUploadedFile(timestamp, file);
-            final String validationResult = validationService.validateDocument(uploadedFile)
-                    .toBlocking()
-                    .first();
+            validationTaskRunner.run(uploadedFile);
 
-            setModelFlashAttributes(redirectAttributes, validationResult);
+            setModelFlashAttributes(redirectAttributes, getJsonValidationResult(), getSoapValidationResult());
         } catch (final IOException e) {
             LOGGER.warn("File upload problem", e);
             redirectAttributes.addFlashAttribute("File upload failed with message: " + e.getMessage());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         } finally {
             fileUploadService.deleteUploadedFile(timestamp);
         }
@@ -81,18 +77,33 @@ class UploadController {
         return REDIRECT_PATH;
     }
 
+    private String getJsonValidationResult() {
+        return validationTaskRunner.getValidationResult(ValidationResultType.JSON);
+    }
+
+    private String getSoapValidationResult() {
+        return validationTaskRunner.getValidationResult(ValidationResultType.SOAP);
+    }
+
     private static void setModelFlashAttributes(
             RedirectAttributes redirectAttributes,
-            String validationResult
+            String validationResult,
+            String soapValidationResult
     ) throws JsonProcessingException {
         final ValidationResponse response = new ValidationResponse();
         response.setFilename(getValidateFilename(validationResult));
         response.setOverAllValidationResult(getOverallValidationResult(validationResult));
 
         final String output = isJSONNull(validationResult) ? handleMissingJSON() : validationResult;
-        response.setValidationResult(new JSONObject(output).toString(4));
+        response.setJsonValidationResult(new JSONObject(output).toString(4));
+        response.setSoapValidationResult(soapValidationResult);
 
         redirectAttributes.addFlashAttribute(response);
+    }
+
+    @Autowired
+    public void setValidationTaskRunner(ValidationTaskRunner validationTaskRunner) {
+        this.validationTaskRunner = validationTaskRunner;
     }
 
     @Autowired
@@ -103,18 +114,6 @@ class UploadController {
     @Autowired
     public void setBuildInfo(final Observable<BuildInfo> buildInfo) {
         this.buildInfo = buildInfo;
-    }
-
-    @Autowired
-    @Qualifier(value = SivaServiceType.JSON_SERVICE)
-    public void setValidationService(final ValidationService validationService) {
-        this.validationService = validationService;
-    }
-
-    @Autowired
-    @Qualifier(value = SivaServiceType.SOAP_SERVICE)
-    public void setSoapValidationService(ValidationService soapValidationService) {
-        this.soapValidationService = soapValidationService;
     }
 
     @Autowired

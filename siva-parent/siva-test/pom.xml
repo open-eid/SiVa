@@ -104,6 +104,9 @@
                                     <goal>jmeter</goal>
                                 </goals>
                                 <configuration>
+                                    <jMeterProcessJVMSettings>
+                                        <xmx>2g</xmx>
+                                    </jMeterProcessJVMSettings>
                                     <testResultsTimestamp>false</testResultsTimestamp>
                                     <propertiesUser>
                                         <host.name>${jmeter.host.name}</host.name>

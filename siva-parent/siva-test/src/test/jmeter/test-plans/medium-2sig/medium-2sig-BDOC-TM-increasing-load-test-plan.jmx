@@ -81,7 +81,59 @@
         </collectionProp>
       </Arguments>
       <hashTree/>
-      <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="BeanShell PreProcessor" enabled="true">
+      <SetupThreadGroup guiclass="SetupThreadGroupGui" testclass="SetupThreadGroup" testname="setUp Thread Group" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">0</stringProp>
+        <longProp name="ThreadGroup.start_time">1470141689000</longProp>
+        <longProp name="ThreadGroup.end_time">1470141689000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </SetupThreadGroup>
+      <hashTree>
+        <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="BeanShell Sampler" enabled="true">
+          <stringProp name="BeanShellSampler.query">import java.io.File;
+import java.io.FileNotFoundException;
+import java.lang.RuntimeException;
+import java.lang.Exception;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.jmeter.util.JMeterUtils;
+
+try {
+    String testFilesRootDir = vars.get(&quot;TESTFILES_ROOT_DIR&quot;);
+    String testFileDir = vars.get(&quot;TESTFILE_DIR&quot;);
+    String testFileName = vars.get(&quot;TESTFILE&quot;);
+    File testFile = new File(testFilesRootDir + File.separator + testFileDir + File.separator + testFileName);
+    if (!testFile.exists()) {
+    	   throw new FileNotFoundException(testFile.toPath().toString() + &quot; not found&quot;);
+    }
+    byte[] testFileContentBytes = Files.readAllBytes(testFile.toPath());
+    if (testFileContentBytes == null || testFileContentBytes.length == 0) {
+    	   throw new RuntimeException(testFile.toPath().toString() + &quot; has no content&quot;);
+    }
+    String testFileContentsBase64 = new String(Base64.encodeBase64(testFileContentBytes));
+    JMeterUtils.setProperty(&quot;TESTFILE_BASE64&quot;, testFileContentsBase64);
+} catch (Exception e) {
+    log.error(&quot;BeanShell failed with exception: &quot;, e);
+    log.info(&quot;Stopping test&quot;);
+    throw e;
+}</stringProp>
+          <stringProp name="BeanShellSampler.filename"></stringProp>
+          <stringProp name="BeanShellSampler.parameters"></stringProp>
+          <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+        </BeanShellSampler>
+        <hashTree/>
+      </hashTree>
+      <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="BeanShell PreProcessor" enabled="false">
         <stringProp name="filename"></stringProp>
         <stringProp name="parameters"></stringProp>
         <boolProp name="resetInterpreter">false</boolProp>

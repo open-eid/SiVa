@@ -2,6 +2,7 @@ package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
+import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -142,15 +143,15 @@ public class BdocValidationFail extends SiVaRestTests{
      *
      * File: EE_SER-AEX-B-LT-V-33.asice
      ***/
-    @Test @Ignore //TODO: request returns error not a validation report, needs investigation wether it is ok or not.
+    @Test
     public void bdocInvalidMimeTypeChars() {
         setTestFilesDirectory("bdoc/live/timestamp/");
-        post(validationRequestFor("EE_SER-AEX-B-LT-V-33.asice"))
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("EE_SER-AEX-B-LT-V-33.asice"));
+        post(validationRequestWithValidKeys(encodedString, "EE_SER-AEX-B-LT-V-33.asice", "bdoc"))
                 .then()
-                .body("signatures[0].errors.nameId", Matchers.hasItems(""))
-                .body("signatures[0].errors.content", Matchers.hasItems(""))
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validSignaturesCount", Matchers.is(0));
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
+                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
     /***
@@ -294,7 +295,7 @@ public class BdocValidationFail extends SiVaRestTests{
      * File: EE_SER-AEX-B-LT-R-25.asice
      ***/
     @Test
-    public void bdocOcspStatusRevoced() {
+    public void bdocTsOcspStatusRevoked() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-R-25.asice"))
                 .then()
@@ -418,16 +419,165 @@ public class BdocValidationFail extends SiVaRestTests{
      *
      * File: TM-05_bdoc21-good-nonce-policy-bes.bdoc
      ***/
-    @Test @Ignore //TODO: needs clarification how to determine that we have a BES level file
+    @Test @Ignore //TODO: This is actually a EPES level file?
     public void bdocBaselineBesSignatureLevel() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("TM-05_bdoc21-good-nonce-policy-bes.bdoc"))
                 .then()
+                .body("signatures[0].errors.nameId", Matchers.hasItems("BBB_XCV_IRDPFC_ANS"))
+                .body("signatures[0].errors.content", Matchers.hasItems("No revocation data for the certificate"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatures[0].subIndication", Matchers.is("TRY_LATER"))
+                .body("validSignaturesCount", Matchers.is(0));
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationFail-18
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Bdoc Baseline-EPES file
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: TM-04_kehtivuskinnituset.4.asice
+     ***/
+    @Test
+    public void bdocBaselineEpesSignatureLevel() {
+        setTestFilesDirectory("bdoc/live/timemark/");
+        post(validationRequestFor("TM-04_kehtivuskinnituset.4.asice"))
+                .then()
+                .body("signatures[0].errors.nameId", Matchers.hasItems("BBB_XCV_IRDPFC_ANS"))
+                .body("signatures[0].errors.content", Matchers.hasItems("No revocation data for the certificate"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatures[0].subIndication", Matchers.is("TRY_LATER"))
+                .body("validSignaturesCount", Matchers.is(0));
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationFail-19
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Bdoc signers certificate is not trusted
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: SS-4_teadmataCA.4.asice
+     ***/
+    @Test
+    public void bdocSignersCertNotTrusted() {
+        setTestFilesDirectory("bdoc/live/timemark/");
+        post(validationRequestFor("SS-4_teadmataCA.4.asice"))
+                .then()
+                .body("signatures[0].errors.nameId", Matchers.hasItems("BBB_XCV_CCCBB_ANS"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The certificate chain is not trusted, there is no trusted anchor."))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
+                .body("validSignaturesCount", Matchers.is(0));
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationFail-20
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Bdoc OCSP response status is revoked
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: TM-15_revoked.4.asice
+     ***/
+    @Test
+    public void bdocTmOcspStatusRevoked() {
+        setTestFilesDirectory("bdoc/live/timemark/");
+        post(validationRequestFor("TM-15_revoked.4.asice"))
+                .then()
+                .body("signatures[0].errors.nameId", Matchers.hasItems("BBB_XCV_ISCR_ANS"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The certificate is revoked!"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatures[0].subIndication", Matchers.is("REVOKED_NO_POE"))
+                .body("validSignaturesCount", Matchers.is(0));
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationFail-21
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Bdoc OCSP response status is unknown
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: TM-16_unknown.4.asice
+     ***/
+    @Test @Ignore //TODO: This file returns revoked status...
+    public void bdocTmOcspStatusUnknown() {
+        setTestFilesDirectory("bdoc/live/timemark/");
+        post(validationRequestFor("TM-16_unknown.4.asice"))
+                .then()
                 .body("signatures[0].errors.nameId", Matchers.hasItems(""))
                 .body("signatures[0].errors.content", Matchers.hasItems(""))
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validSignaturesCount", Matchers.is(0));
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationFail-22
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Bdoc signed data file has been removed from the container
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: TM-16_unknown.4.asice
+     ***/
+    @Test
+    public void bdocSignedFileRemoved() {
+        setTestFilesDirectory("bdoc/live/timemark/");
+        post(validationRequestFor("KS-21_fileeemaldatud.4.asice"))
+                .then()
+                .body("signatures[0].errors.nameId", Matchers.hasItems("BBB_CV_IRDOF_ANS"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The reference data object(s) not found!"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatures[0].subIndication", Matchers.is("SIGNED_DATA_NOT_FOUND"))
+                .body("validSignaturesCount", Matchers.is(0));
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationFail-23
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Bdoc no files in container
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: KS-02_tyhi.bdoc
+     ***/
+    @Test @Ignore //TODO: this file gives two errors, need a good solution to check them both in same time.
+    public void bdocNoFilesInContainer() {
+        setTestFilesDirectory("bdoc/live/timemark/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("KS-02_tyhi.bdoc"));
+        post(validationRequestWithValidKeys(encodedString, "KS-02_tyhi.bdoc", "bdoc"))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
+                .body("requestErrors[0].message", Matchers.containsString(MAY_NOT_BE_EMPTY));
     }
     @Override
     protected String getTestFilesDirectory() {

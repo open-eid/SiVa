@@ -116,6 +116,23 @@ public class BdocValidationPass extends SiVaRestTests{
                 .body("validSignaturesCount", Matchers.is(1));
     }
 
+    /***
+     * TestCaseID: Bdoc-ValidationPass-5
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Bdoc signed with Mobile-ID, ECC-SHA256 signature with prime256v1 key
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: 24050_short_ecdsa_correct_file_mimetype.bdoc
+     ***/
+    @Test
+    public void bdocEccSha256signature() {
+        assertAllSignaturesAreValid(postForReport("24050_short_ecdsa_correct_file_mimetype.bdoc"));
+    }
     @Override
     protected String getTestFilesDirectory() {
         return testFilesDirectory;

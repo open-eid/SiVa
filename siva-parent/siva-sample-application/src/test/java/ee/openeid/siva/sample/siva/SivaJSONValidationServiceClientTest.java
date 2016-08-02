@@ -113,7 +113,7 @@ public class SivaJSONValidationServiceClientTest {
     }
 
     private String mockServiceResponse() {
-        final String mockResponse = "{\"validationResult\": \"TOTAL-PASSED\"}";
+        final String mockResponse = "{\"jsonValidationResult\": \"TOTAL-PASSED\"}";
         given(restTemplate.postForObject(anyString(), any(ValidationRequest.class), any()))
                 .willReturn(mockResponse);
 

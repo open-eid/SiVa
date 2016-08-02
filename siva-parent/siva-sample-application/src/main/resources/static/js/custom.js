@@ -19,8 +19,13 @@
     sivaDropzone.on('success', function (file, response) {
         $('#result-area').removeClass('hide');
 
-        $('#validation-report').text(response.validationResult);
+        $('#validation-report').text(response.jsonValidationResult);
         $('#validation-report').each(function (i, block) {
+            hljs.highlightBlock(block);
+        });
+
+        $('#soap-validation-report').text(response.soapValidationResult);
+        $('#soap-validation-report').each(function (i, block) {
             hljs.highlightBlock(block);
         });
 

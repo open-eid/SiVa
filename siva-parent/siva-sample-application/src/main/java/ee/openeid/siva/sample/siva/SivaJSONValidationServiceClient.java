@@ -33,19 +33,20 @@ public class SivaJSONValidationServiceClient implements ValidationService {
 
         final String filename = file.getFilename();
         validationRequest.setFilename(filename);
-        setValidationDocumentType(validationRequest);
+        setValidationDocumentType(validationRequest, file);
 
         try {
             restTemplate.setErrorHandler(errorHandler);
-            return Observable.just(restTemplate.postForObject(properties.getServiceUrl(), validationRequest, String.class));
+            String fullUrl = properties.getServiceHost() + properties.getJsonServicePath();
+            return Observable.just(restTemplate.postForObject(fullUrl, validationRequest, String.class));
         } catch (ResourceAccessException ce) {
             String errorMessage = "Connection to web service failed. Make sure You have configured SiVa web service correctly";
             return Observable.just(new ObjectMapper().writer().writeValueAsString(new ServiceError(GENERIC_ERROR_CODE, errorMessage)));
         }
     }
 
-    private static void setValidationDocumentType(final ValidationRequest validationRequest) throws IOException {
-        final FileType uploadedFileExtension = ValidationRequestUtils.getValidationServiceType(validationRequest);
+    private static void setValidationDocumentType(ValidationRequest validationRequest, UploadedFile uploadedFile) throws IOException {
+        final FileType uploadedFileExtension = ValidationRequestUtils.getValidationServiceType(uploadedFile);
         validationRequest.setDocumentType(uploadedFileExtension);
     }
 

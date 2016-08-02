@@ -22,6 +22,10 @@ public class SivaSOAPValidationServiceClient implements ValidationService {
 
     @Override
     public Observable<String> validateDocument(UploadedFile file) throws IOException {
+        if (file == null) {
+            throw new IOException("File not found");
+        }
+
         FileType serviceType = ValidationRequestUtils.getValidationServiceType(file);
         String requestBody = createXMLValidationRequest(file.getEncodedFile(), serviceType.name(), file.getFilename());
 

@@ -23,6 +23,11 @@ body {
     color: #999
 }
 
+.icon-alert {
+    width: 35px;
+    margin: 10px 15px 0 15px;
+}
+
 .dropzone .dz-message {
     margin: 1em 0;
     min-height: 10%;

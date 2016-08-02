@@ -63,11 +63,13 @@ public class FilesystemBuildInfoFileLoader implements BuildInfoFileLoader {
     private Path getBuildInfoFilePath() {
         final String defaultPath = Paths.get("").toAbsolutePath() + File.separator;
         final String infoFile = properties.getInfoFile();
-        final String infoFilePath = infoFile.startsWith(UNIX_PATH_START) || infoFile.contains(WINDOWS_DRIVE_LETTER_POSTFIX) ?
-                infoFile :
-                defaultPath + infoFile;
+        final String infoFilePath = isFullPathToInfoFile(infoFile) ? infoFile : defaultPath + infoFile;
 
         return Paths.get(infoFilePath);
+    }
+
+    private static boolean isFullPathToInfoFile(String infoFile) {
+        return infoFile.startsWith(UNIX_PATH_START) || infoFile.contains(WINDOWS_DRIVE_LETTER_POSTFIX);
     }
 
     @Autowired

@@ -4,6 +4,15 @@ include mixins/footer-mixins
 block content
     .row
         .col-md-12
+            .alert.alert-warning
+                .col-md-1.col-sm-2
+                    img.icon-alert(src="img/icon-alert.svg")
+                .col-md-11
+                    strong Warning!&nbsp;
+                    | Using SiVa demo validation service is not secure. The uploaded content may be views by third parties.
+                    | Upload only content that does not contain confidential information.
+                .clearfix
+        .col-md-12
             h1 Upload a digitally signed file
             p Supported file types are: BDOC, DDOC and PDF
             form#siva-dropzone.dropzone(action="/upload", style="width: 100%", method="POST", enctype="multipart/form-data")

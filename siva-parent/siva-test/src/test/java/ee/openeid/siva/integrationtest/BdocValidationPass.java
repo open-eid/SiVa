@@ -3,6 +3,7 @@ package ee.openeid.siva.integrationtest;
 import com.jayway.restassured.RestAssured;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -88,6 +89,31 @@ public class BdocValidationPass extends SiVaRestTests{
         QualifiedReport report = postForReport("warning.bdoc");
         assertEquals(report.getSignaturesCount(), report.getValidSignaturesCount());
         assertTrue(report.getSignatures().get(0).getWarnings().size() > 0);
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationPass-4
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Asice One LT signature with certificates from different countries
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: EE_SER-AEX-B-LT-V-30.asice
+     ***/
+    @Test @Ignore //TODO: This file fails in SiVA. Needs investigation.
+    public void bdocDifferentCertificateCountries() {
+        setTestFilesDirectory("bdoc/live/timestamp/");
+        post(validationRequestFor("EE_SER-AEX-B-LT-V-30.asice"))
+                .then()
+                .body("signatures[0].errors.nameId", Matchers.hasItems(""))
+                .body("signatures[0].errors.content", Matchers.hasItems(""))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("validSignaturesCount", Matchers.is(1));
     }
 
     @Override

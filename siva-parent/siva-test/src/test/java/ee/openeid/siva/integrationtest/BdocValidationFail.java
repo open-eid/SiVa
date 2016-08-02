@@ -142,7 +142,7 @@ public class BdocValidationFail extends SiVaRestTests{
      *
      * File: EE_SER-AEX-B-LT-V-33.asice
      ***/
-    @Test @Ignore //TODO: request returns error, needs investigation
+    @Test @Ignore //TODO: request returns error not a validation report, needs investigation wether it is ok or not.
     public void bdocInvalidMimeTypeChars() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-V-33.asice"))
@@ -191,7 +191,7 @@ public class BdocValidationFail extends SiVaRestTests{
      *
      * Expected Result: The document should fail the validation
      *
-     * File: EE_SER-AEX-B-LT-I-43..asice
+     * File: EE_SER-AEX-B-LT-I-43.asice
      ***/
     @Test
     public void bdocInvalidNonRepudiationKey() {
@@ -202,6 +202,231 @@ public class BdocValidationFail extends SiVaRestTests{
                 .body("signatures[0].errors.content", Matchers.hasItems("The signer's certificate has not expected key-usage!"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is("SIG_CONSTRAINTS_FAILURE"))
+                .body("validSignaturesCount", Matchers.is(0));
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationFail-9
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Asice signers certificate does not have non-repudiation value in the certificates key usage field and it does not contain the QC and SSCD compliance information.
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: EE_SER-AEX-B-LT-I-26.asice
+     ***/
+    @Test
+    public void bdocInvalidNonRepudiationKeyNoComplianceInfo() {
+        setTestFilesDirectory("bdoc/live/timestamp/");
+        post(validationRequestFor("EE_SER-AEX-B-LT-I-26.asice"))
+                .then()
+                .body("signatures[0].errors.nameId", Matchers.hasItems("BBB_XCV_ISCGKU_ANS"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The signer's certificate has not expected key-usage!"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is("SIG_CONSTRAINTS_FAILURE"))
+                .body("validSignaturesCount", Matchers.is(0));
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationFail-10
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Asice OCSP certificate is not trusted
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: EE_SER-AEX-B-LT-I-27.asice
+     ***/
+    @Test @Ignore //TODO: As test certs are included by defaul this file currently passes. Separate class with life profile may be needed for this test.
+    public void bdocNotTrustedOcspCert() {
+        setTestFilesDirectory("bdoc/live/timestamp/");
+        post(validationRequestFor("EE_SER-AEX-B-LT-I-27.asice"))
+                .then()
+                .body("signatures[0].errors.nameId", Matchers.hasItems(""))
+                .body("signatures[0].errors.content", Matchers.hasItems(""))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("validSignaturesCount", Matchers.is(0));
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationFail-11
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Asice TSA certificate is not trusted
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: TS-05_23634_TS_unknown_TSA.asice
+     ***/
+    @Test
+    public void bdocNotTrustedTsaCert() {
+        setTestFilesDirectory("bdoc/live/timestamp/");
+        post(validationRequestFor("TS-05_23634_TS_unknown_TSA.asice"))
+                .then()
+                .body("signatures[0].errors.nameId", Matchers.hasItems("GENERIC"))
+                .body("signatures[0].errors.content", Matchers.hasItems("Signature has an invalid timestamp"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatures[0].subIndication", Matchers.is("NO_VALID_TIMESTAMP"))
+                .body("validSignaturesCount", Matchers.is(0));
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationFail-12
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Asice OCSP response status is revoked
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: EE_SER-AEX-B-LT-R-25.asice
+     ***/
+    @Test
+    public void bdocOcspStatusRevoced() {
+        setTestFilesDirectory("bdoc/live/timestamp/");
+        post(validationRequestFor("EE_SER-AEX-B-LT-R-25.asice"))
+                .then()
+                .body("signatures[0].errors.nameId", Matchers.hasItems("BBB_XCV_ISCR_ANS"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The certificate is revoked!"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatures[0].subIndication", Matchers.is("REVOKED_NO_POE"))
+                .body("validSignaturesCount", Matchers.is(0));
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationFail-13
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Asice difference between OCSP and time-stamp issuing times is more than 24 hours
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: EE_SER-AEX-B-LT-V-20.asice
+     ***/
+    @Test
+    public void bdocOcspAndTsDifferenceOver24H() {
+        setTestFilesDirectory("bdoc/live/timestamp/");
+        post(validationRequestFor("EE_SER-AEX-B-LT-V-20.asice"))
+                .then()
+                .body("signatures[0].errors.nameId", Matchers.hasItems("GENERIC"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The difference between the revocation time and the signature time stamp is too large"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("validSignaturesCount", Matchers.is(0));
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationFail-14
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Asice unsigned data files in the container
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: EE_SER-AEX-B-LT-V-34.asice
+     ***/
+    @Test @Ignore //TODO: Needs investigation whether it is actually okay to ignore manifest errors as currently is done
+    public void bdocUnsignedDataFiles() {
+        setTestFilesDirectory("bdoc/live/timestamp/");
+        post(validationRequestFor("EE_SER-AEX-B-LT-V-34.asice"))
+                .then()
+                .body("signatures[0].errors.nameId", Matchers.hasItems(""))
+                .body("signatures[0].errors.content", Matchers.hasItems(""))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("validSignaturesCount", Matchers.is(0));
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationFail-15
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Bdoc different data file mime-type values in signatures.xml and manifest.xml files
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: 23613_TM_wrong-manifest-mimetype.bdoc
+     ***/
+    @Test @Ignore //TODO: Needs investigation whether it is actually okay to ignore manifest errors as currently is done
+    public void bdocDifferentDataFileInSignature() {
+        setTestFilesDirectory("bdoc/live/timemark/");
+        post(validationRequestFor("23613_TM_wrong-manifest-mimetype.bdoc"))
+                .then()
+                .body("signatures[0].errors.nameId", Matchers.hasItems(""))
+                .body("signatures[0].errors.content", Matchers.hasItems(""))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("validSignaturesCount", Matchers.is(0));
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationFail-16
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Bdoc SignatureValue does not correspond to the SignedInfo block
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: REF-19_bdoc21-no-sig-asn1-pref.bdoc
+     ***/
+    @Test
+    public void bdocSignatureValueDoNotCorrespondToSignedInfo() {
+        setTestFilesDirectory("bdoc/live/timemark/");
+        post(validationRequestFor("REF-19_bdoc21-no-sig-asn1-pref.bdoc"))
+                .then()
+                .body("signatures[0].errors.nameId", Matchers.hasItems("BBB_CV_ISI_ANS"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The signature is not intact!"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
+                .body("validSignaturesCount", Matchers.is(0));
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationFail-17
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Bdoc Baseline-BES file
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: TM-05_bdoc21-good-nonce-policy-bes.bdoc
+     ***/
+    @Test @Ignore //TODO: needs clarification how to determine that we have a BES level file
+    public void bdocBaselineBesSignatureLevel() {
+        setTestFilesDirectory("bdoc/live/timemark/");
+        post(validationRequestFor("TM-05_bdoc21-good-nonce-policy-bes.bdoc"))
+                .then()
+                .body("signatures[0].errors.nameId", Matchers.hasItems(""))
+                .body("signatures[0].errors.content", Matchers.hasItems(""))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validSignaturesCount", Matchers.is(0));
     }
     @Override

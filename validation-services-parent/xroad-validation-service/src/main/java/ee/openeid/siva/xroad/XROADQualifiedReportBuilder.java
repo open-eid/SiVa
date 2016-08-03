@@ -1,33 +1,34 @@
 package ee.openeid.siva.xroad;
 
+import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
-import ee.ria.xroad.common.asic.AsicContainer;
 import ee.ria.xroad.common.asic.AsicContainerVerifier;
-import ee.ria.xroad.common.signature.Signature;
-import ee.ria.xroad.common.signature.SignatureData;
 import org.apache.commons.lang.StringUtils;
-import org.apache.xml.security.signature.Reference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.naming.InvalidNameException;
+import javax.naming.ldap.LdapName;
+import javax.security.auth.x500.X500Principal;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
+
 
 public class XROADQualifiedReportBuilder {
 
     private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-    private static final String FULL_SIGNATURE_SCOPE = "FullSignatureScope";
-    private static final String FULL_DOCUMENT = "Full document";
-    private static final String GENERIC = "GENERIC";
     private static final String XADES_FORMAT_PREFIX = "XAdES_BASELINE_";
-    private static final String DSS_BASIC_INFO_NAME_ID = "NameId";
     private static final String REPORT_INDICATION_INDETERMINATE = "INDETERMINATE";
     private static final String GREENWICH_MEAN_TIME = "Etc/GMT";
 
-    private AsicContainer container;
+    private static final Logger LOGGER = LoggerFactory.getLogger(XROADQualifiedReportBuilder.class);
+
     private AsicContainerVerifier verifier;
     private String documentName;
     private Date validationTime;
@@ -44,7 +45,7 @@ public class XROADQualifiedReportBuilder {
         qualifiedReport.setValidationTime(getDateFormatterWithGMTZone().format(validationTime));
         qualifiedReport.setDocumentName(documentName);
         qualifiedReport.setSignaturesCount(getTotalSignatureCount());
-        qualifiedReport.setSignatures(Arrays.asList(createSignaturesForReport(container)));
+        qualifiedReport.setSignatures(Collections.singletonList(createSignatureValidationData()));
         qualifiedReport.setValidSignaturesCount(
                 qualifiedReport.getSignatures()
                         .stream()
@@ -59,28 +60,68 @@ public class XROADQualifiedReportBuilder {
         return verifier.getSignature() != null ? 1 : 0;
     }
 
-    private SignatureValidationData createSignaturesForReport(AsicContainer container) throws Exception {
-        return createSignatureValidationData();
-    }
-
     private SignatureValidationData createSignatureValidationData() throws Exception {
         SignatureValidationData signatureValidationData = new SignatureValidationData();
-        SignatureData bDocSignature = verifier.getAsic().getSignature();
-
         signatureValidationData.setId(verifier.getSignature().getXmlSignature().getId());
-        signatureValidationData.setSignatureFormat(getSignatureFormat(null));
-        signatureValidationData.setSignatureLevel(getSignatureLevel(bDocSignature));
-        signatureValidationData.setSignedBy(removeQuotes(verifier.getSignerCert().getSubjectDN().getName()));
-//        signatureValidationData.setErrors(getErrors(bDocSignature));
-        signatureValidationData.setSignatureScopes(Arrays.asList(new SignatureScope()));
-//        signatureValidationData.setClaimedSigningTime(getDateFormatterWithGMTZone().format(verifier.getSignature().getSignatureTimestamp()));
-//        signatureValidationData.setWarnings(getWarnings(bDocSignature));
-        signatureValidationData.setInfo(getInfo(verifier.getSignature()));
+        signatureValidationData.setSignatureFormat(XADES_FORMAT_PREFIX + "LT");
+        signatureValidationData.setSignatureLevel(getSignatureLevel());
+        //TODO: SignatureForm is missing - need to add it for all document types, in case of batchSignature: ASIC_E_batchsignature?
+        //verifier.getAsic().getSignature().isBatchSignature();
+
+        signatureValidationData.setSignedBy(parseCNFromX500Principal(verifier.getSignerCert().getSubjectX500Principal()));
         signatureValidationData.setIndication(getIndication());
-        signatureValidationData.setSubIndication(getSubIndication(bDocSignature));
+        signatureValidationData.setSubIndication(getSubIndication());
+        signatureValidationData.setErrors(getErrors());
+        signatureValidationData.setSignatureScopes(getSignatureScopes());
+
+        signatureValidationData.setClaimedSigningTime(getClaimedSigningTime());
+
+        signatureValidationData.setWarnings(getWarnings());
+        signatureValidationData.setInfo(getInfo());
 
         return signatureValidationData;
+    }
 
+    private String getClaimedSigningTime() {
+        //TODO: figure out if we should get it from DOM?
+        return "";
+    }
+
+    private List<SignatureScope> getSignatureScopes() {
+        //TODO: What should the actual scope be for XROAD signature?
+        SignatureScope scope = new SignatureScope();
+        scope.setContent("");
+        scope.setName("");
+        scope.setScope("");
+        return Collections.singletonList(scope);
+    }
+
+    private List<Warning> getWarnings() {
+        return Collections.emptyList();
+    }
+
+    private List<Error> getErrors() {
+        return Collections.emptyList();
+    }
+
+    private String parseCNFromX500Principal(X500Principal x500Principal)  {
+        String distinguishedName = x500Principal.getName();
+        try {
+            return readCommonNameFromDistinguishedName(distinguishedName);
+        } catch (InvalidNameException e) {
+            LOGGER.warn("Unable to parse CN from certificate, using distinguished name", e);
+            return removeQuotes(distinguishedName);
+        }
+    }
+
+    private String readCommonNameFromDistinguishedName(String distinguishedName) throws InvalidNameException {
+        return new LdapName(distinguishedName)
+                .getRdns()
+                .stream()
+                .filter(rdn -> StringUtils.equals("CN", rdn.getType()))
+                .map(rdn -> rdn.getValue().toString())
+                .findFirst()
+                .orElse(removeQuotes(distinguishedName));
     }
 
     private SimpleDateFormat getDateFormatterWithGMTZone() {
@@ -93,63 +134,23 @@ public class XROADQualifiedReportBuilder {
         return subjectName.replaceAll("^\"|\"$", "");
     }
 
-    private String getSignatureLevel(SignatureData bDocSignature) {
-//        return getDssSimpleReport(bDocSignature).getSignatureLevel(bDocSignature.getId()).name();
-        return "random-level";
+    private String getSignatureLevel() {
+        return "random-level"; //TODO: Can't leave it to random level
     }
 
     private SignatureValidationData.Indication getIndication() {
         return SignatureValidationData.Indication.TOTAL_PASSED;
     }
 
-    private String getSubIndication(SignatureData bDocSignature) {
-        if (getIndication() == SignatureValidationData.Indication.TOTAL_PASSED) {
-            return "";
-        }
-//        return emptyWhenNull(getDssSimpleReport(bDocSignature).getSubIndication(bDocSignature.getId()));
+    private String getSubIndication() {
+        //TODO: can't get subindication from API is there another way to determine it?
         return "";
     }
 
-
-    private Info getInfo(Signature bDocSignature) {
+    private Info getInfo() {
         Info info = new Info();
-//        Date trustedTime = new Date(bDocSignature.getSignatureTimestamp());
-
-        Date trustedTime = new Date();
-        if (trustedTime != null) {
-            info.setBestSignatureTime(getDateFormatterWithGMTZone().format(trustedTime));
-        } else {
-            info.setBestSignatureTime("");
-        }
+        Date trustedTime = verifier.getTimestampDate();
+        info.setBestSignatureTime(emptyWhenNull(getDateFormatterWithGMTZone().format(trustedTime)));
         return info;
-    }
-
-//    private List<SignatureScope> getSignatureScopes(SignatureData bDocSignature, List<String> dataFileNames) {
-//        return bDocSignature.getOrigin().getReferences()
-//                .stream()
-//                .filter(r -> dataFileNames.contains(r.getURI())) //filters out Signed Properties
-//                .map(BDOCQualifiedReportBuilder::mapDssReference)
-//                .collect(Collectors.toList());
-//    }
-
-    private static SignatureScope mapDssReference(Reference reference) {
-        SignatureScope signatureScope = new SignatureScope();
-        signatureScope.setName(reference.getURI());
-        signatureScope.setScope(FULL_SIGNATURE_SCOPE);
-        signatureScope.setContent(FULL_DOCUMENT);
-        return signatureScope;
-    }
-
-    private static boolean isRepeatingMessage(List<String> dssMessages, String digidoc4jExceptionMessage) {
-        for (String dssMessage : dssMessages) {
-            if (digidoc4jExceptionMessage.contains(dssMessage)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private String getSignatureFormat(Signature profile) {
-        return XADES_FORMAT_PREFIX;
     }
 }

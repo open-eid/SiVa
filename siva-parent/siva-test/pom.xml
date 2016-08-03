@@ -96,6 +96,12 @@
                         <groupId>com.lazerycode.jmeter</groupId>
                         <artifactId>jmeter-maven-plugin</artifactId>
                         <version>1.10.1</version>
+                        <configuration>
+                            <jMeterProcessJVMSettings>
+                                <xms>2048</xms>
+                                <xmx>2048</xmx>
+                            </jMeterProcessJVMSettings>
+                        </configuration>
                         <executions>
                             <execution>
                                 <id>jmeter-tests</id>
@@ -104,9 +110,6 @@
                                     <goal>jmeter</goal>
                                 </goals>
                                 <configuration>
-                                    <jMeterProcessJVMSettings>
-                                        <xmx>2048</xmx>
-                                    </jMeterProcessJVMSettings>
                                     <testResultsTimestamp>false</testResultsTimestamp>
                                     <propertiesUser>
                                         <host.name>${jmeter.host.name}</host.name>

@@ -124,7 +124,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      * File: 23200_weakdigest-wrong-nonce.asice
      *
      ***/
-    @Test //@Ignore //TODO: replace the mockup bdoc/asice mixture with "normal"  asice call when asice support is implemented properly
+    @Test
     public void BdocCorrectValuesArePresentValidLtSignatureAdesqc() {
         setTestFilesDirectory("bdoc/test/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("23200_weakdigest-wrong-nonce.asice"));

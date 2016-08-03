@@ -10,17 +10,20 @@ POST https://<server url>/validate
 
 ### JSON Request
 
+
+
 +-------------------+--------+-----------+------------------------------------------------------------+
 | Parameter         | Type   | Mandatory | Description                                                |
 +===================+========+===========+============================================================+
-| `document`        | String | +         | Base64 encoded string of digitally signed file             |
+| `document`        | String | +         | Base64 encoded string of digitally signed document         |
 +-------------------+--------+-----------+------------------------------------------------------------+
-| `filename`        | String | +         | Filename of the digitally signed file (i.e `sample.bdoc`   |
+| `filename`        | String | +         | File name of the digitally signed document                 |
+|                   |        |           | (i.e `sample.bdoc`)                                        |
 +-------------------+--------+-----------+------------------------------------------------------------+
 | `documentType`    | String | +         | Validation service to use for validation                   |
 +-------------------+--------+-----------+------------------------------------------------------------+
-| `signaturePolicy` | String | -         | If You want to use alternative validation policy. Then You |
-|                   |        |           | `signaturePolicy` for that.                                |
+| `signaturePolicy` | String | -         | Can be used to change the default signature validation     |
+|                   |        |           | policy that is used by the service                         |
 +-------------------+--------+-----------+------------------------------------------------------------+
 
 #### Sample request
@@ -39,15 +42,16 @@ POST https://<server url>/validate
 +---------------------------------------+--------+------------------------------------------------------------+
 | Parameter                             | Type   |  Description                                               |
 +=======================================+========+============================================================+
-| `policy`                              | Object | Version of SiVa validation policy                          |
+| `policy`                              | Object | Object containing information of the SiVa signature        |
+|                                       |        | validation policy that was used for validation             |
 +---------------------------------------+--------+------------------------------------------------------------+
-| `policy.policyVersion`                | String | Version of SiVa validation policy                          |
+| `policy.policyVersion`                | String | Version of the validation policy                           |
 +---------------------------------------+--------+------------------------------------------------------------+
-| `policy.policyName`                   | String | Name of policy used for validation                         |
+| `policy.policyName`                   | String | Name of the validation policy                              |
 +---------------------------------------+--------+------------------------------------------------------------+
-| `policy.policyDescription`            | String | Short description of validation used                       |
+| `policy.policyDescription`            | String | Short description of the validation policy                 |
 +---------------------------------------+--------+------------------------------------------------------------+
-| `policy.policyUrl`                    | String | URL where the validation service's signature policy        |
+| `policy.policyUrl`                    | String | URL where the signature validation policy                  |
 |                                       |        | document can be downloaded.                                |
 |                                       |        |                                                            |
 |                                       |        | The validation policy document shall include information   |
@@ -57,31 +61,42 @@ POST https://<server url>/validate
 +---------------------------------------+--------+------------------------------------------------------------+
 | `signaturesCount`                     | Number | Number of signatures found inside digitally signed file    |
 +---------------------------------------+--------+------------------------------------------------------------+
-| `validSignaturesCount`                | Number | Signatures count that have validated to `TOTAL-PASSED`     |
+| `validSignaturesCount`                | Number | Signatures count that have validated to `TOTAL-PASSED`.    |
+|                                       |        | See also `validSignaturesCount` field.                     |
 +---------------------------------------+--------+------------------------------------------------------------+
-| `validationTime`                      | Date   | Time of validating the signature by the service.           |
+| `validationTime`                      | Date   | Time of validating the signature by the service            |
 +---------------------------------------+--------+------------------------------------------------------------+
-| `documentName`                        | String | Digitally signed document filename                         |
+| `documentName`                        | String | Digitally signed document's file name                      |
 +---------------------------------------+--------+------------------------------------------------------------+
-| `signatures`                          | Array  | Collection of signatures found digitally signed document   |
+| `signatureForm`                       | String | Format (and optionally version) of the container           |
+|                                       |        | containing the signature                                   |
++---------------------------------------+--------+------------------------------------------------------------+
+| `signatures`                          | Array  | Collection of signatures found in digitally signed document|
 +---------------------------------------+--------+------------------------------------------------------------+
 | `signatures[0]`                       | Object | Signature information object                               |
 +---------------------------------------+--------+------------------------------------------------------------+
-| `signatures[0].claimedSigningTime`    | Data   | Time signature was given                                   |
+| `signatures[0].claimedSigningTime`    | Data   | Claimed signing time, i.e. signer's computer time during   |
+|                                       |        | signature creation                                         |
 +---------------------------------------+--------+------------------------------------------------------------+
 | `signatures[0].errors`                | Array  | Information about validation error(s).                     |
 |                                       |        |                                                            |
-|                                       |        | Array of error message, as returned by the base library    |
-|                                       |        | used for signature validation.                             |
+|                                       |        | Array of error messages, as returned by the base library   |
+|                                       |        | that was used for signature validation.                    |
 +---------------------------------------+--------+------------------------------------------------------------+
-| `signatures[0].id`                    | String | Signature ID                                               |
+| `signatures[0].id`                    | String | Signature ID:                                              |
+|                                       |        |                                                            |
+|                                       |        | * In case of XAdES signatures, the value of <Signature>    |
+|                                       |        |   XML element's Id attribute                               |
+|                                       |        |                                                            |
+|                                       |        | * In case of PAdES signatures, the value of                |
+|                                       |        |                                                            |
 +---------------------------------------+--------+------------------------------------------------------------+
-| `signatures[0].indication`            | String | Overall result of the respective signature's validation    |
+| `signatures[0].indication`            | String | Overall result of the signature's validation               |
 |                                       |        | process, according to EN 319 102-1 "Table 5: Status        |
 |                                       |        | indications of the signature validation process"           |
 |                                       |        |                                                            |
 |                                       |        | The validation results of different signatures in one      |
-|                                       |        | signature container may vary.                              |
+|                                       |        | signed document (signature container) may vary.            |
 |                                       |        | See also `validSignaturesCount` and `SignaturesCount`      |
 |                                       |        | fields.                                                    |
 +---------------------------------------+--------+------------------------------------------------------------+
@@ -99,8 +114,8 @@ POST https://<server url>/validate
 |                                       |        |   value of the earliest valid signature time-stamp         |
 |                                       |        |   token in the signature.                                  |
 +---------------------------------------+--------+------------------------------------------------------------+
-| `signatures[0].signatureFormat`       | String | Format (and optionally version) of the container           |
-|                                       |        | containing the signature(s).                               |                                                          |
+| `signatures[0].signatureFormat`       | String | Format and profile (according to Baseline Profile standard)|
+|                                       |        | of the signature                                           |
 +---------------------------------------+--------+------------------------------------------------------------+
 | `signatures[0].signatureLevel`        | String | In case of BDOC and PAdES formats: indication whether      |
 |                                       |        | the signature is Advanced electronic Signature (AdES),     |
@@ -114,11 +129,12 @@ POST https://<server url>/validate
 | `signatures[0].signatureScopes`       | Array  | Contains information of the original data that is          |
 |                                       |        | covered by the signature.                                  |
 +---------------------------------------+--------+------------------------------------------------------------+
-| `signatures[0].signedBy`              | String | Signers name and identification number                     |
+| `signatures[0].signedBy`              | String | Signers name and identification number, i.e. value of      |
+|                                       |        | the CN field of the signer's certificate                   |
 +---------------------------------------+--------+------------------------------------------------------------+
 | `signatures[0].subIndication`         | String | Additional subindication in case of failed or              |
 |                                       |        | indeterminate validation result, according to EN 319 102-1 |
-|                                       |        | "Table 6: Validation Report Structure and Semantics"       |                                                    |
+|                                       |        | "Table 6: Validation Report Structure and Semantics"       |
 +---------------------------------------+--------+------------------------------------------------------------+
 | `signatures[0].warnings`              | Array  | Block of validation warnings that do not affect            |
 |                                       |        | the overall validation result.                             |
@@ -133,7 +149,7 @@ POST https://<server url>/validate
 |                                       |        |   attribute is missing.                                    |
 |                                       |        | * DIGIDOC-XML 1.0-1.3: `<IssuerSerial><X509IssuerName>`    |
 |                                       |        |   and/or `<IssuerSerial><X509IssuerSerial>` element’s      |
-|                                       |        |   `xmlns` attribute is missing.                            |                              |
+|                                       |        |   `xmlns` attribute is missing.                            |
 +---------------------------------------+--------+------------------------------------------------------------+
 
 #### Sample response
@@ -177,14 +193,15 @@ POST https://<server url>/validate
 +-------------------+--------+-----------+------------------------------------------------------------+
 | Parameter         | Type   | Mandatory | Description                                                |
 +===================+========+===========+============================================================+
-| `Document`        | String | +         | Base64 encoded string of digitally signed file             |
+| `Document`        | String | +         | Base64 encoded string of digitally signed document         |
 +-------------------+--------+-----------+------------------------------------------------------------+
-| `Filename`        | String | +         | Filename of the digitally signed file (i.e `sample.bdoc`   |
+| `Filename`        | String | +         | Filename of the digitally signed document                  |
+|                   |        |           | (i.e `sample.bdoc`)                                        |
 +-------------------+--------+-----------+------------------------------------------------------------+
 | `DocumentType`    | String | +         | Validation service to use for validation                   |
 +-------------------+--------+-----------+------------------------------------------------------------+
-| `SignaturePolicy` | String | -         | If You want to use alternative validation policy. Then You |
-|                   |        |           | `signaturePolicy` for that.                                |
+| `SignaturePolicy` | String | -         | Can be used to change the default signature validation     |
+|                   |        |           | policy that is used by the service                         |
 +-------------------+--------+-----------+------------------------------------------------------------+
 
 

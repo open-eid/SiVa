@@ -42,14 +42,14 @@ public class XROADValidationService implements ValidationService {
             return new XROADQualifiedReportBuilder(verifier, wsDocument.getName(), new Date())
                     .build();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.warn("There was an error validating the document", e);
         }
 
         return null;
     }
 
     @PostConstruct
-    private void loadXroadConfigurationDirectory() {
+    void loadXroadConfigurationDirectory() {
         String configurationDirectoryPath = properties.getConfigurationDirectoryPath();
         System.setProperty(SystemProperties.CONFIGURATION_PATH, configurationDirectoryPath);
 

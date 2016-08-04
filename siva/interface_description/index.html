@@ -232,8 +232,6 @@
     </a>
     
       
-        
-      
       
         <ul>
           
@@ -373,8 +371,16 @@
       <article class="article">
         <div class="wrapper">
           
-          <h1 id="interface-description">Interface description</h1>
+            <h1>Interfaces</h1>
+          
+          <!--# Interface description-->
+
 <h2 id="rest-json-validation-service">REST JSON validation service</h2>
+<h3 id="rest-json-endpoint">REST JSON Endpoint</h3>
+<div class="codehilite"><pre><span></span>POST https://&lt;server url&gt;/validate
+</pre></div>
+
+
 <h3 id="json-request">JSON Request</h3>
 <table>
 <thead>
@@ -405,21 +411,25 @@
 <p>+</p>
 </td>
 <td colspan="1" rowspan="1">
-<p>Base64 encoded string of digitally signed file</p>
+<p>Base64 encoded string of digitally signed document</p>
 </td>
 </tr>
 <tr>
 <td colspan="1" rowspan="1">
-<p><code>filename</code></p>
+<p><code>filename</code>
+</p>
 </td>
 <td colspan="1" rowspan="1">
-<p>String</p>
+<p>String
+</p>
 </td>
 <td colspan="1" rowspan="1">
-<p>+</p>
+<p>+
+</p>
 </td>
 <td colspan="1" rowspan="1">
-<p>Filename of the digitally signed file (i.e <code>sample.bdoc</code></p>
+<p>File name of the digitally signed document
+(i.e <code>sample.bdoc</code>)</p>
 </td>
 </tr>
 <tr>
@@ -450,8 +460,8 @@
 </p>
 </td>
 <td colspan="1" rowspan="1">
-<p>If You want to use alternative validation policy. Then You
-<code>signaturePolicy</code> for that.</p>
+<p>Can be used to change the default signature validation
+policy that is used by the service</p>
 </td>
 </tr>
 </tbody>
@@ -484,13 +494,16 @@
 <tbody>
 <tr>
 <td colspan="1" rowspan="1">
-<p><code>policy</code></p>
+<p><code>policy</code>
+</p>
 </td>
 <td colspan="1" rowspan="1">
-<p>Object</p>
+<p>Object
+</p>
 </td>
 <td colspan="1" rowspan="1">
-<p>Version of SiVa validation policy</p>
+<p>Object containing information of the SiVa signature
+validation policy that was used for validation</p>
 </td>
 </tr>
 <tr>
@@ -501,7 +514,7 @@
 <p>String</p>
 </td>
 <td colspan="1" rowspan="1">
-<p>Version of SiVa validation policy</p>
+<p>Version of the validation policy</p>
 </td>
 </tr>
 <tr>
@@ -512,7 +525,7 @@
 <p>String</p>
 </td>
 <td colspan="1" rowspan="1">
-<p>Name of policy used for validation</p>
+<p>Name of the validation policy</p>
 </td>
 </tr>
 <tr>
@@ -523,7 +536,7 @@
 <p>String</p>
 </td>
 <td colspan="1" rowspan="1">
-<p>Short description of validation used</p>
+<p>Short description of the validation policy</p>
 </td>
 </tr>
 <tr>
@@ -534,7 +547,7 @@
 <p>String</p>
 </td>
 <td colspan="1" rowspan="1">
-<p>URL where the validation service's signature policy
+<p>URL where the signature validation policy
 document can be downloaded.</p>
 <p>The validation policy document shall include information
 about validation of all the document formats, including
@@ -555,13 +568,16 @@ case of different file formats and base libraries.</p>
 </tr>
 <tr>
 <td colspan="1" rowspan="1">
-<p><code>validSignaturesCount</code></p>
+<p><code>validSignaturesCount</code>
+</p>
 </td>
 <td colspan="1" rowspan="1">
-<p>Number</p>
+<p>Number
+</p>
 </td>
 <td colspan="1" rowspan="1">
-<p>Signatures count that have validated to <code>TOTAL-PASSED</code></p>
+<p>Signatures count that have validated to <code>TOTAL-PASSED</code>.
+See also <code>validSignaturesCount</code> field.</p>
 </td>
 </tr>
 <tr>
@@ -572,7 +588,7 @@ case of different file formats and base libraries.</p>
 <p>Date</p>
 </td>
 <td colspan="1" rowspan="1">
-<p>Time of validating the signature by the service.</p>
+<p>Time of validating the signature by the service</p>
 </td>
 </tr>
 <tr>
@@ -583,7 +599,21 @@ case of different file formats and base libraries.</p>
 <p>String</p>
 </td>
 <td colspan="1" rowspan="1">
-<p>Digitally signed document filename</p>
+<p>Digitally signed document's file name</p>
+</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">
+<p><code>signatureForm</code>
+</p>
+</td>
+<td colspan="1" rowspan="1">
+<p>String
+</p>
+</td>
+<td colspan="1" rowspan="1">
+<p>Format (and optionally version) of the container
+containing the signature</p>
 </td>
 </tr>
 <tr>
@@ -594,7 +624,7 @@ case of different file formats and base libraries.</p>
 <p>Array</p>
 </td>
 <td colspan="1" rowspan="1">
-<p>Collection of signatures found digitally signed document</p>
+<p>Collection of signatures found in digitally signed document</p>
 </td>
 </tr>
 <tr>
@@ -610,13 +640,16 @@ case of different file formats and base libraries.</p>
 </tr>
 <tr>
 <td colspan="1" rowspan="1">
-<p><code>signatures[0].claimedSigningTime</code></p>
+<p><code>signatures[0].claimedSigningTime</code>
+</p>
 </td>
 <td colspan="1" rowspan="1">
-<p>Data</p>
+<p>Data
+</p>
 </td>
 <td colspan="1" rowspan="1">
-<p>Time signature was given</p>
+<p>Claimed signing time, i.e. signer's computer time during
+signature creation</p>
 </td>
 </tr>
 <tr>
@@ -628,8 +661,8 @@ case of different file formats and base libraries.</p>
 </td>
 <td colspan="1" rowspan="1">
 <p>Information about validation error(s).</p>
-<p>Array of error message, as returned by the base library
-used for signature validation.</p>
+<p>Array of error messages, as returned by the base library
+that was used for signature validation.</p>
 </td>
 </tr>
 <tr>
@@ -640,7 +673,17 @@ used for signature validation.</p>
 <p>String</p>
 </td>
 <td colspan="1" rowspan="1">
-<p>Signature ID</p>
+<p>Signature ID:</p>
+<ul>
+<li>
+<p>In case of XAdES signatures, the value of <Signature>
+  XML element's Id attribute</p>
+</li>
+<li>
+<p>In case of PAdES signatures, the value of
+</p>
+</li>
+</ul>
 </td>
 </tr>
 <tr>
@@ -651,11 +694,11 @@ used for signature validation.</p>
 <p>String</p>
 </td>
 <td colspan="1" rowspan="1">
-<p>Overall result of the respective signature's validation
+<p>Overall result of the signature's validation
 process, according to EN 319 102-1 "Table 5: Status
 indications of the signature validation process"</p>
 <p>The validation results of different signatures in one
-signature container may vary.
+signed document (signature container) may vary.
 See also <code>validSignaturesCount</code> and <code>SignaturesCount</code>
 fields.</p>
 </td>
@@ -701,8 +744,8 @@ present in the signature) that a signature has existed:</p>
 </p>
 </td>
 <td colspan="1" rowspan="1">
-<p>Format (and optionally version) of the container
-containing the signature(s).</p>
+<p>Format and profile (according to Baseline Profile standard)
+of the signature</p>
 </td>
 </tr>
 <tr>
@@ -738,13 +781,16 @@ covered by the signature.</p>
 </tr>
 <tr>
 <td colspan="1" rowspan="1">
-<p><code>signatures[0].signedBy</code></p>
+<p><code>signatures[0].signedBy</code>
+</p>
 </td>
 <td colspan="1" rowspan="1">
-<p>String</p>
+<p>String
+</p>
 </td>
 <td colspan="1" rowspan="1">
-<p>Signers name and identification number</p>
+<p>Signers name and identification number, i.e. value of
+the CN field of the signer's certificate</p>
 </td>
 </tr>
 <tr>
@@ -850,21 +896,25 @@ http://id.ee/public/SK-JDD-PRG-GUIDE.pdf, chap. 5.2.4.1):</p>
 <p>+</p>
 </td>
 <td colspan="1" rowspan="1">
-<p>Base64 encoded string of digitally signed file</p>
+<p>Base64 encoded string of digitally signed document</p>
 </td>
 </tr>
 <tr>
 <td colspan="1" rowspan="1">
-<p><code>Filename</code></p>
+<p><code>Filename</code>
+</p>
 </td>
 <td colspan="1" rowspan="1">
-<p>String</p>
+<p>String
+</p>
 </td>
 <td colspan="1" rowspan="1">
-<p>+</p>
+<p>+
+</p>
 </td>
 <td colspan="1" rowspan="1">
-<p>Filename of the digitally signed file (i.e <code>sample.bdoc</code></p>
+<p>Filename of the digitally signed document
+(i.e <code>sample.bdoc</code>)</p>
 </td>
 </tr>
 <tr>
@@ -895,8 +945,8 @@ http://id.ee/public/SK-JDD-PRG-GUIDE.pdf, chap. 5.2.4.1):</p>
 </p>
 </td>
 <td colspan="1" rowspan="1">
-<p>If You want to use alternative validation policy. Then You
-<code>signaturePolicy</code> for that.</p>
+<p>Can be used to change the default signature validation
+policy that is used by the service</p>
 </td>
 </tr>
 </tbody>

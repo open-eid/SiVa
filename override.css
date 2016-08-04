@@ -1,3 +1,7 @@
+.wrapper h4 {
+    padding-top: 35px;
+}
+
 .wrapper ul li {
     margin-top: 0;
 }
@@ -37,7 +41,12 @@
 }
 
 table {
-    width: 93%;
+    width: 94%;
+}
+
+.article .data {
+    padding: 0 0 1em 0;
+    margin: 1.5em 0;
 }
 
 .article table th,

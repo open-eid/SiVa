@@ -406,6 +406,12 @@
             </li>
           
             <li class="anchor">
+              <a title="SignaturePolicyTests.java" href="#signaturepolicytestsjava">
+                SignaturePolicyTests.java
+              </a>
+            </li>
+          
+            <li class="anchor">
               <a title="SignatureRevocationValueTests.java" href="#signaturerevocationvaluetestsjava">
                 SignatureRevocationValueTests.java
               </a>
@@ -491,6 +497,156 @@
 <li>Expected Result: document malformed error should be returned</li>
 <li>File: 23147_weak-warning-sha1-invalid-mimetype-in-manifest.bdoc</li>
 </ul>
+<p><strong>TestCaseID: Bdoc-ValidationFail-6</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Asice with wrong slash character ('\') in data file mime-type value</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: EE_SER-AEX-B-LT-V-33.asice</li>
+</ul>
+<p><strong>TestCaseID: Bdoc-ValidationFail-7</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Asice time-stamp does not correspond to the SignatureValue element</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: TS-02_23634_TS_wrong_SignatureValue.asice</li>
+</ul>
+<p><strong>TestCaseID: Bdoc-ValidationFail-8</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Asice No non-repudiation key usage value in the certificate</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: EE_SER-AEX-B-LT-I-43.asice</li>
+</ul>
+<p><strong>TestCaseID: Bdoc-ValidationFail-9</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Asice signers certificate does not have non-repudiation value in the certificates key usage field and it does not contain the QC and SSCD compliance information.</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: EE_SER-AEX-B-LT-I-26.asice</li>
+</ul>
+<p><strong>TestCaseID: Bdoc-ValidationFail-10</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Asice OCSP certificate is not trusted</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: EE_SER-AEX-B-LT-I-27.asice</li>
+</ul>
+<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
+<p><strong>TestCaseID: Bdoc-ValidationFail-11</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Asice TSA certificate is not trusted</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: TS-05_23634_TS_unknown_TSA.asice</li>
+</ul>
+<p><strong>TestCaseID: Bdoc-ValidationFail-12</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Asice OCSP response status is revoked</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: EE_SER-AEX-B-LT-R-25.asice</li>
+</ul>
+<p><strong>TestCaseID: Bdoc-ValidationFail-13</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Asice difference between OCSP and time-stamp issuing times is more than 24 hours</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: EE_SER-AEX-B-LT-V-20.asice</li>
+</ul>
+<p><strong>TestCaseID: Bdoc-ValidationFail-14</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Asice unsigned data files in the container</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: EE_SER-AEX-B-LT-V-34.asice</li>
+</ul>
+<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
+<p><strong>TestCaseID: Bdoc-ValidationFail-15</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Bdoc different data file mime-type values in signatures.xml and manifest.xml files</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: 23613_TM_wrong-manifest-mimetype.bdoc</li>
+</ul>
+<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
+<p><strong>TestCaseID: Bdoc-ValidationFail-16</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Bdoc SignatureValue does not correspond to the SignedInfo block</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: REF-19_bdoc21-no-sig-asn1-pref.bdoc</li>
+</ul>
+<p><strong>TestCaseID: Bdoc-ValidationFail-17</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Bdoc Baseline-BES file</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: TM-05_bdoc21-good-nonce-policy-bes.bdoc</li>
+</ul>
+<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
+<p><strong>TestCaseID: Bdoc-ValidationFail-18</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Bdoc Baseline-EPES file</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: TM-04_kehtivuskinnituset.4.asice</li>
+</ul>
+<p><strong>TestCaseID: Bdoc-ValidationFail-19</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Bdoc signers certificate is not trusted</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: SS-4_teadmataCA.4.asice</li>
+</ul>
+<p><strong>TestCaseID: Bdoc-ValidationFail-20</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Bdoc OCSP response status is revoked</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: TM-15_revoked.4.asice</li>
+</ul>
+<p><strong>TestCaseID: Bdoc-ValidationFail-21</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Bdoc OCSP response status is unknown</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: TM-16_unknown.4.asice</li>
+</ul>
+<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
+<p><strong>TestCaseID: Bdoc-ValidationFail-22</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Bdoc signed data file has been removed from the container</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: TM-16_unknown.4.asice</li>
+</ul>
+<p><strong>TestCaseID: Bdoc-ValidationFail-23</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Bdoc no files in container</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: KS-02_tyhi.bdoc</li>
+</ul>
+<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <h2 id="bdocvalidationpassjava">BdocValidationPass.java</h2>
 <p><strong>TestCaseID: Bdoc-ValidationPass-1</strong></p>
 <ul>
@@ -517,6 +673,23 @@
 <li>File:</li>
 </ul>
 <p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
+<p><strong>TestCaseID: Bdoc-ValidationPass-4</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Asice One LT signature with certificates from different countries</li>
+<li>Expected Result: The document should pass the validation</li>
+<li>File: EE_SER-AEX-B-LT-V-30.asice</li>
+</ul>
+<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
+<p><strong>TestCaseID: Bdoc-ValidationPass-5</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Bdoc signed with Mobile-ID, ECC-SHA256 signature with prime256v1 key</li>
+<li>Expected Result: The document should pass the validation</li>
+<li>File: 24050_short_ecdsa_correct_file_mimetype.bdoc</li>
+</ul>
 <h2 id="ddocvalidationfailjava">DdocValidationFail.java</h2>
 <p><strong>TestCaseID: Ddoc-ValidationFail-1</strong></p>
 <ul>
@@ -549,6 +722,70 @@
 <li>Title: Ddoc with no signatures</li>
 <li>Expected Result: The document should fail the validation</li>
 <li>File: DdocContainerNoSignature.bdoc</li>
+</ul>
+<p><strong>TestCaseID: Ddoc-ValidationFail-5</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Ddoc signature value has been changed (SignatureValue does not correspond to the SignedInfo block)</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: test-inv-sig-inf.ddoc</li>
+</ul>
+<p><strong>TestCaseID: Ddoc-ValidationFail-6</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Ddoc Data file(s) don't match the hash values in Reference elements</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: AndmefailiAtribuudidMuudetud.ddoc</li>
+</ul>
+<p><strong>TestCaseID: Ddoc-ValidationFail-7</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Ddoc Baseline-BES file, no OCSP response</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: ilma_kehtivuskinnituseta.ddoc</li>
+</ul>
+<p><strong>TestCaseID: Ddoc-ValidationFail-8</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Ddoc no non-repudiation key usage value in the certificate</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: test-non-repu1.ddoc</li>
+</ul>
+<p><strong>TestCaseID: Ddoc-ValidationFail-8</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Ddoc Signer's certificate is not trusted</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: Belgia_kandeavaldus_LIV.ddoc</li>
+</ul>
+<p><strong>TestCaseID: Ddoc-ValidationFail-9</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Ddoc OCSP certificate is not trusted</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: Tundmatu_OCSP_responder.ddoc</li>
+</ul>
+<p><strong>TestCaseID: Ddoc-ValidationFail-10</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Ddoc has unsigned data files in the container</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: lisatud_andmefail.ddoc</li>
+</ul>
+<p><strong>TestCaseID: Ddoc-ValidationFail-11</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Ddoc signed data file has been removed from the container</li>
+<li>Expected Result: The document should fail the validation</li>
+<li>File: faileemald1.ddoc</li>
 </ul>
 <h2 id="ddocvalidationpassjava">DdocValidationPass.java</h2>
 <p><strong>TestCaseID: Ddoc-ValidationPass-1</strong></p>
@@ -966,6 +1203,71 @@
 <li>Expected Result: Document should pass.</li>
 <li>File: PdfValidSingleSignature.pdf</li>
 </ul>
+<h2 id="signaturepolicytestsjava">SignaturePolicyTests.java</h2>
+<p><strong>TestCaseID: PDF-SigPol-1</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation more than 24 hours later than the signatures Time Stamp.</li>
+<li>Expected Result: validation should fail with error when signature policy is set to a non-existing one</li>
+<li>File: hellopades-lt-sha256-ocsp-28h.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-SigPol-2</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation more than 24 hours later than the signatures Time Stamp.</li>
+<li>Expected Result: Document with over 24h delay should fail when signature policy is set to "EE"</li>
+<li>File: hellopades-lt-sha256-ocsp-28h.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-SigPol-3</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation more than 24 hours later than the signatures Time Stamp.</li>
+<li>Expected Result: Document with over 24h delay should pass when signature policy is set to "EU"</li>
+<li>File: hellopades-lt-sha256-ocsp-28h.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-SigPol-4</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation more than 24 hours later than the signatures Time Stamp.</li>
+<li>Expected Result: Document with over 24h delay should fail when signature policy is not set or empty, because it defaults to "EE"</li>
+<li>File: hellopades-lt-sha256-ocsp-28h.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-SigPol-5</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: The PDF has PAdES-LT and B profile signature</li>
+<li>Expected Result: 1 of 2 signatures' should pass when signature policy is set to "EE"</li>
+<li>File: hellopades-lt-b.pdf</li>
+</ul>
+<p><strong>TestCaseID: PDF-SigPol-6</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: The PDF has PAdES-LT and B profile signature</li>
+<li>Expected Result: 2 of 2 signatures' validation should pass when signature policy is set to "EU"</li>
+<li>File: hellopades-lt-b.pdf</li>
+</ul>
+<p><strong>TestCaseID: BDOC-SigPol-1</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Valid_ID_sig.bdoc</li>
+<li>Expected Result: validation should fail with error when signature policy is set to a non-existing one</li>
+<li>File: Valid_ID_sig.bdoc</li>
+</ul>
+<p><strong>TestCaseID: BDOC-SigPol-2</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Valid_ID_sig.bdoc</li>
+<li>Expected Result: Document should pass when signature policy is set to "EE"</li>
+<li>File: Valid_ID_sig.bdoc</li>
+</ul>
 <h2 id="signaturerevocationvaluetestsjava">SignatureRevocationValueTests.java</h2>
 <p><strong>TestCaseID: PDF-SigRevocVal-1</strong></p>
 <ul>
@@ -1207,7 +1509,6 @@
 <li>Expected Result: All required elements are present and meet the expected values.</li>
 <li>File: 23200_weakdigest-wrong-nonce.asice</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <p><strong>TestCaseID: Bdoc-ValidationReportValue-5</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -1216,6 +1517,7 @@
 <li>Expected Result: All required elements are present and meet the expected values.</li>
 <li>File: EE_SER-AEX-B-LTA-V-24.pdf</li>
 </ul>
+<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <p><strong>TestCaseID: Ddoc-ValidationReportValue-6</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -1278,7 +1580,6 @@
 <ul>
 <li>TestType: Automated</li>
 <li>RequirementID: <a href="http://open-eid.github.io/SiVa/siva/interface_description/">http://open-eid.github.io/SiVa/siva/interface_description/</a></li>
-<li>Title: Input a request with empty values</li>
 <li>Expected Result: Errors are returned stating the missing values</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
 </ul>
@@ -1294,27 +1595,11 @@
 <ul>
 <li>TestType: Automated</li>
 <li>RequirementID: <a href="http://open-eid.github.io/SiVa/siva/interface_description/">http://open-eid.github.io/SiVa/siva/interface_description/</a></li>
-<li>Title: Verification of wrong report type as input</li>
-<li>Expected Result: Error is returned stating wrong report type</li>
-<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
-</ul>
-<p><strong>TestCaseID: ValidationRequest-7</strong></p>
-<ul>
-<li>TestType: Automated</li>
-<li>RequirementID: <a href="http://open-eid.github.io/SiVa/siva/interface_description/">http://open-eid.github.io/SiVa/siva/interface_description/</a></li>
-<li>Title: Verification of valid (but not simple) report type as input</li>
-<li>Expected Result: Correct report is returned (currently simple report is returned in all cases)</li>
-<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
-</ul>
-<p><strong>TestCaseID: ValidationRequest-8</strong></p>
-<ul>
-<li>TestType: Automated</li>
-<li>RequirementID: <a href="http://open-eid.github.io/SiVa/siva/interface_description/">http://open-eid.github.io/SiVa/siva/interface_description/</a></li>
 <li>Title: Verification of wrong document type as input</li>
 <li>Expected Result: Correct error code is returned</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
 </ul>
-<p><strong>TestCaseID: ValidationRequest-9</strong></p>
+<p><strong>TestCaseID: ValidationRequest-7</strong></p>
 <ul>
 <li>TestType: Automated</li>
 <li>RequirementID: <a href="http://open-eid.github.io/SiVa/siva/interface_description/">http://open-eid.github.io/SiVa/siva/interface_description/</a></li>
@@ -1322,7 +1607,7 @@
 <li>Expected Result: Error is returned</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
 </ul>
-<p><strong>TestCaseID: ValidationRequest-10</strong></p>
+<p><strong>TestCaseID: ValidationRequest-8</strong></p>
 <ul>
 <li>TestType: Automated</li>
 <li>RequirementID: <a href="http://open-eid.github.io/SiVa/siva/interface_description/">http://open-eid.github.io/SiVa/siva/interface_description/</a></li>
@@ -1331,7 +1616,7 @@
 <li>File: TS-11_23634_TS_2_timestamps.asice</li>
 </ul>
 <p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
-<p><strong>TestCaseID: ValidationRequest-11</strong></p>
+<p><strong>TestCaseID: ValidationRequest-9</strong></p>
 <ul>
 <li>TestType: Automated</li>
 <li>RequirementID: <a href="http://open-eid.github.io/SiVa/siva/interface_description/">http://open-eid.github.io/SiVa/siva/interface_description/</a></li>
@@ -1339,7 +1624,7 @@
 <li>Expected Result: Report is returned</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
 </ul>
-<p><strong>TestCaseID: ValidationRequest-12</strong></p>
+<p><strong>TestCaseID: ValidationRequest-10</strong></p>
 <ul>
 <li>TestType: Automated</li>
 <li>RequirementID: <a href="http://open-eid.github.io/SiVa/siva/interface_description/">http://open-eid.github.io/SiVa/siva/interface_description/</a></li>
@@ -1347,7 +1632,7 @@
 <li>Expected Result: The same filename is returned as sent in the request</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
 </ul>
-<p><strong>TestCaseID: ValidationRequest-13</strong></p>
+<p><strong>TestCaseID: ValidationRequest-11</strong></p>
 <ul>
 <li>TestType: Automated</li>
 <li>RequirementID: <a href="http://open-eid.github.io/SiVa/siva/interface_description/">http://open-eid.github.io/SiVa/siva/interface_description/</a></li>
@@ -1355,7 +1640,7 @@
 <li>Expected Result: Correct error code is returned</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
 </ul>
-<p><strong>TestCaseID: ValidationRequest-14</strong></p>
+<p><strong>TestCaseID: ValidationRequest-12</strong></p>
 <ul>
 <li>TestType: Automated</li>
 <li>RequirementID: <a href="http://open-eid.github.io/SiVa/siva/interface_description/">http://open-eid.github.io/SiVa/siva/interface_description/</a></li>
@@ -1363,15 +1648,7 @@
 <li>Expected Result: Error is returned</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
 </ul>
-<p><strong>TestCaseID: ValidationRequest-15</strong></p>
-<ul>
-<li>TestType: Automated</li>
-<li>RequirementID: <a href="http://open-eid.github.io/SiVa/siva/interface_description/">http://open-eid.github.io/SiVa/siva/interface_description/</a></li>
-<li>Title: Request has wrong key on report type position</li>
-<li>Expected Result: Error is returned</li>
-<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
-</ul>
-<p><strong>TestCaseID: ValidationRequest-16</strong></p>
+<p><strong>TestCaseID: ValidationRequest-13</strong></p>
 <ul>
 <li>TestType: Automated</li>
 <li>RequirementID: <a href="http://open-eid.github.io/SiVa/siva/interface_description/">http://open-eid.github.io/SiVa/siva/interface_description/</a></li>
@@ -1379,7 +1656,7 @@
 <li>Expected Result: Error is given</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
 </ul>
-<p><strong>TestCaseID: ValidationRequest-17</strong></p>
+<p><strong>TestCaseID: ValidationRequest-14</strong></p>
 <ul>
 <li>TestType: Automated</li>
 <li>RequirementID: <a href="http://open-eid.github.io/SiVa/siva/interface_description/">http://open-eid.github.io/SiVa/siva/interface_description/</a></li>
@@ -1387,7 +1664,7 @@
 <li>Expected Result: Report is returned with the same filename</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
 </ul>
-<p><strong>TestCaseID: ValidationRequest-18</strong></p>
+<p><strong>TestCaseID: ValidationRequest-15</strong></p>
 <ul>
 <li>TestType: Automated</li>
 <li>RequirementID: <a href="http://open-eid.github.io/SiVa/siva/interface_description/">http://open-eid.github.io/SiVa/siva/interface_description/</a></li>
@@ -1395,7 +1672,7 @@
 <li>Expected Result: Error is given</li>
 <li>File: None</li>
 </ul>
-<p><strong>TestCaseID: ValidationRequest-19</strong></p>
+<p><strong>TestCaseID: ValidationRequest-16</strong></p>
 <ul>
 <li>TestType: Automated</li>
 <li>RequirementID: <a href="http://open-eid.github.io/SiVa/siva/interface_description/">http://open-eid.github.io/SiVa/siva/interface_description/</a></li>
@@ -1403,7 +1680,7 @@
 <li>Expected Result: Error is given or extra parameters are ignored?</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
 </ul>
-<p><strong>TestCaseID: ValidationRequest-20</strong></p>
+<p><strong>TestCaseID: ValidationRequest-17</strong></p>
 <ul>
 <li>TestType: Automated</li>
 <li>RequirementID: <a href="http://open-eid.github.io/SiVa/siva/interface_description/">http://open-eid.github.io/SiVa/siva/interface_description/</a></li>
@@ -1411,7 +1688,7 @@
 <li>Expected Result: Validation report is returned</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
 </ul>
-<p><strong>TestCaseID: ValidationRequest-21</strong></p>
+<p><strong>TestCaseID: ValidationRequest-18</strong></p>
 <ul>
 <li>TestType: Automated</li>
 <li>RequirementID: <a href="http://open-eid.github.io/SiVa/siva/interface_description/">http://open-eid.github.io/SiVa/siva/interface_description/</a></li>
@@ -1419,7 +1696,7 @@
 <li>Expected Result: Error is returned</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
 </ul>
-<p><strong>TestCaseID: ValidationRequest-22</strong></p>
+<p><strong>TestCaseID: ValidationRequest-19</strong></p>
 <ul>
 <li>TestType: Automated</li>
 <li>RequirementID: <a href="http://open-eid.github.io/SiVa/siva/interface_description/">http://open-eid.github.io/SiVa/siva/interface_description/</a></li>
@@ -1427,7 +1704,7 @@
 <li>Expected Result: Error is returned</li>
 <li>File: PdfValidSingleSignature.pdf</li>
 </ul>
-<p><strong>TestCaseID: ValidationRequest-23</strong></p>
+<p><strong>TestCaseID: ValidationRequest-19</strong></p>
 <ul>
 <li>TestType: Automated</li>
 <li>RequirementID: <a href="http://open-eid.github.io/SiVa/siva/interface_description/">http://open-eid.github.io/SiVa/siva/interface_description/</a></li>
@@ -1435,7 +1712,7 @@
 <li>Expected Result: Error is returned</li>
 <li>File: PdfValidSingleSignature.pdf</li>
 </ul>
-<p><strong>TestCaseID: ValidationRequest-24</strong></p>
+<p><strong>TestCaseID: ValidationRequest-20</strong></p>
 <ul>
 <li>TestType: Automated</li>
 <li>RequirementID: <a href="http://open-eid.github.io/SiVa/siva/interface_description/">http://open-eid.github.io/SiVa/siva/interface_description/</a></li>
@@ -1443,7 +1720,7 @@
 <li>Expected Result: Error is returned</li>
 <li>File: igasugust1.3.ddoc</li>
 </ul>
-<p><strong>TestCaseID: ValidationRequest-25</strong></p>
+<p><strong>TestCaseID: ValidationRequest-21</strong></p>
 <ul>
 <li>TestType: Automated</li>
 <li>RequirementID: <a href="http://open-eid.github.io/SiVa/siva/interface_description/">http://open-eid.github.io/SiVa/siva/interface_description/</a></li>
@@ -1451,7 +1728,7 @@
 <li>Expected Result: Error is returned</li>
 <li>File: igasugust1.3.ddoc</li>
 </ul>
-<p><strong>TestCaseID: ValidationRequest-26</strong></p>
+<p><strong>TestCaseID: ValidationRequest-22</strong></p>
 <ul>
 <li>TestType: Automated</li>
 <li>RequirementID: <a href="http://open-eid.github.io/SiVa/siva/interface_description/">http://open-eid.github.io/SiVa/siva/interface_description/</a></li>

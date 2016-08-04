@@ -259,8 +259,6 @@
     </a>
     
       
-        
-      
       
         <ul>
           
@@ -379,7 +377,10 @@
       <article class="article">
         <div class="wrapper">
           
-          <h1 id="logging">Logging</h1>
+            <h1>Logging</h1>
+          
+          <!--# Logging-->
+
 <p>Logging functionality is handled by the <strong>SLF4J</strong> logging facade and on top
 of it the <strong>Logback</strong> framework is used. As a result, logging can be
 configured via the standard Logback configuration file. By default,
@@ -443,7 +444,7 @@ can use following configuration:</p>
 <li>Default log level is set to <code>INFO</code></li>
 <li>uses RollingFileAppender configured with <code>TimeBasedRollingPolicy</code>.
   Current configuration makes a seperate logfile for each day and each
-  file is kept for <em>30 days</em>. </li>
+  file is kept for <em>30 days</em>.</li>
 </ul>
 <p><em>PS!</em> keep in mind when using relative
   destination file path, then the path is added at the end of the

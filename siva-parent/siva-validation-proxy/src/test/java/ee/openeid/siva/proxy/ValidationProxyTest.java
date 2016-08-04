@@ -2,7 +2,6 @@ package ee.openeid.siva.proxy;
 
 import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.proxy.document.ProxyDocument;
-import ee.openeid.siva.proxy.exception.ValidatonServiceNotFoundException;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
@@ -44,16 +43,6 @@ public class ValidationProxyTest {
         applicationContext = Mockito.mock(ApplicationContext.class);
         validationProxy.setApplicationContext(applicationContext);
         validationServiceSpy = new ValidationServiceSpy();
-    }
-
-    @Test
-    public void ProxyDocumentWithASICEDocumentTypeShouldThrowValidationServiceNotFoundException() {
-        exception.expect(ValidatonServiceNotFoundException.class);
-        exception.expectMessage("ASICEValidationService not found");
-        when(applicationContext.getBean("ASICEValidationService")).thenThrow(new ValidatonServiceNotFoundException("ASICEValidationService not found"));
-
-        ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.ASICE);
-        validationProxy.validate(proxyDocument);
     }
 
     @Test

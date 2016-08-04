@@ -2,6 +2,7 @@ package ee.openeid.siva.proxy.document;
 
 import eu.europa.esig.dss.MimeType;
 import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 
 public class DocumentTypeTest {
@@ -13,8 +14,8 @@ public class DocumentTypeTest {
     }
 
     @Test
-    public void WhenDocumentTypeIsASICEThenGetMimeTypeReturnsASICE() {
-        MimeType mimeType = DocumentType.ASICE.getMimeType();
+    public void WhenDocumentTypeIsXROADThenGetMimeTypeReturnsASICE() {
+        MimeType mimeType = DocumentType.XROAD.getMimeType();
         assertEquals(mimeType, MimeType.ASICE);
     }
 

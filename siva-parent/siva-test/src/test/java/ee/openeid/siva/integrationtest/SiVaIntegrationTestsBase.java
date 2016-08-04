@@ -127,7 +127,7 @@ public abstract class SiVaIntegrationTestsBase {
     }
 
     private boolean isAsicExtension(String fileExtension) {
-        return StringUtils.equalsIgnoreCase(DocumentType.ASICE.name(), fileExtension);
+        return StringUtils.equalsIgnoreCase("asice", fileExtension);
     }
 
     private String resolveDocumentType(String fileExtension) {

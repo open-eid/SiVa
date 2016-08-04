@@ -3,6 +3,7 @@ package ee.openeid.validation.service.bdoc.configuration;
 import ee.openeid.validation.service.bdoc.signature.policy.BDOCSignaturePolicyService;
 import eu.europa.esig.dss.tsl.ServiceInfo;
 import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
+import org.apache.commons.lang.StringUtils;
 import org.digidoc4j.Configuration;
 import org.digidoc4j.TSLCertificateSource;
 import org.digidoc4j.impl.bdoc.tsl.TSLCertificateSourceImpl;
@@ -27,7 +28,7 @@ public class BDOCValidationServiceConfiguration {
     @Bean
     public Configuration configuration(TrustedListsCertificateSource trustedListSource, BDOCSignaturePolicyService bdocSignaturePolicyService) {
         Configuration configuration = new Configuration();
-        configuration.setValidationPolicy(bdocSignaturePolicyService.getAbsolutePath(null));
+        configuration.setValidationPolicy(bdocSignaturePolicyService.getAbsolutePath(StringUtils.EMPTY));
         TSLCertificateSource tslCertificateSource = new TSLCertificateSourceImpl();
 
         trustedListSource.getCertificates().forEach(certToken -> {

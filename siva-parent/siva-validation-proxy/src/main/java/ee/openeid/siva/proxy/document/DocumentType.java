@@ -10,12 +10,6 @@ public enum DocumentType {
             return MimeType.PDF;
         }
     },
-    ASICE {
-        @Override
-        public MimeType getMimeType() {
-            return MimeType.ASICE;
-        }
-    },
     XROAD {
         @Override
         public MimeType getMimeType() {

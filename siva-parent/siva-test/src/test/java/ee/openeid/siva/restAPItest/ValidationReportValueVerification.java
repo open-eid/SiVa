@@ -177,7 +177,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
      *
-     * File: ICT_MoU_FI-EE_10dec2013OneSignature.bdoc
+     * File: DigiDoc_1.0_Tartu_ja_Tallinna_koostooleping.ddoc
      *
      ***/
     @Test @Ignore //TODO: VAL-238 Travis fails the test, although in local machine it passes

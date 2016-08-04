@@ -41,6 +41,30 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
                 filename);
     }
 
+    protected static String createXMLValidationRequestExtended(String base64Document, String documentType, String filename, String signaturePolicy) {
+        return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
+                "   <soapenv:Header/>\n" +
+                "   <soapenv:Body>\n" +
+                "      <soap:ValidateDocument>\n" +
+                "         <soap:ValidationRequest>\n" +
+                "            <Document>" + base64Document + "</Document>\n" +
+                "            <Filename>" + filename + "</Filename>\n" +
+                "            <DocumentType>" + documentType + "</DocumentType>\n" +
+                "            <SignaturePolicy>" + signaturePolicy + "</SignaturePolicy>\n" +
+                "         </soap:ValidationRequest>\n" +
+                "      </soap:ValidateDocument>\n" +
+                "   </soapenv:Body>\n" +
+                "</soapenv:Envelope>";
+    }
+
+    protected String validationRequestForDocumentExtended(String document, String documentType, String filename, String signaturePolicy) {
+        return createXMLValidationRequestExtended(
+                document,
+                documentType,
+                filename,
+                signaturePolicy);
+    }
+
     protected Response post(String request) {
         return given().
                 contentType("text/xml;charset=UTF-8").

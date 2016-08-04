@@ -1128,7 +1128,7 @@ List of Test Cases
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
   * Title: Verification of values in Validation Report, xml v1.0, checks for missing info
   * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
-  * File: ICT_MoU_FI-EE_10dec2013OneSignature.bdoc
+  * File: DigiDoc_1.0_Tartu_ja_Tallinna_koostooleping.ddoc
 
   **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
@@ -1345,5 +1345,110 @@ List of Test Cases
   * File: Valid_IDCard_MobID_signatures.bdoc
 
 
+## SoapValidationReportValueTests.java
 
+**TestCaseID: Soap-ValidationReportValue-1**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of values in Validation Report XAdES_BASELINE_LT_TM, QES, FullSignatureScope
+  * Expected Result: All required elements are present and meet the expected values.
+  * File: Valid_ID_sig.bdoc
+
+**TestCaseID: Soap-ValidationReportValue-2**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of values in Validation Report XAdES_BASELINE_LT, QES, FullSignatureScope
+  * Expected Result: All required elements are present and meet the expected values.
+  * File: 23635_bdoc_ts_OCSP_random_nonce.bdoc
+
+**TestCaseID: Soap-ValidationReportValue-3**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of values in Validation Report XAdES_BASELINE_LT, AdES, FullSignatureScope
+  * Expected Result: All required elements are present and meet the expected values.
+  * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
+
+**TestCaseID: Soap-ValidationReportValue-4**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of values in Validation Report XAdES_BASELINE_LT_TM, AdESqc, FullSignatureScope
+  * Expected Result: All required elements are present and meet the expected values.
+  * File: 23200_weakdigest-wrong-nonce.asice
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
+**TestCaseID: Soap-ValidationReportValue-5**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of values in Validation Report XAdES_BASELINE_LTA, QES, FullSignatureScope
+  * Expected Result: All required elements are present and meet the expected values.
+  * File: EE_SER-AEX-B-LTA-V-24.pdf
+
+**TestCaseID: Soap-ValidationReportValue-6**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of values in Validation Report, xml v1.0, checks for missing info
+  * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
+  * File: DigiDoc_1.0_Tartu_ja_Tallinna_koostooleping.ddoc
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
+**TestCaseID: Soap-ValidationReportValue-7**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of values in Validation Report, xml v1.1, checks for missing info
+  * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
+  * File: Igasugust1.1.ddoc
+
+**TestCaseID: Soap-ValidationReportValue-8**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of values in Validation Report, xml v1.2, checks for missing info
+  * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
+  * File: Igasugust1.2.ddoc
+
+**TestCaseID: Soap-ValidationReportValue-9**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of values in Validation Report, xml v1.3, checks for missing info
+  * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
+  * File: Igasugust1.3.ddoc
+
+**TestCaseID: Soap-ValidationReportValue-10**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of values in Validation Report, PAdES_baseline_LT, checks for missing info
+  * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
+  * File: pades_lt_two_valid_sig.pdf
+
+**TestCaseID: Soap-ValidationReportValue-11**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of values in Validation Report, PAdES_baseline_B, checks for missing info
+  * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
+  * File: hellopades-pades-b-sha256-auth.pdf
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
+
+## SoapValidationRequestTests.java
+
+**TestCaseID: Soap-ValidationRequest-1**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Input random base64 string as document with bdoc document type
+  * Expected Result: Error is returned stating problem in document
+  * File: Valid_IDCard_MobID_signatures.bdoc
 

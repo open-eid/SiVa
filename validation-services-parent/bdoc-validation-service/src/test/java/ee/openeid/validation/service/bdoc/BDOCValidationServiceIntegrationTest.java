@@ -43,7 +43,7 @@ public class BDOCValidationServiceIntegrationTest {
 
     @Test
     public void verifyCorrectPolicyIsLoadedToD4JConfiguration() throws Exception {
-        assertTrue(configuration.getValidationPolicy().contains("null_constraint"));
+        assertTrue(configuration.getValidationPolicy().contains("_constraint"));
     }
 
     @Test

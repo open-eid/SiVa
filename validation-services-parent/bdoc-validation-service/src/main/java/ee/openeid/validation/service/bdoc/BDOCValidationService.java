@@ -50,15 +50,21 @@ public class BDOCValidationService implements ValidationService {
     }
 
     private Container createContainer(ValidationDocument validationDocument) {
-        Configuration configuration = this.configuration.copy();
-        configuration.setValidationPolicy(bdocSignaturePolicyService.getAbsolutePath(validationDocument.getSignaturePolicy()));
-
+        ContainerBuilder builder = ContainerBuilder.aContainer();
+        Configuration configuration = getConfiguration(validationDocument);
         InputStream containerInputStream = new ByteArrayInputStream(validationDocument.getBytes());
-        return ContainerBuilder.
-                aContainer().
-                withConfiguration(configuration).
-                fromStream(containerInputStream).
-                build();
+
+        return builder.fromStream(containerInputStream).withConfiguration(configuration).build();
+    }
+
+    private Configuration getConfiguration(ValidationDocument validationDocument) {
+        Configuration configuration = this.configuration;
+        if (!StringUtils.isEmpty(validationDocument.getSignaturePolicy())) {
+            configuration = this.configuration.copy();
+            configuration.setValidationPolicy(bdocSignaturePolicyService.getAbsolutePath(validationDocument.getSignaturePolicy()));
+        }
+
+        return configuration;
     }
 
     private void verifyContainerTypeNotDDOC(String containerType) {

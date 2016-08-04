@@ -20,10 +20,9 @@ public class ValidationProxy {
 
     private ApplicationContext applicationContext;
 
-    public QualifiedReport validate(final ProxyDocument proxyDocument) {
-        ValidationService validationService = getServiceForType(proxyDocument.getDocumentType());
-        return validationService.validateDocument(createValidationDocument(proxyDocument));
-
+    public QualifiedReport validate(ProxyDocument proxyDocument) {
+        return getServiceForType(proxyDocument.getDocumentType())
+                .validateDocument(createValidationDocument(proxyDocument));
     }
 
     private ValidationService getServiceForType(DocumentType documentType) {

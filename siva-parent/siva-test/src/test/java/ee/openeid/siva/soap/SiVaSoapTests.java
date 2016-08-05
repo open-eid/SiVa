@@ -19,6 +19,11 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
 
     private static final String SOAP_ENDPOINT = "/soap/validationWebService";
 
+    protected static final String SERVER_FAULT = "soap:Server";
+    protected static final String CLIENT_FAULT = "soap:Client";
+
+    protected static final String DOCUMENT_MALFORMED = "the document is malformed";
+
     protected static String createXMLValidationRequest(String base64Document, String documentType, String filename) {
         return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
                 "   <soapenv:Header/>\n" +

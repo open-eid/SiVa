@@ -211,7 +211,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      *
      * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
-     * Title: Mismatch in documentType and actual document (bdoc and pdf)
+     * Title: Mismatch in documentType and actual document (pdf and bdoc)
      *
      * Expected Result: Error is returned
      *
@@ -236,7 +236,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      *
      * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
-     * Title: Mismatch in documentType and actual document (asice and bdoc)
+     * Title: Mismatch in documentType and actual document (ddoc and asice)
      *
      * Expected Result: Error is returned
      *

@@ -237,7 +237,7 @@ try {
           <hashTree/>
           <com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.JSONPathAssertion guiclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.gui.JSONPathAssertionGui" testclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.JSONPathAssertion" testname="Validate valid signatures count" enabled="true">
             <stringProp name="JSON_PATH">$.validSignaturesCount</stringProp>
-            <stringProp name="EXPECTED_VALUE">2</stringProp>
+            <stringProp name="EXPECTED_VALUE">0</stringProp>
             <boolProp name="JSONVALIDATION">true</boolProp>
             <boolProp name="EXPECT_NULL">false</boolProp>
             <boolProp name="INVERT">false</boolProp>

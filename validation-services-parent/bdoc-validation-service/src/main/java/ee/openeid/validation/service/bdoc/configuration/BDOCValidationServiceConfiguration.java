@@ -41,5 +41,4 @@ public class BDOCValidationServiceConfiguration {
         configuration.setTSL(tslCertificateSource);
         return configuration;
     }
-
 }

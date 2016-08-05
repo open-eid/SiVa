@@ -9,8 +9,8 @@ import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
 import ee.openeid.validation.service.bdoc.configuration.BDOCValidationServiceConfiguration;
+import ee.openeid.validation.service.bdoc.signature.policy.BDOCConfigurationService;
 import org.apache.commons.lang.StringUtils;
-import org.digidoc4j.Configuration;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -27,7 +27,8 @@ import static org.junit.Assert.*;
     TSLLoaderConfiguration.class,
     TSLLoader.class,
     BDOCValidationServiceConfiguration.class,
-    BDOCValidationService.class
+    BDOCValidationService.class,
+    BDOCConfigurationService.class
 })
 @ActiveProfiles("test")
 public class BDOCValidationServiceIntegrationTest {
@@ -36,14 +37,14 @@ public class BDOCValidationServiceIntegrationTest {
     private BDOCValidationService bdocValidationService;
 
     @Autowired
-    private Configuration configuration;
+    private BDOCConfigurationService configurationService;
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void verifyCorrectPolicyIsLoadedToD4JConfiguration() throws Exception {
-        assertTrue(configuration.getValidationPolicy().contains("_constraint"));
+        assertTrue(configurationService.loadConfiguration(null).getValidationPolicy().contains("_constraint"));
     }
 
     @Test

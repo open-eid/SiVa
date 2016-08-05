@@ -5,7 +5,7 @@ import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.validation.service.bdoc.report.BDOCQualifiedReportBuilder;
-import ee.openeid.validation.service.bdoc.signature.policy.BDOCSignaturePolicyService;
+import ee.openeid.validation.service.bdoc.signature.policy.BDOCConfigurationService;
 import eu.europa.esig.dss.DSSException;
 import org.apache.commons.lang.StringUtils;
 import org.digidoc4j.Configuration;
@@ -23,14 +23,11 @@ import java.util.Date;
 
 @Service
 public class BDOCValidationService implements ValidationService {
-
     private static final Logger logger = LoggerFactory.getLogger(BDOCValidationService.class);
 
     private static final String CONTAINER_TYPE_DDOC = "DDOC";
 
-    private Configuration configuration;
-
-    private BDOCSignaturePolicyService bdocSignaturePolicyService;
+    private BDOCConfigurationService configurationService;
 
     @Override
     public QualifiedReport validateDocument(ValidationDocument validationDocument) {
@@ -45,26 +42,17 @@ public class BDOCValidationService implements ValidationService {
 
         container.validate();
         Date validationTime = new Date();
-        BDOCQualifiedReportBuilder reportBuilder = new BDOCQualifiedReportBuilder(container, validationDocument.getName(), validationTime);
-        return reportBuilder.build();
+        return new BDOCQualifiedReportBuilder(container, validationDocument.getName(), validationTime).build();
     }
 
     private Container createContainer(ValidationDocument validationDocument) {
-        ContainerBuilder builder = ContainerBuilder.aContainer();
-        Configuration configuration = getConfiguration(validationDocument);
         InputStream containerInputStream = new ByteArrayInputStream(validationDocument.getBytes());
 
-        return builder.fromStream(containerInputStream).withConfiguration(configuration).build();
-    }
-
-    private Configuration getConfiguration(ValidationDocument validationDocument) {
-        Configuration configuration = this.configuration;
-        if (!StringUtils.isEmpty(validationDocument.getSignaturePolicy())) {
-            configuration = this.configuration.copy();
-            configuration.setValidationPolicy(bdocSignaturePolicyService.getAbsolutePath(validationDocument.getSignaturePolicy()));
-        }
-
-        return configuration;
+        Configuration configuration = configurationService.loadConfiguration(validationDocument.getSignaturePolicy());
+        return ContainerBuilder.aContainer()
+                .fromStream(containerInputStream)
+                .withConfiguration(configuration)
+                .build();
     }
 
     private void verifyContainerTypeNotDDOC(String containerType) {
@@ -75,13 +63,7 @@ public class BDOCValidationService implements ValidationService {
     }
 
     @Autowired
-    public void setConfiguration(Configuration configuration) {
-        this.configuration = configuration;
+    public void setConfigurationService(BDOCConfigurationService configurationService) {
+        this.configurationService = configurationService;
     }
-
-    @Autowired
-    public void setBDOCSignaturePolicyService(BDOCSignaturePolicyService bdocSignaturePolicyService) {
-        this.bdocSignaturePolicyService = bdocSignaturePolicyService;
-    }
-
 }

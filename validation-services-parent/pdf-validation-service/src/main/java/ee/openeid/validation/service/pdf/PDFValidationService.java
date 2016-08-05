@@ -15,7 +15,7 @@ import eu.europa.esig.dss.InMemoryDocument;
 import eu.europa.esig.dss.MimeType;
 import eu.europa.esig.dss.validation.CertificateVerifier;
 import eu.europa.esig.dss.validation.DocumentValidator;
-import eu.europa.esig.dss.validation.report.Reports;
+import eu.europa.esig.dss.validation.reports.Reports;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,8 +58,8 @@ public class PDFValidationService implements ValidationService {
             if (LOGGER.isInfoEnabled()) {
                 LOGGER.info(
                         "Validation completed. Total signature count: {} and valid signature count: {}",
-                        reports.getSimpleReport().getElement("//SignaturesCount").getText(),
-                        reports.getSimpleReport().getElement("//ValidSignaturesCount").getText()
+                        reports.getSimpleReport().getSignaturesCount(),
+                        reports.getSimpleReport().getValidSignaturesCount()
                 );
 
                 LOGGER.info("WsValidateDocument: end");

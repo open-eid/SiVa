@@ -2,6 +2,7 @@ package ee.openeid.tsl;
 
 import eu.europa.esig.dss.DSSUtils;
 import eu.europa.esig.dss.tsl.ServiceInfo;
+import eu.europa.esig.dss.tsl.ServiceInfoStatus;
 import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.x509.CertificateToken;
 import org.slf4j.Logger;
@@ -11,6 +12,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @Profile("test")
@@ -233,18 +236,22 @@ public class CustomCertificatesLoader {
 
     private ServiceInfo getCAServiceInfo(CertificateToken certToken) {
         ServiceInfo serviceInfo = new ServiceInfo();
-        serviceInfo.setStatus("http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/undersupervision");
+        serviceInfo.setStatus(getServiceInfoStatuses(certToken));
         serviceInfo.setType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
-        serviceInfo.setStatusStartDate(certToken.getCertificate().getNotBefore());
         return serviceInfo;
     }
 
     private ServiceInfo getOCSPServiceInfo(CertificateToken certToken) {
         ServiceInfo serviceInfo = new ServiceInfo();
-        serviceInfo.setStatus("http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/undersupervision");
+        serviceInfo.setStatus(getServiceInfoStatuses(certToken));
         serviceInfo.setType("http://uri.etsi.org/TrstSvc/Svctype/OCSP/QC");
-        serviceInfo.setStatusStartDate(certToken.getCertificate().getNotBefore());
         return serviceInfo;
+    }
+
+    private List<ServiceInfoStatus> getServiceInfoStatuses(CertificateToken certToken) {
+        List<ServiceInfoStatus> serviceInfoStatuses = new ArrayList<>();
+        serviceInfoStatuses.add(new ServiceInfoStatus("http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/undersupervision", certToken.getCertificate().getNotBefore(), null));
+        return serviceInfoStatuses;
     }
 
     @Autowired

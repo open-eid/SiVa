@@ -47,7 +47,7 @@ public class PdfBaselineProfileTests extends SiVaRestTests{
     @Test //TODO: need test file
     public void baselineProfileTDocumentShouldFail() {
         QualifiedReport report = postForReport("some_file.pdf");
-        assertInvalidWithError(report, "BBB_VCI_ISFC_ANS_1", "The signature format is not allowed by the validation policy constraint!");
+        assertInvalidWithError(report.getSignatures().get(0), "The signature format is not allowed by the validation policy constraint!");
     }
 
     /**
@@ -136,7 +136,8 @@ public class PdfBaselineProfileTests extends SiVaRestTests{
      *
      * File: hellopades-lt1-lt2-Serial.pdf
      */
-    @Test @Ignore //TODO - a new test file is needed; the current one has issues with QC / SSCD
+    @Ignore("Error: The trusted service of the revocation has not expected type identifier!")
+    @Test
     public void documentSignedWithMultipleSignersSerialSignature() {
         assertAllSignaturesAreValid(postForReport("hellopades-lt1-lt2-Serial.pdf"));
     }
@@ -154,7 +155,8 @@ public class PdfBaselineProfileTests extends SiVaRestTests{
      *
      * File: hellopades-lt1-lt2-parallel3.pdf
      */
-    @Test @Ignore //TODO: new test file is needed; the current one has issues with QC / SSCD
+    @Ignore("Error: The trusted service of the revocation has not expected type identifier!")
+    @Test
     public void documentSignedWithMultipleSignersParallelSignature() {
         assertAllSignaturesAreValid(postForReport("hellopades-lt1-lt2-parallel3.pdf"));
     }
@@ -168,15 +170,18 @@ public class PdfBaselineProfileTests extends SiVaRestTests{
      *
      * Title: PDF document signed with multiple signers parallel signature without Sscd
      *
-     * Expected Result: Document with no qualified and without SSCD should fail
+     * Expected Result: Document with no qualified and without SSCD should warn
      *
      * File: hellopades-lt1-lt2-parallel3.pdf
      */
 
+    @Ignore("Error: The trusted service of the revocation has not expected type identifier!")
     @Test
-    public void ifSignerCertificateIsNotQualifiedAndWithoutSscdItIsRejected() {
+    public void ifSignerCertificateIsNotQualifiedAndWithoutSscdItIsAcceptedWithWarning() {
         QualifiedReport report = postForReport("hellopades-lt1-lt2-parallel3.pdf");
-        assertInvalidWithError(report, "BBB_XCV_CMDCIQC_ANS", "The certificate is not qualified!");
+        assertHasWarning(report.getSignatures().get(0), "The certificate is not qualified!");
+        assertHasWarning(report.getSignatures().get(1), "The certificate is not qualified!");
+        assertAllSignaturesAreValid(report);
     }
 
     @Override

@@ -50,7 +50,6 @@ public class TSLLoaderConfiguration {
     @Bean
     public TrustedListsCertificateSource trustedListSource(KeyStoreCertificateSource keyStoreCertificateSource) {
         TrustedListsCertificateSource trustedListsCertificateSource = new TrustedListsCertificateSource();
-        trustedListsCertificateSource.setDssKeyStore(keyStoreCertificateSource);
         return trustedListsCertificateSource;
     }
 

@@ -22,9 +22,9 @@
     <properties>
         <project.encoding>UTF-8</project.encoding>
         <language.level>1.8</language.level>
-        <dss.version>4.6.d4j.2</dss.version>
-        <spring.boot.version>1.4.0.RC1</spring.boot.version>
-        <digidoc4j.version>1.0.3</digidoc4j.version>
+        <dss.version>4.7.RC1.d4j.1</dss.version>
+        <spring.boot.version>1.4.0.RELEASE</spring.boot.version>
+        <digidoc4j.version>1.0.4</digidoc4j.version>
         <powermock.version>1.6.5</powermock.version>
     </properties>
 

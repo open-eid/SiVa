@@ -2,18 +2,18 @@ package ee.openeid.validation.service.bdoc.report;
 
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
-import eu.europa.esig.dss.validation.report.Conclusion;
-import eu.europa.esig.dss.validation.report.SimpleReport;
+import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
+import eu.europa.esig.dss.validation.policy.rules.SubIndication;
+import eu.europa.esig.dss.validation.reports.SignatureType;
+import eu.europa.esig.dss.validation.reports.SimpleReport;
 import org.apache.commons.lang.StringUtils;
 import org.apache.xml.security.signature.Reference;
 import org.digidoc4j.*;
 import org.digidoc4j.exceptions.DigiDoc4JException;
 import org.digidoc4j.impl.bdoc.BDocSignature;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
@@ -22,14 +22,11 @@ import static org.digidoc4j.X509Cert.SubjectName.CN;
 
 public class BDOCQualifiedReportBuilder {
 
-    private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final String FULL_SIGNATURE_SCOPE = "FullSignatureScope";
     private static final String FULL_DOCUMENT = "Full document";
     private static final String GENERIC = "GENERIC";
     private static final String XADES_FORMAT_PREFIX = "XAdES_BASELINE_";
-    private static final String DSS_BASIC_INFO_NAME_ID = "NameId";
     private static final String REPORT_INDICATION_INDETERMINATE = "INDETERMINATE";
-    private static final String GREENWICH_MEAN_TIME = "Etc/GMT";
 
     private Container container;
     private String documentName;
@@ -44,7 +41,7 @@ public class BDOCQualifiedReportBuilder {
     public QualifiedReport build() {
         QualifiedReport qualifiedReport = new QualifiedReport();
         qualifiedReport.setPolicy(Policy.SIVA_DEFAULT);
-        qualifiedReport.setValidationTime(getDateFormatterWithGMTZone().format(validationTime));
+        qualifiedReport.setValidationTime(ReportBuilderUtils.getDateFormatterWithGMTZone().format(validationTime));
         qualifiedReport.setDocumentName(documentName);
         qualifiedReport.setSignaturesCount(container.getSignatures().size());
         qualifiedReport.setSignatures(createSignaturesForReport(container));
@@ -73,7 +70,7 @@ public class BDOCQualifiedReportBuilder {
         signatureValidationData.setSignedBy(removeQuotes(bDocSignature.getSigningCertificate().getSubjectName(CN)));
         signatureValidationData.setErrors(getErrors(bDocSignature));
         signatureValidationData.setSignatureScopes(getSignatureScopes(bDocSignature, dataFileNames));
-        signatureValidationData.setClaimedSigningTime(getDateFormatterWithGMTZone().format(bDocSignature.getClaimedSigningTime()));
+        signatureValidationData.setClaimedSigningTime(ReportBuilderUtils.getDateFormatterWithGMTZone().format(bDocSignature.getClaimedSigningTime()));
         signatureValidationData.setWarnings(getWarnings(bDocSignature));
         signatureValidationData.setInfo(getInfo(bDocSignature));
         signatureValidationData.setIndication(getIndication(bDocSignature));
@@ -83,18 +80,13 @@ public class BDOCQualifiedReportBuilder {
 
     }
 
-    private SimpleDateFormat getDateFormatterWithGMTZone() {
-        SimpleDateFormat sdf = new SimpleDateFormat(DEFAULT_DATE_TIME_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone(GREENWICH_MEAN_TIME));
-        return sdf;
-    }
-
     private String removeQuotes(String subjectName) {
         return subjectName.replaceAll("^\"|\"$", "");
     }
 
     private String getSignatureLevel(BDocSignature bDocSignature) {
-        return getDssSimpleReport(bDocSignature).getSignatureLevel(bDocSignature.getId()).name();
+        SignatureType signatureLevel = getDssSimpleReport(bDocSignature).getSignatureLevel(bDocSignature.getId());
+        return signatureLevel != null ? signatureLevel.name() : "";
     }
 
     private SimpleReport getDssSimpleReport(BDocSignature bDocSignature) {
@@ -116,14 +108,15 @@ public class BDOCQualifiedReportBuilder {
         if (getIndication(bDocSignature) == SignatureValidationData.Indication.TOTAL_PASSED) {
             return "";
         }
-        return emptyWhenNull(getDssSimpleReport(bDocSignature).getSubIndication(bDocSignature.getId()));
+        SubIndication subindication = getDssSimpleReport(bDocSignature).getSubIndication(bDocSignature.getId());
+        return subindication != null ? subindication.name() : "";
     }
 
     private Info getInfo(BDocSignature bDocSignature) {
         Info info = new Info();
         Date trustedTime = bDocSignature.getTrustedSigningTime();
         if (trustedTime != null) {
-            info.setBestSignatureTime(getDateFormatterWithGMTZone().format(trustedTime));
+            info.setBestSignatureTime(ReportBuilderUtils.getDateFormatterWithGMTZone().format(trustedTime));
         } else {
             info.setBestSignatureTime("");
         }
@@ -147,10 +140,10 @@ public class BDOCQualifiedReportBuilder {
         return warnings;
     }
 
-    private static Warning mapDssWarning(Conclusion.BasicInfo dssWarning) {
+    private static Warning mapDssWarning(String dssWarning) {
         Warning warning = new Warning();
-        warning.setNameId(emptyWhenNull(dssWarning.getAttributeValue(DSS_BASIC_INFO_NAME_ID)));
-        warning.setDescription(emptyWhenNull(dssWarning.getValue()));
+        warning.setNameId(emptyWhenNull(""));
+        warning.setDescription(emptyWhenNull(dssWarning));
         return warning;
     }
 
@@ -199,10 +192,10 @@ public class BDOCQualifiedReportBuilder {
         return errors;
     }
 
-    private static Error mapDssError(Conclusion.BasicInfo dssError) {
+    private static Error mapDssError(String dssError) {
         Error error = new Error();
-        error.setNameId(emptyWhenNull(dssError.getAttributeValue(DSS_BASIC_INFO_NAME_ID)));
-        error.setContent(emptyWhenNull(dssError.getValue()));
+        error.setNameId(emptyWhenNull(""));
+        error.setContent(emptyWhenNull(dssError));
         return error;
     }
 

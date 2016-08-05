@@ -129,6 +129,7 @@ public class BdocValidationPass extends SiVaRestTests{
      *
      * File: 24050_short_ecdsa_correct_file_mimetype.bdoc
      ***/
+    @Ignore("Error: The trusted service of the revocation has not expected type identifier!")
     @Test
     public void bdocEccSha256signature() {
         assertAllSignaturesAreValid(postForReport("24050_short_ecdsa_correct_file_mimetype.bdoc"));

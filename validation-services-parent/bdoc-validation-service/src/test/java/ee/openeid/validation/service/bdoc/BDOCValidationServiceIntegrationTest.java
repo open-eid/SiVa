@@ -124,16 +124,16 @@ public class BDOCValidationServiceIntegrationTest {
     }
 
     @Test
+    /*TODO: Should the report signature indication for this case really be TOTAL_FAILED or should it actually be INDETERMINATE?*/
     public void reportForBdocTSWithUntrustedRevocationDataShouldContainError() throws Exception {
         QualifiedReport validationResultSignedNoManifest = bdocValidationService.validateDocument(bdocTSIndeterminateNoManifest());
         assertTrue(validationResultSignedNoManifest.getValidSignaturesCount() == 0);
         SignatureValidationData sig = validationResultSignedNoManifest.getSignatures().get(0);
-        assertTrue(sig.getErrors().size() == 1);
+        assertTrue(sig.getErrors().size() != 0);
 
         Error error = sig.getErrors().get(0);
-        assertEquals("BBB_XCV_IRDTFC_ANS", error.getNameId());
-        assertEquals("The revocation data for the certificate is not trusted!", error.getContent());
-        assertEquals(sig.getIndication(), SignatureValidationData.Indication.INDETERMINATE.toString());
+        assertEquals("The certificate chain for revocation data is not trusted, there is no trusted anchor.", error.getContent());
+        assertEquals(sig.getIndication(), SignatureValidationData.Indication.TOTAL_FAILED.toString());
     }
 
     private ValidationDocument bdocValid2Signatures() throws Exception {

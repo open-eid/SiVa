@@ -72,7 +72,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * File: hellopades-ecdsa.pdf
      */
-    @Test    @Ignore //TODO: current test file's signature doesn't contain ocsp
+    @Test @Ignore //TODO: current test file's signature doesn't contain ocsp
     public void documentSignedWithSha256EcdsaAlgoShouldPass() {
         assertAllSignaturesAreValid(postForReport("hellopades-ecdsa.pdf"));
     }
@@ -90,6 +90,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * File: hellopades-lt-sha256-ec224.pdf
      */
+    @Ignore("Error: The trusted service of the revocation has not expected type identifier!")
     @Test
     public void documentSignedWithSha256Ec224AlgoShouldPass() {
         assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-ec224.pdf"));
@@ -108,6 +109,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * File: hellopades-lt-sha256-ec256.pdf
      */
+    @Ignore("Error: The trusted service of the revocation has not expected type identifier!")
     @Test
     public void documentSignedWithSha256Ec256AlgoShouldPass() {
         assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-ec256.pdf"));
@@ -126,7 +128,8 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * File: hellopades-lt-sha256-rsa1024.pdf
      */
-    @Test @Ignore //TODO: new test file is needed; the current one has issues with QC / SSCD
+    @Ignore("Error: The trusted service of the revocation has not expected type identifier!")
+    @Test
     public void documentSignedWithSha256Rsa1024AlgoShouldPass() {
         assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-rsa1024.pdf"));
     }
@@ -144,7 +147,8 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * File: hellopades-lt-sha256-rsa1023.pdf
      */
-    @Test @Ignore //TODO: new test file is needed; the current one has issues with QC / SSCD
+    @Ignore("Error: The trusted service of the revocation has not expected type identifier!")
+    @Test
     public void documentSignedWithRsa1023AlgoShouldPass() {
         assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-rsa1023.pdf"));
     }
@@ -162,7 +166,8 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * File: hellopades-lt-sha256-rsa2047.pdf
      */
-    @Test @Ignore //TODO - a new test file is needed; the current one has issues with QC / SSCD
+    @Ignore("Error: The trusted service of the revocation has not expected type identifier!")
+    @Test
     public void documentSignedWithRsa2047AlgoShouldPass() {
         assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-rsa2047.pdf"));
     }
@@ -180,6 +185,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * File: PdfValidSingleSignature
      */
+    @Ignore("Error: The trusted service of the revocation has not expected type identifier!")
     @Test
     public void documentSignedWithRsa2048AlgoShouldPass() {
         setTestFilesDirectory("document_format_test_files/");

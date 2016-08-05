@@ -27,7 +27,7 @@
         <junit.version>4.12</junit.version>
         <mockito.version>2.0.2-beta</mockito.version>
         <powermock.version>1.6.2</powermock.version>
-        <dss.version>4.6.d4j.2</dss.version>
+        <dss.version>4.7.RC1.d4j.1</dss.version>
         <cxf.version>3.1.4</cxf.version>
     </properties>
 

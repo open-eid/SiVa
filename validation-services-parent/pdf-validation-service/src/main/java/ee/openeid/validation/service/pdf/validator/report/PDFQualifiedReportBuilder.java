@@ -2,11 +2,11 @@ package ee.openeid.validation.service.pdf.validator.report;
 
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
-import eu.europa.esig.dss.XmlDom;
+import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
+import eu.europa.esig.dss.jaxb.diagnostic.XmlSignatureScopeType;
 import eu.europa.esig.dss.validation.policy.rules.Indication;
-import eu.europa.esig.dss.validation.report.Conclusion;
-import eu.europa.esig.dss.validation.report.Reports;
-import eu.europa.esig.dss.validation.report.SimpleReport;
+import eu.europa.esig.dss.validation.policy.rules.SubIndication;
+import eu.europa.esig.dss.validation.reports.Reports;
 import org.apache.commons.lang.StringUtils;
 
 import java.time.ZonedDateTime;
@@ -18,20 +18,14 @@ import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUt
 
 public class PDFQualifiedReportBuilder {
 
-    private static final String NAME_ID_ATTRIBUTE = "NameId";
-    private static final String NAME_ATTRIBUTE = "name";
-    private static final String SCOPE_ATTRIBUTE = "scope";
-    private static final String BEST_SIGNATURE_TIME_ATTRIBUTE = "BestSignatureTime";
     private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
     private Reports dssReports;
-    private SimpleReport simpleReport;
     private ZonedDateTime validationTime;
     private String documentName;
 
     public PDFQualifiedReportBuilder(Reports dssReports, ZonedDateTime validationTime, String documentName) {
         this.dssReports = dssReports;
-        this.simpleReport = dssReports.getSimpleReport();
         this.validationTime = validationTime;
         this.documentName = documentName;
     }
@@ -62,8 +56,8 @@ public class PDFQualifiedReportBuilder {
     private SignatureValidationData buildSignatureValidationData(String signatureId) {
         SignatureValidationData signatureValidationData = new SignatureValidationData();
         signatureValidationData.setId(signatureId);
-        signatureValidationData.setSignatureFormat(simpleReport.getSignatureFormat(signatureId));
-        signatureValidationData.setSignatureLevel(simpleReport.getSignatureLevel(signatureId).name());
+        signatureValidationData.setSignatureFormat(dssReports.getSimpleReport().getSignatureFormat(signatureId));
+        signatureValidationData.setSignatureLevel(dssReports.getSimpleReport().getSignatureLevel(signatureId).name());
         signatureValidationData.setSignedBy(parseSignedBy(signatureId));
         signatureValidationData.setIndication(parseIndication(signatureId));
         signatureValidationData.setSubIndication(parseSubIndication(signatureId));
@@ -76,10 +70,10 @@ public class PDFQualifiedReportBuilder {
     }
 
     private Info parseSignatureInfo(String signatureId) {
-        List<Conclusion.BasicInfo> dssInfo = simpleReport.getInfo(signatureId);
+        List<String> dssInfo = dssReports.getSimpleReport().getInfo(signatureId);
         String bestSignatureTime = "";
         if (dssInfo != null && !dssInfo.isEmpty()) {
-            bestSignatureTime = emptyWhenNull(dssInfo.get(0).getAttributeValue(BEST_SIGNATURE_TIME_ATTRIBUTE));
+            bestSignatureTime = emptyWhenNull(dssInfo.get(0));
         }
         Info info = new Info();
         info.setBestSignatureTime(bestSignatureTime);
@@ -87,57 +81,57 @@ public class PDFQualifiedReportBuilder {
     }
 
     private List<Error> parseSignatureErrors(String signatureId) {
-        return simpleReport.getErrors(signatureId)
+        return dssReports.getSimpleReport().getErrors(signatureId)
                 .stream()
                 .map(this::mapDssError)
                 .collect(Collectors.toList());
     }
 
-    private Error mapDssError(Conclusion.BasicInfo dssError) {
+    private Error mapDssError(String dssError) {
         Error error = new Error();
-        error.setContent(emptyWhenNull(dssError.getValue()));
-        error.setNameId(emptyWhenNull(dssError.getAttributeValue(NAME_ID_ATTRIBUTE)));
+        error.setContent(emptyWhenNull(dssError));
+        error.setNameId(emptyWhenNull(""));
         return error;
     }
 
     private List<Warning> parseSignatureWarnings(String signatureId) {
-        return simpleReport.getWarnings(signatureId)
+        return dssReports.getSimpleReport().getWarnings(signatureId)
                 .stream()
                 .map(this::mapDssWarning)
                 .collect(Collectors.toList());
     }
 
-    private Warning mapDssWarning(Conclusion.BasicInfo dssWarning) {
+    private Warning mapDssWarning(String dssWarning) {
         Warning warning = new Warning();
-        warning.setDescription(emptyWhenNull(dssWarning.getValue()));
-        warning.setNameId(emptyWhenNull(dssWarning.getAttributeValue(NAME_ID_ATTRIBUTE)));
+        warning.setDescription(emptyWhenNull(dssWarning));
+        warning.setNameId(emptyWhenNull(""));
         return warning;
     }
 
     private List<SignatureScope> parseSignatureScopes(String signatureId) {
-        return simpleReport.getElements("/SimpleReport/Signature[@Id='%s']/SignatureScopes/SignatureScope/", signatureId)
+        return dssReports.getDiagnosticData().getSignatureById(signatureId).getSignatureScopes().getSignatureScope()
                 .stream()
                 .map(this::parseSignatureScope)
                 .collect(Collectors.toList());
     }
 
-    private SignatureScope parseSignatureScope(XmlDom signatureScopeDom) {
+    private SignatureScope parseSignatureScope(XmlSignatureScopeType dssSignatureScope) {
         SignatureScope signatureScope = new SignatureScope();
-        signatureScope.setContent(emptyWhenNull(signatureScopeDom.getText()));
-        signatureScope.setName(emptyWhenNull(signatureScopeDom.getAttribute(NAME_ATTRIBUTE)));
-        signatureScope.setScope(emptyWhenNull(signatureScopeDom.getAttribute(SCOPE_ATTRIBUTE)));
+        signatureScope.setContent(emptyWhenNull(dssSignatureScope.getValue()));
+        signatureScope.setName(emptyWhenNull(dssSignatureScope.getName()));
+        signatureScope.setScope(emptyWhenNull(dssSignatureScope.getScope()));
         return signatureScope;
     }
 
     private String parseClaimedSigningTime(String signatureId) {
-        return emptyWhenNull(simpleReport.getValue("/SimpleReport/Signature[@Id='%s']/SigningTime/text()", signatureId));
+        return emptyWhenNull(ReportBuilderUtils.getDateFormatterWithGMTZone().format(dssReports.getSimpleReport().getSigningTime(signatureId)));
     }
 
     private SignatureValidationData.Indication parseIndication(String signatureId) {
-        String indication = simpleReport.getIndication(signatureId);
-        if (StringUtils.equalsIgnoreCase(indication, Indication.VALID)) {
+        Indication indication = dssReports.getSimpleReport().getIndication(signatureId);
+        if (StringUtils.equalsIgnoreCase(indication.name(), Indication.TOTAL_PASSED.name())) {
             return SignatureValidationData.Indication.TOTAL_PASSED;
-        } else if (StringUtils.equalsIgnoreCase(indication, Indication.INVALID)) {
+        } else if (StringUtils.equalsIgnoreCase(indication.name(), Indication.TOTAL_FAILED.name())) {
             return SignatureValidationData.Indication.TOTAL_FAILED;
         } else {
             return SignatureValidationData.Indication.INDETERMINATE;
@@ -148,11 +142,12 @@ public class PDFQualifiedReportBuilder {
         if (parseIndication(signatureId) == SignatureValidationData.Indication.TOTAL_PASSED) {
             return "";
         }
-        return emptyWhenNull(simpleReport.getSubIndication(signatureId));
+        SubIndication subindication = dssReports.getSimpleReport().getSubIndication(signatureId);
+        return subindication != null ? subindication.name() : "";
     }
 
     private String parseSignedBy(String signatureId) {
-        return emptyWhenNull(simpleReport.getValue("/SimpleReport/Signature[@Id=\'%s\']/SignedBy/text()", signatureId));
+        return emptyWhenNull(dssReports.getSimpleReport().getSignedBy(signatureId));
     }
 
     private String parseValidationTimeToString() {

@@ -3,6 +3,8 @@ package ee.openeid.siva.sample.siva;
 import ee.openeid.siva.sample.cache.UploadedFile;
 import ee.openeid.siva.sample.configuration.SivaRESTWebServiceConfigurationProperties;
 import ee.openeid.siva.sample.controller.ValidationRequestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -17,6 +19,8 @@ import java.io.StringWriter;
 
 @Service(value = SivaServiceType.SOAP_SERVICE)
 public class SivaSOAPValidationServiceClient implements ValidationService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SivaSOAPValidationServiceClient.class);
+
     private SivaRESTWebServiceConfigurationProperties properties;
     private RestTemplate restTemplate;
 
@@ -43,10 +47,10 @@ public class SivaSOAPValidationServiceClient implements ValidationService {
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
             transformer.transform(xmlInput, xmlOutput);
         } catch (TransformerException e) {
-            e.printStackTrace();
+            LOGGER.warn("XML Parsing error: {}", e.getMessage(), e);
         }
 
-        return xmlOutput.getWriter().toString();
+        return xmlOutput.getWriter().toString().replace("?>", "?>\n");
     }
 
     private static String createXMLValidationRequest(String base64Document, String documentType, String filename) {

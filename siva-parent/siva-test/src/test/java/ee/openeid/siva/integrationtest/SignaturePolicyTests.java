@@ -2,6 +2,7 @@ package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import org.hamcrest.Matchers;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class SignaturePolicyTests extends SiVaRestTests {
@@ -42,7 +43,7 @@ public class SignaturePolicyTests extends SiVaRestTests {
      *
      * File: hellopades-lt-sha256-ocsp-28h.pdf
      */
-    @Test
+    @Test @Ignore //TODO: With DigiDoc4J 1.0.4 update this error functionality is no longer implemented
     public void pdfDocumentWithOcspOver24hDelayWithEEPolicyShouldFailWithCorrectErrorInReport() {
         QualifiedReport report = postForReport("hellopades-lt-sha256-ocsp-28h.pdf", "EE");
         assertAllSignaturesAreInvalid(report);
@@ -80,7 +81,7 @@ public class SignaturePolicyTests extends SiVaRestTests {
      *
      * File: hellopades-lt-sha256-ocsp-28h.pdf
      */
-    @Test
+    @Test @Ignore //TODO: With DigiDoc4J 1.0.4 update this error functionality is no longer implemented
     public void ifSignaturePolicyIsNotSetOrEmptyPdfDocumentShouldGetValidatedAgainstEEPolicy() {
         QualifiedReport report = postForReport("hellopades-lt-sha256-ocsp-28h.pdf", null);
         assertAllSignaturesAreInvalid(report);

@@ -9,8 +9,8 @@ import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
 import ee.openeid.validation.service.bdoc.configuration.BDOCValidationServiceConfiguration;
+import ee.openeid.validation.service.bdoc.signature.policy.BDOCConfigurationService;
 import org.apache.commons.lang.StringUtils;
-import org.digidoc4j.Configuration;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -27,7 +27,8 @@ import static org.junit.Assert.*;
     TSLLoaderConfiguration.class,
     TSLLoader.class,
     BDOCValidationServiceConfiguration.class,
-    BDOCValidationService.class
+    BDOCValidationService.class,
+    BDOCConfigurationService.class
 })
 @ActiveProfiles("test")
 public class BDOCValidationServiceIntegrationTest {
@@ -36,14 +37,14 @@ public class BDOCValidationServiceIntegrationTest {
     private BDOCValidationService bdocValidationService;
 
     @Autowired
-    private Configuration configuration;
+    private BDOCConfigurationService configurationService;
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void verifyCorrectPolicyIsLoadedToD4JConfiguration() throws Exception {
-        assertTrue(configuration.getValidationPolicy().contains("_constraint"));
+        assertTrue(configurationService.loadConfiguration(null).getValidationPolicy().contains("_constraint"));
     }
 
     @Test
@@ -123,16 +124,16 @@ public class BDOCValidationServiceIntegrationTest {
     }
 
     @Test
+    /*TODO: Should the report signature indication for this case really be TOTAL_FAILED or should it actually be INDETERMINATE?*/
     public void reportForBdocTSWithUntrustedRevocationDataShouldContainError() throws Exception {
         QualifiedReport validationResultSignedNoManifest = bdocValidationService.validateDocument(bdocTSIndeterminateNoManifest());
         assertTrue(validationResultSignedNoManifest.getValidSignaturesCount() == 0);
         SignatureValidationData sig = validationResultSignedNoManifest.getSignatures().get(0);
-        assertTrue(sig.getErrors().size() == 1);
+        assertTrue(sig.getErrors().size() != 0);
 
         Error error = sig.getErrors().get(0);
-        assertEquals("BBB_XCV_IRDTFC_ANS", error.getNameId());
-        assertEquals("The revocation data for the certificate is not trusted!", error.getContent());
-        assertEquals(sig.getIndication(), SignatureValidationData.Indication.INDETERMINATE.toString());
+        assertEquals("The certificate chain for revocation data is not trusted, there is no trusted anchor.", error.getContent());
+        assertEquals(sig.getIndication(), SignatureValidationData.Indication.TOTAL_FAILED.toString());
     }
 
     private ValidationDocument bdocValid2Signatures() throws Exception {

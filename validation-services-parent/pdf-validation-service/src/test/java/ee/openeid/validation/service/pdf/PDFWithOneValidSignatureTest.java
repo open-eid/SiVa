@@ -46,6 +46,7 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE));
         SignatureValidationData signature = report.getSignatures().get(0);
         assertEquals("2015-07-09T07:00:48Z", signature.getClaimedSigningTime());
+        assertEquals("2015-07-09T07:00:55Z", signature.getInfo().getBestSignatureTime());
     }
 
     @Test

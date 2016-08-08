@@ -234,20 +234,20 @@ public class BdocValidationFail extends SiVaRestTests{
      *
      * RequirementID:
      *
-     * Title: Asice OCSP certificate is not trusted
+     * Title: Bdoc OCSP certificate is not trusted
      *
      * Expected Result: The document should fail the validation
      *
-     * File: EE_SER-AEX-B-LT-I-27.asice
+     * File:  TM-01_bdoc21-unknown-resp.bdoc
      ***/
-    @Test @Ignore //TODO: As test certs are included by defaul this file currently passes. Separate class with life profile may be needed for this test.
+    @Test
     public void bdocNotTrustedOcspCert() {
-        setTestFilesDirectory("bdoc/live/timestamp/");
-        post(validationRequestFor("EE_SER-AEX-B-LT-I-27.asice"))
+        setTestFilesDirectory("bdoc/live/timemark/");
+        post(validationRequestFor("TM-01_bdoc21-unknown-resp.bdoc"))
                 .then()
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors.content", Matchers.hasItems(""))
+                .body("signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The certificate chain for revocation data is not trusted, there is no trusted anchor."))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 

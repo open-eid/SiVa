@@ -279,6 +279,31 @@ public class BdocValidationPass extends SiVaRestTests{
                 .body("validSignaturesCount", Matchers.is(1));
     }
 
+    /***
+     * TestCaseID: Bdoc-ValidationPass-12
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Bdoc with Baseline-LT_TM and QES signature level and ESTEID-SK 2011 certificate chain with valid signature
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: BDOC2.1.bdoc
+     ***/
+    @Test
+    public void bdocEsteidSk2011CertificateChainQesBaselineLtTmValidSignature() {
+        setTestFilesDirectory("bdoc/live/timemark/");
+        post(validationRequestFor("BDOC2.1.bdoc"))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("validSignaturesCount", Matchers.is(1));
+    }
+
     @Override
     protected String getTestFilesDirectory() {
         return testFilesDirectory;

@@ -130,6 +130,8 @@
                         <exclude>**/*Application.*</exclude>
                         <exclude>**/*Configuration.*</exclude>
                         <exclude>**/extra-jars/**</exclude>
+                        <exclude>**/ext-lib/**</exclude>
+                        <exclude>**/xroad-jars/**</exclude>
                     </excludes>
                 </configuration>
                 <executions>

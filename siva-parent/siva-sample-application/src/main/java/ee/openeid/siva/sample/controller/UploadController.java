@@ -69,7 +69,8 @@ class UploadController {
             LOGGER.warn("File upload problem", e);
             redirectAttributes.addFlashAttribute("File upload failed with message: " + e.getMessage());
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOGGER.warn("SiVa SOAP or REST service call failed with error: {}", e.getMessage(), e);
+            Thread.currentThread().interrupt();
         } finally {
             fileUploadService.deleteUploadedFile(timestamp);
         }

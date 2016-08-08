@@ -43,7 +43,7 @@ public class ValidationTaskRunner {
 
             validationResults.put(resultType, validationResult);
         } catch (IOException e) {
-            LOGGER.warn("JSON request uploaded file validation failed with error: {}", e.getMessage(), e);
+            LOGGER.warn("Uploaded file validation failed with error: {}", e.getMessage(), e);
         }
     }
 

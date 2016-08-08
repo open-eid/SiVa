@@ -179,13 +179,13 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
      *
-     * File: DigiDoc_1.0_Tartu_ja_Tallinna_koostooleping.ddoc
+     * File: SK-XML1.0.ddoc
      *
      ***/
     @Test @Ignore //TODO: VAL-238 Travis fails the test, although in local machine it passes
     public void DdocCorrectValuesArePresentV1_0() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestFor("DigiDoc_1.0_Tartu_ja_Tallinna_koostooleping.ddoc"))
+        post(validationRequestFor("SK-XML1.0.ddoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"))
                 .body("signatures[0].signatureFormat", Matchers.is("SK_XML_1.0"))

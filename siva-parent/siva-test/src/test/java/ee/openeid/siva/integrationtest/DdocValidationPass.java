@@ -11,39 +11,21 @@ public class DdocValidationPass extends SiVaRestTests{
     private static final String TEST_FILES_DIRECTORY = "ddoc/live/timemark/";
 
     /***
-     * TestCaseID: Ddoc-ValidationPass-1
-     *
-     * TestType: Automated
-     *
-     * RequirementID:
-     *
-     * Title: Ddoc with single valid signature
-     *
-     * Expected Result: The document should pass the validation
-     *
-     * File: 23734-ddoc13-13basn1.ddoc
-     ***/
-    @Test
-    public void ddocValidSingleSignature() {
-        assertAllSignaturesAreValid(postForReport("23734-ddoc13-13basn1.ddoc"));
-    }
-
-    /***
      * TestCaseID: Ddoc-ValidationPass-2
      *
      * TestType: Automated
      *
      * RequirementID:
      *
-     * Title: Ddoc v1.0 with multiple valid signatures
+     * Title: Ddoc v1.0 with valid signatures
      *
      * Expected Result: The document should pass the validation
      *
-     * File: DigiDoc_1.0_Tartu_ja_Tallinna_koostooleping.ddoc
+     * File: SK-XML1.0.ddoc
      ***/
-    @Test @Ignore //TODO:  VAL-238 Travis fails the test, although in local machine it passes
+    @Test @Ignore //TODO:  VAL-238 Travis fails the test, although in local machine it passes.
     public void ddocValidMultipleSignaturesV1_0() {
-        assertAllSignaturesAreValid(postForReport("DigiDoc_1.0_Tartu_ja_Tallinna_koostooleping.ddoc"));
+        assertAllSignaturesAreValid(postForReport("SK-XML1.0.ddoc"));
     }
 
     /***
@@ -53,15 +35,15 @@ public class DdocValidationPass extends SiVaRestTests{
      *
      * RequirementID:
      *
-     * Title: Ddoc v1.1 with multiple valid signatures v1.1
+     * Title: Ddoc v1.1 with valid signature
      *
      * Expected Result: The document should pass the validation
      *
-     * File: igasugust1.1.ddoc
+     * File: DIGIDOC-XML1.1.ddoc
      ***/
     @Test
-    public void ddocValidMultipleSignaturesV1_1() {
-        assertAllSignaturesAreValid(postForReport("igasugust1.1.ddoc"));
+    public void ddocValidSignatureV1_1() {
+        assertAllSignaturesAreValid(postForReport("DIGIDOC-XML1.1.ddoc"));
     }
 
     /***
@@ -71,15 +53,15 @@ public class DdocValidationPass extends SiVaRestTests{
      *
      * RequirementID:
      *
-     * Title: Ddoc v1.2 with multiple valid signatures
+     * Title: Ddoc v1.2 with valid signature
      *
      * Expected Result: The document should pass the validation
      *
-     * File: igasugust1.2.ddoc
+     * File: DIGIDOC-XML1.2.ddoc
      ***/
     @Test
-    public void ddocValidMultipleSignaturesV1_2() {
-        assertAllSignaturesAreValid(postForReport("igasugust1.2.ddoc"));
+    public void ddocValidSignatureV1_2() {
+        assertAllSignaturesAreValid(postForReport("DIGIDOC-XML1.2.ddoc"));
     }
 
     /***
@@ -89,15 +71,105 @@ public class DdocValidationPass extends SiVaRestTests{
      *
      * RequirementID:
      *
-     * Title: Ddoc v1.3 with multiple valid signatures
+     * Title: Ddoc v1.3 with valid signature with ESTEID-SK 2011 certificate chain
      *
      * Expected Result: The document should pass the validation
      *
-     * File: igasugust1.3.ddoc
+     * File: DIGIDOC-XML1.3.ddoc
      ***/
     @Test
-    public void ddocValidMultipleSignaturesV1_3() {
-        assertAllSignaturesAreValid(postForReport("igasugust1.3.ddoc"));
+    public void ddocValidSignatureV1_3() {
+        assertAllSignaturesAreValid(postForReport("DIGIDOC-XML1.3.ddoc"));
+    }
+
+    /***
+     * TestCaseID: Ddoc-ValidationPass-6
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Ddoc v1.3 with valid signature, signed data file name has special characters and ESTEID-SK certificate chain
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: susisevad1_3.ddoc
+     ***/
+    @Test
+    public void ddocSpecialCharactersInDataFileValidSignature() {
+        assertAllSignaturesAreValid(postForReport("susisevad1_3.ddoc"));
+    }
+
+    /***
+     * TestCaseID: Ddoc-ValidationPass-7
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Ddoc v1.3 KLASS3-SK certificate chain with valid signature
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: KLASS3-SK _ KLASS3-SK OCSP RESPONDER uus.ddoc
+     ***/
+    @Test
+    public void ddocKlass3SkCertificateChainValidSignature() {
+        assertAllSignaturesAreValid(postForReport("KLASS3-SK _ KLASS3-SK OCSP RESPONDER uus.ddoc"));
+    }
+
+    /***
+     * TestCaseID: Ddoc-ValidationPass-8
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Ddoc v1.3 KLASS3-SK 2010 certificate chain with valid signature
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: KLASS3-SK 2010 _ KLASS3-SK 2010 OCSP RESPONDER.ddoc
+     ***/
+    @Test
+    public void ddocKlass3Sk2010CertificateChainValidSignature() {
+        assertAllSignaturesAreValid(postForReport("KLASS3-SK 2010 _ KLASS3-SK 2010 OCSP RESPONDER.ddoc"));
+    }
+
+    /***
+     * TestCaseID: Ddoc-ValidationPass-9
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Ddoc v1.1 ESTEID-SK 2007 certificate chain with valid signature
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: vaikesed1.1.ddoc
+     ***/
+    @Test
+    public void ddocEsteidSk2007CertificateChainValidSignature() {
+        assertAllSignaturesAreValid(postForReport("vaikesed1.1.ddoc"));
+    }
+
+    /***
+     * TestCaseID: Ddoc-ValidationPass-10
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Ddoc v1.1 ESTEID-SK 2007 certificate chain with valid signature
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: IB-4270_ESTEID-SK 2015  SK OCSP RESPONDER 2011.ddoc
+     ***/
+    @Test
+    public void ddocEsteidSk2015CertificateChainValidSignature() {
+        assertAllSignaturesAreValid(postForReport("IB-4270_ESTEID-SK 2015  SK OCSP RESPONDER 2011.ddoc"));
     }
 
     @Override

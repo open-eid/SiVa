@@ -11,7 +11,6 @@ import static org.junit.Assert.assertTrue;
 @Category(IntegrationTest.class)
 public class SoapPdfValidationPass extends SiVaSoapTests {
 
-    @Ignore("Error: The trusted service of the revocation has not expected type identifier!")
     @Test
     public void validPdfSignatureWithSoapEndpoint() {
         Document report = extractReportDom(post(validationRequestForDocument("PdfValidSingleSignature.pdf")).andReturn().body().asString());

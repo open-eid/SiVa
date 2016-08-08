@@ -31,6 +31,7 @@ public class PDFValidationService implements ValidationService {
 
     private CertificateVerifier certificateVerifier;
     private PDFSignaturePolicyService pdfSignaturePolicyService;
+    private final Object lock = new Object();
 
     @Override
     public QualifiedReport validateDocument(ValidationDocument validationDocument) throws DSSException {
@@ -52,7 +53,11 @@ public class PDFValidationService implements ValidationService {
             final DocumentValidator validator = new EstonianPDFDocumentValidator(dssDocument);
             validator.setCertificateVerifier(certificateVerifier);
 
-            final Reports reports = validator.validateDocument(pdfSignaturePolicyService.getPolicyDataStreamFromPolicy(validationDocument.getSignaturePolicy()));
+            final Reports reports;
+            synchronized (lock) {
+                reports = validator.validateDocument(pdfSignaturePolicyService.getPolicyDataStreamFromPolicy(validationDocument.getSignaturePolicy()));
+            }
+
 
             final ZonedDateTime validationTimeInGMT = ZonedDateTime.now(ZoneId.of("GMT"));
             if (LOGGER.isInfoEnabled()) {

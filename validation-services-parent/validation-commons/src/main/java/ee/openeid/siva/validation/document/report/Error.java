@@ -10,9 +10,6 @@ import javax.xml.bind.annotation.XmlElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Error {
 
-    @XmlElement(name = "NameId", required = true)
-    private String nameId;
-
     @XmlElement(name = "Content", required = true)
     private String content;
 }

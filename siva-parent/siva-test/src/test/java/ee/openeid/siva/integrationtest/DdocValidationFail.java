@@ -117,7 +117,6 @@ public class DdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("test-inv-sig-inf.ddoc"))
                 .then()
-                .body("signatures[0].errors[0].nameId", Matchers.is("81"))
                 .body("signatures[0].errors[0].content", Matchers.containsString("Invalid signature value!"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validSignaturesCount", Matchers.is(0));
@@ -141,7 +140,6 @@ public class DdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("AndmefailiAtribuudidMuudetud.ddoc"))
                 .then()
-                .body("signatures[0].errors[0].nameId", Matchers.is("79"))
                 .body("signatures[0].errors[0].content", Matchers.containsString("Bad digest for DataFile: D0"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validSignaturesCount", Matchers.is(0));
@@ -165,7 +163,6 @@ public class DdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("ilma_kehtivuskinnituseta.ddoc"))
                 .then()
-                .body("signatures[0].errors.nameId", Matchers.hasItems("90"))
                 .body("signatures[0].errors.content", Matchers.hasItems("Signature has no OCSP confirmation!"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validSignaturesCount", Matchers.is(0));
@@ -189,7 +186,6 @@ public class DdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("test-non-repu1.ddoc"))
                 .then()
-                .body("signatures[0].errors.nameId", Matchers.hasItems("162"))
                 .body("signatures[0].errors.content", Matchers.hasItems("Signers cert does not have non-repudiation bit set!"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validSignaturesCount", Matchers.is(0));
@@ -213,7 +209,6 @@ public class DdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("Belgia_kandeavaldus_LIV.ddoc"))
                 .then()
-                .body("signatures[1].errors.nameId", Matchers.hasItems("39"))
                 .body("signatures[1].errors.content", Matchers.hasItems("Signers cert not trusted, missing CA cert!"))
                 .body("signatures[1].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validSignaturesCount", Matchers.is(1));
@@ -237,7 +232,6 @@ public class DdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("Tundmatu_OCSP_responder.ddoc"))
                 .then()
-                .body("signatures[0].errors.nameId", Matchers.hasItems("70"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
@@ -260,7 +254,6 @@ public class DdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("lisatud_andmefail.ddoc"))
                 .then()
-                .body("signatures[0].errors.nameId", Matchers.hasItems("81"))
                 .body("signatures[0].errors.content", Matchers.hasItems("Missing Reference for file: testfail2.txt"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validSignaturesCount", Matchers.is(0));
@@ -284,7 +277,6 @@ public class DdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("faileemald1.ddoc"))
                 .then()
-                .body("signatures[0].errors.nameId", Matchers.hasItems("81"))
                 .body("signatures[0].errors.content", Matchers.hasItems("Missing DataFile for signature: S0 reference #D0"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validSignaturesCount", Matchers.is(0));

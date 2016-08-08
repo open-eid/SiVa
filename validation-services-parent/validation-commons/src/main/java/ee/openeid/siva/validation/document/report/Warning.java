@@ -10,9 +10,6 @@ import javax.xml.bind.annotation.XmlElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Warning {
 
-    @XmlElement(name = "NameId", required = true)
-    private String nameId;
-
     @XmlElement(name = "Description", required = true)
     private String description;
 }

@@ -172,7 +172,6 @@ public class BdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("TS-02_23634_TS_wrong_SignatureValue.asice"))
                 .then()
-                .body("signatures[0].errors.nameId", Matchers.hasItems("GENERIC"))
                 .body("signatures[0].errors.content", Matchers.hasItems("Signature has an invalid timestamp"))
                 .body("signatures[0].errors.content", Matchers.hasItems("The signature is not intact!"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
@@ -246,7 +245,6 @@ public class BdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-I-27.asice"))
                 .then()
-                .body("signatures[0].errors.nameId", Matchers.hasItems(""))
                 .body("signatures[0].errors.content", Matchers.hasItems(""))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
@@ -271,7 +269,6 @@ public class BdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("TS-05_23634_TS_unknown_TSA.asice"))
                 .then()
-                .body("signatures[0].errors.nameId", Matchers.hasItems("GENERIC"))
                 .body("signatures[0].errors.content", Matchers.hasItems("Signature has an invalid timestamp"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
@@ -320,7 +317,6 @@ public class BdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-V-20.asice"))
                 .then()
-                .body("signatures[0].errors.nameId", Matchers.hasItems("GENERIC"))
                 .body("signatures[0].errors.content", Matchers.hasItems("The difference between the revocation time and the signature time stamp is too large"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
@@ -345,7 +341,6 @@ public class BdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-V-34.asice"))
                 .then()
-                .body("signatures[0].errors.nameId", Matchers.hasItems(""))
                 .body("signatures[0].errors.content", Matchers.hasItems(""))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
@@ -370,7 +365,6 @@ public class BdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("23613_TM_wrong-manifest-mimetype.bdoc"))
                 .then()
-                .body("signatures[0].errors.nameId", Matchers.hasItems(""))
                 .body("signatures[0].errors.content", Matchers.hasItems(""))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is(""))

@@ -141,7 +141,6 @@ public class SoapValidationReportValueTests extends SiVaSoapTests {
         assertEquals("ReplaceWithCorrectValue", getQualifiedReportFromDom(report).getSignatures().get(0).getSubIndication());
         assertEquals("AdESqc", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureLevel());
         assertEquals("FullSignatureScope", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureScopes().get(0).getScope());
-        assertEquals("GENERIC",getQualifiedReportFromDom(report).getSignatures().get(0).getErrors().get(0).getNameId());
         assertTrue(getQualifiedReportFromDom(report).getSignatures().get(0).getWarnings().isEmpty());
     }
 
@@ -339,7 +338,6 @@ public class SoapValidationReportValueTests extends SiVaSoapTests {
         assertEquals("ReplaceWithCorrectValue", getQualifiedReportFromDom(report).getSignatures().get(0).getSubIndication());
         assertEquals("QES", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureLevel());
         assertEquals("FullSignatureScope", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureScopes().get(0).getScope());
-        assertEquals("ReplaceWithCorrect",getQualifiedReportFromDom(report).getSignatures().get(0).getErrors().get(0).getNameId());
         assertTrue(getQualifiedReportFromDom(report).getSignatures().get(0).getWarnings().isEmpty());
     }
 

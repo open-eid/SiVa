@@ -88,16 +88,6 @@ public abstract class SiVaIntegrationTestsBase {
         assertTrue(report.getValidSignaturesCount() == 0);
     }
 
-    protected Optional<String> findErrorMessageById(String errorCode, QualifiedReport report) {
-        return report.getSignatures()
-                .stream()
-                .filter(sig -> sig.getErrors() != null && !sig.getErrors().isEmpty())
-                .map(SignatureValidationData::getErrors)
-                .flatMap(Collection::stream)
-                .filter(error -> StringUtils.equals(errorCode, error.getNameId()))
-                .map(Error::getContent).findFirst();
-    }
-
     protected static byte[] readFileFromPath(String pathName) {
         try {
             return Files.readAllBytes(FileSystems.getDefault().getPath(pathName));

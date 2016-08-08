@@ -90,7 +90,6 @@ public class PDFQualifiedReportBuilder {
     private Error mapDssError(String dssError) {
         Error error = new Error();
         error.setContent(emptyWhenNull(dssError));
-        error.setNameId(emptyWhenNull(""));
         return error;
     }
 
@@ -104,7 +103,6 @@ public class PDFQualifiedReportBuilder {
     private Warning mapDssWarning(String dssWarning) {
         Warning warning = new Warning();
         warning.setDescription(emptyWhenNull(dssWarning));
-        warning.setNameId(emptyWhenNull(""));
         return warning;
     }
 

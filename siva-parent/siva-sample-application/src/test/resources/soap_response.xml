@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+    <soap:Body>
+        <ns2:ValidateDocumentResponse xmlns:ns2="http://soap.webapp.siva.openeid.ee/">
+            <ns2:ValidationReport>
+                <Policy>
+                    <PolicyDescription>SiVa validation policy</PolicyDescription>
+                    <PolicyName>SiVa validation policy</PolicyName>
+                    <PolicyUrl>http://open-eid.github.io/SiVa/siva/appendix/validation_policy/</PolicyUrl>
+                    <PolicyVersion>1.0</PolicyVersion>
+                </Policy>
+                <ValidationTime>2016-08-08T10:38:41Z</ValidationTime>
+                <DocumentName>bdoc_tm_valid_2_signatures.bdoc</DocumentName>
+                <Signatures>
+                    <Signature>
+                        <Id>S0</Id>
+                        <SignatureFormat>XAdES_BASELINE_LT_TM</SignatureFormat>
+                        <SignatureLevel>QES</SignatureLevel>
+                        <SignedBy>JUHANSON,ALLAN,38608014910</SignedBy>
+                        <Indication>TOTAL_PASSED</Indication>
+                        <SubIndication/>
+                        <Errors/>
+                        <SignatureScopes>
+                            <SignatureScope>
+                                <Name>chrome-signing.log</Name>
+                                <Scope>FullSignatureScope</Scope>
+                                <Content>Full document</Content>
+                            </SignatureScope>
+                        </SignatureScopes>
+                        <ClaimedSigningTime>2016-05-04T08:43:55Z</ClaimedSigningTime>
+                        <Warnings/>
+                        <Info>
+                            <bestSignatureTime>2016-05-04T08:44:23Z</bestSignatureTime>
+                        </Info>
+                    </Signature>
+                    <Signature>
+                        <Id>S1</Id>
+                        <SignatureFormat>XAdES_BASELINE_LT_TM</SignatureFormat>
+                        <SignatureLevel>QES</SignatureLevel>
+                        <SignedBy>VOLL,ANDRES,39004170346</SignedBy>
+                        <Indication>TOTAL_PASSED</Indication>
+                        <SubIndication/>
+                        <Errors/>
+                        <SignatureScopes>
+                            <SignatureScope>
+                                <Name>chrome-signing.log</Name>
+                                <Scope>FullSignatureScope</Scope>
+                                <Content>Full document</Content>
+                            </SignatureScope>
+                        </SignatureScopes>
+                        <ClaimedSigningTime>2016-05-04T11:14:23Z</ClaimedSigningTime>
+                        <Warnings/>
+                        <Info>
+                            <bestSignatureTime>2016-05-04T11:14:32Z</bestSignatureTime>
+                        </Info>
+                    </Signature>
+                </Signatures>
+                <ValidSignaturesCount>2</ValidSignaturesCount>
+                <SignaturesCount>2</SignaturesCount>
+            </ns2:ValidationReport>
+        </ns2:ValidateDocumentResponse>
+    </soap:Body>
+</soap:Envelope>

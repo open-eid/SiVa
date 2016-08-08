@@ -118,7 +118,6 @@ public class DDOCQualifiedReportBuilder {
 
     private Error mapDigiDocException(DigiDocException dde) {
         Error error = new Error();
-        error.setNameId(Integer.toString(dde.getCode()));
         error.setContent(emptyWhenNull(dde.getMessage()));
         return error;
     }

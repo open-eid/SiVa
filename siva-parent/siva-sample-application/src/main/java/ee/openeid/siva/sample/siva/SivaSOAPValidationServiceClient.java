@@ -20,6 +20,7 @@ import java.io.StringWriter;
 @Service(value = SivaServiceType.SOAP_SERVICE)
 public class SivaSOAPValidationServiceClient implements ValidationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SivaSOAPValidationServiceClient.class);
+    private static final String LINE_SEPARATOR = System.lineSeparator();
 
     private SivaRESTWebServiceConfigurationProperties properties;
     private RestTemplate restTemplate;
@@ -37,7 +38,7 @@ public class SivaSOAPValidationServiceClient implements ValidationService {
         return Observable.just(formatXML(restTemplate.postForObject(fullUrl, requestBody, String.class)));
     }
 
-    private String formatXML(String xml) {
+    private static String formatXML(String xml) {
         Source xmlInput = new StreamSource(new StringReader(xml));
         StreamResult xmlOutput = new StreamResult(new StringWriter());
 
@@ -50,21 +51,21 @@ public class SivaSOAPValidationServiceClient implements ValidationService {
             LOGGER.warn("XML Parsing error: {}", e.getMessage(), e);
         }
 
-        return xmlOutput.getWriter().toString().replace("?>", "?>\n");
+        return xmlOutput.getWriter().toString().replace("?>", "?>" + LINE_SEPARATOR);
     }
 
     private static String createXMLValidationRequest(String base64Document, String documentType, String filename) {
         return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
-                "   <soapenv:Header/>\n" +
-                "   <soapenv:Body>\n" +
-                "      <soap:ValidateDocument>\n" +
-                "         <soap:ValidationRequest>\n" +
-                "            <Document>" + base64Document + "</Document>\n" +
-                "            <Filename>" + filename + "</Filename>\n" +
-                "            <DocumentType>" + documentType + "</DocumentType>\n" +
-                "         </soap:ValidationRequest>\n" +
-                "      </soap:ValidateDocument>\n" +
-                "   </soapenv:Body>\n" +
+                "   <soapenv:Header/>" + LINE_SEPARATOR +
+                "   <soapenv:Body>" + LINE_SEPARATOR +
+                "      <soap:ValidateDocument>" + LINE_SEPARATOR +
+                "         <soap:ValidationRequest>" + LINE_SEPARATOR +
+                "            <Document>" + base64Document + "</Document>" + LINE_SEPARATOR +
+                "            <Filename>" + filename + "</Filename>" + LINE_SEPARATOR +
+                "            <DocumentType>" + documentType + "</DocumentType>" + LINE_SEPARATOR +
+                "         </soap:ValidationRequest>" + LINE_SEPARATOR +
+                "      </soap:ValidateDocument>" + LINE_SEPARATOR +
+                "   </soapenv:Body>" + LINE_SEPARATOR +
                 "</soapenv:Envelope>";
     }
 

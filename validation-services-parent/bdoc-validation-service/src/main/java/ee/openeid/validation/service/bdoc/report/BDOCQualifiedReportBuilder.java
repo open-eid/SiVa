@@ -142,14 +142,12 @@ public class BDOCQualifiedReportBuilder {
 
     private static Warning mapDssWarning(String dssWarning) {
         Warning warning = new Warning();
-        warning.setNameId(emptyWhenNull(""));
         warning.setDescription(emptyWhenNull(dssWarning));
         return warning;
     }
 
     private static Warning mapDigidoc4JWarning(DigiDoc4JException digiDoc4JException) {
         Warning warning = new Warning();
-        warning.setNameId(GENERIC);
         warning.setDescription(emptyWhenNull(digiDoc4JException.getMessage()));
         return warning;
     }
@@ -194,7 +192,6 @@ public class BDOCQualifiedReportBuilder {
 
     private static Error mapDssError(String dssError) {
         Error error = new Error();
-        error.setNameId(emptyWhenNull(""));
         error.setContent(emptyWhenNull(dssError));
         return error;
     }
@@ -210,7 +207,6 @@ public class BDOCQualifiedReportBuilder {
 
     private static Error mapDigidoc4JException(DigiDoc4JException digiDoc4JException) {
         Error error = new Error();
-        error.setNameId(GENERIC);
         error.setContent(emptyWhenNull(digiDoc4JException.getMessage()));
         return error;
     }

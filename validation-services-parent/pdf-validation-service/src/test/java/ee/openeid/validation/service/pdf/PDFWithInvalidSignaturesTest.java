@@ -38,8 +38,6 @@ public class PDFWithInvalidSignaturesTest extends PDFValidationServiceTest {
 
         //check error object integrity
         assertTrue(StringUtils.isNotBlank(error.getContent()));
-        assertTrue(StringUtils.isNotBlank(error.getNameId()));
-        assertFalse(StringUtils.equals("EMPTY", error.getNameId()));
 
     }
 

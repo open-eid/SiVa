@@ -119,7 +119,6 @@ public class ValidationProxyTest {
 
         private List<Error> createDummyErrors() {
             Error error = new Error();
-            error.setNameId("NameId");
             error.setContent("ErrorContent");
             return Collections.singletonList(error);
         }

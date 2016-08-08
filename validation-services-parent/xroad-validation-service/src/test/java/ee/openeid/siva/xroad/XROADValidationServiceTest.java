@@ -2,11 +2,13 @@ package ee.openeid.siva.xroad;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
+import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.xroad.configuration.XROADValidationServiceProperties;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class XROADValidationServiceTest {
 
@@ -25,10 +27,10 @@ public class XROADValidationServiceTest {
     }
 
     @Test
+    @Ignore
     public void ValidatingXRoadSimpleContainerShouldHaveOnlyTheCNFieldOfTheSingersCerificateAsSignedByFieldInQualifiedReport() throws Exception {
-//        QualifiedReport report = validationService.validateDocument(buildValidationDocument(XROAD_SIMPLE));
-//        assertEquals("Riigi Infosüsteemi Amet", report.getSignatures().get(0).getSignedBy());
-        assertTrue(true);
+        QualifiedReport report = validationService.validateDocument(buildValidationDocument(XROAD_SIMPLE));
+        assertEquals("Riigi Infosüsteemi Amet", report.getSignatures().get(0).getSignedBy());
     }
 
     private ValidationDocument buildValidationDocument(String testFile) throws Exception {
@@ -38,6 +40,4 @@ public class XROADValidationServiceTest {
                 .withName(testFile)
                 .build();
     }
-
-
 }

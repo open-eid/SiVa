@@ -152,7 +152,6 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
                 .then()
                 .body("signatures.indication", Matchers.hasItem("TOTAL-FAILED"))
                 .body("signatures.subIndication", Matchers.hasItem("SIG_CRYPTO_FAILURE"))
-                .body("signatures.errors[0].nameId", Matchers.hasItems("BBB_CV_ISI_ANS","GENERIC"))
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }
 
@@ -179,7 +178,6 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
         post(validationRequestWithValidKeys(encodedString, "23200_weakdigest-wrong-nonce.asice", "bdoc"))
                 .then()
                 .body("signatures.indication", Matchers.hasItem("TOTAL-FAILED"))
-                .body("signatures.warnings.nameId[0]", Matchers.hasItem("BBB_XCV_CMDCISSCD_ANS"))
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }
 
@@ -439,7 +437,6 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
                 .then()
                 .body("signatures.indication", Matchers.hasItem("TOTAL-FAILED"))
                 .body("signatures.subIndication", Matchers.hasItem(""))
-                .body("signatures.errors.nameId[0]", Matchers.hasItem("70"))
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"));
     }
 
@@ -464,7 +461,6 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
         post(validationRequestFor("NeedFile.ddoc"))
                 .then()
                 .body("signatures.indication", Matchers.hasItem(""))
-                .body("signatures.warnings.nameId", Matchers.hasItem("need value for this"))
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
     }
 

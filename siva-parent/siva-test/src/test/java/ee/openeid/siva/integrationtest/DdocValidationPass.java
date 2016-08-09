@@ -172,6 +172,77 @@ public class DdocValidationPass extends SiVaRestTests{
         assertAllSignaturesAreValid(postForReport("IB-4270_ESTEID-SK 2015  SK OCSP RESPONDER 2011.ddoc"));
     }
 
+    /***
+     * TestCaseID: Ddoc-ValidationPass-11
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Ddoc v1.1 ESTEID-SK certificate chain with valid signature
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: EID-SK _ EID-SK OCSP RESPONDER.ddoc
+     ***/
+    @Test
+    public void ddocEsteidSkCertificateChainValidSignature() {
+        assertAllSignaturesAreValid(postForReport("EID-SK _ EID-SK OCSP RESPONDER.ddoc"));
+    }
+
+    /***
+     * TestCaseID: Ddoc-ValidationPass-12
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Ddoc v1.1 ESTEID-SK 2007 and OCSP 2010 certificate chain with valid signature
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: EID-SK 2007 _ EID-SK 2007 OCSP RESPONDER 2010.ddoc
+     ***/
+    @Test
+    public void ddocEsteidSk2007Ocsp2010CertificateChainValidSignature() {
+        assertAllSignaturesAreValid(postForReport("EID-SK 2007 _ EID-SK 2007 OCSP RESPONDER 2010.ddoc"));
+    }
+
+    /***
+     * TestCaseID: Ddoc-ValidationPass-13
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Ddoc v1.3 ESTEID-SK 2007 and OCSP 2007 certificate chain with valid signature
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: EID-SK 2007 _ EID-SK 2007 OCSP RESPONDER.ddoc
+     ***/
+    @Test
+    public void ddocEsteidSk2007Ocsp2007CertificateChainValidSignature() {
+        assertAllSignaturesAreValid(postForReport("EID-SK 2007 _ EID-SK 2007 OCSP RESPONDER.ddoc"));
+    }
+
+    /***
+     * TestCaseID: Ddoc-ValidationPass-14
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Ddoc v1.3 ESTEID-SK 2011 and OCSP 2011 certificate chain with valid signature
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: EID-SK 2011 _ SK OCSP RESPONDER 2011.ddoc
+     ***/
+    @Test
+    public void ddocEsteidSk2011Ocsp2011CertificateChainValidSignature() {
+        assertAllSignaturesAreValid(postForReport("EID-SK 2011 _ SK OCSP RESPONDER 2011.ddoc"));
+    }
     @Override
     protected String getTestFilesDirectory() {
         return TEST_FILES_DIRECTORY;

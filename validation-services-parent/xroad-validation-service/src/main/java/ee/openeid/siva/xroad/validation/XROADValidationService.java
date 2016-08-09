@@ -1,4 +1,4 @@
-package ee.openeid.siva.xroad;
+package ee.openeid.siva.xroad.validation;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
@@ -10,7 +10,7 @@ import ee.ria.xroad.common.asic.AsicContainer;
 import ee.ria.xroad.common.asic.AsicContainerVerifier;
 import ee.ria.xroad.common.asic.AsicUtils;
 import ee.ria.xroad.common.conf.globalconf.GlobalConf;
-import ee.ria.xroad.common.signature.Signature;
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,6 @@ import javax.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.cert.X509Certificate;
 import java.util.Date;
 
 @Service
@@ -30,7 +29,7 @@ public class XROADValidationService implements ValidationService {
 
     @Override
     public QualifiedReport validateDocument(ValidationDocument wsDocument) {
-        final InputStream inputStream = new ByteArrayInputStream(wsDocument.getBytes());
+        final InputStream inputStream = new ByteArrayInputStream(Base64.decodeBase64(wsDocument.getDataBase64Encoded()));
 
         try {
             final AsicContainer container = AsicContainer.read(inputStream);
@@ -62,37 +61,12 @@ public class XROADValidationService implements ValidationService {
         }
     }
 
-    private static void appendCert(StringBuilder builder, X509Certificate cert) {
-        builder.append("        Subject: " + cert.getSubjectDN().getName() + "\n");
-        builder.append("        Issuer: " + cert.getIssuerDN().getName() + "\n");
-        builder.append("        Serial number: " + cert.getSerialNumber() + "\n");
-        builder.append("        Valid from: " + cert.getNotBefore() + "\n");
-        builder.append("        Valid until: " + cert.getNotAfter() + "\n");
-    }
-
     private void onVerificationSucceeded(AsicContainerVerifier verifier) throws IOException {
         LOGGER.info(AsicUtils.buildSuccessOutput(verifier));
 
-        AsicContainer asic = verifier.getAsic();
-        StringBuilder builder = new StringBuilder();
+        verifier.getAsic();
+        verifier.getSignature();
 
-        Signature signature = verifier.getSignature();
-
-        builder.append("Verification successful.\n");
-        builder.append("Signer\n");
-        builder.append("    Certificate:\n");
-        appendCert(builder, verifier.getSignerCert());
-        builder.append("    ID: " + verifier.getSignerName() + "\n");
-        builder.append("OCSP response\n");
-        builder.append("    Signed by:\n");
-        appendCert(builder, verifier.getOcspCert());
-        builder.append("    Produced at: " + verifier.getOcspDate() + "\n");
-        builder.append("Timestamp\n");
-        builder.append("    Signed by:\n");
-        appendCert(builder, verifier.getTimestampCert());
-        builder.append("    Date: " + verifier.getTimestampDate() + "\n");
-
-//        writeToFile(AsicContainerEntries.ENTRY_MESSAGE, asic.getMessage());
         LOGGER.info("");
     }
 

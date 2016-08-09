@@ -1,4 +1,4 @@
-package ee.openeid.siva.xroad;
+package ee.openeid.siva.xroad.validation;
 
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;

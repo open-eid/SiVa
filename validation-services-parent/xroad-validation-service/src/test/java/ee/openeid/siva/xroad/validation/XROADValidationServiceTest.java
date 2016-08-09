@@ -1,12 +1,15 @@
-package ee.openeid.siva.xroad;
+package ee.openeid.siva.xroad.validation;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.xroad.configuration.XROADValidationServiceProperties;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+
+import java.io.InputStream;
 
 import static org.junit.Assert.assertEquals;
 
@@ -28,9 +31,11 @@ public class XROADValidationServiceTest {
     }
 
     @Test
-    @Ignore
     public void ValidatingXRoadSimpleContainerShouldHaveOnlyTheCNFieldOfTheSingersCerificateAsSignedByFieldInQualifiedReport() throws Exception {
-        QualifiedReport report = validationService.validateDocument(buildValidationDocument(XROAD_SIMPLE));
+        ValidationDocument validationDocument = buildValidationDocument(XROAD_SIMPLE);
+
+        validationDocument.setDataBase64Encoded(Base64.encodeBase64String(IOUtils.toByteArray(getFileStream(XROAD_SIMPLE))));
+        QualifiedReport report = validationService.validateDocument(validationDocument);
         assertEquals("Riigi Infosüsteemi Amet", report.getSignatures().get(0).getSignedBy());
     }
 
@@ -47,5 +52,10 @@ public class XROADValidationServiceTest {
                 .withDocument(testFile)
                 .withName(testFile)
                 .build();
+    }
+
+    private InputStream getFileStream(String filename) {
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        return classloader.getResourceAsStream(filename);
     }
 }

@@ -136,6 +136,13 @@ public class BDOCValidationServiceIntegrationTest {
         assertEquals(sig.getIndication(), SignatureValidationData.Indication.TOTAL_FAILED.toString());
     }
 
+    @Test
+    public void reportForBdocValidationShouldIncludeCorrectAsiceSignatureForm() throws Exception {
+        QualifiedReport report = bdocValidationService.validateDocument(bdocValid2Signatures());
+        assertEquals("ASiC_E", report.getSignatures().get(0).getSignatureForm());
+        assertEquals("ASiC_E", report.getSignatures().get(1).getSignatureForm());
+    }
+
     private ValidationDocument bdocValid2Signatures() throws Exception {
         return BDOCTestUtils.buildValidationDocument(BDOCTestUtils.VALID_BDOC_TM_2_SIGNATURES);
     }

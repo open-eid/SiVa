@@ -37,6 +37,10 @@
             "type": "string",
 			"minLength": 1
           },
+          "signatureForm": {
+            "type": "string",
+            "minLength": 1
+          },
           "warnings": {
             "type": "array",
             "items": {
@@ -124,6 +128,7 @@
           "signedBy",
           "claimedSigningTime",
           "signatureLevel",
+          "signatureForm",
           "signatureScopes",
           "id",
           "indication",

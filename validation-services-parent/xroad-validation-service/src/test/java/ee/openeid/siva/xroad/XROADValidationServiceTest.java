@@ -13,6 +13,7 @@ import static org.junit.Assert.assertEquals;
 public class XROADValidationServiceTest {
 
     private static final String XROAD_SIMPLE = "xroad-simple.asice";
+    private static final String XROAD_BATCHSIGNATURE = "xroad-batchsignature.asice";
 
     private XROADValidationServiceProperties properties;
     private XROADValidationService validationService;
@@ -31,6 +32,13 @@ public class XROADValidationServiceTest {
     public void ValidatingXRoadSimpleContainerShouldHaveOnlyTheCNFieldOfTheSingersCerificateAsSignedByFieldInQualifiedReport() throws Exception {
         QualifiedReport report = validationService.validateDocument(buildValidationDocument(XROAD_SIMPLE));
         assertEquals("Riigi Infosüsteemi Amet", report.getSignatures().get(0).getSignedBy());
+    }
+
+    @Test
+    @Ignore
+    public void validationReportForXroadBatchSignatureShouldHaveCorrectSignatureForm() throws Exception {
+        QualifiedReport report = validationService.validateDocument(buildValidationDocument(XROAD_BATCHSIGNATURE));
+        assertEquals("ASiC_E_batchsignature", report.getSignatures().get(0).getSignatureForm());
     }
 
     private ValidationDocument buildValidationDocument(String testFile) throws Exception {

@@ -40,9 +40,11 @@ public class XROADValidationServiceTest {
     }
 
     @Test
-    @Ignore
     public void validationReportForXroadBatchSignatureShouldHaveCorrectSignatureForm() throws Exception {
-        QualifiedReport report = validationService.validateDocument(buildValidationDocument(XROAD_BATCHSIGNATURE));
+        ValidationDocument validationDocument = buildValidationDocument(XROAD_BATCHSIGNATURE);
+        validationDocument.setDataBase64Encoded(Base64.encodeBase64String(IOUtils.toByteArray(getFileStream(XROAD_BATCHSIGNATURE))));
+
+        QualifiedReport report = validationService.validateDocument(validationDocument);
         assertEquals("ASiC_E_batchsignature", report.getSignatures().get(0).getSignatureForm());
     }
 

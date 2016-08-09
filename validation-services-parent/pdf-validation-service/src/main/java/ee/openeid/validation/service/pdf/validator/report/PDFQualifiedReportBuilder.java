@@ -73,9 +73,9 @@ public class PDFQualifiedReportBuilder {
 
     private Info parseSignatureInfo(String signatureId) {
         List<TimestampWrapper> timeStamps = dssReports.getDiagnosticData().getSignatureById(signatureId).getTimestampList();
-        Date bestSignatureTime = timeStamps.isEmpty() ? dssReports.getSimpleReport().getSigningTime(signatureId) : timeStamps.get(0).getProductionTime();
+        Date bestSignatureTime = timeStamps.isEmpty() ? null : timeStamps.get(0).getProductionTime();
         Info info = new Info();
-        info.setBestSignatureTime(emptyWhenNull(ReportBuilderUtils.getDateFormatterWithGMTZone().format(bestSignatureTime)));
+        info.setBestSignatureTime(bestSignatureTime == null ? "" : ReportBuilderUtils.getDateFormatterWithGMTZone().format(bestSignatureTime));
         return info;
     }
 

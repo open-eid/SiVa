@@ -46,6 +46,7 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE));
         SignatureValidationData signature = report.getSignatures().get(0);
         assertEquals("2015-07-09T07:00:48Z", signature.getClaimedSigningTime());
+        assertEquals("2015-07-09T07:00:55Z", signature.getInfo().getBestSignatureTime());
     }
 
     @Test
@@ -84,7 +85,6 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
     }
 
     @Test
-    @Ignore("Error: The trusted service of the revocation has not expected type identifier!")
     public void validatingPdfSignedWithUnqualifiedCertificateReturnsReportWithoutErrorsButWithWarning() throws Exception {
         QualifiedReport report = validationService.validateDocument(
                 buildValidationDocument(PDF_SIGNED_WITH_UNQUALIFIED_CERTIFICATE));
@@ -92,9 +92,9 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
         List<Warning> firstSignatureWarnings = report.getSignatures().get(0).getWarnings();
         List<Warning> secondSignatureWarnings = report.getSignatures().get(1).getWarnings();
 
-        assertEquals("The certificate is not qualified!", firstSignatureWarnings.get(0).getDescription());
-        assertEquals("The certificate is not supported by SSCD!", firstSignatureWarnings.get(1).getDescription());
-        assertEquals("The certificate is not qualified!", secondSignatureWarnings.get(0).getDescription());
-        assertEquals("The certificate is not supported by SSCD!", secondSignatureWarnings.get(1).getDescription());
+        assertEquals("The certificate is not supported by SSCD!", firstSignatureWarnings.get(0).getDescription());
+        assertEquals("The certificate is not qualified!", firstSignatureWarnings.get(1).getDescription());
+        assertEquals("The certificate is not supported by SSCD!", secondSignatureWarnings.get(0).getDescription());
+        assertEquals("The certificate is not qualified!", secondSignatureWarnings.get(1).getDescription());
     }
 }

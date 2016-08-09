@@ -81,7 +81,6 @@ public class BdocValidationFail extends SiVaRestTests{
      *
      * File: BdocMultipleSignaturesMixedWithValidAndInvalid.bdoc
      ***/
-    @Ignore("Error: The trusted service of the revocation has not expected type identifier!")
     @Test
     public void bdocInvalidAndValidMultipleSignatures() {
         setTestFilesDirectory("bdoc/test/timemark/");
@@ -270,7 +269,7 @@ public class BdocValidationFail extends SiVaRestTests{
         post(validationRequestFor("TS-05_23634_TS_unknown_TSA.asice"))
                 .then()
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
+                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].errors.content", Matchers.hasItems("Signature has an invalid timestamp"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
@@ -486,7 +485,7 @@ public class BdocValidationFail extends SiVaRestTests{
         post(validationRequestFor("TM-15_revoked.4.asice"))
                 .then()
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
+                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].errors.content", Matchers.hasItems("The certificate is revoked!"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
@@ -582,7 +581,7 @@ public class BdocValidationFail extends SiVaRestTests{
         post(validationRequestFor("TM-10_noncevale.4.asice"))
                 .then()
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
+                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].errors.content", Matchers.hasItem("Nonce is invalid"))
                 .body("validSignaturesCount", Matchers.is(0));
     }

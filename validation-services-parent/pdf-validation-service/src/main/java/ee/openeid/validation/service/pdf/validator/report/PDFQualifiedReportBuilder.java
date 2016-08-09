@@ -7,10 +7,12 @@ import eu.europa.esig.dss.jaxb.diagnostic.XmlSignatureScopeType;
 import eu.europa.esig.dss.validation.policy.rules.Indication;
 import eu.europa.esig.dss.validation.policy.rules.SubIndication;
 import eu.europa.esig.dss.validation.reports.Reports;
+import eu.europa.esig.dss.validation.reports.wrapper.TimestampWrapper;
 import org.apache.commons.lang.StringUtils;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,13 +72,10 @@ public class PDFQualifiedReportBuilder {
     }
 
     private Info parseSignatureInfo(String signatureId) {
-        List<String> dssInfo = dssReports.getSimpleReport().getInfo(signatureId);
-        String bestSignatureTime = "";
-        if (dssInfo != null && !dssInfo.isEmpty()) {
-            bestSignatureTime = emptyWhenNull(dssInfo.get(0));
-        }
+        List<TimestampWrapper> timeStamps = dssReports.getDiagnosticData().getSignatureById(signatureId).getTimestampList();
+        Date bestSignatureTime = timeStamps.isEmpty() ? dssReports.getSimpleReport().getSigningTime(signatureId) : timeStamps.get(0).getProductionTime();
         Info info = new Info();
-        info.setBestSignatureTime(bestSignatureTime);
+        info.setBestSignatureTime(emptyWhenNull(ReportBuilderUtils.getDateFormatterWithGMTZone().format(bestSignatureTime)));
         return info;
     }
 

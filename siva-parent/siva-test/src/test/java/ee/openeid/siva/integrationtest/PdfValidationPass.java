@@ -101,7 +101,6 @@ public class PdfValidationPass extends SiVaRestTests{
      *
      * File: PdfValidSingleSignature.pdf
      ***/
-    @Ignore("Error: The trusted service of the revocation has not expected type identifier!")
     @Test
     public void validSignature() {
         setTestFilesDirectory("document_format_test_files/");

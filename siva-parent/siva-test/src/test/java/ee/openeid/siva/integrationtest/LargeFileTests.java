@@ -67,7 +67,6 @@ public class LargeFileTests extends SiVaRestTests{
      *
      * File: singlesignature_lt_1-2mb.pdf
      ***/
-    @Ignore("Error: The trusted service of the revocation has not expected type identifier!")
     @Test
     public void oneMegabyteFilesWithLtSignatureAreAccepted () {
         assertAllSignaturesAreValid(postForReport("singlesignature_lt_1-2mb.pdf"));
@@ -86,7 +85,6 @@ public class LargeFileTests extends SiVaRestTests{
      *
      * File: digidocservice-signed-lta-1-2mb.pdf
      ***/
-    @Ignore("Error: The trusted service of the revocation has not expected type identifier!")
     @Test
     public void oneMegabyteFilesWithLtaSignatureAreAccepted () {
         assertSomeSignaturesAreValid(postForReport("digidocservice-signed-lta-1-2mb.pdf"), 1);
@@ -105,7 +103,6 @@ public class LargeFileTests extends SiVaRestTests{
      *
      * File: singlesignature_lt_3-8mb.pdf
      ***/
-    @Ignore("Error: The trusted service of the revocation has not expected type identifier!")
     @Test
     public void fourMegabyteFilesWithLtSignatureAreAccepted () {
         assertSomeSignaturesAreValid(postForReport("singlesignature_lt_3-8mb.pdf"), 1);
@@ -124,7 +121,6 @@ public class LargeFileTests extends SiVaRestTests{
      *
      * File: egovenrment-benchmark-lta-3-8mb.pdf
      ***/
-    @Ignore("Error: The trusted service of the revocation has not expected type identifier!")
     @Test
     public void fourMegabyteFilesWithLtaSignatureAreAccepted () {
         assertSomeSignaturesAreValid(postForReport("egovenrment-benchmark-lta-3-8mb.pdf"), 1);

@@ -101,19 +101,18 @@ public class SoapValidationReportValueTests extends SiVaSoapTests {
      * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
      *
      ***/
-    @Ignore("Error: The trusted service of the revocation has not expected type identifier!")
     @Test
     public void SoapBdocCorrectValuesArePresentValidLtSignatureAdes() {
         setTestFilesDirectory("bdoc/test/timemark/");
         Document report = extractReportDom(post(validationRequestForDocument("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc")).andReturn().body().asString());
         assertEquals(getQualifiedReportFromDom(report).getValidSignaturesCount(),getQualifiedReportFromDom(report).getSignaturesCount());
-        assertEquals("XAdES_BASELINE_LT", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureFormat());
+        assertEquals("XAdES_BASELINE_LT_TM", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureFormat());
         assertEquals("TOTAL-PASSED", getQualifiedReportFromDom(report).getSignatures().get(0).getIndication());
         assertTrue(getQualifiedReportFromDom(report).getSignatures().get(0).getSubIndication().isEmpty());
         assertEquals("AdES", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureLevel());
         assertEquals("FullSignatureScope", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureScopes().get(0).getScope());
         assertTrue(getQualifiedReportFromDom(report).getSignatures().get(0).getErrors().isEmpty());
-        assertTrue(getQualifiedReportFromDom(report).getSignatures().get(0).getWarnings().isEmpty());
+        assertEquals("The certificate is not supported by SSCD!", getQualifiedReportFromDom(report).getSignatures().get(0).getWarnings().get(0).getDescription());
     }
 
     /***
@@ -299,7 +298,6 @@ public class SoapValidationReportValueTests extends SiVaSoapTests {
      * File: pades_lt_two_valid_sig.pdf
      *
      ***/
-    @Ignore("Error: The trusted service of the revocation has not expected type identifier!")
     @Test
     public void SoapPadesCorrectValuesArePresentBaselineLtSignature() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");

@@ -104,13 +104,11 @@ public class BdocValidationPass extends SiVaRestTests{
      *
      * File: EE_SER-AEX-B-LT-V-30.asice
      ***/
-    @Test @Ignore //TODO: This file fails in SiVA. Needs investigation.
+    @Test
     public void bdocDifferentCertificateCountries() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-V-30.asice"))
                 .then()
-                .body("signatures[0].errors.nameId", Matchers.hasItems(""))
-                .body("signatures[0].errors.content", Matchers.hasItems(""))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validSignaturesCount", Matchers.is(1));
@@ -129,11 +127,182 @@ public class BdocValidationPass extends SiVaRestTests{
      *
      * File: 24050_short_ecdsa_correct_file_mimetype.bdoc
      ***/
-    @Ignore("Error: The trusted service of the revocation has not expected type identifier!")
     @Test
     public void bdocEccSha256signature() {
         assertAllSignaturesAreValid(postForReport("24050_short_ecdsa_correct_file_mimetype.bdoc"));
     }
+
+    /***
+     * TestCaseID: Bdoc-ValidationPass-6
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Asice Baseline-LT file
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: EE_SER-AEX-B-LT-V-49.asice
+     ***/
+    @Test
+    public void bdocBaselineLtProfileValidSignature() {
+        setTestFilesDirectory("bdoc/live/timestamp/");
+        post(validationRequestFor("EE_SER-AEX-B-LT-V-49.asice"))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("validSignaturesCount", Matchers.is(1));
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationPass-7
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Asice QES file
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: bdoc21-TS.asice
+     ***/
+    @Test @Ignore //TODO: This file returns AdESqc not QES
+    public void bdocQESProfileValidSignature() {
+        setTestFilesDirectory("bdoc/live/timestamp/");
+        post(validationRequestFor("bdoc21-TS.asice"))
+                .then()
+                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED2"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("validSignaturesCount", Matchers.is(1));
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationPass-8
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Asice Baseline-LTA file
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: EE_SER-AEX-B-LTA-V-24.asice
+     ***/
+    @Test
+    public void bdocBaselineLtaProfileValidSignature() {
+        setTestFilesDirectory("bdoc/live/timestamp/");
+        post(validationRequestFor("EE_SER-AEX-B-LTA-V-24.asice"))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LTA"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("validSignaturesCount", Matchers.is(1));
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationPass-9
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Asice file signed with Mobile-ID, ECC-SHA256 signature with prime256v1 key
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: EE_SER-AEX-B-LT-V-2.asice
+     ***/
+    @Test
+    public void bdocWithEccSha256ValidSignature() {
+        setTestFilesDirectory("bdoc/live/timestamp/");
+        post(validationRequestFor("EE_SER-AEX-B-LT-V-2.asice"))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("validSignaturesCount", Matchers.is(1));
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationPass-10
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Asice file with 	ESTEID-SK 2015 certificate chain
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: IB-4270_TS_ESTEID-SK 2015  SK OCSP RESPONDER 2011.asice
+     ***/
+    @Test
+    public void bdocSk2015CertificateChainValidSignature() {
+        setTestFilesDirectory("bdoc/live/timestamp/");
+        post(validationRequestFor("IB-4270_TS_ESTEID-SK 2015  SK OCSP RESPONDER 2011.asice"))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("validSignaturesCount", Matchers.is(1));
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationPass-11
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Asice file with KLASS3-SK 2010 (EECCRCA) certificate chain
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: EE_SER-AEX-B-LT-V-28.asice
+     ***/
+    @Test
+    public void bdocKlass3Sk2010CertificateChainValidSignature() {
+        setTestFilesDirectory("bdoc/live/timestamp/");
+        post(validationRequestFor("EE_SER-AEX-B-LT-V-28.asice"))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("AdESqc"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("validSignaturesCount", Matchers.is(1));
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationPass-12
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Bdoc with Baseline-LT_TM and QES signature level and ESTEID-SK 2011 certificate chain with valid signature
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: BDOC2.1.bdoc
+     ***/
+    @Test
+    public void bdocEsteidSk2011CertificateChainQesBaselineLtTmValidSignature() {
+        setTestFilesDirectory("bdoc/live/timemark/");
+        post(validationRequestFor("BDOC2.1.bdoc"))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("validSignaturesCount", Matchers.is(1));
+    }
+
     @Override
     protected String getTestFilesDirectory() {
         return testFilesDirectory;

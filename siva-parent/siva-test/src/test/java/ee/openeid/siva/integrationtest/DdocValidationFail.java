@@ -281,6 +281,29 @@ public class DdocValidationFail extends SiVaRestTests{
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
+
+    /***
+     * TestCaseID: Ddoc-ValidationFail-12
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Ddoc signed data file has been removed from the container
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: OCSP nonce vale.ddoc
+     ***/
+    @Test
+    public void ddocWrongOcspNonce() {
+        setTestFilesDirectory("ddoc/live/timemark/");
+        post(validationRequestFor("OCSP nonce vale.ddoc"))
+                .then()
+                .body("signatures[0].errors.content", Matchers.hasItems("Notarys digest doesn't match!"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validSignaturesCount", Matchers.is(0));
+    }
     @Override
     protected String getTestFilesDirectory() {
         return testFilesDirectory;

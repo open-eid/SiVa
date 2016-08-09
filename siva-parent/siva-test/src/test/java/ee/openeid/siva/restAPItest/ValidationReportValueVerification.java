@@ -97,14 +97,13 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
      *
      ***/
-    @Ignore("Error: The trusted service of the revocation has not expected type identifier!")
     @Test
     public void BdocCorrectValuesArePresentValidLtSignatureAdes() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("signatures[0].signatureLevel", Matchers.is("AdES"))
                 .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"));
@@ -125,7 +124,6 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      * File: 23200_weakdigest-wrong-nonce.asice
      *
      ***/
-    @Ignore("Error: The trusted service of the revocation has not expected type identifier!")
     @Test //TODO: replace the mockup bdoc/asice mixture with "normal"  asice call when asice support is implemented properly
     public void BdocCorrectValuesArePresentValidLtSignatureAdesqc() {
         setTestFilesDirectory("bdoc/test/timemark/");
@@ -179,13 +177,13 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
      *
-     * File: DigiDoc_1.0_Tartu_ja_Tallinna_koostooleping.ddoc
+     * File: SK-XML1.0.ddoc
      *
      ***/
     @Test @Ignore //TODO: VAL-238 Travis fails the test, although in local machine it passes
     public void DdocCorrectValuesArePresentV1_0() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestFor("DigiDoc_1.0_Tartu_ja_Tallinna_koostooleping.ddoc"))
+        post(validationRequestFor("SK-XML1.0.ddoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"))
                 .body("signatures[0].signatureFormat", Matchers.is("SK_XML_1.0"))

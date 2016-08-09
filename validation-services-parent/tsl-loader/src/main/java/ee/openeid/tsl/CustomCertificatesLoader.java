@@ -244,7 +244,7 @@ public class CustomCertificatesLoader {
     private ServiceInfo getOCSPServiceInfo(CertificateToken certToken) {
         ServiceInfo serviceInfo = new ServiceInfo();
         serviceInfo.setStatus(getServiceInfoStatuses(certToken));
-        serviceInfo.setType("http://uri.etsi.org/TrstSvc/Svctype/OCSP/QC");
+        serviceInfo.setType("http://uri.etsi.org/TrstSvc/Svctype/Certstatus/OCSP/QC");
         return serviceInfo;
     }
 

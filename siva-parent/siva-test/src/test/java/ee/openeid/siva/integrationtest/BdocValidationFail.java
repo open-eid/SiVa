@@ -81,7 +81,6 @@ public class BdocValidationFail extends SiVaRestTests{
      *
      * File: BdocMultipleSignaturesMixedWithValidAndInvalid.bdoc
      ***/
-    @Ignore("Error: The trusted service of the revocation has not expected type identifier!")
     @Test
     public void bdocInvalidAndValidMultipleSignatures() {
         setTestFilesDirectory("bdoc/test/timemark/");
@@ -172,10 +171,10 @@ public class BdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("TS-02_23634_TS_wrong_SignatureValue.asice"))
                 .then()
-                .body("signatures[0].errors.content", Matchers.hasItems("Signature has an invalid timestamp"))
-                .body("signatures[0].errors.content", Matchers.hasItems("The signature is not intact!"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
+                .body("signatures[0].errors.content", Matchers.hasItems("Signature has an invalid timestamp"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The signature is not intact!"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -197,9 +196,9 @@ public class BdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-I-43.asice"))
                 .then()
-                .body("signatures[0].errors.content", Matchers.hasItems("The signer's certificate has not expected key-usage!"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is("SIG_CONSTRAINTS_FAILURE"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The signer's certificate has not expected key-usage!"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -221,9 +220,9 @@ public class BdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-I-26.asice"))
                 .then()
-                .body("signatures[0].errors.content", Matchers.hasItems("The signer's certificate has not expected key-usage!"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is("SIG_CONSTRAINTS_FAILURE"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The signer's certificate has not expected key-usage!"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -245,9 +244,9 @@ public class BdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-I-27.asice"))
                 .then()
-                .body("signatures[0].errors.content", Matchers.hasItems(""))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors.content", Matchers.hasItems(""))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -269,9 +268,9 @@ public class BdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("TS-05_23634_TS_unknown_TSA.asice"))
                 .then()
-                .body("signatures[0].errors.content", Matchers.hasItems("Signature has an invalid timestamp"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors.content", Matchers.hasItems("Signature has an invalid timestamp"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -293,9 +292,9 @@ public class BdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-R-25.asice"))
                 .then()
-                .body("signatures[0].errors.content", Matchers.hasItems("The certificate is revoked!"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors.content", Matchers.hasItems("The certificate is revoked!"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -317,9 +316,9 @@ public class BdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-V-20.asice"))
                 .then()
-                .body("signatures[0].errors.content", Matchers.hasItems("The difference between the revocation time and the signature time stamp is too large"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors.content", Matchers.hasItems("The difference between the revocation time and the signature time stamp is too large"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -341,9 +340,9 @@ public class BdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-V-34.asice"))
                 .then()
-                .body("signatures[0].errors.content", Matchers.hasItems(""))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors.content", Matchers.hasItems(""))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -365,9 +364,9 @@ public class BdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("23613_TM_wrong-manifest-mimetype.bdoc"))
                 .then()
-                .body("signatures[0].errors.content", Matchers.hasItems(""))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors.content", Matchers.hasItems(""))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -389,9 +388,9 @@ public class BdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("REF-19_bdoc21-no-sig-asn1-pref.bdoc"))
                 .then()
-                .body("signatures[0].errors.content", Matchers.hasItems("The signature is not intact!"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The signature is not intact!"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -413,9 +412,9 @@ public class BdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("TM-05_bdoc21-good-nonce-policy-bes.bdoc"))
                 .then()
-                .body("signatures[0].errors.content", Matchers.hasItems("No revocation data for the certificate"))
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("signatures[0].subIndication", Matchers.is("TRY_LATER"))
+                .body("signatures[0].errors.content", Matchers.hasItems("No revocation data for the certificate"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -437,9 +436,9 @@ public class BdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("TM-04_kehtivuskinnituset.4.asice"))
                 .then()
-                .body("signatures[0].errors.content", Matchers.hasItems("No revocation data for the certificate"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is("TRY_LATER"))
+                .body("signatures[0].errors.content", Matchers.hasItems("No revocation data for the certificate"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -461,9 +460,9 @@ public class BdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("SS-4_teadmataCA.4.asice"))
                 .then()
-                .body("signatures[0].errors[0].content", Matchers.is("The certificate chain for signature is not trusted, there is no trusted anchor."))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
+                .body("signatures[0].errors[0].content", Matchers.is("The certificate chain for signature is not trusted, there is no trusted anchor."))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -485,9 +484,9 @@ public class BdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("TM-15_revoked.4.asice"))
                 .then()
-                .body("signatures[0].errors.content", Matchers.hasItems("The certificate is revoked!"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors.content", Matchers.hasItems("The certificate is revoked!"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -509,9 +508,9 @@ public class BdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("TM-16_unknown.4.asice"))
                 .then()
-                .body("signatures[0].errors.content", Matchers.hasItems(""))
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors.content", Matchers.hasItems(""))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -533,9 +532,9 @@ public class BdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("KS-21_fileeemaldatud.4.asice"))
                 .then()
-                .body("signatures[0].errors[0].content", Matchers.is("The reference data object(s) is not found!"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is("SIGNED_DATA_NOT_FOUND"))
+                .body("signatures[0].errors[0].content", Matchers.is("The reference data object(s) is not found!"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -552,15 +551,63 @@ public class BdocValidationFail extends SiVaRestTests{
      *
      * File: KS-02_tyhi.bdoc
      ***/
-    @Test @Ignore //TODO: this file gives two errors, need a good solution to check them both in same time.
+    @Test
     public void bdocNoFilesInContainer() {
         setTestFilesDirectory("bdoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("KS-02_tyhi.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "KS-02_tyhi.bdoc", "bdoc"))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
-                .body("requestErrors[0].message", Matchers.containsString(MAY_NOT_BE_EMPTY));
+                .body("requestErrors.message", Matchers.hasItem(MAY_NOT_BE_EMPTY))
+                .body("requestErrors.message", Matchers.hasItem(INVALID_BASE_64));
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationFail-24
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Bdoc signed data file has been removed from the container
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: TM-10_noncevale.4.asice
+     ***/
+    @Test
+    public void bdocWrongOcspNonce() {
+        setTestFilesDirectory("bdoc/live/timemark/");
+        post(validationRequestFor("TM-10_noncevale.4.asice"))
+                .then()
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors.content", Matchers.hasItem("Nonce is invalid"))
+                .body("validSignaturesCount", Matchers.is(0));
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationFail-25
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Bdoc signed data file(s) don't match the hash values in reference elements
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: REF-14_filesisumuudetud.4.asice
+     ***/
+    @Test
+    public void bdocDataFilesDontMatchHash() {
+        setTestFilesDirectory("bdoc/live/timemark/");
+        post(validationRequestFor("REF-14_filesisumuudetud.4.asice"))
+                .then()
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
+                .body("signatures[0].errors.content", Matchers.hasItem("The reference data object(s) is not intact!"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
     @Override
     protected String getTestFilesDirectory() {

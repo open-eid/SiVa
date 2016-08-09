@@ -136,7 +136,6 @@ public class PdfBaselineProfileTests extends SiVaRestTests{
      *
      * File: hellopades-lt1-lt2-Serial.pdf
      */
-    @Ignore("Error: The trusted service of the revocation has not expected type identifier!")
     @Test
     public void documentSignedWithMultipleSignersSerialSignature() {
         assertAllSignaturesAreValid(postForReport("hellopades-lt1-lt2-Serial.pdf"));
@@ -155,7 +154,6 @@ public class PdfBaselineProfileTests extends SiVaRestTests{
      *
      * File: hellopades-lt1-lt2-parallel3.pdf
      */
-    @Ignore("Error: The trusted service of the revocation has not expected type identifier!")
     @Test
     public void documentSignedWithMultipleSignersParallelSignature() {
         assertAllSignaturesAreValid(postForReport("hellopades-lt1-lt2-parallel3.pdf"));
@@ -174,8 +172,6 @@ public class PdfBaselineProfileTests extends SiVaRestTests{
      *
      * File: hellopades-lt1-lt2-parallel3.pdf
      */
-
-    @Ignore("Error: The trusted service of the revocation has not expected type identifier!")
     @Test
     public void ifSignerCertificateIsNotQualifiedAndWithoutSscdItIsAcceptedWithWarning() {
         QualifiedReport report = postForReport("hellopades-lt1-lt2-parallel3.pdf");

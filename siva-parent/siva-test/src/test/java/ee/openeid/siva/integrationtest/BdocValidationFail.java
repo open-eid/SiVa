@@ -609,6 +609,79 @@ public class BdocValidationFail extends SiVaRestTests{
                 .body("signatures[0].errors.content", Matchers.hasItem("The reference data object(s) is not intact!"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
+
+    /***
+     * TestCaseID: Bdoc-ValidationFail-26
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Asice Baseline-T signature
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: TS-06_23634_TS_missing_OCSP.asice
+     ***/
+    @Test
+    public void bdocBaselineTSignature() {
+        setTestFilesDirectory("bdoc/live/timestamp/");
+        post(validationRequestFor("TS-06_23634_TS_missing_OCSP.asice"))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is("TRY_LATER"))
+                .body("signatures[0].errors.content", Matchers.hasItem("No revocation data for the certificate"))
+                .body("validSignaturesCount", Matchers.is(0));
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationFail-27
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Bdoc 	OCSP response doesn't correspond to the signers certificate
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: NS28_WrongSignerCertInOCSPResp.bdoc
+     ***/
+    @Test
+    public void bdocWrongSignersCertInOcspResponse() {
+        setTestFilesDirectory("bdoc/live/timemark/");
+        post(validationRequestFor("NS28_WrongSignerCertInOCSPResp.bdoc"))
+                .then()
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is("TRY_LATER"))
+                .body("signatures[0].errors.content", Matchers.hasItem("No revocation data for the certificate"))
+                .body("validSignaturesCount", Matchers.is(0));
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationFail-28
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Bdoc certificate's validity time is not in the period of OCSP producedAt time
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: 23154_test1-old-sig-sigat-OK-prodat-NOK-1.bdoc
+     ***/
+    @Test
+    public void bdocCertificateValidityOutOfOcspRange() {
+        setTestFilesDirectory("bdoc/live/timemark/");
+        post(validationRequestFor("23154_test1-old-sig-sigat-OK-prodat-NOK-1.bdoc"))
+                .then()
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is("")) //TODO: VAL-242 Subindication should not be empty.
+                .body("signatures[0].errors.content", Matchers.hasItem("Signature has been created with expired certificate"))
+                .body("validSignaturesCount", Matchers.is(0));
+    }
     @Override
     protected String getTestFilesDirectory() {
         return testFilesDirectory;

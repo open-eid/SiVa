@@ -191,7 +191,8 @@ public class ValidationReportValueVerification extends SiVaRestTests{
                 .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
                 .body("signatures[0].errors", Matchers.hasSize(0))
                 .body("signatures[0].warnings", Matchers.hasSize(0))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"));
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validSignaturesCount", Matchers.is(2));
     }
 
     /***
@@ -220,7 +221,8 @@ public class ValidationReportValueVerification extends SiVaRestTests{
                 .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
                 .body("signatures[0].errors", Matchers.hasSize(0))
                 .body("signatures[0].warnings", Matchers.hasSize(0))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"));
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validSignaturesCount", Matchers.is(3));
     }
 
     /***
@@ -248,7 +250,8 @@ public class ValidationReportValueVerification extends SiVaRestTests{
                 .body("signatures[0].signatureLevel", Matchers.is(""))
                 .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
                 .body("signatures[0].errors", Matchers.hasSize(0))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"));
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validSignaturesCount", Matchers.is(3));
     }
 
     /***
@@ -276,7 +279,8 @@ public class ValidationReportValueVerification extends SiVaRestTests{
                 .body("signatures[0].signatureLevel", Matchers.is(""))
                 .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
                 .body("signatures[0].errors", Matchers.hasSize(0))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"));
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validSignaturesCount", Matchers.is(3));
     }
 
 

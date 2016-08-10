@@ -60,7 +60,7 @@ public class BdocValidationPass extends SiVaRestTests{
      *
      * RequirementID:
      *
-     * Title: Bdoc with multiple valid signatures
+     * Title: Bdoc TM with multiple valid signatures
      *
      * Expected Result: The document should pass the validation
      *
@@ -301,6 +301,25 @@ public class BdocValidationPass extends SiVaRestTests{
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validSignaturesCount", Matchers.is(1));
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationPass-13
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Bdoc TS with multiple valid signatures
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: BDOC-TS.bdoc
+     ***/
+    @Test
+    public void bdocTsValidMultipleSignatures() {
+        setTestFilesDirectory("bdoc/live/timestamp/");
+        assertAllSignaturesAreValid(postForReport("BDOC-TS.bdoc"));
     }
 
     @Override

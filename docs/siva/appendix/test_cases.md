@@ -27,8 +27,6 @@ List of Test Cases
   * Expected Result: The document should fail the validation
   * File: BdocMultipleSignaturesMixedWithValidAndInvalid.bdoc
 
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
 **TestCaseID: Bdoc-ValidationFail-4**
 
   * TestType: Automated
@@ -81,11 +79,9 @@ List of Test Cases
 
   * TestType: Automated
   * RequirementID: []()
-  * Title: Asice OCSP certificate is not trusted
+  * Title: Bdoc OCSP certificate is not trusted
   * Expected Result: The document should fail the validation
-  * File: EE_SER-AEX-B-LT-I-27.asice
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+  * File:  TM-01_bdoc21-unknown-resp.bdoc
 
 **TestCaseID: Bdoc-ValidationFail-11**
 
@@ -215,6 +211,30 @@ List of Test Cases
   * Expected Result: The document should fail the validation
   * File: REF-14_filesisumuudetud.4.asice
 
+**TestCaseID: Bdoc-ValidationFail-26**
+
+  * TestType: Automated
+  * RequirementID: []()
+  * Title: Asice Baseline-T signature
+  * Expected Result: The document should fail the validation
+  * File: TS-06_23634_TS_missing_OCSP.asice
+
+**TestCaseID: Bdoc-ValidationFail-27**
+
+  * TestType: Automated
+  * RequirementID: []()
+  * Title: Bdoc 	OCSP response doesn't correspond to the signers certificate
+  * Expected Result: The document should fail the validation
+  * File: NS28_WrongSignerCertInOCSPResp.bdoc
+
+**TestCaseID: Bdoc-ValidationFail-28**
+
+  * TestType: Automated
+  * RequirementID: []()
+  * Title: Bdoc certificate's validity time is not in the period of OCSP producedAt time
+  * Expected Result: The document should fail the validation
+  * File: 23154_test1-old-sig-sigat-OK-prodat-NOK-1.bdoc
+
 
 ## BdocValidationPass.java
 
@@ -230,7 +250,7 @@ List of Test Cases
 
   * TestType: Automated
   * RequirementID: []()
-  * Title: Bdoc with multiple valid signatures
+  * Title: Bdoc TM with multiple valid signatures
   * Expected Result: The document should pass the validation
   * File: Valid_IDCard_MobID_signatures.bdoc
 
@@ -259,8 +279,6 @@ List of Test Cases
   * Title: Bdoc signed with Mobile-ID, ECC-SHA256 signature with prime256v1 key
   * Expected Result: The document should pass the validation
   * File: 24050_short_ecdsa_correct_file_mimetype.bdoc
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: Bdoc-ValidationPass-6**
 
@@ -319,6 +337,14 @@ List of Test Cases
   * Title: Bdoc with Baseline-LT_TM and QES signature level and ESTEID-SK 2011 certificate chain with valid signature
   * Expected Result: The document should pass the validation
   * File: BDOC2.1.bdoc
+
+**TestCaseID: Bdoc-ValidationPass-13**
+
+  * TestType: Automated
+  * RequirementID: []()
+  * Title: Bdoc TS with multiple valid signatures
+  * Expected Result: The document should pass the validation
+  * File: BDOC-TS.bdoc
 
 
 ## DdocValidationFail.java
@@ -504,6 +530,38 @@ List of Test Cases
   * Expected Result: The document should pass the validation
   * File: IB-4270_ESTEID-SK 2015  SK OCSP RESPONDER 2011.ddoc
 
+**TestCaseID: Ddoc-ValidationPass-11**
+
+  * TestType: Automated
+  * RequirementID: []()
+  * Title: Ddoc v1.1 ESTEID-SK certificate chain with valid signature
+  * Expected Result: The document should pass the validation
+  * File: EID-SK _ EID-SK OCSP RESPONDER.ddoc
+
+**TestCaseID: Ddoc-ValidationPass-12**
+
+  * TestType: Automated
+  * RequirementID: []()
+  * Title: Ddoc v1.1 ESTEID-SK 2007 and OCSP 2010 certificate chain with valid signature
+  * Expected Result: The document should pass the validation
+  * File: EID-SK 2007 _ EID-SK 2007 OCSP RESPONDER 2010.ddoc
+
+**TestCaseID: Ddoc-ValidationPass-13**
+
+  * TestType: Automated
+  * RequirementID: []()
+  * Title: Ddoc v1.3 ESTEID-SK 2007 and OCSP 2007 certificate chain with valid signature
+  * Expected Result: The document should pass the validation
+  * File: EID-SK 2007 _ EID-SK 2007 OCSP RESPONDER.ddoc
+
+**TestCaseID: Ddoc-ValidationPass-14**
+
+  * TestType: Automated
+  * RequirementID: []()
+  * Title: Ddoc v1.3 ESTEID-SK 2011 and OCSP 2011 certificate chain with valid signature
+  * Expected Result: The document should pass the validation
+  * File: EID-SK 2011 _ SK OCSP RESPONDER 2011.ddoc
+
 
 ## DocumentFormatTests.java
 
@@ -602,8 +660,6 @@ List of Test Cases
   * Expected Result: Bigger documents with valid signature should pass
   * File: singlesignature_lt_1-2mb.pdf
 
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
 **TestCaseID: PDF-LargeFiles-4**
 
   * TestType: Automated
@@ -611,8 +667,6 @@ List of Test Cases
   * Title: Larger signed PDF files (PAdES Baseline LT).
   * Expected Result: Bigger documents with valid signature should pass
   * File: digidocservice-signed-lta-1-2mb.pdf
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: PDF-LargeFiles-5**
 
@@ -622,8 +676,6 @@ List of Test Cases
   * Expected Result: Bigger documents with valid signature should pass
   * File: singlesignature_lt_3-8mb.pdf
 
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
 **TestCaseID: PDF-LargeFiles-6**
 
   * TestType: Automated
@@ -631,8 +683,6 @@ List of Test Cases
   * Title: Larger signed PDF files (PAdES Baseline LT).
   * Expected Result: Bigger documents with valid signature should pass
   * File: egovenrment-benchmark-lta-3-8mb.pdf
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 
 ## PdfBaselineProfileTests.java
@@ -699,8 +749,6 @@ List of Test Cases
   * Expected Result: Document signed with multiple signers with serial signatures should pass
   * File: hellopades-lt1-lt2-Serial.pdf
 
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
 **TestCaseID: PDF-BaselineProfile-8**
 
   * TestType: Automated
@@ -709,8 +757,6 @@ List of Test Cases
   * Expected Result: Document with parallel signatures should pass
   * File: hellopades-lt1-lt2-parallel3.pdf
 
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
 **TestCaseID: PDF-BaselineProfile-9**
 
   * TestType: Automated
@@ -718,8 +764,6 @@ List of Test Cases
   * Title: PDF document signed with multiple signers parallel signature without Sscd
   * Expected Result: Document with no qualified and without SSCD should warn
   * File: hellopades-lt1-lt2-parallel3.pdf
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 
 ## PdfSignatureCryptographicAlgorithmTests.java
@@ -758,8 +802,6 @@ List of Test Cases
   * Expected Result: Document signed with ECDSA224 algorithm should pass
   * File: hellopades-lt-sha256-ec224.pdf
 
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
 **TestCaseID: PDF-SigCryptoAlg-5**
 
   * TestType: Automated
@@ -767,8 +809,6 @@ List of Test Cases
   * Title: ECDSA256 algorithms (PAdES Baseline LT)
   * Expected Result: Document signed with ECDSA256 algorithm should pass
   * File: hellopades-lt-sha256-ec256.pdf
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: PDF-SigCryptoAlg-6**
 
@@ -778,8 +818,6 @@ List of Test Cases
   * Expected Result: Document signed with RSA1024 algorithm should pass
   * File: hellopades-lt-sha256-rsa1024.pdf
 
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
 **TestCaseID: PDF-SigCryptoAlg-7**
 
   * TestType: Automated
@@ -787,8 +825,6 @@ List of Test Cases
   * Title: RSA1023 algorithms (PAdES Baseline LT)
   * Expected Result: Document signed with RSA1023 algorithm should pass
   * File: hellopades-lt-sha256-rsa1023.pdf
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: PDF-SigCryptoAlg-8**
 
@@ -798,8 +834,6 @@ List of Test Cases
   * Expected Result: Document signed with RSA2047 algorithm should pass
   * File: hellopades-lt-sha256-rsa2047.pdf
 
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
 **TestCaseID: PDF-SigCryptoAlg-9**
 
   * TestType: Automated
@@ -807,8 +841,6 @@ List of Test Cases
   * Title: RSA2048 algorithms (PAdES Baseline LT)
   * Expected Result: Document signed with RSA2048 algorithm should pass
   * File: PdfValidSingleSignature
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 
 ## PdfValidationFail.java
@@ -865,6 +897,8 @@ List of Test Cases
   * Expected Result: Document signed with expired certificate should fail
   * File: hellopades-lt-sha256-rsa2048-expired.pdf
 
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
 **TestCaseID: PDF-ValidationFail-7**
 
   * TestType: Automated
@@ -873,6 +907,8 @@ List of Test Cases
   * Expected Result: Document signed with expired certificate should fail
   * File: hellopades-lt-sha256-rsa1024-expired2.pdf
 
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
 **TestCaseID: PDF-ValidationFail-8**
 
   * TestType: Automated
@@ -880,6 +916,8 @@ List of Test Cases
   * Title: hellopadess been signed with an expired certificate, where signing time is within the original validity
   * Expected Result: Document signed with expired certificate should fail
   * File: hellopades-lt-sha1-rsa1024-expired2.pdf
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 
 ## PdfValidationPass.java
@@ -921,8 +959,6 @@ List of Test Cases
   * Title: Pdf with single valid signature
   * Expected Result: Document should pass.
   * File: PdfValidSingleSignature.pdf
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 
 ## SignaturePolicyTests.java
@@ -1075,8 +1111,6 @@ List of Test Cases
   * Expected Result: All required elements are present according to BdocDocSimpleReportSchema.json
   * File: IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc
 
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
 **TestCaseID: Bdoc-ValidationReport-4**
 
   * TestType: Automated
@@ -1084,8 +1118,6 @@ List of Test Cases
   * Title: JSON structure has all elements (Bdoc indeterminate status)
   * Expected Result: All required elements are present according to BdocDocSimpleReportSchema.json
   * File: test1-bdoc-unknown.bdoc
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: Bdoc-ValidationReport-5**
 
@@ -1095,8 +1127,6 @@ List of Test Cases
   * Expected Result: Error and subindication elements are present
   * File: IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc
 
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
 **TestCaseID: Bdoc-ValidationReport-6**
 
   * TestType: Automated
@@ -1104,8 +1134,6 @@ List of Test Cases
   * Title: Check for optional warning element
   * Expected Result: Warning element is present
   * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: Bdoc-ValidationReport-7**
 
@@ -1123,8 +1151,6 @@ List of Test Cases
   * Expected Result: All required elements are present according to SimpleReportSchema.json
   * File: hellopades-lt-sha256-ec256.pdf
 
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
 **TestCaseID: Pdf-ValidationReport-9**
 
   * TestType: Automated
@@ -1132,8 +1158,6 @@ List of Test Cases
   * Title: JSON structure has all elements (Pdf valid Multiple signatures)
   * Expected Result: All required elements are present according to SimpleReportSchema.json
   * File:
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: Pdf-ValidationReport-10**
 
@@ -1152,8 +1176,6 @@ List of Test Cases
   * Title: JSON structure has all elements (Pdf indeterminate status)
   * Expected Result: All required elements are present according to SimpleReportSchema.json
   * File: hellopades-lt-rsa1024-sha1-expired.pdf
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: Pdf-ValidationReport-12**
 
@@ -1248,8 +1270,6 @@ List of Test Cases
   * Expected Result: All required elements are present and meet the expected values.
   * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
 
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
 **TestCaseID: Bdoc-ValidationReportValue-4**
 
   * TestType: Automated
@@ -1257,8 +1277,6 @@ List of Test Cases
   * Title: Verification of values in Validation Report XAdES_BASELINE_LT_TM, AdESqc, FullSignatureScope
   * Expected Result: All required elements are present and meet the expected values.
   * File: 23200_weakdigest-wrong-nonce.asice
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: Bdoc-ValidationReportValue-5**
 
@@ -1492,8 +1510,6 @@ List of Test Cases
   * Expected Result: Error is returned
   * File: Valid_IDCard_MobID_signatures.bdoc
 
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
 
 ## SoapValidationReportValueTests.java
 
@@ -1520,8 +1536,6 @@ List of Test Cases
   * Title: Verification of values in Validation Report XAdES_BASELINE_LT, AdES, FullSignatureScope
   * Expected Result: All required elements are present and meet the expected values.
   * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: Soap-ValidationReportValue-4**
 
@@ -1582,8 +1596,6 @@ List of Test Cases
   * Title: Verification of values in Validation Report, PAdES_baseline_LT, checks for missing info
   * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
   * File: pades_lt_two_valid_sig.pdf
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: Soap-ValidationReportValue-11**
 

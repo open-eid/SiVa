@@ -45,6 +45,7 @@ public class PDFValidationService implements ValidationService {
             }
 
             final DSSDocument dssDocument = createDssDocument(validationDocument);
+            validationDocument = null;
 
             if (!new EstonianPDFDocumentValidator().isSupported(dssDocument)) {
                 throw new MalformedDocumentException();

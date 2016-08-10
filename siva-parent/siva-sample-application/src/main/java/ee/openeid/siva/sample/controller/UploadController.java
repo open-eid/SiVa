@@ -73,6 +73,7 @@ class UploadController {
             Thread.currentThread().interrupt();
         } finally {
             fileUploadService.deleteUploadedFile(timestamp);
+            validationTaskRunner.clearValidationResults();
         }
 
         return REDIRECT_PATH;

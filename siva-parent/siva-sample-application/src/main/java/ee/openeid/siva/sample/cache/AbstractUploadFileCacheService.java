@@ -46,7 +46,7 @@ public class AbstractUploadFileCacheService implements UploadFileCacheService {
 
     @Override
     @CacheEvict(key = "#timestamp")
-    public void deleteUploadedFile(final long timestamp) {
+    public void deleteUploadedFile(long timestamp) {
         LOGGER.info("Remove file with timestamp {} form cache", timestamp);
     }
 }

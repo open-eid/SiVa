@@ -28,6 +28,10 @@ body {
     margin: 10px 15px 0 15px;
 }
 
+.dz-max-files-reached {
+    border-color: #f2dede;
+}
+
 .dropzone .dz-message {
     margin: 1em 0;
     min-height: 10%;

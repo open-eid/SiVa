@@ -60,10 +60,6 @@
             <groupId>io.github.openeid.siva</groupId>
             <artifactId>ddoc-validation-service</artifactId>
         </dependency>
-        <dependency>
-            <groupId>io.github.openeid.siva</groupId>
-            <artifactId>xroad-validation-service</artifactId>
-        </dependency>
 
     </dependencies>
 

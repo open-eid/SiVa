@@ -7,6 +7,7 @@ final class BDOCTestUtils {
     static final String TEST_FILES_LOCATION = "test-files/";
     static final String VALID_BDOC_TM_2_SIGNATURES = "bdoc_tm_valid_2_signatures.bdoc";
     static final String TS_NO_MANIFEST = "asic-e-baseline-lt_allan_live_no_manifest.bdoc";
+    static final String VALID_ID_CARD_MOB_ID = "Valid_IDCard_MobID_signatures.bdoc";
 
     private BDOCTestUtils() {
     }

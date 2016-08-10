@@ -27,6 +27,7 @@ public class BDOCQualifiedReportBuilder {
     private static final String GENERIC = "GENERIC";
     private static final String XADES_FORMAT_PREFIX = "XAdES_BASELINE_";
     private static final String REPORT_INDICATION_INDETERMINATE = "INDETERMINATE";
+    private static final String BDOC_SIGNATURE_FORM = "ASiC_E";
 
     private Container container;
     private String documentName;
@@ -67,6 +68,7 @@ public class BDOCQualifiedReportBuilder {
         signatureValidationData.setId(bDocSignature.getId());
         signatureValidationData.setSignatureFormat(getSignatureFormat(bDocSignature.getProfile()));
         signatureValidationData.setSignatureLevel(getSignatureLevel(bDocSignature));
+        signatureValidationData.setSignatureForm(BDOC_SIGNATURE_FORM);
         signatureValidationData.setSignedBy(removeQuotes(bDocSignature.getSigningCertificate().getSubjectName(CN)));
         signatureValidationData.setErrors(getErrors(bDocSignature));
         signatureValidationData.setSignatureScopes(getSignatureScopes(bDocSignature, dataFileNames));

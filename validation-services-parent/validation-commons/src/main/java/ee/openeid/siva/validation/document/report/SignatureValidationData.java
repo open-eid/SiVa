@@ -19,6 +19,9 @@ public class SignatureValidationData {
     @XmlElement(name = "SignatureLevel", required = true)
     private String signatureLevel;
 
+    @XmlElement(name = "SignatureForm", required = true)
+    private String signatureForm;
+
     @XmlElement(name = "SignedBy", required = true)
     private String signedBy;
 

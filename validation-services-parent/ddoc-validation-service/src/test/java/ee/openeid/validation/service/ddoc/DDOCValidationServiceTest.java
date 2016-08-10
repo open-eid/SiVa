@@ -77,6 +77,13 @@ public class DDOCValidationServiceTest {
     }
 
     @Test
+    public void qualifiedReportShouldIncludeSignatureFormWithCorrectPrefixAndVersion() throws Exception {
+        validationResult2Signatures = validationService.validateDocument(ddocValid2Signatures());
+        assertEquals("DIGIDOC_XML_1.3",validationResult2Signatures.getSignatures().get(0).getSignatureForm());
+        assertEquals("DIGIDOC_XML_1.3",validationResult2Signatures.getSignatures().get(1).getSignatureForm());
+    }
+
+    @Test
     public void qualifiedReportShouldIncludeRequiredFields() throws Exception {
         validationResult2Signatures = validationService.validateDocument(ddocValid2Signatures());
         assertNotNull(validationResult2Signatures.getPolicy());

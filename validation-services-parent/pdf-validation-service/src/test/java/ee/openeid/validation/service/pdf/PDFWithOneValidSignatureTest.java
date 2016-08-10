@@ -85,6 +85,13 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
     }
 
     @Test
+    public void validationResultForPdfShouldContainCorrectPadesSignatureForm() throws Exception {
+        QualifiedReport report = validationService.validateDocument(
+                buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE));
+        assertEquals("PAdES", report.getSignatures().get(0).getSignatureForm());
+    }
+
+    @Test
     public void validatingPdfSignedWithUnqualifiedCertificateReturnsReportWithoutErrorsButWithWarning() throws Exception {
         QualifiedReport report = validationService.validateDocument(
                 buildValidationDocument(PDF_SIGNED_WITH_UNQUALIFIED_CERTIFICATE));

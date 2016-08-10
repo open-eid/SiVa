@@ -136,11 +136,31 @@ public class BDOCValidationServiceIntegrationTest {
         assertEquals(sig.getIndication(), SignatureValidationData.Indication.TOTAL_FAILED.toString());
     }
 
+    @Test
+    public void reportForBdocValidationShouldIncludeCorrectAsiceSignatureForm() throws Exception {
+        QualifiedReport report = bdocValidationService.validateDocument(bdocValid2Signatures());
+        assertEquals("ASiC_E", report.getSignatures().get(0).getSignatureForm());
+        assertEquals("ASiC_E", report.getSignatures().get(1).getSignatureForm());
+    }
+
+    @Test
+    public void bestSignatureTimeInQualifiedBdocReportShouldNotBeBlank() throws Exception {
+        QualifiedReport report = bdocValidationService.validateDocument(bdocValidIdCardAndMobIdSignatures());
+        String bestSignatureTime1 = report.getSignatures().get(0).getInfo().getBestSignatureTime();
+        String bestSignatureTime2 = report.getSignatures().get(1).getInfo().getBestSignatureTime();
+        assertTrue(StringUtils.isNotBlank(bestSignatureTime1));
+        assertTrue(StringUtils.isNotBlank(bestSignatureTime2));
+    }
+
     private ValidationDocument bdocValid2Signatures() throws Exception {
         return BDOCTestUtils.buildValidationDocument(BDOCTestUtils.VALID_BDOC_TM_2_SIGNATURES);
     }
 
     private ValidationDocument bdocTSIndeterminateNoManifest() throws Exception {
         return BDOCTestUtils.buildValidationDocument(BDOCTestUtils.TS_NO_MANIFEST);
+    }
+
+    private ValidationDocument bdocValidIdCardAndMobIdSignatures() throws Exception {
+        return BDOCTestUtils.buildValidationDocument(BDOCTestUtils.VALID_ID_CARD_MOB_ID);
     }
 }

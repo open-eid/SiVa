@@ -21,6 +21,7 @@ import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUt
 public class PDFQualifiedReportBuilder {
 
     private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+    private static final String PDF_SIGNATURE_FORM = "PAdES";
 
     private Reports dssReports;
     private ZonedDateTime validationTime;
@@ -60,6 +61,7 @@ public class PDFQualifiedReportBuilder {
         signatureValidationData.setId(signatureId);
         signatureValidationData.setSignatureFormat(dssReports.getSimpleReport().getSignatureFormat(signatureId));
         signatureValidationData.setSignatureLevel(dssReports.getSimpleReport().getSignatureLevel(signatureId).name());
+        signatureValidationData.setSignatureForm(PDF_SIGNATURE_FORM);
         signatureValidationData.setSignedBy(parseSignedBy(signatureId));
         signatureValidationData.setIndication(parseIndication(signatureId));
         signatureValidationData.setSubIndication(parseSubIndication(signatureId));

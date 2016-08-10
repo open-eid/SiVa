@@ -19,6 +19,7 @@ public class DDOCQualifiedReportBuilder {
 
     private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final String FULL_DOCUMENT = "Full document";
+    private static final String DDOC_SIGNATURE_FORM_PREFIX = "DIGIDOC_XML_";
 
     private SignedDoc signedDoc;
     private String documentName;
@@ -69,9 +70,9 @@ public class DDOCQualifiedReportBuilder {
 
     private SignatureValidationData createSignatureValidationData(Signature signature) {
         SignatureValidationData signatureValidationData = new SignatureValidationData();
-
         signatureValidationData.setId(signature.getId());
         signatureValidationData.setSignatureFormat(getSignatureFormat());
+        signatureValidationData.setSignatureForm(getSignatureForm());
         signatureValidationData.setSignedBy(CertUtil.subjectCN(signature.getKeyInfo().getSignersCertificate()));
         signatureValidationData.setErrors(getErrors(signature));
         signatureValidationData.setSignatureScopes(getSignatureScopes());
@@ -86,6 +87,10 @@ public class DDOCQualifiedReportBuilder {
 
         return signatureValidationData;
 
+    }
+
+    private String getSignatureForm() {
+        return DDOC_SIGNATURE_FORM_PREFIX + signedDoc.getVersion();
     }
 
     private Info createEmptySignatureInfo() {

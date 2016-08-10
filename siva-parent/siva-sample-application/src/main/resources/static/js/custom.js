@@ -3,6 +3,7 @@
     Dropzone.autoDiscover = false;
 
     Dropzone.options.sivaDropzone = {
+        maxFiles: 1,
         maxFilesize: 11,
         dictDefaultMessage: 'Drop files here or click to browse for upload file'
     };

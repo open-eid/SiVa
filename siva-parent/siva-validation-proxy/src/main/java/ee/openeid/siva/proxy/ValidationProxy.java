@@ -7,7 +7,6 @@ import ee.openeid.siva.proxy.http.RESTProxyService;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.service.ValidationService;
-import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -25,17 +24,11 @@ public class ValidationProxy {
 
     public QualifiedReport validate(ProxyDocument proxyDocument) {
         if (proxyDocument.getDocumentType() == DocumentType.XROAD) {
-            return sendRESTValidationRequest(proxyDocument);
+            return restProxyService.validate(createValidationDocument(proxyDocument));
         }
 
         return getServiceForType(proxyDocument.getDocumentType())
                 .validateDocument(createValidationDocument(proxyDocument));
-    }
-
-    private QualifiedReport sendRESTValidationRequest(ProxyDocument proxyDocument) {
-        ValidationDocument validationDocument = createValidationDocument(proxyDocument);
-        validationDocument.setDataBase64Encoded(Base64.encodeBase64String(proxyDocument.getBytes()));
-        return restProxyService.validate(validationDocument);
     }
 
     private ValidationService getServiceForType(DocumentType documentType) {

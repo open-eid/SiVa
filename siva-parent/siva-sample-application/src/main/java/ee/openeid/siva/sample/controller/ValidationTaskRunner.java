@@ -51,6 +51,10 @@ public class ValidationTaskRunner {
         return validationResults.get(resultType);
     }
 
+    public void clearValidationResults() {
+        validationResults.clear();
+    }
+
     @Autowired
     @Qualifier(value = SivaServiceType.JSON_SERVICE)
     public void setJsonValidationService(final ValidationService jsonValidationService) {

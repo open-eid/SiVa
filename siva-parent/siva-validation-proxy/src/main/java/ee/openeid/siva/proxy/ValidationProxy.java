@@ -25,13 +25,17 @@ public class ValidationProxy {
 
     public QualifiedReport validate(ProxyDocument proxyDocument) {
         if (proxyDocument.getDocumentType() == DocumentType.XROAD) {
-            ValidationDocument validationDocument = createValidationDocument(proxyDocument);
-            validationDocument.setDataBase64Encoded(Base64.encodeBase64String(proxyDocument.getBytes()));
-            return restProxyService.validate(validationDocument);
+            return sendRESTValidationRequest(proxyDocument);
         }
 
         return getServiceForType(proxyDocument.getDocumentType())
                 .validateDocument(createValidationDocument(proxyDocument));
+    }
+
+    private QualifiedReport sendRESTValidationRequest(ProxyDocument proxyDocument) {
+        ValidationDocument validationDocument = createValidationDocument(proxyDocument);
+        validationDocument.setDataBase64Encoded(Base64.encodeBase64String(proxyDocument.getBytes()));
+        return restProxyService.validate(validationDocument);
     }
 
     private ValidationService getServiceForType(DocumentType documentType) {

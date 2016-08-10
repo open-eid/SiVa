@@ -2,6 +2,8 @@ package ee.openeid.siva.proxy;
 
 import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.proxy.document.ProxyDocument;
+import ee.openeid.siva.proxy.exception.ValidatonServiceNotFoundException;
+import ee.openeid.siva.proxy.http.RESTProxyService;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
@@ -14,7 +16,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -22,8 +24,12 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ValidationProxyTest {
@@ -37,12 +43,44 @@ public class ValidationProxyTest {
 
     private ValidationServiceSpy validationServiceSpy;
 
+    private RESTProxyService restProxyService;
+
     @Before
     public void setUp() {
         validationProxy = new ValidationProxy();
-        applicationContext = Mockito.mock(ApplicationContext.class);
+        applicationContext = mock(ApplicationContext.class);
+        restProxyService = mock(RESTProxyService.class);
+
         validationProxy.setApplicationContext(applicationContext);
+        validationProxy.setRestProxyService(restProxyService);
         validationServiceSpy = new ValidationServiceSpy();
+    }
+
+    @Test
+    public void givenXroadValidationWillReturnValidatedDocument() throws Exception {
+        QualifiedReport qualifiedReport = new QualifiedReport();
+        qualifiedReport.setSignaturesCount(1);
+        qualifiedReport.setValidSignaturesCount(1);
+        given(restProxyService.validate(any(ValidationDocument.class))).willReturn(qualifiedReport);
+        ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.XROAD);
+
+        QualifiedReport validationReport = validationProxy.validate(proxyDocument);
+        verify(restProxyService).validate(any(ValidationDocument.class));
+
+        assertThat(validationReport.getValidSignaturesCount()).isEqualTo(1);
+        assertThat(validationReport.getSignaturesCount()).isEqualTo(1);
+    }
+
+    @Test
+    public void applicationContextHasNoBeanWithGivenNameThrowsException() throws Exception {
+        given(applicationContext.getBean(anyString())).willThrow(new NoSuchBeanDefinitionException("Bean not loaded"));
+
+        exception.expect(ValidatonServiceNotFoundException.class);
+        exception.expectMessage("PDFValidationService not found");
+        ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.PDF);
+        validationProxy.validate(proxyDocument);
+
+        verify(applicationContext).getBean(anyString());
     }
 
     @Test

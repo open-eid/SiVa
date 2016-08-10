@@ -120,7 +120,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
      * File: test1-bdoc-unknown.bdoc
      *
      ***/
-    @Test
+    @Test @Ignore //TODO: Need a testfile with indeterminate status. With new DSS version indeterminate seems to be changed to total fail.
     public void BdocAllElementsArePresentIndeterminateSignature() {
         post(validationRequestFor("test1-bdoc-unknown.bdoc"))
                 .then()

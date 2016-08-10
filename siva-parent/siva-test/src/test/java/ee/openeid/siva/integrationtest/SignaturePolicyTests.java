@@ -24,7 +24,7 @@ public class SignaturePolicyTests extends SiVaRestTests {
      */
     @Test
     public void pdfDocumentWithNonExistingSignaturePolicyInRequestShouldReturnErrorResponse() {
-        post(validationRequestFor("hellopades-lt-sha256-ocsp-28h.pdf", "BLA"))
+        post(validationRequestFor("hellopades-lt-sha256-ocsp-28h.pdf", "Policy"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is("signaturePolicy"))
                 .body("requestErrors[0].message", Matchers.containsString("Invalid signature policy"));

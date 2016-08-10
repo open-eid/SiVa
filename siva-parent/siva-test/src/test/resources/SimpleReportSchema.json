@@ -115,7 +115,8 @@
             "type": "object",
             "properties": {
               "bestSignatureTime": {
-                "type": "string"
+                "type": "string",
+				"minLength": 1
               }
             },
             "required": [

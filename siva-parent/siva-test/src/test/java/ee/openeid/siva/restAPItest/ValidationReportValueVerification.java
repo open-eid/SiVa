@@ -121,20 +121,19 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      * Expected Result: All required elements are present and meet the expected values.
      *
-     * File: 23200_weakdigest-wrong-nonce.asice
+     * File: Baltic MoU digital signing_EST_LT_LV.bdoc
      *
      ***/
-    @Test //TODO: replace the mockup bdoc/asice mixture with "normal"  asice call when asice support is implemented properly
-    public void BdocCorrectValuesArePresentValidLtSignatureAdesqc() {
-        setTestFilesDirectory("bdoc/test/timemark/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("23200_weakdigest-wrong-nonce.asice"));
-        post(validationRequestWithValidKeys(encodedString, "23200_weakdigest-wrong-nonce.asice", "bdoc"))
+    @Test @Ignore //TODO: VAL-294
+    public void BdocCorrectValuesArePresentValidLtTmSignatureAdesqc() {
+        setTestFilesDirectory("bdoc/live/timemark/");
+        post(validationRequestFor("Baltic MoU digital signing_EST_LT_LV.bdoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("signatures[0].signatureLevel", Matchers.is("AdESqc"))
-                .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"));
+                .body("signatures[2].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[2].signatureLevel", Matchers.is("AdESqc"))
+                .body("signatures[2].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
+                .body("signatures[2].indication", Matchers.is("TOTAL-FAILED"));
     }
 
     /***
@@ -145,24 +144,24 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
-     * Title: Verification of values in Validation Report XAdES_BASELINE_LTA, QES, FullSignatureScope
+     * Title: Verification of values in Validation Report XAdES_BASELINE_LT-TM, AdESqc
      *
      * Expected Result: All required elements are present and meet the expected values.
      *
-     * File: EE_SER-AEX-B-LTA-V-24.pdf
+     * File: 23200_weakdigest-wrong-nonce.asice
      *
      ***/
     @Test
-    @Ignore
     public void BdocCorrectValuesArePresentInvalidLtSignatureAdesqc() {
-        setTestFilesDirectory("bdoc/live/timestamp/");
-        post(validationRequestFor("EE_SER-AEX-B-LTA-V-24.bdoc"))
+        setTestFilesDirectory("bdoc/test/timemark/");
+        post(validationRequestFor("23200_weakdigest-wrong-nonce.asice"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LTA"))
-                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].signatureLevel", Matchers.is("AdESqc"))
                 .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"));
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /***
@@ -187,9 +186,10 @@ public class ValidationReportValueVerification extends SiVaRestTests{
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"))
                 .body("signatures[0].signatureFormat", Matchers.is("SK_XML_1.0"))
-                .body("signatures[0].signatureLevel", Matchers.is(""))
-                .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
+                .body("signatures[0].signatureLevel", Matchers.isEmptyString())
+                .body("signatures[0].signatureScopes[0].scope", Matchers.isEmptyString())
                 .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].info.bestSignatureTime", Matchers.isEmptyString())
                 .body("signatures[0].warnings", Matchers.hasSize(0))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validSignaturesCount", Matchers.is(2));
@@ -217,9 +217,10 @@ public class ValidationReportValueVerification extends SiVaRestTests{
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"))
                 .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.1"))
-                .body("signatures[0].signatureLevel", Matchers.is(""))
-                .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
+                .body("signatures[0].signatureLevel", Matchers.isEmptyString())
+                .body("signatures[0].signatureScopes[0].scope", Matchers.isEmptyString())
                 .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].info.bestSignatureTime", Matchers.isEmptyString())
                 .body("signatures[0].warnings", Matchers.hasSize(0))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validSignaturesCount", Matchers.is(3));
@@ -247,8 +248,8 @@ public class ValidationReportValueVerification extends SiVaRestTests{
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"))
                 .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.2"))
-                .body("signatures[0].signatureLevel", Matchers.is(""))
-                .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
+                .body("signatures[0].signatureLevel",  Matchers.isEmptyString())
+                .body("signatures[0].signatureScopes[0].scope",  Matchers.isEmptyString())
                 .body("signatures[0].errors", Matchers.hasSize(0))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validSignaturesCount", Matchers.is(3));
@@ -276,9 +277,10 @@ public class ValidationReportValueVerification extends SiVaRestTests{
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"))
                 .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("signatures[0].signatureLevel", Matchers.is(""))
-                .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
+                .body("signatures[0].signatureLevel", Matchers.isEmptyString())
+                .body("signatures[0].signatureScopes[0].scope", Matchers.isEmptyString())
                 .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].info.bestSignatureTime", Matchers.isEmptyString())
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validSignaturesCount", Matchers.is(3));
     }

@@ -1,4 +1,4 @@
-# Signature Verification Service 
+# Signature Verification Service
 
 [![Build Status](https://travis-ci.org/open-eid/SiVa.svg?branch=develop)](https://travis-ci.org/open-eid/SiVa)
 [![Coverage Status](https://coveralls.io/repos/github/open-eid/SiVa/badge.svg?branch=develop)](https://coveralls.io/github/open-eid/SiVa?branch=develop)
@@ -21,11 +21,11 @@ signed document formats are: BDOC, DDOC and PDF files with at least signature le
 
 Below is list of Java libraries we use and for which digitally signed document format we use it for:
 
-* [JDigiDoc](https://github.com/open-eid/jdigidoc) - is used to validate Estonian older digital 
+* [JDigiDoc](https://github.com/open-eid/jdigidoc) - is used to validate Estonian older digital
   signature format called DDOC
-* [DigiDoc4J](https://github.com/open-eid/digidoc4j) - is used to validate BDOC digital signature container 
-  that are compliant with ASiCE standard  
-* [DigiDoc4J DSS fork](https://github.com/open-eid/sd-dss) - to validate digitally signed PDF files that 
+* [DigiDoc4J](https://github.com/open-eid/digidoc4j) - is used to validate BDOC digital signature container
+  that are compliant with ASiCE standard
+* [DigiDoc4J DSS fork](https://github.com/open-eid/sd-dss) - to validate digitally signed PDF files that
   comply with Estonian laws
 
 ## Requirements
@@ -46,7 +46,7 @@ Recommended way of building this project is using [Maven Wrapper](https://github
 Run following command:
 
 ```bash
-./mvnw clean install 
+./mvnw clean install
 ```
 
 ## How to run
@@ -89,7 +89,7 @@ Performance tests are disabled by default, but can be enabled with maven paramet
 and integration tests will be executed prior the performance tests, but it is possible to skip them. When executing the performance tests, SiVa
 Web application has to be started before the tests are executed.
 
-> **Note**: PDF load test files contain test certificates. In order for PDF load tests to succeed 
+> **Note**: PDF load test files contain test certificates. In order for PDF load tests to succeed
 > SiVa application should be started with test certificates preloaded.
 
 To load trusted test certificates in addition to TSL "test" spring profile should be activated at startup, for example:

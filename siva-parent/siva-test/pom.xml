@@ -99,7 +99,7 @@
                         <configuration>
                             <jMeterProcessJVMSettings>
                                 <xms>2048</xms>
-                                <xmx>2048</xmx>
+                                <xmx>4096</xmx>
                             </jMeterProcessJVMSettings>
                         </configuration>
                         <executions>

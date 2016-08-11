@@ -65,7 +65,7 @@ class UploadController {
             validationTaskRunner.run(uploadedFile);
 
             setModelFlashAttributes(redirectAttributes, getJsonValidationResult(), getSoapValidationResult());
-        } catch (final IOException e) {
+        } catch (IOException e) {
             LOGGER.warn("File upload problem", e);
             redirectAttributes.addFlashAttribute("File upload failed with message: " + e.getMessage());
         } catch (InterruptedException e) {

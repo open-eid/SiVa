@@ -10,13 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class BDOCConfigurationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(BDOCConfigurationService.class);
-    private final Map<String, Configuration> policyList = new HashMap<>();
+    private final Map<String, Configuration> policyList = new ConcurrentHashMap<>();
 
     private Configuration configuration;
     private BDOCSignaturePolicyProperties properties;

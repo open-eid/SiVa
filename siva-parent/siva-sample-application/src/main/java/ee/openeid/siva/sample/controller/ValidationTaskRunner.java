@@ -22,7 +22,7 @@ public class ValidationTaskRunner {
 
     private Map<ValidationResultType, String> validationResults = new ConcurrentHashMap<>();
 
-    public void run(UploadedFile uploadedFile) throws InterruptedException {
+    void run(UploadedFile uploadedFile) throws InterruptedException {
         ExecutorService executorService = Executors.newFixedThreadPool(2);
         executorService.submit(() -> validateFile(jsonValidationService, ValidationResultType.JSON, uploadedFile));
         executorService.submit(() -> validateFile(soapValidationService, ValidationResultType.SOAP, uploadedFile));
@@ -47,11 +47,11 @@ public class ValidationTaskRunner {
         }
     }
 
-    public String getValidationResult(ValidationResultType resultType) {
+    String getValidationResult(ValidationResultType resultType) {
         return validationResults.get(resultType);
     }
 
-    public void clearValidationResults() {
+    void clearValidationResults() {
         validationResults.clear();
     }
 

@@ -10,28 +10,7 @@ public class SignaturePolicyTests extends SiVaRestTests {
     private static final String TEST_FILES_DIRECTORY = "signature_policy_test_files/";
 
     /**
-     * TestCaseID: PDF-SigPol-1
-     *
-     * TestType: Automated
-     *
-     * RequirementID:
-     *
-     * Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation more than 24 hours later than the signatures Time Stamp.
-     *
-     * Expected Result: validation should fail with error when signature policy is set to a non-existing one
-     *
-     * File: hellopades-lt-sha256-ocsp-28h.pdf
-     */
-    @Test
-    public void pdfDocumentWithNonExistingSignaturePolicyInRequestShouldReturnErrorResponse() {
-        post(validationRequestFor("hellopades-lt-sha256-ocsp-28h.pdf", "Policy"))
-                .then()
-                .body("requestErrors[0].key", Matchers.is("signaturePolicy"))
-                .body("requestErrors[0].message", Matchers.containsString("Invalid signature policy"));
-    }
-
-    /**
-     * TestCaseID: PDF-SigPol-2
+     * TestCaseID: Signature-Policy-1
      *
      * TestType: Automated
      *
@@ -50,7 +29,7 @@ public class SignaturePolicyTests extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: PDF-SigPol-3
+     * TestCaseID: Signature-Policy-2
      *
      * TestType: Automated
      *
@@ -69,7 +48,7 @@ public class SignaturePolicyTests extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: PDF-SigPol-4
+     * TestCaseID: Signature-Policy-2
      *
      * TestType: Automated
      *
@@ -91,7 +70,7 @@ public class SignaturePolicyTests extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: PDF-SigPol-5
+     * TestCaseID: Signature-Policy-3
      *
      * TestType: Automated
      *
@@ -110,7 +89,7 @@ public class SignaturePolicyTests extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: PDF-SigPol-6
+     * TestCaseID: Signature-Policy-4
      *
      * TestType: Automated
      *
@@ -129,34 +108,13 @@ public class SignaturePolicyTests extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: BDOC-SigPol-1
+     * TestCaseID: Signature-Policy-5
      *
      * TestType: Automated
      *
      * RequirementID:
      *
-     * Title: Valid_ID_sig.bdoc
-     *
-     * Expected Result: validation should fail with error when signature policy is set to a non-existing one
-     *
-     * File: Valid_ID_sig.bdoc
-     */
-    @Test
-    public void bdocDocumentWithNonExistingSignaturePolicyInRequestShouldReturnErrorResponse() {
-        post(validationRequestFor("Valid_ID_sig.bdoc", "BLA"))
-                .then()
-                .body("requestErrors[0].key", Matchers.is("signaturePolicy"))
-                .body("requestErrors[0].message", Matchers.containsString("Invalid signature policy"));
-    }
-
-    /**
-     * TestCaseID: BDOC-SigPol-2
-     *
-     * TestType: Automated
-     *
-     * RequirementID:
-     *
-     * Title: Valid_ID_sig.bdoc
+     * Title: Bdoc with conformant EE signature
      *
      * Expected Result: Document should pass when signature policy is set to "EE"
      *

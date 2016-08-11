@@ -171,7 +171,7 @@ public class ValidationReportJsonStructureVerification extends SiVaRestTests {
     public void BdocOptionalWarningElementIsPresent() {
         setTestFilesDirectory("bdoc/test/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("23200_weakdigest-wrong-nonce.asice"));
-        post(validationRequestWithValidKeys(encodedString, "23200_weakdigest-wrong-nonce.asice", "bdoc"))
+        post(validationRequestWithValidKeys(encodedString, "23200_weakdigest-wrong-nonce.asice", "bdoc", ""))
                 .then()
                 .body("signatures.indication", Matchers.hasItem("TOTAL-FAILED"))
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));

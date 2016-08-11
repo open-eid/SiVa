@@ -23,6 +23,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
     protected static final String DOCUMENT_TYPE = "documentType";
     protected static final String FILENAME = "filename";
     protected static final String DOCUMENT = "document";
+    protected static final String SIGNATURE_POLICY = "signaturePolicy";
 
     private static final String VALIDATION_ENDPOINT = "/validate";
     private static final boolean PRINT_RESPONSE = false;
@@ -78,20 +79,22 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
 
     protected String validationRequestForExtended(String documentKey, String encodedDocument,
                                                   String filenameKey, String file,
-                                                  String documentTypeKey, String documentType) {
+                                                  String documentTypeKey, String documentType,
+                                                  String signaturePolicyKey, String signaturePolicy) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(documentKey, encodedDocument);
         jsonObject.put(filenameKey, file);
         jsonObject.put(documentTypeKey, documentType);
+        jsonObject.put(signaturePolicyKey, signaturePolicy);
         return jsonObject.toString();
     }
 
-    protected String validationRequestWithValidKeys(String encodedString, String filename, String documentType) {
+    protected String validationRequestWithValidKeys(String encodedString, String filename, String documentType, String signaturePolicy) {
         return validationRequestForExtended(
             DOCUMENT, encodedString,
             FILENAME, filename,
-            DOCUMENT_TYPE, documentType
-        );
+            DOCUMENT_TYPE, documentType,
+            SIGNATURE_POLICY, signaturePolicy);
     }
 
     private QualifiedReport mapToReport(String json) {

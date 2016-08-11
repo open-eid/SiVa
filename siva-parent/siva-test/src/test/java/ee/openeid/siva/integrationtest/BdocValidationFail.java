@@ -146,7 +146,7 @@ public class BdocValidationFail extends SiVaRestTests{
     public void bdocInvalidMimeTypeChars() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("EE_SER-AEX-B-LT-V-33.asice"));
-        post(validationRequestWithValidKeys(encodedString, "EE_SER-AEX-B-LT-V-33.asice", "bdoc"))
+        post(validationRequestWithValidKeys(encodedString, "EE_SER-AEX-B-LT-V-33.asice", "bdoc", ""))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -555,7 +555,7 @@ public class BdocValidationFail extends SiVaRestTests{
     public void bdocNoFilesInContainer() {
         setTestFilesDirectory("bdoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("KS-02_tyhi.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "KS-02_tyhi.bdoc", "bdoc"))
+        post(validationRequestWithValidKeys(encodedString, "KS-02_tyhi.bdoc", "bdoc", ""))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors.message", Matchers.hasItem(MAY_NOT_BE_EMPTY))

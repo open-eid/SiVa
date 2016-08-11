@@ -20,7 +20,7 @@
           </elementProp>
           <elementProp name="PORT" elementType="Argument">
             <stringProp name="Argument.name">PORT</stringProp>
-            <stringProp name="Argument.value">${__P(host.port,8080)</stringProp>
+            <stringProp name="Argument.value">${__P(host.port,8080)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="ENDPOINT_PATH" elementType="Argument">

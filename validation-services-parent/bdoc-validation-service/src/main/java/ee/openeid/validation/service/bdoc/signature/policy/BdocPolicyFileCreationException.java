@@ -1,4 +1,4 @@
-package ee.openeid.validation.service.bdoc.configuration;
+package ee.openeid.validation.service.bdoc.signature.policy;
 
 public class BdocPolicyFileCreationException extends RuntimeException {
     public BdocPolicyFileCreationException(Exception e) {

@@ -6,10 +6,12 @@ import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.document.report.SignatureScope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
+import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
 import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
 import ee.openeid.validation.service.bdoc.configuration.BDOCValidationServiceConfiguration;
 import ee.openeid.validation.service.bdoc.signature.policy.BDOCConfigurationService;
+import ee.openeid.validation.service.bdoc.signature.policy.BDOCSignaturePolicyService;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Rule;
 import org.junit.Test;
@@ -28,6 +30,8 @@ import static org.junit.Assert.*;
     TSLLoader.class,
     BDOCValidationServiceConfiguration.class,
     BDOCValidationService.class,
+    BDOCSignaturePolicyService.class,
+    SignaturePolicyService.class,
     BDOCConfigurationService.class
 })
 @ActiveProfiles("test")

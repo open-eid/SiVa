@@ -1,5 +1,6 @@
 package ee.openeid.validation.service.bdoc.configuration;
 
+import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
 import ee.openeid.validation.service.bdoc.signature.policy.BDOCSignaturePolicyService;
 import eu.europa.esig.dss.tsl.ServiceInfo;
 import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
@@ -21,8 +22,8 @@ import org.springframework.context.annotation.Bean;
 public class BDOCValidationServiceConfiguration {
 
     @Bean
-    public BDOCSignaturePolicyService bdocSignaturePolicyService(BDOCSignaturePolicyProperties bdocPolicySettings) {
-        return new BDOCSignaturePolicyService(bdocPolicySettings);
+    public SignaturePolicyService signaturePolicyService(BDOCSignaturePolicyProperties properties) {
+        return new SignaturePolicyService(properties);
     }
 
     @Bean

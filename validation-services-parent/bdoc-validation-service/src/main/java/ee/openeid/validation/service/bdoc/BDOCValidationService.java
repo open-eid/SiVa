@@ -23,7 +23,7 @@ import java.util.Date;
 
 @Service
 public class BDOCValidationService implements ValidationService {
-    private static final Logger logger = LoggerFactory.getLogger(BDOCValidationService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BDOCValidationService.class);
 
     private static final String CONTAINER_TYPE_DDOC = "DDOC";
 
@@ -35,7 +35,7 @@ public class BDOCValidationService implements ValidationService {
         try {
             container = createContainer(validationDocument);
         } catch (DigiDoc4JException | DSSException e) {
-            logger.error("Unable to create container from validation document", e);
+            LOGGER.error("Unable to create container from validation document", e);
             throw new MalformedDocumentException(e);
         }
         verifyContainerTypeNotDDOC(container.getType());
@@ -57,7 +57,7 @@ public class BDOCValidationService implements ValidationService {
 
     private void verifyContainerTypeNotDDOC(String containerType) {
         if (StringUtils.equalsIgnoreCase(containerType, CONTAINER_TYPE_DDOC)) {
-            logger.error("DDOC container passed to BDOC validator");
+            LOGGER.error("DDOC container passed to BDOC validator");
             throw new MalformedDocumentException();
         }
     }

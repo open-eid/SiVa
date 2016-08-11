@@ -12,11 +12,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
-public abstract class SignaturePolicyService {
+public class SignaturePolicyService {
     protected static final Logger LOGGER = LoggerFactory.getLogger(SignaturePolicyService.class);
 
     protected byte[] defaultPolicy;
-    protected Map<String, byte[]> signaturePolicies = new HashMap<>();
+    private Map<String, byte[]> signaturePolicies = new HashMap<>();
 
     public SignaturePolicyService(SignaturePolicyProperties signaturePolicyProperties) {
         LOGGER.info("Loading signature abstractPolicies for: " + signaturePolicyProperties.getClass().getSimpleName());
@@ -32,7 +32,7 @@ public abstract class SignaturePolicyService {
         return new ByteArrayInputStream(policyData);
     }
 
-    protected byte[] getContentFromPolicyPath(String policyPath) throws IOException {
+    private byte[] getContentFromPolicyPath(String policyPath) throws IOException {
         InputStream policyDataStream = null;
         if (new File(policyPath).isAbsolute()) {
             LOGGER.info("Reading policy from absolute path: " + policyPath);
@@ -85,5 +85,4 @@ public abstract class SignaturePolicyService {
     private void validateAgainstSchema(InputStream policyDataStream) {
         PolicySchemaValidator.validate(policyDataStream);
     }
-
 }

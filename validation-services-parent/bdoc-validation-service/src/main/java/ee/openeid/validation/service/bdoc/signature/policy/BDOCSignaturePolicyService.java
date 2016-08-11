@@ -1,23 +1,25 @@
 package ee.openeid.validation.service.bdoc.signature.policy;
 
 import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
-import ee.openeid.siva.validation.service.signature.policy.properties.SignaturePolicyProperties;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 
-public class BDOCSignaturePolicyService extends SignaturePolicyService {
-
-    public BDOCSignaturePolicyService(SignaturePolicyProperties signaturePolicyProperties) {
-        super(signaturePolicyProperties);
-    }
+@Service
+public class BDOCSignaturePolicyService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(BDOCSignaturePolicyService.class);
+    private SignaturePolicyService signaturePolicyService;
 
     public String getAbsolutePath(String policy) {
         LOGGER.debug("creating policy file from path {}", policy);
         InputStream inputStream = StringUtils.isEmpty(policy) ?
-                new ByteArrayInputStream(defaultPolicy) :
-                getPolicyDataStreamFromPolicy(policy);
+                new ByteArrayInputStream(signaturePolicyService.getDefaultPolicy()) :
+                signaturePolicyService.getPolicyDataStreamFromPolicy(policy);
 
         try {
             final File file = File.createTempFile(policy + "_constraint", "xml");
@@ -32,10 +34,8 @@ public class BDOCSignaturePolicyService extends SignaturePolicyService {
         }
     }
 
-    private class BdocPolicyFileCreationException extends RuntimeException {
-        public BdocPolicyFileCreationException(Exception e) {
-            super(e);
-        }
+    @Autowired
+    public void setSignaturePolicyService(SignaturePolicyService signaturePolicyService) {
+        this.signaturePolicyService = signaturePolicyService;
     }
-
 }

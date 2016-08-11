@@ -45,8 +45,6 @@ public class PDFValidationService implements ValidationService {
             }
 
             final DSSDocument dssDocument = createDssDocument(validationDocument);
-            validationDocument = null;
-
             if (!new EstonianPDFDocumentValidator().isSupported(dssDocument)) {
                 throw new MalformedDocumentException();
             }
@@ -58,7 +56,6 @@ public class PDFValidationService implements ValidationService {
             synchronized (lock) {
                 reports = validator.validateDocument(pdfSignaturePolicyService.getPolicyDataStreamFromPolicy(validationDocument.getSignaturePolicy()));
             }
-
 
             final ZonedDateTime validationTimeInGMT = ZonedDateTime.now(ZoneId.of("GMT"));
             if (LOGGER.isInfoEnabled()) {
@@ -77,10 +74,7 @@ public class PDFValidationService implements ValidationService {
                     validationDocument.getName()
             );
             return reportBuilder.build();
-        } catch (MalformedDocumentException e) {
-            endExceptionally(e);
-            throw e;
-        } catch (InvalidPolicyException e) {
+        } catch (MalformedDocumentException | InvalidPolicyException e) {
             endExceptionally(e);
             throw e;
         } catch (Exception e) {

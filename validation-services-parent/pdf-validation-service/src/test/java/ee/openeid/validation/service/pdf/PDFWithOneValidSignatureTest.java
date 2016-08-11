@@ -4,7 +4,6 @@ import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.document.report.SignatureScope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.Warning;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;

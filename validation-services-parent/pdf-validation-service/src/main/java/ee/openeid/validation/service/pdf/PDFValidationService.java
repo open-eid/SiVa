@@ -6,7 +6,7 @@ import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
-import ee.openeid.validation.service.pdf.signature.policy.PDFSignaturePolicyService;
+import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
 import ee.openeid.validation.service.pdf.validator.EstonianPDFDocumentValidator;
 import ee.openeid.validation.service.pdf.validator.report.PDFQualifiedReportBuilder;
 import eu.europa.esig.dss.DSSDocument;
@@ -19,6 +19,7 @@ import eu.europa.esig.dss.validation.reports.Reports;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.ZoneId;
@@ -30,7 +31,7 @@ public class PDFValidationService implements ValidationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(PDFValidationService.class);
 
     private CertificateVerifier certificateVerifier;
-    private PDFSignaturePolicyService pdfSignaturePolicyService;
+    private SignaturePolicyService signaturePolicyService;
     private final Object lock = new Object();
 
     @Override
@@ -54,7 +55,7 @@ public class PDFValidationService implements ValidationService {
 
             final Reports reports;
             synchronized (lock) {
-                reports = validator.validateDocument(pdfSignaturePolicyService.getPolicyDataStreamFromPolicy(validationDocument.getSignaturePolicy()));
+                reports = validator.validateDocument(signaturePolicyService.getPolicyDataStreamFromPolicy(validationDocument.getSignaturePolicy()));
             }
 
             final ZonedDateTime validationTimeInGMT = ZonedDateTime.now(ZoneId.of("GMT"));
@@ -106,8 +107,8 @@ public class PDFValidationService implements ValidationService {
     }
 
     @Autowired
-    public void setPDFSignaturePolicyService(PDFSignaturePolicyService pdfSignaturePolicyService) {
-        this.pdfSignaturePolicyService = pdfSignaturePolicyService;
+    @Qualifier(value = "PDFPolicyService")
+    public void setSignaturePolicyService(SignaturePolicyService signaturePolicyService) {
+        this.signaturePolicyService = signaturePolicyService;
     }
-
 }

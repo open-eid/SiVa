@@ -4,6 +4,7 @@ import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
+import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
 import ee.openeid.tsl.CustomCertificatesLoader;
 import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
@@ -33,7 +34,7 @@ public class PDFValidationServiceTest {
 
     PDFValidationService validationService;
 
-    private PDFSignaturePolicyService pdfSignaturePolicyService;
+    private SignaturePolicyService pdfSignaturePolicyService;
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
@@ -50,7 +51,7 @@ public class PDFValidationServiceTest {
         validationService.setCertificateVerifier(certificateVerifier);
 
         pdfSignaturePolicyService = new PDFSignaturePolicyService(policySettings);
-        validationService.setPDFSignaturePolicyService(pdfSignaturePolicyService);
+        validationService.setSignaturePolicyService(pdfSignaturePolicyService);
     }
 
     @Test

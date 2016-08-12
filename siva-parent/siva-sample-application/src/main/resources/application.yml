@@ -1,5 +1,7 @@
 server:
   port: 9000
+  compression:
+    enabled: true
 spring:
   http:
     multipart:
@@ -12,3 +14,7 @@ management:
 security:
   basic:
     path: /monitoring/**
+wro4j:
+  filterUrl: /owr
+  managerFactory:
+    preProcessors: removeSourceMaps, cssUrlRewriting, cssImport, cssMinJawr, semicolonAppender, jsMin

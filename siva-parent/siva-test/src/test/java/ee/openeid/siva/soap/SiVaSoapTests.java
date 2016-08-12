@@ -23,6 +23,7 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
     protected static final String CLIENT_FAULT = "soap:Client";
 
     protected static final String DOCUMENT_MALFORMED = "the document is malformed";
+    protected static final String BODY_MALFORMED = "No binding operation info while invoking unknown method with params unknown.";
 
     protected static String createXMLValidationRequest(String base64Document, String documentType, String filename) {
         return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
@@ -46,7 +47,7 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
                 filename);
     }
 
-    protected static String createXMLValidationRequestExtended(String base64Document, String documentType, String filename, String signaturePolicy) {
+    protected static String createXMLValidationRequestExtended(String base64Document, String filename, String documentType, String signaturePolicy) {
         return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
                 "   <soapenv:Header/>\n" +
                 "   <soapenv:Body>\n" +
@@ -62,11 +63,11 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
                 "</soapenv:Envelope>";
     }
 
-    protected String validationRequestForDocumentExtended(String document, String documentType, String filename, String signaturePolicy) {
+    protected String validationRequestForDocumentExtended(String document, String filename, String documentType, String signaturePolicy) {
         return createXMLValidationRequestExtended(
                 document,
-                documentType,
                 filename,
+                documentType,
                 signaturePolicy);
     }
 

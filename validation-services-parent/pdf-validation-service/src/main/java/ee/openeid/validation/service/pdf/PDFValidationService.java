@@ -15,6 +15,7 @@ import eu.europa.esig.dss.InMemoryDocument;
 import eu.europa.esig.dss.MimeType;
 import eu.europa.esig.dss.validation.CertificateVerifier;
 import eu.europa.esig.dss.validation.DocumentValidator;
+import eu.europa.esig.dss.validation.executor.ValidationLevel;
 import eu.europa.esig.dss.validation.reports.Reports;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +53,10 @@ public class PDFValidationService implements ValidationService {
 
             final DocumentValidator validator = new EstonianPDFDocumentValidator(dssDocument);
             validator.setCertificateVerifier(certificateVerifier);
+
+            // Validation level was added since DSS version 4.7.1.RC1
+            // Implicitly set to ARCHIVAL_DATA, in which case the the revoked signing certificate check gets discarded somehow
+            validator.setValidationLevel(ValidationLevel.LONG_TERM_DATA);
 
             final Reports reports;
             synchronized (lock) {

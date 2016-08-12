@@ -27,7 +27,8 @@ public class PdfValidationFail extends SiVaRestTests{
     @Test
     public void certificateExpiredBeforeDocumentSigningShouldFail() {
         QualifiedReport report = postForReport("hellopades-lt-rsa1024-sha1-expired.pdf");
-        assertInvalidWithError(report.getSignatures().get(0), "No revocation data for the certificate");
+        // assertInvalidWithError(report.getSignatures().get(0), "The past signature validation is not conclusive!");
+        assertAllSignaturesAreInvalid(report);
     }
 
     /***
@@ -46,7 +47,8 @@ public class PdfValidationFail extends SiVaRestTests{
     @Test
     public void signaturesMadeWithExpiredSigningCertificatesAreInvalid() {
         QualifiedReport report = postForReport("hellopades-lt-rsa1024-sha1-expired.pdf");
-        assertInvalidWithError(report.getSignatures().get(0), "No revocation data for the certificate");
+        // assertInvalidWithError(report.getSignatures().get(0), "The past signature validation is not conclusive!");
+        assertAllSignaturesAreInvalid(report);
     }
 
     /***
@@ -62,11 +64,10 @@ public class PdfValidationFail extends SiVaRestTests{
      *
      * File: pades_lt_revoked.pdf
      ***/
-    @Ignore("Validation passes")
     @Test
     public void documentSignedWithRevokedCertificateShouldFail() {
         QualifiedReport report = postForReport("pades_lt_revoked.pdf");
-        assertInvalidWithError(report.getSignatures().get(0), "The certificate is revoked!");
+        assertInvalidWithError(report.getSignatures().get(0), "The revocation time is not posterior to best-signature-time!");
     }
 
     /***
@@ -82,8 +83,9 @@ public class PdfValidationFail extends SiVaRestTests{
      *
      * File: missing_signing_certificate_attribute.pdf
      ***/
-    @Ignore("Error: The expected format is not found!")
     @Test
+    @Ignore // Since DSS 4.7.1.RC1 the given file is identified as PAdES_BASELINE_T
+            // When PAdES_BASELINE_T is not in constraint.xml's AcceptableFormats -> Error: The expected format is not found!
     public void missingSignedAttributeForSigningCertificate() {
         QualifiedReport report = postForReport("missing_signing_certificate_attribute.pdf");
         assertInvalidWithError(report.getSignatures().get(0), "The signed attribute: 'signing-certificate' is absent!");
@@ -122,7 +124,6 @@ public class PdfValidationFail extends SiVaRestTests{
      *
      * File: hellopades-lt-sha256-rsa2048-expired.pdf
      ***/
-    @Ignore("Validation passes")
     @Test
     public void documentSignedWithExpiredRsa2048CertificateShouldFail() {
         assertAllSignaturesAreInvalid(postForReport("hellopades-lt-sha256-rsa2048-expired.pdf"));
@@ -142,7 +143,6 @@ public class PdfValidationFail extends SiVaRestTests{
      *
      * File: hellopades-lt-sha256-rsa1024-expired2.pdf
      ***/
-    @Ignore("Validation passes")
     @Test
     public void documentSignedWithExpiredRsa1024CertificateShouldFail() {
         assertAllSignaturesAreInvalid(postForReport("hellopades-lt-sha256-rsa1024-expired2.pdf"));
@@ -162,7 +162,6 @@ public class PdfValidationFail extends SiVaRestTests{
      *
      * File: hellopades-lt-sha1-rsa1024-expired2.pdf
      ***/
-    @Ignore("Validation passes")
     @Test
     public void documentSignedWithExpiredSha1CertificateShouldFail() {
         assertAllSignaturesAreInvalid(postForReport("hellopades-lt-sha1-rsa1024-expired2.pdf"));

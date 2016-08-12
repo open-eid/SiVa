@@ -28,7 +28,7 @@
             <SigningCertificate>
                 <Recognition Level="FAIL"/>
                 <Signature Level="FAIL"/>
-                <NotExpired Level="INFORM"/>
+                <NotExpired Level="FAIL"/>
                 <RevocationDataAvailable Level="FAIL"/>
                 <RevocationDataNextUpdatePresent Level="WARN"/>
                 <RevocationDataFreshness Level="FAIL"/>

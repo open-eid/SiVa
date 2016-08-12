@@ -30,7 +30,7 @@
           </elementProp>
           <elementProp name="RESPONSE_TIMEOUT" elementType="Argument">
             <stringProp name="Argument.name">RESPONSE_TIMEOUT</stringProp>
-            <stringProp name="Argument.value">${__P(host.timeout,60000)}</stringProp>
+            <stringProp name="Argument.value">${__P(host.timeout,90000)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="INIT_THREAD_COUNT" elementType="Argument">

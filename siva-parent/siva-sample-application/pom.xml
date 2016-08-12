@@ -60,6 +60,12 @@
             <artifactId>jade4j</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>eu.michael-simons</groupId>
+            <artifactId>wro4j-spring-boot-starter</artifactId>
+            <version>0.1.1</version>
+        </dependency>
+
         <!-- Caching in memory file store -->
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>

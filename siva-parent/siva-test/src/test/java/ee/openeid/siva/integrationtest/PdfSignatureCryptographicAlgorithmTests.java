@@ -126,7 +126,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * File: hellopades-lt-sha256-rsa1024.pdf
      */
-    @Test
+    @Test @Ignore //TODO: Need new test file as the cert has expired
     public void documentSignedWithSha256Rsa1024AlgoShouldPass() {
         assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-rsa1024.pdf"));
     }

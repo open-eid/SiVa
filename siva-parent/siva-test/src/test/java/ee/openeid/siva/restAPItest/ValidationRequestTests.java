@@ -749,6 +749,34 @@ public class ValidationRequestTests extends SiVaRestTests {
                 .then()
                 .body("validSignaturesCount", Matchers.is(3));
     }
+
+    /***
+     *
+     * TestCaseID: ValidationRequest-27
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Request without optional signaturePolicy field
+     *
+     * Expected Result: Validation report is returned with default policy
+     *
+     * File: Valid_IDCard_MobID_signatures.bdoc
+     *
+     ***/
+    @Test
+    public void ValidationRequestNoPolicyKey() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(DOCUMENT, encodedString);
+        jsonObject.put(FILENAME, "Valid_IDCard_MobID_signatures.bdoc");
+        jsonObject.put(DOCUMENT_TYPE, "bdoc");
+        post(jsonObject.toString())
+                .then()
+                .body("documentName",equalTo("Valid_IDCard_MobID_signatures.bdoc"));
+
+    }
     @Override
     protected String getTestFilesDirectory() {
         return testFilesDirectory;

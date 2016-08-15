@@ -727,6 +727,41 @@ public class SoapValidationRequestTests extends SiVaSoapTests {
                 .then()
                 .body("Envelope.Body.ValidateDocumentResponse.ValidationReport.ValidSignaturesCount", Matchers.is("3"));
     }
+
+    /***
+     *
+     * TestCaseID: Soap-ValidationRequest-28
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Request with no optional SignaturePolicy field
+     *
+     * Expected Result: Validation report is returned using default policy
+     *
+     * File: Valid_IDCard_MobID_signatures.bdoc
+     *
+     ***/
+    @Test
+    public void ValidationRequestNoPolicyKey() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
+        String requestBody = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
+                "   <soapenv:Header/>\n" +
+                "   <soapenv:Body>\n" +
+                "      <soap:ValidateDocument>\n" +
+                "         <soap:ValidationRequest>\n" +
+                "            <Document>" + encodedString + "</Document>\n" +
+                "            <Filename>Valid_IDCard_MobID_signatures.bdoc</Filename>\n" +
+                "            <DocumentType>BDOC</DocumentType>\n" +
+                "         </soap:ValidationRequest>\n" +
+                "      </soap:ValidateDocument>\n" +
+                "   </soapenv:Body>\n" +
+                "</soapenv:Envelope>";
+        post(requestBody)
+                .then()
+                .body("Envelope.Body.ValidateDocumentResponse.ValidationReport.ValidSignaturesCount", Matchers.is("2"));
+    }
     @Override
     protected String getTestFilesDirectory() {
         return testFilesDirectory;

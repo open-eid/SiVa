@@ -46,7 +46,7 @@ public class BdocValidationFail extends SiVaRestTests{
         QualifiedReport report = postForReport("IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc");
         assertAllSignaturesAreInvalid(report);
         assertEquals("The signature is not intact!", report.getSignatures().get(0).getErrors().get(0).getContent());
-        assertEquals(5, report.getSignatures().get(0).getErrors().size());
+        assertEquals(2, report.getSignatures().get(0).getErrors().size());
     }
 
     /***

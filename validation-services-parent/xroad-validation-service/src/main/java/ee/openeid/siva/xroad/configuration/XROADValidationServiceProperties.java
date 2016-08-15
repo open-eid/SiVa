@@ -34,13 +34,13 @@ public class XROADValidationServiceProperties {
     private String unpackPackagedConfiguration() {
         Path tempXroadConfiguration = null;
         try (InputStream configurationZipStream = getClass().getResourceAsStream(JAR_PACKAGED_CONFIGURATION)) {
-            tempXroadConfiguration = Files.createTempDirectory("siva-xroad");
+            tempXroadConfiguration = Files.createTempDirectory("siva-xroad-globalconf-");
             Path zipFilename = Paths.get(tempXroadConfiguration + File.separator + JAR_PACKAGED_CONFIGURATION);
             Files.copy(configurationZipStream, zipFilename);
 
             ZipUtil.unpack(new File(zipFilename.toAbsolutePath().toString()), tempXroadConfiguration.toFile());
 
-            LOGGER.info("XROAD Configuraiton directory: {}", zipFilename);
+            LOGGER.info("XROAD Configuration directory: {}", zipFilename);
             return tempXroadConfiguration.toAbsolutePath().toString() + File.separator + DEFAULT_CONFIGURATION_DIRECTORY;
         } catch (IOException e) {
             LOGGER.error("XROAD default configuration unpacking failed with error: {}", e.getMessage());

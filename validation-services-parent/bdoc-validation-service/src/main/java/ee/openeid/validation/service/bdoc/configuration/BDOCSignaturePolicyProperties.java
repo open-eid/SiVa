@@ -1,6 +1,7 @@
 package ee.openeid.validation.service.bdoc.configuration;
 
 import ee.openeid.siva.validation.service.signature.policy.properties.SignaturePolicyProperties;
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import javax.annotation.PostConstruct;
@@ -13,6 +14,7 @@ import java.util.stream.Stream;
 
 import static java.util.AbstractMap.SimpleEntry;
 
+@Data
 @ConfigurationProperties(prefix = "siva.bdoc.signaturePolicy")
 public class BDOCSignaturePolicyProperties extends SignaturePolicyProperties {
     private static final String DEFAULT_BDOC_POLICY = "bdoc_constraint.xml";

@@ -34,14 +34,16 @@ public class DDOCValidationService implements ValidationService {
 
     @PostConstruct
     protected void initConfig() throws DigiDocException, IOException {
-        final File file = File.createTempFile("siva-jdigidoc-", ".cfg");
+        final File file = File.createTempFile("siva-ddoc-jdigidoc-", ".cfg");
 
         try (
             InputStream inputStream = getClass().getResourceAsStream(properties.getJdigidocConfigurationFile());
             OutputStream outputStream = new FileOutputStream(file)
         ) {
+            LOGGER.info("Copying DDOC configuration file: {}", file.getAbsolutePath());
             IOUtils.copy(inputStream, outputStream);
         } finally {
+            LOGGER.info("Removing configuration file: {}", file.getAbsolutePath());
             file.deleteOnExit();
         }
 

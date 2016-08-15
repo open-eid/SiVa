@@ -5,6 +5,7 @@ import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.ValidationService;
+import ee.openeid.validation.service.ddoc.configuration.DDOCValidationServiceProperties;
 import ee.openeid.validation.service.ddoc.report.DDOCQualifiedReportBuilder;
 import ee.sk.digidoc.DigiDocException;
 import ee.sk.digidoc.SignedDoc;
@@ -14,6 +15,7 @@ import org.apache.commons.io.IOUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -25,21 +27,23 @@ import java.util.List;
 
 @Service
 public class DDOCValidationService implements ValidationService {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(DDOCValidationService.class);
-    private static final String JDIGIDOC_CONF_FILE = "/jdigidoc.cfg";
-
     private final Object lock = new Object();
+
+    private DDOCValidationServiceProperties properties;
 
     @PostConstruct
     protected void initConfig() throws DigiDocException, IOException {
-        final InputStream inputStream = getClass().getResourceAsStream(JDIGIDOC_CONF_FILE);
-        final File file = File.createTempFile("jdigidoc", "cfg");
-        file.deleteOnExit();
-        final OutputStream outputStream = new FileOutputStream(file);
+        final File file = File.createTempFile("siva-jdigidoc-", ".cfg");
 
-        IOUtils.copy(inputStream, outputStream);
-        outputStream.close();
+        try (
+            InputStream inputStream = getClass().getResourceAsStream(properties.getJdigidocConfigurationFile());
+            OutputStream outputStream = new FileOutputStream(file)
+        ) {
+            IOUtils.copy(inputStream, outputStream);
+        } finally {
+            file.deleteOnExit();
+        }
 
         ConfigManager.init(file.getAbsolutePath());
     }
@@ -51,7 +55,7 @@ public class DDOCValidationService implements ValidationService {
         }
 
         synchronized (lock) {
-            SignedDoc signedDoc;
+            SignedDoc signedDoc = null;
 
             //TODO: Why are we not using initialization errors? VAL-257
             List<DigiDocException> signedDocInitializationErrors = new ArrayList<>();
@@ -73,8 +77,16 @@ public class DDOCValidationService implements ValidationService {
             } catch (DigiDocException e) {
                 LOGGER.warn("Unexpected exception when validating DDOC document: " + e.getMessage(), e);
                 throw new ValidationServiceException(getClass().getSimpleName(), e);
+            } finally {
+                if (signedDoc != null) {
+                    signedDoc.cleanupDfCache();
+                }
             }
         }
     }
 
+    @Autowired
+    public void setProperties(DDOCValidationServiceProperties properties) {
+        this.properties = properties;
+    }
 }

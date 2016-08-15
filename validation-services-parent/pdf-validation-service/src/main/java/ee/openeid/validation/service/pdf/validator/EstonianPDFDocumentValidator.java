@@ -18,10 +18,10 @@ public class EstonianPDFDocumentValidator extends PDFDocumentValidator {
 
     @Override
     public Reports validateDocument(final String policyResourcePath) {
-
         if (policyResourcePath == null) {
             return validateDocument((InputStream) null);
         }
+
         return validateDocument(getClass().getResourceAsStream(policyResourcePath));
     }
 

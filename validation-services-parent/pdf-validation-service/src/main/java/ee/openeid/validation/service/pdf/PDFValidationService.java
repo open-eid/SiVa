@@ -95,8 +95,7 @@ public class PDFValidationService implements ValidationService {
         }
         final InMemoryDocument dssDocument = new InMemoryDocument(ValidationDocument.getBytes());
         dssDocument.setName(ValidationDocument.getName());
-        final MimeType mimeType = ValidationDocument.getMimeType();
-        dssDocument.setMimeType(mimeType);
+        dssDocument.setMimeType(MimeType.PDF);
 
         return dssDocument;
     }

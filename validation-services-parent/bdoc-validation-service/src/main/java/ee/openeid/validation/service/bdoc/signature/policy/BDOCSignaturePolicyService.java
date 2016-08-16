@@ -22,16 +22,24 @@ public class BDOCSignaturePolicyService {
                 signaturePolicyService.getPolicyDataStreamFromPolicy(policy);
 
         try {
-            final File file = File.createTempFile(policy + "_constraint", "xml");
+            File file = File.createTempFile(setTempPolicyName(policy), ".xml");
             file.deleteOnExit();
-            final OutputStream outputStream = new FileOutputStream(file);
+            OutputStream outputStream = new FileOutputStream(file);
+
+            LOGGER.info("BDOC policy constrains file added: {}", file.getAbsolutePath());
             IOUtils.copy(inputStream, outputStream);
+
             outputStream.close();
             return file.getAbsolutePath();
         } catch (IOException e) {
             LOGGER.error("Unable to create temporary file from bdoc policy resource", e);
             throw new BdocPolicyFileCreationException(e);
         }
+    }
+
+    private String setTempPolicyName(String policyName) {
+        String validPolicyName = StringUtils.isEmpty(policyName) ? "default" : policyName;
+        return "siva-bdoc-" + validPolicyName + "-constraint-";
     }
 
     @Autowired

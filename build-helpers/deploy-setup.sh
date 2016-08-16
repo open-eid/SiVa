@@ -5,6 +5,8 @@ mv ci-build-info.yml /var/apps
 mv *.jar /var/apps
 ls -al /var/apps
 
+rm /var/apps/*.log
+
 # Remove keystore directory
 rm -fr /var/apps/etc
 

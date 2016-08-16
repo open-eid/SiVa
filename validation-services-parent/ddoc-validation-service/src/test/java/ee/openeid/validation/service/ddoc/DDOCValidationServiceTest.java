@@ -8,6 +8,7 @@ import ee.openeid.siva.validation.document.report.SignatureScope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
+import ee.openeid.validation.service.ddoc.configuration.DDOCValidationServiceProperties;
 import ee.sk.digidoc.DigiDocException;
 import ee.sk.digidoc.factory.DigiDocFactory;
 import ee.sk.utils.ConfigManager;
@@ -45,6 +46,10 @@ public class DDOCValidationServiceTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
+        DDOCValidationServiceProperties properties = new DDOCValidationServiceProperties();
+        properties.setJdigidocConfigurationFile("/jdigidoc.cfg");
+
+        validationService.setProperties(properties);
         validationService.initConfig();
     }
 

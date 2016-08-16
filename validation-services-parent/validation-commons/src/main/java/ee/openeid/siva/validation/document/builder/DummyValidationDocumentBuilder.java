@@ -45,38 +45,7 @@ public class DummyValidationDocumentBuilder {
 
     public DummyValidationDocumentBuilder withName(String name) {
         validationDocument.setName(name);
-        validationDocument.setMimeType(parseFileExtension(name));
         return this;
-    }
-
-    private static MimeType parseFileExtension(String filename) {
-        String fileExtension = filename.substring(filename.lastIndexOf(".") + 1);
-        if (isPdf(fileExtension)) {
-            return MimeType.PDF;
-        }
-
-        if (isAsice(fileExtension)) {
-            return MimeType.ASICE;
-        }
-
-        if (isDdoc(fileExtension)) {
-            return MimeType.XML;
-        }
-
-        return MimeType.fromFileName(filename);
-
-    }
-
-    private static boolean isAsice(String fileExtension) {
-        return StringUtils.equalsIgnoreCase(fileExtension, "bdoc") || StringUtils.equalsIgnoreCase(fileExtension, "asice");
-    }
-
-    private static boolean isDdoc(String fileExtension) {
-        return StringUtils.equalsIgnoreCase(fileExtension, "ddoc");
-    }
-
-    private static boolean isPdf(String fileExtension) {
-        return StringUtils.equalsIgnoreCase(fileExtension, "pdf");
     }
 
     public ValidationDocument build() {

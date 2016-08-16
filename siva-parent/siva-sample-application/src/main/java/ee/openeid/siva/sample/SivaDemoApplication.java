@@ -11,4 +11,3 @@ public class SivaDemoApplication {
         SpringApplication.run(SivaDemoApplication.class, args);
     }
 }
-

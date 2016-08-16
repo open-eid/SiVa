@@ -13,7 +13,6 @@ public class MalformedPDFTest extends PDFValidationServiceTest {
     @Test
     public void validatingAPdfWithMalformedBytesResultsInMalformedDocumentException() {
         ValidationDocument validationDocument = new ValidationDocument();
-        validationDocument.setMimeType(MimeType.PDF);
         validationDocument.setName("Some name.pdf");
         validationDocument.setBytes(Base64.decode("ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA=="));
 

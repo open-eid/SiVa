@@ -126,26 +126,12 @@ public class BDOCQualifiedReportBuilder {
     }
 
     private List<Warning> getWarnings(BDocSignature bDocSignature) {
-        List<Warning> warnings = getDssSimpleReport(bDocSignature).getWarnings(bDocSignature.getId())
+        List<Warning> warnings = bDocSignature.validateSignature().getWarnings()
                 .stream()
-                .map(BDOCQualifiedReportBuilder::mapDssWarning)
+                .map(BDOCQualifiedReportBuilder::mapDigidoc4JWarning)
                 .collect(Collectors.toList());
 
-        List<String> dssWarningMessages = warnings.stream().map(Warning::getDescription).collect(Collectors.toList());
-
-        bDocSignature.validateSignature().getWarnings()
-                .stream()
-                .filter(e -> !isRepeatingMessage(dssWarningMessages, e.getMessage()))
-                .map(BDOCQualifiedReportBuilder::mapDigidoc4JWarning)
-                .forEach(warnings::add);
-
         return warnings;
-    }
-
-    private static Warning mapDssWarning(String dssWarning) {
-        Warning warning = new Warning();
-        warning.setDescription(emptyWhenNull(dssWarning));
-        return warning;
     }
 
     private static Warning mapDigidoc4JWarning(DigiDoc4JException digiDoc4JException) {
@@ -171,40 +157,12 @@ public class BDOCQualifiedReportBuilder {
     }
 
     private List<Error> getErrors(BDocSignature bDocSignature) {
-        //First get DSS errors as they have error codes
-        List<Error> errors = getDssSimpleReport(bDocSignature).getErrors(bDocSignature.getId())
+        List<Error> errors = bDocSignature.validateSignature().getErrors()
                 .stream()
-                .map(BDOCQualifiedReportBuilder::mapDssError)
-                .collect(Collectors.toList());
-
-        List<String> dssErrorMessages = errors
-                .stream()
-                .map(Error::getContent)
-                .collect(Collectors.toList());
-
-        //Add additional digidoc4j errors
-        bDocSignature.validateSignature().getErrors()
-                .stream()
-                .filter(e -> !isRepeatingMessage(dssErrorMessages, e.getMessage()))
                 .map(BDOCQualifiedReportBuilder::mapDigidoc4JException)
-                .forEach(errors::add);
+                .collect(Collectors.toList());
 
         return errors;
-    }
-
-    private static Error mapDssError(String dssError) {
-        Error error = new Error();
-        error.setContent(emptyWhenNull(dssError));
-        return error;
-    }
-
-    private static boolean isRepeatingMessage(List<String> dssMessages, String digidoc4jExceptionMessage) {
-        for (String dssMessage : dssMessages) {
-            if (digidoc4jExceptionMessage.contains(dssMessage)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private static Error mapDigidoc4JException(DigiDoc4JException digiDoc4JException) {

@@ -85,10 +85,7 @@
                 <jmeter.host.endpoint>/validate</jmeter.host.endpoint>
                 <jmeter.host.timeoutInMillis>60000</jmeter.host.timeoutInMillis>
                 <jmeter.testfiles.dir>${project.basedir}/src/test/jmeter/test-files</jmeter.testfiles.dir>
-                <jmeter.thread.init.count>5</jmeter.thread.init.count>
-                <jmeter.thread.max.count>50</jmeter.thread.max.count>
-                <jmeter.thread.increment.count>5</jmeter.thread.increment.count>
-                <jmeter.thread.increment.intervalInSecs>180</jmeter.thread.increment.intervalInSecs>
+                <jmeter.load.step.duration>60</jmeter.load.step.duration>
             </properties>
             <build>
                 <plugins>
@@ -118,10 +115,7 @@
                                         <host.timeout>${jmeter.host.timeoutInMillis}</host.timeout>
                                         <testfiles.dir>${jmeter.testfiles.dir}</testfiles.dir>
                                         <errors.dir>${project.build.directory}/jmeter/results/errors</errors.dir>
-                                        <thread.init.count>${jmeter.thread.init.count}</thread.init.count>
-                                        <thread.max.count>${jmeter.thread.max.count}</thread.max.count>
-                                        <thread.increment.count>${jmeter.thread.increment.count}</thread.increment.count>
-                                        <thread.increment.interval>${jmeter.thread.increment.intervalInSecs}</thread.increment.interval>
+                                        <load.step.duration>${jmeter.load.step.duration}</load.step.duration>
                                     </propertiesUser>
                                     <jmeterPlugins>
                                         <plugin>

@@ -49,7 +49,6 @@ public class ValidationProxy {
         ValidationDocument validationDocument = new ValidationDocument();
         validationDocument.setName(proxyDocument.getName());
         validationDocument.setBytes(proxyDocument.getBytes());
-        validationDocument.setMimeType(proxyDocument.getDocumentType().getMimeType());
         validationDocument.setSignaturePolicy(proxyDocument.getSignaturePolicy());
         return validationDocument;
     }

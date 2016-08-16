@@ -38,6 +38,7 @@ after_success:
 - "./mvnw jacoco:report coveralls:report -q -Dcoveralls.repo.token=$COVERALLS_REPO_TOKEN"
 #- "${TRAVIS_BUILD_DIR}/build-helpers/buildinfo_yml_builder.py ${TRAVIS_COMMIT} ${TRAVIS_BUILD_ID} ${TRAVIS_BUILD_NUMBER}"
 - "./mvnw -pl siva-parent/siva-webapp -pl validation-services-parent/xroad-validation-service -pl siva-parent/siva-sample-application package docker:build docker:push -DskipTests -Dsettings.security=settings-security.xml -s settings.xml"
+- "chmod 600 ${TRAVIS_BUILD_DIR}/ci-deploy-key"
 - "scp -i ci-deploy-key ci-build-info.yml ci-deploy@demoapps.eu:/home/ci-deploy"
 - "${TRAVIS_BUILD_DIR}/build-helpers/deploy.sh"
 #deploy:

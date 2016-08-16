@@ -117,10 +117,7 @@ It is possible to configure following parameters in performance test:
   * `jmeter.host.endpoint` - name of endpoint, default is /validate
   * `jmeter.host.timeoutInMillis` - response waiting timeout, default is 60000
   * `jmeter.testfiles.dir` - directory of the test files, default is ${project.basedir}/src/test/jmeter/test-files
-  * `jmeter.thread.init.count` - start thread count, default is 5
-  * `jmeter.thread.max.count` - max thread count, default is 50
-  * `jmeter.thread.increment.count` - step of thread count incrementation, default is 5
-  * `jmeter.thread.increment.intervalInSecs` - time between incrementations, default is 180
+  * `jmeter.load.step.duration` - time how long the load is kept on each throuput level, default is 60
 
 The default values can be changed inside `siva-test/pom.xml` file. It is also possible to run the tests with modifying the parameters on execution.
 

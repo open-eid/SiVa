@@ -25,7 +25,7 @@
           </elementProp>
           <elementProp name="ENDPOINT_PATH" elementType="Argument">
             <stringProp name="Argument.name">ENDPOINT_PATH</stringProp>
-            <stringProp name="Argument.value">${__P(host.endpoint,/soap/validationWebService)}</stringProp>
+            <stringProp name="Argument.value">/soap/validationWebService</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="RESPONSE_TIMEOUT" elementType="Argument">
@@ -97,7 +97,7 @@
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
-                <stringProp name="Header.value">application/json</stringProp>
+                <stringProp name="Header.value">application/XML</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>

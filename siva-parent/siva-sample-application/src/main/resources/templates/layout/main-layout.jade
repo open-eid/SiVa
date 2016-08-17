@@ -3,10 +3,14 @@ html
         title SiVa Demo application
         meta(charset="utf-8")
         meta(http-equiv="Content-Type", content="text/html; charset=utf-8")
+        meta(name="viewport",content="width=device-width, initial-scale=1")
         link(rel="stylesheet", href="/owr/site.css")
     body
         nav.navbar.navbar-fixed-top.navbar-dark.bg-inverse
-            a.navbar-brand(href="/") SiVa Sample Application
+            .navbar-header
+                a.navbar-brand(href="/")
+                    img(src="img/open-eid-logo.svg")
+                    span SiVa Sample Application
         .container
             .row
                 .col-md-12.col-lg-12

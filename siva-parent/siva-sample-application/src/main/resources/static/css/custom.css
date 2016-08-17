@@ -32,10 +32,42 @@ body {
     border-color: #f2dede;
 }
 
+.navbar-brand > img {
+    height: 2%;
+    display: inline-block;
+    margin-right: 10px;
+    width: auto;
+}
+
 .dropzone .dz-message {
     margin: 1em 0;
     min-height: 10%;
     padding-top: 10%;
     background: url("../img/upload-icon.svg") no-repeat top center;
     background-size: 10%;
+}
+
+@media screen and (max-width: 768px) {
+    .dropzone .dz-message {
+        margin: 1em 0;
+        min-height: 10%;
+        padding-top: 5%;
+        background: url("../img/upload-icon.svg") no-repeat top center;
+        background-size: 35%;
+    }
+
+    .dropzone .dz-message span {
+        display: inline-block;
+        margin-top: 25%;
+    }
+
+    .navbar-header {
+        float: left;
+        text-align: center;
+        width: 100%;
+    }
+
+    .navbar-brand {
+        float:none;
+    }
 }

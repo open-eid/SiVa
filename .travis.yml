@@ -4,6 +4,8 @@ jdk:
 - oraclejdk8
 env:
   - TMPDIR=/tmp
+services:
+  - docker
 addons:
   ssh_known_hosts: demoapps.eu
   apt:
@@ -29,26 +31,12 @@ branchespython-dev:
 install: true
 script:
 - "./mvnw clean install -q"
-- "${TRAVIS_BUILD_DIR}/build-helpers/system-test-prepare.sh"
-after_script:
-- ssh -i ci-deploy-key ci-deploy@demoapps.eu "bash -s" < ${TRAVIS_BUILD_DIR}/build-helpers/stage-deploy-cleanup.sh
 after_success:
 - "./mvnw jacoco:report coveralls:report -q -Dcoveralls.repo.token=$COVERALLS_REPO_TOKEN"
-- "${TRAVIS_BUILD_DIR}/build-helpers/buildinfo_yml_builder.py ${TRAVIS_COMMIT} ${TRAVIS_BUILD_ID} ${TRAVIS_BUILD_NUMBER}"
+- "./mvnw -pl siva-parent/siva-webapp -pl validation-services-parent/xroad-validation-service -pl siva-parent/siva-sample-application package docker:build docker:push -DskipTests -Dsettings.security=settings-security.xml -s settings.xml"
+- "chmod 600 ${TRAVIS_BUILD_DIR}/ci-deploy-key"
 - "scp -i ci-deploy-key ci-build-info.yml ci-deploy@demoapps.eu:/home/ci-deploy"
 - "${TRAVIS_BUILD_DIR}/build-helpers/deploy.sh"
-deploy:
-  provider: s3
-  access_key_id: AKIAJPTKESQQK3GFXN2Q
-  secret_access_key:
-    secure: mjUPlrP1Bklk6BUpmUY62CXqduCuPI35fv9GWGRx60IL7r+BudyfYyz4Nh4gOzy0agnM80UFpDqokmUUPp4MWQ+YhdwJlEkeoWa28m1W5sjm89g5AFj+cEgVPU7yLREhyY1BqOx8wbBDgqjr/hQvenzbGLg686fOQwXcCnFRwUe+b2toUsR8o5JB3z9pONq7YmJA009fAOoRg/DmL3kTI6AwkJmZOAgaxw9dN4m3UVotirXHuHuda3pVMsm41v+HNjwuqLuNTtbxORzAylseTl9pqB96R6y6JBkkCG5V1um95C6gKJ0L2lvxcFlx/+lMvWE4/O3zQQA5dJhSFP0m7uMd3tN/A8d5OtbpSP7MYt6hC90+2EP6etj/fDIh+BibJFYX/bBs0l5GPOBCY1fzzOZqmY8cxJuLR6/RU8yQm5V8tXoCIzNe4CbKmf96qbwxAzQn7hvV7JClU2DBUC/x0AH+OzRrw2kPlQJ63BBxLq3yvxITkfWsZTmQWb5xbxWhmggx4VyLlt1ne1b7f3y2VV4t19WRIWsa7PqBUyiUi2jMbs6JDhJ10gCqwFvbFmozyEuSk0S04Dc0Fa8WdxZvZCgAPYKFF2GZKrKnZyqUcGZMt2PIyE1exhZ87qwKU3Wugh2pSaqCsMjkhDKQM2JM0mFzG//9bdPvCApZre1mZf4=
-  bucket: open-eid-siva-travis
-  skip_cleanup: true
-  local_dir: "${TRAVIS_BUILD_DIR}/siva-parent/siva-distribution/target"
-  upload-dir: travis-build/${TRAVIS_BUILD_NUMBER}
-  region: eu-west-1
-  on:
-    branch: develop
 notifications:
   email:
     recipients:

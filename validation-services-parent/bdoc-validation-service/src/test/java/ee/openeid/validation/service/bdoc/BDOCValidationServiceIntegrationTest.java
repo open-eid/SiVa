@@ -48,7 +48,8 @@ public class BDOCValidationServiceIntegrationTest {
 
     @Test
     public void verifyCorrectPolicyIsLoadedToD4JConfiguration() throws Exception {
-        assertTrue(configurationService.loadConfiguration(null).getValidationPolicy().contains("siva-bdoc-EE-constraint"));
+        assertTrue(configurationService.loadConfiguration(null).getValidationPolicy().contains("siva-bdoc-default-constraint"));
+        assertTrue(configurationService.loadConfiguration("EE").getValidationPolicy().contains("siva-bdoc-EE-constraint"));
     }
 
     @Test

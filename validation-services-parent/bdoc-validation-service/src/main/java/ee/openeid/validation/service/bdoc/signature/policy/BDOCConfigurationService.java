@@ -26,7 +26,7 @@ public class BDOCConfigurationService {
     private void loadAllBDOCConfigurations() {
         properties.getAbstractPolicies().entrySet().forEach(e -> {
             Configuration tempConfiguration = configuration.copy();
-            configuration.setValidationPolicy(policyService.getAbsolutePath(e.getKey()));
+            tempConfiguration.setValidationPolicy(policyService.getAbsolutePath(e.getKey()));
 
             LOGGER.info("Adding BDOC validation policy: {}", e.getKey());
             policyList.put(e.getKey(), tempConfiguration);
@@ -39,7 +39,7 @@ public class BDOCConfigurationService {
 
     private Configuration loadExistingPolicy(String policyName) {
         if (!policyList.containsKey(policyName)) {
-            throw new InvalidPolicyException("Invalid signature policy");
+            throw new InvalidPolicyException("Invalid signature policy: " + policyName + "; Available abstractPolicies: " + policyList.keySet() );
         }
 
         return policyList.get(policyName);

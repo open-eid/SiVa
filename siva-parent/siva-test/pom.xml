@@ -86,6 +86,7 @@
                 <jmeter.host.timeoutInMillis>60000</jmeter.host.timeoutInMillis>
                 <jmeter.testfiles.dir>${project.basedir}/src/test/jmeter/test-files</jmeter.testfiles.dir>
                 <jmeter.load.step.duration>60</jmeter.load.step.duration>
+                <jmeter.exclude.testplans>test.jmx</jmeter.exclude.testplans>
             </properties>
             <build>
                 <plugins>
@@ -107,6 +108,9 @@
                                     <goal>jmeter</goal>
                                 </goals>
                                 <configuration>
+                                    <testFilesExcluded>
+                                        <excludeJMeterTestFile>${jmeter.exclude.testplans}</excludeJMeterTestFile>
+                                    </testFilesExcluded>
                                     <testResultsTimestamp>false</testResultsTimestamp>
                                     <propertiesUser>
                                         <host.name>${jmeter.host.name}</host.name>

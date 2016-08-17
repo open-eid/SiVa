@@ -5,7 +5,7 @@ block content
     .row
         .col-md-12
             .alert.alert-warning
-                .col-md-1.col-sm-2
+                .col-md-1.col-sm-2.hidden-md-down
                     img.icon-alert(src="img/icon-alert.svg")
                 .col-md-11
                     strong Warning!&nbsp;
@@ -13,8 +13,9 @@ block content
                     | Upload only content that does not contain confidential information.
                 .clearfix
         .col-md-12
-            h1 Upload a digitally signed file
-            p Supported file types are: BDOC, DDOC and PDF
+            h1.hidden-md-down Upload a digitally signed file
+            h3.hidden-md-up Upload signed file
+            p.hidden-md-down Supported file types are: BDOC, DDOC and PDF
             form#siva-dropzone.dropzone(action="/upload", style="width: 100%", method="POST", enctype="multipart/form-data")
                 input.hide(type="file", name="file")
     .row.hide#validation-summery

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <groups xmlns="http://www.isdc.ro/wro">
     <group name="site">
-        <css minimize="true">/webjars/bootstrap/4.0.0-alpha.2/dist/css/bootstrap.css</css>
+        <css minimize="true">/webjars/bootstrap/4.0.0-alpha.3/dist/css/bootstrap.css</css>
         <css minimize="true">/webjars/dropzone/4.2.0/dropzone.css</css>
         <css minimize="true">/webjars/highlightjs/9.4.0/styles/dark.css</css>
         <css>/css/desert.css</css>

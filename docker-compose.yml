@@ -2,6 +2,8 @@ version: "2"
 services:
   siva-xroad-validation:
     image: mihkels/xroad-validation-service
+    logging:
+      driver: syslog
     ports:
       - "8081:8081"
   siva-webapp:
@@ -10,6 +12,8 @@ services:
       - siva-xroad-validation
     ports:
       - "8080:8080"
+    logging:
+      driver: syslog
     environment:
       SIVA_PROXY_XROAD_URL: http://siva-xroad-validation:8081
   siva-sample-application:
@@ -18,5 +22,7 @@ services:
       - siva-webapp
     ports:
       - "9000:9000"
+    logging:
+      driver: syslog
     environment:
       SIVA_SERVICE_SERVICE_HOST: http://siva-webapp:8080

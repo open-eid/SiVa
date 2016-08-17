@@ -8,9 +8,11 @@ html
     body
         nav.navbar.navbar-fixed-top.navbar-dark.bg-inverse
             .navbar-header
-                a.navbar-brand(href="/")
-                    img(src="img/open-eid-logo.svg")
-                    span SiVa Sample Application
+                .container
+                    a.navbar-brand.hidden-md-down(href="/")
+                        img(src="img/open-eid-logo.svg")
+                    a.navbar-brand(href="/")
+                        span SiVa Sample Application
         .container
             .row
                 .col-md-12.col-lg-12

@@ -62,6 +62,14 @@ public class BDOCValidationServiceIntegrationTest {
     }
 
     @Test
+    public void validatingAnXRoadAsicContainerWithBdocValidatorThrowsMalformedDocumentException() throws Exception {
+        ValidationDocument validationDocument = BDOCTestUtils.buildValidationDocument(BDOCTestUtils.XROAD_BATCHSIGNATURE_CONTAINER);
+        expectedException.expect(MalformedDocumentException.class);
+        expectedException.expectMessage("the document is malformed");
+        bdocValidationService.validateDocument(validationDocument);
+    }
+
+    @Test
     public void bdocValidationResultShouldIncludeQualifiedReportPOJO() throws Exception {
         QualifiedReport validationResult2Signatures = bdocValidationService.validateDocument(bdocValid2Signatures());
         assertNotNull(validationResult2Signatures);

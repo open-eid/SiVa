@@ -32,11 +32,25 @@ body {
     border-color: #f2dede;
 }
 
+.navbar-brand {
+    padding: 0px;
+}
+
 .navbar-brand > img {
     height: 2%;
-    display: inline-block;
-    margin-right: 10px;
     width: auto;
+    margin-top: 5px;
+}
+
+.footer-social > img {
+    margin: 0 .5em 0 0;
+    height: 2%;
+    width: auto;
+}
+
+.footer a {
+    color: rgba(0, 0, 0, 0.5);
+    font-size: .9em;
 }
 
 .dropzone .dz-message {
@@ -69,5 +83,9 @@ body {
 
     .navbar-brand {
         float:none;
+    }
+
+    .footer-icons {
+        text-align: center;
     }
 }

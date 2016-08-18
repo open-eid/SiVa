@@ -26,7 +26,7 @@ public class SignaturePolicyService {
     public InputStream getPolicyDataStreamFromPolicy(String policy) {
         byte[] policyData = StringUtils.isEmpty(policy) ? defaultPolicy : signaturePolicies.get(policy);
         if (policyData == null) {
-            throw new InvalidPolicyException("Invalid signature policy: " + policy + "; Available abstractPolicies: " + signaturePolicies.keySet() );
+            throw new InvalidPolicyException(policy, signaturePolicies.keySet());
         }
 
         return new ByteArrayInputStream(policyData);
@@ -78,7 +78,7 @@ public class SignaturePolicyService {
                     signaturePolicyProperties.getAbstractDefaultPolicy(),
                     e.getMessage(), e);
 
-            throw new InvalidPolicyException("Default policy is not defined in signature abstractPolicies.");
+            throw new DefaultPolicyNotDefinedException();
         }
     }
 

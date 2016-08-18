@@ -97,7 +97,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
             SIGNATURE_POLICY, signaturePolicy);
     }
 
-    private QualifiedReport mapToReport(String json) {
+    protected QualifiedReport mapToReport(String json) {
         try {
             return new ObjectMapper().readValue(json, QualifiedReport.class);
         } catch (IOException e) {

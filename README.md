@@ -69,7 +69,7 @@ application.
 ./siva-parent/siva-sample-application/target/siva-sample-application-2.0.2-SNAPSHOT.jar
 ```
 
-Now point Your browser to URL: [http://localhost:9000]
+Now point Your browser to URL: <http://localhost:9000>
 
 ![Sample of validation result](https://raw.githubusercontent.com/open-eid/SiVa/develop/docs/img/siva-responsive.png)
 

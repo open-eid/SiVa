@@ -38,6 +38,7 @@ public class PDFQualifiedReportBuilder {
         report.setPolicy(Policy.SIVA_DEFAULT);
         report.setValidationTime(parseValidationTimeToString());
         report.setDocumentName(documentName);
+        report.setSignatureForm(PDF_SIGNATURE_FORM);
         report.setSignatures(buildSignatureValidationDataList());
         report.setSignaturesCount(report.getSignatures().size());
         report.setValidSignaturesCount(report.getSignatures()
@@ -61,7 +62,6 @@ public class PDFQualifiedReportBuilder {
         signatureValidationData.setId(signatureId);
         signatureValidationData.setSignatureFormat(dssReports.getSimpleReport().getSignatureFormat(signatureId));
         signatureValidationData.setSignatureLevel(dssReports.getSimpleReport().getSignatureLevel(signatureId).name());
-        signatureValidationData.setSignatureForm(PDF_SIGNATURE_FORM);
         signatureValidationData.setSignedBy(parseSignedBy(signatureId));
         signatureValidationData.setIndication(parseIndication(signatureId));
         signatureValidationData.setSubIndication(parseSubIndication(signatureId));

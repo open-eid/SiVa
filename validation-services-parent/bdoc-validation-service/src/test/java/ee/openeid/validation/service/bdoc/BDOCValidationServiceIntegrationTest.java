@@ -144,8 +144,7 @@ public class BDOCValidationServiceIntegrationTest {
     @Test
     public void reportForBdocValidationShouldIncludeCorrectAsiceSignatureForm() throws Exception {
         QualifiedReport report = bdocValidationService.validateDocument(bdocValid2Signatures());
-        assertEquals("ASiC_E", report.getSignatures().get(0).getSignatureForm());
-        assertEquals("ASiC_E", report.getSignatures().get(1).getSignatureForm());
+        assertEquals("ASiC_E", report.getSignatureForm());
     }
 
     @Test

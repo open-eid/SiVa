@@ -183,8 +183,11 @@
                         <imageTag>${project.version}</imageTag>
                         <imageTag>latest</imageTag>
                     </imageTags>
-                    <baseImage>cogniteev/oracle-java:latest</baseImage>
-                    <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
+                    <env>
+                        <JAVA_OPTS>""</JAVA_OPTS>
+                    </env>
+                    <baseImage>anapsix/alpine-java:latest</baseImage>
+                    <entryPoint>exec java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /${project.build.finalName}.jar </entryPoint>
                     <resources>
                         <resource>
                             <targetPath>/</targetPath>

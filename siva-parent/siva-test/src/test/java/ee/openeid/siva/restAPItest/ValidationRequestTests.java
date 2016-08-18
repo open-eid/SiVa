@@ -206,51 +206,26 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-7
-     *
-     * TestType: Automated
-     *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
-     *
-     * Title: Mismatch in documentType and actual document (pdf and bdoc)
-     *
-     * Expected Result: Error is returned
-     *
-     * File: Valid_IDCard_MobID_signatures.bdoc
-     *
-     ***/
-    @Test
-    public void ValidationRequestNotMatchingDocumentTypeAndActualFile() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "pdf", ""))
-                .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
-                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
-    }
-
-    /***
-     *
      * TestCaseID: ValidationRequest-8
      *
      * TestType: Automated
      *
      * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
-     * Title: Mismatch in documentType and actual document (ddoc and asice)
+     * Title: Acceptance of ASICE as BDOC document type
      *
-     * Expected Result: Error is returned
+     * Expected Result: Asice files are handled the same as *.bdoc
      *
      * File: TS-11_23634_TS_2_timestamps.asice
      *
      ***/
-    @Test @Ignore //TODO: this needs evaluation what should actually happen. X-Road will be using asice which will not validate in this sequence.
-    public void ValidationRequestNotMatchingDocumentTypeAndActualFileAsice() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("TS-11_23634_TS_2_timestamps.asice"));
-        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "dDOC", ""))
+    @Test
+    public void ValidationRequestDocumentTypeBdocAndFileAsice() {
+        setTestFilesDirectory("bdoc/live/timestamp/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("bdoc21-TS.asice"));
+        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "bDOC", ""))
                 .then()
-                .body("requestErrors[0].key", Matchers.is(DOCUMENT_TYPE))
-                .body("requestErrors[0].message", Matchers.containsString(INVALID_DOCUMENT_TYPE));
+                .body("documentName",equalTo("Valid_IDCard_MobID_signatures.bdoc"));
 
     }
 
@@ -715,15 +690,15 @@ public class ValidationRequestTests extends SiVaRestTests {
      *
      * Title: X-road file, not existing value in signaturePolicy
      *
-     * Expected Result:
+     * Expected Result: X-Road do not support signature policy selection, value is ignored
      *
-     * File:
+     * File: xroad-simple.asice
      *
      ***/
-    @Test @Ignore //TODO: Test file is needed.
+    @Test @Ignore //TODO: VAL-296 This test can be run locally on IDE when X-Road validation service is running. It will fail on automatic build.
     public void xRoadValidationRequestWrongSignaturePolicy() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources(""));
-        post(validationRequestWithValidKeys(encodedString, "", "ddoc", "RUS"))
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
+        post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", "xroad", "RUS"))
                 .then()
                 .body("validSignaturesCount", Matchers.is(1));
     }
@@ -776,6 +751,181 @@ public class ValidationRequestTests extends SiVaRestTests {
                 .then()
                 .body("documentName",equalTo("Valid_IDCard_MobID_signatures.bdoc"));
 
+    }
+
+    /***
+     *
+     * TestCaseID: ValidationRequest-28
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Input random base64 string as document with ddoc document type
+     *
+     * Expected Result: Error is returned stating problem in document
+     *
+     * File:
+     *
+     ***/
+    @Test @Ignore //TODO: VAL-296 & VAL-301 This test can be run locally on IDE when X-Road validation service is running. It will fail on automatic build.
+    public void ValidationRequestRandomInputAsXroadDocument() {
+        String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
+        post(validationRequestWithValidKeys(encodedString, "some_pdf.ddoc", "xroad", ""))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
+                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
+    }
+
+    /***
+     *
+     * TestCaseID: ValidationRequest-29
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Mismatch in documentType and actual document (xroad and pdf)
+     *
+     * Expected Result: Error is returned
+     *
+     * File: PdfValidSingleSignature.pdf
+     *
+     ***/
+    @Test @Ignore //TODO: VAL-296 & VAL-301 This test can be run locally on IDE when X-Road validation service is running. It will fail on automatic build.
+    public void XroadValidationRequestNotMatchingDocumentTypeAndActualFilePdf() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "PdfValidSingleSignature.pdf", "xroad", ""))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
+                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
+    }
+
+    /***
+     *
+     * TestCaseID: ValidationRequest-30
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Mismatch in documentType and actual document (xroad and ddoc)
+     *
+     * Expected Result: Error is returned
+     *
+     * File: igasugust1.3.ddoc
+     *
+     ***/
+    @Test @Ignore //TODO: VAL-296 & VAL-301 This test can be run locally on IDE when X-Road validation service is running. It will fail on automatic build.
+    public void XroadValidationRequestNotMatchingDocumentTypeAndActualFileDdoc() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
+        post(validationRequestWithValidKeys(encodedString, "igasugust1.3.ddoc", "xroad", ""))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
+                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
+    }
+
+    /***
+     *
+     * TestCaseID: ValidationRequest-31
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Mismatch in documentType and actual document (xroad and bdoc)
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_IDCard_MobID_signatures.bdoc
+     *
+     ***/
+    @Test @Ignore //TODO: VAL-296 & VAL-301 This test can be run locally on IDE when X-Road validation service is running. It will fail on automatic build.
+    public void XroadValidationRequestNotMatchingDocumentTypeAndActualFileBdoc() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
+        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "xroad", ""))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
+                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
+    }
+
+    /***
+     *
+     * TestCaseID: ValidationRequest-32
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Mismatch in documentType and actual document (bdoc and xroad)
+     *
+     * Expected Result: Error is returned
+     *
+     * File: xroad-simple.asice
+     *
+     ***/
+    @Test @Ignore //TODO: VAL-296 & VAL-301 This test can be run locally on IDE when X-Road validation service is running. It will fail on automatic build.
+    public void BdocValidationRequestNotMatchingDocumentTypeAndActualFileXroad() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
+        post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", "bdoc", ""))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
+                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
+    }
+
+    /***
+     *
+     * TestCaseID: ValidationRequest-32
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Mismatch in documentType and actual document (xroad and pdf)
+     *
+     * Expected Result: Error is returned
+     *
+     * File: xroad-simple.asice
+     *
+     ***/
+    @Test //@Ignore //TODO: VAL-296 & VAL-301 This test can be run locally on IDE when X-Road validation service is running. It will fail on automatic build.
+    public void PdfValidationRequestNotMatchingDocumentTypeAndActualFileXroad() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
+        post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", "pdf", ""))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
+                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
+    }
+
+    /***
+     *
+     * TestCaseID: ValidationRequest-33
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Mismatch in documentType and actual document (xroad and ddoc)
+     *
+     * Expected Result: Error is returned
+     *
+     * File: xroad-simple.asice
+     *
+     ***/
+    @Test //@Ignore //TODO: VAL-296 & VAL-301 This test can be run locally on IDE when X-Road validation service is running. It will fail on automatic build.
+    public void DdocdValidationRequestNotMatchingDocumentTypeAndActualFileXroad() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
+        post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", "ddoc", ""))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
+                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
     @Override
     protected String getTestFilesDirectory() {

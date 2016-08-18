@@ -697,6 +697,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      ***/
     @Test @Ignore //TODO: VAL-296 This test can be run locally on IDE when X-Road validation service is running. It will fail on automatic build.
     public void xRoadValidationRequestWrongSignaturePolicy() {
+        setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
         post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", "xroad", "RUS"))
                 .then()
@@ -868,8 +869,9 @@ public class ValidationRequestTests extends SiVaRestTests {
      * File: xroad-simple.asice
      *
      ***/
-    @Test @Ignore //TODO: VAL-296 & VAL-301 This test can be run locally on IDE when X-Road validation service is running. It will fail on automatic build.
+    @Test @Ignore //TODO: VAL-302
     public void BdocValidationRequestNotMatchingDocumentTypeAndActualFileXroad() {
+        setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
         post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", "bdoc", ""))
                 .then()
@@ -886,15 +888,16 @@ public class ValidationRequestTests extends SiVaRestTests {
      *
      * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
-     * Title: Mismatch in documentType and actual document (xroad and pdf)
+     * Title: Mismatch in documentType and actual document (pdf and xroad)
      *
      * Expected Result: Error is returned
      *
      * File: xroad-simple.asice
      *
      ***/
-    @Test //@Ignore //TODO: VAL-296 & VAL-301 This test can be run locally on IDE when X-Road validation service is running. It will fail on automatic build.
+    @Test
     public void PdfValidationRequestNotMatchingDocumentTypeAndActualFileXroad() {
+        setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
         post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", "pdf", ""))
                 .then()
@@ -911,15 +914,16 @@ public class ValidationRequestTests extends SiVaRestTests {
      *
      * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
-     * Title: Mismatch in documentType and actual document (xroad and ddoc)
+     * Title: Mismatch in documentType and actual document (ddoc and xroad)
      *
      * Expected Result: Error is returned
      *
      * File: xroad-simple.asice
      *
      ***/
-    @Test //@Ignore //TODO: VAL-296 & VAL-301 This test can be run locally on IDE when X-Road validation service is running. It will fail on automatic build.
+    @Test
     public void DdocdValidationRequestNotMatchingDocumentTypeAndActualFileXroad() {
+        setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
         post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", "ddoc", ""))
                 .then()

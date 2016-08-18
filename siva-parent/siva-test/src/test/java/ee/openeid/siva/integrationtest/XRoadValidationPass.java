@@ -1,4 +1,4 @@
-package ee.openeid.siva.integrationtest.xroad;
+package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.SiVaRestTests;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;

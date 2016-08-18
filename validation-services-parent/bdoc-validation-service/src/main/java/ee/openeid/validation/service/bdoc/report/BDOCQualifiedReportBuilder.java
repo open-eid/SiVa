@@ -44,6 +44,7 @@ public class BDOCQualifiedReportBuilder {
         qualifiedReport.setPolicy(Policy.SIVA_DEFAULT);
         qualifiedReport.setValidationTime(ReportBuilderUtils.getDateFormatterWithGMTZone().format(validationTime));
         qualifiedReport.setDocumentName(documentName);
+        qualifiedReport.setSignatureForm(BDOC_SIGNATURE_FORM);
         qualifiedReport.setSignaturesCount(container.getSignatures().size());
         qualifiedReport.setSignatures(createSignaturesForReport(container));
         qualifiedReport.setValidSignaturesCount(
@@ -68,7 +69,6 @@ public class BDOCQualifiedReportBuilder {
         signatureValidationData.setId(bDocSignature.getId());
         signatureValidationData.setSignatureFormat(getSignatureFormat(bDocSignature.getProfile()));
         signatureValidationData.setSignatureLevel(getSignatureLevel(bDocSignature));
-        signatureValidationData.setSignatureForm(BDOC_SIGNATURE_FORM);
         signatureValidationData.setSignedBy(removeQuotes(bDocSignature.getSigningCertificate().getSubjectName(CN)));
         signatureValidationData.setErrors(getErrors(bDocSignature));
         signatureValidationData.setSignatureScopes(getSignatureScopes(bDocSignature, dataFileNames));

@@ -3,7 +3,10 @@ package ee.openeid.siva.validation.document.report;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import java.util.List;
 
 @Data
@@ -18,9 +21,6 @@ public class SignatureValidationData {
 
     @XmlElement(name = "SignatureLevel", required = true)
     private String signatureLevel;
-
-    @XmlElement(name = "SignatureForm", required = true)
-    private String signatureForm;
 
     @XmlElement(name = "SignedBy", required = true)
     private String signedBy;

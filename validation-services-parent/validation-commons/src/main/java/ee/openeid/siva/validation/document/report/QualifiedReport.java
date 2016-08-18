@@ -19,6 +19,9 @@ public class QualifiedReport {
     @XmlElement(name = "DocumentName", required = true)
     private String documentName;
 
+    @XmlElement(name = "SignatureForm", required = true)
+    private String signatureForm;
+
     @XmlElement(name = "Signature")
     @XmlElementWrapper(name = "Signatures", required = true)
     private List<SignatureValidationData> signatures;

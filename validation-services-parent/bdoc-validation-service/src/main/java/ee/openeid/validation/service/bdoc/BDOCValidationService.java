@@ -39,10 +39,26 @@ public class BDOCValidationService implements ValidationService {
             throw new MalformedDocumentException(e);
         }
         verifyContainerTypeNotDDOC(container.getType());
+        try {
+            container.validate();
+            Date validationTime = new Date();
+            return new BDOCQualifiedReportBuilder(container, validationDocument.getName(), validationTime).build();
+        } catch (Exception e) {
+            if (isXRoadContainer(container)) {
+                LOGGER.error("XROAD container passed to BDOC validator", e);
+                throw new MalformedDocumentException(e);
+            }
+            LOGGER.error("An error occurred when validating document " + validationDocument.getName(), e);
+            throw e;
+        }
+    }
 
-        container.validate();
-        Date validationTime = new Date();
-        return new BDOCQualifiedReportBuilder(container, validationDocument.getName(), validationTime).build();
+    private boolean isXRoadContainer(Container container) {
+        return container
+                .getDataFiles()
+                .stream()
+                .filter(dataFile -> StringUtils.equals(dataFile.getName(), "message.xml"))
+                .count() == 1;
     }
 
     private Container createContainer(ValidationDocument validationDocument) {

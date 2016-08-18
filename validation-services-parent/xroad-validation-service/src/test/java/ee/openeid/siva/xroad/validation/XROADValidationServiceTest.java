@@ -45,7 +45,7 @@ public class XROADValidationServiceTest {
         validationDocument.setDataBase64Encoded(Base64.encodeBase64String(IOUtils.toByteArray(getFileStream(XROAD_BATCHSIGNATURE))));
 
         QualifiedReport report = validationService.validateDocument(validationDocument);
-        assertEquals("ASiC_E_batchsignature", report.getSignatures().get(0).getSignatureForm());
+        assertEquals("ASiC_E_batchsignature", report.getSignatureForm());
     }
 
     private ValidationDocument buildValidationDocument(String testFile) throws Exception {

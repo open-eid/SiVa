@@ -13,6 +13,10 @@
       "type": "string",
 	  "minLength": 1
     },
+    "signatureForm": {
+      "type": "string",
+      "minLength": 1
+    },
     "validSignaturesCount": {
       "type": "integer"
     },
@@ -36,10 +40,6 @@
           "signatureLevel": {
             "type": "string",
 			"minLength": 1
-          },
-          "signatureForm": {
-            "type": "string",
-            "minLength": 1
           },
           "warnings": {
             "type": "array",
@@ -129,7 +129,6 @@
           "signedBy",
           "claimedSigningTime",
           "signatureLevel",
-          "signatureForm",
           "signatureScopes",
           "id",
           "indication",
@@ -171,6 +170,7 @@
     "validationTime",
     "signaturesCount",
     "documentName",
+    "signatureForm",
     "validSignaturesCount",
     "signatures",
     "policy"

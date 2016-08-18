@@ -651,14 +651,14 @@ public class SoapValidationRequestTests extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
      ***/
-    @Test //TODO: VAL-295 bdoc should also return same error as pdf.
+    @Test
     public void bdocValidationRequestWrongSignaturePolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "BDOC", "RUS"))
                 .then()
                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .body("Envelope.Body.Fault.faultcode", Matchers.is(SERVER_FAULT))
-                .body("Envelope.Body.Fault.faultstring", Matchers.containsString("Invalid signature policy"));
+                .body("Envelope.Body.Fault.faultstring", Matchers.containsString("Invalid signature policy: RUS; Available abstractPolicies: [EE]"));
     }
 
     /***
@@ -703,7 +703,7 @@ public class SoapValidationRequestTests extends SiVaSoapTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources(""));
         post(validationRequestForDocumentExtended(encodedString, "", "ddoc", "RUS"))
                 .then()
-                .body("Envelope.Body.ValidateDocumentResponse.ValidationReport.ValidSignaturesCount", Matchers.is("3"));
+                .body("Envelope.Body.ValidateDocumentResponse.ValidationReport.ValidSignaturesCount", Matchers.is("1"));
     }
     /***
      *

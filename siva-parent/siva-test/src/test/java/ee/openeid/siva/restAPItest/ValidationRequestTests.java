@@ -673,14 +673,14 @@ public class ValidationRequestTests extends SiVaRestTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
      ***/
-    @Test //TODO: VAL-295 bdoc should also return same error as pdf.
+    @Test
     public void bdocValidationRequestWrongSignaturePolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "bdoc", "RUS"))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(SIGNATURE_POLICY))
-                .body("requestErrors[0].message", Matchers.containsString("Invalid signature policy"));
+                .body("requestErrors[0].message", Matchers.containsString("Invalid signature policy: RUS; Available abstractPolicies: [EE]"));
     }
 
     /***

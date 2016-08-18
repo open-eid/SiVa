@@ -39,7 +39,7 @@ public class BDOCConfigurationService {
 
     private Configuration loadExistingPolicy(String policyName) {
         if (!policyList.containsKey(policyName)) {
-            throw new InvalidPolicyException("Invalid signature policy: " + policyName + "; Available abstractPolicies: " + policyList.keySet() );
+            throw new InvalidPolicyException(policyName, policyList.keySet());
         }
 
         return policyList.get(policyName);

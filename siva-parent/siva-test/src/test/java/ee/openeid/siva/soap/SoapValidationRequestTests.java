@@ -693,15 +693,16 @@ public class SoapValidationRequestTests extends SiVaSoapTests {
      *
      * Title: X-road file, not existing value in signaturePolicy
      *
-     * Expected Result:
+     * Expected Result: X-Road do not support signature policy selection, value is ignored
      *
-     * File:
+     * File: xroad-simple.asice
      *
      ***/
-    @Test @Ignore //TODO: Test file is needed.
+    @Test
     public void xRoadValidationRequestWrongSignaturePolicy() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources(""));
-        post(validationRequestForDocumentExtended(encodedString, "", "ddoc", "RUS"))
+        setTestFilesDirectory("xroad/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
+        post(validationRequestForDocumentExtended(encodedString, "xroad-simple.asice", "XROAD", "RUS"))
                 .then()
                 .body("Envelope.Body.ValidateDocumentResponse.ValidationReport.ValidSignaturesCount", Matchers.is("1"));
     }

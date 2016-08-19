@@ -71,7 +71,6 @@ public class DDOCValidationServiceTest {
         validationDocument.setBytes(Base64.decode("ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA=="));
 
         expectedException.expect(MalformedDocumentException.class);
-        DDOCValidationService validationService = new DDOCValidationService();
         validationService.validateDocument(validationDocument);
     }
 
@@ -162,8 +161,11 @@ public class DDOCValidationServiceTest {
             given(ConfigManager.instance()).willReturn(configManager);
             when(digiDocFactory.readSignedDocFromStreamOfType(any(ByteArrayInputStream.class), anyBoolean(), anyList())).thenThrow(new DigiDocException(101, "Testing error", new Exception()));
 
+            DDOCValidationService validationServiceSpy = spy(new DDOCValidationService());
+            doNothing().when(validationServiceSpy).validateAgainstXMLEntityAttacks(any(byte[].class));
+
             expectedException.expect(ValidationServiceException.class);
-            validationService.validateDocument(validationDocument);
+            validationServiceSpy.validateDocument(validationDocument);
 
     }
 }

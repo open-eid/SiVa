@@ -7,6 +7,7 @@ import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.validation.service.ddoc.configuration.DDOCValidationServiceProperties;
 import ee.openeid.validation.service.ddoc.report.DDOCQualifiedReportBuilder;
+import ee.openeid.validation.service.ddoc.security.SecureSAXParsers;
 import ee.sk.digidoc.DigiDocException;
 import ee.sk.digidoc.SignedDoc;
 import ee.sk.digidoc.factory.DigiDocFactory;
@@ -17,8 +18,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.SAXNotSupportedException;
 
 import javax.annotation.PostConstruct;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
 import java.io.*;
 import java.security.Security;
 import java.util.ArrayList;
@@ -33,9 +40,8 @@ public class DDOCValidationService implements ValidationService {
     private DDOCValidationServiceProperties properties;
 
     @PostConstruct
-    protected void initConfig() throws DigiDocException, IOException {
+    protected void initConfig() throws DigiDocException, IOException, SAXNotSupportedException, SAXNotRecognizedException, ParserConfigurationException {
         final File file = File.createTempFile("siva-ddoc-jdigidoc-", ".cfg");
-
         try (
             InputStream inputStream = getClass().getResourceAsStream(properties.getJdigidocConfigurationFile());
             OutputStream outputStream = new FileOutputStream(file)
@@ -46,7 +52,6 @@ public class DDOCValidationService implements ValidationService {
             LOGGER.info("Removing configuration file: {}", file.getAbsolutePath());
             file.deleteOnExit();
         }
-
         ConfigManager.init(file.getAbsolutePath());
     }
 
@@ -55,6 +60,8 @@ public class DDOCValidationService implements ValidationService {
         if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
             Security.addProvider(new BouncyCastleProvider());
         }
+
+        validateAgainstXMLEntityAttacks(validationDocument.getBytes());
 
         synchronized (lock) {
             SignedDoc signedDoc = null;
@@ -84,6 +91,16 @@ public class DDOCValidationService implements ValidationService {
                     signedDoc.cleanupDfCache();
                 }
             }
+        }
+    }
+
+    protected void validateAgainstXMLEntityAttacks(byte[] xmlContent) {
+        try {
+            SAXParser saxParser = SecureSAXParsers.createParser();
+            saxParser.getXMLReader().parse(new InputSource(new ByteArrayInputStream(xmlContent)));
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            LOGGER.error("Exception when validation document against XML entity attacks: " + e.getMessage(), e);
+            throw new MalformedDocumentException(e);
         }
     }
 

@@ -45,6 +45,7 @@ public class XROADQualifiedReportBuilder {
         qualifiedReport.setPolicy(Policy.SIVA_DEFAULT);
         qualifiedReport.setValidationTime(getDateFormatterWithGMTZone().format(validationTime));
         qualifiedReport.setDocumentName(documentName);
+        qualifiedReport.setSignatureForm(getSignatureForm());
         qualifiedReport.setSignaturesCount(getTotalSignatureCount());
         qualifiedReport.setSignatures(Collections.singletonList(createSignatureValidationData()));
         qualifiedReport.setValidSignaturesCount(
@@ -66,7 +67,6 @@ public class XROADQualifiedReportBuilder {
         signatureValidationData.setId(verifier.getSignature().getXmlSignature().getId());
         signatureValidationData.setSignatureFormat(XADES_FORMAT_PREFIX + "LT");
         signatureValidationData.setSignatureLevel(getSignatureLevel());
-        signatureValidationData.setSignatureForm(getSignatureForm());
         //verifier.getAsic().getSignature().isBatchSignature();
 
         signatureValidationData.setSignedBy(parseCNFromX500Principal(verifier.getSignerCert().getSubjectX500Principal()));

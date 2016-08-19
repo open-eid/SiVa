@@ -36,6 +36,7 @@ public class DDOCQualifiedReportBuilder {
         qualifiedReport.setPolicy(Policy.SIVA_DEFAULT);
         qualifiedReport.setValidationTime(getDateFormatterWithGMTZone().format(validationTime));
         qualifiedReport.setDocumentName(documentName);
+        qualifiedReport.setSignatureForm(getSignatureForm());
         qualifiedReport.setSignaturesCount(getSignatures(signedDoc).size());
         qualifiedReport.setSignatures(createSignaturesForReport(signedDoc));
         qualifiedReport.setValidSignaturesCount(
@@ -72,7 +73,6 @@ public class DDOCQualifiedReportBuilder {
         SignatureValidationData signatureValidationData = new SignatureValidationData();
         signatureValidationData.setId(signature.getId());
         signatureValidationData.setSignatureFormat(getSignatureFormat());
-        signatureValidationData.setSignatureForm(getSignatureForm());
         signatureValidationData.setSignedBy(CertUtil.subjectCN(signature.getKeyInfo().getSignersCertificate()));
         signatureValidationData.setErrors(getErrors(signature));
         signatureValidationData.setSignatureScopes(getSignatureScopes());

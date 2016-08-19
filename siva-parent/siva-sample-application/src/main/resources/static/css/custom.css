@@ -20,7 +20,8 @@ body {
 
 .footer {
     font-size: .8em;
-    color: #999
+    color: #999;
+    margin-bottom: 1em;
 }
 
 .icon-alert {
@@ -62,6 +63,10 @@ body {
 }
 
 @media screen and (max-width: 768px) {
+    body {
+        padding-top: 4rem;
+    }
+
     .dropzone .dz-message {
         margin: 1em 0;
         min-height: 10%;
@@ -87,5 +92,17 @@ body {
 
     .footer-icons {
         text-align: center;
+    }
+
+    .footer-social > img {
+        height: 5%;
+        margin-right: 1em;
+    }
+
+    .navbar-brand > img {
+        height: 3%;
+        width: auto;
+        margin-top: -1px;
+        display: inline-block;
     }
 }

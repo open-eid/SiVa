@@ -186,7 +186,7 @@
                     <env>
                         <JAVA_OPTS>""</JAVA_OPTS>
                     </env>
-                    <baseImage>anapsix/alpine-java:latest</baseImage>
+                    <baseImage>cogniteev/oracle-java:latest</baseImage>
                     <entryPoint>exec java $JAVA_OPTS -jar /${project.build.finalName}.jar </entryPoint>
                     <resources>
                         <resource>

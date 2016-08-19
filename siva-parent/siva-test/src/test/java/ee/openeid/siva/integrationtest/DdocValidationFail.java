@@ -1,14 +1,10 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
 import org.hamcrest.Matchers;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-
-import static org.junit.Assert.assertEquals;
 
 @Category(IntegrationTest.class)
 public class DdocValidationFail extends SiVaRestTests{
@@ -304,8 +300,54 @@ public class DdocValidationFail extends SiVaRestTests{
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
+
+    /***
+     * TestCaseID: Ddoc-ValidationFail-13
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Ddoc with XML Entity expansion attack
+     *
+     * Expected Result: The document should fail the validation with error
+     *
+     * File: 2.denialOfServiceWithEntityExpansion.ddoc
+     ***/
+    @Test
+    public void ddocWithXMLEntityExpansionAttackShouldFail() {
+        setTestFilesDirectory("ddoc/test/timemark/");
+        post(validationRequestFor("2.denialOfServiceWithEntityExpansion.ddoc"))
+                .then()
+                .body("requestErrors[0].key", Matchers.is("document"))
+                .body("requestErrors[0].message", Matchers.is("document malformed or not matching documentType"));
+    }
+
+    /***
+     * TestCaseID: Ddoc-ValidationFail-14
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Ddoc with XML server side request forgery attack
+     *
+     * Expected Result: The document should fail the validation with error
+     *
+     * File: 3.serverSideRequestForgeryViaDtd.ddoc
+     ***/
+    @Test
+    public void ddocWithXMLServerSideRequestForgeryAttackShouldFail() {
+        setTestFilesDirectory("ddoc/test/timemark/");
+        post(validationRequestFor("3.serverSideRequestForgeryViaDtd.ddoc"))
+                .then()
+                .body("requestErrors[0].key", Matchers.is("document"))
+                .body("requestErrors[0].message", Matchers.is("document malformed or not matching documentType"));
+    }
+
     @Override
     protected String getTestFilesDirectory() {
         return testFilesDirectory;
     }
+
 }

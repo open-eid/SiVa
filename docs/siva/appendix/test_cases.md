@@ -453,7 +453,6 @@ List of Test Cases
   * Expected Result: The document should fail the validation
   * File: OCSP nonce vale.ddoc
 
-
 ## DdocValidationPass.java
 
 **TestCaseID: Ddoc-ValidationPass-2**
@@ -1543,7 +1542,7 @@ List of Test Cases
 
 ## SoapValidationReportValueTests.java
 
-**TestCaseID: Soap-ValidationReportValue-1**
+**TestCaseID: Bdoc-SoapValidationReportValue-1**
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
@@ -1551,7 +1550,7 @@ List of Test Cases
   * Expected Result: All required elements are present and meet the expected values.
   * File: Valid_ID_sig.bdoc
 
-**TestCaseID: Soap-ValidationReportValue-2**
+**TestCaseID: Bdoc-SoapValidationReportValue-2**
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
@@ -1559,7 +1558,7 @@ List of Test Cases
   * Expected Result: All required elements are present and meet the expected values.
   * File: 23635_bdoc_ts_OCSP_random_nonce.bdoc
 
-**TestCaseID: Soap-ValidationReportValue-3**
+**TestCaseID: Bdoc-SoapValidationReportValue-3**
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
@@ -1567,7 +1566,7 @@ List of Test Cases
   * Expected Result: All required elements are present and meet the expected values.
   * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
 
-**TestCaseID: Soap-ValidationReportValue-4**
+**TestCaseID: Bdoc-SoapValidationReportValue-4**
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
@@ -1577,15 +1576,15 @@ List of Test Cases
 
   **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
-**TestCaseID: Soap-ValidationReportValue-5**
+**TestCaseID: Bdoc-SoapValidationReportValue-5**
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
   * Title: Verification of values in Validation Report XAdES_BASELINE_LTA, QES, FullSignatureScope
   * Expected Result: All required elements are present and meet the expected values.
-  * File: EE_SER-AEX-B-LTA-V-24.pdf
+  * File: EE_SER-AEX-B-LTA-V-24.bdoc
 
-**TestCaseID: Soap-ValidationReportValue-6**
+**TestCaseID: Ddoc-SoapValidationReportValue-1**
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
@@ -1595,7 +1594,7 @@ List of Test Cases
 
   **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
-**TestCaseID: Soap-ValidationReportValue-7**
+**TestCaseID: Ddoc-SoapValidationReportValue-2**
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
@@ -1603,7 +1602,7 @@ List of Test Cases
   * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
   * File: Igasugust1.1.ddoc
 
-**TestCaseID: Soap-ValidationReportValue-8**
+**TestCaseID: Ddoc-SoapValidationReportValue-3**
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
@@ -1611,7 +1610,7 @@ List of Test Cases
   * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
   * File: Igasugust1.2.ddoc
 
-**TestCaseID: Soap-ValidationReportValue-9**
+**TestCaseID: Ddoc-SoapValidationReportValue-4**
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
@@ -1619,7 +1618,7 @@ List of Test Cases
   * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
   * File: Igasugust1.3.ddoc
 
-**TestCaseID: Soap-ValidationReportValue-10**
+**TestCaseID: Pdf-SoapValidationReportValue-1**
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
@@ -1627,7 +1626,7 @@ List of Test Cases
   * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
   * File: pades_lt_two_valid_sig.pdf
 
-**TestCaseID: Soap-ValidationReportValue-11**
+**TestCaseID: Pdf-SoapValidationReportValue-2**
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
@@ -1848,8 +1847,6 @@ List of Test Cases
   * Title: X-road file, not existing value in signaturePolicy
   * Expected Result: X-Road do not support signature policy selection, value is ignored
   * File: xroad-simple.asice
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: Soap-ValidationRequest-27**
 

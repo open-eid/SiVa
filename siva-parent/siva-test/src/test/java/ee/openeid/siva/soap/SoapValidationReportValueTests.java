@@ -30,7 +30,7 @@ public class SoapValidationReportValueTests extends SiVaSoapTests {
 
     /***
      *
-     * TestCaseID: Soap-ValidationReportValue-1
+     * TestCaseID: Bdoc-SoapValidationReportValue-1
      *
      * TestType: Automated
      *
@@ -60,7 +60,7 @@ public class SoapValidationReportValueTests extends SiVaSoapTests {
 
     /***
      *
-     * TestCaseID: Soap-ValidationReportValue-2
+     * TestCaseID: Bdoc-SoapValidationReportValue-2
      *
      * TestType: Automated
      *
@@ -90,7 +90,7 @@ public class SoapValidationReportValueTests extends SiVaSoapTests {
 
     /***
      *
-     * TestCaseID: Soap-ValidationReportValue-3
+     * TestCaseID: Bdoc-SoapValidationReportValue-3
      *
      * TestType: Automated
      *
@@ -120,7 +120,7 @@ public class SoapValidationReportValueTests extends SiVaSoapTests {
 
     /***
      *
-     * TestCaseID: Soap-ValidationReportValue-4
+     * TestCaseID: Bdoc-SoapValidationReportValue-4
      *
      * TestType: Automated
      *
@@ -149,7 +149,7 @@ public class SoapValidationReportValueTests extends SiVaSoapTests {
 
     /***
      *
-     * TestCaseID: Soap-ValidationReportValue-5
+     * TestCaseID: Bdoc-SoapValidationReportValue-5
      *
      * TestType: Automated
      *
@@ -159,7 +159,7 @@ public class SoapValidationReportValueTests extends SiVaSoapTests {
      *
      * Expected Result: All required elements are present and meet the expected values.
      *
-     * File: EE_SER-AEX-B-LTA-V-24.pdf
+     * File: EE_SER-AEX-B-LTA-V-24.bdoc
      *
      ***/
     @Test
@@ -178,7 +178,7 @@ public class SoapValidationReportValueTests extends SiVaSoapTests {
 
     /***
      *
-     * TestCaseID: Soap-ValidationReportValue-6
+     * TestCaseID: Ddoc-SoapValidationReportValue-1
      *
      * TestType: Automated
      *
@@ -207,7 +207,7 @@ public class SoapValidationReportValueTests extends SiVaSoapTests {
 
     /***
      *
-     * TestCaseID: Soap-ValidationReportValue-7
+     * TestCaseID: Ddoc-SoapValidationReportValue-2
      *
      * TestType: Automated
      *
@@ -236,7 +236,7 @@ public class SoapValidationReportValueTests extends SiVaSoapTests {
 
     /***
      *
-     * TestCaseID: Soap-ValidationReportValue-8
+     * TestCaseID: Ddoc-SoapValidationReportValue-3
      *
      * TestType: Automated
      *
@@ -265,7 +265,7 @@ public class SoapValidationReportValueTests extends SiVaSoapTests {
 
     /***
      *
-     * TestCaseID: Soap-ValidationReportValue-9
+     * TestCaseID: Ddoc-SoapValidationReportValue-4
      *
      * TestType: Automated
      *
@@ -294,7 +294,7 @@ public class SoapValidationReportValueTests extends SiVaSoapTests {
 
     /***
      *
-     * TestCaseID: Soap-ValidationReportValue-10
+     * TestCaseID: Pdf-SoapValidationReportValue-1
      *
      * TestType: Automated
      *
@@ -308,7 +308,7 @@ public class SoapValidationReportValueTests extends SiVaSoapTests {
      *
      ***/
     @Test
-    public void SoapPadesCorrectValuesArePresentBaselineLtSignature() {
+    public void SoapPdfCorrectValuesArePresentBaselineLtSignature() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         Document report = extractReportDom(post(validationRequestForDocument("pades_lt_two_valid_sig.pdf")).andReturn().body().asString());
         assertEquals(getQualifiedReportFromDom(report).getSignaturesCount(),getQualifiedReportFromDom(report).getValidSignaturesCount());
@@ -323,7 +323,7 @@ public class SoapValidationReportValueTests extends SiVaSoapTests {
 
     /***
      *
-     * TestCaseID: Soap-ValidationReportValue-11
+     * TestCaseID: Pdf-SoapValidationReportValue-2
      *
      * TestType: Automated
      *
@@ -337,7 +337,7 @@ public class SoapValidationReportValueTests extends SiVaSoapTests {
      *
      ***/
     @Test @Ignore //TODO: VAL-242
-    public void SoapPadesCorrectValuesArePresentInvalidBaselineBSignature() {
+    public void SoapPdfCorrectValuesArePresentInvalidBaselineBSignature() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         Document report = extractReportDom(post(validationRequestForDocument("hellopades-pades-b-sha256-auth.pdf")).andReturn().body().asString());
         assertTrue(getQualifiedReportFromDom(report).getValidSignaturesCount()==0);

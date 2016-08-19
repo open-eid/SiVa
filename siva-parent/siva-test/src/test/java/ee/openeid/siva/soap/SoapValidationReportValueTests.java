@@ -55,6 +55,7 @@ public class SoapValidationReportValueTests extends SiVaSoapTests {
         assertEquals("FullSignatureScope", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureScopes().get(0).getScope());
         assertTrue(getQualifiedReportFromDom(report).getSignatures().get(0).getErrors().isEmpty());
         assertTrue(getQualifiedReportFromDom(report).getSignatures().get(0).getWarnings().isEmpty());
+        assertEquals("ASiC_E", getQualifiedReportFromDom(report).getSignatureForm());
     }
 
     /***
@@ -84,6 +85,7 @@ public class SoapValidationReportValueTests extends SiVaSoapTests {
         assertEquals("FullSignatureScope", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureScopes().get(0).getScope());
         assertTrue(getQualifiedReportFromDom(report).getSignatures().get(0).getErrors().isEmpty());
         assertTrue(getQualifiedReportFromDom(report).getSignatures().get(0).getWarnings().isEmpty());
+        assertEquals("ASiC_E", getQualifiedReportFromDom(report).getSignatureForm());
     }
 
     /***
@@ -113,6 +115,7 @@ public class SoapValidationReportValueTests extends SiVaSoapTests {
         assertEquals("FullSignatureScope", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureScopes().get(0).getScope());
         assertTrue(getQualifiedReportFromDom(report).getSignatures().get(0).getErrors().isEmpty());
         assertEquals("The certificate is not supported by SSCD!", getQualifiedReportFromDom(report).getSignatures().get(0).getWarnings().get(0).getDescription());
+        assertEquals("ASiC_E", getQualifiedReportFromDom(report).getSignatureForm());
     }
 
     /***
@@ -141,6 +144,7 @@ public class SoapValidationReportValueTests extends SiVaSoapTests {
         assertEquals("AdESqc", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureLevel());
         assertEquals("FullSignatureScope", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureScopes().get(0).getScope());
         assertTrue(getQualifiedReportFromDom(report).getSignatures().get(0).getWarnings().isEmpty());
+        assertEquals("ASiC_E", getQualifiedReportFromDom(report).getSignatureForm());
     }
 
     /***
@@ -169,6 +173,7 @@ public class SoapValidationReportValueTests extends SiVaSoapTests {
         assertEquals("FullSignatureScope", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureScopes().get(0).getScope());
         assertTrue(getQualifiedReportFromDom(report).getSignatures().get(0).getErrors().isEmpty());
         assertTrue(getQualifiedReportFromDom(report).getSignatures().get(0).getWarnings().isEmpty());
+        assertEquals("ASiC_E", getQualifiedReportFromDom(report).getSignatureForm());
     }
 
     /***
@@ -197,6 +202,7 @@ public class SoapValidationReportValueTests extends SiVaSoapTests {
         assertEquals("", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureScopes().get(0).getScope());
         assertTrue(getQualifiedReportFromDom(report).getSignatures().get(0).getErrors().isEmpty());
         assertTrue(getQualifiedReportFromDom(report).getSignatures().get(0).getWarnings().isEmpty());
+        assertEquals("DIGIDOC_XML_1.0", getQualifiedReportFromDom(report).getSignatureForm());
     }
 
     /***
@@ -225,6 +231,7 @@ public class SoapValidationReportValueTests extends SiVaSoapTests {
         assertEquals("", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureScopes().get(0).getScope());
         assertTrue(getQualifiedReportFromDom(report).getSignatures().get(0).getErrors().isEmpty());
         assertTrue(getQualifiedReportFromDom(report).getSignatures().get(0).getWarnings().isEmpty());
+        assertEquals("DIGIDOC_XML_1.1", getQualifiedReportFromDom(report).getSignatureForm());
     }
 
     /***
@@ -253,6 +260,7 @@ public class SoapValidationReportValueTests extends SiVaSoapTests {
         assertEquals("", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureScopes().get(0).getScope());
         assertTrue(getQualifiedReportFromDom(report).getSignatures().get(0).getErrors().isEmpty());
         assertTrue(getQualifiedReportFromDom(report).getSignatures().get(0).getWarnings().isEmpty());
+        assertEquals("DIGIDOC_XML_1.2", getQualifiedReportFromDom(report).getSignatureForm());
     }
 
     /***
@@ -281,6 +289,7 @@ public class SoapValidationReportValueTests extends SiVaSoapTests {
         assertEquals("", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureScopes().get(0).getScope());
         assertTrue(getQualifiedReportFromDom(report).getSignatures().get(0).getErrors().isEmpty());
         assertTrue(getQualifiedReportFromDom(report).getSignatures().get(0).getWarnings().isEmpty());
+        assertEquals("DIGIDOC_XML_1.3", getQualifiedReportFromDom(report).getSignatureForm());
     }
 
     /***
@@ -309,6 +318,7 @@ public class SoapValidationReportValueTests extends SiVaSoapTests {
         assertEquals("PdfByteRangeSignatureScope", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureScopes().get(0).getScope());
         assertTrue(getQualifiedReportFromDom(report).getSignatures().get(0).getErrors().isEmpty());
         assertTrue(getQualifiedReportFromDom(report).getSignatures().get(0).getWarnings().isEmpty());
+        assertEquals("PAdES", getQualifiedReportFromDom(report).getSignatureForm());
     }
 
     /***
@@ -337,6 +347,7 @@ public class SoapValidationReportValueTests extends SiVaSoapTests {
         assertEquals("QES", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureLevel());
         assertEquals("FullSignatureScope", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureScopes().get(0).getScope());
         assertTrue(getQualifiedReportFromDom(report).getSignatures().get(0).getWarnings().isEmpty());
+        assertEquals("PAdES", getQualifiedReportFromDom(report).getSignatureForm());
     }
 
     @Override

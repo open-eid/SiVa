@@ -27,7 +27,8 @@ public class PdfValidationFail extends SiVaRestTests{
     @Test
     public void certificateExpiredBeforeDocumentSigningShouldFail() {
         QualifiedReport report = postForReport("hellopades-lt-rsa1024-sha1-expired.pdf");
-        assertInvalidWithError(report, "BBB_XCV_ICTIVRSC_ANS", "The current time is not in the validity range of the signer's certificate.");
+        // assertInvalidWithError(report.getSignatures().get(0), "The past signature validation is not conclusive!");
+        assertAllSignaturesAreInvalid(report);
     }
 
     /***
@@ -41,12 +42,13 @@ public class PdfValidationFail extends SiVaRestTests{
      *
      * Expected Result: Document signed with certificate that is expired should fail.
      *
-     * File: IB-3691_bdoc21-TS-old-cert.bdoc
+     * File: hellopades-lt-rsa1024-sha1-expired.pdf
      ***/
-    @Ignore("TODO: when we get a PDF file for the same test case, use that one instead of this ASiC file")
     @Test
     public void signaturesMadeWithExpiredSigningCertificatesAreInvalid() {
-        assertAllSignaturesAreInvalid(postForReport("IB-3691_bdoc21-TS-old-cert.bdoc"));
+        QualifiedReport report = postForReport("hellopades-lt-rsa1024-sha1-expired.pdf");
+        // assertInvalidWithError(report.getSignatures().get(0), "The past signature validation is not conclusive!");
+        assertAllSignaturesAreInvalid(report);
     }
 
     /***
@@ -60,12 +62,12 @@ public class PdfValidationFail extends SiVaRestTests{
      *
      * Expected Result: Document signed with certificate that is revoked should fail.
      *
-     * File: hellopades-lt-sha256-revoked.pdf
+     * File: pades_lt_revoked.pdf
      ***/
-    @Ignore // current test file's signature doesn't contain ocsp
     @Test
     public void documentSignedWithRevokedCertificateShouldFail() {
-        assertAllSignaturesAreInvalid(postForReport("hellopades-lt-sha256-revoked.pdf"));
+        QualifiedReport report = postForReport("pades_lt_revoked.pdf");
+        assertInvalidWithError(report.getSignatures().get(0), "The revocation time is not posterior to best-signature-time!");
     }
 
     /***
@@ -82,9 +84,11 @@ public class PdfValidationFail extends SiVaRestTests{
      * File: missing_signing_certificate_attribute.pdf
      ***/
     @Test
+    @Ignore // Since DSS 4.7.1.RC1 the given file is identified as PAdES_BASELINE_T
+            // When PAdES_BASELINE_T is not in constraint.xml's AcceptableFormats -> Error: The expected format is not found!
     public void missingSignedAttributeForSigningCertificate() {
         QualifiedReport report = postForReport("missing_signing_certificate_attribute.pdf");
-        assertInvalidWithError(report, "BBB_ICS_ISASCP_ANS", "The signed attribute: 'signing-certificate' is absent!");
+        assertInvalidWithError(report.getSignatures().get(0), "The signed attribute: 'signing-certificate' is absent!");
     }
 
     /***
@@ -103,7 +107,7 @@ public class PdfValidationFail extends SiVaRestTests{
     @Test
     public void signingCertificateWithoutNonRepudiationKeyUsageAttributeShouldFail() {
         QualifiedReport report = postForReport("hellopades-pades-lt-sha256-auth.pdf");
-        assertInvalidWithError(report, "BBB_XCV_ISCGKU_ANS", "The signer's certificate has not expected key-usage!");
+        assertInvalidWithError(report.getSignatures().get(0), "The signer's certificate has not expected key-usage!");
     }
 
     /***

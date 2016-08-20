@@ -1,7 +1,6 @@
 package ee.openeid.siva.webapp.transformer;
 
 import ee.openeid.siva.proxy.document.ProxyDocument;
-import ee.openeid.siva.proxy.document.ReportType;
 import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.testutils.MockValidationRequestBuilder;
 import org.apache.commons.codec.binary.Base64;
@@ -50,24 +49,6 @@ public class ValidationRequestToProxyDocumentTransformerTest {
     public void ddocTypeIsCorrectlyTransformedToDocumentType() {
         validationRequest.setType("ddoc");
         assertEquals(DocumentType.DDOC, transformer.transform(validationRequest).getDocumentType());
-    }
-
-    @Test
-    public void simpleReportTypeIsCorrectlyTransformedToReportType() {
-        validationRequest.setReportType("SimPle");
-        assertEquals(ReportType.SIMPLE, transformer.transform(validationRequest).getReportType());
-    }
-
-    @Test
-    public void detailedReportTypeIsCorrectlyTransformedToReportType() {
-        validationRequest.setReportType("detailed");
-        assertEquals(ReportType.DETAILED, transformer.transform(validationRequest).getReportType());
-    }
-
-    @Test
-    public void diagnosticDataReportTypeIsCorrectlyTransformedToReportType() {
-        validationRequest.setReportType("diagnosticData");
-        assertEquals(ReportType.DIAGNOSTICDATA, transformer.transform(validationRequest).getReportType());
     }
 
     @Test

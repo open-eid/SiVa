@@ -5,12 +5,24 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class DocumentTypeResolverTest {
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
+
+    @Test
+    public void testConstructorIsPrivate() throws Exception {
+        final Constructor<DocumentTypeResolver> constructor = DocumentTypeResolver.class.getDeclaredConstructor();
+        assertTrue(Modifier.isPrivate(constructor.getModifiers()));
+        constructor.setAccessible(true);
+        constructor.newInstance();
+    }
 
     @Test
     public void pdfTypeReturnsPdfMimeType() {

@@ -1,24 +1,44 @@
 extends layout/main-layout
+include mixins/footer-mixins
 
 block content
     .row
         .col-md-12
-            h1 Upload a digitally signed file
-            form(action="/upload", method="POST", enctype="multipart/form-data")
-                .form-group
-                    input(type="file", name="file")
-                .form-group
-                    button(type="submit")#validate-btn.btn.btn-primary Validate
-    if overallValidationResult != null && !documentName.isEmpty()
-        .row
-            .col-md-12
-                h1 Overall validation result
-                p Document&nbsp;
-                    strong= documentName
-                    |&nbsp;is&nbsp;
-                    strong(class="validation-result "  + overallValidationResult.toLowerCase())= overallValidationResult
-    .row
+            .alert.alert-warning
+                .col-md-1.col-sm-2.hidden-md-down
+                    img.icon-alert(src="img/icon-alert.svg")
+                .col-md-11
+                    strong Warning!&nbsp;
+                    | Content uploaded to SiVa demo validation service may be visible to third parties.
+                    | Upload only content that does not contain confidential information.
+                .clearfix
+        .col-md-12
+            h1.hidden-md-down Upload a digitally signed file
+            h3.hidden-md-up Upload signed file
+            p.hidden-md-down Supported file types are: BDOC, DDOC and PDF
+            form#siva-dropzone.dropzone(action="/upload", style="width: 100%", method="POST", enctype="multipart/form-data")
+                input.hide(type="file", name="file")
+    .row.hide#validation-summery
+        .col-md-12
+            h1 Overall validation result
+            p Document&nbsp;
+                strong#document-name
+                |&nbsp;is&nbsp;
+                strong#overall-validation-result.validation-result
+    .row.hide#result-area
         .col-md-12
             h1 Validation report
-            if validationResult != null
-                pre.prettyprint= validationResult
+            ul#response-tabs.nav.nav-tabs(role="tablist")
+                li.nav-item(role="presentation")
+                    a.nav-link.active(href="#json", aria-controls="json", role="tab", data-toggle="tab") JSON
+                li.nav-item(role="presentation")
+                    a.nav-link(href="#soap", aria-controls="soap", role="tab", data-toggle="tab") SOAP
+            .tab-content
+                #json.tab-pane.active(role="tabpanel")
+                    pre
+                        code.json#validation-report
+                #soap.tab-pane(role="tabpanel")
+                    pre
+                        code.xml#soap-validation-report
+    +footerBuildInfo
+

@@ -1,0 +1,19 @@
+mixin footerBuildInfo
+    .row.footer
+        hr
+        .col-lg-6.pull-lg-left.hidden-md-down
+            span
+                a(href="https://open-eid.github.io/SiVa/", target="_blank") SiVa Documentation&nbsp;
+            if buildInfo.github != null
+                span Git commit:&nbsp;
+                    a(href=buildInfo.github.url, target="_blank")= buildInfo.github.shortHash
+                    | &nbsp;by&nbsp;
+                span=buildInfo.github.authorName
+                span &nbsp;. TravisCI build number:&nbsp;
+                    a(href=buildInfo.travisCi.buildUrl, target="_blank")= buildInfo.travisCi.buildNumber
+        .col-lg-4.col-md-12.pull-lg-right.text-lg-right.text-md-center.footer-icons
+            a.footer-social(href="https://www.facebook.com/riigiinfosysteemiamet/", target="_blank")
+                img(src="img/social/Facebook.svg", alt="Facebook Riigi Infosüsteemide Amet")
+            a.footer-social(href="https://github.com/open-eid/SiVa", target="_blank")
+                img(src="img/social/Github.svg", alt="Github SiVa project")
+

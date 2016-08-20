@@ -3,13 +3,17 @@ package ee.openeid.validation.service.pdf;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.document.report.SignatureScope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.Warning;
 import org.junit.Test;
+
+import java.util.List;
 
 import static org.junit.Assert.*;
 
 public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
 
     private static final String PDF_WITH_ONE_VALID_SIGNATURE = "hellopades-pades-lt-sha256-sign.pdf";
+    private static final String PDF_SIGNED_WITH_UNQUALIFIED_CERTIFICATE = "hellopades-lt1-lt2-parallel3.pdf";
 
     @Test
     public void validatingWithValidPdfShouldReturnQualifiedReportPojo() throws Exception {
@@ -41,6 +45,7 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE));
         SignatureValidationData signature = report.getSignatures().get(0);
         assertEquals("2015-07-09T07:00:48Z", signature.getClaimedSigningTime());
+        assertEquals("2015-07-09T07:00:55Z", signature.getInfo().getBestSignatureTime());
     }
 
     @Test
@@ -76,5 +81,26 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
         QualifiedReport report = validationService.validateDocument(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE));
         report.getSignatures().forEach(this::assertNoErrorsOrWarnings);
+    }
+
+    @Test
+    public void validationResultForPdfShouldContainCorrectPadesSignatureForm() throws Exception {
+        QualifiedReport report = validationService.validateDocument(
+                buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE));
+        assertEquals("PAdES", report.getSignatureForm());
+    }
+
+    @Test
+    public void validatingPdfSignedWithUnqualifiedCertificateReturnsReportWithoutErrorsButWithWarning() throws Exception {
+        QualifiedReport report = validationService.validateDocument(
+                buildValidationDocument(PDF_SIGNED_WITH_UNQUALIFIED_CERTIFICATE));
+        assertNotNull(report);
+        List<Warning> firstSignatureWarnings = report.getSignatures().get(0).getWarnings();
+        List<Warning> secondSignatureWarnings = report.getSignatures().get(1).getWarnings();
+
+        assertEquals("The certificate is not supported by SSCD!", firstSignatureWarnings.get(0).getDescription());
+        assertEquals("The certificate is not qualified!", firstSignatureWarnings.get(1).getDescription());
+        assertEquals("The certificate is not supported by SSCD!", secondSignatureWarnings.get(0).getDescription());
+        assertEquals("The certificate is not qualified!", secondSignatureWarnings.get(1).getDescription());
     }
 }

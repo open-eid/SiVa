@@ -62,7 +62,7 @@ public class ValidationRequestTests extends SiVaRestTests {
     @Test
     public void ValidationRequestRandomInputAsBdocDocument() {
         String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
-        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "bdoc", "simple"))
+        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "bdoc", ""))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -87,7 +87,7 @@ public class ValidationRequestTests extends SiVaRestTests {
     @Test
     public void ValidationRequestRandomInputAsPdfDocument() {
         String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
-        post(validationRequestWithValidKeys(encodedString, "some_pdf.pdf", "pdf", "simple"))
+        post(validationRequestWithValidKeys(encodedString, "some_pdf.pdf", "pdf", ""))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -112,7 +112,7 @@ public class ValidationRequestTests extends SiVaRestTests {
     @Test
     public void ValidationRequestRandomInputAsDdocDocument() {
         String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
-        post(validationRequestWithValidKeys(encodedString, "some_pdf.ddoc", "ddoc", "simple"))
+        post(validationRequestWithValidKeys(encodedString, "some_pdf.ddoc", "ddoc", ""))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -127,7 +127,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      *
      * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
-     * Title: Input a request with empty values
+     * Title: Input empty values
      *
      * Expected Result: Errors are returned stating the missing values
      *
@@ -139,12 +139,10 @@ public class ValidationRequestTests extends SiVaRestTests {
         String json = post(validationRequestWithValidKeys("", "", "", "")).asString();
 
         assertTrue(getFailMessageForKey(DOCUMENT_TYPE), getRequestErrorsCount(json, DOCUMENT_TYPE, MAY_NOT_BE_EMPTY)==1);
-        assertTrue(getFailMessageForKey(REPORT_TYPE), getRequestErrorsCount(json, REPORT_TYPE, MAY_NOT_BE_EMPTY)==1);
         assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(json, FILENAME, MAY_NOT_BE_EMPTY)==1);
         assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(json, DOCUMENT, MAY_NOT_BE_EMPTY)==1);
 
         assertTrue(getFailMessageForKey(DOCUMENT_TYPE), getRequestErrorsCount(json, DOCUMENT_TYPE, INVALID_DOCUMENT_TYPE)==1);
-        assertTrue(getFailMessageForKey(REPORT_TYPE), getRequestErrorsCount(json, REPORT_TYPE, INVALID_REPORT_TYPE)==1);
         assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(json, FILENAME, INVALID_FILENAME)==1);
         assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(json, DOCUMENT, INVALID_BASE_64)==1);
     }
@@ -176,7 +174,7 @@ public class ValidationRequestTests extends SiVaRestTests {
     @Test
     public void ValidationRequestNonBase64Input() {
         String encodedString = ",:";
-        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "bdoc", "simple"))
+        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "bdoc", ""))
                 .then()
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
                 .body("requestErrors[0].message", Matchers.containsString(INVALID_BASE_64));
@@ -185,53 +183,6 @@ public class ValidationRequestTests extends SiVaRestTests {
     /***
      *
      * TestCaseID: ValidationRequest-6
-     *
-     * TestType: Automated
-     *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
-     *
-     * Title: Verification of wrong report type as input
-     *
-     * Expected Result: Error is returned stating wrong report type
-     *
-     * File: Valid_IDCard_MobID_signatures.bdoc
-     *
-     ***/
-    @Test
-    public void ValidationRequestInvalidReportType() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "bdoc", "Complicated"))
-                .then()
-                .body("requestErrors[0].key", Matchers.is(REPORT_TYPE))
-                .body("requestErrors[0].message", Matchers.containsString(INVALID_REPORT_TYPE));
-    }
-
-    /***
-     *
-     * TestCaseID: ValidationRequest-7
-     *
-     * TestType: Automated
-     *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
-     *
-     * Title: Verification of valid (but not simple) report type as input
-     *
-     * Expected Result: Correct report is returned (currently simple report is returned in all cases)
-     *
-     * File: Valid_IDCard_MobID_signatures.bdoc
-     *
-     ***/
-    @Test //todo revisit this test when decision has been made regarding other types of reports than simple
-    public void ValidationRequestValidReportType() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "bdoc", "diagnosticdata"))
-                .then()
-                .body("documentName",equalTo("Valid_IDCard_MobID_signatures.bdoc"));
-    }
-
-    /***
-     *
-     * TestCaseID: ValidationRequest-8
      *
      * TestType: Automated
      *
@@ -247,65 +198,40 @@ public class ValidationRequestTests extends SiVaRestTests {
     @Test
     public void ValidationRequestInvalidDocumentType() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "cdoc", "simple"))
+        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "cdoc", ""))
                 .then()
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT_TYPE))
                 .body("requestErrors[0].message", Matchers.containsString(INVALID_DOCUMENT_TYPE));
+    }
+
+    /***
+     *
+     * TestCaseID: ValidationRequest-8
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Acceptance of ASICE as BDOC document type
+     *
+     * Expected Result: Asice files are handled the same as *.bdoc
+     *
+     * File: TS-11_23634_TS_2_timestamps.asice
+     *
+     ***/
+    @Test
+    public void ValidationRequestDocumentTypeBdocAndFileAsice() {
+        setTestFilesDirectory("bdoc/live/timestamp/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("bdoc21-TS.asice"));
+        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "bDOC", ""))
+                .then()
+                .body("documentName",equalTo("Valid_IDCard_MobID_signatures.bdoc"));
+
     }
 
     /***
      *
      * TestCaseID: ValidationRequest-9
-     *
-     * TestType: Automated
-     *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
-     *
-     * Title: Mismatch in documentType and actual document (bdoc and pdf)
-     *
-     * Expected Result: Error is returned
-     *
-     * File: Valid_IDCard_MobID_signatures.bdoc
-     *
-     ***/
-    @Test
-    public void ValidationRequestNotMatchingDocumentTypeAndActualFile() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "pdf", "simple"))
-                .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
-                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
-    }
-
-    /***
-     *
-     * TestCaseID: ValidationRequest-10
-     *
-     * TestType: Automated
-     *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
-     *
-     * Title: Mismatch in documentType and actual document (asice and bdoc)
-     *
-     * Expected Result: Error is returned
-     *
-     * File: TS-11_23634_TS_2_timestamps.asice
-     *
-     ***/
-    @Test @Ignore //TODO: this needs evaluation what should actually happen. X-Road will be using asice which will not validate in this sequence.
-    public void ValidationRequestNotMatchingDocumentTypeAndActualFileAsice() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("TS-11_23634_TS_2_timestamps.asice"));
-        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "dDOC", "simple"))
-                .then()
-                .body("requestErrors[0].key", Matchers.is(DOCUMENT_TYPE))
-                .body("requestErrors[0].message", Matchers.containsString(INVALID_DOCUMENT_TYPE));
-
-    }
-
-    /***
-     *
-     * TestCaseID: ValidationRequest-11
      *
      * TestType: Automated
      *
@@ -321,14 +247,14 @@ public class ValidationRequestTests extends SiVaRestTests {
     @Test
     public void ValidationRequestCaseChangeDocumentType() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "BdOc", "simple"))
+        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "BdOc",""))
                 .then()
                 .body("documentName",equalTo("Valid_IDCard_MobID_signatures.bdoc"));
     }
 
     /***
      *
-     * TestCaseID: ValidationRequest-12
+     * TestCaseID: ValidationRequest-10
      *
      * TestType: Automated
      *
@@ -344,14 +270,14 @@ public class ValidationRequestTests extends SiVaRestTests {
     @Test
     public void ValidationRequestWrongFilename() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "TotallyRandomFilename.exe", "BdOC", "simple"))
+        post(validationRequestWithValidKeys(encodedString, "TotallyRandomFilename.exe", "BdOC",""))
                 .then()
                 .body("documentName",equalTo("TotallyRandomFilename.exe"));
     }
 
     /***
      *
-     * TestCaseID: ValidationRequest-13
+     * TestCaseID: ValidationRequest-11
      *
      * TestType: Automated
      *
@@ -367,7 +293,7 @@ public class ValidationRequestTests extends SiVaRestTests {
     @Test
     public void ValidationRequestInvalidFilename() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "*.exe", "BDOC", "simple"))
+        post(validationRequestWithValidKeys(encodedString, "*.exe", "BDOC", ""))
                 .then()
                 .body("requestErrors[0].key", Matchers.is(FILENAME))
                 .body("requestErrors[0].message", Matchers.containsString(INVALID_FILENAME));
@@ -376,7 +302,7 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-14
+     * TestCaseID: ValidationRequest-12
      *
      * TestType: Automated
      *
@@ -393,48 +319,21 @@ public class ValidationRequestTests extends SiVaRestTests {
     public void ValidationRequestInvalidDocumentKey() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         String response = post(validationRequestForExtended("Document", encodedString,
-                FILENAME, "*.exe", DOCUMENT_TYPE, "BDOC", REPORT_TYPE, "simple")).asString();
+                FILENAME, "*.exe", DOCUMENT_TYPE, "BDOC", SIGNATURE_POLICY, "EE")).asString();
 
         assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, MAY_NOT_BE_EMPTY) == 1);
         assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, INVALID_BASE_64) == 1);
     }
 
-
     /***
      *
-     * TestCaseID: ValidationRequest-15
+     * TestCaseID: ValidationRequest-13
      *
      * TestType: Automated
      *
      * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
-     * Title: Request has wrong key on report type position
-     *
-     * Expected Result: Error is returned
-     *
-     * File: Valid_IDCard_MobID_signatures.bdoc
-     *
-     ***/
-    @Test
-    public void ValidationRequestInvalidReportTypeKey() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        String repsonse = post(validationRequestForExtended(DOCUMENT, encodedString,
-                FILENAME, "Valid_IDCard_MobID_signatures.bdoc", DOCUMENT_TYPE, "BDOC", "WrongreportType", "simple")).asString();
-
-        assertTrue(getFailMessageForKey(REPORT_TYPE), getRequestErrorsCount(repsonse, REPORT_TYPE, MAY_NOT_BE_EMPTY) == 1);
-        assertTrue(getFailMessageForKey(REPORT_TYPE), getRequestErrorsCount(repsonse, REPORT_TYPE, INVALID_REPORT_TYPE) == 1);
-
-    }
-
-    /***
-     *
-     * TestCaseID: ValidationRequest-16
-     *
-     * TestType: Automated
-     *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
-     *
-     * Title: Request has XML as document type (special case, XML is similar to ddoc)
+     * Title: Request has XML as document type (special case, XML is similar to ddoc and was a accepted document type in earlier versions)
      *
      * Expected Result: Error is given
      *
@@ -444,7 +343,7 @@ public class ValidationRequestTests extends SiVaRestTests {
     @Test
     public void ValidationRequestXmlDocument() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "xml", "simple"))
+        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "xml", ""))
                 .then()
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT_TYPE))
                 .body("requestErrors[0].message", Matchers.is(INVALID_DOCUMENT_TYPE));
@@ -453,7 +352,7 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-17
+     * TestCaseID: ValidationRequest-14
      *
      * TestType: Automated
      *
@@ -472,14 +371,14 @@ public class ValidationRequestTests extends SiVaRestTests {
 
         String filename = "ngFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBngFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongngFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenangFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLonngFilenamengFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLonngFilngFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLonngFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLonngFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLonenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLonToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLonmeToBeInsertedLonngFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLonFilenameToBeInsertedLonngFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLoneInsertedLonngFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLonngFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLonngFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInserted.bdoc";
 
-        post(validationRequestWithValidKeys(encodedString, filename, "bdoc", "simple"))
+        post(validationRequestWithValidKeys(encodedString, filename, "bdoc",""))
                 .then()
                 .body("documentName",equalTo(filename));
     }
 
     /***
      *
-     * TestCaseID: ValidationRequest-18
+     * TestCaseID: ValidationRequest-15
      *
      * TestType: Automated
      *
@@ -497,19 +396,17 @@ public class ValidationRequestTests extends SiVaRestTests {
         String response = post(new JSONObject().toString()).thenReturn().body().asString();
 
         assertTrue(getFailMessageForKey(DOCUMENT_TYPE), getRequestErrorsCount(response, DOCUMENT_TYPE, MAY_NOT_BE_EMPTY)==1);
-        assertTrue(getFailMessageForKey(REPORT_TYPE), getRequestErrorsCount(response, REPORT_TYPE, MAY_NOT_BE_EMPTY)==1);
         assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, MAY_NOT_BE_EMPTY)==1);
         assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, MAY_NOT_BE_EMPTY)==1);
 
         assertTrue(getFailMessageForKey(DOCUMENT_TYPE), getRequestErrorsCount(response, DOCUMENT_TYPE, INVALID_DOCUMENT_TYPE)==1);
-        assertTrue(getFailMessageForKey(REPORT_TYPE), getRequestErrorsCount(response, REPORT_TYPE, INVALID_REPORT_TYPE)==1);
         assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, INVALID_FILENAME)==1);
         assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, INVALID_BASE_64)==1);
     }
 
     /***
      *
-     * TestCaseID: ValidationRequest-19
+     * TestCaseID: ValidationRequest-16
      *
      * TestType: Automated
      *
@@ -529,7 +426,7 @@ public class ValidationRequestTests extends SiVaRestTests {
         jsonObject.put(DOCUMENT, encodedString);
         jsonObject.put(FILENAME, "Valid_IDCard_MobID_signatures.bdoc");
         jsonObject.put(DOCUMENT_TYPE, "bdoc");
-        jsonObject.put(REPORT_TYPE, "simple");
+        jsonObject.put(SIGNATURE_POLICY, "EE");
         jsonObject.put("ExtraOne", "RandomValue");
         jsonObject.put("ExtraTwo", "AnotherValue");
         post(jsonObject.toString())
@@ -540,7 +437,7 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-20
+     * TestCaseID: ValidationRequest-17
      *
      * TestType: Automated
      *
@@ -556,14 +453,14 @@ public class ValidationRequestTests extends SiVaRestTests {
     @Test
     public void ValidationRequestUnusualChars() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "ÕValid_IDCard_MobID_signatures.bdocÄÖÜ", "bdoc", "simple"))
+        post(validationRequestWithValidKeys(encodedString, "ÕValid_IDCard_MobID_signatures.bdocÄÖÜ", "bdoc",""))
                 .then()
                 .body("documentName",equalTo("ÕValid_IDCard_MobID_signatures.bdocÄÖÜ"));
     }
 
     /***
      *
-     * TestCaseID: ValidationRequest-21
+     * TestCaseID: ValidationRequest-18
      *
      * TestType: Automated
      *
@@ -579,7 +476,7 @@ public class ValidationRequestTests extends SiVaRestTests {
     @Test
     public void DdocValidationRequestNotMatchingDocumentTypeAndActualFileBdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "ddoc", "simple"))
+        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "ddoc", ""))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -588,7 +485,7 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-22
+     * TestCaseID: ValidationRequest-19
      *
      * TestType: Automated
      *
@@ -604,7 +501,7 @@ public class ValidationRequestTests extends SiVaRestTests {
     @Test
     public void DdocValidationRequestNotMatchingDocumentTypeAndActualFilePdf() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "PdfValidSingleSignature.pdf", "ddoc", "simple"))
+        post(validationRequestWithValidKeys(encodedString, "PdfValidSingleSignature.pdf", "ddoc", ""))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -613,7 +510,7 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-23
+     * TestCaseID: ValidationRequest-19
      *
      * TestType: Automated
      *
@@ -629,7 +526,7 @@ public class ValidationRequestTests extends SiVaRestTests {
     @Test
     public void BdocValidationRequestNotMatchingDocumentTypeAndActualFilePdf() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "PdfValidSingleSignature.pdf", "bdoc", "simple"))
+        post(validationRequestWithValidKeys(encodedString, "PdfValidSingleSignature.pdf", "bdoc", ""))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -638,7 +535,7 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-24
+     * TestCaseID: ValidationRequest-20
      *
      * TestType: Automated
      *
@@ -654,7 +551,7 @@ public class ValidationRequestTests extends SiVaRestTests {
     @Test
     public void BdocValidationRequestNotMatchingDocumentTypeAndActualFileDdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
-        post(validationRequestWithValidKeys(encodedString, "igasugust1.3.ddoc", "bdoc", "simple"))
+        post(validationRequestWithValidKeys(encodedString, "igasugust1.3.ddoc", "bdoc", ""))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -663,7 +560,7 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-25
+     * TestCaseID: ValidationRequest-21
      *
      * TestType: Automated
      *
@@ -679,7 +576,7 @@ public class ValidationRequestTests extends SiVaRestTests {
     @Test
     public void PdfValidationRequestNotMatchingDocumentTypeAndActualFileDdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
-        post(validationRequestWithValidKeys(encodedString, "igasugust1.3.ddoc", "pdf", "simple"))
+        post(validationRequestWithValidKeys(encodedString, "igasugust1.3.ddoc", "pdf", ""))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -688,7 +585,7 @@ public class ValidationRequestTests extends SiVaRestTests {
 
     /***
      *
-     * TestCaseID: ValidationRequest-26
+     * TestCaseID: ValidationRequest-22
      *
      * TestType: Automated
      *
@@ -704,7 +601,331 @@ public class ValidationRequestTests extends SiVaRestTests {
     @Test
     public void PdfValidationRequestNotMatchingDocumentTypeAndActualFileBdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "pdf", "simple"))
+        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "pdf", ""))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
+                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
+    }
+
+    /***
+     *
+     * TestCaseID: ValidationRequest-23
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: PDF file, not existing value in signaturePolicy
+     *
+     * Expected Result: Error is returned
+     *
+     * File: PdfValidSingleSignature.pdf
+     *
+     ***/
+    @Test
+    public void PdfValidationRequestWrongSignaturePolicy() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "PdfValidSingleSignature.pdf", "pdf", "RUS"))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(SIGNATURE_POLICY))
+                .body("requestErrors[0].message", Matchers.containsString("Invalid signature policy: RUS; Available abstractPolicies: [EE, EU]"));
+    }
+
+    /***
+     *
+     * TestCaseID: ValidationRequest-24
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Bdoc file, not existing value in signaturePolicy
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_IDCard_MobID_signatures.bdoc
+     *
+     ***/
+    @Test
+    public void bdocValidationRequestWrongSignaturePolicy() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
+        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "bdoc", "RUS"))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(SIGNATURE_POLICY))
+                .body("requestErrors[0].message", Matchers.containsString("Invalid signature policy: RUS; Available abstractPolicies: [EE]"));
+    }
+
+    /***
+     *
+     * TestCaseID: ValidationRequest-25
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Ddoc file, not existing value in signaturePolicy
+     *
+     * Expected Result: DDOC do not support signature policy selection, value is ignored
+     *
+     * File: igasugust1.3.ddoc
+     *
+     ***/
+    @Test
+    public void ddocValidationRequestWrongSignaturePolicy() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
+        post(validationRequestWithValidKeys(encodedString, "igasugust1.3.ddoc", "ddoc", "RUS"))
+                .then()
+                .body("validSignaturesCount", Matchers.is(3));
+    }
+    /***
+     *
+     * TestCaseID: ValidationRequest-26
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: X-road file, not existing value in signaturePolicy
+     *
+     * Expected Result: X-Road do not support signature policy selection, value is ignored
+     *
+     * File: xroad-simple.asice
+     *
+     ***/
+    @Test @Ignore //TODO: VAL-296 This test can be run locally on IDE when X-Road validation service is running. It will fail on automatic build.
+    public void xRoadValidationRequestWrongSignaturePolicy() {
+        setTestFilesDirectory("xroad/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
+        post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", "xroad", "RUS"))
+                .then()
+                .body("validSignaturesCount", Matchers.is(1));
+    }
+    /***
+     *
+     * TestCaseID: ValidationRequest-27
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Bdoc file, policy fiels should be case insensitive
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_IDCard_MobID_signatures.bdoc
+     *
+     ***/
+    @Test @Ignore //TODO: VAL-297
+    public void bdocValidationRequestCaseInsensitivePolicy() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
+        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "bdoc", "ee"))
+                .then()
+                .body("validSignaturesCount", Matchers.is(3));
+    }
+
+    /***
+     *
+     * TestCaseID: ValidationRequest-27
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Request without optional signaturePolicy field
+     *
+     * Expected Result: Validation report is returned with default policy
+     *
+     * File: Valid_IDCard_MobID_signatures.bdoc
+     *
+     ***/
+    @Test
+    public void ValidationRequestNoPolicyKey() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(DOCUMENT, encodedString);
+        jsonObject.put(FILENAME, "Valid_IDCard_MobID_signatures.bdoc");
+        jsonObject.put(DOCUMENT_TYPE, "bdoc");
+        post(jsonObject.toString())
+                .then()
+                .body("documentName",equalTo("Valid_IDCard_MobID_signatures.bdoc"));
+
+    }
+
+    /***
+     *
+     * TestCaseID: ValidationRequest-28
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Input random base64 string as document with ddoc document type
+     *
+     * Expected Result: Error is returned stating problem in document
+     *
+     * File:
+     *
+     ***/
+    @Test @Ignore //TODO: VAL-296 & VAL-301 This test can be run locally on IDE when X-Road validation service is running. It will fail on automatic build.
+    public void ValidationRequestRandomInputAsXroadDocument() {
+        String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
+        post(validationRequestWithValidKeys(encodedString, "some_pdf.ddoc", "xroad", ""))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
+                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
+    }
+
+    /***
+     *
+     * TestCaseID: ValidationRequest-29
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Mismatch in documentType and actual document (xroad and pdf)
+     *
+     * Expected Result: Error is returned
+     *
+     * File: PdfValidSingleSignature.pdf
+     *
+     ***/
+    @Test @Ignore //TODO: VAL-296 & VAL-301 This test can be run locally on IDE when X-Road validation service is running. It will fail on automatic build.
+    public void XroadValidationRequestNotMatchingDocumentTypeAndActualFilePdf() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "PdfValidSingleSignature.pdf", "xroad", ""))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
+                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
+    }
+
+    /***
+     *
+     * TestCaseID: ValidationRequest-30
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Mismatch in documentType and actual document (xroad and ddoc)
+     *
+     * Expected Result: Error is returned
+     *
+     * File: igasugust1.3.ddoc
+     *
+     ***/
+    @Test @Ignore //TODO: VAL-296 & VAL-301 This test can be run locally on IDE when X-Road validation service is running. It will fail on automatic build.
+    public void XroadValidationRequestNotMatchingDocumentTypeAndActualFileDdoc() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
+        post(validationRequestWithValidKeys(encodedString, "igasugust1.3.ddoc", "xroad", ""))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
+                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
+    }
+
+    /***
+     *
+     * TestCaseID: ValidationRequest-31
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Mismatch in documentType and actual document (xroad and bdoc)
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_IDCard_MobID_signatures.bdoc
+     *
+     ***/
+    @Test @Ignore //TODO: VAL-296 & VAL-301 This test can be run locally on IDE when X-Road validation service is running. It will fail on automatic build.
+    public void XroadValidationRequestNotMatchingDocumentTypeAndActualFileBdoc() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
+        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "xroad", ""))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
+                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
+    }
+
+    /***
+     *
+     * TestCaseID: ValidationRequest-32
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Mismatch in documentType and actual document (bdoc and xroad)
+     *
+     * Expected Result: Error is returned
+     *
+     * File: xroad-simple.asice
+     *
+     ***/
+    @Test @Ignore //TODO: VAL-302
+    public void BdocValidationRequestNotMatchingDocumentTypeAndActualFileXroad() {
+        setTestFilesDirectory("xroad/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
+        post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", "bdoc", ""))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
+                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
+    }
+
+    /***
+     *
+     * TestCaseID: ValidationRequest-32
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Mismatch in documentType and actual document (pdf and xroad)
+     *
+     * Expected Result: Error is returned
+     *
+     * File: xroad-simple.asice
+     *
+     ***/
+    @Test
+    public void PdfValidationRequestNotMatchingDocumentTypeAndActualFileXroad() {
+        setTestFilesDirectory("xroad/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
+        post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", "pdf", ""))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
+                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
+    }
+
+    /***
+     *
+     * TestCaseID: ValidationRequest-33
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Mismatch in documentType and actual document (ddoc and xroad)
+     *
+     * Expected Result: Error is returned
+     *
+     * File: xroad-simple.asice
+     *
+     ***/
+    @Test
+    public void DdocdValidationRequestNotMatchingDocumentTypeAndActualFileXroad() {
+        setTestFilesDirectory("xroad/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
+        post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", "ddoc", ""))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))

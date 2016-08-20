@@ -31,8 +31,7 @@ public class LargeFileTests extends SiVaRestTests{
      *
      * File: scout_x4-manual-signed_lt_9mb.pdf
      ***/
-    @Test
-    @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
+    @Test @Ignore //TODO: new test file is needed; the current one has issues with QC / SSCD
     public void nineMegabyteFilesWithLtSignatureAreAccepted () {
         assertSomeSignaturesAreValid(postForReport("scout_x4-manual-signed_lt_9mb.pdf"), 1);
     }
@@ -50,7 +49,7 @@ public class LargeFileTests extends SiVaRestTests{
      *
      * File: scout_x4-manual-signed_lta_9mb.pdf
      ***/
-    @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
+    @Test @Ignore  //TODO - a new test file is needed; the current one has issues with QC / SSCD
     public void nineMegabyteFilesWithLtaSignatureAreAccepted () {
         assertSomeSignaturesAreValid(postForReport("scout_x4-manual-signed_lta_9mb.pdf"), 1);
     }
@@ -86,7 +85,7 @@ public class LargeFileTests extends SiVaRestTests{
      *
      * File: digidocservice-signed-lta-1-2mb.pdf
      ***/
-    @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
+    @Test
     public void oneMegabyteFilesWithLtaSignatureAreAccepted () {
         assertSomeSignaturesAreValid(postForReport("digidocservice-signed-lta-1-2mb.pdf"), 1);
     }
@@ -122,7 +121,7 @@ public class LargeFileTests extends SiVaRestTests{
      *
      * File: egovenrment-benchmark-lta-3-8mb.pdf
      ***/
-    @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
+    @Test
     public void fourMegabyteFilesWithLtaSignatureAreAccepted () {
         assertSomeSignaturesAreValid(postForReport("egovenrment-benchmark-lta-3-8mb.pdf"), 1);
     }

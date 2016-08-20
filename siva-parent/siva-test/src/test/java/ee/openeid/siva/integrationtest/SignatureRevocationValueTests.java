@@ -16,7 +16,7 @@ public class SignatureRevocationValueTests extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: DSS-SIG-OCSP-TS-WARN
+     * RequirementID:
      *
      * Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation that is more than 15 minutes later than the signatures Time Stamp.
      *
@@ -34,7 +34,7 @@ public class SignatureRevocationValueTests extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: DSS-SIG-OCSP-TS-WARN
+     * RequirementID:
      *
      * Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation that is more than 15 minutes later than the signatures Time Stamp.
      *
@@ -42,10 +42,10 @@ public class SignatureRevocationValueTests extends SiVaRestTests {
      *
      * File: hellopades-lt-sha256-ocsp-15min1s.pdf
      */
-    @Test @Ignore //TODO: warnings are not included in report currently, turn this test on when or if they are included
+    @Test @Ignore //TODO: With DigiDoc4J 1.0.4 update this warn functionality is no longer implemented
     public void documentWithOcspOver15MinDelayShouldHaveCorrectWarningInReport() {
         QualifiedReport report = postForReport("hellopades-lt-sha256-ocsp-15min1s.pdf");
-        assertHasWarning(report, "ADEST_IOTNLABST_ANS", "The validation failed, because OCSP is too long after the best-signature-time!");
+        assertHasWarning(report.getSignatures().get(0), "The validation failed, because OCSP is too long after the best-signature-time!");
     }
 
     /**
@@ -53,7 +53,7 @@ public class SignatureRevocationValueTests extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: DSS-SIG-OCSP-TS-ERROR
+     * RequirementID:
      *
      * Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation more than 24 hours later than the signatures Time Stamp.
      *
@@ -61,32 +61,13 @@ public class SignatureRevocationValueTests extends SiVaRestTests {
      *
      * File: hellopades-lt-sha256-ocsp-28h.pdf
      */
-    @Test
+    @Test @Ignore //TODO: With DigiDoc4J 1.0.4 update this error functionality is no longer implemented
     public void documentWithOcspOver24hDelayShouldFail() {
         assertAllSignaturesAreInvalid(postForReport("hellopades-lt-sha256-ocsp-28h.pdf"));
     }
 
     /**
      * TestCaseID: PDF-SigRevocVal-4
-     *
-     * TestType: Automated
-     *
-     * RequirementID: DSS-SIG-OCSP-TS-ERROR
-     *
-     * Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation more than 24 hours later than the signatures Time Stamp.
-     *
-     * Expected Result: Document with over 24h delay should fail
-     *
-     * File: hellopades-lt-sha256-ocsp-28h.pdf
-     */
-    @Test
-    public void documentWithOcspOver24hDelayShouldDailWithCorrectErrorInReport() {
-        QualifiedReport report = postForReport("hellopades-lt-sha256-ocsp-28h.pdf");
-        assertAllSignaturesAreInvalid(report);
-    }
-
-    /**
-     * TestCaseID: PDF-SigRevocVal-5
      *
      * TestType: Automated
      *
@@ -98,14 +79,13 @@ public class SignatureRevocationValueTests extends SiVaRestTests {
      *
      * File: hellopades-lta-no-ocsp.pdf
      */
-    @Test
-    @Ignore("VAL-98 File size limit exeeded with thsi file")
+    @Test @Ignore //TODO: VAL-98 File size limit exceeded with this file
     public void documentWithNoOcspNorCrlInSignatureShouldFail() {
         assertAllSignaturesAreInvalid(postForReport("hellopades-lta-no-ocsp.pdf"));
     }
 
     /**
-     * TestCaseID: PDF-SigRevocVal-6
+     * TestCaseID: PDF-SigRevocVal-5
      *
      * TestType: Automated
      *
@@ -117,10 +97,10 @@ public class SignatureRevocationValueTests extends SiVaRestTests {
      *
      * File: hellopades-lt-sha256-rsa2048-ocsp-before-ts.pdf
      */
-    @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
+    @Test @Ignore //TODO: new test file is needed; the current one has issues with QC / SSCD
     public void documentSignedWithOcspTimeValueBeforeBestSignatureTimeShouldFail() {
         QualifiedReport report = postForReport("hellopades-lt-sha256-rsa2048-ocsp-before-ts.pdf");
-        assertInvalidWithError(report, "ADEST_IOABST_ANS", "The validation failed, because OCSP is before the best-signature-time!");
+        assertInvalidWithError(report.getSignatures().get(0), "The validation failed, because OCSP is before the best-signature-time!");
     }
 
     @Override

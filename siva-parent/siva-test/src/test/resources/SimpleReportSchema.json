@@ -3,13 +3,19 @@
   "type": "object",
   "properties": {
     "validationTime": {
-      "type": "string"
+      "type": "string",
+	  "minLength": 1
     },
     "signaturesCount": {
       "type": "integer"
     },
     "documentName": {
-      "type": "string"
+      "type": "string",
+	  "minLength": 1
+    },
+    "signatureForm": {
+      "type": "string",
+      "minLength": 1
     },
     "validSignaturesCount": {
       "type": "integer"
@@ -20,16 +26,20 @@
         "type": "object",
         "properties": {
           "signatureFormat": {
-            "type": "string"
+            "type": "string",
+			"minLength": 1
           },
           "signedBy": {
-            "type": "string"
+            "type": "string",
+			"minLength": 1
           },
           "claimedSigningTime": {
-            "type": "string"
+            "type": "string",
+			"minLength": 1
           },
           "signatureLevel": {
-            "type": "string"
+            "type": "string",
+			"minLength": 1
           },
           "warnings": {
             "type": "array",
@@ -46,44 +56,42 @@
           },
           "signatureScopes": {
             "type": "array",
+			"minItems": 1,
             "items": {
-              "type": "object",
-              "properties": {
-                "signatureScope": {
-                  "type": "array",
-                  "properties": {
-                    "name": {
-                      "type": "string"
-                    },
-                    "content": {
-                      "type": "string"
-                    },
-                    "scope": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "scope",
-                    "name",
-                    "content"
-                  ]
-                }
-              },
+			  "properties": {
+                "name": {
+                  "type": "string",
+				  "minLength": 1
+				},
+				"content": {
+				  "type": "string",
+				  "minLength": 1
+				},
+				"scope": {
+				  "type": "string",
+				  "minLength": 1
+				}
+			  },
               "required": [
-                "signatureScope"
-              ]
-            }
-          },
+                "scope",
+                "name",
+                "content"
+            ]
+			}
+		  },
           "id": {
-            "type": "string"
+            "type": "string",
+			"minLength": 1
           },
           "indication": {
-            "type": "string"
+            "type": "string",
+			"minLength": 1
           },
           "subindication": {
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "string",
+			  "minLength": 1
             }
           },
           "errors": {
@@ -92,10 +100,13 @@
               "type": "object",
               "properties": {
                 "nameId": {
-                  "type": "string"
+                  "type": "string",
+				  "minLength": 1
+				  
                 },
                 "content": {
-                  "type": "string"
+                  "type": "string",
+				  "minLength": 1
                 }
               }
             }
@@ -103,9 +114,6 @@
           "info": {
             "type": "object",
             "properties": {
-              "nameId": {
-                "type": "string"
-              },
               "bestSignatureTime": {
                 "type": "string"
               }
@@ -114,35 +122,38 @@
               "bestSignatureTime"
             ]
           }
-        }
-      },
-      "required": [
-        "signatureFormat",
-        "signedBy",
-        "claimedSigningTime",
-        "signatureLevel",
-        "signatureScopes",
-        "id",
-        "indication",
-        "errors",
-        "info"
+        },
+		"required": [
+          "signatureFormat",
+          "signedBy",
+          "claimedSigningTime",
+          "signatureLevel",
+          "signatureScopes",
+          "id",
+          "indication",
+          "errors",
+          "info"
       ]
-
+      }
     },
     "policy": {
       "type": "object",
       "properties": {
         "policyDescription": {
-          "type": "string"
+          "type": "string",
+		  "minLength": 1
         },
         "policyUrl": {
-          "type": "string"
+          "type": "string",
+		  "minLength": 1
         },
         "policyName": {
-          "type": "string"
+          "type": "string",
+		  "minLength": 1
         },
         "policyVersion": {
-          "type": "string"
+          "type": "string",
+		  "minLength": 1
         }
       },
       "required": [
@@ -158,6 +169,7 @@
     "validationTime",
     "signaturesCount",
     "documentName",
+    "signatureForm",
     "validSignaturesCount",
     "signatures",
     "policy"

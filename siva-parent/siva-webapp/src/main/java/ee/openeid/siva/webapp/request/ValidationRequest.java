@@ -5,6 +5,6 @@ public interface ValidationRequest {
     String getDocument();
     String getFilename();
     String getDocumentType();
-    String getReportType();
+    String getSignaturePolicy();
 
 }

@@ -32,7 +32,7 @@
         <dependency>
             <groupId>ee.sk.digidoc</groupId>
             <artifactId>jdigidoc</artifactId>
-            <version>3.12.0</version>
+            <version>3.12.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>iaik.pkcs</groupId>
@@ -51,11 +51,25 @@
             <artifactId>cryptacular</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
         <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
         </dependency>
     </dependencies>
 </project>

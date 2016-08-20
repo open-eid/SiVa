@@ -1,14 +1,26 @@
 html
     head
         title SiVa Demo application
-        link(rel="stylesheet", href="/webjars/bootstrap/4.0.0-alpha.2/dist/css/bootstrap.css")
-        link(rel="stylesheet", href="/css/desert.css")
-        link(rel="stylesheet", href="/css/custom.css")
-        script(src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js")
+        meta(charset="utf-8")
+        meta(http-equiv="Content-Type", content="text/html; charset=utf-8")
+        meta(name="viewport",content="width=device-width, initial-scale=1")
+        link(rel="stylesheet", href="/owr/site.css")
     body
         nav.navbar.navbar-fixed-top.navbar-dark.bg-inverse
-            a.navbar-brand(href="/") SiVa Sample Application
+            .navbar-header
+                .container
+                    a.navbar-brand(href="/")
+                        img(src="img/open-eid-logo.svg")
+                    a.navbar-brand(href="/")
+                        span SiVa Sample Application
         .container
             .row
                 .col-md-12.col-lg-12
                     block content
+        script(src="/owr/site.js")
+        if googleTrackingId != null
+            script(src="/js/google-tracking-init.js")
+            script.
+                var trackingId = '#{googleTrackingId}';
+                ga('create', trackingId, 'auto');
+                ga('send', 'pageview');

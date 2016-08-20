@@ -1,0 +1,9 @@
+siva:
+  pdf:
+    signaturePolicy:
+      policies:
+        ? EE
+        : pdf_constraint.xml
+        ? EU
+        : pdf_constraint2.xml
+      defaultPolicy: pdf_constraint.xml

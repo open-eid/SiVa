@@ -3,17 +3,15 @@ package ee.openeid.validation.service.bdoc;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
-import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.validation.service.bdoc.report.BDOCQualifiedReportBuilder;
+import ee.openeid.validation.service.bdoc.signature.policy.BDOCConfigurationService;
 import eu.europa.esig.dss.DSSException;
-import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import org.apache.commons.lang.StringUtils;
 import org.digidoc4j.Configuration;
 import org.digidoc4j.Container;
 import org.digidoc4j.ContainerBuilder;
 import org.digidoc4j.exceptions.DigiDoc4JException;
-import org.digidoc4j.impl.bdoc.tsl.TSLCertificateSourceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,74 +23,63 @@ import java.util.Date;
 
 @Service
 public class BDOCValidationService implements ValidationService {
-
-    private static final Logger logger = LoggerFactory.getLogger(BDOCValidationService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BDOCValidationService.class);
 
     private static final String CONTAINER_TYPE_DDOC = "DDOC";
 
-    private TrustedListsCertificateSource trustedListSource;
-    private Configuration configuration;
+    private BDOCConfigurationService configurationService;
 
     @Override
     public QualifiedReport validateDocument(ValidationDocument validationDocument) {
-        initConfiguration();
         Container container;
         try {
             container = createContainer(validationDocument);
         } catch (DigiDoc4JException | DSSException e) {
-            logger.error("Unable to create container from validation document", e);
+            LOGGER.error("Unable to create container from validation document", e);
             throw new MalformedDocumentException(e);
         }
         verifyContainerTypeNotDDOC(container.getType());
-
         try {
             container.validate();
             Date validationTime = new Date();
-            BDOCQualifiedReportBuilder reportBuilder = new BDOCQualifiedReportBuilder(container, validationDocument.getName(), validationTime);
-            return reportBuilder.build();
+            return new BDOCQualifiedReportBuilder(container, validationDocument.getName(), validationTime).build();
         } catch (Exception e) {
-            logger.error("Error occured during validation", e);
-            throw new ValidationServiceException(getClass().getSimpleName(), e);
+            if (isXRoadContainer(container)) {
+                LOGGER.error("XROAD container passed to BDOC validator", e);
+                throw new MalformedDocumentException(e);
+            }
+            LOGGER.error("An error occurred when validating document " + validationDocument.getName(), e);
+            throw e;
         }
     }
 
-    public void initConfiguration() {
-        if (configuration == null) {
-            configuration = new Configuration();
-
-            TSLCertificateSourceImpl tslCertificateSource = new TSLCertificateSourceImpl();
-            trustedListSource.getCertificates().stream().forEach(certToken -> tslCertificateSource.addTSLCertificate(certToken.getCertificate()));
-            configuration.setTSL(tslCertificateSource);
-        }
+    private boolean isXRoadContainer(Container container) {
+        return container
+                .getDataFiles()
+                .stream()
+                .filter(dataFile -> StringUtils.equals(dataFile.getName(), "message.xml"))
+                .count() == 1;
     }
 
     private Container createContainer(ValidationDocument validationDocument) {
         InputStream containerInputStream = new ByteArrayInputStream(validationDocument.getBytes());
-        return ContainerBuilder.
-                aContainer().
-                withConfiguration(configuration).
-                fromStream(containerInputStream).
-                build();
+
+        Configuration configuration = configurationService.loadConfiguration(validationDocument.getSignaturePolicy());
+        return ContainerBuilder.aContainer()
+                .fromStream(containerInputStream)
+                .withConfiguration(configuration)
+                .build();
     }
 
     private void verifyContainerTypeNotDDOC(String containerType) {
         if (StringUtils.equalsIgnoreCase(containerType, CONTAINER_TYPE_DDOC)) {
-            logger.error("DDOC container passed to BDOC validator");
+            LOGGER.error("DDOC container passed to BDOC validator");
             throw new MalformedDocumentException();
         }
     }
-    /**
-     * allow setting the configuration manually for testing purposes
-     *
-     * @param configuration
-     */
-    void setConfiguration(Configuration configuration) {
-        this.configuration = configuration;
-    }
 
     @Autowired
-    public void setTrustedListSource(TrustedListsCertificateSource trustedListSource) {
-        this.trustedListSource = trustedListSource;
+    public void setConfigurationService(BDOCConfigurationService configurationService) {
+        this.configurationService = configurationService;
     }
-
 }

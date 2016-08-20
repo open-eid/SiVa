@@ -1,9 +1,23 @@
 server:
   port: 9000
-siva:
-  uploadDirectory: "upload-dir"
-  serviceUrl: "http://localhost:8080/validate"
+  compression:
+    enabled: true
 spring:
   http:
     multipart:
       max-file-size: "10Mb"
+  cache:
+    caffeine:
+      spec: maximumSize=100,expireAfterAccess=20s
+management:
+  context-path: /monitoring
+security:
+  basic:
+    path: /monitoring/**
+  headers:
+    cache: false
+wro4j:
+  filterUrl: /owr
+  cacheName: owr
+  managerFactory:
+    preProcessors: removeSourceMaps, cssUrlRewriting, cssImport, cssMinJawr, semicolonAppender, jsMin

@@ -2,6 +2,10 @@ body {
     padding-top: 5rem;
 }
 
+.hide {
+    display: none;
+}
+
 .validation-result {
     font-size: 1.3em;
 }
@@ -12,4 +16,93 @@ body {
 
 .validation-result.invalid {
     color: red;
+}
+
+.footer {
+    font-size: .8em;
+    color: #999;
+    margin-bottom: 1em;
+}
+
+.icon-alert {
+    width: 35px;
+    margin: 10px 15px 0 15px;
+}
+
+.dz-max-files-reached {
+    border-color: #f2dede;
+}
+
+.navbar-brand {
+    padding: 0px;
+}
+
+.navbar-brand > img {
+    height: 2%;
+    width: auto;
+    margin-top: 5px;
+}
+
+.footer-social > img {
+    margin: 0 .5em 0 0;
+    height: 2%;
+    width: auto;
+}
+
+.footer a {
+    color: rgba(0, 0, 0, 0.5);
+    font-size: .9em;
+}
+
+.dropzone .dz-message {
+    margin: 1em 0;
+    min-height: 10%;
+    padding-top: 10%;
+    background: url("../img/upload-icon.svg") no-repeat top center;
+    background-size: 10%;
+}
+
+@media screen and (max-width: 768px) {
+    body {
+        padding-top: 4rem;
+    }
+
+    .dropzone .dz-message {
+        margin: 1em 0;
+        min-height: 10%;
+        padding-top: 5%;
+        background: url("../img/upload-icon.svg") no-repeat top center;
+        background-size: 35%;
+    }
+
+    .dropzone .dz-message span {
+        display: inline-block;
+        margin-top: 25%;
+    }
+
+    .navbar-header {
+        float: left;
+        text-align: center;
+        width: 100%;
+    }
+
+    .navbar-brand {
+        float:none;
+    }
+
+    .footer-icons {
+        text-align: center;
+    }
+
+    .footer-social > img {
+        height: 5%;
+        margin-right: 1em;
+    }
+
+    .navbar-brand > img {
+        height: 3%;
+        width: auto;
+        margin-top: -1px;
+        display: inline-block;
+    }
 }

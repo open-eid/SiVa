@@ -81,7 +81,7 @@ public class DocumentFormatTests extends SiVaRestTests {
      ***/
     @Test
     public void TxtDocumentShouldFail() {
-        post(validationRequestFor("hellopades-pades-lt-sha256-sign.txt", "simple"))
+        post(validationRequestFor("hellopades-pades-lt-sha256-sign.txt"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is("documentType"))
                 .body("requestErrors[0].message", Matchers.containsString("invalid document type"));
@@ -104,7 +104,7 @@ public class DocumentFormatTests extends SiVaRestTests {
      ***/
     @Test
     public void CAdESDocumentShouldFail() {
-        post(validationRequestFor("hellocades.p7s", "simple"))
+        post(validationRequestFor("hellocades.p7s"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is("documentType"))
                 .body("requestErrors[0].message", Matchers.containsString("invalid document type"));
@@ -127,7 +127,7 @@ public class DocumentFormatTests extends SiVaRestTests {
      ***/
     @Test
     public void ZipDocumentShouldFail() {
-        post(validationRequestFor("42.zip", "simple"))
+        post(validationRequestFor("42.zip"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is("documentType"))
                 .body("requestErrors[0].message", Matchers.containsString("invalid document type"));
@@ -150,7 +150,7 @@ public class DocumentFormatTests extends SiVaRestTests {
      ***/
     @Test
     public void DocDocumentShouldFail() {
-        post(validationRequestFor("hellopades-pades-lt-sha256-sign.doc", "simple"))
+        post(validationRequestFor("hellopades-pades-lt-sha256-sign.doc"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is("documentType"))
                 .body("requestErrors[0].message", Matchers.containsString("invalid document type"));
@@ -173,7 +173,7 @@ public class DocumentFormatTests extends SiVaRestTests {
      ***/
     @Test
     public void XmlDocumentShouldFail() {
-        post(validationRequestFor("XML.xml", "simple"))
+        post(validationRequestFor("XML.xml"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is("documentType"))
                 .body("requestErrors[0].message", Matchers.containsString("invalid document type"));
@@ -197,7 +197,7 @@ public class DocumentFormatTests extends SiVaRestTests {
 
     @Test
     public void PngDocumentShouldFail() {
-        post(validationRequestFor("Picture.png", "simple"))
+        post(validationRequestFor("Picture.png"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is("documentType"))
                 .body("requestErrors[0].message", Matchers.containsString("invalid document type"));

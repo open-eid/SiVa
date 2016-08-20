@@ -28,7 +28,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: DSS-CRY-ALGOEXP
+     * RequirementID:
      *
      * Title: SHA512 algorithms (PAdES Baseline LT)
      *
@@ -46,7 +46,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: DSS-CRY-ALGOEXP
+     * RequirementID:
      *
      * Title: SHA1 algorithms (PAdES Baseline LT)
      *
@@ -64,7 +64,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: DSS-CRY-ALGOEXP
+     * RequirementID:
      *
      * Title: ECDSA algorithms (PAdES Baseline LT)
      *
@@ -72,8 +72,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * File: hellopades-ecdsa.pdf
      */
-    @Ignore("TODO - current test file's signature doesn't contain ocsp")
-    @Test
+    @Test @Ignore //TODO: current test file's signature doesn't contain ocsp
     public void documentSignedWithSha256EcdsaAlgoShouldPass() {
         assertAllSignaturesAreValid(postForReport("hellopades-ecdsa.pdf"));
     }
@@ -83,7 +82,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: DSS-CRY-ALGOEXP
+     * RequirementID:
      *
      * Title: ECDSA224 algorithms (PAdES Baseline LT)
      *
@@ -101,7 +100,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: DSS-CRY-ALGOEXP
+     * RequirementID:
      *
      * Title: ECDSA256 algorithms (PAdES Baseline LT)
      *
@@ -119,7 +118,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: DSS-CRY-ALGOEXP
+     * RequirementID:
      *
      * Title: RSA1024 algorithms (PAdES Baseline LT)
      *
@@ -127,7 +126,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * File: hellopades-lt-sha256-rsa1024.pdf
      */
-    @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
+    @Test @Ignore //TODO: Need new test file as the cert has expired
     public void documentSignedWithSha256Rsa1024AlgoShouldPass() {
         assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-rsa1024.pdf"));
     }
@@ -137,7 +136,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: DSS-CRY-ALGOEXP
+     * RequirementID:
      *
      * Title: RSA1023 algorithms (PAdES Baseline LT)
      *
@@ -145,7 +144,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * File: hellopades-lt-sha256-rsa1023.pdf
      */
-    @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
+    @Test
     public void documentSignedWithRsa1023AlgoShouldPass() {
         assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-rsa1023.pdf"));
     }
@@ -155,7 +154,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: DSS-CRY-ALGOEXP
+     * RequirementID:
      *
      * Title: RSA2047 algorithms (PAdES Baseline LT)
      *
@@ -163,7 +162,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * File: hellopades-lt-sha256-rsa2047.pdf
      */
-    @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
+    @Test
     public void documentSignedWithRsa2047AlgoShouldPass() {
         assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-rsa2047.pdf"));
     }
@@ -173,7 +172,7 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: DSS-CRY-ALGOEXP
+     * RequirementID:
      *
      * Title: RSA2048 algorithms (PAdES Baseline LT)
      *

@@ -3,6 +3,7 @@ package ee.openeid.siva.proxy;
 import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.exception.ValidatonServiceNotFoundException;
+import ee.openeid.siva.proxy.http.RESTProxyService;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.service.ValidationService;
@@ -18,12 +19,16 @@ public class ValidationProxy {
     private static final Logger LOGGER = LoggerFactory.getLogger(ValidationProxy.class);
     private static final String SERVICE_BEAN_NAME_POSTFIX = "ValidationService";
 
+    private RESTProxyService restProxyService;
     private ApplicationContext applicationContext;
 
-    public QualifiedReport validate(final ProxyDocument proxyDocument) {
-        ValidationService validationService = getServiceForType(proxyDocument.getDocumentType());
-        return validationService.validateDocument(createValidationDocument(proxyDocument));
+    public QualifiedReport validate(ProxyDocument proxyDocument) {
+        if (proxyDocument.getDocumentType() == DocumentType.XROAD) {
+            return restProxyService.validate(createValidationDocument(proxyDocument));
+        }
 
+        return getServiceForType(proxyDocument.getDocumentType())
+                .validateDocument(createValidationDocument(proxyDocument));
     }
 
     private ValidationService getServiceForType(DocumentType documentType) {
@@ -44,7 +49,7 @@ public class ValidationProxy {
         ValidationDocument validationDocument = new ValidationDocument();
         validationDocument.setName(proxyDocument.getName());
         validationDocument.setBytes(proxyDocument.getBytes());
-        validationDocument.setMimeType(proxyDocument.getDocumentType().getMimeType());
+        validationDocument.setSignaturePolicy(proxyDocument.getSignaturePolicy());
         return validationDocument;
     }
 
@@ -53,4 +58,8 @@ public class ValidationProxy {
         this.applicationContext = applicationContext;
     }
 
+    @Autowired
+    public void setRestProxyService(RESTProxyService restProxyService) {
+        this.restProxyService = restProxyService;
+    }
 }

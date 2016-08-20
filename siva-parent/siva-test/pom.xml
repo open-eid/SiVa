@@ -48,6 +48,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
             </plugin>
+
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.19.1</version>
@@ -66,7 +67,163 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>com.bazaarvoice.maven.plugins</groupId>
+                <artifactId>process-exec-maven-plugin</artifactId>
+                <version>0.7</version>
+                <executions>
+                    <execution>
+                        <id>xroad-validator-application</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                        <configuration>
+                            <name>xroad-validator</name>
+                            <workingDir>xroad-validator</workingDir>
+                            <waitForInterrupt>false</waitForInterrupt>
+                            <arguments>
+                                <argument>java</argument>
+                                <argument>-jar</argument>
+                                <argument>${basedir}/../../validation-services-parent/xroad-validation-service/target/xroad-validation-service-${project.version}.jar</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>stop-all</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>stop-all</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>load-test</id>
+            <activation>
+                <property>
+                    <name>runLoadTests</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <properties>
+                <jmeter.host.name>localhost</jmeter.host.name>
+                <jmeter.host.port>8080</jmeter.host.port>
+                <jmeter.host.endpoint>/validate</jmeter.host.endpoint>
+                <jmeter.host.timeoutInMillis>60000</jmeter.host.timeoutInMillis>
+                <jmeter.testfiles.dir>${project.basedir}/src/test/jmeter/test-files</jmeter.testfiles.dir>
+                <jmeter.load.step.duration>60</jmeter.load.step.duration>
+                <jmeter.exclude.testplans>test.jmx</jmeter.exclude.testplans>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.lazerycode.jmeter</groupId>
+                        <artifactId>jmeter-maven-plugin</artifactId>
+                        <version>1.10.1</version>
+                        <configuration>
+                            <jMeterProcessJVMSettings>
+                                <xms>2048</xms>
+                                <xmx>4096</xmx>
+                            </jMeterProcessJVMSettings>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>jmeter-tests</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>jmeter</goal>
+                                </goals>
+                                <configuration>
+                                    <testFilesExcluded>
+                                        <excludeJMeterTestFile>${jmeter.exclude.testplans}</excludeJMeterTestFile>
+                                    </testFilesExcluded>
+                                    <testResultsTimestamp>false</testResultsTimestamp>
+                                    <propertiesUser>
+                                        <host.name>${jmeter.host.name}</host.name>
+                                        <host.port>${jmeter.host.port}</host.port>
+                                        <host.endpoint>${jmeter.host.endpoint}</host.endpoint>
+                                        <host.timeout>${jmeter.host.timeoutInMillis}</host.timeout>
+                                        <testfiles.dir>${jmeter.testfiles.dir}</testfiles.dir>
+                                        <errors.dir>${project.build.directory}/jmeter/results/errors</errors.dir>
+                                        <load.step.duration>${jmeter.load.step.duration}</load.step.duration>
+                                    </propertiesUser>
+                                    <jmeterPlugins>
+                                        <plugin>
+                                            <groupId>kg.apc</groupId>
+                                            <artifactId>jmeter-plugins-extras</artifactId>
+                                        </plugin>
+                                        <plugin>
+                                            <groupId>kg.apc</groupId>
+                                            <artifactId>jmeter-plugins-extras-libs</artifactId>
+                                        </plugin>
+                                        <plugin>
+                                            <groupId>kg.apc</groupId>
+                                            <artifactId>jmeter-plugins-standard</artifactId>
+                                        </plugin>
+                                    </jmeterPlugins>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>kg.apc</groupId>
+                                <artifactId>jmeter-plugins-extras</artifactId>
+                                <version>1.4.0</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>kg.apc</groupId>
+                                <artifactId>jmeter-plugins-extras-libs</artifactId>
+                                <version>1.4.0</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>kg.apc</groupId>
+                                <artifactId>jmeter-plugins-standard</artifactId>
+                                <version>1.4.0</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>com.github.Cka3o4Huk</groupId>
+                        <artifactId>jmeter-graph-maven-plugin</artifactId>
+                        <version>0.1.1</version>
+                        <executions>
+                            <execution>
+                                <id>create-graphs</id>
+                                <goals>
+                                    <goal>create-graph</goal>
+                                </goals>
+                                <phase>verify</phase>
+                                <configuration>
+                                    <inputFilePattern>${project.build.directory}/jmeter/results/*.jtl</inputFilePattern>
+                                    <graphs>
+                                        <graph>
+                                            <pluginType>ThroughputVsThreads</pluginType>
+                                            <width>950</width>
+                                            <height>500</height>
+                                            <outputFilePattern>${project.build.directory}/jmeter/results/reports/%FILENAME%-ThroughputVsThreads.png</outputFilePattern>
+                                        </graph>
+                                        <graph>
+                                            <pluginType>TimesVsThreads</pluginType>
+                                            <width>950</width>
+                                            <height>500</height>
+                                            <outputFilePattern>${project.build.directory}/jmeter/results/reports/%FILENAME%-TimesVsThreads.png</outputFilePattern>
+                                        </graph>
+                                    </graphs>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

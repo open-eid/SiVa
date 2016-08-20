@@ -1,18 +1,13 @@
 package ee.openeid.siva.sample.siva;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@Data
+@AllArgsConstructor
 class ServiceError {
-    @Getter
-    private String errorMessage;
-
     @Getter
     private int errorCode;
 
-    ServiceError(int errorCode, String errorMessage) {
-        this.errorCode = errorCode;
-        this.errorMessage = errorMessage;
-    }
+    @Getter
+    private String errorMessage;
 }

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><!DOCTYPE SignedDoc PUBLIC "-//VSR//PENTEST//EN" "http://localhost:1234/">
+<SignedDoc format="DIGIDOC-XML" version="1.3" xmlns="http://www.sk.ee/DigiDoc/v1.3.0#">
+<DataFile ContentType="EMBEDDED_BASE64" Filename="asd.php" Id="D0" MimeType="text" Size="6" xmlns="http://www.sk.ee/DigiDoc/v1.3.0#">prephpas</DataFile>
+<Signature Id="S0" xmlns="http://www.w3.org/2000/09/xmldsig#">
+<SignedInfo xmlns="http://www.w3.org/2000/09/xmldsig#">
+<CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315">
+</CanonicalizationMethod>
+<SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1">
+</SignatureMethod>
+<Reference URI="#D0">
+<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1">
+</DigestMethod>
+<DigestValue>xZqKSeUrCPs3jPV3KHCJks70qbE=</DigestValue>
+</Reference>
+<Reference Type="http://uri.etsi.org/01903/v1.1.1#SignedProperties" URI="#S0-SignedProperties">
+<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1">
+</DigestMethod>
+<DigestValue>P4QTSuDQUh7qsHTwlM5NUknH3Xs=</DigestValue>
+</Reference>
+</SignedInfo><KeyInfo>
+<KeyValue>
+<RSAKeyValue>
+<Modulus>AMFo0cOULrm6HHJdMsyYVq6bBmCU4rjg8eonNnbWNq9Y0AAiyIQvJ3xDULnfwJD0
+C3QI8Y5RHYnZlt4U4Yt4CI6JenMySV1hElOtGYP1EuFPf643V11t/mUDgY6aZaAu
+PLNvVYbeVHv0rkunKQ+ORABjhANCvHaErqC24i9kv3mV</Modulus>
+<Exponent>AQAB</Exponent>
+</RSAKeyValue>
+</KeyValue>
+<X509Data><X509Certificate>MIIECjCCAvKgAwIBAgIES7sTMzANBgkqhkiG9w0BAQUFADBfMQswCQYDVQQGEwJF
+RTEiMCAGA1UEChMZQVMgU2VydGlmaXRzZWVyaW1pc2tlc2t1czEaMBgGA1UECxMR
+VGVzdHNlcnRpZmlrYWFkaWQxEDAOBgNVBAMTB1RFU1QtU0swHhcNMTAwNDA2MTA1
+NTQ3WhcNMTIwNDA3MTE0MjE3WjCBnTELMAkGA1UEBhMCRUUxCzAJBgNVBAoTAlNL
+MRkwFwYDVQQLExBtb2JpbGUgc2lnbmF0dXJlMSgwJgYDVQQDEx9UZXN0bnVtYmVy
+LFNlaXRzbWVzLDE0MjEyMTI4MDI1MRMwEQYDVQQEEwpUZXN0bnVtYmVyMREwDwYD
+VQQqEwhTZWl0c21lczEUMBIGA1UEBRMLMTQyMTIxMjgwMjUwgZ8wDQYJKoZIhvcN
+AQEBBQADgY0AMIGJAoGBAMFo0cOULrm6HHJdMsyYVq6bBmCU4rjg8eonNnbWNq9Y
+0AAiyIQvJ3xDULnfwJD0C3QI8Y5RHYnZlt4U4Yt4CI6JenMySV1hElOtGYP1EuFP
+f643V11t/mUDgY6aZaAuPLNvVYbeVHv0rkunKQ+ORABjhANCvHaErqC24i9kv3mV
+AgMBAAGjggERMIIBDTAOBgNVHQ8BAf8EBAMCBkAwMwYDVR0fBCwwKjAooCagJIYi
+aHR0cDovL3d3dy5zay5lZS9jcmxzL3Rlc3QvY3JsLmNybDBeBgNVHSAEVzBVMFMG
+CysGAQQBzh8KAQEBMEQwHwYIKwYBBQUHAgIwExoRVGVzdCBjZXJ0aWZpY2F0ZS4w
+IQYIKwYBBQUHAgEWFWh0dHA6Ly93d3cuc2suZWUvY3BzLzAYBggrBgEFBQcBAwQM
+MAowCAYGBACORgEBMB8GA1UdIwQYMBaAFAIFJ92ocoe3gsBbOSp/4zjy+lIJMB0G
+A1UdDgQWBBSBiUUnibDAPTHAuhRAwSvWzPfoEjAMBgNVHRMBAf8EAjAAMA0GCSqG
+SIb3DQEBBQUAA4IBAQA5vjU9RciiS+f5VyJi+tzbrroovaTWmdL+2K2i3kVZcPZr
+qofrzu+veCXwY9Pyd9FD0js2GrmyYYaXlVnPRPY7MqyXGIcLt88FO4oR+Gj7tEnj
+BHIVOyogM/GUCcdGMn9Q+htsC4TbH5YtPOZszMo5Udug+8IA6EEdkZZqk2XZ+3Zw
+piyXYm6jXE75wRG5/GhJ6lUtTZhOxiHY2ykf5qq0GaAfK0MmU1W7Mfs/LwMtYPOe
+VX5lIphhw9VGtUWSmiqwnlb3664hrAqgapKv2Q1zmgMFV4u8IXt4l0mPoNsJ61M8
+1puEXMhU0gwI9Wxto7Zm55cngZptXexPTQdK/wHy</X509Certificate></X509Data></KeyInfo>
+<Object><QualifyingProperties Target="#S0" xmlns="http://uri.etsi.org/01903/v1.1.1#"><SignedProperties xmlns="http://uri.etsi.org/01903/v1.1.1#" Id="S0-SignedProperties">
+<SignedSignatureProperties>
+<SigningTime>2012-03-02T15:00:21Z</SigningTime>
+<SigningCertificate>
+<Cert>
+<CertDigest>
+<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1">
+</DigestMethod>
+<DigestValue>IJRLr5Y7EFJw5qpkfiq2eQ6bfmI=</DigestValue>
+</CertDigest>
+<IssuerSerial>
+<X509IssuerName>CN=TEST-SK,OU=Testsertifikaadid,O=AS Sertifitseerimiskeskus,C=EE</X509IssuerName>
+<X509SerialNumber>1270551347</X509SerialNumber>
+</IssuerSerial>
+</Cert>
+</SigningCertificate>
+<SignaturePolicyIdentifier>
+<SignaturePolicyImplied>
+</SignaturePolicyImplied>
+</SignaturePolicyIdentifier>
+
+<SignatureProductionPlace>
+<City>Tallinn</City>
+<StateOrProvince>Harjumaa</StateOrProvince>
+<PostalCode>123456</PostalCode>
+<CountryName>EE</CountryName>
+</SignatureProductionPlace>
+
+<SignerRole>
+<ClaimedRoles>
+<ClaimedRole>Inimene</ClaimedRole>
+</ClaimedRoles>
+</SignerRole>
+</SignedSignatureProperties>
+</SignedProperties></QualifyingProperties></Object>
+</Signature>
+
+
+</SignedDoc>

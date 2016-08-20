@@ -3,45 +3,69 @@ package ee.openeid.validation.service.pdf;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.exception.ValidationServiceException;
+import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
+import ee.openeid.tsl.CustomCertificatesLoader;
+import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
+import ee.openeid.validation.service.pdf.configuration.PDFSignaturePolicyProperties;
+import ee.openeid.validation.service.pdf.configuration.PDFValidationServiceConfiguration;
+import ee.openeid.validation.service.pdf.signature.policy.PDFSignaturePolicyService;
 import eu.europa.esig.dss.validation.CertificateVerifier;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
-import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
-@SpringBootTest(classes = PDFValidationServiceTest.TestTslLoaderConfiguration.class)
-@RunWith(SpringJUnit4ClassRunner.class)
+@SpringBootTest(classes = {PDFValidationServiceTest.TestConfiguration.class})
+@RunWith(SpringRunner.class)
 public class PDFValidationServiceTest {
 
     private static final String TEST_FILES_LOCATION = "test-files/";
 
     PDFValidationService validationService;
 
+    private SignaturePolicyService pdfSignaturePolicyService;
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
     @Autowired
     private CertificateVerifier certificateVerifier;
+
+    @Autowired
+    private PDFSignaturePolicyProperties policySettings;
 
     @Before
     public void setUp() {
         validationService = new PDFValidationService();
         validationService.setCertificateVerifier(certificateVerifier);
+
+        pdfSignaturePolicyService = new PDFSignaturePolicyService(policySettings);
+        validationService.setSignaturePolicyService(pdfSignaturePolicyService);
     }
 
     @Test
     public void testConfiguration() {
         assertNotNull(certificateVerifier);
         assertTrue(certificateVerifier instanceof CommonCertificateVerifier);
+        assertEquals(1, pdfSignaturePolicyService.getSignaturePolicies().size());
+        assertNotNull(pdfSignaturePolicyService.getPolicyDataStreamFromPolicy(null));
+    }
+
+    @Test
+    public void givenInvalidPDFFileShouldThrowServiceException() throws Exception {
+        expectedException.expect(ValidationServiceException.class);
+        validationService.validateDocument(new ValidationDocument());
     }
 
     void assertNoErrorsOrWarnings(SignatureValidationData signatureValidationData) {
@@ -65,24 +89,20 @@ public class PDFValidationServiceTest {
                 .build();
     }
 
-
-    @Import(TSLLoaderConfiguration.class)
-    public static class TestTslLoaderConfiguration {
-
+    @Import({
+        TSLLoaderConfiguration.class,
+        PDFValidationServiceConfiguration.class
+    })
+    public static class TestConfiguration {
         @Bean
-        public YamlPropertiesFactoryBean yamlProperties() {
-            YamlPropertiesFactoryBean yamlProperties = new YamlPropertiesFactoryBean();
-            yamlProperties.setResources(new ClassPathResource("test-tsl-loader-props.yml"));
-            return yamlProperties;
+        public TSLLoader tslLoader() {
+            return new TSLLoader();
         }
 
         @Bean
-        public PropertyPlaceholderConfigurer propertyPlaceholderConfigurer(YamlPropertiesFactoryBean yamlProperties) {
-            PropertyPlaceholderConfigurer ppc = new PropertyPlaceholderConfigurer();
-            ppc.setProperties(yamlProperties.getObject());
-            return ppc;
+        public CustomCertificatesLoader customCertificatesLoader() {
+            return new CustomCertificatesLoader();
         }
-
     }
 
 

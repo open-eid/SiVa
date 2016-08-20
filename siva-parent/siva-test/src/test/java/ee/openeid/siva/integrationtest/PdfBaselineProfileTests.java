@@ -41,13 +41,13 @@ public class PdfBaselineProfileTests extends SiVaRestTests{
      *
      * Expected Result: Document validation should fail
      *
-     * File: some_file.pdf
+     * File:
      */
     @Ignore
-    @Test // need non-plugtest test file
+    @Test //TODO: need test file
     public void baselineProfileTDocumentShouldFail() {
         QualifiedReport report = postForReport("some_file.pdf");
-        assertInvalidWithError(report, "BBB_VCI_ISFC_ANS_1", "The signature format is not allowed by the validation policy constraint!");
+        assertInvalidWithError(report.getSignatures().get(0), "The signature format is not allowed by the validation policy constraint!");
     }
 
     /**
@@ -79,10 +79,9 @@ public class PdfBaselineProfileTests extends SiVaRestTests{
      *
      * Expected Result: Document validation should pass
      *
-     * File: some_file.pdf
+     * File:
      */
-    @Ignore
-    @Test // need non-plugtest test file
+    @Test @Ignore //TODO: need test file
     public void baselineProfileLTADocumentShouldPass() {
         assertAllSignaturesAreValid(postForReport("some_file.pdf"));
     }
@@ -94,14 +93,14 @@ public class PdfBaselineProfileTests extends SiVaRestTests{
      *
      * RequirementID:
      *
-     * Title: The PDF has PAdES-LTA profile signature
+     * Title: The PDF has PAdES-LT and B profile signature
      *
-     * Expected Result: Document validation should pass
+     * Expected Result: Document validation should fail
      *
-     * File: some_file.pdf
+     * File: hellopades-lt-b.pdf
      */
     @Test
-    public void documentWithBaselineProfilesBAndLTASignaturesShouldPass() {
+    public void documentWithBaselineProfilesBAndLTSignaturesShouldFail() {
         QualifiedReport report = postForReport("hellopades-lt-b.pdf");
         assertSomeSignaturesAreValid(report, 1);
     }
@@ -119,7 +118,7 @@ public class PdfBaselineProfileTests extends SiVaRestTests{
      *
      * File: hellopades-lt1-lt2-wrongDigestValue.pdf
      */
-    @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
+    @Test @Ignore //TODO: new test file is needed; the current one has issues with QC / SSCD
     public void documentMessageDigestAttributeValueDoesNotMatchCalculatedValue() {
         assertAllSignaturesAreInvalid(postForReport("hellopades-lt1-lt2-wrongDigestValue.pdf"));
     }
@@ -129,7 +128,7 @@ public class PdfBaselineProfileTests extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: DSS-SIG-MULTISIG
+     * RequirementID:
      *
      * Title: PDF file with a serial signature
      *
@@ -137,7 +136,7 @@ public class PdfBaselineProfileTests extends SiVaRestTests{
      *
      * File: hellopades-lt1-lt2-Serial.pdf
      */
-    @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
+    @Test
     public void documentSignedWithMultipleSignersSerialSignature() {
         assertAllSignaturesAreValid(postForReport("hellopades-lt1-lt2-Serial.pdf"));
     }
@@ -155,7 +154,7 @@ public class PdfBaselineProfileTests extends SiVaRestTests{
      *
      * File: hellopades-lt1-lt2-parallel3.pdf
      */
-    @Test @Ignore("TODO - a new test file is needed; the current one has issues with QC / SSCD")
+    @Test
     public void documentSignedWithMultipleSignersParallelSignature() {
         assertAllSignaturesAreValid(postForReport("hellopades-lt1-lt2-parallel3.pdf"));
     }
@@ -169,15 +168,16 @@ public class PdfBaselineProfileTests extends SiVaRestTests{
      *
      * Title: PDF document signed with multiple signers parallel signature without Sscd
      *
-     * Expected Result: Document with no qualified and without SSCD should fail
+     * Expected Result: Document with no qualified and without SSCD should warn
      *
      * File: hellopades-lt1-lt2-parallel3.pdf
      */
-
     @Test
-    public void ifSignerCertificateIsNotQualifiedAndWithoutSscdItIsRejected() {
+    public void ifSignerCertificateIsNotQualifiedAndWithoutSscdItIsAcceptedWithWarning() {
         QualifiedReport report = postForReport("hellopades-lt1-lt2-parallel3.pdf");
-        assertInvalidWithError(report, "BBB_XCV_CMDCIQC_ANS", "The certificate is not qualified!");
+        assertHasWarning(report.getSignatures().get(0), "The certificate is not qualified!");
+        assertHasWarning(report.getSignatures().get(1), "The certificate is not qualified!");
+        assertAllSignaturesAreValid(report);
     }
 
     @Override

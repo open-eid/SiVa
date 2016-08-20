@@ -1,7 +1,7 @@
 package ee.openeid.validation.service.ddoc.report;
 
-import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.document.report.Error;
+import ee.openeid.siva.validation.document.report.*;
 import ee.sk.digidoc.DataFile;
 import ee.sk.digidoc.DigiDocException;
 import ee.sk.digidoc.Signature;
@@ -13,10 +13,13 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
+
 public class DDOCQualifiedReportBuilder {
 
     private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final String FULL_DOCUMENT = "Full document";
+    private static final String DDOC_SIGNATURE_FORM_PREFIX = "DIGIDOC_XML_";
 
     private SignedDoc signedDoc;
     private String documentName;
@@ -33,6 +36,7 @@ public class DDOCQualifiedReportBuilder {
         qualifiedReport.setPolicy(Policy.SIVA_DEFAULT);
         qualifiedReport.setValidationTime(getDateFormatterWithGMTZone().format(validationTime));
         qualifiedReport.setDocumentName(documentName);
+        qualifiedReport.setSignatureForm(getSignatureForm());
         qualifiedReport.setSignaturesCount(getSignatures(signedDoc).size());
         qualifiedReport.setSignatures(createSignaturesForReport(signedDoc));
         qualifiedReport.setValidSignaturesCount(
@@ -67,7 +71,6 @@ public class DDOCQualifiedReportBuilder {
 
     private SignatureValidationData createSignatureValidationData(Signature signature) {
         SignatureValidationData signatureValidationData = new SignatureValidationData();
-
         signatureValidationData.setId(signature.getId());
         signatureValidationData.setSignatureFormat(getSignatureFormat());
         signatureValidationData.setSignedBy(CertUtil.subjectCN(signature.getKeyInfo().getSignersCertificate()));
@@ -84,6 +87,10 @@ public class DDOCQualifiedReportBuilder {
 
         return signatureValidationData;
 
+    }
+
+    private String getSignatureForm() {
+        return DDOC_SIGNATURE_FORM_PREFIX + signedDoc.getVersion();
     }
 
     private Info createEmptySignatureInfo() {
@@ -116,7 +123,6 @@ public class DDOCQualifiedReportBuilder {
 
     private Error mapDigiDocException(DigiDocException dde) {
         Error error = new Error();
-        error.setNameId(Integer.toString(dde.getCode()));
         error.setContent(emptyWhenNull(dde.getMessage()));
         return error;
     }
@@ -124,7 +130,9 @@ public class DDOCQualifiedReportBuilder {
     @SuppressWarnings("unchecked")
     private List<SignatureScope> getSignatureScopes() {
         List<DataFile> dataFiles = signedDoc.getDataFiles();
-
+        if (dataFiles == null) {
+            return Collections.emptyList();
+        }
         return dataFiles
                 .stream()
                 .map(this::mapDataFile)
@@ -149,9 +157,4 @@ public class DDOCQualifiedReportBuilder {
 
         return SignatureValidationData.Indication.TOTAL_PASSED;
     }
-
-    private String emptyWhenNull(String value) {
-        return value != null ? value : "";
-    }
-
 }

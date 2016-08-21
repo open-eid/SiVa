@@ -6,14 +6,15 @@ html
         meta(name="viewport",content="width=device-width, initial-scale=1")
         link(rel="stylesheet", href="/owr/site.css")
     body
-        nav.navbar.navbar-fixed-top.navbar-dark.bg-inverse
+        block notificationBlock
+        nav#top-navbar.navbar.navbar-dark.bg-inverse.navbar-sticky-top
             .navbar-header
                 .container
                     a.navbar-brand(href="/")
                         img(src="img/open-eid-logo.svg")
                     a.navbar-brand(href="/")
                         span SiVa Sample Application
-        .container
+        .container#content
             .row
                 .col-md-12.col-lg-12
                     block content

@@ -41,4 +41,13 @@
                 .text(response.overAllValidationResult);
         }
     });
+
+    if (Cookies.get('notification') === undefined) {
+        $('#notification').show();
+    }
+
+    $('#notification').find('button.close').click(function(e) {
+        e.preventDefault();
+        Cookies.set('notification', 'closed', {path: '/'});
+    });
 })(jQuery);

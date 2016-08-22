@@ -1,10 +1,12 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.springframework.http.HttpStatus;
 
 @Category(IntegrationTest.class)
 public class DdocValidationFail extends SiVaRestTests{
@@ -343,6 +345,30 @@ public class DdocValidationFail extends SiVaRestTests{
                 .then()
                 .body("requestErrors[0].key", Matchers.is("document"))
                 .body("requestErrors[0].message", Matchers.is("document malformed or not matching documentType"));
+    }
+
+    /***
+     * TestCaseID: Ddoc-ValidationFail-15
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Ddoc no files in container
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: KS-02_tyhi.ddoc
+     ***/
+    @Test
+    public void ddocNoFilesInContainer() {
+        setTestFilesDirectory("ddoc/live/timemark/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("KS-02_tyhi.ddoc"));
+        post(validationRequestWithValidKeys(encodedString, "KS-02_tyhi.ddoc", "ddoc", ""))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors.message", Matchers.hasItem(MAY_NOT_BE_EMPTY))
+                .body("requestErrors.message", Matchers.hasItem(INVALID_BASE_64));
     }
 
     @Override

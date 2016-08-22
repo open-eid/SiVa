@@ -453,6 +453,23 @@ List of Test Cases
   * Expected Result: The document should fail the validation
   * File: OCSP nonce vale.ddoc
 
+**TestCaseID: Ddoc-ValidationFail-13**
+
+  * TestType: Automated
+  * RequirementID: []()
+  * Title: Ddoc with XML Entity expansion attack
+  * Expected Result: The document should fail the validation with error
+  * File: 2.denialOfServiceWithEntityExpansion.ddoc
+
+**TestCaseID: Ddoc-ValidationFail-14**
+
+  * TestType: Automated
+  * RequirementID: []()
+  * Title: Ddoc with XML server side request forgery attack
+  * Expected Result: The document should fail the validation with error
+  * File: 3.serverSideRequestForgeryViaDtd.ddoc
+
+
 ## DdocValidationPass.java
 
 **TestCaseID: Ddoc-ValidationPass-2**
@@ -1249,43 +1266,11 @@ List of Test Cases
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
-  * Title: Input random base64 string as document with bdoc document type
-  * Expected Result: Error is returned stating problem in document
-  * File: Valid_IDCard_MobID_signatures.bdoc
-
-**TestCaseID: ValidationRequest-2**
-
-  * TestType: Automated
-  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
-  * Title: Input random base64 string as document with pdf document type
-  * Expected Result: Error is returned stating problem in document
-  * File: Valid_IDCard_MobID_signatures.bdoc
-
-**TestCaseID: ValidationRequest-3**
-
-  * TestType: Automated
-  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
-  * Title: Input random base64 string as document with ddoc document type
-  * Expected Result: Error is returned stating problem in document
-  * File:
-
-**TestCaseID: ValidationRequest-4**
-
-  * TestType: Automated
-  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
   * Title: Input empty values
   * Expected Result: Errors are returned stating the missing values
   * File: Valid_IDCard_MobID_signatures.bdoc
 
-**TestCaseID: ValidationRequest-5**
-
-  * TestType: Automated
-  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
-  * Title: Request with not base64 string as document
-  * Expected Result: Error is returned stating encoding problem
-  * File: Valid_IDCard_MobID_signatures.bdoc
-
-**TestCaseID: ValidationRequest-6**
+**TestCaseID: ValidationRequest-2**
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
@@ -1293,39 +1278,7 @@ List of Test Cases
   * Expected Result: Correct error code is returned
   * File: Valid_IDCard_MobID_signatures.bdoc
 
-**TestCaseID: ValidationRequest-8**
-
-  * TestType: Automated
-  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
-  * Title: Acceptance of ASICE as BDOC document type
-  * Expected Result: Asice files are handled the same as *.bdoc
-  * File: TS-11_23634_TS_2_timestamps.asice
-
-**TestCaseID: ValidationRequest-9**
-
-  * TestType: Automated
-  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
-  * Title: Verification of case insensitivity in document type
-  * Expected Result: Report is returned
-  * File: Valid_IDCard_MobID_signatures.bdoc
-
-**TestCaseID: ValidationRequest-10**
-
-  * TestType: Automated
-  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
-  * Title: Verification of filename value (filename do not match the actual file)
-  * Expected Result: The same filename is returned as sent in the request
-  * File: Valid_IDCard_MobID_signatures.bdoc
-
-**TestCaseID: ValidationRequest-11**
-
-  * TestType: Automated
-  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
-  * Title: Request has invalid character in filename
-  * Expected Result: Correct error code is returned
-  * File: Valid_IDCard_MobID_signatures.bdoc
-
-**TestCaseID: ValidationRequest-12**
+**TestCaseID: ValidationRequest-3**
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
@@ -1333,7 +1286,7 @@ List of Test Cases
   * Expected Result: Error is returned
   * File: Valid_IDCard_MobID_signatures.bdoc
 
-**TestCaseID: ValidationRequest-13**
+**TestCaseID: ValidationRequest-4**
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
@@ -1341,7 +1294,7 @@ List of Test Cases
   * Expected Result: Error is given
   * File: Valid_IDCard_MobID_signatures.bdoc
 
-**TestCaseID: ValidationRequest-14**
+**TestCaseID: ValidationRequest-5**
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
@@ -1349,7 +1302,7 @@ List of Test Cases
   * Expected Result: Report is returned with the same filename
   * File: Valid_IDCard_MobID_signatures.bdoc
 
-**TestCaseID: ValidationRequest-15**
+**TestCaseID: ValidationRequest-6**
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
@@ -1357,7 +1310,7 @@ List of Test Cases
   * Expected Result: Error is given
   * File: None
 
-**TestCaseID: ValidationRequest-16**
+**TestCaseID: ValidationRequest-7**
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
@@ -1365,7 +1318,7 @@ List of Test Cases
   * Expected Result: Error is given or extra parameters are ignored?
   * File: Valid_IDCard_MobID_signatures.bdoc
 
-**TestCaseID: ValidationRequest-17**
+**TestCaseID: ValidationRequest-8**
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
@@ -1373,23 +1326,15 @@ List of Test Cases
   * Expected Result: Validation report is returned
   * File: Valid_IDCard_MobID_signatures.bdoc
 
-**TestCaseID: ValidationRequest-18**
+**TestCaseID: ValidationRequest-9**
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
-  * Title: Mismatch in documentType and actual document (ddoc and bdoc)
-  * Expected Result: Error is returned
+  * Title: Request with not base64 string as document
+  * Expected Result: Error is returned stating encoding problem
   * File: Valid_IDCard_MobID_signatures.bdoc
 
-**TestCaseID: ValidationRequest-19**
-
-  * TestType: Automated
-  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
-  * Title: Mismatch in documentType and actual document (ddoc and pdf)
-  * Expected Result: Error is returned
-  * File: PdfValidSingleSignature.pdf
-
-**TestCaseID: ValidationRequest-19**
+**TestCaseID: Bdoc-ValidationRequest-1**
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
@@ -1397,7 +1342,7 @@ List of Test Cases
   * Expected Result: Error is returned
   * File: PdfValidSingleSignature.pdf
 
-**TestCaseID: ValidationRequest-20**
+**TestCaseID: Bdoc-ValidationRequest-2**
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
@@ -1405,115 +1350,7 @@ List of Test Cases
   * Expected Result: Error is returned
   * File: igasugust1.3.ddoc
 
-**TestCaseID: ValidationRequest-21**
-
-  * TestType: Automated
-  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
-  * Title: Mismatch in documentType and actual document (pdf and ddoc)
-  * Expected Result: Error is returned
-  * File: igasugust1.3.ddoc
-
-**TestCaseID: ValidationRequest-22**
-
-  * TestType: Automated
-  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
-  * Title: Mismatch in documentType and actual document (pdf and bdoc)
-  * Expected Result: Error is returned
-  * File: Valid_IDCard_MobID_signatures.bdoc
-
-**TestCaseID: ValidationRequest-23**
-
-  * TestType: Automated
-  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
-  * Title: PDF file, not existing value in signaturePolicy
-  * Expected Result: Error is returned
-  * File: PdfValidSingleSignature.pdf
-
-**TestCaseID: ValidationRequest-24**
-
-  * TestType: Automated
-  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
-  * Title: Bdoc file, not existing value in signaturePolicy
-  * Expected Result: Error is returned
-  * File: Valid_IDCard_MobID_signatures.bdoc
-
-**TestCaseID: ValidationRequest-25**
-
-  * TestType: Automated
-  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
-  * Title: Ddoc file, not existing value in signaturePolicy
-  * Expected Result: DDOC do not support signature policy selection, value is ignored
-  * File: igasugust1.3.ddoc
-
-**TestCaseID: ValidationRequest-26**
-
-  * TestType: Automated
-  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
-  * Title: X-road file, not existing value in signaturePolicy
-  * Expected Result: X-Road do not support signature policy selection, value is ignored
-  * File: xroad-simple.asice
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
-**TestCaseID: ValidationRequest-27**
-
-  * TestType: Automated
-  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
-  * Title: Bdoc file, policy fiels should be case insensitive
-  * Expected Result: Error is returned
-  * File: Valid_IDCard_MobID_signatures.bdoc
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
-**TestCaseID: ValidationRequest-27**
-
-  * TestType: Automated
-  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
-  * Title: Request without optional signaturePolicy field
-  * Expected Result: Validation report is returned with default policy
-  * File: Valid_IDCard_MobID_signatures.bdoc
-
-**TestCaseID: ValidationRequest-28**
-
-  * TestType: Automated
-  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
-  * Title: Input random base64 string as document with ddoc document type
-  * Expected Result: Error is returned stating problem in document
-  * File:
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
-**TestCaseID: ValidationRequest-29**
-
-  * TestType: Automated
-  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
-  * Title: Mismatch in documentType and actual document (xroad and pdf)
-  * Expected Result: Error is returned
-  * File: PdfValidSingleSignature.pdf
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
-**TestCaseID: ValidationRequest-30**
-
-  * TestType: Automated
-  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
-  * Title: Mismatch in documentType and actual document (xroad and ddoc)
-  * Expected Result: Error is returned
-  * File: igasugust1.3.ddoc
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
-**TestCaseID: ValidationRequest-31**
-
-  * TestType: Automated
-  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
-  * Title: Mismatch in documentType and actual document (xroad and bdoc)
-  * Expected Result: Error is returned
-  * File: Valid_IDCard_MobID_signatures.bdoc
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
-**TestCaseID: ValidationRequest-32**
+**TestCaseID: Bdoc-ValidationRequest-3**
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
@@ -1523,7 +1360,89 @@ List of Test Cases
 
   **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
-**TestCaseID: ValidationRequest-32**
+**TestCaseID: Bdoc-ValidationRequest-4**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Bdoc file, not existing value in signaturePolicy
+  * Expected Result: Error is returned
+  * File: Valid_IDCard_MobID_signatures.bdoc
+
+**TestCaseID: Bdoc-ValidationRequest-5**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Bdoc file, policy fiels should be case insensitive
+  * Expected Result: Error is returned
+  * File: Valid_IDCard_MobID_signatures.bdoc
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
+**TestCaseID: Bdoc-ValidationRequest-6**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Request without optional signaturePolicy field
+  * Expected Result: Validation report is returned with default policy
+  * File: Valid_IDCard_MobID_signatures.bdoc
+
+**TestCaseID: Bdoc-ValidationRequest-7**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Input random base64 string as document with bdoc document type
+  * Expected Result: Error is returned stating problem in document
+  * File: Valid_IDCard_MobID_signatures.bdoc
+
+**TestCaseID: Bdoc-ValidationRequest-8**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Acceptance of ASICE as BDOC document type
+  * Expected Result: Asice files are handled the same as bdoc
+  * File: bdoc21-TS.asice
+
+**TestCaseID: Bdoc-ValidationRequest-9**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of case insensitivity in document type
+  * Expected Result: Report is returned
+  * File: Valid_IDCard_MobID_signatures.bdoc
+
+**TestCaseID: Bdoc-ValidationRequest-10**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of filename value (filename do not match the actual file)
+  * Expected Result: The same filename is returned as sent in the request
+  * File: Valid_IDCard_MobID_signatures.bdoc
+
+**TestCaseID: Bdoc-ValidationRequest-11**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Request has invalid character in filename
+  * Expected Result: Correct error code is returned
+  * File: Valid_IDCard_MobID_signatures.bdoc
+
+**TestCaseID: Pdf-ValidationRequest-1**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Mismatch in documentType and actual document (pdf and ddoc)
+  * Expected Result: Error is returned
+  * File: igasugust1.3.ddoc
+
+**TestCaseID: Pdf-ValidationRequest-2**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Mismatch in documentType and actual document (pdf and bdoc)
+  * Expected Result: Error is returned
+  * File: Valid_IDCard_MobID_signatures.bdoc
+
+**TestCaseID: Pdf-ValidationRequest-3**
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
@@ -1531,12 +1450,134 @@ List of Test Cases
   * Expected Result: Error is returned
   * File: xroad-simple.asice
 
-**TestCaseID: ValidationRequest-33**
+**TestCaseID: Pdf-ValidationRequest-4**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: PDF file, not existing value in signaturePolicy
+  * Expected Result: Error is returned
+  * File: PdfValidSingleSignature.pdf
+
+**TestCaseID: Pdf-ValidationRequest-5**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Input random base64 string as document with pdf document type
+  * Expected Result: Error is returned stating problem in document
+  * File: Valid_IDCard_MobID_signatures.bdoc
+
+**TestCaseID: Pdf-ValidationRequest-6**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of filename value (filename do not match the actual file)
+  * Expected Result: The same filename is returned as sent in the request
+  * File: Valid_IDCard_MobID_signatures.bdoc
+
+**TestCaseID: Ddoc-ValidationRequest-1**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Mismatch in documentType and actual document (ddoc and bdoc)
+  * Expected Result: Error is returned
+  * File: Valid_IDCard_MobID_signatures.bdoc
+
+**TestCaseID: Ddoc-ValidationRequest-2**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Mismatch in documentType and actual document (ddoc and pdf)
+  * Expected Result: Error is returned
+  * File: PdfValidSingleSignature.pdf
+
+**TestCaseID: Ddoc-ValidationRequest-3**
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
   * Title: Mismatch in documentType and actual document (ddoc and xroad)
   * Expected Result: Error is returned
+  * File: xroad-simple.asice
+
+**TestCaseID: Ddoc-ValidationRequest-4**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Ddoc file, not existing value in signaturePolicy
+  * Expected Result: DDOC do not support signature policy selection, value is ignored
+  * File: igasugust1.3.ddoc
+
+**TestCaseID: Ddoc-ValidationRequest-5**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Input random base64 string as document with ddoc document type
+  * Expected Result: Error is returned stating problem in document
+  * File:
+
+**TestCaseID: Ddoc-ValidationRequest-6**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of filename value (filename do not match the actual file)
+  * Expected Result: The same filename is returned as sent in the request
+  * File: igasugust1.3.ddoc
+
+**TestCaseID: Xroad-ValidationRequest-1**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Mismatch in documentType and actual document (xroad and pdf)
+  * Expected Result: Error is returned
+  * File: PdfValidSingleSignature.pdf
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
+**TestCaseID: Xroad-ValidationRequest-2**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Mismatch in documentType and actual document (xroad and ddoc)
+  * Expected Result: Error is returned
+  * File: igasugust1.3.ddoc
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
+**TestCaseID: Xroad-ValidationRequest-3**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Mismatch in documentType and actual document (xroad and bdoc)
+  * Expected Result: Error is returned
+  * File: Valid_IDCard_MobID_signatures.bdoc
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
+**TestCaseID: Xroad-ValidationRequest-4**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: X-road file, not existing value in signaturePolicy
+  * Expected Result: X-Road do not support signature policy selection, value is ignored
+  * File: xroad-simple.asice
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
+**TestCaseID: Xroad-ValidationRequest-5**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Input random base64 string as document with xroad document type
+  * Expected Result: Error is returned stating problem in document
+  * File:
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
+**TestCaseID: Xroad-ValidationRequest-6**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of filename value (filename do not match the actual file)
+  * Expected Result: The same filename is returned as sent in the request
   * File: xroad-simple.asice
 
 

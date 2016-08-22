@@ -1,5 +1,6 @@
 package ee.openeid.siva.webapp;
 
+import ee.openeid.siva.proxy.http.RESTValidationProxyException;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
@@ -7,6 +8,7 @@ import ee.openeid.siva.webapp.response.erroneus.RequestValidationError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -37,6 +39,14 @@ public class ValidationExceptionHandler {
         requestValidationError.addFieldError("signaturePolicy", e.getMessage());
         return requestValidationError;
     }
+
+    @ExceptionHandler(RESTValidationProxyException.class)
+    public ResponseEntity<RequestValidationError> handleRESTValidationProxyException(RESTValidationProxyException e) {
+        RequestValidationError requestValidationError = new RequestValidationError();
+        requestValidationError.addFieldError(e.getErrorKey(), e.getErrorMessage());
+        return ResponseEntity.status(e.getHttpStatus()).body(requestValidationError);
+    }
+
 
     private String getMessage(String key) {
         return messageSource.getMessage(key, null, null);

@@ -2,6 +2,7 @@ package ee.openeid.siva.xroad.validation;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.siva.xroad.configuration.XROADValidationServiceProperties;
 import ee.ria.xroad.common.CodedException;
@@ -30,20 +31,21 @@ public class XROADValidationService implements ValidationService {
     @Override
     public QualifiedReport validateDocument(ValidationDocument wsDocument) {
         final InputStream inputStream = new ByteArrayInputStream(Base64.decodeBase64(wsDocument.getDataBase64Encoded()));
-
+        AsicContainer container;
         try {
-            final AsicContainer container = AsicContainer.read(inputStream);
+            container = AsicContainer.read(inputStream);
+        } catch (Exception e) {
+            LOGGER.error("Unable to create AsicContainer from validation document", e);
+            throw new MalformedDocumentException(e);
+        }
+        try {
             final AsicContainerVerifier verifier = new AsicContainerVerifier(container);
-
             verifier.verify();
             onVerificationSucceeded(verifier);
-
-            return new XROADQualifiedReportBuilder(verifier, wsDocument.getName(), new Date())
-                    .build();
+            return new XROADQualifiedReportBuilder(verifier, wsDocument.getName(), new Date()).build();
         } catch (Exception e) {
             LOGGER.warn("There was an error validating the document", e);
         }
-
         return null;
     }
 

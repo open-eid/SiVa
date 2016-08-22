@@ -2,6 +2,8 @@ package ee.openeid.siva.webapp;
 
 import ee.openeid.siva.proxy.ValidationProxy;
 import ee.openeid.siva.proxy.document.ProxyDocument;
+import ee.openeid.siva.proxy.http.RESTProxyError;
+import ee.openeid.siva.proxy.http.RESTValidationProxyException;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.MessageSourceAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -65,6 +68,23 @@ public class ValidationExceptionHandlerTest {
 
         String content = result.getResponse().getContentAsString();
         assertEquals(content, "{\"requestErrors\":[{\"key\":\"document\",\"message\":\"document malformed or not matching documentType\"}]}");
+    }
+
+    @Test
+    public void handlingRESTValidationProxyExceptionPreservesInitialErrorInformation() throws Exception {
+        RESTProxyError initialError = new RESTProxyError();
+        initialError.setHttpStatus(HttpStatus.BAD_REQUEST);
+        initialError.setKey("some key");
+        initialError.setMessage("some message");
+        when(validationProxy.validate(any(ProxyDocument.class))).thenThrow(new RESTValidationProxyException(initialError));
+        MvcResult result = mockMvc.perform(post("/validate")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request().toString().getBytes()))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        assertEquals(content, "{\"requestErrors\":[{\"key\":\"some key\",\"message\":\"some message\"}]}");
     }
 
     @SuppressWarnings("unchecked")

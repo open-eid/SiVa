@@ -169,13 +169,13 @@ public class BdocValidationPass extends SiVaRestTests{
      *
      * File: bdoc21-TS.asice
      ***/
-    @Test @Ignore //TODO: This file returns AdESqc not QES
+    @Test @Ignore //TODO: Because DSS bug this file returns AdESqc not QES. Can be enabled when fix is available.
     public void bdocQESProfileValidSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("bdoc21-TS.asice"))
                 .then()
                 .body("signatures[0].signatureLevel", Matchers.is("QES"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED2"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validSignaturesCount", Matchers.is(1));
     }

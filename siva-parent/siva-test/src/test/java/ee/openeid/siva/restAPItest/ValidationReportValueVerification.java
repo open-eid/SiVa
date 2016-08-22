@@ -46,7 +46,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      ***/
     @Test
-    public void BdocCorrectValuesArePresentValidLtTmSignature() {
+    public void bdocCorrectValuesArePresentValidLtTmSignature() {
         post(validationRequestFor("Valid_ID_sig.bdoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
@@ -85,7 +85,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      ***/
     @Test
-    public void BdocCorrectValuesArePresentValidLtSignature() {
+    public void bdocCorrectValuesArePresentValidLtSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("23635_bdoc_ts_OCSP_random_nonce.bdoc"))
                 .then()
@@ -125,7 +125,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      ***/
     @Test
-    public void BdocCorrectValuesArePresentValidLtSignatureAdesWarning() {
+    public void bdocCorrectValuesArePresentValidLtSignatureAdesWarning() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc"))
                 .then()
@@ -165,7 +165,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      ***/
     @Test
-    public void BdocCorrectValuesArePresentInvalidLtSignatureAdesqc() {
+    public void bdocCorrectValuesArePresentInvalidLtSignatureAdesqc() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("23200_weakdigest-wrong-nonce.asice"))
                 .then()
@@ -205,7 +205,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      ***/
     @Test @Ignore//TODO: VAL-244 was found with Valid_IDCard_MobID_signatures.bdoc file in addition to this file.
-    public void BdocAllElementsArePresentValidMultipleSignatures() {
+    public void bdocAllElementsArePresentValidMultipleSignatures() {
         post(validationRequestFor("Baltic MoU digital signing_EST_LT_LV.bdoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
@@ -244,7 +244,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      ***/
     @Test @Ignore //TODO: Need a testfile with indeterminate status. With new DSS version indeterminate seems to be changed to total fail.
-    public void BdocAllElementsArePresentIndeterminateSignature() {
+    public void bdocAllElementsArePresentIndeterminateSignature() {
         post(validationRequestFor("test1-bdoc-unknown.bdoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
@@ -283,7 +283,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      ***/
     @Test
-    public void BdocNoSignature() {
+    public void bdocNoSignature() {
         setTestFilesDirectory("document_format_test_files/");
         post(validationRequestFor("BdocContainerNoSignature.bdoc"))
                 .then()
@@ -311,7 +311,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      ***/
     @Test
-    public void PdfAllElementsArePresentValidSignature() {
+    public void pdfAllElementsArePresentValidSignature() {
         setTestFilesDirectory("pdf/signature_cryptographic_algorithm_test_files/");
         post(validationRequestFor("hellopades-lt-sha256-ec256.pdf"))
                 .then()
@@ -351,7 +351,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      ***/
     @Test
-    public void PdfAllElementsArePresentValidmultipleSignatures() {
+    public void pdfAllElementsArePresentValidmultipleSignatures() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         post(validationRequestFor("pades_lt_two_valid_sig.pdf"))
                 .then()
@@ -391,7 +391,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      ***/
     @Test @Ignore //TODO: VAL-242
-    public void PdfAllElementsArePresentInvalidSignature() {
+    public void pdfAllElementsArePresentInvalidSignature() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         post(validationRequestFor("hellopades-lt-b.pdf"))
                 .then()
@@ -431,7 +431,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      ***/
     @Test
-    public void PdfAllElementsArePresentIndeterminateSignature() {
+    public void pdfAllElementsArePresentIndeterminateSignature() {
         setTestFilesDirectory("pdf/signing_certifacte_test_files/");
         post(validationRequestFor("hellopades-lt-rsa1024-sha1-expired.pdf"))
                 .then()
@@ -471,7 +471,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      ***/
     @Test
-    public void PdfNoSignature() {
+    public void pdfNoSignature() {
         setTestFilesDirectory("document_format_test_files/");
         post(validationRequestFor("PdfNoSignature.pdf"))
                 .then()
@@ -499,7 +499,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      ***/
     @Test
-    public void DdocAllElementsArePresentValidSignature() {
+    public void ddocAllElementsArePresentValidSignature() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("DIGIDOC-XML1.3.ddoc"))
                 .then()
@@ -539,7 +539,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      ***/
     @Test
-    public void DdocAllElementsArePresentInvalidSignature() {
+    public void ddocAllElementsArePresentInvalidSignature() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("test1-ddoc-revoked.ddoc"))
                 .then()
@@ -579,7 +579,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      ***/
     @Test @Ignore //TODO: We are getting total-fail on all the files we expect to be indeterminate
-    public void DdocAllElementsArePresentIndeterminateSignature() {
+    public void ddocAllElementsArePresentIndeterminateSignature() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("test1-ddoc-unknown.ddoc"))
                 .then()
@@ -619,7 +619,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      ***/
     @Test @Ignore //TODO: File is needed!
-    public void DdocOptionalWarningElementIsPresent() {
+    public void ddocOptionalWarningElementIsPresent() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("NeedFile.ddoc"))
                 .then()
@@ -659,7 +659,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      ***/
     @Test
-    public void DdocNoSignature() {
+    public void ddocNoSignature() {
         setTestFilesDirectory("document_format_test_files/");
         post(validationRequestFor("DdocContainerNoSignature.ddoc"))
                 .then()
@@ -687,7 +687,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      ***/
     @Test @Ignore //TODO: VAL-238
-    public void DdocCorrectValuesArePresentV1_0() {
+    public void ddocCorrectValuesArePresentV1_0() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("SK-XML1.0.ddoc"))
                 .then()
@@ -727,7 +727,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      ***/
     @Test
-    public void DdocCorrectValuesArePresentV1_1() {
+    public void ddocCorrectValuesArePresentV1_1() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("igasugust1.1.ddoc"))
                 .then()
@@ -767,7 +767,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      ***/
     @Test
-    public void DdocCorrectValuesArePresentV1_2() {
+    public void ddocCorrectValuesArePresentV1_2() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("igasugust1.2.ddoc"))
                 .then()
@@ -807,7 +807,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      ***/
     @Test
-    public void DdocCorrectValuesArePresentV1_3() {
+    public void ddocCorrectValuesArePresentV1_3() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("igasugust1.3.ddoc"))
                 .then()
@@ -847,7 +847,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      *
      ***/
     @Test @Ignore //TODO: Probably sepparate schema is required for XRoad
-    public void XroadAllElementsArePresentValidSignature() {
+    public void xroadAllElementsArePresentValidSignature() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
         post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", "xroad", ""))

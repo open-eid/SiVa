@@ -14,6 +14,10 @@
     color: red;
 }
 
+.progress {
+    margin-top: 2.5rem;
+}
+
 .footer {
     font-size: .8em;
     color: #999;

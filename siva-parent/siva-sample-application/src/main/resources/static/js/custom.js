@@ -5,6 +5,7 @@
     Dropzone.options.sivaDropzone = {
         maxFiles: 1,
         maxFilesize: 11,
+        previewTemplate : '<progress class="progress progress-info progress-striped" id="file-progress" value="0" max="100"></progress>',
         dictDefaultMessage: 'Drop files here or click to browse for upload file'
     };
 
@@ -15,6 +16,12 @@
 
     sivaDropzone.on('sending', function () {
         $('#result-area, #validation-summery').addClass("hide");
+    });
+    
+    sivaDropzone.on('uploadprogress', function (file, progress) {
+        for (var i = 0; i <= 100; i++) {
+            $('#file-progress').attr('value', i);
+        }
     });
 
     sivaDropzone.on('success', function (file, response) {

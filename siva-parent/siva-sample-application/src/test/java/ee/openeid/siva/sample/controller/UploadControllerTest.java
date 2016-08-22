@@ -1,6 +1,11 @@
 package ee.openeid.siva.sample.controller;
 
 import ac.simons.spring.boot.wro4j.Wro4jAutoConfiguration;
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.classic.spi.LoggingEvent;
+import ch.qos.logback.core.Appender;
 import com.domingosuarez.boot.autoconfigure.jade4j.Jade4JAutoConfiguration;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -8,9 +13,14 @@ import ee.openeid.siva.sample.cache.UploadFileCacheService;
 import ee.openeid.siva.sample.cache.UploadedFile;
 import ee.openeid.siva.sample.ci.info.BuildInfo;
 import ee.openeid.siva.sample.configuration.GoogleAnalyticsProperties;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -28,6 +38,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -55,9 +68,25 @@ public class UploadControllerTest {
     @MockBean
     private GoogleAnalyticsProperties googleAnalyticsProperties;
 
+    @Mock
+    private Appender<ILoggingEvent> mockAppender;
+
+    @Captor
+    private ArgumentCaptor<LoggingEvent> captorLoggingEvent;
+
     @Before
     public void setUp() throws Exception {
+        final Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+        logger.addAppender(mockAppender);
         given(googleAnalyticsProperties.getTrackingId()).willReturn("random-tracking-id");
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        final Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+        logger.detachAppender(mockAppender);
+        reset(taskRunner);
+        Thread.interrupted();
     }
 
     @Test
@@ -106,7 +135,7 @@ public class UploadControllerTest {
 
     @Test
     public void emptyFileUploadedRedirectsBackToStartPage() throws Exception {
-        final MockMultipartFile uploadFile = new MockMultipartFile(
+        MockMultipartFile uploadFile = new MockMultipartFile(
                 "file",
                 "random.bdoc",
                 "application/vnd.etsi.asic-e+zip",
@@ -115,5 +144,26 @@ public class UploadControllerTest {
 
         mockMvc.perform(fileUpload("/upload").file(uploadFile))
                 .andExpect(status().is(200));
+    }
+
+    @Test
+    public void webServiceTaskRunnerThrowsInterruptedExceptionExpectLogMessage() throws Exception {
+        doThrow(new InterruptedException("SiVa Service failure")).when(taskRunner).run(any());
+        MockMultipartFile uploadFile = new MockMultipartFile(
+                "file",
+                "random.bdoc",
+                "application/vnd.etsi.asic-e+zip",
+                "bdoc content".getBytes()
+        );
+
+        mockMvc.perform(fileUpload("/upload").file(uploadFile))
+                .andExpect(status().is(200));
+
+        verify(mockAppender).doAppend(captorLoggingEvent.capture());
+        LoggingEvent loggingEvent = captorLoggingEvent.getValue();
+
+        assertThat(loggingEvent.getLevel()).isEqualTo(Level.WARN);
+        assertThat(loggingEvent.getMessage()).contains("SiVa SOAP or REST service call failed with error:");
+
     }
 }

@@ -6,8 +6,8 @@ import org.springframework.cache.annotation.EnableCaching;
 
 @EnableCaching
 @SpringBootApplication
-public class SivaDemoApplication {
+public class SivaSampleApplication {
     public static void main(String... args) {
-        SpringApplication.run(SivaDemoApplication.class, args);
+        SpringApplication.run(SivaSampleApplication.class, args);
     }
 }

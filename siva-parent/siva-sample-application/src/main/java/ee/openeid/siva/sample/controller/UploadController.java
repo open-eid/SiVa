@@ -3,7 +3,6 @@ package ee.openeid.siva.sample.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import ee.openeid.siva.sample.cache.UploadFileCacheService;
 import ee.openeid.siva.sample.cache.UploadedFile;
-import ee.openeid.siva.sample.ci.info.BuildInfo;
 import ee.openeid.siva.sample.configuration.GoogleAnalyticsProperties;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -17,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import rx.Observable;
 
 import java.io.IOException;
 
@@ -27,47 +24,35 @@ import static ee.openeid.siva.sample.siva.ValidationReportUtils.*;
 @Controller
 class UploadController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UploadController.class);
-
-    private static final String REDIRECT_PATH = "redirect:/validation-response";
     private static final String START_PAGE_VIEW_NAME = "index";
 
     private ValidationTaskRunner validationTaskRunner;
     private UploadFileCacheService fileUploadService;
     private GoogleAnalyticsProperties googleAnalyticsProperties;
-    private Observable<BuildInfo> buildInfo;
 
     @RequestMapping("/")
     public String startPage(final Model model) {
-        model.addAttribute(buildInfo.toBlocking().single());
         model.addAttribute("googleTrackingId", googleAnalyticsProperties.getTrackingId());
         return START_PAGE_VIEW_NAME;
     }
 
     @ResponseBody
-    @RequestMapping("/validation-response")
-    public ValidationResponse validationResponse(final Model model) {
-        return  (ValidationResponse) model.asMap().get("validationResponse");
-    }
-
     @RequestMapping(value = "/upload", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String getUploadedFile(
-            @RequestParam(value = "file") final MultipartFile file,
-            final RedirectAttributes redirectAttributes
-    ) {
+    public ValidationResponse getUploadedFile(@RequestParam(value = "file") MultipartFile file, Model model) {
         if (file.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "File upload failed");
-            return REDIRECT_PATH;
+            model.addAttribute("error", "File upload failed");
+            return validationResponse(model);
         }
 
-        final long timestamp = System.currentTimeMillis() / 1000L;
+        long timestamp = System.currentTimeMillis() / 1000L;
         try {
             final UploadedFile uploadedFile = fileUploadService.addUploadedFile(timestamp, file);
             validationTaskRunner.run(uploadedFile);
 
-            setModelFlashAttributes(redirectAttributes, getJsonValidationResult(), getSoapValidationResult());
+            setModelFlashAttributes(model);
         } catch (IOException e) {
             LOGGER.warn("File upload problem", e);
-            redirectAttributes.addFlashAttribute("File upload failed with message: " + e.getMessage());
+            model.addAttribute("error", "File upload failed with message: " + e.getMessage());
         } catch (InterruptedException e) {
             LOGGER.warn("SiVa SOAP or REST service call failed with error: {}", e.getMessage(), e);
             Thread.currentThread().interrupt();
@@ -76,7 +61,7 @@ class UploadController {
             validationTaskRunner.clearValidationResults();
         }
 
-        return REDIRECT_PATH;
+        return validationResponse(model);
     }
 
     private String getJsonValidationResult() {
@@ -87,20 +72,23 @@ class UploadController {
         return validationTaskRunner.getValidationResult(ValidationResultType.SOAP);
     }
 
-    private static void setModelFlashAttributes(
-            RedirectAttributes redirectAttributes,
-            String validationResult,
-            String soapValidationResult
-    ) throws JsonProcessingException {
-        final ValidationResponse response = new ValidationResponse();
-        response.setFilename(getValidateFilename(validationResult));
-        response.setOverAllValidationResult(getOverallValidationResult(validationResult));
+    private static ValidationResponse validationResponse(Model model) {
+        return (ValidationResponse) model.asMap().get("validationResponse");
+    }
 
-        final String output = isJSONNull(validationResult) ? handleMissingJSON() : validationResult;
+    private void setModelFlashAttributes(Model model) throws JsonProcessingException {
+        String jsonValidationResult = getJsonValidationResult();
+        String soapValidationResult = getSoapValidationResult();
+
+        final ValidationResponse response = new ValidationResponse();
+        response.setFilename(getValidateFilename(jsonValidationResult));
+        response.setOverAllValidationResult(getOverallValidationResult(jsonValidationResult));
+
+        final String output = isJSONNull(jsonValidationResult) ? handleMissingJSON() : jsonValidationResult;
         response.setJsonValidationResult(new JSONObject(output).toString(4));
         response.setSoapValidationResult(soapValidationResult);
 
-        redirectAttributes.addFlashAttribute(response);
+        model.addAttribute(response);
     }
 
     @Autowired
@@ -111,11 +99,6 @@ class UploadController {
     @Autowired
     public void setGoogleAnalyticsProperties(GoogleAnalyticsProperties googleAnalyticsProperties) {
         this.googleAnalyticsProperties = googleAnalyticsProperties;
-    }
-
-    @Autowired
-    public void setBuildInfo(final Observable<BuildInfo> buildInfo) {
-        this.buildInfo = buildInfo;
     }
 
     @Autowired

@@ -17,7 +17,7 @@
     sivaDropzone.on('sending', function () {
         $('#result-area, #validation-summery').addClass("hide");
     });
-    
+
     sivaDropzone.on('uploadprogress', function (file, progress) {
         for (var i = 0; i <= 100; i++) {
             $('#file-progress').attr('value', i);

@@ -1,5 +1,6 @@
 package ee.openeid.siva.sample.controller;
 
+import ac.simons.spring.boot.wro4j.Wro4jAutoConfiguration;
 import com.domingosuarez.boot.autoconfigure.jade4j.Jade4JAutoConfiguration;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -8,13 +9,13 @@ import ee.openeid.siva.sample.cache.UploadedFile;
 import ee.openeid.siva.sample.ci.info.BuildInfo;
 import ee.openeid.siva.sample.configuration.GoogleAnalyticsProperties;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -33,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(UploadController.class)
-@ImportAutoConfiguration(Jade4JAutoConfiguration.class)
+@ImportAutoConfiguration({Jade4JAutoConfiguration.class, Wro4jAutoConfiguration.class})
 public class UploadControllerTest {
 
     @Autowired
@@ -60,12 +61,9 @@ public class UploadControllerTest {
     }
 
     @Test
-    @Ignore
     public void displayStartPageCheckPresenceOfUploadForm() throws Exception {
         final HtmlPage startPage = webClient.getPage("/");
-
-        assertThat(startPage.getHtmlElementById("validate-btn").getTextContent()).isEqualTo("Validate");
-        assertThat(startPage.getBody().getElementsByAttribute("input", "type", "file").size()).isEqualTo(1);
+        assertThat(startPage.getHtmlElementById("siva-dropzone").getAttribute("action")).isEqualTo("/upload");
     }
 
     @Test
@@ -86,8 +84,8 @@ public class UploadControllerTest {
         );
 
         mockMvc.perform(fileUpload("/upload").file(uploadFile))
-                .andExpect(status().is(302))
-                .andExpect(content().string(""));
+                .andExpect(status().is(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
     }
 
     @Test
@@ -103,7 +101,7 @@ public class UploadControllerTest {
         );
 
         mockMvc.perform(fileUpload("/upload").file(uploadFile))
-                .andExpect(status().is(302));
+                .andExpect(status().is(200));
     }
 
     @Test
@@ -116,6 +114,6 @@ public class UploadControllerTest {
         );
 
         mockMvc.perform(fileUpload("/upload").file(uploadFile))
-                .andExpect(status().is(302));
+                .andExpect(status().is(200));
     }
 }

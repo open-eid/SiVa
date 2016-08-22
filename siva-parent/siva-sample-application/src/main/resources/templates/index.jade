@@ -1,17 +1,15 @@
 extends layout/main-layout
 include mixins/footer-mixins
 
+block notificationBlock
+    #notification.alert.alert-warning.hide(role="alert")
+        button.close(type="button", data-dismiss="alert") ×
+        strong Warning!&nbsp;
+        | Content uploaded to SiVa demo validation service may be visible to third parties.
+        | Upload only content that does not contain confidential information.
+
 block content
     .row
-        .col-md-12
-            .alert.alert-warning
-                .col-md-1.col-sm-2.hidden-md-down
-                    img.icon-alert(src="img/icon-alert.svg")
-                .col-md-11
-                    strong Warning!&nbsp;
-                    | Content uploaded to SiVa demo validation service may be visible to third parties.
-                    | Upload only content that does not contain confidential information.
-                .clearfix
         .col-md-12
             h1.hidden-md-down Upload a digitally signed file
             h3.hidden-md-up Upload signed file

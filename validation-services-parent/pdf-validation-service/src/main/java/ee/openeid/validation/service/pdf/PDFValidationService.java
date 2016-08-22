@@ -33,6 +33,7 @@ public class PDFValidationService implements ValidationService {
 
     private CertificateVerifier certificateVerifier;
     private SignaturePolicyService signaturePolicyService;
+    private final Object lock = new Object();
 
     @Override
     public QualifiedReport validateDocument(ValidationDocument validationDocument) throws DSSException {
@@ -57,7 +58,10 @@ public class PDFValidationService implements ValidationService {
             // Implicitly set to ARCHIVAL_DATA, in which case the the revoked signing certificate check gets discarded somehow
             validator.setValidationLevel(ValidationLevel.LONG_TERM_DATA);
 
-            final Reports reports = validator.validateDocument(signaturePolicyService.getPolicyDataStreamFromPolicy(validationDocument.getSignaturePolicy()));
+            final Reports reports;
+            synchronized (lock) {
+                reports = validator.validateDocument(signaturePolicyService.getPolicyDataStreamFromPolicy(validationDocument.getSignaturePolicy()));
+            }
 
             final ZonedDateTime validationTimeInGMT = ZonedDateTime.now(ZoneId.of("GMT"));
             if (LOGGER.isInfoEnabled()) {

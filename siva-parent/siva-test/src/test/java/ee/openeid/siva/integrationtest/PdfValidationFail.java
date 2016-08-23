@@ -2,9 +2,12 @@ package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
+import org.apache.commons.codec.binary.Base64;
+import org.hamcrest.Matchers;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.springframework.http.HttpStatus;
 
 @Category(IntegrationTest.class)
 public class PdfValidationFail extends SiVaRestTests{
@@ -18,26 +21,6 @@ public class PdfValidationFail extends SiVaRestTests{
      *
      * RequirementID:
      *
-     * Title: The PDF-file has been signed with certificate that is expired before signing (PAdES Baseline LT)
-     *
-     * Expected Result: Document signed with certificate that expired before signing should fail.
-     *
-     * File: hellopades-lt-rsa1024-sha1-expired.pdf
-     ***/
-    @Test
-    public void certificateExpiredBeforeDocumentSigningShouldFail() {
-        QualifiedReport report = postForReport("hellopades-lt-rsa1024-sha1-expired.pdf");
-        // assertInvalidWithError(report.getSignatures().get(0), "The past signature validation is not conclusive!");
-        assertAllSignaturesAreInvalid(report);
-    }
-
-    /***
-     * TestCaseID: PDF-ValidationFail-2
-     *
-     * TestType: Automated
-     *
-     * RequirementID:
-     *
      * Title: The PDF-file has been signed with expired certificate (PAdES Baseline LT)
      *
      * Expected Result: Document signed with certificate that is expired should fail.
@@ -46,13 +29,21 @@ public class PdfValidationFail extends SiVaRestTests{
      ***/
     @Test
     public void signaturesMadeWithExpiredSigningCertificatesAreInvalid() {
-        QualifiedReport report = postForReport("hellopades-lt-rsa1024-sha1-expired.pdf");
-        // assertInvalidWithError(report.getSignatures().get(0), "The past signature validation is not conclusive!");
-        assertAllSignaturesAreInvalid(report);
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-rsa1024-sha1-expired.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "hellopades-lt-rsa1024-sha1-expired.pdf", "pdf", ""))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("AdES"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatures[0].subIndication", Matchers.is("OUT_OF_BOUNDS_NO_POE"))
+                .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /***
-     * TestCaseID: PDF-ValidationFail-3
+     * TestCaseID: PDF-ValidationFail-2
      *
      * TestType: Automated
      *
@@ -71,7 +62,7 @@ public class PdfValidationFail extends SiVaRestTests{
     }
 
     /***
-     * TestCaseID: PDF-ValidationFail-4
+     * TestCaseID: PDF-ValidationFail-3
      *
      * TestType: Automated
      *
@@ -84,15 +75,27 @@ public class PdfValidationFail extends SiVaRestTests{
      * File: missing_signing_certificate_attribute.pdf
      ***/
     @Test
-    @Ignore // Since DSS 4.7.1.RC1 the given file is identified as PAdES_BASELINE_T
+            // Since DSS 4.7.1.RC1 the given file is identified as PAdES_BASELINE_T
             // When PAdES_BASELINE_T is not in constraint.xml's AcceptableFormats -> Error: The expected format is not found!
+            // EU signature policy is used.
     public void missingSignedAttributeForSigningCertificate() {
-        QualifiedReport report = postForReport("missing_signing_certificate_attribute.pdf");
-        assertInvalidWithError(report.getSignatures().get(0), "The signed attribute: 'signing-certificate' is absent!");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("missing_signing_certificate_attribute.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "missing_signing_certificate_attribute.pdf", "pdf", "EU"))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_T"))
+                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].signedBy", Matchers.is("ALAS,RISTO,38109300259"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatures[0].subIndication", Matchers.is("NO_SIGNING_CERTIFICATE_FOUND"))
+                .body("signatures[0].errors[0].content", Matchers.is("The signed attribute: 'signing-certificate' is absent!"))
+                .body("signatures[0].claimedSigningTime", Matchers.is("2015-05-20T12:51:32Z"))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /***
-     * TestCaseID: PDF-ValidationFail-5
+     * TestCaseID: PDF-ValidationFail-4
      *
      * TestType: Automated
      *
@@ -111,7 +114,7 @@ public class PdfValidationFail extends SiVaRestTests{
     }
 
     /***
-     * TestCaseID: PDF-ValidationFail-6
+     * TestCaseID: PDF-ValidationFail-5
      *
      * TestType: Automated
      *
@@ -130,7 +133,7 @@ public class PdfValidationFail extends SiVaRestTests{
     }
 
     /***
-     * TestCaseID: PDF-ValidationFail-7
+     * TestCaseID: PDF-ValidationFail-6
      *
      * TestType: Automated
      *
@@ -144,12 +147,12 @@ public class PdfValidationFail extends SiVaRestTests{
      * File: hellopades-lt-sha256-rsa1024-expired2.pdf
      ***/
     @Test
-    public void documentSignedWithExpiredRsa1024CertificateShouldFail() {
+    public void documentSignedWithExpiredSha256CertificateShouldFail() {
         assertAllSignaturesAreInvalid(postForReport("hellopades-lt-sha256-rsa1024-expired2.pdf"));
     }
 
     /***
-     * TestCaseID: PDF-ValidationFail-8
+     * TestCaseID: PDF-ValidationFail-7
      *
      * TestType: Automated
      *

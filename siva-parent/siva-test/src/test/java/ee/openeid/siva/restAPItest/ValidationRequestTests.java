@@ -351,7 +351,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      * File: xroad-simple.asice
      *
      ***/
-    @Test @Ignore //TODO: VAL-302
+    @Test
     public void bdocValidationRequestNotMatchingDocumentTypeAndActualFileXroad() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
@@ -559,6 +559,58 @@ public class ValidationRequestTests extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString(INVALID_FILENAME));
     }
 
+    /***
+     *
+     * TestCaseID: Bdoc-ValidationRequest-12
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Mismatch in documentType and actual document (bdoc and xroad)
+     *
+     * Expected Result: Error is returned
+     *
+     * File: xroad-batchsignature
+     *
+     ***/
+    @Test
+    public void bdocValidationRequestNotMatchingDocumentTypeAndActualFileXroadBatch() {
+        setTestFilesDirectory("xroad/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-batchsignature.asice"));
+        post(validationRequestWithValidKeys(encodedString, "xroad-batchsignature.asice", "bdoc", ""))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
+                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
+    }
+
+    /***
+     *
+     * TestCaseID: Bdoc-ValidationRequest-13
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Mismatch in documentType and actual document (bdoc and xroad)
+     *
+     * Expected Result: Error is returned
+     *
+     * File: xroad-attachment.asice
+     *
+     ***/
+    @Test
+    public void bdocValidationRequestNotMatchingDocumentTypeAndActualFileXroadAttach() {
+        setTestFilesDirectory("xroad/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-attachment.asice"));
+        post(validationRequestWithValidKeys(encodedString, "xroad-attachment.asice", "bdoc", ""))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
+                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
+    }
+
      /***
      *
      * TestCaseID: Pdf-ValidationRequest-1
@@ -709,6 +761,58 @@ public class ValidationRequestTests extends SiVaRestTests {
                 .body("validSignaturesCount",Matchers.is(1));
     }
 
+    /***
+     *
+     * TestCaseID: Pdf-ValidationRequest-7
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Mismatch in documentType and actual document (pdf and xroad)
+     *
+     * Expected Result: Error is returned
+     *
+     * File: xroad-batchsignature.asice
+     *
+     ***/
+    @Test
+    public void pdfValidationRequestNotMatchingDocumentTypeAndActualFileXroadBatch() {
+        setTestFilesDirectory("xroad/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-batchsignature.asice"));
+        post(validationRequestWithValidKeys(encodedString, "xroad-batchsignature.asice", "pdf", ""))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
+                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
+    }
+
+    /***
+     *
+     * TestCaseID: Pdf-ValidationRequest-8
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Mismatch in documentType and actual document (pdf and xroad)
+     *
+     * Expected Result: Error is returned
+     *
+     * File: xroad-attachment.asice
+     *
+     ***/
+    @Test
+    public void pdfValidationRequestNotMatchingDocumentTypeAndActualFileXroadAttach() {
+        setTestFilesDirectory("xroad/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-attachment.asice"));
+        post(validationRequestWithValidKeys(encodedString, "xroad-attachment.asice", "pdf", ""))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
+                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
+    }
+
      /***
      *
      * TestCaseID: Ddoc-ValidationRequest-1
@@ -855,6 +959,58 @@ public class ValidationRequestTests extends SiVaRestTests {
                 .then()
                 .body("documentName",equalTo("TotallyRandomFilename.exe"))
                 .body("validSignaturesCount",Matchers.is(3));
+    }
+
+    /***
+     *
+     * TestCaseID: Ddoc-ValidationRequest-7
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Mismatch in documentType and actual document (ddoc and xroad)
+     *
+     * Expected Result: Error is returned
+     *
+     * File: xroad-simple.asice
+     *
+     ***/
+    @Test
+    public void ddocValidationRequestNotMatchingDocumentTypeAndActualFileXroadBatch() {
+        setTestFilesDirectory("xroad/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-batchsignature.asice"));
+        post(validationRequestWithValidKeys(encodedString, "xroad-batchsignature.asice", "ddoc", ""))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
+                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
+    }
+
+    /***
+     *
+     * TestCaseID: Ddoc-ValidationRequest-8
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Mismatch in documentType and actual document (ddoc and xroad)
+     *
+     * Expected Result: Error is returned
+     *
+     * File: xroad-simple.asice
+     *
+     ***/
+    @Test
+    public void ddocValidationRequestNotMatchingDocumentTypeAndActualFileXroadAttach() {
+        setTestFilesDirectory("xroad/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-attachment.asice"));
+        post(validationRequestWithValidKeys(encodedString, "xroad-attachment.asice", "ddoc", ""))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
+                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
      /***

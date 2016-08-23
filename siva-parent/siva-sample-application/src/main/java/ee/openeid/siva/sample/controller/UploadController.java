@@ -25,6 +25,7 @@ import static ee.openeid.siva.sample.siva.ValidationReportUtils.*;
 class UploadController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UploadController.class);
     private static final String START_PAGE_VIEW_NAME = "index";
+    private static final long SECOND_IN_MILLISECONDS = 1000L;
 
     private ValidationTaskRunner validationTaskRunner;
     private UploadFileCacheService fileUploadService;
@@ -44,7 +45,7 @@ class UploadController {
             return validationResponse(model);
         }
 
-        long timestamp = System.currentTimeMillis() / 1000L;
+        long timestamp = System.currentTimeMillis() / SECOND_IN_MILLISECONDS;
         try {
             final UploadedFile uploadedFile = fileUploadService.addUploadedFile(timestamp, file);
             validationTaskRunner.run(uploadedFile);

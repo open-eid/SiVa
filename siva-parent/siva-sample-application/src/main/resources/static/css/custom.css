@@ -82,6 +82,11 @@
     margin-top: 1rem;
 }
 
+.eu-brand {
+    height: 7%;
+    width: auto;
+}
+
 @media screen and (max-width: 768px) {
     .dropzone .dz-message {
         margin: 1em 0;

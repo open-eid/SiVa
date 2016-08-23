@@ -32,12 +32,12 @@ public class FilesystemBuildInfoFileLoader implements BuildInfoFileLoader {
 
     @Override
     public Observable<BuildInfo> loadBuildInfo() throws IOException {
-        final byte[] yamlFile = loadYamlFile();
+        byte[] yamlFile = loadYamlFile();
         return Observable.just(mapToBuildInfo(yamlFile)) ;
     }
 
     private static BuildInfo mapToBuildInfo(byte[] yamlFile) throws IOException {
-        final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         try {
@@ -50,7 +50,7 @@ public class FilesystemBuildInfoFileLoader implements BuildInfoFileLoader {
     }
 
     private byte[] loadYamlFile() throws IOException {
-        final Path yamlFilePath = getBuildInfoFilePath();
+        Path yamlFilePath = getBuildInfoFilePath();
         if (!Files.exists(yamlFilePath)) {
             LOGGER.warn("No such file exists: {}", yamlFilePath);
             return EMPTY_CONTENT;
@@ -61,9 +61,9 @@ public class FilesystemBuildInfoFileLoader implements BuildInfoFileLoader {
     }
 
     private Path getBuildInfoFilePath() {
-        final String defaultPath = Paths.get("").toAbsolutePath() + File.separator;
-        final String infoFile = properties.getInfoFile();
-        final String infoFilePath = isFullPathToInfoFile(infoFile) ? infoFile : defaultPath + infoFile;
+        String defaultPath = Paths.get("").toAbsolutePath() + File.separator;
+        String infoFile = properties.getInfoFile();
+        String infoFilePath = isFullPathToInfoFile(infoFile) ? infoFile : defaultPath + infoFile;
 
         return Paths.get(infoFilePath);
     }

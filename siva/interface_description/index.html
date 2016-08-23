@@ -23,8 +23,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     
-    <link rel="shortcut icon" type="image/x-icon" href="../../assets/images/favicon-e565ddfa3b.ico">
-    <link rel="icon" type="image/x-icon" href="../../assets/images/favicon-e565ddfa3b.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="../../None">
+    <link rel="icon" type="image/x-icon" href="../../None">
     <style>
       @font-face {
       	font-family: 'Icon';
@@ -41,7 +41,7 @@
       	font-style: normal;
       }
     </style>
-    <link rel="stylesheet" href="../../assets/stylesheets/application-a422ff04cc.css">
+    <link rel="stylesheet" href="../../assets/stylesheets/application-0dac3e5884.css">
     
       <link rel="stylesheet" href="../../assets/stylesheets/palettes-05ab2406df.css">
     
@@ -49,7 +49,7 @@
       
       
       
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
       <style>
         body, input {
           font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
@@ -377,8 +377,7 @@
 
 <h2 id="rest-json-validation-service">REST JSON validation service</h2>
 <h3 id="rest-json-endpoint">REST JSON Endpoint</h3>
-<div class="codehilite"><pre><span></span>POST https://&lt;server url&gt;/validate
-</pre></div>
+<pre class="codehilite"><code>POST https://&lt;server url&gt;/validate</code></pre>
 
 
 <h3 id="json-request">JSON Request</h3>
@@ -467,13 +466,12 @@ policy that is used by the service</p>
 </tbody>
 </table>
 <h4 id="sample-request">Sample request</h4>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;filename&quot;</span><span class="p">:</span><span class="s2">&quot;sample.ddoc&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;documentType&quot;</span><span class="p">:</span><span class="s2">&quot;DDOC&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;document&quot;</span><span class="p">:</span><span class="s2">&quot;PD94bWwgdmVyc2lvbj0iMS4....&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;signaturePolicy&quot;</span><span class="p">:</span> <span class="s2">&quot;EU&quot;</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="codehilite"><code class="language-json">{
+  &quot;filename&quot;:&quot;sample.ddoc&quot;,
+  &quot;documentType&quot;:&quot;DDOC&quot;,
+  &quot;document&quot;:&quot;PD94bWwgdmVyc2lvbj0iMS4....&quot;,
+  &quot;signaturePolicy&quot;: &quot;EU&quot;
+}</code></pre>
 
 
 <h3 id="json-response">JSON Response</h3>
@@ -833,36 +831,35 @@ http://id.ee/public/SK-JDD-PRG-GUIDE.pdf, chap. 5.2.4.1):</p>
 </tbody>
 </table>
 <h4 id="sample-response">Sample response</h4>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
-    <span class="nt">&quot;policy&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;policyVersion&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;policyName&quot;</span><span class="p">:</span> <span class="s2">&quot;SiVa validation policy&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;policyDescription&quot;</span><span class="p">:</span> <span class="s2">&quot;SiVa validation policy&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;policyUrl&quot;</span><span class="p">:</span> <span class="s2">&quot;http://open-eid.github.io/SiVa/siva/appendix/validation_policy/&quot;</span>
-    <span class="p">},</span>
-    <span class="nt">&quot;signaturesCount&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="nt">&quot;validSignaturesCount&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="nt">&quot;validationTime&quot;</span><span class="p">:</span> <span class="s2">&quot;2016-07-28T14:41:45Z&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;documentName&quot;</span><span class="p">:</span> <span class="s2">&quot;sample.bdoc&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;signatures&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="p">{</span>
-            <span class="nt">&quot;claimedSigningTime&quot;</span><span class="p">:</span> <span class="s2">&quot;2016-05-11T10:17:57Z&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;errors&quot;</span><span class="p">:</span> <span class="p">[],</span>
-            <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;S0&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;indication&quot;</span><span class="p">:</span> <span class="s2">&quot;TOTAL-PASSED&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;info&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="nt">&quot;bestSignatureTime&quot;</span><span class="p">:</span> <span class="s2">&quot;2016-05-11T10:18:06Z&quot;</span>
-            <span class="p">},</span>
-            <span class="nt">&quot;signatureFormat&quot;</span><span class="p">:</span> <span class="s2">&quot;XAdES_BASELINE_LT_TM&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;signatureLevel&quot;</span><span class="p">:</span> <span class="s2">&quot;QES&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;signatureScopes&quot;</span><span class="p">:</span> <span class="p">[],</span>
-            <span class="nt">&quot;signedBy&quot;</span><span class="p">:</span> <span class="s2">&quot;NURM,AARE,38211015222&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;subIndication&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;warnings&quot;</span><span class="p">:</span> <span class="p">[]</span>
-        <span class="p">}</span>
-    <span class="p">]</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="codehilite"><code class="language-json">{
+    &quot;policy&quot;: {
+        &quot;policyVersion&quot;: &quot;1.0&quot;,
+        &quot;policyName&quot;: &quot;SiVa validation policy&quot;,
+        &quot;policyDescription&quot;: &quot;SiVa validation policy&quot;,
+        &quot;policyUrl&quot;: &quot;http://open-eid.github.io/SiVa/siva/appendix/validation_policy/&quot;
+    },
+    &quot;signaturesCount&quot;: 1,
+    &quot;validSignaturesCount&quot;: 1,
+    &quot;validationTime&quot;: &quot;2016-07-28T14:41:45Z&quot;,
+    &quot;documentName&quot;: &quot;sample.bdoc&quot;,
+    &quot;signatures&quot;: [
+        {
+            &quot;claimedSigningTime&quot;: &quot;2016-05-11T10:17:57Z&quot;,
+            &quot;errors&quot;: [],
+            &quot;id&quot;: &quot;S0&quot;,
+            &quot;indication&quot;: &quot;TOTAL-PASSED&quot;,
+            &quot;info&quot;: {
+                &quot;bestSignatureTime&quot;: &quot;2016-05-11T10:18:06Z&quot;
+            },
+            &quot;signatureFormat&quot;: &quot;XAdES_BASELINE_LT_TM&quot;,
+            &quot;signatureLevel&quot;: &quot;QES&quot;,
+            &quot;signatureScopes&quot;: [],
+            &quot;signedBy&quot;: &quot;NURM,AARE,38211015222&quot;,
+            &quot;subIndication&quot;: &quot;&quot;,
+            &quot;warnings&quot;: []
+        }
+    ]
+}</code></pre>
 
 
 <h2 id="soap-validation-service">SOAP validation service</h2>

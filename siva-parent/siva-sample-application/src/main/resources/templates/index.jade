@@ -10,10 +10,14 @@ block notificationBlock
 
 block content
     .row
-        .col-md-12
+        .col-lg-6
             h1.hidden-md-down Upload a digitally signed file
             h3.hidden-md-up Upload signed file
             p.hidden-md-down Supported file types are: BDOC, DDOC, PDF and XRoad ASiCE
+        .col-lg-6.hidden-md-down
+            img.pull-lg-right.eu-brand(src="img/eu-logo.svg")
+    .row
+        .col-md-12
             form#siva-dropzone.dropzone(action="/upload", style="width: 100%", method="POST", enctype="multipart/form-data")
                 input.hide(type="file", name="file")
     .row.hide#validation-summery

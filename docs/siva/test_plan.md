@@ -45,7 +45,6 @@ Following areas are tested on input:
   * Inconsistencies on stated parameters and actual data (wrong document type)
   * Case insensitivity on parameter names
   * Empty request
-  * Simultaneous validation requests
 
 
 In all of the negative cases correctness of returned error message is checked.
@@ -59,22 +58,19 @@ Specific test cases and input files can be found in:
 
 ### Validation Report tests
 
-SiVa web service returns uniform Validation Report on all the supported document types. This also includes correct document types without actual signature (for example PDF document without signature).
+SiVa web service returns uniform Validation Report on all the supported document types. This also includes correct document types without actual signature (for example PDF document without signature). However not all values may be present for all the document types.
 
 Following areas are tested on output (Validation Report):
 
-  * JSON structure on DDOC, BDOC, PDF and ASICE document types
-  * Presence of the mandatory elements on DDOC, BDOC, PDF and ASICE document types
-  * Presence of optional elements on DDOC, BDOC, PDF and ASICE document types
+  * JSON structure on DDOC, BDOC, PDF, ASIC-E and ASICE-E X-Road document types
+  * Presence of the mandatory elements on DDOC, BDOC, PDF, ASIC-E and ASICE-E X-Road document types
+  * Presence of optional elements on DDOC, BDOC, PDF, ASIC-E and ASICE-E X-Road document types
+  * Verification of expected values
   * JSON structure on containers without signatures
-
-**What is not tested:**
-
-  * Correctness of the values in the report is not in scope on these tests
 
 Specific test cases and input files can be found in:
 
-  * [Appendix 5 - ValidationReportJsonStructureVerification.java](/siva/appendix/test_cases/#validationreportjsonstructureverificationjava)
+  * [Appendix 5 - ValidationReportJsonStructureVerification.java](/siva/appendix/test_cases/#validationreportvalueverificationjava)
 
 ## Testing of SOAP API
 
@@ -113,7 +109,7 @@ The goal of the BDOC signature validation testing is to check that the validatio
 
 The testing of BDOC signatures consists of following main cases:
 
-  * Containers with valid signature(s) are validated (how many signatures are acceptable?)
+  * Containers with valid signature(s) are validated
   * Containers with invalid signature(s) or no signature are validated
   * Containers sizes near maximum are validated
 
@@ -200,21 +196,32 @@ In addition to testing the service as such, SiVa Sample Application itself is te
   * Displayment of Validation Report
 
 
-## Performance Test introduction
+## Load Test introduction
 
-Performance testing will be carried out on following environments:
+The goal of the load test was to determine the throughput capabilities of a single Siva node and how it handles requests under increasing load. Each container type was load-tested separately since the business logic and underlying mechanics for validating specific container types are vastly different.
 
-  * Nortal Load Test (processor: memory: )
+JMeter plugin for Maven is used to execute the tests.
 
-Jmeter v2.13 is used to carry out the testing.
+load testing is carried out on following environments:
 
-The goal is to measure throughput-latency of the service with different file types and sizes. The performance testing is carried out on REST interface. SOAP interface is used only for one testrun for comparison between SOAP and REST interface. It is assessed that the interface itself does not have considerable impact on throughput or latency compared to the validation process.
+  * Test execution enviroment (processor: Intel(R) Xeon(R) CPU E5-2620 v2 @ 2.10GHz memory: 6GB)
+  * System under test enviroment (processor: Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz memory: 13GB)
 
-Following cases will be covered on all supported file types (BDOC, DDOC, ASICE, PDF):
+Following test data is used in load test:
 
-  * The service is loaded under 1MB containers with two valid signatures
-  * The service is loaded around 5MB containers with two valid signatures
-  * The service is loaded near 10MB containers with two valid signatures
-  * The service is loaded under 1MB containers with ten valid signatures
+  * BDOC-TS file with two valid signatures (~100KB and 5MB)
+  * BDOC-TM file with two valid signatures (~100KB and 5MB)
+  * PDF file with two valid signatures (~200KB and 5MB)
+  * DDOC file with two valid signatures (~300KB and 5MB)
+  * ASIC-E X-Road container with one valid signature (~10KB)
 
-The thread count will be increased from 5 to 60 with step of 5. The results are presented as throughput-latency graphs for each run.
+Each of the files are validated through REST interface. SOAP interface is used with small files for a comparison. It is evaluated that the interface (REST or SOAP) do not play noticeable effect on overall results.
+
+Each of the tested files follow the same test plan:
+
+  * Five concurrent requests are made per second
+  * This load is held for period of time
+  * Concurrent requests are increased by five until 50 concurrent requests per second is achieved
+  * Latency and throughput is measured on each concurrent request steps
+
+

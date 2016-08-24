@@ -4,6 +4,7 @@ import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
@@ -371,6 +372,55 @@ public class DdocValidationFail extends SiVaRestTests{
                 .body("requestErrors.message", Matchers.hasItem(INVALID_BASE_64));
     }
 
+    /***
+     * TestCaseID: Ddoc-ValidationFail-16
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Ddoc OCSP status is revoked
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: opensc-error(1.2).ddoc
+     ***/
+    @Test @Ignore //TODO: VAL-310 This testfile requires TEST-SK OCSP RESPONDER 2005 certification
+    public void ddocOcspStatusRevoked() {
+        setTestFilesDirectory("ddoc/live/timemark/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("opensc-error(1.2).ddoc"));
+        post(validationRequestWithValidKeys(encodedString, "opensc-error(1.2).ddoc", "ddoc", ""))
+                .then()
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].errors[0].content", Matchers.is("Certificate has been revoked!"))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1));
+    }
+
+    /***
+     * TestCaseID: Ddoc-ValidationFail-17
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Ddoc XML namespace error in container
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: ns6t3cp7.ddoc
+     ***/
+    @Test
+    public void ddocNamespaceErrorShouldFail() {
+        setTestFilesDirectory("ddoc/live/timemark/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("ns6t3cp7.ddoc"));
+        post(validationRequestWithValidKeys(encodedString, "ns6t3cp7.ddoc", "ddoc", ""))
+                .then()
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].errors[0].content", Matchers.is("Bad digest for DataFile: D0 alternate digest matches!"))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1));
+    }
     @Override
     protected String getTestFilesDirectory() {
         return testFilesDirectory;

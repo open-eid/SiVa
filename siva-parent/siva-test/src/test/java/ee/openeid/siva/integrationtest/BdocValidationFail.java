@@ -405,17 +405,19 @@ public class BdocValidationFail extends SiVaRestTests{
      *
      * Expected Result: The document should fail the validation
      *
-     * File: TM-05_bdoc21-good-nonce-policy-bes.bdoc
+     * File: signWithIdCard_d4j_1.0.4_BES.asice
      ***/
-    @Test @Ignore //TODO: This is actually a EPES level file?
+    @Test //@Ignore //TODO: This is actually a EPES level file?
     public void bdocBaselineBesSignatureLevel() {
-        setTestFilesDirectory("bdoc/live/timemark/");
-        post(validationRequestFor("TM-05_bdoc21-good-nonce-policy-bes.bdoc"))
+        setTestFilesDirectory("bdoc/live/timestamp/");
+        post(validationRequestFor("signWithIdCard_d4j_1.0.4_BES.asice"))
                 .then()
-                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is("TRY_LATER"))
                 .body("signatures[0].errors.content", Matchers.hasItems("No revocation data for the certificate"))
-                .body("validSignaturesCount", Matchers.is(0));
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /***
@@ -436,6 +438,7 @@ public class BdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("TM-04_kehtivuskinnituset.4.asice"))
                 .then()
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_EPES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is("TRY_LATER"))
                 .body("signatures[0].errors.content", Matchers.hasItems("No revocation data for the certificate"))
@@ -681,6 +684,29 @@ public class BdocValidationFail extends SiVaRestTests{
                 .body("signatures[0].subIndication", Matchers.is("")) //TODO: VAL-242 Subindication should not be empty.
                 .body("signatures[0].errors.content", Matchers.hasItem("Signature has been created with expired certificate"))
                 .body("validSignaturesCount", Matchers.is(0));
+    }
+
+    /***
+     * TestCaseID: Bdoc-ValidationFail-29
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Bdoc 	BDOC-1.0 version container
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: BDOC-1.0.bdoc
+     ***/
+    @Test
+    public void bdocOldNotSupportedVersion() {
+        setTestFilesDirectory("bdoc/live/timemark/");
+        post(validationRequestFor("BDOC-1.0.bdoc"))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
+                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
     @Override
     protected String getTestFilesDirectory() {

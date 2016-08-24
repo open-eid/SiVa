@@ -145,43 +145,52 @@ To execute the tests from command line after application is built use:
 ./mvnw verify
 ```
 
-### How to run performance tests
+### How to run load tests
 
-Performance tests are disabled by default, but can be enabled with maven parameter `-DrunLoadTests=true`. By default all unit
-and integration tests will be executed prior the performance tests, but it is possible to skip them. When executing the performance tests, SiVa
+Load tests are disabled by default, but can be enabled with maven parameter `-DrunLoadTests=true`. By default all unit
+and integration tests will be executed prior the load tests, but it is possible to skip them. When executing the load tests, SiVa
 Web application has to be started before the tests are executed.
 
 > **Note**: PDF load test files contain test certificates. In order for PDF load tests to succeed
 > SiVa application should be started with test certificates preloaded.
 
-To load trusted test certificates in addition to TSL "test" spring profile should be activated at startup, for example:
+To load trusted test certificates in addition to TSL, "test" spring profile should be activated at startup, for example:
 
 ```bash
 java -Dspring.profiles.active=test -jar siva-webapp-2.0.2-SNAPSHOT.jar
 ```
 
-To run performance tests after unit and integration tests:
+To run load tests after unit and integration tests in non GUI mode:
 
 ```bash
 ./mvnw verify -DrunLoadTests=true
 ```
 
-To run performance tests only:
+To run load tests only:
 
 ```bash
 ./mvnw verify -DskipTests=true -DrunLoadTests=true
 ```
 
-It is possible to configure following parameters in performance test:
+To run load tests with JMeter GUI execute the command in `Siva/siva-parent/siva-test/` folder:
+
+```bash
+mvn jmeter:gui  -DrunLoadTests=true
+```
+
+It is possible to configure following parameters in load test (given defaults are based on `../siva-test/pom.xml`):
 
   * `jmeter.host.name` - target webapp host against what the tests are executed, default is localhost
   * `jmeter.host.port` - target port of the webapp host , default is 8080
   * `jmeter.host.endpoint` - name of endpoint, default is /validate
-  * `jmeter.host.timeoutInMillis` - response waiting timeout, default is 60000
+  * `jmeter.host.timeoutInMillis` - response waiting timeout, default is 60000 (in milliseconds)
   * `jmeter.testfiles.dir` - directory of the test files, default is ${project.basedir}/src/test/jmeter/test-files
-  * `jmeter.load.step.duration` - time how long the load is kept on each throuput level, default is 60
+  * `jmeter.load.step.duration` - time how long the load is kept on each throuput level, default is 60 (in seconds)
 
-The default values can be changed inside `siva-test/pom.xml` file. It is also possible to run the tests with modifying the parameters on execution.
+These values can be set in three different ways:
+  * In JMeter test plan - these settings will be used when JMeter GUI is used to run the tests
+  * In `../siva-test/pom.xml` file - these settings will be used when the tests are run in non GUI mode and will overwrite the default values in test plans.
+  * As parameters when executing the tests - These values have highest priority and will overwrite other default values.
 
 To run the tests with modified parameters:
 

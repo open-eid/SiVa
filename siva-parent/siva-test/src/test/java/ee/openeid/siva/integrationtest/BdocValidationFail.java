@@ -407,7 +407,7 @@ public class BdocValidationFail extends SiVaRestTests{
      *
      * File: signWithIdCard_d4j_1.0.4_BES.asice
      ***/
-    @Test //@Ignore //TODO: This is actually a EPES level file?
+    @Test
     public void bdocBaselineBesSignatureLevel() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("signWithIdCard_d4j_1.0.4_BES.asice"))

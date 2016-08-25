@@ -141,9 +141,7 @@ List of Test Cases
   * RequirementID: []()
   * Title: Bdoc Baseline-BES file
   * Expected Result: The document should fail the validation
-  * File: TM-05_bdoc21-good-nonce-policy-bes.bdoc
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+  * File: signWithIdCard_d4j_1.0.4_BES.asice
 
 **TestCaseID: Bdoc-ValidationFail-18**
 
@@ -234,6 +232,14 @@ List of Test Cases
   * Title: Bdoc certificate's validity time is not in the period of OCSP producedAt time
   * Expected Result: The document should fail the validation
   * File: 23154_test1-old-sig-sigat-OK-prodat-NOK-1.bdoc
+
+**TestCaseID: Bdoc-ValidationFail-29**
+
+  * TestType: Automated
+  * RequirementID: []()
+  * Title: Bdoc 	BDOC-1.0 version container
+  * Expected Result: The document should fail the validation
+  * File: BDOC-1.0.bdoc
 
 
 ## BdocValidationPass.java
@@ -477,6 +483,24 @@ List of Test Cases
   * Expected Result: The document should fail the validation
   * File: KS-02_tyhi.ddoc
 
+**TestCaseID: Ddoc-ValidationFail-16**
+
+  * TestType: Automated
+  * RequirementID: []()
+  * Title: Ddoc OCSP status is revoked
+  * Expected Result: The document should fail the validation
+  * File: opensc-error(1.2).ddoc
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
+**TestCaseID: Ddoc-ValidationFail-17**
+
+  * TestType: Automated
+  * RequirementID: []()
+  * Title: Ddoc XML namespace error in container
+  * Expected Result: The document should fail the validation
+  * File: ns6t3cp7.ddoc
+
 
 ## DdocValidationPass.java
 
@@ -660,53 +684,33 @@ List of Test Cases
 
   * TestType: Automated
   * RequirementID: []()
-  * Title: Larger signed PDF files (PAdES Baseline LT).
-  * Expected Result: Bigger documents with valid signature should pass
-  * File: scout_x4-manual-signed_lt_9mb.pdf
+  * Title: 9MB PDF files (PAdES Baseline LT).
+  * Expected Result: Validation report is returned
+  * File: 9MB_PDF.pdf
 
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
-**TestCaseID: PDF-LargeFiles-2**
+**TestCaseID: Bdoc-LargeFiles-1**
 
   * TestType: Automated
   * RequirementID: []()
-  * Title: Larger signed PDF files (PAdES Baseline LT).
-  * Expected Result: Bigger documents with valid signature should pass
-  * File: scout_x4-manual-signed_lta_9mb.pdf
+  * Title: 9MB ASIC-E file
+  * Expected Result: Validation report is returned
+  * File: 9MB_BDOC-TS.bdoc
 
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
-**TestCaseID: PDF-LargeFiles-3**
+**TestCaseID: Bdoc-LargeFiles-2**
 
   * TestType: Automated
   * RequirementID: []()
-  * Title: Larger signed PDF files (PAdES Baseline LT).
-  * Expected Result: Bigger documents with valid signature should pass
-  * File: singlesignature_lt_1-2mb.pdf
+  * Title: 9MB BDOC-TM
+  * Expected Result: Validation report is returned
+  * File: 9MB_BDOC-TM.bdoc
 
-**TestCaseID: PDF-LargeFiles-4**
-
-  * TestType: Automated
-  * RequirementID: []()
-  * Title: Larger signed PDF files (PAdES Baseline LT).
-  * Expected Result: Bigger documents with valid signature should pass
-  * File: digidocservice-signed-lta-1-2mb.pdf
-
-**TestCaseID: PDF-LargeFiles-5**
+**TestCaseID: Ddoc-LargeFiles-1**
 
   * TestType: Automated
   * RequirementID: []()
-  * Title: Larger signed PDF files (PAdES Baseline LT).
-  * Expected Result: Bigger documents with valid signature should pass
-  * File: singlesignature_lt_3-8mb.pdf
-
-**TestCaseID: PDF-LargeFiles-6**
-
-  * TestType: Automated
-  * RequirementID: []()
-  * Title: Larger signed PDF files (PAdES Baseline LT).
-  * Expected Result: Bigger documents with valid signature should pass
-  * File: egovenrment-benchmark-lta-3-8mb.pdf
+  * Title: 9MB DDOC
+  * Expected Result: Validation report is returned
+  * File: 9MB_DDOC.ddoc
 
 
 ## PdfBaselineProfileTests.java
@@ -1603,8 +1607,6 @@ List of Test Cases
   * Title: X-road file, not existing value in signaturePolicy
   * Expected Result: X-Road do not support signature policy selection, value is ignored
   * File: xroad-simple.asice
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: Xroad-ValidationRequest-5**
 

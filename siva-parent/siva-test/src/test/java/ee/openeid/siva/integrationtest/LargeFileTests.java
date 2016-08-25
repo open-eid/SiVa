@@ -2,21 +2,31 @@ package ee.openeid.siva.integrationtest;
 
 import com.jayway.restassured.RestAssured;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+import org.apache.commons.codec.binary.Base64;
+import org.hamcrest.Matchers;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import static org.hamcrest.Matchers.equalTo;
+
 @Category(IntegrationTest.class)
 public class LargeFileTests extends SiVaRestTests{
 
-
-    @BeforeClass
-    public static void oneTimeSetUp() {
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+    @Before
+    public void DirectoryBackToDefault() {
+        setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
     }
 
-    private static final String TEST_FILES_DIRECTORY = "pdf/large_pdf_files/";
+    private static final String DEFAULT_TEST_FILES_DIRECTORY = "large_files/";
+
+    private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
+
+    public void setTestFilesDirectory(String testFilesDirectory) {
+        this.testFilesDirectory = testFilesDirectory;
+    }
 
     /***
      * TestCaseID: PDF-LargeFiles-1
@@ -25,109 +35,46 @@ public class LargeFileTests extends SiVaRestTests{
      *
      * RequirementID:
      *
-     * Title: Larger signed PDF files (PAdES Baseline LT).
+     * Title: 9MB PDF files (PAdES Baseline LT).
+     *
+     * Expected Result: Validation report is returned
+     *
+     * File: scout_x4-manual-signed_lt_9mb.pdf
+     ***/
+    @Test
+    public void pdfNineMegabyteFilesWithLtSignatureAreAccepted() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("scout_x4-manual-signed_lt_9mb.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "scout_x4-manual-signed_lt_9mb.pdf", "pdf",""))
+                .then()
+                .body("signatures[0].signatureFormat",equalTo("PAdES_BASELINE_LT"))
+                .body("documentName",equalTo("scout_x4-manual-signed_lt_9mb.pdf"));
+    }
+
+    /***
+     * TestCaseID: PDF-LargeFiles-1
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Large signed PDF files (PAdES Baseline LT).
      *
      * Expected Result: Bigger documents with valid signature should pass
      *
      * File: scout_x4-manual-signed_lt_9mb.pdf
      ***/
-    @Test @Ignore //TODO: new test file is needed; the current one has issues with QC / SSCD
-    public void nineMegabyteFilesWithLtSignatureAreAccepted () {
-        assertSomeSignaturesAreValid(postForReport("scout_x4-manual-signed_lt_9mb.pdf"), 1);
-    }
-
-    /***
-     * TestCaseID: PDF-LargeFiles-2
-     *
-     * TestType: Automated
-     *
-     * RequirementID:
-     *
-     * Title: Larger signed PDF files (PAdES Baseline LT).
-     *
-     * Expected Result: Bigger documents with valid signature should pass
-     *
-     * File: scout_x4-manual-signed_lta_9mb.pdf
-     ***/
-    @Test @Ignore  //TODO - a new test file is needed; the current one has issues with QC / SSCD
-    public void nineMegabyteFilesWithLtaSignatureAreAccepted () {
-        assertSomeSignaturesAreValid(postForReport("scout_x4-manual-signed_lta_9mb.pdf"), 1);
-    }
-
-    /***
-     * TestCaseID: PDF-LargeFiles-3
-     *
-     * TestType: Automated
-     *
-     * RequirementID:
-     *
-     * Title: Larger signed PDF files (PAdES Baseline LT).
-     *
-     * Expected Result: Bigger documents with valid signature should pass
-     *
-     * File: singlesignature_lt_1-2mb.pdf
-     ***/
     @Test
-    public void oneMegabyteFilesWithLtSignatureAreAccepted () {
-        assertAllSignaturesAreValid(postForReport("singlesignature_lt_1-2mb.pdf"));
+    public void bdocEightMegabyteFilesWithLtSignatureAreAccepted() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("EE_SER-AEX-B-LT-V-44_8mb.asice"));
+        post(validationRequestWithValidKeys(encodedString, "EE_SER-AEX-B-LT-V-44_8mb.asice", "bdoc",""))
+                .then()
+                .body("signatures[0].signatureFormat",equalTo("XAdES_BASELINE_LT"))
+                .body("documentName",equalTo("EE_SER-AEX-B-LT-V-44_8mb.asice"));
     }
 
-    /***
-     * TestCaseID: PDF-LargeFiles-4
-     *
-     * TestType: Automated
-     *
-     * RequirementID:
-     *
-     * Title: Larger signed PDF files (PAdES Baseline LT).
-     *
-     * Expected Result: Bigger documents with valid signature should pass
-     *
-     * File: digidocservice-signed-lta-1-2mb.pdf
-     ***/
-    @Test
-    public void oneMegabyteFilesWithLtaSignatureAreAccepted () {
-        assertSomeSignaturesAreValid(postForReport("digidocservice-signed-lta-1-2mb.pdf"), 1);
-    }
-
-    /***
-     * TestCaseID: PDF-LargeFiles-5
-     *
-     * TestType: Automated
-     *
-     * RequirementID:
-     *
-     * Title: Larger signed PDF files (PAdES Baseline LT).
-     *
-     * Expected Result: Bigger documents with valid signature should pass
-     *
-     * File: singlesignature_lt_3-8mb.pdf
-     ***/
-    @Test
-    public void fourMegabyteFilesWithLtSignatureAreAccepted () {
-        assertSomeSignaturesAreValid(postForReport("singlesignature_lt_3-8mb.pdf"), 1);
-    }
-
-    /***
-     * TestCaseID: PDF-LargeFiles-6
-     *
-     * TestType: Automated
-     *
-     * RequirementID:
-     *
-     * Title: Larger signed PDF files (PAdES Baseline LT).
-     *
-     * Expected Result: Bigger documents with valid signature should pass
-     *
-     * File: egovenrment-benchmark-lta-3-8mb.pdf
-     ***/
-    @Test
-    public void fourMegabyteFilesWithLtaSignatureAreAccepted () {
-        assertSomeSignaturesAreValid(postForReport("egovenrment-benchmark-lta-3-8mb.pdf"), 1);
-    }
 
     @Override
     protected String getTestFilesDirectory() {
-        return TEST_FILES_DIRECTORY;
+        return testFilesDirectory;
     }
 }

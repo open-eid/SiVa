@@ -315,12 +315,12 @@ public class DdocValidationFail extends SiVaRestTests{
      *
      * Expected Result: The document should fail the validation with error
      *
-     * File: 2.denialOfServiceWithEntityExpansion.ddoc
+     * File: xml_expansion.ddoc
      ***/
     @Test
     public void ddocWithXMLEntityExpansionAttackShouldFail() {
         setTestFilesDirectory("ddoc/test/timemark/");
-        post(validationRequestFor("2.denialOfServiceWithEntityExpansion.ddoc"))
+        post(validationRequestFor("xml_expansion.ddoc"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is("document"))
                 .body("requestErrors[0].message", Matchers.is("document malformed or not matching documentType"));
@@ -337,12 +337,12 @@ public class DdocValidationFail extends SiVaRestTests{
      *
      * Expected Result: The document should fail the validation with error
      *
-     * File: 3.serverSideRequestForgeryViaDtd.ddoc
+     * File: xml_entity.ddoc
      ***/
     @Test
     public void ddocWithXMLServerSideRequestForgeryAttackShouldFail() {
         setTestFilesDirectory("ddoc/test/timemark/");
-        post(validationRequestFor("3.serverSideRequestForgeryViaDtd.ddoc"))
+        post(validationRequestFor("xml_entity.ddoc"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is("document"))
                 .body("requestErrors[0].message", Matchers.is("document malformed or not matching documentType"));

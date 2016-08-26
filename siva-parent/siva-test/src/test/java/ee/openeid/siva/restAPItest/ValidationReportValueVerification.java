@@ -124,7 +124,7 @@ public class ValidationReportValueVerification extends SiVaRestTests{
      * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
      *
      ***/
-    @Test
+    @Test @Ignore //TODO: this is not proper AdES!
     public void bdocCorrectValuesArePresentValidLtSignatureAdesWarning() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc"))

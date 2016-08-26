@@ -322,6 +322,32 @@ public class BdocValidationPass extends SiVaRestTests{
         assertAllSignaturesAreValid(postForReport("BDOC-TS.bdoc"));
     }
 
+    /***
+     * TestCaseID: Bdoc-ValidationPass-14
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Bdoc-TM with special characters in data file
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: Šužlikud sõid ühe õuna ära.bdoc
+     ***/
+    @Test
+    public void bdocWithSpecialCharactersInDataFileShouldPass() {
+        setTestFilesDirectory("bdoc/live/timemark/");
+        post(validationRequestFor("Šužlikud sõid ühe õuna ära.bdoc"))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
+    }
+
     @Override
     protected String getTestFilesDirectory() {
         return testFilesDirectory;

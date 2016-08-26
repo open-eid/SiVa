@@ -185,7 +185,7 @@ public class BdocValidationFail extends SiVaRestTests{
      *
      * RequirementID:
      *
-     * Title: Asice No non-repudiation key usage value in the certificate
+     * Title: Asice No non-repudiation key usage value in the certificate, verification of AdES signature level
      *
      * Expected Result: The document should fail the validation
      *
@@ -196,6 +196,7 @@ public class BdocValidationFail extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-I-43.asice"))
                 .then()
+                .body("signatures[0].signatureLevel", Matchers.is("AdES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is("SIG_CONSTRAINTS_FAILURE"))
                 .body("signatures[0].errors.content", Matchers.hasItems("The signer's certificate has not expected key-usage!"))

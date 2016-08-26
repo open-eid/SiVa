@@ -182,7 +182,6 @@ It is possible to configure following parameters in load test (given defaults ar
 
   * `jmeter.host.name` - target webapp host against what the tests are executed, default is localhost
   * `jmeter.host.port` - target port of the webapp host , default is 8080
-  * `jmeter.host.endpoint` - name of endpoint, default is /validate
   * `jmeter.host.timeoutInMillis` - response waiting timeout, default is 60000 (in milliseconds)
   * `jmeter.testfiles.dir` - directory of the test files, default is ${project.basedir}/src/test/jmeter/test-files
   * `jmeter.load.step.duration` - time how long the load is kept on each throuput level, default is 60 (in seconds)

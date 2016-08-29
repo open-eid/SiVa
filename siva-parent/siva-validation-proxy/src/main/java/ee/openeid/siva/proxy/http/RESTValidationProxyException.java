@@ -7,6 +7,7 @@ public class RESTValidationProxyException extends RuntimeException {
     private final RESTProxyError proxyError;
 
     public RESTValidationProxyException(RESTProxyError proxyError) {
+        super(proxyError.getMessage());
         this.proxyError = proxyError;
     }
 

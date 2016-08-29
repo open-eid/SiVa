@@ -2,24 +2,15 @@ package ee.openeid.validation.service.ddoc.report;
 
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.validation.util.CertUtil;
 import ee.sk.digidoc.DataFile;
 import ee.sk.digidoc.DigiDocException;
 import ee.sk.digidoc.Signature;
 import ee.sk.digidoc.SignedDoc;
 import org.apache.commons.lang.StringUtils;
-import org.bouncycastle.asn1.x500.RDN;
-import org.bouncycastle.asn1.x500.X500Name;
-import org.bouncycastle.asn1.x500.style.BCStyle;
-import org.bouncycastle.asn1.x500.style.IETFUtils;
-import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
-import org.cryptacular.util.CertUtil;
 import org.slf4j.LoggerFactory;
-
-import java.security.cert.CertificateEncodingException;
-import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
@@ -84,7 +75,7 @@ public class DDOCQualifiedReportBuilder {
         SignatureValidationData signatureValidationData = new SignatureValidationData();
         signatureValidationData.setId(signature.getId());
         signatureValidationData.setSignatureFormat(getSignatureFormat());
-        signatureValidationData.setSignedBy(CertUtil.subjectCN(signature.getKeyInfo().getSignersCertificate()));
+        signatureValidationData.setSignedBy(org.cryptacular.util.CertUtil.subjectCN(signature.getKeyInfo().getSignersCertificate()));
         signatureValidationData.setErrors(getErrors(signature));
         signatureValidationData.setSignatureScopes(getSignatureScopes());
         signatureValidationData.setClaimedSigningTime(getDateFormatterWithGMTZone().format(signature.getSignedProperties().getSigningTime()));
@@ -95,7 +86,7 @@ public class DDOCQualifiedReportBuilder {
         signatureValidationData.setSignatureLevel("");
         signatureValidationData.setInfo(createEmptySignatureInfo());
         signatureValidationData.setSubIndication("");
-        signatureValidationData.setCountryCode(getCountryCode(signature));
+        signatureValidationData.setCountryCode(CertUtil.getCountryCode(signature.getKeyInfo().getSignersCertificate()));
 
         return signatureValidationData;
     }
@@ -167,18 +158,6 @@ public class DDOCQualifiedReportBuilder {
         }
 
         return SignatureValidationData.Indication.TOTAL_PASSED;
-    }
-
-    private String getCountryCode(Signature signature) {
-        X509Certificate cert = signature.getKeyInfo().getSignersCertificate();
-        try {
-            X500Name x500name = new JcaX509CertificateHolder(cert).getSubject();
-            RDN c = x500name.getRDNs(BCStyle.C)[0];
-            return IETFUtils.valueToString(c.getFirst().getValue());
-        } catch (CertificateEncodingException e) {
-            LOGGER.error("Error extracting country from certificate", e.getMessage(), e);
-            return null;
-        }
     }
 
 }

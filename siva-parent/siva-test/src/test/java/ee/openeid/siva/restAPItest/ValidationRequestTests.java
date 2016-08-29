@@ -1028,7 +1028,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      * File: PdfValidSingleSignature.pdf
      *
      ***/
-    @Test @Ignore //TODO: VAL-301
+    @Test
     public void xroadValidationRequestNotMatchingDocumentTypeAndActualFilePdf() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
         post(validationRequestWithValidKeys(encodedString, "PdfValidSingleSignature.pdf", "xroad", ""))
@@ -1053,7 +1053,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      * File: igasugust1.3.ddoc
      *
      ***/
-    @Test @Ignore //TODO: VAL-301
+    @Test
     public void xroadValidationRequestNotMatchingDocumentTypeAndActualFileDdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
         post(validationRequestWithValidKeys(encodedString, "igasugust1.3.ddoc", "xroad", ""))
@@ -1078,7 +1078,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
      ***/
-    @Test @Ignore //TODO: VAL-301
+    @Test
     public void xroadValidationRequestNotMatchingDocumentTypeAndActualFileBdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "xroad", ""))
@@ -1127,7 +1127,7 @@ public class ValidationRequestTests extends SiVaRestTests {
      * File:
      *
      ***/
-    @Test @Ignore //TODO: VAL-301
+    @Test
     public void validationRequestRandomInputAsXroadDocument() {
         String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
         post(validationRequestWithValidKeys(encodedString, "some_pdf.asice", "xroad", ""))

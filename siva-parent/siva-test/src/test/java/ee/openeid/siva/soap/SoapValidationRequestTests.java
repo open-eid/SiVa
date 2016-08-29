@@ -920,7 +920,7 @@ public class SoapValidationRequestTests extends SiVaSoapTests {
      * File: igasugust1.3.ddoc
      *
      ***/
-    @Test @Ignore //TODO: Error "Fault occurred while processing." is given
+    @Test
     public void xroadValidationRequestNotMatchingDocumentTypeAndActualFileDdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
         post(validationRequestForDocumentExtended(encodedString, "igasugust1.3.ddoc", "XROAD", ""))
@@ -945,7 +945,7 @@ public class SoapValidationRequestTests extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
      ***/
-    @Test @Ignore //TODO: Error "Fault occurred while processing." is given
+    @Test
     public void xroadValidationRequestNotMatchingDocumentTypeAndActualFileBdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "XROAD", "EE"))
@@ -970,7 +970,7 @@ public class SoapValidationRequestTests extends SiVaSoapTests {
      * File: PdfValidSingleSignature.pdf
      *
      ***/
-    @Test @Ignore //TODO: Error "Fault occurred while processing." is given
+    @Test
     public void xroadValidationRequestNotMatchingDocumentTypeAndActualFilePdf() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
         post(validationRequestForDocumentExtended(encodedString, "PdfValidSingleSignature.pdf", "XROAD", ""))

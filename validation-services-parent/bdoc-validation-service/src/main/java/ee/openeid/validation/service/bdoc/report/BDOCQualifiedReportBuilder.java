@@ -8,10 +8,18 @@ import eu.europa.esig.dss.validation.reports.SignatureType;
 import eu.europa.esig.dss.validation.reports.SimpleReport;
 import org.apache.commons.lang.StringUtils;
 import org.apache.xml.security.signature.Reference;
+import org.bouncycastle.asn1.x500.RDN;
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x500.style.BCStyle;
+import org.bouncycastle.asn1.x500.style.IETFUtils;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
 import org.digidoc4j.*;
 import org.digidoc4j.exceptions.DigiDoc4JException;
 import org.digidoc4j.impl.bdoc.BDocSignature;
+import org.slf4j.LoggerFactory;
 
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,9 +30,10 @@ import static org.digidoc4j.X509Cert.SubjectName.CN;
 
 public class BDOCQualifiedReportBuilder {
 
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(BDOCQualifiedReportBuilder.class);
+
     private static final String FULL_SIGNATURE_SCOPE = "FullSignatureScope";
     private static final String FULL_DOCUMENT = "Full document";
-    private static final String GENERIC = "GENERIC";
     private static final String XADES_FORMAT_PREFIX = "XAdES_BASELINE_";
     private static final String REPORT_INDICATION_INDETERMINATE = "INDETERMINATE";
     private static final String BDOC_SIGNATURE_FORM = "ASiC_E";
@@ -77,6 +86,7 @@ public class BDOCQualifiedReportBuilder {
         signatureValidationData.setInfo(getInfo(bDocSignature));
         signatureValidationData.setIndication(getIndication(bDocSignature));
         signatureValidationData.setSubIndication(getSubIndication(bDocSignature));
+        signatureValidationData.setCountryCode(getCountryCode(bDocSignature));
 
         return signatureValidationData;
 
@@ -174,4 +184,9 @@ public class BDOCQualifiedReportBuilder {
     private String getSignatureFormat(SignatureProfile profile) {
         return XADES_FORMAT_PREFIX + profile.name();
     }
+
+    private String getCountryCode(BDocSignature bDocSignature) {
+        return bDocSignature.getSigningCertificate().getSubjectName(X509Cert.SubjectName.C);
+    }
+
 }

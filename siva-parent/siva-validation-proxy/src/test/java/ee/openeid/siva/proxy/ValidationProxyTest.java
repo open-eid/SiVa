@@ -4,6 +4,7 @@ import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.exception.ValidatonServiceNotFoundException;
 import ee.openeid.siva.proxy.http.RESTProxyService;
+import ee.openeid.siva.statistics.StatisticsService;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
@@ -45,14 +46,21 @@ public class ValidationProxyTest {
 
     private RESTProxyService restProxyService;
 
+    private StatisticsService statisticsService;
+
     @Before
     public void setUp() {
         validationProxy = new ValidationProxy();
-        applicationContext = mock(ApplicationContext.class);
-        restProxyService = mock(RESTProxyService.class);
 
+        applicationContext = mock(ApplicationContext.class);
         validationProxy.setApplicationContext(applicationContext);
+
+        restProxyService = mock(RESTProxyService.class);
         validationProxy.setRestProxyService(restProxyService);
+
+        statisticsService = mock(StatisticsService.class);
+        validationProxy.setStatisticsService(statisticsService);
+
         validationServiceSpy = new ValidationServiceSpy();
     }
 

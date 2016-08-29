@@ -7,15 +7,26 @@ import ee.sk.digidoc.DigiDocException;
 import ee.sk.digidoc.Signature;
 import ee.sk.digidoc.SignedDoc;
 import org.apache.commons.lang.StringUtils;
+import org.bouncycastle.asn1.x500.RDN;
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x500.style.BCStyle;
+import org.bouncycastle.asn1.x500.style.IETFUtils;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
 import org.cryptacular.util.CertUtil;
+import org.slf4j.LoggerFactory;
 
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
 
 public class DDOCQualifiedReportBuilder {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(DDOCQualifiedReportBuilder.class);
 
     private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final String FULL_DOCUMENT = "Full document";
@@ -84,9 +95,9 @@ public class DDOCQualifiedReportBuilder {
         signatureValidationData.setSignatureLevel("");
         signatureValidationData.setInfo(createEmptySignatureInfo());
         signatureValidationData.setSubIndication("");
+        signatureValidationData.setCountryCode(getCountryCode(signature));
 
         return signatureValidationData;
-
     }
 
     private String getSignatureForm() {
@@ -157,4 +168,17 @@ public class DDOCQualifiedReportBuilder {
 
         return SignatureValidationData.Indication.TOTAL_PASSED;
     }
+
+    private String getCountryCode(Signature signature) {
+        X509Certificate cert = signature.getKeyInfo().getSignersCertificate();
+        try {
+            X500Name x500name = new JcaX509CertificateHolder(cert).getSubject();
+            RDN c = x500name.getRDNs(BCStyle.C)[0];
+            return IETFUtils.valueToString(c.getFirst().getValue());
+        } catch (CertificateEncodingException e) {
+            LOGGER.error("Error extracting country from certificate", e.getMessage(), e);
+            return null;
+        }
+    }
+
 }

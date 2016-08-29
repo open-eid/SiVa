@@ -18,6 +18,7 @@
         <module>siva-sample-application</module>
         <module>siva-test</module>
         <module>siva-distribution</module>
+        <module>siva-statistics</module>
     </modules>
 
     <properties>
@@ -111,6 +112,11 @@
             <dependency>
                 <groupId>io.github.openeid.siva</groupId>
                 <artifactId>tsl-loader</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.openeid.siva</groupId>
+                <artifactId>siva-statistics</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -242,6 +248,12 @@
                 <groupId>org.hsqldb</groupId>
                 <artifactId>hsqldb</artifactId>
                 <version>1.8.0.10</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-httpclient</groupId>
+                <artifactId>commons-httpclient</artifactId>
+                <version>3.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

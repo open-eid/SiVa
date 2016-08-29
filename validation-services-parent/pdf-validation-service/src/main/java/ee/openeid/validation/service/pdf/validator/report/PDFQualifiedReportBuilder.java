@@ -4,9 +4,11 @@ import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import eu.europa.esig.dss.jaxb.diagnostic.XmlSignatureScopeType;
+import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.validation.policy.rules.Indication;
 import eu.europa.esig.dss.validation.policy.rules.SubIndication;
 import eu.europa.esig.dss.validation.reports.Reports;
+import eu.europa.esig.dss.validation.reports.wrapper.CertificateWrapper;
 import eu.europa.esig.dss.validation.reports.wrapper.TimestampWrapper;
 import org.apache.commons.lang.StringUtils;
 
@@ -14,6 +16,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
@@ -70,6 +73,8 @@ public class PDFQualifiedReportBuilder {
         signatureValidationData.setErrors(parseSignatureErrors(signatureId));
         signatureValidationData.setWarnings(parseSignatureWarnings(signatureId));
         signatureValidationData.setInfo(parseSignatureInfo(signatureId));
+        signatureValidationData.setCountryCode(getCountryCode());
+
         return signatureValidationData;
     }
 
@@ -156,5 +161,14 @@ public class PDFQualifiedReportBuilder {
     private String getFormattedTimeValue(ZonedDateTime zonedDateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT);
         return zonedDateTime.format(formatter);
+    }
+
+    private String getCountryCode() {
+        String signingCertId = dssReports.getDiagnosticData().getSigningCertificateId();
+        Optional<String> countryCode = dssReports.getDiagnosticData().getUsedCertificates().stream()
+                .filter( cert -> cert.getId().equals(signingCertId) )
+                .map( cert -> cert.getCountryName() )
+                .findFirst();
+        return countryCode.isPresent() ? countryCode.get() : null;
     }
 }

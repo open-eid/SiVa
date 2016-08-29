@@ -4,6 +4,7 @@ import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.exception.ValidatonServiceNotFoundException;
 import ee.openeid.siva.proxy.http.RESTProxyService;
+import ee.openeid.siva.statistics.StatisticsService;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.service.ValidationService;
@@ -20,15 +21,19 @@ public class ValidationProxy {
     private static final String SERVICE_BEAN_NAME_POSTFIX = "ValidationService";
 
     private RESTProxyService restProxyService;
+    private StatisticsService statisticsService;
     private ApplicationContext applicationContext;
 
     public QualifiedReport validate(ProxyDocument proxyDocument) {
+        long validationStartTime = System.nanoTime();
+        QualifiedReport report;
         if (proxyDocument.getDocumentType() == DocumentType.XROAD) {
-            return restProxyService.validate(createValidationDocument(proxyDocument));
+            report = restProxyService.validate(createValidationDocument(proxyDocument));
+        } else {
+            report = getServiceForType(proxyDocument.getDocumentType()).validateDocument(createValidationDocument(proxyDocument));
         }
-
-        return getServiceForType(proxyDocument.getDocumentType())
-                .validateDocument(createValidationDocument(proxyDocument));
+        statisticsService.publishValidationStatistic(System.nanoTime() - validationStartTime, report);
+        return report;
     }
 
     private ValidationService getServiceForType(DocumentType documentType) {
@@ -54,12 +59,18 @@ public class ValidationProxy {
     }
 
     @Autowired
+    public void setRestProxyService(RESTProxyService restProxyService) {
+        this.restProxyService = restProxyService;
+    }
+
+    @Autowired
+    public void setStatisticsService(StatisticsService statisticsService) {
+        this.statisticsService = statisticsService;
+    }
+
+    @Autowired
     public void setApplicationContext(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
 
-    @Autowired
-    public void setRestProxyService(RESTProxyService restProxyService) {
-        this.restProxyService = restProxyService;
-    }
 }

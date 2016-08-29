@@ -46,6 +46,8 @@ public class BDOCValidationServiceIntegrationTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
+    private static String DOCUMENT_MALFORMED_MESSAGE = "document malformed or not matching documentType";
+
     @Test
     public void verifyCorrectPolicyIsLoadedToD4JConfiguration() throws Exception {
         assertTrue(configurationService.loadConfiguration(null).getValidationPolicy().contains("siva-bdoc-default-constraint"));
@@ -57,7 +59,7 @@ public class BDOCValidationServiceIntegrationTest {
         ValidationDocument validationDocument = new ValidationDocument();
         validationDocument.setBytes("Hello".getBytes());
         expectedException.expect(MalformedDocumentException.class);
-        expectedException.expectMessage("the document is malformed");
+        expectedException.expectMessage(DOCUMENT_MALFORMED_MESSAGE);
         bdocValidationService.validateDocument(validationDocument);
     }
 
@@ -65,7 +67,7 @@ public class BDOCValidationServiceIntegrationTest {
     public void validatingAnXRoadBatchSignatureAsicContainerWithBdocValidatorThrowsMalformedDocumentException() throws Exception {
         ValidationDocument validationDocument = BDOCTestUtils.buildValidationDocument(BDOCTestUtils.XROAD_BATCHSIGNATURE_CONTAINER);
         expectedException.expect(MalformedDocumentException.class);
-        expectedException.expectMessage("the document is malformed");
+        expectedException.expectMessage(DOCUMENT_MALFORMED_MESSAGE);
         bdocValidationService.validateDocument(validationDocument);
     }
 
@@ -73,7 +75,7 @@ public class BDOCValidationServiceIntegrationTest {
     public void validatingAnXRoadSimpleAsicContainerWithBdocValidatorThrowsMalformedDocumentException() throws Exception {
         ValidationDocument validationDocument = BDOCTestUtils.buildValidationDocument(BDOCTestUtils.XROAD_SIMPLE_CONTAINER);
         expectedException.expect(MalformedDocumentException.class);
-        expectedException.expectMessage("the document is malformed");
+        expectedException.expectMessage(DOCUMENT_MALFORMED_MESSAGE);
         bdocValidationService.validateDocument(validationDocument);
     }
 

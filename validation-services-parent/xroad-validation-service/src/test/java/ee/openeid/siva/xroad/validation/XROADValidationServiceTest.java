@@ -25,6 +25,8 @@ public class XROADValidationServiceTest {
     private static final String DDOC_VALID = "ddoc_valid_2_signatures.ddoc";
     private static final String PDF_VALID = "hellopades-pades-lt-sha256-sign.pdf";
 
+    private static String DOCUMENT_MALFORMED_MESSAGE = "document malformed or not matching documentType";
+
     private XROADValidationServiceProperties properties;
     private XROADValidationService validationService;
 
@@ -59,7 +61,7 @@ public class XROADValidationServiceTest {
         ValidationDocument doc = new ValidationDocument();
         doc.setDataBase64Encoded("ASDASDAFGOAGMRASGMASPÖGLMOP");
         expectedException.expect(MalformedDocumentException.class);
-        expectedException.expectMessage("the document is malformed");
+        expectedException.expectMessage(DOCUMENT_MALFORMED_MESSAGE);
         validationService.validateDocument(doc);
     }
 
@@ -67,7 +69,7 @@ public class XROADValidationServiceTest {
     public void validatingValidBdocTSWithXroadValidatorResultsInMalformedDocumentException() throws Exception {
         ValidationDocument doc = buildValidationDocument(BDOC_TS_VALID);
         expectedException.expect(MalformedDocumentException.class);
-        expectedException.expectMessage("the document is malformed");
+        expectedException.expectMessage(DOCUMENT_MALFORMED_MESSAGE);
         validationService.validateDocument(doc);
     }
 
@@ -75,7 +77,7 @@ public class XROADValidationServiceTest {
     public void validatingValidDDocWithXroadValidatorResultsInMalformedDocumentException() throws Exception {
         ValidationDocument doc = buildValidationDocument(DDOC_VALID);
         expectedException.expect(MalformedDocumentException.class);
-        expectedException.expectMessage("the document is malformed");
+        expectedException.expectMessage(DOCUMENT_MALFORMED_MESSAGE);
         validationService.validateDocument(doc);
     }
 
@@ -83,7 +85,7 @@ public class XROADValidationServiceTest {
     public void validatingValidPdfWithXroadValidatorResultsInMalformedDocumentException() throws Exception {
         ValidationDocument doc = buildValidationDocument(PDF_VALID);
         expectedException.expect(MalformedDocumentException.class);
-        expectedException.expectMessage("the document is malformed");
+        expectedException.expectMessage(DOCUMENT_MALFORMED_MESSAGE);
         validationService.validateDocument(doc);
     }
 

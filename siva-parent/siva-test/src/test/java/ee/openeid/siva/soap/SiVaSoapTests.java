@@ -22,7 +22,7 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
     protected static final String SERVER_FAULT = "soap:Server";
     protected static final String CLIENT_FAULT = "soap:Client";
 
-    protected static final String DOCUMENT_MALFORMED = "the document is malformed";
+    protected static final String DOCUMENT_MALFORMED = "document malformed or not matching documentType";
     protected static final String BODY_MALFORMED = "No binding operation info while invoking unknown method with params unknown.";
 
     protected static String createXMLValidationRequest(String base64Document, String documentType, String filename) {

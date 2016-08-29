@@ -1,15 +1,12 @@
 package ee.openeid.siva.soap;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
-import org.apache.commons.codec.binary.Base64;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.w3c.dom.Document;
 
-import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

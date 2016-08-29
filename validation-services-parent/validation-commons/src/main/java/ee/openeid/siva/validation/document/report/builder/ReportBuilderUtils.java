@@ -3,7 +3,6 @@ package ee.openeid.siva.validation.document.report.builder;
 import org.apache.commons.lang.StringUtils;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.TimeZone;
 
 public final class ReportBuilderUtils {

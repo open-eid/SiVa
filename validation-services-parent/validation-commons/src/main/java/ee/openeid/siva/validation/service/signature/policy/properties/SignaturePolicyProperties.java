@@ -1,6 +1,7 @@
 package ee.openeid.siva.validation.service.signature.policy.properties;
 
 import lombok.Data;
+
 import java.util.HashMap;
 import java.util.Map;
 

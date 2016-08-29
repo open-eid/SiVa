@@ -1,7 +1,7 @@
 package ee.openeid.siva.webapp.transformer;
 
-import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.document.DocumentType;
+import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.testutils.MockValidationRequestBuilder;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Assert;

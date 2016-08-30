@@ -1,7 +1,6 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.validation.document.report.QualifiedReport;
-import org.hamcrest.Matchers;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -76,7 +75,7 @@ public class SignaturePolicyTests extends SiVaRestTests {
      *
      * RequirementID:
      *
-     * Title: The PDF has PAdES-LT and B profile signature
+     * Title: The PDF has LT and B profile signatures
      *
      * Expected Result: 1 of 2 signatures' should pass when signature policy is set to "EE"
      *
@@ -95,7 +94,7 @@ public class SignaturePolicyTests extends SiVaRestTests {
      *
      * RequirementID:
      *
-     * Title: The PDF has PAdES-LT and B profile signature
+     * Title: The PDF has LT and B profile signatures
      *
      * Expected Result: 2 of 2 signatures' validation should pass when signature policy is set to "EU"
      *
@@ -114,6 +113,25 @@ public class SignaturePolicyTests extends SiVaRestTests {
      *
      * RequirementID:
      *
+     * Title: The PDF has LT and B profile signatures
+     *
+     * Expected Result: 2 of 2 signatures' validation should pass when signature policy is set to "eU"
+     *
+     * File: hellopades-lt-b.pdf
+     */
+    @Test
+    public void testPdfDocumentSignaturePolicyCaseInsensitvity() {
+        QualifiedReport report = postForReport("hellopades-lt-b.pdf", "eU");
+        assertAllSignaturesAreValid(report);
+    }
+
+    /**
+     * TestCaseID: Signature-Policy-6
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
      * Title: Bdoc with conformant EE signature
      *
      * Expected Result: Document should pass when signature policy is set to "EE"
@@ -123,6 +141,25 @@ public class SignaturePolicyTests extends SiVaRestTests {
     @Test
     public void bdocDocumentWithEESignaturePolicyInRequestShouldPass() {
         QualifiedReport report = postForReport("Valid_ID_sig.bdoc", "EE");
+        assertAllSignaturesAreValid(report);
+    }
+
+    /**
+     * TestCaseID: Signature-Policy-7
+     *
+     * TestType: Automated
+     *
+     * RequirementID:
+     *
+     * Title: Bdoc with conformant EE signature
+     *
+     * Expected Result: Document should pass when signature policy is set to "ee"
+     *
+     * File: Valid_ID_sig.bdoc
+     */
+    @Test
+    public void testBdocDocumentSignaturePolicyCaseInsensitvity() {
+        QualifiedReport report = postForReport("Valid_ID_sig.bdoc", "ee");
         assertAllSignaturesAreValid(report);
     }
 

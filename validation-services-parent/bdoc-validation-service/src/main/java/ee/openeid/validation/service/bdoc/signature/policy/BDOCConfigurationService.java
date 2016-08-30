@@ -11,12 +11,12 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 @Component
 public class BDOCConfigurationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(BDOCConfigurationService.class);
-    private final Map<String, Configuration> policyList = new ConcurrentHashMap<>();
+    private final Map<String, Configuration> policyList = new ConcurrentSkipListMap<>(String.CASE_INSENSITIVE_ORDER);
 
     private Configuration configuration;
     private BDOCSignaturePolicyProperties properties;

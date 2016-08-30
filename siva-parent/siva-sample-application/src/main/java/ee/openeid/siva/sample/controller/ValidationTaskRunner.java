@@ -19,7 +19,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static ee.openeid.siva.sample.controller.ValidationResultType.*;
+import static ee.openeid.siva.sample.controller.ValidationResultType.JSON;
+import static ee.openeid.siva.sample.controller.ValidationResultType.SOAP;
 
 @Service
 class ValidationTaskRunner {

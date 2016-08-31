@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 @Category(IntegrationTest.class)
-public class PdfBaselineProfileTests extends SiVaRestTests{
+public class PdfBaselineProfileTest extends SiVaRestTests{
 
     private static final String TEST_FILES_DIRECTORY = "pdf/baseline_profile_test_files/";
 

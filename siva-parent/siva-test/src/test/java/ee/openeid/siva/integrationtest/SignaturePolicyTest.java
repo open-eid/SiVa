@@ -5,7 +5,7 @@ import org.hamcrest.Matchers;
 import org.junit.Ignore;
 import org.junit.Test;
 
-public class SignaturePolicyTests extends SiVaRestTests {
+public class SignaturePolicyTest extends SiVaRestTests {
 
     private static final String TEST_FILES_DIRECTORY = "signature_policy_test_files/";
 

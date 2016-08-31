@@ -21,7 +21,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertTrue;
 
 @Category(IntegrationTest.class)
-public class SoapValidationRequestTests extends SiVaSoapTests {
+public class SoapValidationRequestTest extends SiVaSoapTests {
 
     @Before
     public void DirectoryBackToDefault() {

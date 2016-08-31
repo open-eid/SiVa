@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 @Category(IntegrationTest.class)
-public class XRoadValidationPass extends SiVaRestTests {
+public class XRoadValidationPassTest extends SiVaRestTests {
 
     @Override
     protected String getTestFilesDirectory() {

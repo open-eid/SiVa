@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 @Category(IntegrationTest.class)
 
-public class ValidationReportValueVerification extends SiVaRestTests{
+public class ValidationReportValueVerificationTest extends SiVaRestTests{
 
     @Before
     public void DirectoryBackToDefault() {

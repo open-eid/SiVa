@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import static org.junit.Assert.assertEquals;
 
 @Category(IntegrationTest.class)
-public class BdocValidationFail extends SiVaRestTests{
+public class BdocValidationFailTest extends SiVaRestTests{
 
     @Before
     public void DirectoryBackToDefault() {

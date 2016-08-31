@@ -10,7 +10,7 @@ import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
 
 @Category(IntegrationTest.class)
-public class PdfValidationFail extends SiVaRestTests{
+public class PdfValidationFailTest extends SiVaRestTests{
 
     private static final String TEST_FILES_DIRECTORY = "pdf/signing_certifacte_test_files/";
 

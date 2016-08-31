@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @Category(IntegrationTest.class)
-public class BdocValidationPass extends SiVaRestTests{
+public class BdocValidationPassTest extends SiVaRestTests{
     @Before
     public void DirectoryBackToDefault() {
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);

@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 @Category(IntegrationTest.class)
-public class DdocValidationPass extends SiVaRestTests{
+public class DdocValidationPassTest extends SiVaRestTests{
 
     private static final String TEST_FILES_DIRECTORY = "ddoc/live/timemark/";
 

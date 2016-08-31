@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 @Category(IntegrationTest.class)
-public class SignatureRevocationValueTests extends SiVaRestTests {
+public class SignatureRevocationValueTest extends SiVaRestTests {
 
     private static final String TEST_FILES_DIRECTORY = "pdf/signature_revocation_value_test_files/";
 

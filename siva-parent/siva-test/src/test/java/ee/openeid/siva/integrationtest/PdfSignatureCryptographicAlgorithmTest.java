@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 @Category(IntegrationTest.class)
-public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
+public class PdfSignatureCryptographicAlgorithmTest extends SiVaRestTests{
 
     @Before
     public void DirectoryBackToDefault() {

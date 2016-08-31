@@ -11,7 +11,7 @@ import org.junit.experimental.categories.Category;
 import static org.junit.Assert.assertEquals;
 
 @Category(IntegrationTest.class)
-public class DocumentFormatTests extends SiVaRestTests {
+public class DocumentFormatTest extends SiVaRestTests {
 
     @BeforeClass
     public static void oneTimeSetUp() {

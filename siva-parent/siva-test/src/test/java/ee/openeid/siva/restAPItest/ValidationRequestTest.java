@@ -22,7 +22,7 @@ import static org.junit.Assert.assertTrue;
 
 
 @Category(IntegrationTest.class)
-public class ValidationRequestTests extends SiVaRestTests {
+public class ValidationRequestTest extends SiVaRestTests {
 
     @Before
     public void DirectoryBackToDefault() {

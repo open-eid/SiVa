@@ -9,7 +9,7 @@ import org.junit.experimental.categories.Category;
 import static org.hamcrest.Matchers.equalTo;
 
 @Category(IntegrationTest.class)
-public class LargeFileIt extends SiVaRestTests{
+public class LargeFileIT extends SiVaRestTests{
 
     @Before
     public void DirectoryBackToDefault() {

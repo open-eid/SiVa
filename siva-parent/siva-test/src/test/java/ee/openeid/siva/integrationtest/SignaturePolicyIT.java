@@ -4,7 +4,7 @@ import ee.openeid.siva.validation.document.report.QualifiedReport;
 import org.junit.Ignore;
 import org.junit.Test;
 
-public class SignaturePolicyIt extends SiVaRestTests {
+public class SignaturePolicyIT extends SiVaRestTests {
 
     private static final String TEST_FILES_DIRECTORY = "signature_policy_test_files/";
 

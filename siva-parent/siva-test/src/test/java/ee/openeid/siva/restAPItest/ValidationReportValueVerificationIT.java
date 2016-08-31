@@ -14,7 +14,7 @@ import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonS
 
 @Category(IntegrationTest.class)
 
-public class ValidationReportValueVerificationIt extends SiVaRestTests{
+public class ValidationReportValueVerificationIT extends SiVaRestTests{
 
     @Before
     public void DirectoryBackToDefault() {
@@ -838,20 +838,160 @@ public class ValidationReportValueVerificationIt extends SiVaRestTests{
      *
      * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
      *
-     * Title:
+     * Title: Verification of values in Validation Report, xroad-simple container
      *
      * Expected Result: Report is returned with required elements
      *
      * File: xroad-simple.asice
      *
      ***/
-    @Test @Ignore //TODO: Probably sepparate schema is required for XRoad
-    public void xroadAllElementsArePresentValidSignature() {
+    @Test @Ignore //TODO: VAL-314, VAL-315, VAL-317
+    public void xroadAllElementsArePresentValidSimpleSignature() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
         post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", "xroad", ""))
                 .then()
-                .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"));
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchemaXroad.json"))
+                .body("signatures[0].id", Matchers.is("signature"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is(""))
+                .body("signatures[0].signedBy", Matchers.is("Riigi Infosüsteemi Amet"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].signatureScopes.name", Matchers.is("somename"))
+                .body("signatures[0].signatureScopes.scope", Matchers.is(""))
+                .body("signatures[0].signatureScopes.content", Matchers.is(""))
+                .body("signatures[0].claimedSigningTime", Matchers.is(""))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-04-27T12:15:42Z"))
+                .body("signatureForm", Matchers.is("ASIC_E"))
+                .body("documentName", Matchers.is("xroad-simple.asice"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
+    }
+
+    /***
+     *
+     * TestCaseID: Xroad-ValidationReportVerification-2
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Verification of values in Validation Report, xroad-batchsignature container
+     *
+     * Expected Result: Report is returned with required elements
+     *
+     * File: xroad-batchsignature.asice
+     *
+     ***/
+    @Test @Ignore //TODO: VAL-315, VAL-316, VAL-317
+    public void xroadAllElementsArePresentValidBatchSignature() {
+        setTestFilesDirectory("xroad/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-batchsignature.asice"));
+        post(validationRequestWithValidKeys(encodedString, "xroad-batchsignature.asice", "xroad", ""))
+                .then()
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchemaXroad.json"))
+                .body("signatures[0].id", Matchers.is("signature"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B"))
+                .body("signatures[0].signatureLevel", Matchers.is(""))
+                .body("signatures[0].signedBy", Matchers.is("Riigi Infosüsteemi Amet"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].signatureScopes[0].name", Matchers.is("somename"))
+                .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
+                .body("signatures[0].signatureScopes[0].content", Matchers.is(""))
+                .body("signatures[0].claimedSigningTime", Matchers.is(""))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-04-27T12:26:53Z"))
+                .body("signatureForm", Matchers.is("ASiC_E_batchsignature"))
+                .body("documentName", Matchers.is("xroad-batchsignature.asice"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
+    }
+
+    /***
+     *
+     * TestCaseID: Xroad-ValidationReportVerification-3
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Verification of values in Validation Report, xroad-attachment container
+     *
+     * Expected Result: Report is returned with required elements
+     *
+     * File: xroad-attachment.asice
+     *
+     ***/
+    @Test @Ignore //TODO: VAL-315, VAL-317
+    public void xroadAllElementsArePresentValidAttachmentSignature() {
+        setTestFilesDirectory("xroad/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-attachment.asice"));
+        post(validationRequestWithValidKeys(encodedString, "xroad-attachment.asice", "xroad", ""))
+                .then()
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchemaXroad.json"))
+                .body("signatures[0].id", Matchers.is("signature"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is(""))
+                .body("signatures[0].signedBy", Matchers.is("Riigi Infosüsteemi Amet"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].signatureScopes[0].name", Matchers.is("somename"))
+                .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
+                .body("signatures[0].signatureScopes[0].content", Matchers.is(""))
+                .body("signatures[0].claimedSigningTime", Matchers.is(""))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-04-27T12:30:10Z"))
+                .body("signatureForm", Matchers.is("ASiC_E_batchsignature"))
+                .body("documentName", Matchers.is("xroad-attachment.asice"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
+    }
+
+    /***
+     *
+     * TestCaseID: Xroad-ValidationReportVerification-4
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Verification of values in Validation Report with invalid xroad container
+     *
+     * Expected Result: Report is returned with required elements
+     *
+     * File: xroad-attachment.asice
+     *
+     ***/
+    @Test @Ignore //TODO: VAL-323
+    public void xroadAllElementsArePresentInvalidSignature() {
+        setTestFilesDirectory("xroad/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("invalid-digest.asice"));
+        post(validationRequestWithValidKeys(encodedString, "invalid-digest.asice", "xroad", ""))
+                .then()
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchemaXroad.json"))
+                .body("signatures[0].id", Matchers.is("signature"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is(""))
+                .body("signatures[0].signedBy", Matchers.is("Riigi Infosüsteemi Amet"))
+                .body("signatures[0].indication", Matchers.is(""))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].signatureScopes[0].name", Matchers.is("somename"))
+                .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
+                .body("signatures[0].signatureScopes[0].content", Matchers.is(""))
+                .body("signatures[0].claimedSigningTime", Matchers.is(""))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-04-27T12:30:10Z"))
+                .body("signatureForm", Matchers.is("ASiC_E_batchsignature"))
+                .body("documentName", Matchers.is("invalid-digest.asice"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     @Override

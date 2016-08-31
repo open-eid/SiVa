@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 @Category(IntegrationTest.class)
-public class PdfValidationPassIt extends SiVaRestTests{
+public class PdfValidationPassIT extends SiVaRestTests{
 
     @Before
     public void DirectoryBackToDefault() {

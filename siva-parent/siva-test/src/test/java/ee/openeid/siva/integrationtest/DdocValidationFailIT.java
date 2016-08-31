@@ -10,7 +10,7 @@ import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
 
 @Category(IntegrationTest.class)
-public class DdocValidationFailIt extends SiVaRestTests{
+public class DdocValidationFailIT extends SiVaRestTests{
 
     @Before
     public void DirectoryBackToDefault() {

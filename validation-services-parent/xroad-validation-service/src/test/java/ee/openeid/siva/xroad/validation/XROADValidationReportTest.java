@@ -39,4 +39,10 @@ public class XROADValidationReportTest {
         assertEquals("", report1.getSignatures().get(0).getSignatureLevel());
         assertEquals("", report2.getSignatures().get(0).getSignatureLevel());
     }
+
+    @Test
+    public void signatureFormInReportShouldBeAsicEWhenValidatingXROADSimpleContainer() throws Exception {
+        QualifiedReport report= validationService.validateDocument(buildValidationDocument(XROAD_SIMPLE));
+        assertEquals("ASiC_E", report.getSignatureForm());
+    }
 }

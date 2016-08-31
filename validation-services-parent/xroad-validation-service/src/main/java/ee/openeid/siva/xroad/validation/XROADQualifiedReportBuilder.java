@@ -28,6 +28,7 @@ public class XROADQualifiedReportBuilder {
     private static final String REPORT_INDICATION_INDETERMINATE = "INDETERMINATE";
     private static final String GREENWICH_MEAN_TIME = "Etc/GMT";
     private static final String XROAD_SIGNATURE_FORM = "ASiC_E_batchsignature";
+    private static final String ASICE_SIGNATURE_FORM = "ASiC_E";
     private static final String EMPTY_STRING = "";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(XROADQualifiedReportBuilder.class);
@@ -88,8 +89,7 @@ public class XROADQualifiedReportBuilder {
     }
 
     private String getSignatureForm() {
-        //TODO: What to use when isBatchSignature() returns false?
-        return verifier.getAsic().getSignature().isBatchSignature() ? XROAD_SIGNATURE_FORM : null;
+        return verifier.getAsic().getSignature().isBatchSignature() ? XROAD_SIGNATURE_FORM : ASICE_SIGNATURE_FORM;
     }
 
     private String getClaimedSigningTime() {

@@ -28,6 +28,7 @@ public class XROADQualifiedReportBuilder {
     private static final String REPORT_INDICATION_INDETERMINATE = "INDETERMINATE";
     private static final String GREENWICH_MEAN_TIME = "Etc/GMT";
     private static final String XROAD_SIGNATURE_FORM = "ASiC_E_batchsignature";
+    private static final String EMPTY_STRING = "";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(XROADQualifiedReportBuilder.class);
 
@@ -144,7 +145,7 @@ public class XROADQualifiedReportBuilder {
     }
 
     private String getSignatureLevel() {
-        return "random-level"; //TODO: Can't leave it to random level
+        return EMPTY_STRING;
     }
 
     private SignatureValidationData.Indication getIndication() {

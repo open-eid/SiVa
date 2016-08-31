@@ -129,7 +129,17 @@ public class PdfValidationFail extends SiVaRestTests{
      ***/
     @Test
     public void documentSignedWithExpiredRsa2048CertificateShouldFail() {
-        assertAllSignaturesAreInvalid(postForReport("hellopades-lt-sha256-rsa2048-expired.pdf"));
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-sha256-rsa2048-expired.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "hellopades-lt-sha256-rsa2048-expired.pdf", "pdf", ""))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("AdES"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatures[0].subIndication", Matchers.is("OUT_OF_BOUNDS_NO_POE"))
+                .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /***
@@ -148,7 +158,17 @@ public class PdfValidationFail extends SiVaRestTests{
      ***/
     @Test
     public void documentSignedWithExpiredSha256CertificateShouldFail() {
-        assertAllSignaturesAreInvalid(postForReport("hellopades-lt-sha256-rsa1024-expired2.pdf"));
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-sha256-rsa1024-expired2.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "hellopades-lt-sha256-rsa1024-expired2.pdf", "pdf", ""))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("AdES"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatures[0].subIndication", Matchers.is("OUT_OF_BOUNDS_NO_POE"))
+                .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /***
@@ -167,7 +187,17 @@ public class PdfValidationFail extends SiVaRestTests{
      ***/
     @Test
     public void documentSignedWithExpiredSha1CertificateShouldFail() {
-        assertAllSignaturesAreInvalid(postForReport("hellopades-lt-sha1-rsa1024-expired2.pdf"));
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-sha1-rsa1024-expired2.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "hellopades-lt-sha1-rsa1024-expired2.pdf", "pdf", ""))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("AdES"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatures[0].subIndication", Matchers.is("OUT_OF_BOUNDS_NO_POE"))
+                .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     @Override

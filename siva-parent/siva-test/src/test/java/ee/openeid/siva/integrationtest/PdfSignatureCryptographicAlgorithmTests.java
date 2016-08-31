@@ -1,6 +1,8 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+import org.apache.commons.codec.binary.Base64;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -128,7 +130,17 @@ public class PdfSignatureCryptographicAlgorithmTests extends SiVaRestTests{
      */
     @Test @Ignore //TODO: Need new test file as the cert has expired
     public void documentSignedWithSha256Rsa1024AlgoShouldPass() {
-        assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-rsa1024.pdf"));
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-sha256-rsa1024.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "hellopades-lt-sha256-rsa1024.pdf", "pdf", ""))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("AdES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**

@@ -2,6 +2,8 @@ package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
+import org.apache.commons.codec.binary.Base64;
+import org.hamcrest.Matchers;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -138,7 +140,17 @@ public class PdfBaselineProfileTests extends SiVaRestTests{
      */
     @Test
     public void documentSignedWithMultipleSignersSerialSignature() {
-        assertAllSignaturesAreValid(postForReport("hellopades-lt1-lt2-Serial.pdf"));
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt1-lt2-Serial.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "hellopades-lt1-lt2-Serial.pdf", "pdf", ""))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LTA"))
+                .body("signatures[0].signatureLevel", Matchers.is("AdES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].warnings", Matchers.hasSize(2))
+                .body("validSignaturesCount", Matchers.is(2))
+                .body("signaturesCount", Matchers.is(2));
     }
 
     /**

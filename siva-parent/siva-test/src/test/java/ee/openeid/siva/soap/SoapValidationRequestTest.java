@@ -1,24 +1,13 @@
 package ee.openeid.siva.soap;
 
-import com.sun.xml.internal.messaging.saaj.soap.Envelope;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.experimental.categories.Categories;
 import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
-import org.w3c.dom.Document;
-
-import java.util.List;
-import java.util.Map;
-
-import static com.jayway.restassured.path.json.JsonPath.from;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertTrue;
 
 @Category(IntegrationTest.class)
 public class SoapValidationRequestTest extends SiVaSoapTests {

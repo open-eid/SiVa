@@ -1,7 +1,6 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

@@ -8,15 +8,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 @Data
 public class SignaturePolicyService {
     protected static final Logger LOGGER = LoggerFactory.getLogger(SignaturePolicyService.class);
 
     protected byte[] defaultPolicy;
-    private Map<String, byte[]> signaturePolicies = new HashMap<>();
+    private Map<String, byte[]> signaturePolicies = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     public SignaturePolicyService(SignaturePolicyProperties signaturePolicyProperties) {
         LOGGER.info("Loading signature abstractPolicies for: " + signaturePolicyProperties.getClass().getSimpleName());
@@ -60,8 +60,12 @@ public class SignaturePolicyService {
                 byte[] policyData = getContentFromPolicyPath(policyPath);
                 InputStream policyDataStream = new ByteArrayInputStream(policyData);
                 validateAgainstSchema(policyDataStream);
-                signaturePolicies.put(policy, policyData);
-                LOGGER.info("Policy: " + policy + " loaded successfully");
+                byte[] existingPolicyData = signaturePolicies.putIfAbsent(policy, policyData);
+                if (existingPolicyData == null) {
+                    LOGGER.info("Policy: " + policy + " loaded successfully");
+                } else {
+                    LOGGER.error("Policy: " + policy + " was not loaded as it already exists");
+                }
             } catch (Exception e) {
                 LOGGER.error("Could not load policy " + policy + " due to: " + e);
             }

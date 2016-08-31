@@ -1,8 +1,6 @@
 package ee.openeid.siva.validation.document.builder;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
-import eu.europa.esig.dss.MimeType;
-import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

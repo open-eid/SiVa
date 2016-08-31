@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 @Category(IntegrationTest.class)
-public class PdfValidationFailTest extends SiVaRestTests{
+public class PdfValidationFailIt extends SiVaRestTests{
 
     private static final String TEST_FILES_DIRECTORY = "pdf/signing_certifacte_test_files/";
 

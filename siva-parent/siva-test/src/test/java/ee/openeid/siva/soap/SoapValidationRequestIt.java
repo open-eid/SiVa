@@ -10,7 +10,7 @@ import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
 
 @Category(IntegrationTest.class)
-public class SoapValidationRequestTest extends SiVaSoapTests {
+public class SoapValidationRequestIt extends SiVaSoapTests {
 
     @Before
     public void DirectoryBackToDefault() {

@@ -14,7 +14,7 @@ import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonS
 
 @Category(IntegrationTest.class)
 
-public class ValidationReportValueVerificationTest extends SiVaRestTests{
+public class ValidationReportValueVerificationIt extends SiVaRestTests{
 
     @Before
     public void DirectoryBackToDefault() {

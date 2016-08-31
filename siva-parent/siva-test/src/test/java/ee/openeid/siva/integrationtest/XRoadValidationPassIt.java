@@ -8,14 +8,14 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 @Category(IntegrationTest.class)
-public class XRoadValidationPassTest extends SiVaRestTests {
+public class XRoadValidationPassIt extends SiVaRestTests {
 
     @Override
     protected String getTestFilesDirectory() {
         return "xroad/";
     }
 
-    @Test @Ignore
+    @Test
     public void validatingAnXroadDocumentShouldReturnAReport() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
         QualifiedReport report = mapToReport(

@@ -50,18 +50,14 @@ public class SoapRequestValidationInterceptor extends AbstractSoapInterceptor {
     }
 
     private void validateDocumentElement(SOAPBody body) {
-        Node documentNode = body.getElementsByTagName("Document").item(0);
-        documentNode = documentNode == null ? null : documentNode.getFirstChild();
-        String documentValue = documentNode == null ? "" : documentNode.getNodeValue();
+        String documentValue = getElementValueFromBody(body, "Document");
         if (StringUtils.isBlank(documentValue) || !Base64.isBase64(documentValue)) {
             throwFault(messageSource.getMessage("validation.error.message.base64", null, null));
         }
     }
 
     private void validateFilenameElement(SOAPBody body) {
-        Node filenameNode = body.getElementsByTagName("Filename").item(0);
-        filenameNode = filenameNode == null ? null : filenameNode.getFirstChild();
-        String filenameValue = filenameNode == null ? "" : filenameNode.getNodeValue();
+        String filenameValue = getElementValueFromBody(body, "Filename");
         Pattern pattern = Pattern.compile(NotNullValidFilenamePattern.PATTERN);
         Matcher matcher = pattern.matcher(filenameValue);
         if (!matcher.matches()) {
@@ -70,14 +66,18 @@ public class SoapRequestValidationInterceptor extends AbstractSoapInterceptor {
     }
 
     private void validateSignaturePolicyElement(SOAPBody body) {
-        Node signaturePolicyNode = body.getElementsByTagName("SignaturePolicy").item(0);
-        signaturePolicyNode = signaturePolicyNode == null ? null : signaturePolicyNode.getFirstChild();
-        String signaturePolicyValue = signaturePolicyNode == null ? "" : signaturePolicyNode.getNodeValue();
+        String signaturePolicyValue = getElementValueFromBody(body, "SignaturePolicy");
         Pattern pattern = Pattern.compile(ValidSignaturePolicyPattern.PATTERN);
         Matcher matcher = pattern.matcher(signaturePolicyValue);
         if (!matcher.matches()) {
             throwFault(messageSource.getMessage("validation.error.message.signaturePolicy", null, null));
         }
+    }
+
+    private String getElementValueFromBody(SOAPBody body, String elementName) {
+        Node elementNode = body.getElementsByTagName(elementName).item(0);
+        elementNode = elementNode == null ? null : elementNode.getFirstChild();
+        return elementNode == null ? "" : elementNode.getNodeValue();
     }
 
     private void throwFault(String message) {

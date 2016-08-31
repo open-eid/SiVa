@@ -138,7 +138,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * File: hellopades-lt1-lt2-Serial.pdf
      */
-    @Test
+    @Test @Ignore //TODO: New test file may be needed! Current one has problems with expired signer cert.
     public void documentSignedWithMultipleSignersSerialSignature() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt1-lt2-Serial.pdf"));
         post(validationRequestWithValidKeys(encodedString, "hellopades-lt1-lt2-Serial.pdf", "pdf", ""))
@@ -166,7 +166,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * File: hellopades-lt1-lt2-parallel3.pdf
      */
-    @Test
+    @Test @Ignore //TODO: New test file may be needed! Current one has problems with expired signer cert.
     public void documentSignedWithMultipleSignersParallelSignature() {
         assertAllSignaturesAreValid(postForReport("hellopades-lt1-lt2-parallel3.pdf"));
     }
@@ -184,7 +184,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * File: hellopades-lt1-lt2-parallel3.pdf
      */
-    @Test
+    @Test @Ignore //TODO: New test file may be needed! Current one has problems with expired signer cert.
     public void ifSignerCertificateIsNotQualifiedAndWithoutSscdItIsAcceptedWithWarning() {
         QualifiedReport report = postForReport("hellopades-lt1-lt2-parallel3.pdf");
         assertHasWarning(report.getSignatures().get(0), "The certificate is not qualified!");

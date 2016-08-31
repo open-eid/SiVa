@@ -68,7 +68,7 @@ public class XROADQualifiedReportBuilder {
     private SignatureValidationData createSignatureValidationData() throws Exception {
         SignatureValidationData signatureValidationData = new SignatureValidationData();
         signatureValidationData.setId(verifier.getSignature().getXmlSignature().getId());
-        signatureValidationData.setSignatureFormat(XADES_FORMAT_PREFIX + "LT");
+        signatureValidationData.setSignatureFormat(getSignatureFormat());
         signatureValidationData.setSignatureLevel(getSignatureLevel());
         //verifier.getAsic().getSignature().isBatchSignature();
 
@@ -86,6 +86,10 @@ public class XROADQualifiedReportBuilder {
         signatureValidationData.setCountryCode(CertUtil.getCountryCode(verifier.getSignerCert()));
 
         return signatureValidationData;
+    }
+
+    private String getSignatureFormat() {
+        return XADES_FORMAT_PREFIX + (verifier.getAsic().getSignature().isBatchSignature() ? "B" : "LT");
     }
 
     private String getSignatureForm() {

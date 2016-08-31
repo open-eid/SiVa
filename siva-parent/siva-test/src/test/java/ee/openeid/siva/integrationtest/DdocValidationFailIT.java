@@ -323,7 +323,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
         post(validationRequestFor("xml_expansion.ddoc"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is("document"))
-                .body("requestErrors[0].message", Matchers.is("document malformed or not matching documentType"));
+                .body("requestErrors[0].message", Matchers.is("Document malformed or not matching documentType"));
     }
 
     /***
@@ -345,7 +345,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
         post(validationRequestFor("xml_entity.ddoc"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is("document"))
-                .body("requestErrors[0].message", Matchers.is("document malformed or not matching documentType"));
+                .body("requestErrors[0].message", Matchers.is("Document malformed or not matching documentType"));
     }
 
     /***

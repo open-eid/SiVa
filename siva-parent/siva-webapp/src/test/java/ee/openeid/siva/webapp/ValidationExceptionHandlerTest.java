@@ -67,7 +67,7 @@ public class ValidationExceptionHandlerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        assertEquals(content, "{\"requestErrors\":[{\"key\":\"document\",\"message\":\"document malformed or not matching documentType\"}]}");
+        assertEquals(content, "{\"requestErrors\":[{\"key\":\"document\",\"message\":\"Document malformed or not matching documentType\"}]}");
     }
 
     @Test
@@ -112,7 +112,7 @@ public class ValidationExceptionHandlerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        assertEquals(content, "unfortunately there was an error validating your document");
+        assertEquals(content, "Unfortunately there was an error validating your document");
     }
 
     private JSONObject request() {

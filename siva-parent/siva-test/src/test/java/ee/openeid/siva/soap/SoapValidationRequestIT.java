@@ -40,13 +40,13 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File:
      *
      ***/
-    @Test //TODO: When VAL-290 is fixed then HttpStatus needs to be changed to BAD_REQUEST
+    @Test
     public void validationRequestEmptyInputs() {
         post(validationRequestForDocumentExtended("", "", "", ""))
                 .then()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("Envelope.Body.Fault.faultcode",Matchers.is(CLIENT_FAULT))
-                .body("Envelope.Body.Fault.faultstring",Matchers.is("Unmarshalling Error: cvc-enumeration-valid: Value '' is not facet-valid with respect to enumeration '[PDF, XROAD, BDOC, DDOC]'. It must be a value from the enumeration. "));
+                .body("Envelope.Body.Fault.faultstring",Matchers.is(DOCUMENT_NOT_BASE64));
     }
 
     /***
@@ -64,14 +64,14 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
      ***/
-    @Test //TODO: When VAL-290 is fixed then HttpStatus needs to be changed to BAD_REQUEST
+    @Test
     public void validationRequestNonBase64Input() {
         String encodedString = ",:";
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.ddoc", "DDOC", "EE"))
                 .then()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .body("Envelope.Body.Fault.faultcode",Matchers.is(SERVER_FAULT))
-                .body("Envelope.Body.Fault.faultstring",Matchers.is(DOCUMENT_MALFORMED));
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("Envelope.Body.Fault.faultcode",Matchers.is(CLIENT_FAULT))
+                .body("Envelope.Body.Fault.faultstring",Matchers.is(DOCUMENT_NOT_BASE64));
     }
 
     /***
@@ -254,9 +254,9 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 "</soapenv:Envelope>";
         post(emptyRequestBody)
                 .then()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .body("Envelope.Body.Fault.faultcode",Matchers.is(SERVER_FAULT))
-                .body("Envelope.Body.Fault.faultstring",Matchers.is(BODY_MALFORMED));
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("Envelope.Body.Fault.faultcode",Matchers.is(CLIENT_FAULT))
+                .body("Envelope.Body.Fault.faultstring",Matchers.is(DOCUMENT_NOT_BASE64));
     }
 
     /***
@@ -477,6 +477,80 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .then()
                 .body("Envelope.Body.Fault.faultcode", Matchers.is("soap:Client"))
                 .body("Envelope.Body.Fault.faultstring", Matchers.containsString("Error reading XMLStreamReader: Unrecognized XML directive; expected CDATA or comment"));
+    }
+
+    /***
+     *
+     * TestCaseID: Soap-ValidationRequest-14
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Request with empty document
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_IDCard_MobID_signatures.bdoc
+     *
+     ***/
+    @Test
+    public void validationRequestWithEmptyDocument() {
+        post(validationRequestForDocumentExtended("", "Valid_IDCard_MobID_signatures.bdoc", "DDOC", "EE"))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("Envelope.Body.Fault.faultcode",Matchers.is(CLIENT_FAULT))
+                .body("Envelope.Body.Fault.faultstring",Matchers.is(DOCUMENT_NOT_BASE64));
+    }
+
+    /***
+     *
+     * TestCaseID: Soap-ValidationRequest-15
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Request with empty filename
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_IDCard_MobID_signatures.bdoc
+     *
+     ***/
+    @Test
+    public void validationRequestWithEmptyFilename() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
+        post(validationRequestForDocumentExtended(encodedString, "", "DDOC", "EE"))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("Envelope.Body.Fault.faultcode",Matchers.is(CLIENT_FAULT))
+                .body("Envelope.Body.Fault.faultstring",Matchers.is(INVALID_FILENAME));
+    }
+
+    /***
+     *
+     * TestCaseID: Soap-ValidationRequest-16
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Request with invalid signature policy
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_IDCard_MobID_signatures.bdoc
+     *
+     ***/
+    @Test
+    public void validationWithInvalidSignaturePolicy() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
+        post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "DDOC", "/"))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("Envelope.Body.Fault.faultcode",Matchers.is(CLIENT_FAULT))
+                .body("Envelope.Body.Fault.faultstring",Matchers.is(INVALID_SIGNATURE_POLICY));
     }
 
     /***

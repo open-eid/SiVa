@@ -120,7 +120,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: hellopades-lt-b.pdf
      */
     @Test
-    public void testPdfDocumentSignaturePolicyCaseInsensitvity() {
+    public void testPdfDocumentSignaturePolicyCaseInsensitivity() {
         QualifiedReport report = postForReport("hellopades-lt-b.pdf", "eU");
         assertAllSignaturesAreValid(report);
     }
@@ -158,7 +158,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: Valid_ID_sig.bdoc
      */
     @Test
-    public void testBdocDocumentSignaturePolicyCaseInsensitvity() {
+    public void testBdocDocumentSignaturePolicyCaseInsensitivity() {
         QualifiedReport report = postForReport("Valid_ID_sig.bdoc", "ee");
         assertAllSignaturesAreValid(report);
     }

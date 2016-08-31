@@ -21,6 +21,6 @@ public class MalformedPDFTest extends PDFValidationServiceTest {
         } catch (MalformedDocumentException e) {
             message = e.getMessage();
         }
-        assertEquals("document malformed or not matching documentType", message);
+        assertEquals("Document malformed or not matching documentType", message);
     }
 }

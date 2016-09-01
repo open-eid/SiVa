@@ -34,15 +34,27 @@ public class XROADValidationReportTest {
 
     @Test
     public void validationReportForXROADSimpleAndPatchSignatureShouldHaveEmptySignatureLevel() throws Exception {
-        QualifiedReport report1= validationService.validateDocument(buildValidationDocument(XROAD_SIMPLE));
-        QualifiedReport report2= validationService.validateDocument(buildValidationDocument(XROAD_BATCHSIGNATURE));
+        QualifiedReport report1 = validationService.validateDocument(buildValidationDocument(XROAD_SIMPLE));
+        QualifiedReport report2 = validationService.validateDocument(buildValidationDocument(XROAD_BATCHSIGNATURE));
         assertEquals("", report1.getSignatures().get(0).getSignatureLevel());
         assertEquals("", report2.getSignatures().get(0).getSignatureLevel());
     }
 
     @Test
     public void signatureFormInReportShouldBeAsicEWhenValidatingXROADSimpleContainer() throws Exception {
-        QualifiedReport report= validationService.validateDocument(buildValidationDocument(XROAD_SIMPLE));
+        QualifiedReport report = validationService.validateDocument(buildValidationDocument(XROAD_SIMPLE));
         assertEquals("ASiC_E", report.getSignatureForm());
+    }
+
+    @Test
+    public void signatureFormatInReportShouldBeXadesBaselineBWhenValidatingXROADBatchSignature() throws Exception {
+        QualifiedReport report = validationService.validateDocument(buildValidationDocument(XROAD_BATCHSIGNATURE));
+        assertEquals("XAdES_BASELINE_B", report.getSignatures().get(0).getSignatureFormat());
+    }
+
+    @Test
+    public void signatureFormatInReportShouldBeXadesBaselineLTWhenValidatingXROADSimpleContainer() throws Exception {
+        QualifiedReport report = validationService.validateDocument(buildValidationDocument(XROAD_SIMPLE));
+        assertEquals("XAdES_BASELINE_LT", report.getSignatures().get(0).getSignatureFormat());
     }
 }

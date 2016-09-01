@@ -46,7 +46,7 @@ public class BDOCValidationServiceIntegrationTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
-    private static String DOCUMENT_MALFORMED_MESSAGE = "document malformed or not matching documentType";
+    private static String DOCUMENT_MALFORMED_MESSAGE = "Document malformed or not matching documentType";
 
     @Test
     public void verifyCorrectPolicyIsLoadedToD4JConfiguration() throws Exception {

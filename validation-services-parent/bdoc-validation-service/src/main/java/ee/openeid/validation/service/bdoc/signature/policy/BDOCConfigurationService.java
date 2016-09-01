@@ -29,7 +29,7 @@ public class BDOCConfigurationService {
             tempConfiguration.setValidationPolicy(policyService.getAbsolutePath(e.getKey()));
 
             LOGGER.info("Adding BDOC validation policy: {}", e.getKey());
-            policyList.put(e.getKey(), tempConfiguration);
+            policyList.putIfAbsent(e.getKey(), tempConfiguration);
         });
     }
 

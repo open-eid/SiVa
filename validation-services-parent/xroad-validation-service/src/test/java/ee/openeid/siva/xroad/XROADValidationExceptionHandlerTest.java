@@ -57,7 +57,7 @@ public class XROADValidationExceptionHandlerTest {
                 .andExpect(status().isBadRequest())
                 .andReturn();
         String content = result.getResponse().getContentAsString();
-        assertEquals(content, "{\"key\":\"document\",\"message\":\"document malformed or not matching documentType\"}");
+        assertEquals(content, "{\"key\":\"document\",\"message\":\"Document malformed or not matching documentType\"}");
     }
 
     private JSONObject mockRequest() {

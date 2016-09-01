@@ -16,7 +16,7 @@ public class XROADValidationServiceTest {
     private static final String DDOC_VALID = "ddoc_valid_2_signatures.ddoc";
     private static final String PDF_VALID = "hellopades-pades-lt-sha256-sign.pdf";
 
-    private static String DOCUMENT_MALFORMED_MESSAGE = "document malformed or not matching documentType";
+    private static String DOCUMENT_MALFORMED_MESSAGE = "Document malformed or not matching documentType";
 
     private XROADValidationService validationService;
 

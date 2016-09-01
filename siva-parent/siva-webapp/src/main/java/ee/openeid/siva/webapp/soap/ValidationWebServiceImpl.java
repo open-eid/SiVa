@@ -4,10 +4,12 @@ import ee.openeid.siva.proxy.ValidationProxy;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.webapp.soap.request.SOAPValidationRequest;
 import ee.openeid.siva.webapp.transformer.ValidationRequestToProxyDocumentTransformer;
+import org.apache.cxf.interceptor.InInterceptors;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.jws.WebService;
 
+@InInterceptors(interceptors = {"ee.openeid.siva.webapp.soap.validation.SoapRequestValidationInterceptor"})
 @WebService(serviceName = "SignatureValidationService", endpointInterface = "ee.openeid.siva.webapp.soap.ValidationWebService")
 public class ValidationWebServiceImpl implements ValidationWebService {
 

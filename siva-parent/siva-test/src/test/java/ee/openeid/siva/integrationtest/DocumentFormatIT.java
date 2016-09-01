@@ -84,7 +84,7 @@ public class DocumentFormatIT extends SiVaRestTests {
         post(validationRequestFor("hellopades-pades-lt-sha256-sign.txt"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is("documentType"))
-                .body("requestErrors[0].message", Matchers.containsString("invalid document type"));
+                .body("requestErrors[0].message", Matchers.containsString("Invalid document type"));
     }
 
     /***
@@ -107,7 +107,7 @@ public class DocumentFormatIT extends SiVaRestTests {
         post(validationRequestFor("hellocades.p7s"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is("documentType"))
-                .body("requestErrors[0].message", Matchers.containsString("invalid document type"));
+                .body("requestErrors[0].message", Matchers.containsString("Invalid document type"));
     }
 
     /***
@@ -130,7 +130,7 @@ public class DocumentFormatIT extends SiVaRestTests {
         post(validationRequestFor("42.zip"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is("documentType"))
-                .body("requestErrors[0].message", Matchers.containsString("invalid document type"));
+                .body("requestErrors[0].message", Matchers.containsString("Invalid document type"));
     }
 
     /***
@@ -153,7 +153,7 @@ public class DocumentFormatIT extends SiVaRestTests {
         post(validationRequestFor("hellopades-pades-lt-sha256-sign.doc"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is("documentType"))
-                .body("requestErrors[0].message", Matchers.containsString("invalid document type"));
+                .body("requestErrors[0].message", Matchers.containsString("Invalid document type"));
     }
 
     /***
@@ -176,7 +176,7 @@ public class DocumentFormatIT extends SiVaRestTests {
         post(validationRequestFor("XML.xml"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is("documentType"))
-                .body("requestErrors[0].message", Matchers.containsString("invalid document type"));
+                .body("requestErrors[0].message", Matchers.containsString("Invalid document type"));
     }
 
     /***
@@ -200,7 +200,7 @@ public class DocumentFormatIT extends SiVaRestTests {
         post(validationRequestFor("Picture.png"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is("documentType"))
-                .body("requestErrors[0].message", Matchers.containsString("invalid document type"));
+                .body("requestErrors[0].message", Matchers.containsString("Invalid document type"));
     }
     @Override
     protected String getTestFilesDirectory() {

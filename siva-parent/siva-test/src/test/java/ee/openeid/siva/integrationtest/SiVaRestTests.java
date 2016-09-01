@@ -15,11 +15,11 @@ import static com.jayway.restassured.config.EncoderConfig.encoderConfig;
 
 public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
 
-    protected static final String DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE = "document malformed or not matching documentType";
-    protected static final String INVALID_DOCUMENT_TYPE = "invalid document type";
-    protected static final String INVALID_FILENAME = "invalid filename";
+    protected static final String DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE = "Document malformed or not matching documentType";
+    protected static final String INVALID_DOCUMENT_TYPE = "Invalid document type";
+    protected static final String INVALID_FILENAME = "Invalid filename";
     protected static final String MAY_NOT_BE_EMPTY = "may not be empty";
-    protected static final String INVALID_BASE_64 = "not valid base64 encoded string";
+    protected static final String INVALID_BASE_64 = "Document is not encoded in a valid base64 string";
     protected static final String DOCUMENT_TYPE = "documentType";
     protected static final String FILENAME = "filename";
     protected static final String DOCUMENT = "document";

@@ -55,7 +55,7 @@ public class ValidationControllerTest {
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.requestErrors", Matchers.hasSize(1)))
                 .andExpect(jsonPath("$.requestErrors[0].key", is("documentType")))
-                .andExpect(jsonPath("$.requestErrors[0].message", containsString("invalid document type")));
+                .andExpect(jsonPath("$.requestErrors[0].message", containsString("Invalid document type")));
     }
 
     @Test
@@ -67,7 +67,7 @@ public class ValidationControllerTest {
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.requestErrors", Matchers.hasSize(1)))
                 .andExpect(jsonPath("$.requestErrors[0].key", is("document")))
-                .andExpect(jsonPath("$.requestErrors[0].message", containsString("not valid base64 encoded string")));
+                .andExpect(jsonPath("$.requestErrors[0].message", containsString("Document is not encoded in a valid base64 string")));
     }
 
     @Test
@@ -79,7 +79,7 @@ public class ValidationControllerTest {
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.requestErrors", Matchers.hasSize(2)))
                 .andExpect(jsonPath("$.requestErrors[*].key", containsInAnyOrder("document", "document")))
-                .andExpect(jsonPath("$.requestErrors[*].message", containsInAnyOrder("not valid base64 encoded string", "may not be empty")));
+                .andExpect(jsonPath("$.requestErrors[*].message", containsInAnyOrder("Document is not encoded in a valid base64 string", "may not be empty")));
     }
 
     @Test
@@ -106,7 +106,7 @@ public class ValidationControllerTest {
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.requestErrors", Matchers.hasSize(2)))
                 .andExpect(jsonPath("$.requestErrors[*].key", containsInAnyOrder("filename", "filename")))
-                .andExpect(jsonPath("$.requestErrors[*].message", containsInAnyOrder("invalid filename", "may not be empty")));
+                .andExpect(jsonPath("$.requestErrors[*].message", containsInAnyOrder("Invalid filename", "may not be empty")));
     }
 
     @Test
@@ -171,7 +171,7 @@ public class ValidationControllerTest {
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.requestErrors", Matchers.hasSize(3)))
                 .andExpect(jsonPath("$.requestErrors[*].key", containsInAnyOrder("filename", "documentType", "document")))
-                .andExpect(jsonPath("$.requestErrors[*].message", containsInAnyOrder("invalid filename", "invalid document type", "not valid base64 encoded string")));
+                .andExpect(jsonPath("$.requestErrors[*].message", containsInAnyOrder("Invalid filename", "Invalid document type", "Document is not encoded in a valid base64 string")));
     }
 
     @Test
@@ -185,9 +185,9 @@ public class ValidationControllerTest {
                 .andExpect(jsonPath("$.requestErrors[*].key", containsInAnyOrder("filename",
                         "documentType", "document", "filename", "documentType", "document")))
                 .andExpect(jsonPath("$.requestErrors[*].message", containsInAnyOrder(
-                        "invalid filename",
-                        "invalid document type",
-                        "not valid base64 encoded string",
+                        "Invalid filename",
+                        "Invalid document type",
+                        "Document is not encoded in a valid base64 string",
                         "may not be empty",
                         "may not be empty",
                         "may not be empty"
@@ -206,7 +206,7 @@ public class ValidationControllerTest {
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.requestErrors", Matchers.hasSize(1)))
                 .andExpect(jsonPath("$.requestErrors[0].key", is("filename")))
-                .andExpect(jsonPath("$.requestErrors[0].message", containsString("invalid filename")));
+                .andExpect(jsonPath("$.requestErrors[0].message", containsString("Invalid filename")));
     }
 
     private JSONObject validRequest() {

@@ -1,7 +1,7 @@
 List of Test Cases
 ==================
 
-## BdocValidationFail.java
+## BdocValidationFailIT.java
 
 **TestCaseID: Bdoc-ValidationFail-1**
 
@@ -63,7 +63,7 @@ List of Test Cases
 
   * TestType: Automated
   * RequirementID: []()
-  * Title: Asice No non-repudiation key usage value in the certificate
+  * Title: Asice No non-repudiation key usage value in the certificate, verification of AdES signature level
   * Expected Result: The document should fail the validation
   * File: EE_SER-AEX-B-LT-I-43.asice
 
@@ -242,7 +242,7 @@ List of Test Cases
   * File: BDOC-1.0.bdoc
 
 
-## BdocValidationPass.java
+## BdocValidationPassIT.java
 
 **TestCaseID: Bdoc-ValidationPass-1**
 
@@ -352,8 +352,16 @@ List of Test Cases
   * Expected Result: The document should pass the validation
   * File: BDOC-TS.bdoc
 
+**TestCaseID: Bdoc-ValidationPass-14**
 
-## DdocValidationFail.java
+  * TestType: Automated
+  * RequirementID: []()
+  * Title: Bdoc-TM with special characters in data file
+  * Expected Result: The document should pass the validation
+  * File: Ðuþlikud sõid ühe õuna ära.bdoc
+
+
+## DdocValidationFailIT.java
 
 **TestCaseID: Ddoc-ValidationFail-1**
 
@@ -465,7 +473,7 @@ List of Test Cases
   * RequirementID: []()
   * Title: Ddoc with XML Entity expansion attack
   * Expected Result: The document should fail the validation with error
-  * File: 2.denialOfServiceWithEntityExpansion.ddoc
+  * File: xml_expansion.ddoc
 
 **TestCaseID: Ddoc-ValidationFail-14**
 
@@ -473,7 +481,7 @@ List of Test Cases
   * RequirementID: []()
   * Title: Ddoc with XML server side request forgery attack
   * Expected Result: The document should fail the validation with error
-  * File: 3.serverSideRequestForgeryViaDtd.ddoc
+  * File: xml_entity.ddoc
 
 **TestCaseID: Ddoc-ValidationFail-15**
 
@@ -502,7 +510,7 @@ List of Test Cases
   * File: ns6t3cp7.ddoc
 
 
-## DdocValidationPass.java
+## DdocValidationPassIT.java
 
 **TestCaseID: Ddoc-ValidationPass-2**
 
@@ -611,7 +619,7 @@ List of Test Cases
   * File: EID-SK 2011 _ SK OCSP RESPONDER 2011.ddoc
 
 
-## DocumentFormatTests.java
+## DocumentFormatIT.java
 
 **TestCaseID: DocumentFormat-1**
 
@@ -678,7 +686,7 @@ List of Test Cases
   * File: Picture.png
 
 
-## LargeFileTests.java
+## LargeFileIT.java
 
 **TestCaseID: PDF-LargeFiles-1**
 
@@ -713,7 +721,7 @@ List of Test Cases
   * File: 9MB_DDOC.ddoc
 
 
-## PdfBaselineProfileTests.java
+## PdfBaselineProfileIT.java
 
 **TestCaseID: PDF-BaselineProfile-1**
 
@@ -777,6 +785,8 @@ List of Test Cases
   * Expected Result: Document signed with multiple signers with serial signatures should pass
   * File: hellopades-lt1-lt2-Serial.pdf
 
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
 **TestCaseID: PDF-BaselineProfile-8**
 
   * TestType: Automated
@@ -784,6 +794,8 @@ List of Test Cases
   * Title: PDF document signed with multiple signers parallel signature
   * Expected Result: Document with parallel signatures should pass
   * File: hellopades-lt1-lt2-parallel3.pdf
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: PDF-BaselineProfile-9**
 
@@ -793,8 +805,10 @@ List of Test Cases
   * Expected Result: Document with no qualified and without SSCD should warn
   * File: hellopades-lt1-lt2-parallel3.pdf
 
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
-## PdfSignatureCryptographicAlgorithmTests.java
+
+## PdfSignatureCryptographicAlgorithmIT.java
 
 **TestCaseID: PDF-SigCryptoAlg-1**
 
@@ -856,6 +870,8 @@ List of Test Cases
   * Expected Result: Document signed with RSA1023 algorithm should pass
   * File: hellopades-lt-sha256-rsa1023.pdf
 
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
 **TestCaseID: PDF-SigCryptoAlg-8**
 
   * TestType: Automated
@@ -863,6 +879,8 @@ List of Test Cases
   * Title: RSA2047 algorithms (PAdES Baseline LT)
   * Expected Result: Document signed with RSA2047 algorithm should pass
   * File: hellopades-lt-sha256-rsa2047.pdf
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: PDF-SigCryptoAlg-9**
 
@@ -873,7 +891,7 @@ List of Test Cases
   * File: PdfValidSingleSignature
 
 
-## PdfValidationFail.java
+## PdfValidationFailIT.java
 
 **TestCaseID: PDF-ValidationFail-1**
 
@@ -932,7 +950,7 @@ List of Test Cases
   * File: hellopades-lt-sha1-rsa1024-expired2.pdf
 
 
-## PdfValidationPass.java
+## PdfValidationPassIT.java
 
 **TestCaseID: PDF-ValidationPass-1**
 
@@ -963,7 +981,7 @@ List of Test Cases
   * File: PdfValidSingleSignature.pdf
 
 
-## SignaturePolicyTests.java
+## SignaturePolicyIT.java
 
 **TestCaseID: Signature-Policy-1**
 
@@ -997,7 +1015,7 @@ List of Test Cases
 
   * TestType: Automated
   * RequirementID: []()
-  * Title: The PDF has PAdES-LT and B profile signature
+  * Title: The PDF has LT and B profile signatures
   * Expected Result: 1 of 2 signatures' should pass when signature policy is set to "EE"
   * File: hellopades-lt-b.pdf
 
@@ -1005,7 +1023,7 @@ List of Test Cases
 
   * TestType: Automated
   * RequirementID: []()
-  * Title: The PDF has PAdES-LT and B profile signature
+  * Title: The PDF has LT and B profile signatures
   * Expected Result: 2 of 2 signatures' validation should pass when signature policy is set to "EU"
   * File: hellopades-lt-b.pdf
 
@@ -1013,12 +1031,28 @@ List of Test Cases
 
   * TestType: Automated
   * RequirementID: []()
+  * Title: The PDF has LT and B profile signatures
+  * Expected Result: 2 of 2 signatures' validation should pass when signature policy is set to "eU"
+  * File: hellopades-lt-b.pdf
+
+**TestCaseID: Signature-Policy-6**
+
+  * TestType: Automated
+  * RequirementID: []()
   * Title: Bdoc with conformant EE signature
   * Expected Result: Document should pass when signature policy is set to "EE"
   * File: Valid_ID_sig.bdoc
 
+**TestCaseID: Signature-Policy-7**
 
-## SignatureRevocationValueTests.java
+  * TestType: Automated
+  * RequirementID: []()
+  * Title: Bdoc with conformant EE signature
+  * Expected Result: Document should pass when signature policy is set to "ee"
+  * File: Valid_ID_sig.bdoc
+
+
+## SignatureRevocationValueIT.java
 
 **TestCaseID: PDF-SigRevocVal-1**
 
@@ -1069,7 +1103,7 @@ List of Test Cases
   **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 
-## ValidationReportValueVerification.java
+## ValidationReportValueVerificationIT.java
 
 **TestCaseID: Bdoc-ValidationReportVerification-1**
 
@@ -1094,6 +1128,8 @@ List of Test Cases
   * Title: Verification of values in Validation Report XAdES_BASELINE_LT, AdES, FullSignatureScope, warning
   * Expected Result: All required elements are present and meet the expected values.
   * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: Bdoc-ValidationReportVerification-5**
 
@@ -1255,14 +1291,44 @@ List of Test Cases
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
-  * Title:
+  * Title: Verification of values in Validation Report, xroad-simple container
   * Expected Result: Report is returned with required elements
   * File: xroad-simple.asice
 
   **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
+**TestCaseID: Xroad-ValidationReportVerification-2**
 
-## ValidationRequestTests.java
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of values in Validation Report, xroad-batchsignature container
+  * Expected Result: Report is returned with required elements
+  * File: xroad-batchsignature.asice
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
+**TestCaseID: Xroad-ValidationReportVerification-3**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of values in Validation Report, xroad-attachment container
+  * Expected Result: Report is returned with required elements
+  * File: xroad-attachment.asice
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
+**TestCaseID: Xroad-ValidationReportVerification-4**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of values in Validation Report with invalid xroad container
+  * Expected Result: Report is returned with required elements
+  * File: xroad-attachment.asice
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
+
+## ValidationRequestIT.java
 
 **TestCaseID: ValidationRequest-1**
 
@@ -1578,8 +1644,6 @@ List of Test Cases
   * Expected Result: Error is returned
   * File: PdfValidSingleSignature.pdf
 
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
 **TestCaseID: Xroad-ValidationRequest-2**
 
   * TestType: Automated
@@ -1588,8 +1652,6 @@ List of Test Cases
   * Expected Result: Error is returned
   * File: igasugust1.3.ddoc
 
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
 **TestCaseID: Xroad-ValidationRequest-3**
 
   * TestType: Automated
@@ -1597,8 +1659,6 @@ List of Test Cases
   * Title: Mismatch in documentType and actual document (xroad and bdoc)
   * Expected Result: Error is returned
   * File: Valid_IDCard_MobID_signatures.bdoc
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: Xroad-ValidationRequest-4**
 
@@ -1616,8 +1676,6 @@ List of Test Cases
   * Expected Result: Error is returned stating problem in document
   * File:
 
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
 **TestCaseID: Xroad-ValidationRequest-6**
 
   * TestType: Automated
@@ -1627,7 +1685,7 @@ List of Test Cases
   * File: xroad-simple.asice
 
 
-## SoapValidationReportValueTests.java
+## SoapValidationReportValueIT.java
 
 **TestCaseID: Bdoc-SoapValidationReportValue-1**
 
@@ -1723,8 +1781,28 @@ List of Test Cases
 
   **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
+**TestCaseID: Xroad-SoapValidationReportValue-1**
 
-## SoapValidationRequestTests.java
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of values in Validation Report, xroad-simple container
+  * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
+  * File: xroad-simple.asice
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
+**TestCaseID: Xroad-SoapValidationReportValue-2**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Verification of values in Validation Report, xroad-simple invalid container
+  * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
+  * File: xroad-simple.asice
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
+
+## SoapValidationRequestIT.java
 
 **TestCaseID: Soap-ValidationRequest-1**
 
@@ -1772,7 +1850,7 @@ List of Test Cases
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
-  * Title: Request has long (38784 characters) in filename field
+  * Title: Request has long filename field
   * Expected Result: Report is returned with the same filename
   * File: Valid_IDCard_MobID_signatures.bdoc
 
@@ -1814,6 +1892,46 @@ List of Test Cases
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
   * Title: Request with no optional SignaturePolicy field
   * Expected Result: Validation report is returned using default policy
+  * File: Valid_IDCard_MobID_signatures.bdoc
+
+**TestCaseID: Soap-ValidationRequest-12**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Request with XML expansion
+  * Expected Result: Error is returned and Entity is not handled
+  * File: Valid_IDCard_MobID_signatures.bdoc
+
+**TestCaseID: Soap-ValidationRequest-13**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Request XML external entity attack
+  * Expected Result: Error message is returned and Doctype field is not handled
+  * File: Valid_IDCard_MobID_signatures.bdoc
+
+**TestCaseID: Soap-ValidationRequest-14**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Request with empty document
+  * Expected Result: Error is returned
+  * File: Valid_IDCard_MobID_signatures.bdoc
+
+**TestCaseID: Soap-ValidationRequest-15**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Request with empty filename
+  * Expected Result: Error is returned
+  * File: Valid_IDCard_MobID_signatures.bdoc
+
+**TestCaseID: Soap-ValidationRequest-16**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Request with invalid signature policy
+  * Expected Result: Error is returned
   * File: Valid_IDCard_MobID_signatures.bdoc
 
 **TestCaseID: Soap-BdocValidationRequest-1**
@@ -1978,8 +2096,6 @@ List of Test Cases
   * Expected Result: Error is returned
   * File: igasugust1.3.ddoc
 
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
 **TestCaseID: Soap-XroadValidationRequest-3**
 
   * TestType: Automated
@@ -1988,8 +2104,6 @@ List of Test Cases
   * Expected Result: Error is returned
   * File: Valid_IDCard_MobID_signatures.bdoc
 
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
 **TestCaseID: Soap-XroadValidationRequest-4**
 
   * TestType: Automated
@@ -1997,6 +2111,4 @@ List of Test Cases
   * Title: Mismatch in documentType and actual document (bdoc and pdf)
   * Expected Result: Error is returned
   * File: PdfValidSingleSignature.pdf
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 

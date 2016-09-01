@@ -358,7 +358,7 @@ List of Test Cases
   * RequirementID: []()
   * Title: Bdoc-TM with special characters in data file
   * Expected Result: The document should pass the validation
-  * File: Ðuþlikud sõid ühe õuna ära.bdoc
+  * File: Å uÅ¾likud sÃµid Ã¼he Ãµuna Ã¤ra.bdoc
 
 
 ## DdocValidationFailIT.java

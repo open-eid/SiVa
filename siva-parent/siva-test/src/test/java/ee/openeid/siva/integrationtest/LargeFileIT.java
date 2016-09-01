@@ -37,7 +37,7 @@ public class LargeFileIT extends SiVaRestTests{
      *
      * File: 9MB_PDF.pdf
      ***/
-    @Test
+    @Test //TODO: This file actually returns INDETERMINATE because of expired signers cert.
     public void pdfNineMegabyteFilesWithLtSignatureAreAccepted() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("9MB_PDF.pdf"));
         post(validationRequestWithValidKeys(encodedString, "9MB_PDF.pdf", "pdf",""))

@@ -34,6 +34,14 @@ public abstract class SiVaIntegrationTestsBase {
 
     private static final String PROJECT_SUBMODULE_NAME =  "siva-test";
 
+    protected static final String VALID_SIGNATURE_POLICY_1 = "EE";
+    protected static final String VALID_SIGNATURE_POLICY_2 = "EU";
+
+    protected static final String INVALID_SIGNATURE_POLICY = "RUS";
+
+    protected static final String SMALL_CASE_VALID_SIGNATURE_POLICY_1 = "ee";
+    protected static final String SMALL_CASE_VALID_SIGNATURE_POLICY_2 = "eu";
+
     @Value("${local.server.port}")
     protected int serverPort;
 

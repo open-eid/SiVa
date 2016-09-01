@@ -123,7 +123,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     public void validationRequestInvalidDocumentKey() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         String response = post(validationRequestForExtended("Document", encodedString,
-                FILENAME, "*.exe", DOCUMENT_TYPE, "BDOC", SIGNATURE_POLICY, "EE")).asString();
+                FILENAME, "*.exe", DOCUMENT_TYPE, "BDOC", SIGNATURE_POLICY, VALID_SIGNATURE_POLICY_1)).asString();
 
         assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, MAY_NOT_BE_EMPTY) == 1);
         assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, INVALID_BASE_64) == 1);
@@ -230,7 +230,7 @@ public class ValidationRequestIT extends SiVaRestTests {
         jsonObject.put(DOCUMENT, encodedString);
         jsonObject.put(FILENAME, "Valid_IDCard_MobID_signatures.bdoc");
         jsonObject.put(DOCUMENT_TYPE, "bdoc");
-        jsonObject.put(SIGNATURE_POLICY, "EE");
+        jsonObject.put(SIGNATURE_POLICY, VALID_SIGNATURE_POLICY_1);
         jsonObject.put("ExtraOne", "RandomValue");
         jsonObject.put("ExtraTwo", "AnotherValue");
         post(jsonObject.toString())
@@ -380,11 +380,11 @@ public class ValidationRequestIT extends SiVaRestTests {
     @Test
     public void bdocValidationRequestWrongSignaturePolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "bdoc", "RUS"))
+        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "bdoc", INVALID_SIGNATURE_POLICY))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(SIGNATURE_POLICY))
-                .body("requestErrors[0].message", Matchers.containsString("Invalid signature policy: RUS; Available abstractPolicies: [EE]"));
+                .body("requestErrors[0].message", Matchers.containsString("Invalid signature policy: "+INVALID_SIGNATURE_POLICY+"; Available abstractPolicies: ["+VALID_SIGNATURE_POLICY_1+"]"));
     }
 
      /***
@@ -405,7 +405,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     @Test
     public void bdocValidationRequestCaseInsensitivePolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "bdoc", "ee"))
+        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "bdoc", SMALL_CASE_VALID_SIGNATURE_POLICY_1))
                 .then()
                 .body("validSignaturesCount", Matchers.is(2));
     }
@@ -705,11 +705,11 @@ public class ValidationRequestIT extends SiVaRestTests {
     @Test
     public void pdfValidationRequestWrongSignaturePolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "PdfValidSingleSignature.pdf", "pdf", "RUS"))
+        post(validationRequestWithValidKeys(encodedString, "PdfValidSingleSignature.pdf", "pdf", INVALID_SIGNATURE_POLICY))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(SIGNATURE_POLICY))
-                .body("requestErrors[0].message", Matchers.containsString("Invalid signature policy: RUS; Available abstractPolicies: [EE, EU]"));
+                .body("requestErrors[0].message", Matchers.containsString("Invalid signature policy: "+INVALID_SIGNATURE_POLICY+"; Available abstractPolicies: ["+VALID_SIGNATURE_POLICY_1+", "+VALID_SIGNATURE_POLICY_2+"]"));
     }
 
      /***
@@ -907,7 +907,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     @Test
     public void ddocValidationRequestWrongSignaturePolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
-        post(validationRequestWithValidKeys(encodedString, "igasugust1.3.ddoc", "ddoc", "RUS"))
+        post(validationRequestWithValidKeys(encodedString, "igasugust1.3.ddoc", "ddoc", INVALID_SIGNATURE_POLICY))
                 .then()
                 .body("validSignaturesCount", Matchers.is(3));
     }
@@ -1107,7 +1107,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     public void xroadValidationRequestWrongSignaturePolicy() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", "xroad", "RUS"))
+        post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", "xroad", INVALID_SIGNATURE_POLICY))
                 .then()
                 .body("validSignaturesCount", Matchers.is(1));
     }

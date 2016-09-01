@@ -23,7 +23,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      */
     @Test @Ignore //TODO: With DigiDoc4J 1.0.4 update this error functionality is no longer implemented
     public void pdfDocumentWithOcspOver24hDelayWithEEPolicyShouldFailWithCorrectErrorInReport() {
-        QualifiedReport report = postForReport("hellopades-lt-sha256-ocsp-28h.pdf", "EE");
+        QualifiedReport report = postForReport("hellopades-lt-sha256-ocsp-28h.pdf", VALID_SIGNATURE_POLICY_1);
         assertAllSignaturesAreInvalid(report);
     }
 
@@ -42,7 +42,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      */
     @Test
     public void pdfDocumentWithOcspOver24hDelayWithEUPolicyShouldPassWithoutErrors() {
-        QualifiedReport report = postForReport("hellopades-lt-sha256-ocsp-28h.pdf", "EU");
+        QualifiedReport report = postForReport("hellopades-lt-sha256-ocsp-28h.pdf", VALID_SIGNATURE_POLICY_2);
         assertAllSignaturesAreValid(report);
     }
 
@@ -83,7 +83,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      */
     @Test
     public void pdfDocumentWithBaselineProfilesBAndLTSignaturesValidatedAgainstEEPolicyOnlyLTShouldPass() {
-        QualifiedReport report = postForReport("hellopades-lt-b.pdf", "EE");
+        QualifiedReport report = postForReport("hellopades-lt-b.pdf", VALID_SIGNATURE_POLICY_1);
         assertSomeSignaturesAreValid(report, 1);
     }
 
@@ -102,7 +102,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      */
     @Test
     public void pdfDocumentWithBaselineProfilesBAndLTSignaturesValidatedAgainstEUPolicyBothShouldPass() {
-        QualifiedReport report = postForReport("hellopades-lt-b.pdf", "EU");
+        QualifiedReport report = postForReport("hellopades-lt-b.pdf", VALID_SIGNATURE_POLICY_2);
         assertAllSignaturesAreValid(report);
     }
 
@@ -121,7 +121,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      */
     @Test
     public void testPdfDocumentSignaturePolicyCaseInsensitivity() {
-        QualifiedReport report = postForReport("hellopades-lt-b.pdf", "eU");
+        QualifiedReport report = postForReport("hellopades-lt-b.pdf", SMALL_CASE_VALID_SIGNATURE_POLICY_2);
         assertAllSignaturesAreValid(report);
     }
 
@@ -140,7 +140,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      */
     @Test
     public void bdocDocumentWithEESignaturePolicyInRequestShouldPass() {
-        QualifiedReport report = postForReport("Valid_ID_sig.bdoc", "EE");
+        QualifiedReport report = postForReport("Valid_ID_sig.bdoc", VALID_SIGNATURE_POLICY_1);
         assertAllSignaturesAreValid(report);
     }
 
@@ -159,7 +159,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      */
     @Test
     public void testBdocDocumentSignaturePolicyCaseInsensitivity() {
-        QualifiedReport report = postForReport("Valid_ID_sig.bdoc", "ee");
+        QualifiedReport report = postForReport("Valid_ID_sig.bdoc", SMALL_CASE_VALID_SIGNATURE_POLICY_1);
         assertAllSignaturesAreValid(report);
     }
 

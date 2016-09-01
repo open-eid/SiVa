@@ -402,12 +402,12 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
      ***/
-    @Test @Ignore //TODO: VAL-297
+    @Test
     public void bdocValidationRequestCaseInsensitivePolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "bdoc", "ee"))
                 .then()
-                .body("validSignaturesCount", Matchers.is(3));
+                .body("validSignaturesCount", Matchers.is(2));
     }
 
      /***

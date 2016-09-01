@@ -26,6 +26,8 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
     protected static final String DOCUMENT_NOT_BASE64 = "Document is not encoded in a valid base64 string";
     protected static final String INVALID_FILENAME = "Invalid filename";
     protected static final String INVALID_SIGNATURE_POLICY = "Invalid signature policy";
+    protected static final String UNMARSHALING_ERROR_CVC_ENUMERATION_VALID = "Unmarshalling Error: cvc-enumeration-valid: ";
+    protected static final String IS_NOT_FROM_DOCTYPE_ENUMERATION = " is not facet-valid with respect to enumeration '[PDF, XROAD, BDOC, DDOC]'. It must be a value from the enumeration. ";
 
     protected static String createXMLValidationRequest(String base64Document, String documentType, String filename) {
         return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +

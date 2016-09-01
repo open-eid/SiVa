@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="no-js ie6"><![endif]-->
+<!--[if IE 7 ]><html class="no-js ie7"><![endif]-->
+<!--[if IE 8 ]><html class="no-js ie8"><![endif]-->
+<!--[if IE 9 ]><html class="no-js ie9"><![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1">
+    
+      
+        <title>Appendix 6 - WSDL of SOAP Interface - SiVa - Validation Service Documentation</title>
+      
+      
+      
+      
+    
+    <meta property="og:url" content="None">
+    <meta property="og:title" content="SiVa - Validation Service Documentation">
+    <meta property="og:image" content="None/../../../">
+    <meta name="apple-mobile-web-app-title" content="SiVa - Validation Service Documentation">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    
+    <link rel="shortcut icon" type="image/x-icon" href="../../../None">
+    <link rel="icon" type="image/x-icon" href="../../../None">
+    <style>
+      @font-face {
+      	font-family: 'Icon';
+      	src: url('../../../assets/fonts/icon.eot?52m981');
+      	src: url('../../../assets/fonts/icon.eot?#iefix52m981')
+               format('embedded-opentype'),
+      		   url('../../../assets/fonts/icon.woff?52m981')
+               format('woff'),
+      		   url('../../../assets/fonts/icon.ttf?52m981')
+               format('truetype'),
+      		   url('../../../assets/fonts/icon.svg?52m981#icon')
+               format('svg');
+      	font-weight: normal;
+      	font-style: normal;
+      }
+    </style>
+    <link rel="stylesheet" href="../../../assets/stylesheets/application-0dac3e5884.css">
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/palettes-05ab2406df.css">
+    
+    
+      
+      
+      
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
+      <style>
+        body, input {
+          font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
+        }
+        pre, code {
+          font-family: 'Roboto Mono', 'Courier New', 'Courier', monospace;
+        }
+      </style>
+    
+    
+      <link rel="stylesheet" href="../../../override.css">
+    
+    <script src="../../../assets/javascripts/modernizr-4ab42b99fd.js"></script>
+    
+  </head>
+  
+  
+  
+  <body class="palette-primary-cyan palette-accent-light-blue">
+    
+      
+      
+    
+    <div class="backdrop">
+      <div class="backdrop-paper"></div>
+    </div>
+    <input class="toggle" type="checkbox" id="toggle-drawer">
+    <input class="toggle" type="checkbox" id="toggle-search">
+    <label class="toggle-button overlay" for="toggle-drawer"></label>
+    <header class="header">
+      <nav aria-label="Header">
+  <div class="bar default">
+    <div class="button button-menu" role="button" aria-label="Menu">
+      <label class="toggle-button icon icon-menu" for="toggle-drawer">
+        <span></span>
+      </label>
+    </div>
+    <div class="stretch">
+      <div class="title">
+        
+          <span class="path">
+            
+              
+                Appendixes <i class="icon icon-link"></i>
+              
+            
+          </span>
+        
+        Appendix 6 - WSDL of SOAP Interface
+      </div>
+    </div>
+    
+    
+    <div class="button button-search" role="button" aria-label="Search">
+      <label class="toggle-button icon icon-search" title="Search" for="toggle-search"></label>
+    </div>
+  </div>
+  <div class="bar search">
+    <div class="button button-close" role="button" aria-label="Close">
+      <label class="toggle-button icon icon-back" for="toggle-search"></label>
+    </div>
+    <div class="stretch">
+      <div class="field">
+        <input class="query" type="text" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck>
+      </div>
+    </div>
+    <div class="button button-reset" role="button" aria-label="Search">
+      <button class="toggle-button icon icon-close" id="reset-search"></button>
+    </div>
+  </div>
+</nav>
+    </header>
+    <main class="main">
+      
+      <div class="drawer">
+        <nav aria-label="Navigation">
+  
+  <a href="https://github.com/open-eid/SiVa" class="project">
+    <div class="banner">
+      
+      <div class="name">
+        <strong>
+          SiVa - Validation Service Documentation
+          <span class="version">
+            
+          </span>
+        </strong>
+        
+          <br>
+          open-eid/SiVa
+        
+      </div>
+    </div>
+  </a>
+  <div class="scrollable">
+    <div class="wrapper">
+      
+        <ul class="repo">
+          <li class="repo-download">
+            
+            <a href="https://github.com/open-eid/SiVa/archive/master.zip" target="_blank" title="Download" data-action="download">
+              <i class="icon icon-download"></i> Download
+            </a>
+          </li>
+          <li class="repo-stars">
+            <a href="https://github.com/open-eid/SiVa/stargazers" target="_blank" title="Stargazers" data-action="star">
+              <i class="icon icon-star"></i> Stars
+              <span class="count">&ndash;</span>
+            </a>
+          </li>
+        </ul>
+        <hr>
+      
+      <div class="toc">
+        <ul>
+          
+            
+  <li>
+    <a class="" title="Introduction" href="../../..">
+      Introduction
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Version info" href="../../version_info/">
+      Version info
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Definitions" href="../../definitions/">
+      Definitions
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="SiVa Service Overview" href="../../overview/">
+      SiVa Service Overview
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Regulatory environment" href="../../regulatory_environment/">
+      Regulatory environment
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Component diagram" href="../../component_diagram/">
+      Component diagram
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Deployment view" href="../../deployment_view/">
+      Deployment view
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Interfaces" href="../../interface_description/">
+      Interfaces
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Use cases" href="../../use_cases/">
+      Use cases
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Deployment" href="../../deployment/">
+      Deployment
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Logging" href="../../logging/">
+      Logging
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="QA Strategy" href="../../qa_strategy/">
+      QA Strategy
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Test Plan" href="../../test_plan/">
+      Test Plan
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="References" href="../../references/">
+      References
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <span class="section">Appendixes</span>
+    <ul>
+      
+        
+  <li>
+    <a class="" title="Appendix 1 - Non-Functional Requirements" href="../none_functional_requirements/">
+      Appendix 1 - Non-Functional Requirements
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="Appendix 2 - Functional Requirements" href="../functional_requirements/">
+      Appendix 2 - Functional Requirements
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="Appendix 3 - Validation Policy" href="../validation_policy/">
+      Appendix 3 - Validation Policy
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="Appendix 4 - Validation Constraint Configuration" href="../validation_constraints/">
+      Appendix 4 - Validation Constraint Configuration
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="Appendix 5 - Test Case Descriptions" href="../test_cases/">
+      Appendix 5 - Test Case Descriptions
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="current" title="Appendix 6 - WSDL of SOAP Interface" href="./">
+      Appendix 6 - WSDL of SOAP Interface
+    </a>
+    
+      
+      
+    
+  </li>
+
+      
+    </ul>
+  </li>
+
+          
+        </ul>
+        
+      </div>
+    </div>
+  </div>
+</nav>
+      </div>
+      <article class="article">
+        <div class="wrapper">
+          
+            <h1>Appendix 6 - WSDL of SOAP Interface</h1>
+          
+          <!--# WSDL of SOAP interface-->
+
+<p>See also <a href="../../interface_description">Interfaces</a> for more information about the SOAP interface. </p>
+<pre class="codehilite"><code class="language-xml">&lt;?xml version='1.0' encoding='UTF-8'?&gt;&lt;wsdl:definitions xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:wsdl=&quot;http://schemas.xmlsoap.org/wsdl/&quot; xmlns:tns=&quot;http://soap.webapp.siva.openeid.ee/&quot; xmlns:soap=&quot;http://schemas.xmlsoap.org/wsdl/soap/&quot; xmlns:ns1=&quot;http://schemas.xmlsoap.org/soap/http&quot; name=&quot;SignatureValidationService&quot; targetNamespace=&quot;http://soap.webapp.siva.openeid.ee/&quot;&gt;
+  &lt;wsdl:types&gt;
+&lt;xs:schema xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:tns=&quot;http://soap.webapp.siva.openeid.ee/&quot; elementFormDefault=&quot;unqualified&quot; targetNamespace=&quot;http://soap.webapp.siva.openeid.ee/&quot; version=&quot;1.0&quot;&gt;
+
+  &lt;xs:element name=&quot;ValidateDocument&quot; type=&quot;tns:validateDocument&quot;/&gt;
+
+  &lt;xs:element name=&quot;ValidateDocumentResponse&quot; type=&quot;tns:ValidateDocumentResponse&quot;/&gt;
+
+  &lt;xs:element name=&quot;ValidationReport&quot; type=&quot;tns:qualifiedReport&quot;/&gt;
+
+  &lt;xs:element name=&quot;ValidationRequest&quot; type=&quot;tns:soapValidationRequest&quot;/&gt;
+
+  &lt;xs:complexType name=&quot;validateDocument&quot;&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element ref=&quot;tns:ValidationRequest&quot;/&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name=&quot;soapValidationRequest&quot;&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name=&quot;Document&quot; type=&quot;xs:string&quot;/&gt;
+      &lt;xs:element name=&quot;Filename&quot; type=&quot;xs:string&quot;/&gt;
+      &lt;xs:element name=&quot;DocumentType&quot; type=&quot;tns:documentType&quot;/&gt;
+      &lt;xs:element minOccurs=&quot;0&quot; name=&quot;SignaturePolicy&quot; type=&quot;xs:string&quot;/&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name=&quot;ValidateDocumentResponse&quot;&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element minOccurs=&quot;0&quot; ref=&quot;tns:ValidationReport&quot;/&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name=&quot;qualifiedReport&quot;&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name=&quot;Policy&quot; type=&quot;tns:policy&quot;/&gt;
+      &lt;xs:element name=&quot;ValidationTime&quot; type=&quot;xs:string&quot;/&gt;
+      &lt;xs:element name=&quot;DocumentName&quot; type=&quot;xs:string&quot;/&gt;
+      &lt;xs:element name=&quot;Signatures&quot;&gt;
+        &lt;xs:complexType&gt;
+          &lt;xs:sequence&gt;
+            &lt;xs:element maxOccurs=&quot;unbounded&quot; minOccurs=&quot;0&quot; name=&quot;Signature&quot; type=&quot;tns:signatureValidationData&quot;/&gt;
+          &lt;/xs:sequence&gt;
+        &lt;/xs:complexType&gt;
+      &lt;/xs:element&gt;
+      &lt;xs:element name=&quot;ValidSignaturesCount&quot; type=&quot;xs:int&quot;/&gt;
+      &lt;xs:element name=&quot;SignaturesCount&quot; type=&quot;xs:int&quot;/&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name=&quot;policy&quot;&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name=&quot;PolicyDescription&quot; type=&quot;xs:string&quot;/&gt;
+      &lt;xs:element name=&quot;PolicyName&quot; type=&quot;xs:string&quot;/&gt;
+      &lt;xs:element name=&quot;PolicyUrl&quot; type=&quot;xs:string&quot;/&gt;
+      &lt;xs:element name=&quot;PolicyVersion&quot; type=&quot;xs:string&quot;/&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name=&quot;signatureValidationData&quot;&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name=&quot;Id&quot; type=&quot;xs:string&quot;/&gt;
+      &lt;xs:element name=&quot;SignatureFormat&quot; type=&quot;xs:string&quot;/&gt;
+      &lt;xs:element name=&quot;SignatureLevel&quot; type=&quot;xs:string&quot;/&gt;
+      &lt;xs:element name=&quot;SignedBy&quot; type=&quot;xs:string&quot;/&gt;
+      &lt;xs:element name=&quot;Indication&quot; type=&quot;tns:indication&quot;/&gt;
+      &lt;xs:element name=&quot;SubIndication&quot; type=&quot;xs:string&quot;/&gt;
+      &lt;xs:element name=&quot;Errors&quot;&gt;
+        &lt;xs:complexType&gt;
+          &lt;xs:sequence&gt;
+            &lt;xs:element maxOccurs=&quot;unbounded&quot; minOccurs=&quot;0&quot; name=&quot;Error&quot; type=&quot;tns:error&quot;/&gt;
+          &lt;/xs:sequence&gt;
+        &lt;/xs:complexType&gt;
+      &lt;/xs:element&gt;
+      &lt;xs:element name=&quot;SignatureScopes&quot;&gt;
+        &lt;xs:complexType&gt;
+          &lt;xs:sequence&gt;
+            &lt;xs:element maxOccurs=&quot;unbounded&quot; name=&quot;SignatureScope&quot; type=&quot;tns:signatureScope&quot;/&gt;
+          &lt;/xs:sequence&gt;
+        &lt;/xs:complexType&gt;
+      &lt;/xs:element&gt;
+      &lt;xs:element name=&quot;ClaimedSigningTime&quot; type=&quot;xs:string&quot;/&gt;
+      &lt;xs:element name=&quot;Warnings&quot;&gt;
+        &lt;xs:complexType&gt;
+          &lt;xs:sequence&gt;
+            &lt;xs:element maxOccurs=&quot;unbounded&quot; minOccurs=&quot;0&quot; name=&quot;Warning&quot; type=&quot;tns:warning&quot;/&gt;
+          &lt;/xs:sequence&gt;
+        &lt;/xs:complexType&gt;
+      &lt;/xs:element&gt;
+      &lt;xs:element name=&quot;Info&quot; type=&quot;tns:info&quot;/&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name=&quot;error&quot;&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name=&quot;NameId&quot; type=&quot;xs:string&quot;/&gt;
+      &lt;xs:element name=&quot;Content&quot; type=&quot;xs:string&quot;/&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name=&quot;signatureScope&quot;&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name=&quot;Name&quot; type=&quot;xs:string&quot;/&gt;
+      &lt;xs:element name=&quot;Scope&quot; type=&quot;xs:string&quot;/&gt;
+      &lt;xs:element name=&quot;Content&quot; type=&quot;xs:string&quot;/&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name=&quot;warning&quot;&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name=&quot;NameId&quot; type=&quot;xs:string&quot;/&gt;
+      &lt;xs:element name=&quot;Description&quot; type=&quot;xs:string&quot;/&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name=&quot;info&quot;&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element minOccurs=&quot;0&quot; name=&quot;bestSignatureTime&quot; type=&quot;xs:string&quot;/&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:simpleType name=&quot;documentType&quot;&gt;
+    &lt;xs:restriction base=&quot;xs:string&quot;&gt;
+      &lt;xs:enumeration value=&quot;PDF&quot;/&gt;
+      &lt;xs:enumeration value=&quot;ASICE&quot;/&gt;
+      &lt;xs:enumeration value=&quot;XROAD&quot;/&gt;
+      &lt;xs:enumeration value=&quot;BDOC&quot;/&gt;
+      &lt;xs:enumeration value=&quot;DDOC&quot;/&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name=&quot;indication&quot;&gt;
+    &lt;xs:restriction base=&quot;xs:string&quot;&gt;
+      &lt;xs:enumeration value=&quot;TOTAL_PASSED&quot;/&gt;
+      &lt;xs:enumeration value=&quot;TOTAL_FAILED&quot;/&gt;
+      &lt;xs:enumeration value=&quot;INDETERMINATE&quot;/&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+
+&lt;/xs:schema&gt;
+  &lt;/wsdl:types&gt;
+  &lt;wsdl:message name=&quot;ValidateDocument&quot;&gt;
+    &lt;wsdl:part element=&quot;tns:ValidateDocument&quot; name=&quot;parameters&quot;&gt;
+    &lt;/wsdl:part&gt;
+  &lt;/wsdl:message&gt;
+  &lt;wsdl:message name=&quot;ValidateDocumentResponse&quot;&gt;
+    &lt;wsdl:part element=&quot;tns:ValidateDocumentResponse&quot; name=&quot;parameters&quot;&gt;
+    &lt;/wsdl:part&gt;
+  &lt;/wsdl:message&gt;
+  &lt;wsdl:portType name=&quot;ValidationWebService&quot;&gt;
+    &lt;wsdl:operation name=&quot;ValidateDocument&quot;&gt;
+      &lt;wsdl:input message=&quot;tns:ValidateDocument&quot; name=&quot;ValidateDocument&quot;&gt;
+    &lt;/wsdl:input&gt;
+      &lt;wsdl:output message=&quot;tns:ValidateDocumentResponse&quot; name=&quot;ValidateDocumentResponse&quot;&gt;
+    &lt;/wsdl:output&gt;
+    &lt;/wsdl:operation&gt;
+  &lt;/wsdl:portType&gt;
+  &lt;wsdl:binding name=&quot;SignatureValidationServiceSoapBinding&quot; type=&quot;tns:ValidationWebService&quot;&gt;
+    &lt;soap:binding style=&quot;document&quot; transport=&quot;http://schemas.xmlsoap.org/soap/http&quot;/&gt;
+    &lt;wsdl:operation name=&quot;ValidateDocument&quot;&gt;
+      &lt;soap:operation soapAction=&quot;&quot; style=&quot;document&quot;/&gt;
+      &lt;wsdl:input name=&quot;ValidateDocument&quot;&gt;
+        &lt;soap:body use=&quot;literal&quot;/&gt;
+      &lt;/wsdl:input&gt;
+      &lt;wsdl:output name=&quot;ValidateDocumentResponse&quot;&gt;
+        &lt;soap:body use=&quot;literal&quot;/&gt;
+      &lt;/wsdl:output&gt;
+    &lt;/wsdl:operation&gt;
+  &lt;/wsdl:binding&gt;
+  &lt;wsdl:service name=&quot;SignatureValidationService&quot;&gt;
+    &lt;wsdl:port binding=&quot;tns:SignatureValidationServiceSoapBinding&quot; name=&quot;ValidationWebServiceImplPort&quot;&gt;
+      &lt;soap:address location=&quot;http://localhost:8080/soap/validationWebService&quot;/&gt;
+    &lt;/wsdl:port&gt;
+  &lt;/wsdl:service&gt;
+&lt;/wsdl:definitions&gt;</code></pre>
+          <aside class="copyright" role="note">
+            
+            Documentation built with
+            <a href="http://www.mkdocs.org" target="_blank">MkDocs</a>
+            using the
+            <a href="http://squidfunk.github.io/mkdocs-material/" target="_blank">
+              Material
+            </a>
+            theme.
+          </aside>
+          
+            <footer class="footer">
+              
+  <nav class="pagination" aria-label="Footer">
+    <div class="previous">
+      
+        <a href="../test_cases/" title="Appendix 5 - Test Case Descriptions">
+          <span class="direction">
+            Previous
+          </span>
+          <div class="page">
+            <div class="button button-previous" role="button" aria-label="Previous">
+              <i class="icon icon-back"></i>
+            </div>
+            <div class="stretch">
+              <div class="title">
+                Appendix 5 - Test Case Descriptions
+              </div>
+            </div>
+          </div>
+        </a>
+      
+    </div>
+    <div class="next">
+      
+    </div>
+  </nav>
+
+            </footer>
+          
+        </div>
+      </article>
+      <div class="results" role="status" aria-live="polite">
+        <div class="scrollable">
+          <div class="wrapper">
+            <div class="meta"></div>
+            <div class="list"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script>
+      var base_url = '../../..';
+      var repo_id  = 'open-eid/SiVa';
+    </script>
+    <script src="../../../assets/javascripts/application-997097ee0c.js"></script>
+    
+    
+  </body>
+</html>

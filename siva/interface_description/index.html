@@ -236,14 +236,14 @@
         <ul>
           
             <li class="anchor">
-              <a title="REST JSON validation service" href="#rest-json-validation-service">
-                REST JSON validation service
+              <a title="Validation request interface" href="#validation-request-interface">
+                Validation request interface
               </a>
             </li>
           
             <li class="anchor">
-              <a title="SOAP validation service" href="#soap-validation-service">
-                SOAP validation service
+              <a title="Validation response interface" href="#validation-response-interface">
+                Validation response interface
               </a>
             </li>
           
@@ -357,6 +357,15 @@
   </li>
 
       
+        
+  <li>
+    <a class="" title="Appendix 6 - WSDL of SOAP Interface" href="../appendix/wsdl/">
+      Appendix 6 - WSDL of SOAP Interface
+    </a>
+    
+  </li>
+
+      
     </ul>
   </li>
 
@@ -375,467 +384,250 @@
           
           <!--# Interface description-->
 
-<h2 id="rest-json-validation-service">REST JSON validation service</h2>
-<h3 id="rest-json-endpoint">REST JSON Endpoint</h3>
+<p>In this section the SiVa signature validation service's external interfaces that are provided for the service's clients are described. For information of internal components and their interfaces, please refer to <a href="../component_diagram"><strong>Component diagram</strong></a>. </p>
+<p>SiVa service provides <strong>REST JSON</strong> and <strong>SOAP</strong> interfaces that enable the service users to:</p>
+<ul>
+<li>request validation of signatures in a digitally signed document (i.e. signature container like BDOC/ASiC-E or PDF); </li>
+<li>receive a response with the validation result of all the signatures in the document. </li>
+</ul>
+<p>In the following subsections, the SiVa validation request and response interfaces are described in detail. </p>
+<h2 id="validation-request-interface">Validation request interface</h2>
+<p><strong> REST JSON Endpoint </strong></p>
 <pre class="codehilite"><code>POST https://&lt;server url&gt;/validate</code></pre>
 
 
-<h3 id="json-request">JSON Request</h3>
+<p><strong> SOAP Endpoint </strong> </p>
+<pre class="codehilite"><code>POST https://&lt;server url&gt;/soap/validationWebService/validateDocument</code></pre>
+
+
+<h3 id="validation-request-parameters">Validation request parameters</h3>
+<p>Validation request parameters for JSON and SOAP interfaces are described in the table below. Data types of SOAP parameters are defined in the <a href="../appendix/wsdl">SiVa WSDL document</a>.    </p>
 <table>
 <thead>
 <tr>
-<th colspan="1" rowspan="1">
-<p>Parameter</p>
-</th>
-<th colspan="1" rowspan="1">
-<p>Type</p>
-</th>
-<th colspan="1" rowspan="1">
-<p>Mandatory</p>
-</th>
-<th colspan="1" rowspan="1">
-<p>Description</p>
-</th>
+<th>JSON parameter</th>
+<th>SOAP parameter</th>
+<th>Mandatory</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td colspan="1" rowspan="1">
-<p><code>document</code></p>
-</td>
-<td colspan="1" rowspan="1">
-<p>String</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>+</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Base64 encoded string of digitally signed document</p>
-</td>
+<td>document</td>
+<td>Document</td>
+<td>+</td>
+<td>Base64 encoded string of digitally signed document to be validated</td>
 </tr>
 <tr>
-<td colspan="1" rowspan="1">
-<p><code>filename</code>
-</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>String
-</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>+
-</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>File name of the digitally signed document
-(i.e <code>sample.bdoc</code>)</p>
-</td>
+<td>filename</td>
+<td>Filename</td>
+<td>+</td>
+<td>File name of the digitally signed document (i.e. sample.bdoc)</td>
 </tr>
 <tr>
-<td colspan="1" rowspan="1">
-<p><code>documentType</code></p>
-</td>
-<td colspan="1" rowspan="1">
-<p>String</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>+</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Validation service to use for validation</p>
-</td>
+<td>documentType</td>
+<td>DocumentType</td>
+<td>+</td>
+<td>Format of the digitally signed document. This value determines the validation service type that will be used for validation. <br> <strong>Possible values:</strong> <br> * BDOC - for documents in <a href="http://id.ee/public/bdoc-spec212-eng.pdf">BDOC</a> (ASiC-E/XAdES) format. Both time-stamp (TS) and time-mark (TM) profiles are supported here. <br> * DDOC - for documents in <a href="http://id.ee/public/DigiDoc_format_1.3.pdf">DIGIDOC-XML</a> format, supported versions are DIGIDOC-XML 1.0 (also known as SK-XML 1.0) to DIGIDOC-XML 1.3. In case of DIGIDOC_XML documents, also the hashcode format is supported (see <a href="http://sertkeskus.github.io/dds-documentation/api/api_docs/#ddoc-format-and-hashcode">DigiDocService Specification</a> for more information). <br> * PDF - for signed PDF document in <a href="http://www.etsi.org/deliver/etsi_en/319100_319199/31914201/01.01.01_60/en_31914201v010101p.pdf">PAdES</a> format. <br>* XROAD - for documents created in the <a href="https://www.ria.ee/en/x-road.html">X-Road</a> information system, see also <a href="https://cyber.ee/uploads/2013/05/T-4-23-Profile-for-High-Performance-Digital-Signatures1.pdf">specification document</a> of the signature format.</td>
 </tr>
 <tr>
-<td colspan="1" rowspan="1">
-<p><code>signaturePolicy</code>
-</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>String
-</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>-
-</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Can be used to change the default signature validation
-policy that is used by the service</p>
-</td>
+<td>signaturePolicy</td>
+<td>SignaturePolicy</td>
+<td>-</td>
+<td>Can be used to change the default signature validation policy that is used by the service. <br> See also <a href="../appendix/validation_policy">SiVa Validation Policy</a> for more information. <br> <strong>Possible values:</strong> <br> * POLv1 - the default policy. Signatures with all legal levels are accepted (i.e. QES, AdES and AdESqc, according to Regulation (EU) No 910/2014.) <br> * POLv2 - only signatures with QES legal level (according to Regulation (EU) No 910/2014) are accepted.</td>
 </tr>
 </tbody>
 </table>
-<h4 id="sample-request">Sample request</h4>
+<h3 id="sample-json-request">Sample JSON request</h3>
 <pre class="codehilite"><code class="language-json">{
   &quot;filename&quot;:&quot;sample.ddoc&quot;,
   &quot;documentType&quot;:&quot;DDOC&quot;,
   &quot;document&quot;:&quot;PD94bWwgdmVyc2lvbj0iMS4....&quot;,
-  &quot;signaturePolicy&quot;: &quot;EU&quot;
+  &quot;signaturePolicy&quot;: &quot;POLv1&quot;
 }</code></pre>
 
 
-<h3 id="json-response">JSON Response</h3>
+<h3 id="sample-soap-request">Sample SOAP request</h3>
+<pre class="codehilite"><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;soap:Envelope xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+  &lt;soap:Body&gt;
+    &lt;ns2:ValidateDocument xmlns:ns2=&quot;http://soap.webapp.siva.openeid.ee/&quot;&gt;
+      &lt;ns2:ValidationRequest&gt;
+        &lt;Document&gt;PD94bWwgdmVyc2lvbj0iMS4....&lt;/Document&gt;
+        &lt;Filename&gt;sample.ddoc&lt;/Filename&gt;
+        &lt;DocumentType&gt;DDOC&lt;/DocumentType&gt;
+        &lt;SignaturePolicy&gt;POLv1&lt;/SignaturePolicy&gt;
+      &lt;/ns2:ValidationRequest&gt;
+    &lt;/ns2:ValidateDocument&gt;
+  &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;</code></pre>
+
+
+<h2 id="validation-response-interface">Validation response interface</h2>
+<h3 id="validation-response-parameters-successful-scenario">Validation response parameters (successful scenario)</h3>
+<p>The signature validation report (i.e. the validation response) for JSON and SOAP interfaces is described in the table below. Data types of SOAP parameters are defined in the <a href="../appendix/wsdl">SiVa WSDL document</a>.    </p>
 <table>
 <thead>
 <tr>
-<th colspan="1" rowspan="1">
-<p>Parameter</p>
-</th>
-<th colspan="1" rowspan="1">
-<p>Type</p>
-</th>
-<th colspan="1" rowspan="1">
-<p>Description</p>
-</th>
+<th>JSON parameter</th>
+<th>SOAP parameter</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td colspan="1" rowspan="1">
-<p><code>policy</code>
-</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Object
-</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Object containing information of the SiVa signature
-validation policy that was used for validation</p>
-</td>
+<td><code>policy</code></td>
+<td><code>Policy</code></td>
+<td>Object containing information of the SiVa signature validation policy that was used for validation</td>
 </tr>
 <tr>
-<td colspan="1" rowspan="1">
-<p><code>policy.policyVersion</code></p>
-</td>
-<td colspan="1" rowspan="1">
-<p>String</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Version of the validation policy</p>
-</td>
+<td><code>policy.policyVersion</code></td>
+<td><code>Policy.PolicyVersion</code></td>
+<td>Version of the validation policy</td>
 </tr>
 <tr>
-<td colspan="1" rowspan="1">
-<p><code>policy.policyName</code></p>
-</td>
-<td colspan="1" rowspan="1">
-<p>String</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Name of the validation policy</p>
-</td>
+<td><code>policy.policyName</code></td>
+<td><code>Policy.PolicyName</code></td>
+<td>Name of the validation policy</td>
 </tr>
 <tr>
-<td colspan="1" rowspan="1">
-<p><code>policy.policyDescription</code></p>
-</td>
-<td colspan="1" rowspan="1">
-<p>String</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Short description of the validation policy</p>
-</td>
+<td><code>policy. policyDescription</code></td>
+<td><code>Policy. PolicyDescription</code></td>
+<td>Short description of the validation policy</td>
 </tr>
 <tr>
-<td colspan="1" rowspan="1">
-<p><code>policy.policyUrl</code></p>
-</td>
-<td colspan="1" rowspan="1">
-<p>String</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>URL where the signature validation policy
-document can be downloaded.</p>
-<p>The validation policy document shall include information
-about validation of all the document formats, including
-the different validation policies that are used in
-case of different file formats and base libraries.</p>
-</td>
+<td><code>policy.policyUrl</code></td>
+<td><code>Policy.PolicyUrl</code></td>
+<td>URL where the signature validation policy document can be downloaded. The validation policy document shall include information about validation of all the document formats, including the different validation policies that are used in case of different file formats and base libraries.</td>
 </tr>
 <tr>
-<td colspan="1" rowspan="1">
-<p><code>signaturesCount</code></p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Number</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Number of signatures found inside digitally signed file</p>
-</td>
+<td><code>signaturesCount</code></td>
+<td><code>SignaturesCount</code></td>
+<td>Number of signatures found inside digitally signed file</td>
 </tr>
 <tr>
-<td colspan="1" rowspan="1">
-<p><code>validSignaturesCount</code>
-</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Number
-</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Signatures count that have validated to <code>TOTAL-PASSED</code>.
-See also <code>validSignaturesCount</code> field.</p>
-</td>
+<td><code>validSignaturesCount</code></td>
+<td><code>ValidSignaturesCount</code></td>
+<td>Signatures count that have validated to <code>TOTAL-PASSED</code>. See also <code>validSignaturesCount</code> field.</td>
 </tr>
 <tr>
-<td colspan="1" rowspan="1">
-<p><code>validationTime</code></p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Date</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Time of validating the signature by the service</p>
-</td>
+<td><code>validationTime</code></td>
+<td><code>ValidationTime</code></td>
+<td>Time of validating the signature by the service</td>
 </tr>
 <tr>
-<td colspan="1" rowspan="1">
-<p><code>documentName</code></p>
-</td>
-<td colspan="1" rowspan="1">
-<p>String</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Digitally signed document's file name</p>
-</td>
+<td><code>documentName</code></td>
+<td><code>DocumentName</code></td>
+<td>Digitally signed document's file name</td>
 </tr>
 <tr>
-<td colspan="1" rowspan="1">
-<p><code>signatureForm</code>
-</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>String
-</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Format (and optionally version) of the container
-containing the signature</p>
-</td>
+<td><code>signatureForm</code></td>
+<td><code>SignatureForm</code></td>
+<td>Format (and optionally version) of the digitally signed document container. <br> In case of documents in <a href="http://id.ee/public/DigiDoc_format_1.3.pdf">DIGIDOC-XML</a> (DDOC) format, the "hashcode" suffix is used to denote that the container was validated in <a href="http://sertkeskus.github.io/dds-documentation/api/api_docs/#ddoc-format-and-hashcode">hashcode mode</a>, i.e. without original data files. <br> <strong>Possible values:</strong>  <br> * DIGIDOC_XML_1.0 <br> * DIGIDOC_XML_1.0_hashcode <br> * DIGIDOC_XML_1.1 <br> * DIGIDOC_XML_1.1_hashcode <br> * DIGIDOC_XML_1.2 <br> * DIGIDOC_XML_1.2_hashcode <br> * DIGIDOC_XML_1.3 <br> * DIGIDOC_XML_1.3_hashcode <br> * PAdES - used in case of signed PDF document <br> * ASiC_E - used in case of all <a href="http://id.ee/public/bdoc-spec212-eng.pdf">BDOC</a> documents and X-Road simple containers that don't use batch time-stamping (see <a href="https://cyber.ee/uploads/2013/05/T-4-23-Profile-for-High-Performance-Digital-Signatures1.pdf">specification document</a>)<br> * ASiC_E_batchsignature - used in case of X-Road containers with batch signature (see <a href="https://cyber.ee/uploads/2013/05/T-4-23-Profile-for-High-Performance-Digital-Signatures1.pdf">specification document</a>)</td>
 </tr>
 <tr>
-<td colspan="1" rowspan="1">
-<p><code>signatures</code></p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Array</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Collection of signatures found in digitally signed document</p>
-</td>
+<td><code>signatures</code></td>
+<td><code>Signatures</code></td>
+<td>Collection of signatures found in digitally signed document</td>
 </tr>
 <tr>
-<td colspan="1" rowspan="1">
-<p><code>signatures[0]</code></p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Object</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Signature information object</p>
-</td>
+<td><code>signatures[0]</code></td>
+<td><code>Signature</code></td>
+<td>Signature information object</td>
 </tr>
 <tr>
-<td colspan="1" rowspan="1">
-<p><code>signatures[0].claimedSigningTime</code>
-</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Data
-</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Claimed signing time, i.e. signer's computer time during
-signature creation</p>
-</td>
+<td><code>signatures[0]. claimedSigningTime</code></td>
+<td><code>Signature. ClaimedSigningTime</code></td>
+<td>Claimed signing time, i.e. signer's computer time during signature creation</td>
 </tr>
 <tr>
-<td colspan="1" rowspan="1">
-<p><code>signatures[0].errors</code></p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Array</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Information about validation error(s).</p>
-<p>Array of error messages, as returned by the base library
-that was used for signature validation.</p>
-</td>
+<td><code>signatures[0].id</code></td>
+<td><code>Signature.Id</code></td>
+<td>Signature ID attribute</td>
 </tr>
 <tr>
-<td colspan="1" rowspan="1">
-<p><code>signatures[0].id</code></p>
-</td>
-<td colspan="1" rowspan="1">
-<p>String</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Signature ID:</p>
-<ul>
-<li>
-<p>In case of XAdES signatures, the value of <Signature>
-  XML element's Id attribute</p>
-</li>
-<li>
-<p>In case of PAdES signatures, the value of
-</p>
-</li>
-</ul>
-</td>
+<td><code>signatures[0].indication</code></td>
+<td><code>Signature.Indication</code></td>
+<td>Overall result of the signature's validation process, according to <a href="http://www.etsi.org/deliver/etsi_en/319100_319199/31910201/01.01.01_60/en_31910201v010101p.pdf">ETSI EN 319 102-1</a> "Table 5: Status indications of the signature validation process". <br> Note that the validation results of different signatures in one signed document (signature container) may vary. <br> See also <code>validSignaturesCount</code> and <code>SignaturesCount</code> fields. <br><strong>Possible values:</strong> <br> * TOTAL-PASSED <br> * TOTAL-FAILED <br> * INDETERMINATE</td>
 </tr>
 <tr>
-<td colspan="1" rowspan="1">
-<p><code>signatures[0].indication</code></p>
-</td>
-<td colspan="1" rowspan="1">
-<p>String</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Overall result of the signature's validation
-process, according to EN 319 102-1 "Table 5: Status
-indications of the signature validation process"</p>
-<p>The validation results of different signatures in one
-signed document (signature container) may vary.
-See also <code>validSignaturesCount</code> and <code>SignaturesCount</code>
-fields.</p>
-</td>
+<td><code>signatures[0]. subIndication</code></td>
+<td><code>Signature. SubIndication</code></td>
+<td>Additional subindication in case of failed or indeterminate validation result, according to <a href="http://www.etsi.org/deliver/etsi_en/319100_319199/31910201/01.01.01_60/en_31910201v010101p.pdf">ETSI EN 319 102-1</a> "Table 6: Validation Report Structure and Semantics"</td>
 </tr>
 <tr>
-<td colspan="1" rowspan="1">
-<p><code>signatures[0].info</code></p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Object</p>
-</td>
-<td colspan="1" rowspan="1"></td>
+<td><code>signatures[0].errors</code></td>
+<td><code>Signature.Errors</code></td>
+<td>Information about validation error(s), array of error messages.</td>
 </tr>
 <tr>
-<td colspan="1" rowspan="1">
-<p><code>signatures[0].info.bestSignatureTime</code></p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Date</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Time value that is regarded as trusted signing time,
-denoting the earliest time when it can be trusted by
-the validation application (because proven by some POE
-present in the signature) that a signature has existed:</p>
-<ul>
-<li>in case of signature with time-mark - the producedAt
-  value of the earliest valid time-mark (OCSP confirmation
-  of the signer's certificate) in the signature.</li>
-<li>in case of signature with time-stamp - the getTime
-  value of the earliest valid signature time-stamp
-  token in the signature.</li>
-</ul>
-</td>
+<td><code>signatures[0].errors[0].  content</code></td>
+<td><code>Signature.Errors. Error.Content</code></td>
+<td>Error message, as returned by the base library that was used for signature validation.</td>
 </tr>
 <tr>
-<td colspan="1" rowspan="1">
-<p><code>signatures[0].signatureFormat</code>
-</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>String
-</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Format and profile (according to Baseline Profile standard)
-of the signature</p>
-</td>
+<td><code>signatures[0].info</code></td>
+<td><code>Signature.Info</code></td>
+<td>Object containing trusted signing time information.</td>
 </tr>
 <tr>
-<td colspan="1" rowspan="1">
-<p><code>signatures[0].signatureLevel</code></p>
-</td>
-<td colspan="1" rowspan="1">
-<p>String</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>In case of BDOC and PAdES formats: indication whether
-the signature is Advanced electronic Signature (AdES),
-AdES supported by a Qualified Certificate (AdES/QC) or a
-Qualified electronic Signature (QES).</p>
-<p>In case of DIGIDOC-XML 1.0..1.3 formats, empty value
-is used as the signature level is not checked by the
-JDigiDoc base library that is used for validation.</p>
-</td>
+<td><code>signatures[0].info. bestSignatureTime</code></td>
+<td><code>Signature.Info. BestSignatureTime</code></td>
+<td>Time value that is regarded as trusted signing time, denoting the earliest time when it can be trusted by the validation application (because proven by some Proof-of-Existence present in the signature) that a signature has existed.<br>The source of the value depends on the signature profile (see also <code>SignatureFormat</code> parameter):<br>- Signature with time-mark (LT_TM level) - the producedAt value of the earliest valid time-mark (OCSP confirmation of the signer's certificate) in the signature.<br>- Signature with time-stamp (LT or LTA level) - the genTime value of the earliest valid signature time-stamp token in the signature. <br> - Signature with BES or EPES level - the value is empty, i.e. there is no trusted signing time value available.</td>
 </tr>
 <tr>
-<td colspan="1" rowspan="1">
-<p><code>signatures[0].signatureScopes</code>
-</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Array
-</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Contains information of the original data that is
-covered by the signature.</p>
-</td>
+<td><code>signatures[0]. signatureFormat</code></td>
+<td><code>Signature. SignatureFormat</code></td>
+<td>Format and profile (according to Baseline Profile) of the signature. See <a href="http://www.etsi.org/deliver/etsi_ts/103100_103199/103171/02.01.01_60/ts_103171v020101p.pdf">XAdES Baseline Profile</a> and <a href="http://www.etsi.org/deliver/etsi_ts/103100_103199/103172/02.02.02_60/ts_103172v020202p.pdf">PAdES Baseline Profile</a> for detailed description of the Baseline Profile levels. Levels that are accepted in SiVa validation policy are described in <a href="../appendix/validation_policy">SiVa signature validation policy</a> <br><strong>Possible values:</strong>  <br> * XAdES_BASELINE_B_BES <br> * XAdES_BASELINE_B_EPES <br> * XAdES_BASELINE_T <br> * XAdES_BASELINE_LT - long-term level XAdES signature where time-stamp is used as a assertion of trusted signing time<br> * XAdES_BASELINE_LT_TM - long-term level XAdES signature where time-mark is used as a assertion of trusted signing time. Used in case of <a href="http://id.ee/public/bdoc-spec212-eng.pdf">BDOC</a> signatures with time-mark profile and <a href="http://id.ee/public/DigiDoc_format_1.3.pdf">DIGIDOC-XML</a> (DDOC) signatures.<br> * XAdES_BASELINE_LTA <br> * PAdES_BASELINE_B_BES <br> * PAdES_BASELINE_B_EPES <br> * PAdES_BASELINE_T <br> * PAdES_BASELINE_LT <br> * PAdES_BASELINE_LTA</td>
 </tr>
 <tr>
-<td colspan="1" rowspan="1">
-<p><code>signatures[0].signedBy</code>
-</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>String
-</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Signers name and identification number, i.e. value of
-the CN field of the signer's certificate</p>
-</td>
+<td><code>signatures[0]. signatureLevel</code></td>
+<td><code>Signature. SignatureLevel</code></td>
+<td>Legal level of the signature, according to Regulation (EU) No 910/2014. <br> - In case of BDOC and PAdES formats: indication whether the signature is Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES). <br> - In case of DIGIDOC-XML 1.0..1.3 formats, empty value is used as the signature level is not checked by the JDigiDoc base library that is used for validation. However, the signatures can be indirectly regarded as QES level signatures, see also <a href="../appendix/validation_policy">SiVa Validation Policy</a></td>
 </tr>
 <tr>
-<td colspan="1" rowspan="1">
-<p><code>signatures[0].subIndication</code></p>
-</td>
-<td colspan="1" rowspan="1">
-<p>String</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Additional subindication in case of failed or
-indeterminate validation result, according to EN 319 102-1
-"Table 6: Validation Report Structure and Semantics"</p>
-</td>
+<td><code>signatures[0].signedBy</code></td>
+<td><code>Signature.SignedBy</code></td>
+<td>Signers name and identification number, i.e. value of the CN field of the signer's certificate</td>
 </tr>
 <tr>
-<td colspan="1" rowspan="1">
-<p><code>signatures[0].warnings</code></p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Array</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Block of validation warnings that do not affect
-the overall validation result.</p>
-<p>Known warning situations (according to
-http://id.ee/public/SK-JDD-PRG-GUIDE.pdf, chap. 5.2.4.1):</p>
-<ul>
-<li>BDOC (and PAdES?): Weaker digest method (SHA-1) has
-  been used than recommended when calculating either or
-  element’s digest value.</li>
-<li>DIGIDOC-XML 1.0-1.3: <code>DataFile</code> element’s <code>xmlns</code>
-  attribute is missing.</li>
-<li>DIGIDOC-XML 1.0-1.3: <code>&lt;IssuerSerial&gt;&lt;X509IssuerName&gt;</code>
-  and/or <code>&lt;IssuerSerial&gt;&lt;X509IssuerSerial&gt;</code> element’s
-  <code>xmlns</code> attribute is missing.</li>
-</ul>
-</td>
+<td><code>signatures[0]. signatureScopes</code></td>
+<td><code>Signature. SignatureScopes</code></td>
+<td>Contains information of the original data that is covered by the signature.</td>
+</tr>
+<tr>
+<td><code>signatures[0]. signatureScopes[0]. name</code></td>
+<td><code>Signature. SignatureScopes.  SignatureScope.Name</code></td>
+<td>Name of the signature scope.  <br>- In case of XAdES signature: name of the data file that is signed. <br>- In case of PAdES signature: PDF version that is covered by the signature, e.g. 'PDF previous version #1'</td>
+</tr>
+<tr>
+<td><code>signatures[0]. signatureScopes[0]. scope</code></td>
+<td><code>Signature. SignatureScopes.  SignatureScope. Scope</code></td>
+<td>Type of the signature scope.<br>- In case of XAdES signature: 'FullSignatureScope'<br>- In case of PAdES signature: 'PdfByteRangeSignatureScope'</td>
+</tr>
+<tr>
+<td><code>signatures[0]. signatureScopes[0]. content</code></td>
+<td><code>Signature. SignatureScopes.  SignatureScope. Content</code></td>
+<td>- In case of XAdES signatures: 'Full document', indicating that the whole document is covered by the signature. <br>- In case of PAdES signatures: the byte range that is covered by the signature.</td>
+</tr>
+<tr>
+<td><code>signatures[0].warnings</code></td>
+<td><code>Signature.Warnings</code></td>
+<td>Block of validation warnings that do not affect the overall validation result. Known warning situations (according to http://id.ee/public/SK-JDD-PRG-GUIDE.pdf, chap. 5.2.4.1): <br>- BDOC (ASiC-E) and PAdES: weaker digest method (SHA-1) has been used than recommended when calculating either Reference or Signature element’s digest value; <br> - DIGIDOC-XML 1.0-1.3: DataFile element’s xmlns attribute is missing;<br> - DIGIDOC-XML 1.0-1.3: IssuerSerial/X509IssuerName and/or IssuerSerial/X509IssuerSerial element’s xmlns attribute is missing.</td>
+</tr>
+<tr>
+<td><code>signatures[0].warnings[0]. description</code></td>
+<td><code>Signature.Warnings. Warning.Description</code></td>
+<td>Warning description, as retuned by the base library that was used for validation.</td>
 </tr>
 </tbody>
 </table>
-<h4 id="sample-response">Sample response</h4>
+<h3 id="sample-json-response-successful-scenario">Sample JSON response (successful scenario)</h3>
 <pre class="codehilite"><code class="language-json">{
     &quot;policy&quot;: {
         &quot;policyVersion&quot;: &quot;1.0&quot;,
         &quot;policyName&quot;: &quot;SiVa validation policy&quot;,
-        &quot;policyDescription&quot;: &quot;SiVa validation policy&quot;,
+        &quot;policyDescription&quot;: &quot;SiVa validation policy version 1&quot;,
         &quot;policyUrl&quot;: &quot;http://open-eid.github.io/SiVa/siva/appendix/validation_policy/&quot;
     },
     &quot;signaturesCount&quot;: 1,
@@ -862,97 +654,69 @@ http://id.ee/public/SK-JDD-PRG-GUIDE.pdf, chap. 5.2.4.1):</p>
 }</code></pre>
 
 
-<h2 id="soap-validation-service">SOAP validation service</h2>
-<h3 id="soap-request">SOAP Request</h3>
-<table>
-<thead>
-<tr>
-<th colspan="1" rowspan="1">
-<p>Parameter</p>
-</th>
-<th colspan="1" rowspan="1">
-<p>Type</p>
-</th>
-<th colspan="1" rowspan="1">
-<p>Mandatory</p>
-</th>
-<th colspan="1" rowspan="1">
-<p>Description</p>
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="1" rowspan="1">
-<p><code>Document</code></p>
-</td>
-<td colspan="1" rowspan="1">
-<p>String</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>+</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Base64 encoded string of digitally signed document</p>
-</td>
-</tr>
-<tr>
-<td colspan="1" rowspan="1">
-<p><code>Filename</code>
-</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>String
-</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>+
-</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Filename of the digitally signed document
-(i.e <code>sample.bdoc</code>)</p>
-</td>
-</tr>
-<tr>
-<td colspan="1" rowspan="1">
-<p><code>DocumentType</code></p>
-</td>
-<td colspan="1" rowspan="1">
-<p>String</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>+</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Validation service to use for validation</p>
-</td>
-</tr>
-<tr>
-<td colspan="1" rowspan="1">
-<p><code>SignaturePolicy</code>
-</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>String
-</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>-
-</p>
-</td>
-<td colspan="1" rowspan="1">
-<p>Can be used to change the default signature validation
-policy that is used by the service</p>
-</td>
-</tr>
-</tbody>
-</table>
-<h3 id="soap-response">SOAP Response</h3>
-<div class="admonition development">
-<p class="admonition-title">Development</p>
-<p>Need to add response description</p>
-</div>
+<h3 id="sample-soap-response-successful-scenario">Sample SOAP response (successful scenario)</h3>
+<pre class="codehilite"><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;soap:Envelope xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+  &lt;soap:Body&gt;
+    &lt;ns2:ValidateDocumentResponse xmlns:ns2=&quot;http://soap.webapp.siva.openeid.ee/&quot;&gt;
+      &lt;ns2:ValidationReport&gt;
+        &lt;Policy&gt;
+          &lt;PolicyDescription&gt;SiVa validation policy&lt;/PolicyDescription&gt;
+          &lt;PolicyName&gt;SiVa validation policy&lt;/PolicyName&gt;
+          &lt;PolicyUrl&gt;http://open-eid.github.io/SiVa/siva/appendix/validation_policy/&lt;/PolicyUrl&gt;
+          &lt;PolicyVersion&gt;1.0&lt;/PolicyVersion&gt;
+        &lt;/Policy&gt;
+        &lt;ValidationTime&gt;2016-08-31T16:26:20Z&lt;/ValidationTime&gt;
+        &lt;DocumentName&gt;default.bdoc&lt;/DocumentName&gt;
+        &lt;SignatureForm&gt;ASiC_E&lt;/SignatureForm&gt;
+        &lt;Signatures&gt;
+          &lt;Signature&gt;
+            &lt;Id&gt;S0&lt;/Id&gt;
+            &lt;SignatureFormat&gt;XAdES_BASELINE_LT_TM&lt;/SignatureFormat&gt;
+            &lt;SignatureLevel&gt;QES&lt;/SignatureLevel&gt;
+            &lt;SignedBy&gt;NURM,AARE,38211015222&lt;/SignedBy&gt;
+            &lt;Indication&gt;TOTAL_PASSED&lt;/Indication&gt;
+            &lt;SubIndication/&gt;
+            &lt;Errors/&gt;
+            &lt;SignatureScopes&gt;
+              &lt;SignatureScope&gt;
+                &lt;Name&gt;lama.jpg&lt;/Name&gt;
+                &lt;Scope&gt;FullSignatureScope&lt;/Scope&gt;
+                &lt;Content&gt;Full document&lt;/Content&gt;
+              &lt;/SignatureScope&gt;
+            &lt;/SignatureScopes&gt;
+            &lt;ClaimedSigningTime&gt;2013-11-25T13:16:42Z&lt;/ClaimedSigningTime&gt;
+            &lt;Warnings/&gt;
+            &lt;Info&gt;
+              &lt;bestSignatureTime&gt;2013-11-25T13:16:59Z&lt;/bestSignatureTime&gt;
+            &lt;/Info&gt;
+          &lt;/Signature&gt;
+        &lt;/Signatures&gt;
+        &lt;ValidSignaturesCount&gt;1&lt;/ValidSignaturesCount&gt;
+        &lt;SignaturesCount&gt;1&lt;/SignaturesCount&gt;
+      &lt;/ns2:ValidationReport&gt;
+    &lt;/ns2:ValidateDocumentResponse&gt;
+  &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;</code></pre>
+
+
+<h3 id="sample-json-response-error-situation">Sample JSON response (error situation)</h3>
+<pre class="codehilite"><code class="language-json">{&quot;requestErrors&quot;: [{
+    &quot;message&quot;: &quot;document malformed or not matching documentType&quot;,
+    &quot;key&quot;: &quot;document&quot;
+}]}</code></pre>
+
+
+<h3 id="sample-soap-response-error-situation">Sample SOAP response (error situation)</h3>
+<pre class="codehilite"><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;soap:Envelope xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+  &lt;soap:Body&gt;
+    &lt;soap:Fault&gt;
+      &lt;faultcode&gt;soap:Server&lt;/faultcode&gt;
+      &lt;faultstring&gt;document malformed or not matching documentType&lt;/faultstring&gt;
+    &lt;/soap:Fault&gt;
+  &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;</code></pre>
           <aside class="copyright" role="note">
             
             Documentation built with

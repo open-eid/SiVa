@@ -2,6 +2,7 @@ package ee.openeid.siva.webapp.soap.interceptor;
 
 
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
+import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.binding.soap.interceptor.AbstractSoapInterceptor;
 import org.apache.cxf.interceptor.Fault;
@@ -27,7 +28,7 @@ public class SoapFaultResponseInterceptor extends AbstractSoapInterceptor {
             return;
         }
 
-        if (cause instanceof MalformedDocumentException) {
+        if (cause instanceof MalformedDocumentException || cause instanceof InvalidPolicyException) {
             f.setStatusCode(400);
             f.setFaultCode(new QName("Client"));
         }

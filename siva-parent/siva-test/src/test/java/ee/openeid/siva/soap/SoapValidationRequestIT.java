@@ -498,7 +498,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      ***/
     @Test
     public void soapValidationRequestWithEmptyDocument() {
-        post(validationRequestForDocumentExtended("", "Valid_IDCard_MobID_signatures.bdoc", "DDOC", VALID_SIGNATURE_POLICY_1))
+        post(validationRequestForDocumentExtended("", "Valid_IDCard_MobID_signatures.bdoc", "BDOC", VALID_SIGNATURE_POLICY_1))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("Envelope.Body.Fault.faultcode",Matchers.is(CLIENT_FAULT))
@@ -523,7 +523,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
     @Test
     public void soapValidationRequestWithEmptyFilename() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestForDocumentExtended(encodedString, "", "DDOC", VALID_SIGNATURE_POLICY_1))
+        post(validationRequestForDocumentExtended(encodedString, "", "BDOC", VALID_SIGNATURE_POLICY_1))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("Envelope.Body.Fault.faultcode",Matchers.is(CLIENT_FAULT))
@@ -533,6 +533,31 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
     /***
      *
      * TestCaseID: Soap-ValidationRequest-16
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/interface_description/
+     *
+     * Title: Request with not allowed signature policy
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_IDCard_MobID_signatures.bdoc
+     *
+     ***/
+    @Test
+    public void soapValidationWithNotAllowedSignaturePolicyContent() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
+        post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "BDOC", "/"))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("Envelope.Body.Fault.faultcode",Matchers.is(CLIENT_FAULT))
+                .body("Envelope.Body.Fault.faultstring",Matchers.is(INVALID_SIGNATURE_POLICY));
+    }
+
+    /***
+     *
+     * TestCaseID: Soap-ValidationRequest-17
      *
      * TestType: Automated
      *
@@ -548,11 +573,11 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
     @Test
     public void soapValidationWithInvalidSignaturePolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "DDOC", "/"))
+        post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "BDOC", "BLA"))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("Envelope.Body.Fault.faultcode",Matchers.is(CLIENT_FAULT))
-                .body("Envelope.Body.Fault.faultstring",Matchers.is(INVALID_SIGNATURE_POLICY));
+                .body("Envelope.Body.Fault.faultstring",Matchers.is("Invalid signature policy: BLA; Available abstractPolicies: [EE]"));
     }
 
     /***
@@ -673,8 +698,8 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "BDOC", INVALID_SIGNATURE_POLICY))
                 .then()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .body("Envelope.Body.Fault.faultcode", Matchers.is(SERVER_FAULT))
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
                 .body("Envelope.Body.Fault.faultstring", Matchers.containsString("Invalid signature policy: "+INVALID_SIGNATURE_POLICY+"; Available abstractPolicies: ["+VALID_SIGNATURE_POLICY_1+"]"));
     }
 
@@ -997,8 +1022,8 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
         post(validationRequestForDocumentExtended(encodedString, "PdfValidSingleSignature.pdf", "PDF", INVALID_SIGNATURE_POLICY))
                 .then()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .body("Envelope.Body.Fault.faultcode", Matchers.is(SERVER_FAULT))
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
                 .body("Envelope.Body.Fault.faultstring", Matchers.is("Invalid signature policy: "+INVALID_SIGNATURE_POLICY+"; Available abstractPolicies: ["+VALID_SIGNATURE_POLICY_1+", "+VALID_SIGNATURE_POLICY_2+"]"));
     }
 

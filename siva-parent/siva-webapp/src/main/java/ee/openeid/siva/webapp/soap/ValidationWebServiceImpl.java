@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.jws.WebService;
 
-@InInterceptors(interceptors = {"ee.openeid.siva.webapp.soap.SoapRequestValidationInterceptor"})
+@InInterceptors(interceptors = {"ee.openeid.siva.webapp.soap.validation.SoapRequestValidationInterceptor"})
 @WebService(serviceName = "SignatureValidationService", endpointInterface = "ee.openeid.siva.webapp.soap.ValidationWebService")
 public class ValidationWebServiceImpl implements ValidationWebService {
 

@@ -1,4 +1,4 @@
-package ee.openeid.siva.webapp.soap;
+package ee.openeid.siva.webapp.soap.validation;
 
 
 import ee.openeid.siva.webapp.request.validation.annotations.NotNullValidFilenamePattern;
@@ -11,7 +11,6 @@ import org.apache.cxf.binding.soap.saaj.SAAJInInterceptor;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.w3c.dom.*;
 import org.w3c.dom.Node;
 
 import javax.xml.namespace.QName;

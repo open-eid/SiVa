@@ -189,7 +189,7 @@ The signature validation report (i.e. the validation response) for JSON and SOAP
 
 ```json
 {"requestErrors": [{
-    "message": "document malformed or not matching documentType",
+    "message": "Document malformed or not matching documentType",
     "key": "document"
 }]}
 ```
@@ -202,7 +202,7 @@ The signature validation report (i.e. the validation response) for JSON and SOAP
   <soap:Body>
     <soap:Fault>
       <faultcode>soap:Server</faultcode>
-      <faultstring>document malformed or not matching documentType</faultstring>
+      <faultstring>Document malformed or not matching documentType</faultstring>
     </soap:Fault>
   </soap:Body>
 </soap:Envelope>

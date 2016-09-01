@@ -22,7 +22,7 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
     protected static final String SERVER_FAULT = "soap:Server";
     protected static final String CLIENT_FAULT = "soap:Client";
 
-    protected static final String DOCUMENT_MALFORMED = "Document malformed or not matching documentType";
+    protected static final String DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE = "Document malformed or not matching documentType";
     protected static final String DOCUMENT_NOT_BASE64 = "Document is not encoded in a valid base64 string";
     protected static final String INVALID_FILENAME = "Invalid filename";
     protected static final String INVALID_SIGNATURE_POLICY = "Invalid signature policy";

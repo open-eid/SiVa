@@ -89,8 +89,8 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
      ***/
-    @Test //TODO: When VAL-290 is fixed then HttpStatus needs to be changed to BAD_REQUEST
-    public void soapValidationRequestInvalidDocumentType() {
+    @Test
+    public void validationRequestInvalidDocumentType() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "CDOC", VALID_SIGNATURE_POLICY_1))
                 .then()
@@ -570,14 +570,14 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
      ***/
-    @Test //TODO: When VAL-290 is fixed then HttpStatus needs to be changed to BAD_REQUEST
-    public void soapValidationRequestRandomInputAsBdocDocument() {
+    @Test
+    public void validationRequestRandomInputAsBdocDocument() {
         String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "BDOC", VALID_SIGNATURE_POLICY_1))
                 .then()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .body("Envelope.Body.Fault.faultcode",Matchers.is(SERVER_FAULT))
-                .body("Envelope.Body.Fault.faultstring",Matchers.is(DOCUMENT_MALFORMED));
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("Envelope.Body.Fault.faultcode",Matchers.is(CLIENT_FAULT))
+                .body("Envelope.Body.Fault.faultstring",Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
     /***
@@ -623,9 +623,9 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
         post(validationRequestForDocumentExtended(encodedString, "PdfValidSingleSignature.pdf", "BDOC", ""))
                 .then()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .body("Envelope.Body.Fault.faultcode", Matchers.is(SERVER_FAULT))
-                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED));
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
+                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
     /***
@@ -648,9 +648,9 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
         post(validationRequestForDocumentExtended(encodedString, "igasugust1.3.ddoc", "BDOC", ""))
                 .then()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .body("Envelope.Body.Fault.faultcode", Matchers.is(SERVER_FAULT))
-                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED));
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
+                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
     /***
@@ -722,9 +722,9 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
         post(validationRequestForDocumentExtended(encodedString, "xroad-simple.asice", "DDOC", ""))
                 .then()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .body("Envelope.Body.Fault.faultcode", Matchers.is(SERVER_FAULT))
-                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED));
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
+                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
     /***
@@ -742,14 +742,14 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File:
      *
      ***/
-    @Test //TODO: When VAL-290 is fixed then HttpStatus needs to be changed to BAD_REQUEST
-    public void soapValidationRequestRandomInputAsDdocDocument() {
+    @Test
+    public void validationRequestRandomInputAsDdocDocument() {
         String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.ddoc", "DDOC", VALID_SIGNATURE_POLICY_1))
                 .then()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .body("Envelope.Body.Fault.faultcode",Matchers.is(SERVER_FAULT))
-                .body("Envelope.Body.Fault.faultstring",Matchers.is(DOCUMENT_MALFORMED));
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("Envelope.Body.Fault.faultcode",Matchers.is(CLIENT_FAULT))
+                .body("Envelope.Body.Fault.faultstring",Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
     /***
@@ -767,14 +767,14 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
      ***/
-    @Test ////TODO: When VAL-290 is fixed then HttpStatus needs to be changed to BAD_REQUEST
-    public void soapValidationRequestNotMatchingDocumentTypeAndActualFileDdocBdoc() {
+    @Test
+    public void validationRequestNotMatchingDocumentTypeAndActualFileDdocBdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "DDOC", VALID_SIGNATURE_POLICY_1))
                 .then()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .body("Envelope.Body.Fault.faultcode", Matchers.is(SERVER_FAULT))
-                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED));
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
+                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
     /***
@@ -797,9 +797,9 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "DDOC", ""))
                 .then()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .body("Envelope.Body.Fault.faultcode", Matchers.is(SERVER_FAULT))
-                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED));
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
+                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
     /***
@@ -822,9 +822,9 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
         post(validationRequestForDocumentExtended(encodedString, "PdfValidSingleSignature.pdf", "DDOC", ""))
                 .then()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .body("Envelope.Body.Fault.faultcode", Matchers.is(SERVER_FAULT))
-                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED));
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
+                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
     /***
@@ -871,9 +871,9 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-attachment.asice"));
         post(validationRequestForDocumentExtended(encodedString, "xroad-attachment.asice", "DDOC", ""))
                 .then()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .body("Envelope.Body.Fault.faultcode", Matchers.is(SERVER_FAULT))
-                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED));
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
+                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
     /***
@@ -891,14 +891,14 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
      ***/
-    @Test //TODO: When VAL-290 is fixed then HttpStatus needs to be changed to BAD_REQUEST
-    public void soapValidationRequestRandomInputAsPdfDocument() {
+    @Test
+    public void validationRequestRandomInputAsPdfDocument() {
         String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.pdf", "PDF", VALID_SIGNATURE_POLICY_1))
                 .then()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .body("Envelope.Body.Fault.faultcode",Matchers.is(SERVER_FAULT))
-                .body("Envelope.Body.Fault.faultstring",Matchers.is(DOCUMENT_MALFORMED));
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("Envelope.Body.Fault.faultcode",Matchers.is(CLIENT_FAULT))
+                .body("Envelope.Body.Fault.faultstring",Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
     /***
@@ -916,14 +916,14 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
      ***/
-    @Test //TODO: When VAL-290 is fixed then HttpStatus needs to be changed to BAD_REQUEST
-    public void soapPdfValidationRequestNotMatchingDocumentTypeAndActualFileBdoc() {
+    @Test
+    public void pdfValidationRequestNotMatchingDocumentTypeAndActualFileBdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "PDF", VALID_SIGNATURE_POLICY_1))
                 .then()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .body("Envelope.Body.Fault.faultcode", Matchers.is(SERVER_FAULT))
-                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED));
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
+                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
     /***
@@ -946,9 +946,9 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
         post(validationRequestForDocumentExtended(encodedString, "igasugust1.3.ddoc", "PDF", ""))
                 .then()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .body("Envelope.Body.Fault.faultcode", Matchers.is(SERVER_FAULT))
-                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED));
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
+                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
     /***
@@ -966,15 +966,15 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: xroad-batchsignature.asice
      *
      ***/
-    @Test //TODO: When VAL-290 is fixed then HttpStatus needs to be changed to BAD_REQUEST
-    public void soapPdfValidationRequestNotMatchingDocumentTypeAndActualFileXroad() {
+    @Test
+    public void pdfValidationRequestNotMatchingDocumentTypeAndActualFileXroad() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-batchsignature.asice"));
         post(validationRequestForDocumentExtended(encodedString, "xroad-batchsignature.asice", "PDF", VALID_SIGNATURE_POLICY_1))
                 .then()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .body("Envelope.Body.Fault.faultcode", Matchers.is(SERVER_FAULT))
-                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED));
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
+                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
     /***
@@ -1048,7 +1048,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .then()
                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .body("Envelope.Body.Fault.faultcode", Matchers.is(SERVER_FAULT))
-                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED));
+                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
     /***
@@ -1073,7 +1073,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .then()
                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .body("Envelope.Body.Fault.faultcode", Matchers.is(SERVER_FAULT))
-                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED));
+                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
     /***
@@ -1098,7 +1098,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .then()
                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .body("Envelope.Body.Fault.faultcode", Matchers.is(SERVER_FAULT))
-                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED));
+                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
     @Override

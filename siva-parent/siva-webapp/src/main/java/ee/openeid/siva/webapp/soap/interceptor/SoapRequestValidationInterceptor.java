@@ -1,4 +1,4 @@
-package ee.openeid.siva.webapp.soap.validation;
+package ee.openeid.siva.webapp.soap.interceptor;
 
 
 import ee.openeid.siva.webapp.request.validation.annotations.NotNullValidFilenamePattern;
@@ -37,6 +37,9 @@ public class SoapRequestValidationInterceptor extends AbstractSoapInterceptor {
             soapMessage = message.getContent(SOAPMessage.class);
         }
         try {
+            if (soapMessage == null) {
+                throw new SOAPException();
+            }
             SOAPBody body = soapMessage.getSOAPPart().getEnvelope().getBody();
 
             validateDocumentElement(body);
@@ -44,7 +47,7 @@ public class SoapRequestValidationInterceptor extends AbstractSoapInterceptor {
             validateSignaturePolicyElement(body);
 
         } catch (SOAPException e) {
-            throwFault(messageSource.getMessage("Invalid request", null, null));
+            throwFault(messageSource.getMessage("validation.error.message.invalidRequest", null, null));
         }
     }
 

@@ -373,23 +373,23 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * Expected Result: Correct data is shown in the log with correct structure
      *
-     * File:
+     * File: Regulatione-signedbyco-legislators.pdf
      */
-    @Test @Ignore //TODO: need a file
+    @Test
     public void pdfWithSignaturesFromDifferentCountries() {
-        setTestFilesDirectory("pdf/signature_cryptographic_algorithm_test_files/");
-        QualifiedReport report = postForReport("hellopades-ecdsa.pdf", VALID_SIGNATURE_POLICY_1);
-        assertAllSignaturesAreValid((report));
+        setTestFilesDirectory("pdf/signing_certifacte_test_files/");
+        QualifiedReport report = postForReport("Regulatione-signedbyco-legislators.pdf", VALID_SIGNATURE_POLICY_2);
+        assertAllSignaturesAreInvalid((report));
     /*
     Expected result:
 {
    "stats": {
       "dur": 1334, <- Can vary, verify that its present
       "sigCt": 2,
-      "vSigCt": 1,
+      "vSigCt": 0,
       "sigRslt": [
-         {"i":"TOTAL-PASSED", "cc":"EE"},
-         {"i":"TOTAL-FAILED", "cc":"BE"},
+         { "i" : "INDETERMINATE", "si" : "OUT_OF_BOUNDS_NO_POE", "cc" : "BE"},
+         { "i" : "INDETERMINATE", "si" : "TRY_LATER", "cc" : "BE"}
       ]
    }
 }        */

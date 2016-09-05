@@ -1103,6 +1103,131 @@ List of Test Cases
   **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 
+## StatisticsToLogsManualIT.java
+
+**TestCaseID: Bdoc-Statistics-Log-1**
+
+  * TestType: Manual
+  * RequirementID: []()
+  * Title: Bdoc valid container is validated
+  * Expected Result: Correct data is shown in the log with correct structure
+  * File: Valid_IDCard_MobID_signatures.bdoc
+
+**TestCaseID: Bdoc-Statistics-Log-2**
+
+  * TestType: Manual
+  * RequirementID: []()
+  * Title: Bdoc invalid container is validated
+  * Expected Result: Correct data is shown in the log with correct structure
+  * File: SS-4_teadmataCA.4.asice
+
+**TestCaseID: Bdoc-Statistics-Log-3**
+
+  * TestType: Manual
+  * RequirementID: []()
+  * Title: Bdoc not supported file is inserted
+  * Expected Result: No message in statistics as the container is not validated
+  * File: xroad-simple.asice
+
+**TestCaseID: Bdoc-Statistics-Log-4**
+
+  * TestType: Manual
+  * RequirementID: []()
+  * Title: Bdoc with certificates from different countries.
+  * Expected Result: Correct data is shown in the log with correct structure
+  * File: Baltic MoU digital signing_EST_LT_LV.bdoc
+
+**TestCaseID: Ddoc-Statistics-Log-1**
+
+  * TestType: Manual
+  * RequirementID: []()
+  * Title: Ddoc valid container is validated
+  * Expected Result: Correct data is shown in the log with correct structure
+  * File: igasugust1.3.ddoc
+
+**TestCaseID: Ddoc-Statistics-Log-2**
+
+  * TestType: Manual
+  * RequirementID: []()
+  * Title: Ddoc invalid container is validated
+  * Expected Result: Correct data is shown in the log with correct structure
+  * File: ilma_kehtivuskinnituseta.ddoc
+
+**TestCaseID: Ddoc-Statistics-Log-3**
+
+  * TestType: Manual
+  * RequirementID: []()
+  * Title: Ddoc not supported file is inserted
+  * Expected Result: No message in statistics as the container is not validated
+  * File: xroad-simple.asice
+
+**TestCaseID: Ddoc-Statistics-Log-4**
+
+  * TestType: Manual
+  * RequirementID: []()
+  * Title: Ddoc with certificates from different countries.
+  * Expected Result: Correct data is shown in the log with correct structure
+  * File: Belgia_kandeavaldus_LIV.ddoc
+
+**TestCaseID: Pdf-Statistics-Log-1**
+
+  * TestType: Manual
+  * RequirementID: []()
+  * Title: Pdf valid container is validated
+  * Expected Result: Correct data is shown in the log with correct structure
+  * File: pades_lt_two_valid_sig.pdf
+
+**TestCaseID: Pdf-Statistics-Log-2**
+
+  * TestType: Manual
+  * RequirementID: []()
+  * Title: Pdf invalid container is validated
+  * Expected Result: Correct data is shown in the log with correct structure
+  * File: hellopades-lt1-lt2-wrongDigestValue.pdf
+
+**TestCaseID: Pdf-Statistics-Log-3**
+
+  * TestType: Manual
+  * RequirementID: []()
+  * Title: Pdf not supported file is inserted
+  * Expected Result: No message in statistics as the container is not validated
+  * File: xroad-simple.asice
+
+**TestCaseID: Pdf-Statistics-Log-4**
+
+  * TestType: Manual
+  * RequirementID: []()
+  * Title: Pdf with certificates from different countries.
+  * Expected Result: Correct data is shown in the log with correct structure
+  * File: Regulatione-signedbyco-legislators.pdf
+
+**TestCaseID: Xroad-Statistics-Log-1**
+
+  * TestType: Manual
+  * RequirementID: []()
+  * Title: Xroad valid container is validated
+  * Expected Result: Correct data is shown in the log with correct structure
+  * File: xroad-batchsignature.asice
+
+**TestCaseID: Xroad-Statistics-Log-2**
+
+  * TestType: Manual
+  * RequirementID: []()
+  * Title: Xroad invalid container is validated
+  * Expected Result: Correct data is shown in the log with correct structure
+  * File: invalid-digest.asice
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
+**TestCaseID: Xroad-Statistics-Log-3**
+
+  * TestType: Manual
+  * RequirementID: []()
+  * Title: Xroad not supported file is inserted
+  * Expected Result: No message in statistics as the container is not validated
+  * File: BDOC-TS.bdoc
+
+
 ## ValidationReportValueVerificationIT.java
 
 **TestCaseID: Bdoc-ValidationReportVerification-1**
@@ -1441,8 +1566,6 @@ List of Test Cases
   * Title: Bdoc file, policy fiels should be case insensitive
   * Expected Result: Error is returned
   * File: Valid_IDCard_MobID_signatures.bdoc
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: Bdoc-ValidationRequest-6**
 
@@ -1832,11 +1955,9 @@ List of Test Cases
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
-  * Title: Verification of case insensitivity in document type
-  * Expected Result: Report is returned
+  * Title: Verification of case sensitivity in document type
+  * Expected Result: Error is returned as WSDL defines the allowed values
   * File: Valid_IDCard_MobID_signatures.bdoc
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: Soap-ValidationRequest-5**
 
@@ -1930,6 +2051,14 @@ List of Test Cases
 
   * TestType: Automated
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
+  * Title: Request with not allowed signature policy
+  * Expected Result: Error is returned
+  * File: Valid_IDCard_MobID_signatures.bdoc
+
+**TestCaseID: Soap-ValidationRequest-17**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
   * Title: Request with invalid signature policy
   * Expected Result: Error is returned
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -1981,8 +2110,6 @@ List of Test Cases
   * Title: Bdoc file, policy fiels should be case insensitive
   * Expected Result: Error is returned
   * File: Valid_IDCard_MobID_signatures.bdoc
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 **TestCaseID: Soap-DdocValidationRequest-7**
 

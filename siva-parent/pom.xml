@@ -9,7 +9,7 @@
 
     <artifactId>siva-parent</artifactId>
     <packaging>pom</packaging>
-    <name>SIVa webapp and other core modules</name>
+    <name>SiVa webapp and other core modules</name>
     <version>2.0.2-SNAPSHOT</version>
 
     <modules>
@@ -30,6 +30,7 @@
         <powermock.version>1.6.2</powermock.version>
         <dss.version>4.7.RC1.d4j.1</dss.version>
         <cxf.version>3.1.4</cxf.version>
+        <powermock.version>1.6.5</powermock.version>
     </properties>
 
     <dependencyManagement>
@@ -254,6 +255,20 @@
                 <groupId>commons-httpclient</groupId>
                 <artifactId>commons-httpclient</artifactId>
                 <version>3.1</version>
+            </dependency>
+
+            <!-- Powermock for testing -->
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-api-mockito</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-module-junit4</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

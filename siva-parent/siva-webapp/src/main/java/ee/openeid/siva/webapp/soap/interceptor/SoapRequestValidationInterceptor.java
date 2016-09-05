@@ -31,11 +31,8 @@ public class SoapRequestValidationInterceptor extends AbstractSoapInterceptor {
 
     @Override
     public void handleMessage(SoapMessage message){
+        saajIn.handleMessage(message);
         SOAPMessage soapMessage = message.getContent(SOAPMessage.class);
-        if (soapMessage == null) {
-            saajIn.handleMessage(message);
-            soapMessage = message.getContent(SOAPMessage.class);
-        }
         try {
             if (soapMessage == null) {
                 throw new SOAPException();

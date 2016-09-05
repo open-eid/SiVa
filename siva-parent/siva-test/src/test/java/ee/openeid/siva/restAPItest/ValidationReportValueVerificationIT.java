@@ -845,7 +845,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      * File: xroad-simple.asice
      *
      ***/
-    @Test @Ignore //TODO: VAL-314, VAL-315, VAL-317
+    @Test @Ignore //TODO: VAL-315
     public void xroadAllElementsArePresentValidSimpleSignature() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
@@ -886,7 +886,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      * File: xroad-batchsignature.asice
      *
      ***/
-    @Test @Ignore //TODO: VAL-315, VAL-316, VAL-317
+    @Test @Ignore //TODO: VAL-315
     public void xroadAllElementsArePresentValidBatchSignature() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-batchsignature.asice"));
@@ -927,7 +927,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      * File: xroad-attachment.asice
      *
      ***/
-    @Test @Ignore //TODO: VAL-315, VAL-317
+    @Test @Ignore //TODO: VAL-315
     public void xroadAllElementsArePresentValidAttachmentSignature() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-attachment.asice"));
@@ -935,7 +935,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaXroad.json"))
                 .body("signatures[0].id", Matchers.is("signature"))
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B"))
                 .body("signatures[0].signatureLevel", Matchers.is(""))
                 .body("signatures[0].signedBy", Matchers.is("Riigi Infosüsteemi Amet"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))

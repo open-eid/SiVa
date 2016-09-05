@@ -363,7 +363,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      * File: xroad-simple.asice
      *
      ***/
-    @Test @Ignore //TODO: VAL-314, VAL-315, VAL-317
+    @Test @Ignore //TODO: VAL-315
     public void SoapXroadCorrectValuesArePresentValidSimpleSignature() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));

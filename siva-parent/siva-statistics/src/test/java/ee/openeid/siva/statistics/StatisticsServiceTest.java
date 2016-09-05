@@ -20,7 +20,7 @@ import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({StatisticsService.class, LoggerFactory.class})
+@PrepareForTest({LoggerFactory.class})
 public class StatisticsServiceTest {
 
     private static StatisticsService statisticsService;
@@ -101,7 +101,6 @@ public class StatisticsServiceTest {
         QualifiedReport report = new QualifiedReport();
         report.setSignaturesCount(totalSignaturesCount);
         report.setValidSignaturesCount(validSignaturesCount);
-
         return report;
     }
 

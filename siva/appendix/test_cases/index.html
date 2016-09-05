@@ -418,6 +418,12 @@
             </li>
           
             <li class="anchor">
+              <a title="StatisticsToLogsManualIT.java" href="#statisticstologsmanualitjava">
+                StatisticsToLogsManualIT.java
+              </a>
+            </li>
+          
+            <li class="anchor">
               <a title="ValidationReportValueVerificationIT.java" href="#validationreportvalueverificationitjava">
                 ValidationReportValueVerificationIT.java
               </a>
@@ -1524,6 +1530,128 @@
 <li>File: hellopades-lt-sha256-rsa2048-ocsp-before-ts.pdf</li>
 </ul>
 <p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
+<h2 id="statisticstologsmanualitjava">StatisticsToLogsManualIT.java</h2>
+<p><strong>TestCaseID: Bdoc-Statistics-Log-1</strong></p>
+<ul>
+<li>TestType: Manual</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Bdoc valid container is validated</li>
+<li>Expected Result: Correct data is shown in the log with correct structure</li>
+<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
+</ul>
+<p><strong>TestCaseID: Bdoc-Statistics-Log-2</strong></p>
+<ul>
+<li>TestType: Manual</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Bdoc invalid container is validated</li>
+<li>Expected Result: Correct data is shown in the log with correct structure</li>
+<li>File: SS-4_teadmataCA.4.asice</li>
+</ul>
+<p><strong>TestCaseID: Bdoc-Statistics-Log-3</strong></p>
+<ul>
+<li>TestType: Manual</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Bdoc not supported file is inserted</li>
+<li>Expected Result: No message in statistics as the container is not validated</li>
+<li>File: xroad-simple.asice</li>
+</ul>
+<p><strong>TestCaseID: Bdoc-Statistics-Log-4</strong></p>
+<ul>
+<li>TestType: Manual</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Bdoc with certificates from different countries.</li>
+<li>Expected Result: Correct data is shown in the log with correct structure</li>
+<li>File: Baltic MoU digital signing_EST_LT_LV.bdoc</li>
+</ul>
+<p><strong>TestCaseID: Ddoc-Statistics-Log-1</strong></p>
+<ul>
+<li>TestType: Manual</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Ddoc valid container is validated</li>
+<li>Expected Result: Correct data is shown in the log with correct structure</li>
+<li>File: igasugust1.3.ddoc</li>
+</ul>
+<p><strong>TestCaseID: Ddoc-Statistics-Log-2</strong></p>
+<ul>
+<li>TestType: Manual</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Ddoc invalid container is validated</li>
+<li>Expected Result: Correct data is shown in the log with correct structure</li>
+<li>File: ilma_kehtivuskinnituseta.ddoc</li>
+</ul>
+<p><strong>TestCaseID: Ddoc-Statistics-Log-3</strong></p>
+<ul>
+<li>TestType: Manual</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Ddoc not supported file is inserted</li>
+<li>Expected Result: No message in statistics as the container is not validated</li>
+<li>File: xroad-simple.asice</li>
+</ul>
+<p><strong>TestCaseID: Ddoc-Statistics-Log-4</strong></p>
+<ul>
+<li>TestType: Manual</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Ddoc with certificates from different countries.</li>
+<li>Expected Result: Correct data is shown in the log with correct structure</li>
+<li>File: Belgia_kandeavaldus_LIV.ddoc</li>
+</ul>
+<p><strong>TestCaseID: Pdf-Statistics-Log-1</strong></p>
+<ul>
+<li>TestType: Manual</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Pdf valid container is validated</li>
+<li>Expected Result: Correct data is shown in the log with correct structure</li>
+<li>File: pades_lt_two_valid_sig.pdf</li>
+</ul>
+<p><strong>TestCaseID: Pdf-Statistics-Log-2</strong></p>
+<ul>
+<li>TestType: Manual</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Pdf invalid container is validated</li>
+<li>Expected Result: Correct data is shown in the log with correct structure</li>
+<li>File: hellopades-lt1-lt2-wrongDigestValue.pdf</li>
+</ul>
+<p><strong>TestCaseID: Pdf-Statistics-Log-3</strong></p>
+<ul>
+<li>TestType: Manual</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Pdf not supported file is inserted</li>
+<li>Expected Result: No message in statistics as the container is not validated</li>
+<li>File: xroad-simple.asice</li>
+</ul>
+<p><strong>TestCaseID: Pdf-Statistics-Log-4</strong></p>
+<ul>
+<li>TestType: Manual</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Pdf with certificates from different countries.</li>
+<li>Expected Result: Correct data is shown in the log with correct structure</li>
+<li>File: Regulatione-signedbyco-legislators.pdf</li>
+</ul>
+<p><strong>TestCaseID: Xroad-Statistics-Log-1</strong></p>
+<ul>
+<li>TestType: Manual</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Xroad valid container is validated</li>
+<li>Expected Result: Correct data is shown in the log with correct structure</li>
+<li>File: xroad-batchsignature.asice</li>
+</ul>
+<p><strong>TestCaseID: Xroad-Statistics-Log-2</strong></p>
+<ul>
+<li>TestType: Manual</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Xroad invalid container is validated</li>
+<li>Expected Result: Correct data is shown in the log with correct structure</li>
+<li>File: invalid-digest.asice</li>
+</ul>
+<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
+<p><strong>TestCaseID: Xroad-Statistics-Log-3</strong></p>
+<ul>
+<li>TestType: Manual</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Xroad not supported file is inserted</li>
+<li>Expected Result: No message in statistics as the container is not validated</li>
+<li>File: BDOC-TS.bdoc</li>
+</ul>
 <h2 id="validationreportvalueverificationitjava">ValidationReportValueVerificationIT.java</h2>
 <p><strong>TestCaseID: Bdoc-ValidationReportVerification-1</strong></p>
 <ul>
@@ -1849,7 +1977,6 @@
 <li>Expected Result: Error is returned</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <p><strong>TestCaseID: Bdoc-ValidationRequest-6</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -2229,11 +2356,10 @@
 <ul>
 <li>TestType: Automated</li>
 <li>RequirementID: <a href="http://open-eid.github.io/SiVa/siva/interface_description/">http://open-eid.github.io/SiVa/siva/interface_description/</a></li>
-<li>Title: Verification of case insensitivity in document type</li>
-<li>Expected Result: Report is returned</li>
+<li>Title: Verification of case sensitivity in document type</li>
+<li>Expected Result: Error is returned as WSDL defines the allowed values</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <p><strong>TestCaseID: Soap-ValidationRequest-5</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -2326,6 +2452,14 @@
 <ul>
 <li>TestType: Automated</li>
 <li>RequirementID: <a href="http://open-eid.github.io/SiVa/siva/interface_description/">http://open-eid.github.io/SiVa/siva/interface_description/</a></li>
+<li>Title: Request with not allowed signature policy</li>
+<li>Expected Result: Error is returned</li>
+<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
+</ul>
+<p><strong>TestCaseID: Soap-ValidationRequest-17</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>RequirementID: <a href="http://open-eid.github.io/SiVa/siva/interface_description/">http://open-eid.github.io/SiVa/siva/interface_description/</a></li>
 <li>Title: Request with invalid signature policy</li>
 <li>Expected Result: Error is returned</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
@@ -2378,7 +2512,6 @@
 <li>Expected Result: Error is returned</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <p><strong>TestCaseID: Soap-DdocValidationRequest-7</strong></p>
 <ul>
 <li>TestType: Automated</li>

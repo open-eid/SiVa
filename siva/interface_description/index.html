@@ -508,7 +508,7 @@
 <tr>
 <td><code>validSignaturesCount</code></td>
 <td><code>ValidSignaturesCount</code></td>
-<td>Signatures count that have validated to <code>TOTAL-PASSED</code>. See also <code>validSignaturesCount</code> field.</td>
+<td>Signatures count that have validated to <code>TOTAL-PASSED</code>. See also <code>Signature.Indication</code> field.</td>
 </tr>
 <tr>
 <td><code>validationTime</code></td>
@@ -702,7 +702,7 @@
 
 <h3 id="sample-json-response-error-situation">Sample JSON response (error situation)</h3>
 <pre class="codehilite"><code class="language-json">{&quot;requestErrors&quot;: [{
-    &quot;message&quot;: &quot;document malformed or not matching documentType&quot;,
+    &quot;message&quot;: &quot;Document malformed or not matching documentType&quot;,
     &quot;key&quot;: &quot;document&quot;
 }]}</code></pre>
 
@@ -713,7 +713,7 @@
   &lt;soap:Body&gt;
     &lt;soap:Fault&gt;
       &lt;faultcode&gt;soap:Server&lt;/faultcode&gt;
-      &lt;faultstring&gt;document malformed or not matching documentType&lt;/faultstring&gt;
+      &lt;faultstring&gt;Document malformed or not matching documentType&lt;/faultstring&gt;
     &lt;/soap:Fault&gt;
   &lt;/soap:Body&gt;
 &lt;/soap:Envelope&gt;</code></pre>

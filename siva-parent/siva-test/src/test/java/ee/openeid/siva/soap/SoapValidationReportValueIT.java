@@ -226,7 +226,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         assertEquals("SignatureFormat should match expected", "DIGIDOC_XML_1.1", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureFormat());
         assertEquals("Indication should match expected", "TOTAL-PASSED", getQualifiedReportFromDom(report).getSignatures().get(0).getIndication());
         assertTrue("SignatureLevel should match expected", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureLevel().isEmpty());
-        assertEquals("SignatureScopes should match expected", "", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureScopes().get(0).getScope());
+        assertEquals("SignatureScopes should match expected", "FullSignatureScope", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureScopes().get(0).getScope());
         assertTrue("Errors should be empty", getQualifiedReportFromDom(report).getSignatures().get(0).getErrors().isEmpty());
         assertTrue("Warnings should be empty", getQualifiedReportFromDom(report).getSignatures().get(0).getWarnings().isEmpty());
         assertEquals("SignatureForm should match expected", "DIGIDOC_XML_1.1", getQualifiedReportFromDom(report).getSignatureForm());
@@ -255,7 +255,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         assertEquals("SignatureFormat should match expected", "DIGIDOC_XML_1.2", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureFormat());
         assertEquals("Indication should match expected", "TOTAL-PASSED", getQualifiedReportFromDom(report).getSignatures().get(0).getIndication());
         assertTrue("SignatureLevel should match expected", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureLevel().isEmpty());
-        assertEquals("SignatureScopes should match expected", "", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureScopes().get(0).getScope());
+        assertEquals("SignatureScopes should match expected", "FullSignatureScope", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureScopes().get(0).getScope());
         assertTrue("Errors should be empty", getQualifiedReportFromDom(report).getSignatures().get(0).getErrors().isEmpty());
         assertTrue("Warnings should be empty", getQualifiedReportFromDom(report).getSignatures().get(0).getWarnings().isEmpty());
         assertEquals("SignatureForm should match expected", "DIGIDOC_XML_1.2", getQualifiedReportFromDom(report).getSignatureForm());
@@ -284,7 +284,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         assertEquals("SignatureFormat should match expected", "DIGIDOC_XML_1.3", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureFormat());
         assertEquals("Indication should match expected", "TOTAL-PASSED", getQualifiedReportFromDom(report).getSignatures().get(0).getIndication());
         assertTrue("SignatureLevel should match expected", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureLevel().isEmpty());
-        assertEquals("SignatureScopes should match expected", "", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureScopes().get(0).getScope());
+        assertEquals("SignatureScopes should match expected", "FullSignatureScope", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureScopes().get(0).getScope());
         assertTrue("Errors should be empty", getQualifiedReportFromDom(report).getSignatures().get(0).getErrors().isEmpty());
         assertTrue("Warnings should be empty", getQualifiedReportFromDom(report).getSignatures().get(0).getWarnings().isEmpty());
         assertEquals("SignatureForm should match expected", "DIGIDOC_XML_1.3", getQualifiedReportFromDom(report).getSignatureForm());

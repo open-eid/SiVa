@@ -114,4 +114,8 @@ public class GoogleAnalyticsMeasurementProtocolClient {
         this.httpRequest = httpRequest;
     }
 
+    public void setRestTemplate(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
+
 }

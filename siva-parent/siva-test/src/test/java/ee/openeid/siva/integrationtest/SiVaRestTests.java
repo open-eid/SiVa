@@ -37,6 +37,16 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
                 .post(VALIDATION_ENDPOINT);
     }
 
+    protected Response postWithXAuthUsrHeader(String request, String xAuthUser) {
+        return given()
+                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+                .header("x-authenticated-user", xAuthUser)
+                .body(request)
+                .contentType(ContentType.JSON)
+                .when()
+                .post(VALIDATION_ENDPOINT);
+    }
+
     /**
      * Override to enable/disable printing the response per class
      * @return

@@ -1,6 +1,5 @@
 package ee.openeid.siva.manualtest;
 
-import com.jayway.restassured.RestAssured;
 import ee.openeid.siva.integrationtest.SiVaRestTests;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import org.apache.commons.codec.binary.Base64;
@@ -26,7 +25,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "bdoc/live/timemark/";
 
     /*
-    NOTE: All tests in this class expect manual verification of responses. The test are made to prepare test data and ease the test execution.
+    * Note: All tests in this class expect manual verification of responses in log! The tests are made to prepare test data and ease the test execution.
     */
 
     /**

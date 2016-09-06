@@ -14,7 +14,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -63,8 +65,11 @@ public class StatisticsService {
     }
 
     private String toJson(SimpleValidationReport simpleValidationReport) throws JsonProcessingException {
+        Map<String, SimpleValidationReport> stats = new HashMap<>();
+        stats.put("stats", simpleValidationReport);
+
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        return ow.writeValueAsString(simpleValidationReport);
+        return ow.writeValueAsString(stats);
     }
 
     @Autowired

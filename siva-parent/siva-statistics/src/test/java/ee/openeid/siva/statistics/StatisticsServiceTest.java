@@ -42,24 +42,28 @@ public class StatisticsServiceTest {
     @Test
     public void testValidationStatisticsLoggingWhereAllSignaturesInQualifiedReportAreValid() {
         long validationDurationInMillis = 1000L;
+        String signatureForm = "PAdES";
         int validSignaturesCount = 1;
         int totalSignatureCount = 1;
         SignatureValidationData.Indication indication = SignatureValidationData.Indication.TOTAL_PASSED;
         String subindication = "";
         String countryCode = "EE";
 
-        QualifiedReport report = createDummyQualifiedReport(validSignaturesCount, totalSignatureCount);
+        QualifiedReport report = createDummyQualifiedReport(signatureForm, validSignaturesCount, totalSignatureCount);
         addSignatureValidationData(report, indication, subindication, countryCode);
 
         statisticsService.publishValidationStatistic(TimeUnit.MILLISECONDS.toNanos(validationDurationInMillis), report);
         verify(loggerMock).info("{\n" +
-                "  \"dur\" : "+ validationDurationInMillis + ",\n" +
-                "  \"sigCt\" : "+ totalSignatureCount + ",\n" +
-                "  \"vSigCt\" : "+ validSignaturesCount + ",\n" +
-                "  \"sigRslt\" : [ {\n" +
-                "    \"i\" : \"" + indication + "\",\n" +
-                "    \"cc\" : \"" + countryCode + "\"\n" +
-                "  } ]\n" +
+                "  \"stats\" : {\n" +
+                "    \"type\" : \"" + signatureForm + "\",\n" +
+                "    \"dur\" : "+ validationDurationInMillis + ",\n" +
+                "    \"sigCt\" : "+ totalSignatureCount + ",\n" +
+                "    \"vSigCt\" : "+ validSignaturesCount + ",\n" +
+                "    \"sigRslt\" : [ {\n" +
+                "      \"i\" : \"" + indication + "\",\n" +
+                "      \"cc\" : \"" + countryCode + "\"\n" +
+                "    } ]\n" +
+                "  }\n" +
                 "}"
         );
     }
@@ -67,6 +71,7 @@ public class StatisticsServiceTest {
     @Test
     public void testValidationStatisticsLoggingWhereOneSignatureInQualifiedReportIsValid() {
         long validationDurationInMillis = 2000L;
+        String signatureForm = "PAdES";
         int validSignaturesCount = 1;
         int totalSignatureCount = 2;
         SignatureValidationData.Indication firstSignatureIndication = SignatureValidationData.Indication.TOTAL_PASSED;
@@ -76,31 +81,35 @@ public class StatisticsServiceTest {
         String secondSignatureSubindication = "CERTIFICATE_CHAIN_NOT_FOUND";
         String secondSignatureCountryCode = "US";
 
-        QualifiedReport report = createDummyQualifiedReport(validSignaturesCount, totalSignatureCount);
+        QualifiedReport report = createDummyQualifiedReport(signatureForm, validSignaturesCount, totalSignatureCount);
         addSignatureValidationData(report, firstSignatureIndication, firstSignatureSubindication, firstSignatureCountryCode);
         addSignatureValidationData(report, secondSignatureIndication, secondSignatureSubindication, secondSignatureCountryCode);
 
         statisticsService.publishValidationStatistic(TimeUnit.MILLISECONDS.toNanos(validationDurationInMillis), report);
         verify(loggerMock).info("{\n" +
-                "  \"dur\" : "+ validationDurationInMillis + ",\n" +
-                "  \"sigCt\" : "+ totalSignatureCount + ",\n" +
-                "  \"vSigCt\" : "+ validSignaturesCount + ",\n" +
-                "  \"sigRslt\" : [ {\n" +
-                "    \"i\" : \"" + firstSignatureIndication + "\",\n" +
-                "    \"cc\" : \"" + firstSignatureCountryCode + "\"\n" +
-                "  }, {\n" +
-                "    \"i\" : \"" + secondSignatureIndication + "\",\n" +
-                "    \"si\" : \"" + secondSignatureSubindication + "\",\n" +
-                "    \"cc\" : \"" + secondSignatureCountryCode + "\"\n" +
-                "  } ]\n" +
+                "  \"stats\" : {\n" +
+                "    \"type\" : \"" + signatureForm + "\",\n" +
+                "    \"dur\" : "+ validationDurationInMillis + ",\n" +
+                "    \"sigCt\" : "+ totalSignatureCount + ",\n" +
+                "    \"vSigCt\" : "+ validSignaturesCount + ",\n" +
+                "    \"sigRslt\" : [ {\n" +
+                "      \"i\" : \"" + firstSignatureIndication + "\",\n" +
+                "      \"cc\" : \"" + firstSignatureCountryCode + "\"\n" +
+                "    }, {\n" +
+                "      \"i\" : \"" + secondSignatureIndication + "\",\n" +
+                "      \"si\" : \"" + secondSignatureSubindication + "\",\n" +
+                "      \"cc\" : \"" + secondSignatureCountryCode + "\"\n" +
+                "    } ]\n" +
+                "  }\n" +
                 "}"
         );
     }
 
-    private QualifiedReport createDummyQualifiedReport(int validSignaturesCount, int totalSignaturesCount) {
+    private QualifiedReport createDummyQualifiedReport(String signatureForm, int validSignaturesCount, int totalSignaturesCount) {
         QualifiedReport report = new QualifiedReport();
         report.setSignaturesCount(totalSignaturesCount);
         report.setValidSignaturesCount(validSignaturesCount);
+        report.setSignatureForm(signatureForm);
         return report;
     }
 

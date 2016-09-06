@@ -1,6 +1,5 @@
 package ee.openeid.siva.statistics.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
@@ -8,7 +7,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-@JsonPropertyOrder({ "dur", "sigCt", "vSigCt", "sigRslt" })
+@JsonPropertyOrder({ "type", "dur", "sigCt", "vSigCt", "sigRslt" })
 public class SimpleValidationReport {
 
     @JsonProperty("dur")
@@ -23,7 +22,7 @@ public class SimpleValidationReport {
     @JsonProperty("sigRslt")
     private List<SimpleSignatureReport> simpleSignatureReports;
 
-    @JsonIgnore
+    @JsonProperty("type")
     private String containerType;
 
 }

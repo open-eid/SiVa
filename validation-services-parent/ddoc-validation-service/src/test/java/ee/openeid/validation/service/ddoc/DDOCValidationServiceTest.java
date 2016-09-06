@@ -116,7 +116,7 @@ public class DDOCValidationServiceTest {
         SignatureScope scope = sig1.getSignatureScopes().get(0);
         assertEquals("Šužlikud sõid ühe õuna ära.txt", scope.getName());
         assertEquals("Full document", scope.getContent());
-        assertTrue(StringUtils.isEmpty(scope.getScope()));
+        assertEquals("FullSignatureScope", scope.getScope());
         assertEquals("2005-02-11T16:23:21Z", sig1.getClaimedSigningTime());
         assertNotNull(sig1.getInfo());
         assertTrue(StringUtils.isEmpty(sig1.getInfo().getBestSignatureTime()));
@@ -141,7 +141,7 @@ public class DDOCValidationServiceTest {
         SignatureScope scope = sig2.getSignatureScopes().get(0);
         assertEquals("Šužlikud sõid ühe õuna ära.txt", scope.getName());
         assertEquals("Full document", scope.getContent());
-        assertTrue(StringUtils.isEmpty(scope.getScope()));
+        assertEquals("FullSignatureScope", scope.getScope());
         assertEquals("2009-02-13T09:22:49Z", sig2.getClaimedSigningTime());
         assertNotNull(sig2.getInfo());
         assertTrue(StringUtils.isEmpty(sig2.getInfo().getBestSignatureTime()));

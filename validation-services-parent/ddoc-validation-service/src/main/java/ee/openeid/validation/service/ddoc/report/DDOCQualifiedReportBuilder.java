@@ -23,6 +23,7 @@ public class DDOCQualifiedReportBuilder {
     private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final String FULL_DOCUMENT = "Full document";
     private static final String DDOC_SIGNATURE_FORM_PREFIX = "DIGIDOC_XML_";
+    private static final String FULL_SIGNATURE_SCOPE = "FullSignatureScope";
 
     private SignedDoc signedDoc;
     private String documentName;
@@ -146,7 +147,7 @@ public class DDOCQualifiedReportBuilder {
         SignatureScope signatureScope = new SignatureScope();
         signatureScope.setName(dataFile.getFileName());
         signatureScope.setContent(FULL_DOCUMENT);
-        signatureScope.setScope("");
+        signatureScope.setScope(FULL_SIGNATURE_SCOPE);
         return signatureScope;
     }
 

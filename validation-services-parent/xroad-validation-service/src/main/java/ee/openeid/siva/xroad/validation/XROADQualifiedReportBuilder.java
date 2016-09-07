@@ -25,6 +25,8 @@ public class XROADQualifiedReportBuilder {
 
     private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final String XADES_FORMAT_PREFIX = "XAdES_BASELINE_";
+    private static final String XADES_BASELINE_B_BES_SUFFIX = "B_BES";
+    private static final String XADES_BASELINE_LT_SUFFIX = "LT";
     private static final String REPORT_INDICATION_INDETERMINATE = "INDETERMINATE";
     private static final String GREENWICH_MEAN_TIME = "Etc/GMT";
     private static final String XROAD_SIGNATURE_FORM = "ASiC_E_batchsignature";
@@ -89,7 +91,7 @@ public class XROADQualifiedReportBuilder {
     }
 
     private String getSignatureFormat() {
-        return XADES_FORMAT_PREFIX + (verifier.getAsic().getSignature().isBatchSignature() ? "B" : "LT");
+        return XADES_FORMAT_PREFIX + (verifier.getAsic().getSignature().isBatchSignature() ? XADES_BASELINE_B_BES_SUFFIX : XADES_BASELINE_LT_SUFFIX);
     }
 
     private String getSignatureForm() {

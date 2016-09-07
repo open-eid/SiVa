@@ -29,7 +29,8 @@ The following validation policy versions are supported in SiVa service:
 	When no specific validation rule is set in the present document, the requirements and rules from the abovementioned implicit sources for validation requirements shall apply in their entirety. When specific requirements and rules are set in the present validation policy document, they shall prevail over the corresponding requirements set in the implicit resources.  
 
 
-## <a name="POLv1"></a>SiVA Signature Validation Policy - Version 1 (POLv1)
+## SiVA Signature Validation Policy - Version 1 (POLv1)
+<a name="POLv1"></a>
 
 ### Description
 Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature. 
@@ -51,7 +52,8 @@ http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv1
 * Constraints defined in the [Common validation constraints (POLv1, POLv2)](validation_policy/#common_POLv1_POLv2) section
 
 
-## <a name="POLv2"></a>SiVA Signature Validation Policy - Version 2 (POLv2)
+## SiVA Signature Validation Policy - Version 2 (POLv2)
+<a name="POLv2"></a>
 
 ### Description
 Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result. 
@@ -75,16 +77,17 @@ http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv2
 		* In case of DIGIDOC-XML 1.0...1.3 and the respective hashcode formats, it is implicitly assumed that the signer's certificate complies with QC and SSCD/QSCD requirements, if the certificate is issued by [SK](https://sk.ee/en/repository/certs/) and if the nonRepudiation bit has been set in the certificate's Key Usage field.
 * Constraints defined in the [Common validation constraints (POLv1, POLv2)](validation_policy/#common_POLv1_POLv2) section
 
-!!! development 
-	TBS: Can X-Road signatures be regarded as QES signatures?
 	
-## <a name="common_POLv1_POLv2"></a>Common validation constraints (POLv1, POLv2)
+## Common validation constraints (POLv1, POLv2)
+<a name="common_POLv1_POLv2"></a>
+
 ### General constraints
 
 1. The validation result returned by SiVa determines whether a signature is technically valid and also conforms to a set of validation constraints that are specific to Estonian legislation and local practices of digital signing. **The policy may not be suitable for signatures created in other territories.** 
 2.  The validation result returned by SiVa comprises validation results of the all the signatures in a single signature container. Overall validation result for the whole container is not determined.
 
-### <a name="common_format"></a>Signature format constraints
+### Signature format constraints
+<a name="common_format"></a>
 
 1. SiVa implicitly implements constraints that are specified in the specification documents of the signature formats supported by the Service: 
 
@@ -132,17 +135,14 @@ Legend:
 
 ### Cryptographic algorithm constraints
 1. Hash algorithm constraints: 
-	* In case of BDOC format: when validating a signature where SHA-1 function has been used when calculating either Reference or Signature element’s digest value then a validation warning about weak digest method is returned. 
-	* In case of PAdES format: when validating a signature where SHA-1 function has been used in the signature, a validation warning about weak digest method is returned. 
+	* In case of BDOC and PAdES formats: when validating a signature where SHA-1 function has been used then a validation warning about weak digest method is returned. 
 
 ### Trust anchor constraints
 1. The signature must contain the certificate of the trust anchor and all certificates necessary for the signature validator to build a certification path up to the trust anchor. This applies to the signer’s certificate and the certificates of trust service providers that have issued the time-stamp token and revocation data that are incorporated in the signature.
 * Trust Anchors are: 
 	* In case of BDOC, PAdES formats: [EU Member State Trusted Lists](https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml). 
-	* In case of DIGIDOC-XML 1.0...1.3 and respective hashcode formats: Estonian CA certificates issued by [SK](https://sk.ee/en/repository/certs/), defined in local configuration file. 
-	
-!!! development
-	TBS: trust anchors used in case of X-Road signatures?
+	* In case of DIGIDOC-XML 1.0...1.3 and respective hashcode formats: Estonian CA certificates issued by [SK](https://sk.ee/en/repository/certs/), defined in local configuration file.
+	* In case of X-Road ASiC-E signatures, SK issued KLASS3-SK 2010, and KLASS3-SK 2010 OCSP RESPONDER and SK TIMESTAMPING AUTHORITY certificates, defined in local configuration file. 
 
 
 ### Revocation data constraints

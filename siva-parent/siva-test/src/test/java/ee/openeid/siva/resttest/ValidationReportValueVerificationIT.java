@@ -845,7 +845,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      * File: xroad-simple.asice
      *
      ***/
-    @Test @Ignore //TODO: VAL-315
+    @Test
     public void xroadAllElementsArePresentValidSimpleSignature() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
@@ -859,13 +859,13 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].errors", Matchers.hasSize(0))
-                .body("signatures[0].signatureScopes.name", Matchers.is("somename"))
-                .body("signatures[0].signatureScopes.scope", Matchers.is(""))
-                .body("signatures[0].signatureScopes.content", Matchers.is(""))
+                .body("signatures[0].signatureScopes[0].name", Matchers.is("")) //TODO: VAL-315 These conditions need to be updated
+                .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
+                .body("signatures[0].signatureScopes[0].content", Matchers.is(""))
                 .body("signatures[0].claimedSigningTime", Matchers.is(""))
                 .body("signatures[0].warnings", Matchers.hasSize(0))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-04-27T12:15:42Z"))
-                .body("signatureForm", Matchers.is("ASIC_E"))
+                .body("signatureForm", Matchers.is("ASiC_E"))
                 .body("documentName", Matchers.is("xroad-simple.asice"))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
@@ -886,7 +886,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      * File: xroad-batchsignature.asice
      *
      ***/
-    @Test @Ignore //TODO: VAL-315
+    @Test
     public void xroadAllElementsArePresentValidBatchSignature() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-batchsignature.asice"));
@@ -894,13 +894,13 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaXroad.json"))
                 .body("signatures[0].id", Matchers.is("signature"))
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
                 .body("signatures[0].signatureLevel", Matchers.is(""))
                 .body("signatures[0].signedBy", Matchers.is("Riigi Infosüsteemi Amet"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].errors", Matchers.hasSize(0))
-                .body("signatures[0].signatureScopes[0].name", Matchers.is("somename"))
+                .body("signatures[0].signatureScopes[0].name", Matchers.is("")) //TODO: VAL-315 These conditions need to be updated
                 .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
                 .body("signatures[0].signatureScopes[0].content", Matchers.is(""))
                 .body("signatures[0].claimedSigningTime", Matchers.is(""))
@@ -927,7 +927,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      * File: xroad-attachment.asice
      *
      ***/
-    @Test @Ignore //TODO: VAL-315
+    @Test
     public void xroadAllElementsArePresentValidAttachmentSignature() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-attachment.asice"));
@@ -935,13 +935,13 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaXroad.json"))
                 .body("signatures[0].id", Matchers.is("signature"))
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
                 .body("signatures[0].signatureLevel", Matchers.is(""))
                 .body("signatures[0].signedBy", Matchers.is("Riigi Infosüsteemi Amet"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].errors", Matchers.hasSize(0))
-                .body("signatures[0].signatureScopes[0].name", Matchers.is("somename"))
+                .body("signatures[0].signatureScopes[0].name", Matchers.is("")) //TODO: VAL-315 These conditions need to be updated
                 .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
                 .body("signatures[0].signatureScopes[0].content", Matchers.is(""))
                 .body("signatures[0].claimedSigningTime", Matchers.is(""))

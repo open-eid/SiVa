@@ -7,6 +7,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.binding.soap.interceptor.AbstractSoapInterceptor;
+import org.apache.cxf.binding.soap.interceptor.SoapInterceptor;
 import org.apache.cxf.binding.soap.saaj.SAAJInInterceptor;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
@@ -14,15 +15,17 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.w3c.dom.Node;
 
 import javax.xml.namespace.QName;
-import javax.xml.soap.*;
+import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SoapRequestValidationInterceptor extends AbstractSoapInterceptor {
 
-    ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+    private ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
 
-    private SAAJInInterceptor saajIn = new SAAJInInterceptor();
+    SoapInterceptor saajIn = new SAAJInInterceptor();
 
     public SoapRequestValidationInterceptor() {
         super(Phase.POST_PROTOCOL);

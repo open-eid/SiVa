@@ -1,4 +1,4 @@
-package ee.openeid.siva.soap;
+package ee.openeid.siva.soaptest;
 
 import com.jayway.restassured.response.Response;
 import ee.openeid.siva.integrationtest.SiVaIntegrationTestsBase;

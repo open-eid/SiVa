@@ -1,4 +1,4 @@
-package ee.openeid.siva.restAPItest;
+package ee.openeid.siva.resttest;
 
 
 import ee.openeid.siva.integrationtest.SiVaRestTests;

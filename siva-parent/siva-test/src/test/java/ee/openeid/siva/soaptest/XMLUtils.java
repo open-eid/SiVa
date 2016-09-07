@@ -1,4 +1,4 @@
-package ee.openeid.siva.soap;
+package ee.openeid.siva.soaptest;
 
 
 import org.w3c.dom.Document;

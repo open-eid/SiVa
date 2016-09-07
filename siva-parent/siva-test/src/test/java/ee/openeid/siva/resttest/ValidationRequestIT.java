@@ -1,4 +1,4 @@
-package ee.openeid.siva.restAPItest;
+package ee.openeid.siva.resttest;
 
 import com.jayway.restassured.RestAssured;
 import ee.openeid.siva.integrationtest.SiVaRestTests;
@@ -8,7 +8,6 @@ import org.hamcrest.Matchers;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;

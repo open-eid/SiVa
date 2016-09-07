@@ -1,4 +1,4 @@
-package ee.openeid.siva.soap;
+package ee.openeid.siva.soaptest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.apache.commons.codec.binary.Base64;

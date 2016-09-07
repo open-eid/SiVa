@@ -116,7 +116,7 @@
                 <jmeter.host.name>localhost</jmeter.host.name>
                 <jmeter.host.port>8080</jmeter.host.port>
                 <jmeter.host.endpoint>/validate</jmeter.host.endpoint>
-                <jmeter.host.timeoutInMillis>60000</jmeter.host.timeoutInMillis>
+                <jmeter.host.timeoutInMillis>120000</jmeter.host.timeoutInMillis>
                 <jmeter.testfiles.dir>${project.basedir}/src/test/jmeter/test-files</jmeter.testfiles.dir>
                 <jmeter.load.step.duration>60</jmeter.load.step.duration>
                 <jmeter.exclude.testplans>test.jmx</jmeter.exclude.testplans>

@@ -74,7 +74,6 @@ The signature validation report (i.e. the validation response) for JSON and SOAP
 | JSON parameter | SOAP parameter | Description | JSON data type |
 |----------------------------------------------|--------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `policy` | `Policy` | Object containing information of the SiVa signature validation policy that was used for validation | Object |
-| `policy.policyVersion` | `Policy.PolicyVersion` | Version of the validation policy | String |
 | `policy.policyName` | `Policy.PolicyName` | Name of the validation policy | String |
 | `policy. policyDescription` | `Policy. PolicyDescription` | Short description of the validation policy | String |
 | `policy.policyUrl` | `Policy.PolicyUrl` | URL where the signature validation policy document can be downloaded. The validation policy document shall include information about validation of all the document formats, including the different validation policies that are used in case of different file formats and base libraries. | String |
@@ -108,10 +107,9 @@ The signature validation report (i.e. the validation response) for JSON and SOAP
 ```json
 {
     "policy": {
-        "policyVersion": "1.0",
-        "policyName": "SiVa validation policy",
-        "policyDescription": "SiVa validation policy version 1",
-        "policyUrl": "http://open-eid.github.io/SiVa/siva/appendix/validation_policy/"
+        "policyName": "POLv2",
+        "policyDescription": "Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result.",
+        "policyUrl": "http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv2"
     },
     "signaturesCount": 1,
     "validSignaturesCount": 1,
@@ -146,10 +144,9 @@ The signature validation report (i.e. the validation response) for JSON and SOAP
     <ns2:ValidateDocumentResponse xmlns:ns2="http://soap.webapp.siva.openeid.ee/">
       <ns2:ValidationReport>
         <Policy>
-          <PolicyDescription>SiVa validation policy</PolicyDescription>
-          <PolicyName>SiVa validation policy</PolicyName>
-          <PolicyUrl>http://open-eid.github.io/SiVa/siva/appendix/validation_policy/</PolicyUrl>
-          <PolicyVersion>1.0</PolicyVersion>
+          <PolicyDescription>Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.</PolicyDescription>
+          <PolicyName>POLv1</PolicyName>
+          <PolicyUrl>http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv1</PolicyUrl>
         </Policy>
         <ValidationTime>2016-08-31T16:26:20Z</ValidationTime>
         <DocumentName>default.bdoc</DocumentName>

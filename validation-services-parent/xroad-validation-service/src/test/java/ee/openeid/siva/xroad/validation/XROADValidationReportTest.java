@@ -49,7 +49,7 @@ public class XROADValidationReportTest {
     @Test
     public void signatureFormatInReportShouldBeXadesBaselineBWhenValidatingXROADBatchSignature() throws Exception {
         QualifiedReport report = validationService.validateDocument(buildValidationDocument(XROAD_BATCHSIGNATURE));
-        assertEquals("XAdES_BASELINE_B", report.getSignatures().get(0).getSignatureFormat());
+        assertEquals("XAdES_BASELINE_B_BES", report.getSignatures().get(0).getSignatureFormat());
     }
 
     @Test
@@ -57,4 +57,5 @@ public class XROADValidationReportTest {
         QualifiedReport report = validationService.validateDocument(buildValidationDocument(XROAD_SIMPLE));
         assertEquals("XAdES_BASELINE_LT", report.getSignatures().get(0).getSignatureFormat());
     }
+
 }

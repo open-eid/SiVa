@@ -481,11 +481,6 @@
 <td>Object containing information of the SiVa signature validation policy that was used for validation</td>
 </tr>
 <tr>
-<td><code>policy.policyVersion</code></td>
-<td><code>Policy.PolicyVersion</code></td>
-<td>Version of the validation policy</td>
-</tr>
-<tr>
 <td><code>policy.policyName</code></td>
 <td><code>Policy.PolicyName</code></td>
 <td>Name of the validation policy</td>
@@ -625,10 +620,9 @@
 <h3 id="sample-json-response-successful-scenario">Sample JSON response (successful scenario)</h3>
 <pre class="codehilite"><code class="language-json">{
     &quot;policy&quot;: {
-        &quot;policyVersion&quot;: &quot;1.0&quot;,
-        &quot;policyName&quot;: &quot;SiVa validation policy&quot;,
-        &quot;policyDescription&quot;: &quot;SiVa validation policy version 1&quot;,
-        &quot;policyUrl&quot;: &quot;http://open-eid.github.io/SiVa/siva/appendix/validation_policy/&quot;
+        &quot;policyName&quot;: &quot;POLv2&quot;,
+        &quot;policyDescription&quot;: &quot;Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result.&quot;,
+        &quot;policyUrl&quot;: &quot;http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv2&quot;
     },
     &quot;signaturesCount&quot;: 1,
     &quot;validSignaturesCount&quot;: 1,
@@ -661,10 +655,9 @@
     &lt;ns2:ValidateDocumentResponse xmlns:ns2=&quot;http://soap.webapp.siva.openeid.ee/&quot;&gt;
       &lt;ns2:ValidationReport&gt;
         &lt;Policy&gt;
-          &lt;PolicyDescription&gt;SiVa validation policy&lt;/PolicyDescription&gt;
-          &lt;PolicyName&gt;SiVa validation policy&lt;/PolicyName&gt;
-          &lt;PolicyUrl&gt;http://open-eid.github.io/SiVa/siva/appendix/validation_policy/&lt;/PolicyUrl&gt;
-          &lt;PolicyVersion&gt;1.0&lt;/PolicyVersion&gt;
+          &lt;PolicyDescription&gt;Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.&lt;/PolicyDescription&gt;
+          &lt;PolicyName&gt;POLv1&lt;/PolicyName&gt;
+          &lt;PolicyUrl&gt;http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv1&lt;/PolicyUrl&gt;
         &lt;/Policy&gt;
         &lt;ValidationTime&gt;2016-08-31T16:26:20Z&lt;/ValidationTime&gt;
         &lt;DocumentName&gt;default.bdoc&lt;/DocumentName&gt;

@@ -156,7 +156,7 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      *
      * File: hellopades-lt-sha256-rsa1023.pdf
      */
-    @Test @Ignore //TODO: New test file may be needed! Current one has problems with expired signer cert.
+    @Test @Ignore //TODO: New test file may be needed! Current one has problems with expired signer cert. This should be removed as we do not support 1023?
     public void documentSignedWithRsa1023AlgoShouldPass() {
         assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-rsa1023.pdf"));
     }

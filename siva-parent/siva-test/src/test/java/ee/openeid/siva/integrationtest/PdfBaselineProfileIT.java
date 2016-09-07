@@ -120,9 +120,19 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * File: hellopades-lt1-lt2-wrongDigestValue.pdf
      */
-    @Test @Ignore //TODO: new test file is needed; the current one has issues with QC / SSCD
+    @Test
     public void documentMessageDigestAttributeValueDoesNotMatchCalculatedValue() {
-        assertAllSignaturesAreInvalid(postForReport("hellopades-lt1-lt2-wrongDigestValue.pdf"));
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt1-lt2-wrongDigestValue.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "hellopades-lt1-lt2-wrongDigestValue.pdf", "pdf", ""))
+                .then()
+                .body("signatures[1].signatureFormat", Matchers.is("PAdES_BASELINE_LTA"))
+                .body("signatures[1].signatureLevel", Matchers.is("AdES"))
+                .body("signatures[1].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[1].subIndication", Matchers.is("HASH_FAILURE"))
+                .body("signatures[1].errors", Matchers.hasSize(3))
+                .body("signatures[1].warnings", Matchers.hasSize(0))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(2));
     }
 
     /**
@@ -148,7 +158,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].errors", Matchers.hasSize(0))
-                .body("signatures[0].warnings", Matchers.hasSize(2))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
                 .body("validSignaturesCount", Matchers.is(2))
                 .body("signaturesCount", Matchers.is(2));
     }
@@ -184,7 +194,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * File: hellopades-lt1-lt2-parallel3.pdf
      */
-    @Test @Ignore //TODO: New test file may be needed! Current one has problems with expired signer cert.
+    @Test @Ignore //TODO: New test file may be needed! Current one has problems with expired signer cert. Should it still warn?
     public void ifSignerCertificateIsNotQualifiedAndWithoutSscdItIsAcceptedWithWarning() {
         QualifiedReport report = postForReport("hellopades-lt1-lt2-parallel3.pdf");
         assertHasWarning(report.getSignatures().get(0), "The certificate is not qualified!");

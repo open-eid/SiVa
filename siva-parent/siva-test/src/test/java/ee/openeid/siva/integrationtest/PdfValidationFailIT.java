@@ -55,8 +55,19 @@ public class PdfValidationFailIT extends SiVaRestTests{
      ***/
     @Test
     public void documentSignedWithRevokedCertificateShouldFail() {
-        QualifiedReport report = postForReport("pades_lt_revoked.pdf");
-        assertInvalidWithError(report.getSignatures().get(0), "The revocation time is not posterior to best-signature-time!");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades_lt_revoked.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "pades_lt_revoked.pdf", "pdf", VALID_SIGNATURE_POLICY_1))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].signedBy", Matchers.is("NURM,AARE,38211015222"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatures[0].subIndication", Matchers.is("REVOKED_NO_POE"))
+                .body("signatures[0].errors[0].content", Matchers.is("The revocation time is not posterior to best-signature-time!"))
+                .body("signatures[0].claimedSigningTime", Matchers.is("2016-06-29T08:38:31Z"))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /***

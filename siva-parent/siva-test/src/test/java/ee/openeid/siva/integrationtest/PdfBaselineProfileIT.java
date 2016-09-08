@@ -120,7 +120,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * File: hellopades-lt1-lt2-wrongDigestValue.pdf
      */
-    @Test @Ignore //TODO: One signature is valid when validationLevel is set to ARCHIVAL_DATA
+    @Test
     public void documentMessageDigestAttributeValueDoesNotMatchCalculatedValue() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt1-lt2-wrongDigestValue.pdf"));
         post(validationRequestWithValidKeys(encodedString, "hellopades-lt1-lt2-wrongDigestValue.pdf", "pdf", ""))
@@ -129,9 +129,9 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
                 .body("signatures[1].signatureLevel", Matchers.is("AdES"))
                 .body("signatures[1].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[1].subIndication", Matchers.is("HASH_FAILURE"))
-                .body("signatures[1].errors", Matchers.hasSize(3))
+                .body("signatures[1].errors", Matchers.hasSize(4))
                 .body("signatures[1].warnings", Matchers.hasSize(0))
-                .body("validSignaturesCount", Matchers.is(0))
+                .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(2));
     }
 

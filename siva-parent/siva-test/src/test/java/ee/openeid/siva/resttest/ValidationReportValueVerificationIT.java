@@ -614,31 +614,31 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * Expected Result: Warning element is present
      *
-     * File:
+     * File: ns6t3cp7.ddoc
      *
      ***/
-    @Test @Ignore //TODO: File is needed!
+    @Test
     public void ddocOptionalWarningElementIsPresent() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestFor("NeedFile.ddoc"))
+        post(validationRequestFor("ns6t3cp7.ddoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"))
                 .body("signatures[0].id", Matchers.is("S0"))
                 .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
                 .body("signatures[0].signatureLevel", Matchers.is(""))
-                .body("signatures[0].signedBy", Matchers.is(""))
-                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatures[0].signedBy", Matchers.is("SIILBEK,JANNO,38003260232"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors[0].content", Matchers.is(""))
-                .body("signatures[0].signatureScopes[0].name", Matchers.is(""))
-                .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
+                .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].signatureScopes[0].name", Matchers.is("xxx.docx"))
+                .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
                 .body("signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
-                .body("signatures[0].claimedSigningTime", Matchers.is(""))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("signatures[0].claimedSigningTime", Matchers.is("2012-09-17T14:28:01Z"))
+                .body("signatures[0].warnings[0].description", Matchers.is("Bad digest for DataFile: D0 alternate digest matches!"))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is(""))
                 .body("signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("documentName", Matchers.is("test1-ddoc-unknown.ddoc"))
-                .body("validSignaturesCount", Matchers.is(0))
+                .body("documentName", Matchers.is("ns6t3cp7.ddoc"))
+                .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
 

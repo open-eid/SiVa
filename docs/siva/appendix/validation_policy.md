@@ -74,7 +74,7 @@ http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv2
 		* Signer certificate must comply with SSCD/QSCD criteria. 
 		* If Trusted Lists are used during signature validation then the also signer certificate’s SSCD/QSCD qualification information in the Trusted List is taken into account. 
 	* The signer's certificate is not considered acceptable by the validation process if it is not possible to determine the certificate's QC and SSCD/QSCD compliance, with the following exception:
-		* In case of DIGIDOC-XML 1.0...1.3 and the respective hashcode formats, it is implicitly assumed that the signer's certificate complies with QC and SSCD/QSCD requirements, if the certificate is issued by [SK](https://sk.ee/en/repository/certs/) and if the nonRepudiation bit has been set in the certificate's Key Usage field.
+		* In case of DIGIDOC-XML 1.0...1.3 and the respective hashcode formats, it is assumed that the signer's certificate complies with QC and SSCD/QSCD requirements, if the certificate is issued by [SK](https://sk.ee/en/repository/certs/) and if the nonRepudiation bit has been set in the certificate's Key Usage field. See also [Certificate Profile](https://sk.ee/en/repository/profiles/) documents of certificates issued by SK, [ETSI EN 319 412-2](http://www.etsi.org/deliver/etsi_en/319400_319499/31941202/02.01.01_60/en_31941202v020101p.pdf) and [ETSI EN 319 412-3](http://www.etsi.org/deliver/etsi_en/319400_319499/31941203/01.01.01_60/en_31941203v010101p.pdf).
 * Constraints defined in the [Common validation constraints (POLv1, POLv2)](validation_policy/#common_POLv1_POLv2) section
 
 	

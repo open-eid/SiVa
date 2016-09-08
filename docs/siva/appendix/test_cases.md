@@ -570,6 +570,8 @@ List of Test Cases
   * Expected Result: The document should fail the validation
   * File: ns6t3cp7.ddoc
 
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
 
 ## DdocValidationPassIT.java
 
@@ -887,8 +889,6 @@ List of Test Cases
   * Expected Result: Document with parallel signatures should pass
   * File: hellopades-lt1-lt2-parallel3.pdf
 
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
 
 **TestCaseID: PDF-BaselineProfile-9**
 
@@ -981,8 +981,6 @@ List of Test Cases
   * Expected Result: Document signed with RSA2047 algorithm should pass
   * File: hellopades-lt-sha256-rsa2047.pdf
 
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
 
 **TestCaseID: PDF-SigCryptoAlg-9**
 
@@ -1012,6 +1010,8 @@ List of Test Cases
   * Title: The PDF-file has been signed with revoked certificate (PAdES Baseline LT)
   * Expected Result: Document signed with certificate that is revoked should fail.
   * File: pades_lt_revoked.pdf
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 
 **TestCaseID: PDF-ValidationFail-3**
@@ -1049,6 +1049,8 @@ List of Test Cases
   * Expected Result: Document signed with expired certificate should fail
   * File: hellopades-lt-sha256-rsa1024-expired2.pdf
 
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
 
 **TestCaseID: PDF-ValidationFail-7**
 
@@ -1057,6 +1059,8 @@ List of Test Cases
   * Title: hellopadess been signed with an expired certificate, where signing time is within the original validity
   * Expected Result: Document signed with expired certificate should fail
   * File: hellopades-lt-sha1-rsa1024-expired2.pdf
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 
 ## PdfValidationPassIT.java
@@ -1070,8 +1074,6 @@ List of Test Cases
   * Expected Result: Document signed with certificate that expired after signing should pass.
   * File: hellopades-lt-sha256-rsa1024-not-expired.pdf
 
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
 
 **TestCaseID: PDF-ValidationPass-2**
 
@@ -1080,8 +1082,6 @@ List of Test Cases
   * Title: The PDF-file has been signed with certificate that will expire in 7 days after signing (PAdES Baseline LT)
   * Expected Result: Document signed with certificate that expired after signing should pass.
   * File: hellopades-lt-sha256-rsa2048-7d.pdf
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 
 **TestCaseID: PDF-ValidationPass-4**
@@ -1545,9 +1545,7 @@ List of Test Cases
   * RequirementID: [http://open-eid.github.io/SiVa/siva/interface_description/](http://open-eid.github.io/SiVa/siva/interface_description/)
   * Title: Check for optional warning element
   * Expected Result: Warning element is present
-  * File:
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+  * File: ns6t3cp7.ddoc
 
 
 **TestCaseID: Ddoc-ValidationReportVerification-5**

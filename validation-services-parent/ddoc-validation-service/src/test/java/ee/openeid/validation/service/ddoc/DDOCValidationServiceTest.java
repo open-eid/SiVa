@@ -14,6 +14,7 @@ import ee.sk.digidoc.factory.DigiDocFactory;
 import ee.sk.utils.ConfigManager;
 import org.apache.commons.lang.StringUtils;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -38,11 +39,12 @@ public class DDOCValidationServiceTest {
 
     private static final String TEST_FILES_LOCATION = "test-files/";
     private static final String VALID_DDOC_2_SIGNATURES = "ddoc_valid_2_signatures.ddoc";
+    private static final String DATAFILE_XMLNS_MISSING = "datafile_xmlns_missing.ddoc";
+    private static final String ISSUER_XMLNS_MISSING = "issuerserial_xmlns_missing.ddoc";
 
     private static DDOCValidationService validationService = new DDOCValidationService();
 
     private static QualifiedReport validationResult2Signatures;
-    private Object lock = new Object();
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -145,6 +147,24 @@ public class DDOCValidationServiceTest {
         assertEquals("2009-02-13T09:22:49Z", sig2.getClaimedSigningTime());
         assertNotNull(sig2.getInfo());
         assertTrue(StringUtils.isEmpty(sig2.getInfo().getBestSignatureTime()));
+    }
+
+    @Test
+    public void dDocValidationError173ForMissingDataFileXmlnsShouldBeShownAsWarningInReport() throws Exception {
+        QualifiedReport report = validationService.validateDocument(buildValidationDocument(DATAFILE_XMLNS_MISSING));
+        assertEquals(report.getSignaturesCount(), report.getValidSignaturesCount());
+        SignatureValidationData signature = report.getSignatures().get(0);
+        assertTrue(signature.getErrors().isEmpty());
+        assertTrue(signature.getWarnings().size() == 1);
+        assertEquals("Bad digest for DataFile: D0 alternate digest matches!", signature.getWarnings().get(0).getDescription());
+    }
+
+    @Test @Ignore //TODO: VAL-280 waiting decision on container errors
+    public void dDocValidationError176ForMissingIssuerSerialXmlnsShouldBeShownAsWarningInReport() throws Exception {
+        QualifiedReport report = validationService.validateDocument(buildValidationDocument(ISSUER_XMLNS_MISSING));
+        assertEquals(report.getSignaturesCount(), report.getValidSignaturesCount());
+        assertTrue(report.getSignatures().get(0).getErrors().isEmpty());
+        assertTrue(report.getSignatures().get(0).getWarnings().size() == 1);
     }
 
     @Test

@@ -14,7 +14,6 @@ import ee.sk.digidoc.factory.DigiDocFactory;
 import ee.sk.utils.ConfigManager;
 import org.apache.commons.lang.StringUtils;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -40,7 +39,6 @@ public class DDOCValidationServiceTest {
     private static final String TEST_FILES_LOCATION = "test-files/";
     private static final String VALID_DDOC_2_SIGNATURES = "ddoc_valid_2_signatures.ddoc";
     private static final String DATAFILE_XMLNS_MISSING = "datafile_xmlns_missing.ddoc";
-    private static final String ISSUER_XMLNS_MISSING = "issuerserial_xmlns_missing.ddoc";
 
     private static DDOCValidationService validationService = new DDOCValidationService();
 
@@ -50,7 +48,6 @@ public class DDOCValidationServiceTest {
     public static void setUpClass() throws Exception {
         DDOCValidationServiceProperties properties = new DDOCValidationServiceProperties();
         properties.setJdigidocConfigurationFile("/jdigidoc.cfg");
-
         validationService.setProperties(properties);
         validationService.initConfig();
     }
@@ -71,7 +68,6 @@ public class DDOCValidationServiceTest {
     public void validatingADDOCWithMalformedBytesResultsInMalformedDocumentException() throws Exception {
         ValidationDocument validationDocument = buildValidationDocument(VALID_DDOC_2_SIGNATURES);
         validationDocument.setBytes(Base64.decode("ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA=="));
-
         expectedException.expect(MalformedDocumentException.class);
         validationService.validateDocument(validationDocument);
     }
@@ -157,14 +153,6 @@ public class DDOCValidationServiceTest {
         assertTrue(signature.getErrors().isEmpty());
         assertTrue(signature.getWarnings().size() == 1);
         assertEquals("Bad digest for DataFile: D0 alternate digest matches!", signature.getWarnings().get(0).getDescription());
-    }
-
-    @Test @Ignore //TODO: VAL-280 waiting decision on container errors
-    public void dDocValidationError176ForMissingIssuerSerialXmlnsShouldBeShownAsWarningInReport() throws Exception {
-        QualifiedReport report = validationService.validateDocument(buildValidationDocument(ISSUER_XMLNS_MISSING));
-        assertEquals(report.getSignaturesCount(), report.getValidSignaturesCount());
-        assertTrue(report.getSignatures().get(0).getErrors().isEmpty());
-        assertTrue(report.getSignatures().get(0).getWarnings().size() == 1);
     }
 
     @Test

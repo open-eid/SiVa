@@ -65,8 +65,6 @@ public class DDOCValidationService implements ValidationService {
 
         synchronized (lock) {
             SignedDoc signedDoc = null;
-
-            //TODO: Why are we not using initialization errors? VAL-257 Also need a decision on this in order to finish VAL-280
             List<DigiDocException> signedDocInitializationErrors = new ArrayList<>();
 
             try {
@@ -75,12 +73,7 @@ public class DDOCValidationService implements ValidationService {
                 if (signedDoc == null) {
                     throw new MalformedDocumentException();
                 }
-
-                // TODO: Perhaps we should react to these exceptions? Or at least to those which aren't warnings?
-                List<DigiDocException> signedDocValidationErrors = signedDoc.validate(true);
-
                 Date validationTime = new Date();
-
                 DDOCQualifiedReportBuilder reportBuilder = new DDOCQualifiedReportBuilder(signedDoc, validationDocument.getName(), validationTime);
                 return reportBuilder.build();
             } catch (DigiDocException e) {

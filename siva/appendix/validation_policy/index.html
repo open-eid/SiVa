@@ -334,20 +334,20 @@
             </li>
           
             <li class="anchor">
-              <a title="Description" href="#description">
-                Description
+              <a title="SiVA Signature Validation Policy - Version 1 (POLv1)" href="#siva-signature-validation-policy-version-1-polv1">
+                SiVA Signature Validation Policy - Version 1 (POLv1)
               </a>
             </li>
           
             <li class="anchor">
-              <a title="URL" href="#url">
-                URL
+              <a title="SiVA Signature Validation Policy - Version 2 (POLv2)" href="#siva-signature-validation-policy-version-2-polv2">
+                SiVA Signature Validation Policy - Version 2 (POLv2)
               </a>
             </li>
           
             <li class="anchor">
-              <a title="POLv1 validation constraints" href="#polv1-validation-constraints">
-                POLv1 validation constraints
+              <a title="Common validation constraints (POLv1, POLv2)" href="#common-validation-constraints-polv1-polv2">
+                Common validation constraints (POLv1, POLv2)
               </a>
             </li>
           
@@ -428,7 +428,8 @@
 <p class="admonition-title">Note</p>
 <p>When no specific validation rule is set in the present document, the requirements and rules from the abovementioned implicit sources for validation requirements shall apply in their entirety. When specific requirements and rules are set in the present validation policy document, they shall prevail over the corresponding requirements set in the implicit resources.  </p>
 </div>
-<h2 id="siva-signature-validation-policy-version-1-polv1"><a name="POLv1"></a>SiVA Signature Validation Policy - Version 1 (POLv1)</h2>
+<h2 id="siva-signature-validation-policy-version-1-polv1">SiVA Signature Validation Policy - Version 1 (POLv1)</h2>
+<p><a name="POLv1"></a></p>
 <h3 id="description">Description</h3>
 <p>Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature. </p>
 <h3 id="url">URL</h3>
@@ -452,7 +453,8 @@
 </li>
 <li>Constraints defined in the <a href="../validation_policy/#common_POLv1_POLv2">Common validation constraints (POLv1, POLv2)</a> section</li>
 </ol>
-<h2 id="siva-signature-validation-policy-version-2-polv2"><a name="POLv2"></a>SiVA Signature Validation Policy - Version 2 (POLv2)</h2>
+<h2 id="siva-signature-validation-policy-version-2-polv2">SiVA Signature Validation Policy - Version 2 (POLv2)</h2>
+<p><a name="POLv2"></a></p>
 <h3 id="description_1">Description</h3>
 <p>Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result. </p>
 <h3 id="url_1">URL</h3>
@@ -473,24 +475,22 @@
 </ul>
 </li>
 <li>The signer's certificate is not considered acceptable by the validation process if it is not possible to determine the certificate's QC and SSCD/QSCD compliance, with the following exception:<ul>
-<li>In case of DIGIDOC-XML 1.0...1.3 and the respective hashcode formats, it is implicitly assumed that the signer's certificate complies with QC and SSCD/QSCD requirements, if the certificate is issued by <a href="https://sk.ee/en/repository/certs/">SK</a> and if the nonRepudiation bit has been set in the certificate's Key Usage field.</li>
+<li>In case of DIGIDOC-XML 1.0...1.3 and the respective hashcode formats, it is assumed that the signer's certificate complies with QC and SSCD/QSCD requirements, if the certificate is issued by <a href="https://sk.ee/en/repository/certs/">SK</a> and if the nonRepudiation bit has been set in the certificate's Key Usage field. See also <a href="https://sk.ee/en/repository/profiles/">Certificate Profile</a> documents of certificates issued by SK, <a href="http://www.etsi.org/deliver/etsi_en/319400_319499/31941202/02.01.01_60/en_31941202v020101p.pdf">ETSI EN 319 412-2</a> and <a href="http://www.etsi.org/deliver/etsi_en/319400_319499/31941203/01.01.01_60/en_31941203v010101p.pdf">ETSI EN 319 412-3</a>.</li>
 </ul>
 </li>
 </ul>
 </li>
 <li>Constraints defined in the <a href="../validation_policy/#common_POLv1_POLv2">Common validation constraints (POLv1, POLv2)</a> section</li>
 </ol>
-<div class="admonition development">
-<p class="admonition-title">Development</p>
-<p>TBS: Can X-Road signatures be regarded as QES signatures?</p>
-</div>
-<h2 id="common-validation-constraints-polv1-polv2"><a name="common_POLv1_POLv2"></a>Common validation constraints (POLv1, POLv2)</h2>
+<h2 id="common-validation-constraints-polv1-polv2">Common validation constraints (POLv1, POLv2)</h2>
+<p><a name="common_POLv1_POLv2"></a></p>
 <h3 id="general-constraints">General constraints</h3>
 <ol>
 <li>The validation result returned by SiVa determines whether a signature is technically valid and also conforms to a set of validation constraints that are specific to Estonian legislation and local practices of digital signing. <strong>The policy may not be suitable for signatures created in other territories.</strong> </li>
 <li>The validation result returned by SiVa comprises validation results of the all the signatures in a single signature container. Overall validation result for the whole container is not determined.</li>
 </ol>
-<h3 id="signature-format-constraints"><a name="common_format"></a>Signature format constraints</h3>
+<h3 id="signature-format-constraints">Signature format constraints</h3>
+<p><a name="common_format"></a></p>
 <ol>
 <li>
 <p>SiVa implicitly implements constraints that are specified in the specification documents of the signature formats supported by the Service: </p>
@@ -606,8 +606,7 @@
 <h3 id="cryptographic-algorithm-constraints">Cryptographic algorithm constraints</h3>
 <ol>
 <li>Hash algorithm constraints: <ul>
-<li>In case of BDOC format: when validating a signature where SHA-1 function has been used when calculating either Reference or Signature element’s digest value then a validation warning about weak digest method is returned. </li>
-<li>In case of PAdES format: when validating a signature where SHA-1 function has been used in the signature, a validation warning about weak digest method is returned. </li>
+<li>In case of BDOC and PAdES formats: when validating a signature where SHA-1 function has been used then a validation warning about weak digest method is returned. </li>
 </ul>
 </li>
 </ol>
@@ -616,14 +615,11 @@
 <li>The signature must contain the certificate of the trust anchor and all certificates necessary for the signature validator to build a certification path up to the trust anchor. This applies to the signer’s certificate and the certificates of trust service providers that have issued the time-stamp token and revocation data that are incorporated in the signature.</li>
 <li>Trust Anchors are: <ul>
 <li>In case of BDOC, PAdES formats: <a href="https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml">EU Member State Trusted Lists</a>. </li>
-<li>In case of DIGIDOC-XML 1.0...1.3 and respective hashcode formats: Estonian CA certificates issued by <a href="https://sk.ee/en/repository/certs/">SK</a>, defined in local configuration file. </li>
+<li>In case of DIGIDOC-XML 1.0...1.3 and respective hashcode formats: Estonian CA certificates issued by <a href="https://sk.ee/en/repository/certs/">SK</a>, defined in local configuration file.</li>
+<li>In case of X-Road ASiC-E signatures, SK issued KLASS3-SK 2010, and KLASS3-SK 2010 OCSP RESPONDER and SK TIMESTAMPING AUTHORITY certificates, defined in local configuration file. </li>
 </ul>
 </li>
 </ol>
-<div class="admonition development">
-<p class="admonition-title">Development</p>
-<p>TBS: trust anchors used in case of X-Road signatures?</p>
-</div>
 <h3 id="revocation-data-constraints">Revocation data constraints</h3>
 <ol>
 <li>The signature must contain signer certificate's revocation data. </li>

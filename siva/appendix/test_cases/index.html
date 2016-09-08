@@ -412,8 +412,8 @@
             </li>
           
             <li class="anchor">
-              <a title="SignatureRevocationValueIT.java" href="#signaturerevocationvalueitjava">
-                SignatureRevocationValueIT.java
+              <a title="StatisticsToGAManualIT.java" href="#statisticstogamanualitjava">
+                StatisticsToGAManualIT.java
               </a>
             </li>
           
@@ -974,6 +974,7 @@
 <li>Expected Result: The document should fail the validation</li>
 <li>File: ns6t3cp7.ddoc</li>
 </ul>
+<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <h2 id="ddocvalidationpassitjava">DdocValidationPassIT.java</h2>
 <p><strong>TestCaseID: Ddoc-ValidationPass-2</strong></p>
 <ul>
@@ -1229,7 +1230,6 @@
 <li>Expected Result: Document validation should fail</li>
 <li>File: hellopades-lt1-lt2-wrongDigestValue.pdf</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <p><strong>TestCaseID: PDF-BaselineProfile-7</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -1247,7 +1247,6 @@
 <li>Expected Result: Document with parallel signatures should pass</li>
 <li>File: hellopades-lt1-lt2-parallel3.pdf</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <p><strong>TestCaseID: PDF-BaselineProfile-9</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -1325,7 +1324,6 @@
 <li>Expected Result: Document signed with RSA2047 algorithm should pass</li>
 <li>File: hellopades-lt-sha256-rsa2047.pdf</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <p><strong>TestCaseID: PDF-SigCryptoAlg-9</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -1351,6 +1349,7 @@
 <li>Expected Result: Document signed with certificate that is revoked should fail.</li>
 <li>File: pades_lt_revoked.pdf</li>
 </ul>
+<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <p><strong>TestCaseID: PDF-ValidationFail-3</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -1383,6 +1382,7 @@
 <li>Expected Result: Document signed with expired certificate should fail</li>
 <li>File: hellopades-lt-sha256-rsa1024-expired2.pdf</li>
 </ul>
+<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <p><strong>TestCaseID: PDF-ValidationFail-7</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -1391,6 +1391,7 @@
 <li>Expected Result: Document signed with expired certificate should fail</li>
 <li>File: hellopades-lt-sha1-rsa1024-expired2.pdf</li>
 </ul>
+<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <h2 id="pdfvalidationpassitjava">PdfValidationPassIT.java</h2>
 <p><strong>TestCaseID: PDF-ValidationPass-1</strong></p>
 <ul>
@@ -1400,7 +1401,6 @@
 <li>Expected Result: Document signed with certificate that expired after signing should pass.</li>
 <li>File: hellopades-lt-sha256-rsa1024-not-expired.pdf</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <p><strong>TestCaseID: PDF-ValidationPass-2</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -1409,7 +1409,6 @@
 <li>Expected Result: Document signed with certificate that expired after signing should pass.</li>
 <li>File: hellopades-lt-sha256-rsa2048-7d.pdf</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <p><strong>TestCaseID: PDF-ValidationPass-4</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -1485,52 +1484,76 @@
 <li>Expected Result: Document should pass when signature policy is set to "ee"</li>
 <li>File: Valid_ID_sig.bdoc</li>
 </ul>
-<h2 id="signaturerevocationvalueitjava">SignatureRevocationValueIT.java</h2>
-<p><strong>TestCaseID: PDF-SigRevocVal-1</strong></p>
+<h2 id="statisticstogamanualitjava">StatisticsToGAManualIT.java</h2>
+<p><strong>Note: All tests in this class expect manual configuration of Google Analytics before executing the tests.</strong>
+<strong>Note: The test are made to prepare test data and ease the test execution, all results must be checked manually in GA!</strong>
+<strong>Note: Check all the fields presence and correctness even though tests prepare data for specific cases.</strong></p>
+<p><strong>TestCaseID: Xauth-Statistics-GA-1</strong></p>
 <ul>
-<li>TestType: Automated</li>
+<li>TestType: Manual</li>
 <li>RequirementID: <a href=""></a></li>
-<li>Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation that is more than 15 minutes later than the signatures Time Stamp.</li>
-<li>Expected Result: Document with ocsp over 15 min delay should pass but warn</li>
-<li>File: hellopades-lt-sha256-ocsp-15min1s.pdf</li>
+<li>Title: Pdf valid container is validated with x-authenticated-user set in header</li>
+<li>Expected Result: x-authenticated-user value is shown in GA</li>
+<li>File: pades_lt_two_valid_sig.pdf</li>
 </ul>
-<p><strong>TestCaseID: PDF-SigRevocVal-2</strong></p>
+<p><strong>TestCaseID: Xauth-Statistics-GA-2</strong></p>
 <ul>
-<li>TestType: Automated</li>
+<li>TestType: Manual</li>
 <li>RequirementID: <a href=""></a></li>
-<li>Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation that is more than 15 minutes later than the signatures Time Stamp.</li>
-<li>Expected Result: Document with ocsp over 15 min delay should pass but warn</li>
-<li>File: hellopades-lt-sha256-ocsp-15min1s.pdf</li>
+<li>Title: Pdf valid container is validated with x-authenticated-user set in header</li>
+<li>Expected Result: x-authenticated-user value is shown as N/A in GA</li>
+<li>File: pades_lt_two_valid_sig.pdf</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
-<p><strong>TestCaseID: PDF-SigRevocVal-3</strong></p>
+<p><strong>TestCaseID: Xauth-Statistics-GA-3</strong></p>
 <ul>
-<li>TestType: Automated</li>
+<li>TestType: Manual</li>
 <li>RequirementID: <a href=""></a></li>
-<li>Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation more than 24 hours later than the signatures Time Stamp.</li>
-<li>Expected Result: Document with over 24h delay should fail</li>
-<li>File: hellopades-lt-sha256-ocsp-28h.pdf</li>
+<li>Title: Pdf valid container is validated with x-authenticated-user set in header</li>
+<li>Expected Result: x-authenticated-user value is shown as N/A in GA</li>
+<li>File: pades_lt_two_valid_sig.pdf</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
-<p><strong>TestCaseID: PDF-SigRevocVal-4</strong></p>
+<p><strong>TestCaseID: Bdoc-Statistics-GA-1</strong></p>
 <ul>
-<li>TestType: Automated</li>
+<li>TestType: Manual</li>
 <li>RequirementID: <a href=""></a></li>
-<li>Title: The PDF-file has been signed with PAdES Baseline LTA profile signature, the signature contains CRL.</li>
-<li>Expected Result: Document with no ocsp or crl in signature should fail</li>
-<li>File: hellopades-lta-no-ocsp.pdf</li>
+<li>Title: Bdoc with certificates from different countries.</li>
+<li>Expected Result: LT, EE and LV country codes are present in GA, Signature container type is ASIC-E TM</li>
+<li>File: Baltic MoU digital signing_EST_LT_LV.bdoc</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
-<p><strong>TestCaseID: PDF-SigRevocVal-5</strong></p>
+<p><strong>TestCaseID: Bdoc-Statistics-GA-2</strong></p>
 <ul>
-<li>TestType: Automated</li>
+<li>TestType: Manual</li>
 <li>RequirementID: <a href=""></a></li>
-<li>Title: PDF signature has OCSP confirmation before Time Stamp</li>
-<li>Expected Result: Document signed with ocsp time value before best signature time should fail</li>
-<li>File: hellopades-lt-sha256-rsa2048-ocsp-before-ts.pdf</li>
+<li>Title: Asice-E TS is validated</li>
+<li>Expected Result: GA shows Signature container type as ASIC-E TS</li>
+<li>File: BDOC-TS.bdoc</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
+<p><strong>TestCaseID: Xroad-Statistics-GA-1</strong></p>
+<ul>
+<li>TestType: Manual</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Xroad valid container is validated</li>
+<li>Expected Result: Country code XX is sent to GA (GA shows ZZ as the XX is unknown code), Signature container type is ASiC-E (BatchSignature)</li>
+<li>File: xroad-batchsignature.asice</li>
+</ul>
+<p><strong>TestCaseID: Ddoc-Statistics-GA-1</strong></p>
+<ul>
+<li>TestType: Manual</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Ddoc not supported file is inserted</li>
+<li>Expected Result: Not shown in GA statistics as the container is not validated</li>
+<li>File: xroad-simple.asice</li>
+</ul>
+<p><strong>TestCaseID: Ddoc-Statistics-Log-2</strong></p>
+<ul>
+<li>TestType: Manual</li>
+<li>RequirementID: <a href=""></a></li>
+<li>Title: Ddoc invalid container is validated</li>
+<li>Expected Result: GA shows Signature container type as XAdES, TOTAL-FAILED indication</li>
+<li>File: ilma_kehtivuskinnituseta.ddoc</li>
+</ul>
 <h2 id="statisticstologsmanualitjava">StatisticsToLogsManualIT.java</h2>
+<p><strong>Note: All tests in this class expect manual verification of responses in log! The tests are made to prepare test data and ease the test execution.</strong></p>
 <p><strong>TestCaseID: Bdoc-Statistics-Log-1</strong></p>
 <ul>
 <li>TestType: Manual</li>
@@ -1784,9 +1807,8 @@
 <li>RequirementID: <a href="http://open-eid.github.io/SiVa/siva/interface_description/">http://open-eid.github.io/SiVa/siva/interface_description/</a></li>
 <li>Title: Check for optional warning element</li>
 <li>Expected Result: Warning element is present</li>
-<li>File:</li>
+<li>File: ns6t3cp7.ddoc</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <p><strong>TestCaseID: Ddoc-ValidationReportVerification-5</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -1836,7 +1858,6 @@
 <li>Expected Result: Report is returned with required elements</li>
 <li>File: xroad-simple.asice</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <p><strong>TestCaseID: Xroad-ValidationReportVerification-2</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -1845,7 +1866,6 @@
 <li>Expected Result: Report is returned with required elements</li>
 <li>File: xroad-batchsignature.asice</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <p><strong>TestCaseID: Xroad-ValidationReportVerification-3</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -1854,7 +1874,6 @@
 <li>Expected Result: Report is returned with required elements</li>
 <li>File: xroad-attachment.asice</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <p><strong>TestCaseID: Xroad-ValidationReportVerification-4</strong></p>
 <ul>
 <li>TestType: Automated</li>

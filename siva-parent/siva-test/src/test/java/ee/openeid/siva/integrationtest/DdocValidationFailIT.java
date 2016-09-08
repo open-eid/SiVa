@@ -410,7 +410,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * File: ns6t3cp7.ddoc
      ***/
-    @Test
+    @Test @Ignore //TODO: VAL-280 maps this error as a warning so this container should now pass with warning, digidoc3 client also shows valid with warning
     public void ddocNamespaceErrorShouldFail() {
         setTestFilesDirectory("ddoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("ns6t3cp7.ddoc"));

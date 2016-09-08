@@ -91,7 +91,7 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
         assertEquals("PAdES", report.getSignatureForm());
     }
 
-    @Test @Ignore //TODO: New test file may be needed! Current one has problems with expired signer cert.
+    @Test @Ignore //TODO: Warnings are not returned when validationLevel is set to ARCHIVAL_DATA (default level)
     public void validatingPdfSignedWithUnqualifiedCertificateReturnsReportWithoutErrorsButWithWarning() throws Exception {
         QualifiedReport report = validationService.validateDocument(
                 buildValidationDocument(PDF_SIGNED_WITH_UNQUALIFIED_CERTIFICATE));

@@ -1,5 +1,7 @@
 package ee.openeid.siva.webapp.soap.interceptor;
 
+import ee.openeid.siva.proxy.http.RESTProxyError;
+import ee.openeid.siva.proxy.http.RESTValidationProxyException;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import org.apache.cxf.binding.soap.SoapMessage;
@@ -10,6 +12,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.HttpStatus;
+
+import javax.xml.bind.UnmarshalException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -51,6 +56,26 @@ public class SoapFaultResponseInterceptorTest {
     @Test
     public void whenSoapFaultIsCausedByInvalidPolicyExceptionThenFaultStatusAndCodeAreChanged() {
         Fault fault = new Fault(new InvalidPolicyException(""));
+        doReturn(fault).when(message).getContent(any());
+        soapFaultResponseInterceptor.handleMessage(message);
+        assertTrue(fault.getStatusCode() == 400);
+        assertEquals("Client", fault.getFaultCode().toString());
+    }
+
+    @Test
+    public void whenSoapFaultIsCausedByUnmarshalExceptionThenFaultStatusAndCodeAreChanged() {
+        Fault fault = new Fault(new UnmarshalException("Some message.."));
+        doReturn(fault).when(message).getContent(any());
+        soapFaultResponseInterceptor.handleMessage(message);
+        assertTrue(fault.getStatusCode() == 400);
+        assertEquals("Client", fault.getFaultCode().toString());
+    }
+
+    @Test
+    public void whenSoapFaultIsCausedByRESTValidationProxyExceptionWithBadRequestStatusCodeThenFaultStatusAndCodeAreChanged() {
+        RESTProxyError error = new RESTProxyError();
+        error.setHttpStatus(HttpStatus.BAD_REQUEST);
+        Fault fault = new Fault(new RESTValidationProxyException(error));
         doReturn(fault).when(message).getContent(any());
         soapFaultResponseInterceptor.handleMessage(message);
         assertTrue(fault.getStatusCode() == 400);

@@ -1070,8 +1070,8 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
         post(validationRequestForDocumentExtended(encodedString, "igasugust1.3.ddoc", "XROAD", ""))
                 .then()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .body("Envelope.Body.Fault.faultcode", Matchers.is(SERVER_FAULT))
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
                 .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
@@ -1095,8 +1095,8 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "XROAD", VALID_SIGNATURE_POLICY_1))
                 .then()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .body("Envelope.Body.Fault.faultcode", Matchers.is(SERVER_FAULT))
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
                 .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
@@ -1120,8 +1120,8 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
         post(validationRequestForDocumentExtended(encodedString, "PdfValidSingleSignature.pdf", "XROAD", ""))
                 .then()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .body("Envelope.Body.Fault.faultcode", Matchers.is(SERVER_FAULT))
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
                 .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 

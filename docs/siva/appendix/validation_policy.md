@@ -91,7 +91,7 @@ http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv2
 
 1. SiVa implicitly implements constraints that are specified in the specification documents of the signature formats supported by the Service: 
 
-	* [BDOC](http://id.ee/public/bdoc-spec212-eng.pdf) ASiC-E/XAdES signatures
+	* [BDOC 2.1](http://id.ee/public/bdoc-spec212-eng.pdf) ASiC-E/XAdES signatures
 	* [X-Road](https://cyber.ee/uploads/2013/05/T-4-23-Profile-for-High-Performance-Digital-Signatures1.pdf) ASiC-E/XAdES signatures 
 	* [PAdES](http://www.etsi.org/deliver/etsi_en/319100_319199/31914201/01.01.01_60/en_31914201v010101p.pdf) signatures
 	* [DIGIDOC-XML](http://id.ee/public/DigiDoc_format_1.3.pdf)  1.0, 1.1, 1.2, 1.3 signatures
@@ -102,7 +102,7 @@ http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv2
 1. SiVa implicitly implements constraints that are imposed by the base software libraries that are used by the service. For more information, see the documentation and source code of the base libraries: 
 
 	* [JDigiDoc](https://github.com/open-eid/jdigidoc) - is used to validate signatures in DIGIDOC-XML 1.0...1.3 format, including documents in hashcode form.
-	* [DigiDoc4J](https://github.com/open-eid/digidoc4j) - is used to validate ASiC-E/XAdES signatures that conform with BDOC digital signature format
+	* [DigiDoc4J](https://github.com/open-eid/digidoc4j) - is used to validate ASiC-E/XAdES signatures that conform with BDOC 2.1 digital signature format
 	* [Open-eID DSS fork](https://github.com/open-eid/sd-dss) - is used to validate PAdES signatures
 	* [asicverifier](https://github.com/vrk-kpa/xroad-public/tree/master/src/asicverifier) - used for validating ASiC-E/XAdES signatures created in [X-Road](https://www.ria.ee/en/x-road.html) system.
 
@@ -136,6 +136,9 @@ Legend:
 ### Cryptographic algorithm constraints
 1. Hash algorithm constraints: 
 	* In case of BDOC and PAdES formats: when validating a signature where SHA-1 function has been used then a validation warning about weak digest method is returned. 
+* Asymmetric cryptographic algorithm contraints:
+	* RSA and ECC cryptographic algorithms are supported
+	* In case of BDOC and PAdES formats, the RSA key lenght must be at least 1024 bits and ECC key length at least 192 bits. 
 
 ### Trust anchor constraints
 1. The signature must contain the certificate of the trust anchor and all certificates necessary for the signature validator to build a certification path up to the trust anchor. This applies to the signer’s certificate and the certificates of trust service providers that have issued the time-stamp token and revocation data that are incorporated in the signature.
@@ -156,10 +159,11 @@ Legend:
 
 ### Signer certificate's revocation freshness constraints
 1. In case of BDOC and DIGIDOC-XML 1.0...1.3 BASELINE_LT_TM signatures with time-mark: revocation data is always considered fresh as the revocation data is issued at the trusted signing time.
-* In case of BDOC BASELINE_LT and BASELINE_LTA signatures with signature time-stamp: revocation data freshness is checked according to the following rules: 
+* In case of BDOC 2.1 BASELINE_LT and BASELINE_LTA signatures with signature time-stamp: revocation data freshness is checked according to the following rules: 
 	* The revocation data must be issued after the signature time-stamp production time. 
 	* If difference between signature time-stamp's production time (genTime field) and signer certificate OCSP confirmation’s production time (producedAt field) is more than 15 minutes then a validation warning is returned. 
 	* If difference between signature time-stamp's production time (genTime field) and signer certificate OCSP confirmation’s production time (producedAt field) is more than 24 hours then the signature is considered invalid. 
+* In case of PAdES signatures, the default DSS base library's revocation freshness check is used. 
 
 	
 ### Trusted signing time constraints

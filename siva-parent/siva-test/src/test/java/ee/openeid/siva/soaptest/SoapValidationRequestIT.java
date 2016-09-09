@@ -88,12 +88,12 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
      ***/
-    @Test //TODO: When VAL-290 is fixed then HttpStatus needs to be changed to BAD_REQUEST
+    @Test
     public void validationRequestInvalidDocumentType() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "CDOC", VALID_SIGNATURE_POLICY_1))
                 .then()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("Envelope.Body.Fault.faultcode",Matchers.is(CLIENT_FAULT))
                 .body("Envelope.Body.Fault.faultstring",Matchers.is(UNMARSHALING_ERROR_CVC_ENUMERATION_VALID+"Value 'CDOC'"+IS_NOT_FROM_DOCTYPE_ENUMERATION));
     }
@@ -113,12 +113,12 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
      ***/
-    @Test //TODO: When VAL-290 is fixed then HttpStatus needs to be changed to BAD_REQUEST
+    @Test
     public void soapValidationRequestCaseChangeDocumentType() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "bdoC",""))
                 .then()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("Envelope.Body.Fault.faultcode",Matchers.is(CLIENT_FAULT))
                 .body("Envelope.Body.Fault.faultstring",Matchers.is(UNMARSHALING_ERROR_CVC_ENUMERATION_VALID+"Value 'bdoC'"+IS_NOT_FROM_DOCTYPE_ENUMERATION));
     }
@@ -138,12 +138,12 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
      ***/
-    @Test //TODO: When VAL-290 is fixed then HttpStatus needs to be changed to BAD_REQUEST
+    @Test
     public void soapValidationRequestXmlDocument() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "xml", ""))
                 .then()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
                 .body("Envelope.Body.Fault.faultstring", Matchers.is(UNMARSHALING_ERROR_CVC_ENUMERATION_VALID+"Value 'xml'"+IS_NOT_FROM_DOCTYPE_ENUMERATION));
 

@@ -30,7 +30,7 @@
           </elementProp>
           <elementProp name="RESPONSE_TIMEOUT" elementType="Argument">
             <stringProp name="Argument.name">RESPONSE_TIMEOUT</stringProp>
-            <stringProp name="Argument.value">${__P(host.timeout,60000)}</stringProp>
+            <stringProp name="Argument.value">${__P(host.timeout,180000)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="TESTFILES_ROOT_DIR" elementType="Argument">

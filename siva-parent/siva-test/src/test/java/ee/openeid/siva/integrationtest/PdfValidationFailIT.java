@@ -54,7 +54,7 @@ public class PdfValidationFailIT extends SiVaRestTests{
      *
      * File: pades_lt_revoked.pdf
      ***/
-    @Test @Ignore //TODO: Need to investigate why PAdES doc with revoked sign cert gets validated as valid
+    @Test @Ignore //TODO: PAdES doc with revoked sign cert gets validated as valid - Update: this should be fixed in DSS 4.7.RC2
     public void documentSignedWithRevokedCertificateShouldFail() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades_lt_revoked.pdf"));
         post(validationRequestWithValidKeys(encodedString, "pades_lt_revoked.pdf", "pdf", VALID_SIGNATURE_POLICY_1))
@@ -203,7 +203,7 @@ public class PdfValidationFailIT extends SiVaRestTests{
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("AdES"))
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
-                //.body("signatures[0].subIndication", Matchers.is("NO_POE"))
+                .body("signatures[0].subIndication", Matchers.is("NO_POE"))
                 .body("signatures[0].errors.content", Matchers.hasItem("The past signature validation is not conclusive!"))
                 .body("signatures[0].warnings", Matchers.hasSize(0))
                 .body("validSignaturesCount", Matchers.is(0))

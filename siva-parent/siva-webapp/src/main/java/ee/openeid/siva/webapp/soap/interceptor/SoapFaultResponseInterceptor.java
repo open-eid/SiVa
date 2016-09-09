@@ -8,6 +8,7 @@ import org.apache.cxf.binding.soap.interceptor.AbstractSoapInterceptor;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
 
+import javax.xml.bind.UnmarshalException;
 import javax.xml.namespace.QName;
 
 public class SoapFaultResponseInterceptor extends AbstractSoapInterceptor {
@@ -28,7 +29,7 @@ public class SoapFaultResponseInterceptor extends AbstractSoapInterceptor {
             return;
         }
 
-        if (cause instanceof MalformedDocumentException || cause instanceof InvalidPolicyException) {
+        if (cause instanceof MalformedDocumentException || cause instanceof InvalidPolicyException || cause instanceof UnmarshalException) {
             f.setStatusCode(400);
             f.setFaultCode(new QName("Client"));
         }

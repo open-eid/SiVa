@@ -18,7 +18,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: The PDF has PAdES-B profile signature
      *
@@ -37,7 +37,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: The PDF has PAdES-T profile signature
      *
@@ -57,7 +57,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: The PDF has PAdES-LT profile signature
      *
@@ -75,7 +75,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: The PDF has PAdES-LTA profile signature
      *
@@ -93,7 +93,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: The PDF has PAdES-LT and B profile signature
      *

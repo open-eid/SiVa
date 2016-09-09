@@ -52,7 +52,7 @@ List of Test Cases
 **TestCaseID: Bdoc-ValidationFail-6**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Asice with wrong slash character ('\') in data file mime-type value
   * Expected Result: The document should fail the validation
   * File: EE_SER-AEX-B-LT-V-33.asice
@@ -70,7 +70,7 @@ List of Test Cases
 **TestCaseID: Bdoc-ValidationFail-8**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Asice No non-repudiation key usage value in the certificate, verification of AdES signature level
   * Expected Result: The document should fail the validation
   * File: EE_SER-AEX-B-LT-I-43.asice
@@ -79,7 +79,7 @@ List of Test Cases
 **TestCaseID: Bdoc-ValidationFail-9**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Asice signers certificate does not have non-repudiation value in the certificates key usage field and it does not contain the QC and SSCD compliance information.
   * Expected Result: The document should fail the validation
   * File: EE_SER-AEX-B-LT-I-26.asice
@@ -88,7 +88,7 @@ List of Test Cases
 **TestCaseID: Bdoc-ValidationFail-10**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Bdoc OCSP certificate is not trusted
   * Expected Result: The document should fail the validation
   * File:  TM-01_bdoc21-unknown-resp.bdoc
@@ -97,7 +97,7 @@ List of Test Cases
 **TestCaseID: Bdoc-ValidationFail-11**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Asice TSA certificate is not trusted
   * Expected Result: The document should fail the validation
   * File: TS-05_23634_TS_unknown_TSA.asice
@@ -106,7 +106,7 @@ List of Test Cases
 **TestCaseID: Bdoc-ValidationFail-12**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Asice OCSP response status is revoked
   * Expected Result: The document should fail the validation
   * File: EE_SER-AEX-B-LT-R-25.asice
@@ -115,7 +115,7 @@ List of Test Cases
 **TestCaseID: Bdoc-ValidationFail-13**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Asice difference between OCSP and time-stamp issuing times is more than 24 hours
   * Expected Result: The document should fail the validation
   * File: EE_SER-AEX-B-LT-V-20.asice
@@ -124,7 +124,7 @@ List of Test Cases
 **TestCaseID: Bdoc-ValidationFail-14**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Asice unsigned data files in the container
   * Expected Result: The document should fail the validation
   * File: EE_SER-AEX-B-LT-V-34.asice
@@ -135,7 +135,7 @@ List of Test Cases
 **TestCaseID: Bdoc-ValidationFail-15**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Bdoc different data file mime-type values in signatures.xml and manifest.xml files
   * Expected Result: The document should fail the validation
   * File: 23613_TM_wrong-manifest-mimetype.bdoc
@@ -155,7 +155,7 @@ List of Test Cases
 **TestCaseID: Bdoc-ValidationFail-17**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Bdoc Baseline-BES file
   * Expected Result: The document should fail the validation
   * File: signWithIdCard_d4j_1.0.4_BES.asice
@@ -164,7 +164,7 @@ List of Test Cases
 **TestCaseID: Bdoc-ValidationFail-18**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Bdoc Baseline-EPES file
   * Expected Result: The document should fail the validation
   * File: TM-04_kehtivuskinnituset.4.asice
@@ -173,7 +173,7 @@ List of Test Cases
 **TestCaseID: Bdoc-ValidationFail-19**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Bdoc signers certificate is not trusted
   * Expected Result: The document should fail the validation
   * File: SS-4_teadmataCA.4.asice
@@ -202,7 +202,7 @@ List of Test Cases
 **TestCaseID: Bdoc-ValidationFail-22**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Bdoc signed data file has been removed from the container
   * Expected Result: The document should fail the validation
   * File: TM-16_unknown.4.asice
@@ -221,7 +221,7 @@ List of Test Cases
 
   * TestType: Automated
   * RequirementID: []()
-  * Title: Bdoc signed data file has been removed from the container
+  * Title: Bdoc wrong nonce
   * Expected Result: The document should fail the validation
   * File: TM-10_noncevale.4.asice
 
@@ -238,7 +238,7 @@ List of Test Cases
 **TestCaseID: Bdoc-ValidationFail-26**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Asice Baseline-T signature
   * Expected Result: The document should fail the validation
   * File: TS-06_23634_TS_missing_OCSP.asice
@@ -256,7 +256,7 @@ List of Test Cases
 **TestCaseID: Bdoc-ValidationFail-28**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Bdoc certificate's validity time is not in the period of OCSP producedAt time
   * Expected Result: The document should fail the validation
   * File: 23154_test1-old-sig-sigat-OK-prodat-NOK-1.bdoc
@@ -265,7 +265,7 @@ List of Test Cases
 **TestCaseID: Bdoc-ValidationFail-29**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Bdoc 	BDOC-1.0 version container
   * Expected Result: The document should fail the validation
   * File: BDOC-1.0.bdoc
@@ -277,7 +277,7 @@ List of Test Cases
 **TestCaseID: Bdoc-ValidationPass-1**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Bdoc with single valid signature
   * Expected Result: The document should pass the validation
   * File: Valid_ID_sig.bdoc
@@ -286,7 +286,7 @@ List of Test Cases
 **TestCaseID: Bdoc-ValidationPass-2**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Bdoc TM with multiple valid signatures
   * Expected Result: The document should pass the validation
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -295,7 +295,7 @@ List of Test Cases
 **TestCaseID: Bdoc-ValidationPass-3**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Bdoc with warning on signature
   * Expected Result: The document should pass the validation but warning should be returned
   * File:
@@ -306,7 +306,7 @@ List of Test Cases
 **TestCaseID: Bdoc-ValidationPass-4**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Asice One LT signature with certificates from different countries
   * Expected Result: The document should pass the validation
   * File: EE_SER-AEX-B-LT-V-30.asice
@@ -315,7 +315,7 @@ List of Test Cases
 **TestCaseID: Bdoc-ValidationPass-5**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Bdoc signed with Mobile-ID, ECC-SHA256 signature with prime256v1 key
   * Expected Result: The document should pass the validation
   * File: 24050_short_ecdsa_correct_file_mimetype.bdoc
@@ -324,7 +324,7 @@ List of Test Cases
 **TestCaseID: Bdoc-ValidationPass-6**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Asice Baseline-LT file
   * Expected Result: The document should pass the validation
   * File: EE_SER-AEX-B-LT-V-49.asice
@@ -333,7 +333,7 @@ List of Test Cases
 **TestCaseID: Bdoc-ValidationPass-7**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Asice QES file
   * Expected Result: The document should pass the validation
   * File: bdoc21-TS.asice
@@ -344,7 +344,7 @@ List of Test Cases
 **TestCaseID: Bdoc-ValidationPass-8**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Asice Baseline-LTA file
   * Expected Result: The document should pass the validation
   * File: EE_SER-AEX-B-LTA-V-24.asice
@@ -353,7 +353,7 @@ List of Test Cases
 **TestCaseID: Bdoc-ValidationPass-9**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Asice file signed with Mobile-ID, ECC-SHA256 signature with prime256v1 key
   * Expected Result: The document should pass the validation
   * File: EE_SER-AEX-B-LT-V-2.asice
@@ -389,7 +389,7 @@ List of Test Cases
 **TestCaseID: Bdoc-ValidationPass-13**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Bdoc TS with multiple valid signatures
   * Expected Result: The document should pass the validation
   * File: BDOC-TS.bdoc
@@ -464,7 +464,7 @@ List of Test Cases
 **TestCaseID: Ddoc-ValidationFail-7**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Ddoc Baseline-BES file, no OCSP response
   * Expected Result: The document should fail the validation
   * File: ilma_kehtivuskinnituseta.ddoc
@@ -473,7 +473,7 @@ List of Test Cases
 **TestCaseID: Ddoc-ValidationFail-8**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Ddoc no non-repudiation key usage value in the certificate
   * Expected Result: The document should fail the validation
   * File: test-non-repu1.ddoc
@@ -482,7 +482,7 @@ List of Test Cases
 **TestCaseID: Ddoc-ValidationFail-8**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Ddoc Signer's certificate is not trusted
   * Expected Result: The document should fail the validation
   * File: Belgia_kandeavaldus_LIV.ddoc
@@ -491,7 +491,7 @@ List of Test Cases
 **TestCaseID: Ddoc-ValidationFail-9**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Ddoc OCSP certificate is not trusted
   * Expected Result: The document should fail the validation
   * File: Tundmatu_OCSP_responder.ddoc
@@ -500,7 +500,7 @@ List of Test Cases
 **TestCaseID: Ddoc-ValidationFail-10**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Ddoc has unsigned data files in the container
   * Expected Result: The document should fail the validation
   * File: lisatud_andmefail.ddoc
@@ -509,7 +509,7 @@ List of Test Cases
 **TestCaseID: Ddoc-ValidationFail-11**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Ddoc signed data file has been removed from the container
   * Expected Result: The document should fail the validation
   * File: faileemald1.ddoc
@@ -519,7 +519,7 @@ List of Test Cases
 
   * TestType: Automated
   * RequirementID: []()
-  * Title: Ddoc signed data file has been removed from the container
+  * Title: Ddoc wrong nonce
   * Expected Result: The document should fail the validation
   * File: OCSP nonce vale.ddoc
 
@@ -565,7 +565,7 @@ List of Test Cases
 **TestCaseID: Ddoc-ValidationFail-17**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Ddoc XML namespace error in container
   * Expected Result: The document should fail the validation
   * File: ns6t3cp7.ddoc
@@ -579,7 +579,7 @@ List of Test Cases
 **TestCaseID: Ddoc-ValidationPass-2**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Ddoc v1.0 with valid signatures
   * Expected Result: The document should pass the validation
   * File: SK-XML1.0.ddoc
@@ -590,7 +590,7 @@ List of Test Cases
 **TestCaseID: Ddoc-ValidationPass-3**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Ddoc v1.1 with valid signature
   * Expected Result: The document should pass the validation
   * File: DIGIDOC-XML1.1.ddoc
@@ -599,7 +599,7 @@ List of Test Cases
 **TestCaseID: Ddoc-ValidationPass-4**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Ddoc v1.2 with valid signature
   * Expected Result: The document should pass the validation
   * File: DIGIDOC-XML1.2.ddoc
@@ -608,7 +608,7 @@ List of Test Cases
 **TestCaseID: Ddoc-ValidationPass-5**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Ddoc v1.3 with valid signature with ESTEID-SK 2011 certificate chain
   * Expected Result: The document should pass the validation
   * File: DIGIDOC-XML1.3.ddoc
@@ -617,7 +617,7 @@ List of Test Cases
 **TestCaseID: Ddoc-ValidationPass-6**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Ddoc v1.3 with valid signature, signed data file name has special characters and ESTEID-SK certificate chain
   * Expected Result: The document should pass the validation
   * File: susisevad1_3.ddoc
@@ -701,7 +701,7 @@ List of Test Cases
 **TestCaseID: DocumentFormat-1**
 
   * TestType: Automated
-  * RequirementID: [(TBD)]((TBD))
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Validation of pdf document acceptance
   * Expected Result: Pdf is accepted and correct signature validation is given
   * File: hellopades-pades-lt-sha256-sign.pdf
@@ -710,7 +710,7 @@ List of Test Cases
 **TestCaseID: DocumentFormat-2**
 
   * TestType: Automated
-  * RequirementID: [(TBD)]((TBD))
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Validation of bdoc document acceptance
   * Expected Result: Bdoc is accepted and correct signature validation is given
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -719,7 +719,7 @@ List of Test Cases
 **TestCaseID: DocumentFormat-3**
 
   * TestType: Automated
-  * RequirementID: [(TBD)]((TBD))
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Validation of txt document rejection
   * Expected Result: Txt document is rejected and proper error message is given
   * File: hellopades-pades-lt-sha256-sign.txt
@@ -728,7 +728,7 @@ List of Test Cases
 **TestCaseID: DocumentFormat-4**
 
   * TestType: Automated
-  * RequirementID: [(TBD)]((TBD))
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Validation of p7s document rejection
   * Expected Result: P7s document is rejected and proper error message is given
   * File: hellocades.p7s
@@ -737,7 +737,7 @@ List of Test Cases
 **TestCaseID: DocumentFormat-5**
 
   * TestType: Automated
-  * RequirementID: [(TBD)]((TBD))
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Validation of zip document rejection
   * Expected Result: Zip document is rejected and proper error message is given
   * File: 42.zip
@@ -746,7 +746,7 @@ List of Test Cases
 **TestCaseID: DocumentFormat-6**
 
   * TestType: Automated
-  * RequirementID: [(TBD)]((TBD))
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Validation of doc document rejection
   * Expected Result: Doc document is rejected and proper error message is given
   * File: hellopades-pades-lt-sha256-sign.doc
@@ -755,7 +755,7 @@ List of Test Cases
 **TestCaseID: DocumentFormat-7**
 
   * TestType: Automated
-  * RequirementID: [(TBD)]((TBD))
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Validation of XML document rejection
   * Expected Result: XML document is rejected and proper error message is given
   * File: XML.xml
@@ -764,7 +764,7 @@ List of Test Cases
 **TestCaseID: DocumentFormat-8**
 
   * TestType: Automated
-  * RequirementID: [(TBD)]((TBD))
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Validation of png document rejection
   * Expected Result: Png document is rejected and proper error message is given
   * File: Picture.png
@@ -815,7 +815,7 @@ List of Test Cases
 **TestCaseID: PDF-BaselineProfile-1**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: The PDF has PAdES-B profile signature
   * Expected Result: Document validation should fail
   * File: hellopades-pades-b-sha256-auth.pdf
@@ -824,7 +824,7 @@ List of Test Cases
 **TestCaseID: PDF-BaselineProfile-2**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: The PDF has PAdES-T profile signature
   * Expected Result: Document validation should fail
   * File:
@@ -835,7 +835,7 @@ List of Test Cases
 **TestCaseID: PDF-BaselineProfile-3**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: The PDF has PAdES-LT profile signature
   * Expected Result: Document validation should pass
   * File: hellopades-pades-lt-sha256-sign.pdf
@@ -844,7 +844,7 @@ List of Test Cases
 **TestCaseID: PDF-BaselineProfile-4**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: The PDF has PAdES-LTA profile signature
   * Expected Result: Document validation should pass
   * File:
@@ -855,7 +855,7 @@ List of Test Cases
 **TestCaseID: PDF-BaselineProfile-5**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: The PDF has PAdES-LT and B profile signature
   * Expected Result: Document validation should fail
   * File: hellopades-lt-b.pdf
@@ -1026,7 +1026,7 @@ List of Test Cases
 **TestCaseID: PDF-ValidationFail-4**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: The PDF-file has been signed with certificate which has no non repudiation key usage attribute (PAdES Baseline LT)
   * Expected Result: The PDF-file validation should fail with error.
   * File: hellopades-pades-lt-sha256-auth.pdf
@@ -1035,7 +1035,7 @@ List of Test Cases
 **TestCaseID: PDF-ValidationFail-5**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: hellopadess been signed with an expired certificate, where signing time is within the original validity
   * Expected Result: Document signed with expired certificate should fail
   * File: hellopades-lt-sha256-rsa2048-expired.pdf
@@ -1044,7 +1044,7 @@ List of Test Cases
 **TestCaseID: PDF-ValidationFail-6**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: hellopadess been signed with an expired certificate, where signing time is within the original validity
   * Expected Result: Document signed with expired certificate should fail
   * File: hellopades-lt-sha256-rsa1024-expired2.pdf
@@ -1055,7 +1055,7 @@ List of Test Cases
 **TestCaseID: PDF-ValidationFail-7**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: hellopadess been signed with an expired certificate, where signing time is within the original validity
   * Expected Result: Document signed with expired certificate should fail
   * File: hellopades-lt-sha1-rsa1024-expired2.pdf
@@ -1087,7 +1087,7 @@ List of Test Cases
 **TestCaseID: PDF-ValidationPass-4**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Pdf with single valid signature
   * Expected Result: Document should pass.
   * File: PdfValidSingleSignature.pdf
@@ -1099,7 +1099,7 @@ List of Test Cases
 **TestCaseID: Signature-Policy-1**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation more than 24 hours later than the signatures Time Stamp.
   * Expected Result: Document with over 24h delay should fail when signature policy is set to "EE"
   * File: hellopades-lt-sha256-ocsp-28h.pdf
@@ -1110,7 +1110,7 @@ List of Test Cases
 **TestCaseID: Signature-Policy-2**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation more than 24 hours later than the signatures Time Stamp.
   * Expected Result: Document with over 24h delay should pass when signature policy is set to "EU"
   * File: hellopades-lt-sha256-ocsp-28h.pdf
@@ -1119,7 +1119,7 @@ List of Test Cases
 **TestCaseID: Signature-Policy-2**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation more than 24 hours later than the signatures Time Stamp.
   * Expected Result: Document with over 24h delay should fail when signature policy is not set or empty, because it defaults to "EE"
   * File: hellopades-lt-sha256-ocsp-28h.pdf
@@ -1130,7 +1130,7 @@ List of Test Cases
 **TestCaseID: Signature-Policy-3**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: The PDF has LT and B profile signatures
   * Expected Result: 1 of 2 signatures' should pass when signature policy is set to "EE"
   * File: hellopades-lt-b.pdf
@@ -1139,7 +1139,7 @@ List of Test Cases
 **TestCaseID: Signature-Policy-4**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: The PDF has LT and B profile signatures
   * Expected Result: 2 of 2 signatures' validation should pass when signature policy is set to "EU"
   * File: hellopades-lt-b.pdf
@@ -1148,7 +1148,7 @@ List of Test Cases
 **TestCaseID: Signature-Policy-5**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: The PDF has LT and B profile signatures
   * Expected Result: 2 of 2 signatures' validation should pass when signature policy is set to "eU"
   * File: hellopades-lt-b.pdf
@@ -1157,7 +1157,7 @@ List of Test Cases
 **TestCaseID: Signature-Policy-6**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Bdoc with conformant EE signature
   * Expected Result: Document should pass when signature policy is set to "EE"
   * File: Valid_ID_sig.bdoc
@@ -1166,7 +1166,19 @@ List of Test Cases
 **TestCaseID: Signature-Policy-7**
 
   * TestType: Automated
-  * RequirementID: []()
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
+  * Title: Bdoc with conformant EE signature
+  * Expected Result: Document should pass when signature policy is set to "ee"
+  * File: Valid_ID_sig.bdoc
+
+
+## XRoadValidationPassIT.java
+
+
+**TestCaseID: Xroad-ValidationPass-1**
+
+  * TestType: Automated
+  * RequirementID: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/)
   * Title: Bdoc with conformant EE signature
   * Expected Result: Document should pass when signature policy is set to "ee"
   * File: Valid_ID_sig.bdoc

@@ -15,6 +15,19 @@ public class XRoadValidationPassIT extends SiVaRestTests {
         return "xroad/";
     }
 
+    /**
+     * TestCaseID: Xroad-ValidationPass-1
+     *
+     * TestType: Automated
+     *
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     *
+     * Title: Bdoc with conformant EE signature
+     *
+     * Expected Result: Document should pass when signature policy is set to "ee"
+     *
+     * File: Valid_ID_sig.bdoc
+     */
     @Test
     public void validatingAnXroadDocumentShouldReturnAReport() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));

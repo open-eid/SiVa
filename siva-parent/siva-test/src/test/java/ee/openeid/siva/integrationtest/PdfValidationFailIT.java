@@ -13,7 +13,7 @@ public class PdfValidationFailIT extends SiVaRestTests{
 
     private static final String TEST_FILES_DIRECTORY = "pdf/signing_certifacte_test_files/";
 
-    /***
+    /**
      * TestCaseID: PDF-ValidationFail-1
      *
      * TestType: Automated
@@ -25,7 +25,7 @@ public class PdfValidationFailIT extends SiVaRestTests{
      * Expected Result: Document signed with certificate that is expired should fail.
      *
      * File: hellopades-lt-rsa1024-sha1-expired.pdf
-     ***/
+     */
     @Test
     public void signaturesMadeWithExpiredSigningCertificatesAreInvalid() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-rsa1024-sha1-expired.pdf"));
@@ -41,7 +41,7 @@ public class PdfValidationFailIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(1));
     }
 
-    /***
+    /**
      * TestCaseID: PDF-ValidationFail-2
      *
      * TestType: Automated
@@ -53,7 +53,7 @@ public class PdfValidationFailIT extends SiVaRestTests{
      * Expected Result: Document signed with certificate that is revoked should fail.
      *
      * File: pades_lt_revoked.pdf
-     ***/
+     */
     @Test @Ignore //TODO: PAdES doc with revoked sign cert gets validated as valid - Update: this should be fixed in DSS 4.7.RC2
     public void documentSignedWithRevokedCertificateShouldFail() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades_lt_revoked.pdf"));
@@ -71,7 +71,7 @@ public class PdfValidationFailIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(1));
     }
 
-    /***
+    /**
      * TestCaseID: PDF-ValidationFail-3
      *
      * TestType: Automated
@@ -83,7 +83,7 @@ public class PdfValidationFailIT extends SiVaRestTests{
      * Expected Result: PDF-file validation should fail
      *
      * File: missing_signing_certificate_attribute.pdf
-     ***/
+     */
     @Test
             // Since DSS 4.7.1.RC1 the given file is identified as PAdES_BASELINE_T
             // When PAdES_BASELINE_T is not in constraint.xml's AcceptableFormats -> Error: The expected format is not found!
@@ -104,31 +104,31 @@ public class PdfValidationFailIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(1));
     }
 
-    /***
+    /**
      * TestCaseID: PDF-ValidationFail-4
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: The PDF-file has been signed with certificate which has no non repudiation key usage attribute (PAdES Baseline LT)
      *
      * Expected Result: The PDF-file validation should fail with error.
      *
      * File: hellopades-pades-lt-sha256-auth.pdf
-     ***/
+     */
     @Test
     public void signingCertificateWithoutNonRepudiationKeyUsageAttributeShouldFail() {
         QualifiedReport report = postForReport("hellopades-pades-lt-sha256-auth.pdf");
         assertInvalidWithError(report.getSignatures().get(0), "The signer's certificate has not expected key-usage!");
     }
 
-    /***
+    /**
      * TestCaseID: PDF-ValidationFail-5
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: hellopadess been signed with an expired certificate, where signing time is within the original validity
      *                  period of the certificate, but OCSP confirmation and Time Stamp are current date (PAdES Baseline LT).
@@ -136,7 +136,7 @@ public class PdfValidationFailIT extends SiVaRestTests{
      * Expected Result: Document signed with expired certificate should fail
      *
      * File: hellopades-lt-sha256-rsa2048-expired.pdf
-     ***/
+     */
     @Test
     public void documentSignedWithExpiredRsa2048CertificateShouldFail() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-sha256-rsa2048-expired.pdf"));
@@ -152,12 +152,12 @@ public class PdfValidationFailIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(1));
     }
 
-    /***
+    /**
      * TestCaseID: PDF-ValidationFail-6
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: hellopadess been signed with an expired certificate, where signing time is within the original validity
      *                  period of the certificate, but OCSP confirmation and Time Stamp are current date (PAdES Baseline LT).
@@ -165,7 +165,7 @@ public class PdfValidationFailIT extends SiVaRestTests{
      * Expected Result: Document signed with expired certificate should fail
      *
      * File: hellopades-lt-sha256-rsa1024-expired2.pdf
-     ***/
+     */
     @Test @Ignore //TODO: CI server produces different subindication and error
     public void documentSignedWithExpiredSha256CertificateShouldFail() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-sha256-rsa1024-expired2.pdf"));
@@ -181,12 +181,12 @@ public class PdfValidationFailIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(1));
     }
 
-    /***
+    /**
      * TestCaseID: PDF-ValidationFail-7
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: hellopadess been signed with an expired certificate, where signing time is within the original validity
      *                  period of the certificate, but OCSP confirmation and Time Stamp are current date (PAdES Baseline LT).
@@ -194,7 +194,7 @@ public class PdfValidationFailIT extends SiVaRestTests{
      * Expected Result: Document signed with expired certificate should fail
      *
      * File: hellopades-lt-sha1-rsa1024-expired2.pdf
-     ***/
+     */
     @Test @Ignore //TODO: CI server produces different subindication and error
     public void documentSignedWithExpiredSha1CertificateShouldFail() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-sha1-rsa1024-expired2.pdf"));

@@ -35,55 +35,55 @@ public class BdocValidationPassIT extends SiVaRestTests{
     }
 
 
-    /***
+    /**
      * TestCaseID: Bdoc-ValidationPass-1
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: Bdoc with single valid signature
      *
      * Expected Result: The document should pass the validation
      *
      * File: Valid_ID_sig.bdoc
-     ***/
+     */
     @Test
     public void validSignature() {
         assertAllSignaturesAreValid(postForReport("Valid_ID_sig.bdoc"));
     }
 
-    /***
+    /**
      * TestCaseID: Bdoc-ValidationPass-2
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: Bdoc TM with multiple valid signatures
      *
      * Expected Result: The document should pass the validation
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
-     ***/
+     */
     @Test
     public void validMultipleSignatures() {
         assertAllSignaturesAreValid(postForReport("Valid_IDCard_MobID_signatures.bdoc"));
     }
 
-    /***
+    /**
      * TestCaseID: Bdoc-ValidationPass-3
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: Bdoc with warning on signature
      *
      * Expected Result: The document should pass the validation but warning should be returned
      *
      * File:
-     ***/
+     */
     @Test @Ignore //TODO: need file with warnings
     public void validSignatureWithWarning() {
         QualifiedReport report = postForReport("warning.bdoc");
@@ -91,19 +91,19 @@ public class BdocValidationPassIT extends SiVaRestTests{
         assertTrue(report.getSignatures().get(0).getWarnings().size() > 0);
     }
 
-    /***
+    /**
      * TestCaseID: Bdoc-ValidationPass-4
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: Asice One LT signature with certificates from different countries
      *
      * Expected Result: The document should pass the validation
      *
      * File: EE_SER-AEX-B-LT-V-30.asice
-     ***/
+     */
     @Test
     public void bdocDifferentCertificateCountries() {
         setTestFilesDirectory("bdoc/live/timestamp/");
@@ -114,37 +114,37 @@ public class BdocValidationPassIT extends SiVaRestTests{
                 .body("validSignaturesCount", Matchers.is(1));
     }
 
-    /***
+    /**
      * TestCaseID: Bdoc-ValidationPass-5
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: Bdoc signed with Mobile-ID, ECC-SHA256 signature with prime256v1 key
      *
      * Expected Result: The document should pass the validation
      *
      * File: 24050_short_ecdsa_correct_file_mimetype.bdoc
-     ***/
+     */
     @Test
     public void bdocEccSha256signature() {
         assertAllSignaturesAreValid(postForReport("24050_short_ecdsa_correct_file_mimetype.bdoc"));
     }
 
-    /***
+    /**
      * TestCaseID: Bdoc-ValidationPass-6
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: Asice Baseline-LT file
      *
      * Expected Result: The document should pass the validation
      *
      * File: EE_SER-AEX-B-LT-V-49.asice
-     ***/
+     */
     @Test
     public void bdocBaselineLtProfileValidSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
@@ -156,19 +156,19 @@ public class BdocValidationPassIT extends SiVaRestTests{
                 .body("validSignaturesCount", Matchers.is(1));
     }
 
-    /***
+    /**
      * TestCaseID: Bdoc-ValidationPass-7
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: Asice QES file
      *
      * Expected Result: The document should pass the validation
      *
      * File: bdoc21-TS.asice
-     ***/
+     */
     @Test @Ignore //TODO: Because DSS bug this file returns AdESqc not QES. Can be enabled when fix is available.
     public void bdocQESProfileValidSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
@@ -180,19 +180,19 @@ public class BdocValidationPassIT extends SiVaRestTests{
                 .body("validSignaturesCount", Matchers.is(1));
     }
 
-    /***
+    /**
      * TestCaseID: Bdoc-ValidationPass-8
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: Asice Baseline-LTA file
      *
      * Expected Result: The document should pass the validation
      *
      * File: EE_SER-AEX-B-LTA-V-24.asice
-     ***/
+     */
     @Test
     public void bdocBaselineLtaProfileValidSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
@@ -204,19 +204,19 @@ public class BdocValidationPassIT extends SiVaRestTests{
                 .body("validSignaturesCount", Matchers.is(1));
     }
 
-    /***
+    /**
      * TestCaseID: Bdoc-ValidationPass-9
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: Asice file signed with Mobile-ID, ECC-SHA256 signature with prime256v1 key
      *
      * Expected Result: The document should pass the validation
      *
      * File: EE_SER-AEX-B-LT-V-2.asice
-     ***/
+     */
     @Test
     public void bdocWithEccSha256ValidSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
@@ -228,7 +228,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
                 .body("validSignaturesCount", Matchers.is(1));
     }
 
-    /***
+    /**
      * TestCaseID: Bdoc-ValidationPass-10
      *
      * TestType: Automated
@@ -240,7 +240,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
      * Expected Result: The document should pass the validation
      *
      * File: IB-4270_TS_ESTEID-SK 2015  SK OCSP RESPONDER 2011.asice
-     ***/
+     */
     @Test
     public void bdocSk2015CertificateChainValidSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
@@ -253,7 +253,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
                 .body("validSignaturesCount", Matchers.is(1));
     }
 
-    /***
+    /**
      * TestCaseID: Bdoc-ValidationPass-11
      *
      * TestType: Automated
@@ -265,7 +265,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
      * Expected Result: The document should pass the validation
      *
      * File: EE_SER-AEX-B-LT-V-28.asice
-     ***/
+     */
     @Test
     public void bdocKlass3Sk2010CertificateChainValidSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
@@ -278,7 +278,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
                 .body("validSignaturesCount", Matchers.is(1));
     }
 
-    /***
+    /**
      * TestCaseID: Bdoc-ValidationPass-12
      *
      * TestType: Automated
@@ -290,7 +290,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
      * Expected Result: The document should pass the validation
      *
      * File: BDOC2.1.bdoc
-     ***/
+     */
     @Test
     public void bdocEsteidSk2011CertificateChainQesBaselineLtTmValidSignature() {
         setTestFilesDirectory("bdoc/live/timemark/");
@@ -303,26 +303,26 @@ public class BdocValidationPassIT extends SiVaRestTests{
                 .body("validSignaturesCount", Matchers.is(1));
     }
 
-    /***
+    /**
      * TestCaseID: Bdoc-ValidationPass-13
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: Bdoc TS with multiple valid signatures
      *
      * Expected Result: The document should pass the validation
      *
      * File: BDOC-TS.bdoc
-     ***/
+     */
     @Test
     public void bdocTsValidMultipleSignatures() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         assertAllSignaturesAreValid(postForReport("BDOC-TS.bdoc"));
     }
 
-    /***
+    /**
      * TestCaseID: Bdoc-ValidationPass-14
      *
      * TestType: Automated
@@ -334,7 +334,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
      * Expected Result: The document should pass the validation
      *
      * File: Šužlikud sõid ühe õuna ära.bdoc
-     ***/
+     */
     @Test
     public void bdocWithSpecialCharactersInDataFileShouldPass() {
         setTestFilesDirectory("bdoc/live/timemark/");

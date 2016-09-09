@@ -24,7 +24,7 @@ public class LargeFileIT extends SiVaRestTests{
         this.testFilesDirectory = testFilesDirectory;
     }
 
-    /***
+    /**
      * TestCaseID: PDF-LargeFiles-1
      *
      * TestType: Automated
@@ -36,7 +36,7 @@ public class LargeFileIT extends SiVaRestTests{
      * Expected Result: Validation report is returned
      *
      * File: 9MB_PDF.pdf
-     ***/
+     */
     @Test //TODO: This file actually returns INDETERMINATE because of expired signers cert.
     public void pdfNineMegabyteFilesWithLtSignatureAreAccepted() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("9MB_PDF.pdf"));
@@ -46,7 +46,7 @@ public class LargeFileIT extends SiVaRestTests{
                 .body("documentName",equalTo("9MB_PDF.pdf"));
     }
 
-    /***
+    /**
      * TestCaseID: Bdoc-LargeFiles-1
      *
      * TestType: Automated
@@ -58,7 +58,7 @@ public class LargeFileIT extends SiVaRestTests{
      * Expected Result: Validation report is returned
      *
      * File: 9MB_BDOC-TS.bdoc
-     ***/
+     */
     @Test
     public void bdocTsNineMegabyteFilesValidSignatureAreAccepted() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("9MB_BDOC-TS.bdoc"));
@@ -69,7 +69,7 @@ public class LargeFileIT extends SiVaRestTests{
                 .body("validSignaturesCount", equalTo(1));
     }
 
-    /***
+    /**
      * TestCaseID: Bdoc-LargeFiles-2
      *
      * TestType: Automated
@@ -81,7 +81,7 @@ public class LargeFileIT extends SiVaRestTests{
      * Expected Result: Validation report is returned
      *
      * File: 9MB_BDOC-TM.bdoc
-     ***/
+     */
     @Test
     public void bdocTmNineMegabyteFilesValidSignatureAreAccepted() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("9MB_BDOC-TM.bdoc"));
@@ -92,7 +92,7 @@ public class LargeFileIT extends SiVaRestTests{
                 .body("validSignaturesCount", equalTo(1));
     }
 
-    /***
+    /**
      * TestCaseID: Ddoc-LargeFiles-1
      *
      * TestType: Automated
@@ -104,7 +104,7 @@ public class LargeFileIT extends SiVaRestTests{
      * Expected Result: Validation report is returned
      *
      * File: 9MB_DDOC.ddoc
-     ***/
+     */
     @Test
     public void ddocTenMegabyteFilesWithValidSignatureAreAccepted() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("9MB_DDOC.ddoc"));

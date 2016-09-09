@@ -22,7 +22,7 @@ public class PdfValidationPassIT extends SiVaRestTests{
         this.testFilesDirectory = testFilesDirectory;
     }
 
-     /***
+     /**
      * TestCaseID: PDF-ValidationPass-1
      *
      * TestType: Automated
@@ -34,13 +34,13 @@ public class PdfValidationPassIT extends SiVaRestTests{
      * Expected Result: Document signed with certificate that expired after signing should pass.
      *
      * File: hellopades-lt-sha256-rsa1024-not-expired.pdf
-     ***/
+     */
     @Test
     public void validSignaturesRemainValidAfterSigningCertificateExpires() {
         assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-rsa1024-not-expired.pdf"));
     }
 
-    /***
+    /**
      * TestCaseID: PDF-ValidationPass-2
      *
      * TestType: Automated
@@ -52,25 +52,25 @@ public class PdfValidationPassIT extends SiVaRestTests{
      * Expected Result: Document signed with certificate that expired after signing should pass.
      *
      * File: hellopades-lt-sha256-rsa2048-7d.pdf
-     ***/
+     */
     @Test
     public void certificateExpired7DaysAfterDocumentSigningShouldPass() {
         assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-rsa2048-7d.pdf"));
     }
 
-    /***
+    /**
      * TestCaseID: PDF-ValidationPass-4
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: Pdf with single valid signature
      *
      * Expected Result: Document should pass.
      *
      * File: PdfValidSingleSignature.pdf
-     ***/
+     */
     @Test
     public void validSignature() {
         setTestFilesDirectory("document_format_test_files/");

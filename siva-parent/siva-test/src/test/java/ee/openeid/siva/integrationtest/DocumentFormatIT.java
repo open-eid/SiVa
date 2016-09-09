@@ -20,13 +20,13 @@ public class DocumentFormatIT extends SiVaRestTests {
 
     private static final String TEST_FILES_DIRECTORY = "document_format_test_files/";
 
-    /***
+    /**
      *
      * TestCaseID: DocumentFormat-1
      *
      * TestType: Automated
      *
-     * RequirementID:  (TBD)
+     * RequirementID:  http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: Validation of pdf document acceptance
      *
@@ -34,7 +34,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      *
      * File: hellopades-pades-lt-sha256-sign.pdf
      *
-     ***/
+     */
     @Test
     public void PAdESDocumentShouldPass() {
         QualifiedReport report = postForReport("hellopades-pades-lt-sha256-sign.pdf");
@@ -42,13 +42,13 @@ public class DocumentFormatIT extends SiVaRestTests {
         assertEquals("PAdES_BASELINE_LT", report.getSignatures().get(0).getSignatureFormat());
     }
 
-    /***
+    /**
      *
      * TestCaseID: DocumentFormat-2
      *
      * TestType: Automated
      *
-     * RequirementID:  (TBD)
+     * RequirementID:  http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: Validation of bdoc document acceptance
      *
@@ -56,7 +56,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void AdESDocumentShouldPass() {
         QualifiedReport report = postForReport("Valid_IDCard_MobID_signatures.bdoc");
@@ -64,13 +64,13 @@ public class DocumentFormatIT extends SiVaRestTests {
         assertEquals("XAdES_BASELINE_LT_TM", report.getSignatures().get(0).getSignatureFormat());
     }
 
-    /***
+    /**
      *
      * TestCaseID: DocumentFormat-3
      *
      * TestType: Automated
      *
-     * RequirementID:  (TBD)
+     * RequirementID:  http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: Validation of txt document rejection
      *
@@ -78,7 +78,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      *
      * File: hellopades-pades-lt-sha256-sign.txt
      *
-     ***/
+     */
     @Test
     public void TxtDocumentShouldFail() {
         post(validationRequestFor("hellopades-pades-lt-sha256-sign.txt"))
@@ -87,13 +87,13 @@ public class DocumentFormatIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString("Invalid document type"));
     }
 
-    /***
+    /**
      *
      * TestCaseID: DocumentFormat-4
      *
      * TestType: Automated
      *
-     * RequirementID:  (TBD)
+     * RequirementID:  http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: Validation of p7s document rejection
      *
@@ -101,7 +101,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      *
      * File: hellocades.p7s
      *
-     ***/
+     */
     @Test
     public void CAdESDocumentShouldFail() {
         post(validationRequestFor("hellocades.p7s"))
@@ -110,13 +110,13 @@ public class DocumentFormatIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString("Invalid document type"));
     }
 
-    /***
+    /**
      *
      * TestCaseID: DocumentFormat-5
      *
      * TestType: Automated
      *
-     * RequirementID:  (TBD)
+     * RequirementID:  http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: Validation of zip document rejection
      *
@@ -124,7 +124,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      *
      * File: 42.zip
      *
-     ***/
+     */
     @Test
     public void ZipDocumentShouldFail() {
         post(validationRequestFor("42.zip"))
@@ -133,13 +133,13 @@ public class DocumentFormatIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString("Invalid document type"));
     }
 
-    /***
+    /**
      *
      * TestCaseID: DocumentFormat-6
      *
      * TestType: Automated
      *
-     * RequirementID:  (TBD)
+     * RequirementID:  http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: Validation of doc document rejection
      *
@@ -147,7 +147,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      *
      * File: hellopades-pades-lt-sha256-sign.doc
      *
-     ***/
+     */
     @Test
     public void DocDocumentShouldFail() {
         post(validationRequestFor("hellopades-pades-lt-sha256-sign.doc"))
@@ -156,13 +156,13 @@ public class DocumentFormatIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString("Invalid document type"));
     }
 
-    /***
+    /**
      *
      * TestCaseID: DocumentFormat-7
      *
      * TestType: Automated
      *
-     * RequirementID:  (TBD)
+     * RequirementID:  http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: Validation of XML document rejection
      *
@@ -170,7 +170,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      *
      * File: XML.xml
      *
-     ***/
+     */
     @Test
     public void XmlDocumentShouldFail() {
         post(validationRequestFor("XML.xml"))
@@ -179,13 +179,13 @@ public class DocumentFormatIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString("Invalid document type"));
     }
 
-    /***
+    /**
      *
      * TestCaseID: DocumentFormat-8
      *
      * TestType: Automated
      *
-     * RequirementID:  (TBD)
+     * RequirementID:  http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: Validation of png document rejection
      *
@@ -193,7 +193,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      *
      * File: Picture.png
      *
-     ***/
+     */
 
     @Test
     public void PngDocumentShouldFail() {

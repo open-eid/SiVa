@@ -25,7 +25,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
         this.testFilesDirectory = testFilesDirectory;
     }
 
-    /***
+    /**
      * TestCaseID: Ddoc-ValidationFail-1
      *
      * TestType: Automated
@@ -37,13 +37,13 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * Expected Result: The document should fail the validation
      *
      * File: test1-ddoc-revoked.ddoc
-     ***/
+     */
     @Test
     public void ddocInvalidSignature() {
         assertAllSignaturesAreInvalid(postForReport("test1-ddoc-revoked.ddoc"));
     }
 
-    /***
+    /**
      * TestCaseID: Ddoc-ValidationFail-2
      *
      * TestType: Automated
@@ -55,13 +55,13 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * Expected Result: The document should fail the validation
      *
      * File: multipleInvalidSignatures.ddoc
-     ***/
+     */
     @Test
     public void ddocInvalidMultipleSignatures() {
         assertAllSignaturesAreInvalid(postForReport("multipleInvalidSignatures.ddoc"));
     }
 
-    /***
+    /**
      * TestCaseID: Ddoc-ValidationFail-3
      *
      * TestType: Automated
@@ -73,13 +73,13 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * Expected Result: The document should fail the validation
      *
      * File: multipleValidAndInvalidSignatures.ddoc
-     ***/
+     */
     @Test
     public void ddocInvalidAndValidMultipleSignatures() {
         assertSomeSignaturesAreValid(postForReport("multipleValidAndInvalidSignatures.ddoc"),2);
     }
 
-    /***
+    /**
      * TestCaseID: Ddoc-ValidationFail-4
      *
      * TestType: Automated
@@ -91,14 +91,14 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * Expected Result: The document should fail the validation
      *
      * File: DdocContainerNoSignature.bdoc
-     ***/
+     */
     @Test
     public void ddocNoSignatures() {
         setTestFilesDirectory("document_format_test_files/");
         assertAllSignaturesAreInvalid(postForReport("DdocContainerNoSignature.ddoc"));
     }
 
-    /***
+    /**
      * TestCaseID: Ddoc-ValidationFail-5
      *
      * TestType: Automated
@@ -110,7 +110,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * Expected Result: The document should fail the validation
      *
      * File: test-inv-sig-inf.ddoc
-     ***/
+     */
     @Test
     public void ddocSignatureValueChanged() {
         setTestFilesDirectory("ddoc/live/timemark/");
@@ -121,7 +121,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
-    /***
+    /**
      * TestCaseID: Ddoc-ValidationFail-6
      *
      * TestType: Automated
@@ -133,7 +133,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * Expected Result: The document should fail the validation
      *
      * File: AndmefailiAtribuudidMuudetud.ddoc
-     ***/
+     */
     @Test
     public void ddocDataFileHashMismatch() {
         setTestFilesDirectory("ddoc/live/timemark/");
@@ -144,19 +144,19 @@ public class DdocValidationFailIT extends SiVaRestTests{
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
-    /***
+    /**
      * TestCaseID: Ddoc-ValidationFail-7
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: Ddoc Baseline-BES file, no OCSP response
      *
      * Expected Result: The document should fail the validation
      *
      * File: ilma_kehtivuskinnituseta.ddoc
-     ***/
+     */
     @Test
     public void ddocNoOCSPResponse() {
         setTestFilesDirectory("ddoc/live/timemark/");
@@ -167,19 +167,19 @@ public class DdocValidationFailIT extends SiVaRestTests{
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
-    /***
+    /**
      * TestCaseID: Ddoc-ValidationFail-8
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: Ddoc no non-repudiation key usage value in the certificate
      *
      * Expected Result: The document should fail the validation
      *
      * File: test-non-repu1.ddoc
-     ***/
+     */
     @Test
     public void ddocNoNonRepudiationKey() {
         setTestFilesDirectory("ddoc/live/timemark/");
@@ -190,19 +190,19 @@ public class DdocValidationFailIT extends SiVaRestTests{
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
-    /***
+    /**
      * TestCaseID: Ddoc-ValidationFail-8
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: Ddoc Signer's certificate is not trusted
      *
      * Expected Result: The document should fail the validation
      *
      * File: Belgia_kandeavaldus_LIV.ddoc
-     ***/
+     */
     @Test //TODO: If this test returns failure it could be because of hardcoded signatures position in returned report. Expectation is that this position is always same.
     public void ddocSignersCertNotTrusted() {
         setTestFilesDirectory("ddoc/live/timemark/");
@@ -213,19 +213,19 @@ public class DdocValidationFailIT extends SiVaRestTests{
                 .body("validSignaturesCount", Matchers.is(1));
     }
 
-    /***
+    /**
      * TestCaseID: Ddoc-ValidationFail-9
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: Ddoc OCSP certificate is not trusted
      *
      * Expected Result: The document should fail the validation
      *
      * File: Tundmatu_OCSP_responder.ddoc
-     ***/
+     */
     @Test //TODO: The error message content is not checked currently as it is really sloppy
     public void ddocOCSPNotTrusted() {
         setTestFilesDirectory("ddoc/live/timemark/");
@@ -235,19 +235,19 @@ public class DdocValidationFailIT extends SiVaRestTests{
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
-    /***
+    /**
      * TestCaseID: Ddoc-ValidationFail-10
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: Ddoc has unsigned data files in the container
      *
      * Expected Result: The document should fail the validation
      *
      * File: lisatud_andmefail.ddoc
-     ***/
+     */
     @Test
     public void ddocNonSignedFile() {
         setTestFilesDirectory("ddoc/live/timemark/");
@@ -258,19 +258,19 @@ public class DdocValidationFailIT extends SiVaRestTests{
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
-    /***
+    /**
      * TestCaseID: Ddoc-ValidationFail-11
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: Ddoc signed data file has been removed from the container
      *
      * Expected Result: The document should fail the validation
      *
      * File: faileemald1.ddoc
-     ***/
+     */
     @Test
     public void ddocFileRemoved() {
         setTestFilesDirectory("ddoc/live/timemark/");
@@ -281,19 +281,19 @@ public class DdocValidationFailIT extends SiVaRestTests{
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
-    /***
+    /**
      * TestCaseID: Ddoc-ValidationFail-12
      *
      * TestType: Automated
      *
      * RequirementID:
      *
-     * Title: Ddoc signed data file has been removed from the container
+     * Title: Ddoc wrong nonce
      *
      * Expected Result: The document should fail the validation
      *
      * File: OCSP nonce vale.ddoc
-     ***/
+     */
     @Test
     public void ddocWrongOcspNonce() {
         setTestFilesDirectory("ddoc/live/timemark/");
@@ -304,7 +304,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
-    /***
+    /**
      * TestCaseID: Ddoc-ValidationFail-13
      *
      * TestType: Automated
@@ -316,7 +316,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * Expected Result: The document should fail the validation with error
      *
      * File: xml_expansion.ddoc
-     ***/
+     */
     @Test
     public void ddocWithXMLEntityExpansionAttackShouldFail() {
         setTestFilesDirectory("ddoc/test/timemark/");
@@ -326,7 +326,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
                 .body("requestErrors[0].message", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-    /***
+    /**
      * TestCaseID: Ddoc-ValidationFail-14
      *
      * TestType: Automated
@@ -338,7 +338,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * Expected Result: The document should fail the validation with error
      *
      * File: xml_entity.ddoc
-     ***/
+     */
     @Test
     public void ddocWithXMLServerSideRequestForgeryAttackShouldFail() {
         setTestFilesDirectory("ddoc/test/timemark/");
@@ -348,7 +348,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
                 .body("requestErrors[0].message", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-    /***
+    /**
      * TestCaseID: Ddoc-ValidationFail-15
      *
      * TestType: Automated
@@ -360,7 +360,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * Expected Result: The document should fail the validation
      *
      * File: KS-02_tyhi.ddoc
-     ***/
+     */
     @Test
     public void ddocNoFilesInContainer() {
         setTestFilesDirectory("ddoc/live/timemark/");
@@ -372,7 +372,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
                 .body("requestErrors.message", Matchers.hasItem(INVALID_BASE_64));
     }
 
-    /***
+    /**
      * TestCaseID: Ddoc-ValidationFail-16
      *
      * TestType: Automated
@@ -384,7 +384,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * Expected Result: The document should fail the validation
      *
      * File: opensc-error(1.2).ddoc
-     ***/
+     */
     @Test @Ignore //TODO: VAL-310 This testfile requires TEST-SK OCSP RESPONDER 2005 certification
     public void ddocOcspStatusRevoked() {
         setTestFilesDirectory("ddoc/live/timemark/");
@@ -397,19 +397,19 @@ public class DdocValidationFailIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(1));
     }
 
-    /***
+    /**
      * TestCaseID: Ddoc-ValidationFail-17
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: Ddoc XML namespace error in container
      *
      * Expected Result: The document should fail the validation
      *
      * File: ns6t3cp7.ddoc
-     ***/
+     */
     @Test @Ignore //TODO: VAL-280 maps this error as a warning so this container should now pass with warning, digidoc3 client also shows valid with warning
     public void ddocNamespaceErrorShouldFail() {
         setTestFilesDirectory("ddoc/live/timemark/");

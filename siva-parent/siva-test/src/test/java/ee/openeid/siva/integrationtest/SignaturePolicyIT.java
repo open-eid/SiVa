@@ -13,7 +13,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation more than 24 hours later than the signatures Time Stamp.
      *
@@ -32,7 +32,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation more than 24 hours later than the signatures Time Stamp.
      *
@@ -51,7 +51,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation more than 24 hours later than the signatures Time Stamp.
      *
@@ -73,7 +73,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: The PDF has LT and B profile signatures
      *
@@ -92,7 +92,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: The PDF has LT and B profile signatures
      *
@@ -111,7 +111,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: The PDF has LT and B profile signatures
      *
@@ -130,7 +130,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: Bdoc with conformant EE signature
      *
@@ -149,7 +149,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
      *
      * Title: Bdoc with conformant EE signature
      *
@@ -158,7 +158,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: Valid_ID_sig.bdoc
      */
     @Test
-    public void testBdocDocumentSignaturePolicyCaseInsensitivity() {
+    public void BdocDocumentSignaturePolicyCaseInsensitivity() {
         QualifiedReport report = postForReport("Valid_ID_sig.bdoc", SMALL_CASE_VALID_SIGNATURE_POLICY_1);
         assertAllSignaturesAreValid(report);
     }

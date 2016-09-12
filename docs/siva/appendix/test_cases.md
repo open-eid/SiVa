@@ -404,6 +404,24 @@ List of Test Cases
   * File: Šužlikud sõid ühe õuna ära.bdoc
 
 
+**TestCaseID: Bdoc-ValidationPass-15**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
+  * Title: *.sce file with TimeMark
+  * Expected Result: The document should pass the validation
+  * File: BDOC2.1_content_as_sce.sce
+
+
+**TestCaseID: Bdoc-ValidationPass-16**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
+  * Title: *.sce file with TimeStamp
+  * Expected Result: The document should pass the validation
+  * File: ASICE_TS_LTA_content_as_sce.sce
+
+
 ## DdocValidationFailIT.java
 
 

@@ -3,6 +3,7 @@ package ee.openeid.siva.integrationtest;
 import com.jayway.restassured.RestAssured;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
+import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -341,6 +342,60 @@ public class BdocValidationPassIT extends SiVaRestTests{
         post(validationRequestFor("Šužlikud sõid ühe õuna ära.bdoc"))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
+    }
+
+    /**
+     * TestCaseID: Bdoc-ValidationPass-15
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     *
+     * Title: *.sce file with TimeMark
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: BDOC2.1_content_as_sce.sce
+     */
+    @Test
+    public void bdocWithSceFileExtensionShouldPass() {
+        setTestFilesDirectory("bdoc/live/timemark/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("BDOC2.1_content_as_sce.sce"));
+        post(validationRequestWithValidKeys(encodedString, "BDOC2.1_content_as_sce.sce", "BDOC", ""))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
+    }
+
+    /**
+     * TestCaseID: Bdoc-ValidationPass-16
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     *
+     * Title: *.sce file with TimeStamp
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: ASICE_TS_LTA_content_as_sce.sce
+     */
+    @Test
+    public void asiceWithSceFileExtensionShouldPass() {
+        setTestFilesDirectory("bdoc/live/timestamp/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("ASICE_TS_LTA_content_as_sce.sce"));
+        post(validationRequestWithValidKeys(encodedString, "ASICE_TS_LTA_content_as_sce.sce", "BDOC", ""))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LTA"))
                 .body("signatures[0].signatureLevel", Matchers.is("QES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))

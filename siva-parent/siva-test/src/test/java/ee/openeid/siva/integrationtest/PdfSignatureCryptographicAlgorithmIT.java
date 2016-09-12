@@ -156,9 +156,9 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      *
      * File: hellopades-lt-sha256-rsa1023.pdf
      */
-    @Test @Ignore //TODO: This test fails because RSA1023 support is not configured in constraint.xml
+    @Test
     public void documentSignedWithRsa1023AlgoShouldPass() {
-        assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-rsa1023.pdf"));
+        assertAllSignaturesAreInvalid(postForReport("hellopades-lt-sha256-rsa1023.pdf"));
     }
 
     /**

@@ -713,6 +713,50 @@ List of Test Cases
   * File: EID-SK 2011 _ SK OCSP RESPONDER 2011.ddoc
 
 
+**TestCaseID: DdocHashcode-ValidationPass-1**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
+  * Title: Validation of DDOC Hashcode v1.0
+  * Expected Result: Document passes the validation
+  * File: SK-XML1.0_hashcode.ddoc
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
+
+**TestCaseID: DdocHashcode-ValidationPass-2**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
+  * Title: Validation of DDOC Hashcode v1.1
+  * Expected Result: Document passes the validation
+  * File: DIGIDOC-XML1.1_hashcode.ddoc
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
+
+**TestCaseID: DdocHashcode-ValidationPass-3**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
+  * Title: Validation of DDOC Hashcode v1.2
+  * Expected Result: Document passes the validation
+  * File: DIGIDOC-XML1.2_hashcode.ddoc
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
+
+**TestCaseID: DdocHashcode-ValidationPass-4**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
+  * Title: Validation of DDOC Hashcode v1.3
+  * Expected Result: Document passes the validation
+  * File: DIGIDOC-XML1.3_hashcode.ddoc
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
+
 ## DocumentFormatIT.java
 
 

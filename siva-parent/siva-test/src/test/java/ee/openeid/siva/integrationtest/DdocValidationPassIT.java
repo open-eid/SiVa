@@ -1,6 +1,7 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+import org.hamcrest.Matchers;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -243,6 +244,159 @@ public class DdocValidationPassIT extends SiVaRestTests{
     public void ddocEsteidSk2011Ocsp2011CertificateChainValidSignature() {
         assertAllSignaturesAreValid(postForReport("EID-SK 2011 _ SK OCSP RESPONDER 2011.ddoc"));
     }
+
+    /**
+     *
+     * TestCaseID: DdocHashcode-ValidationPass-1
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     *
+     * Title: Validation of DDOC Hashcode v1.0
+     *
+     * Expected Result: Document passes the validation
+     *
+     * File: SK-XML1.0_hashcode.ddoc
+     *
+     */
+    @Test @Ignore //TODO: VAL-324
+    public void ddocV1_0HashcodeShouldPass() {
+        post(validationRequestFor("SK-XML1.0_hashcode.ddoc"))
+                .then()
+                .body("signatures[0].id", Matchers.is("S0"))
+                .body("signatures[0].signatureFormat", Matchers.is("SK_XML_1.0"))
+                .body("signatures[0].signatureLevel", Matchers.is(""))
+                .body("signatures[0].signedBy", Matchers.is("ANSIP,ANDRUS,35610012722"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].signatureScopes[0].name", Matchers.is(""))
+                .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
+                .body("signatures[0].signatureScopes[0].content", Matchers.is(""))
+                .body("signatures[0].claimedSigningTime", Matchers.is("2002-10-07T12:10:19Z"))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is(""))
+                .body("signatureForm", Matchers.is("DIGIDOC_XML_1.0_hashcode"))
+                .body("documentName", Matchers.is("SK-XML1.0_hashcode.ddoc"))
+                .body("validSignaturesCount", Matchers.is(2))
+                .body("signaturesCount", Matchers.is(2));
+    }
+
+    /**
+     *
+     * TestCaseID: DdocHashcode-ValidationPass-2
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     *
+     * Title: Validation of DDOC Hashcode v1.1
+     *
+     * Expected Result: Document passes the validation
+     *
+     * File: DIGIDOC-XML1.1_hashcode.ddoc
+     *
+     */
+    @Test @Ignore //TODO: VAL-324
+    public void ddocV1_1HashcodeShouldPass() {
+        post(validationRequestFor("DIGIDOC-XML1.1_hashcode.ddoc"))
+                .then()
+                .body("signatures[0].id", Matchers.is("S0"))
+                .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.1"))
+                .body("signatures[0].signatureLevel", Matchers.is(""))
+                .body("signatures[0].signedBy", Matchers.is("KESKEL,URMO,38002240232"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].signatureScopes[0].name", Matchers.is(""))
+                .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
+                .body("signatures[0].signatureScopes[0].content", Matchers.is(""))
+                .body("signatures[0].claimedSigningTime", Matchers.is("2006-06-26T12:15:40Z"))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is(""))
+                .body("signatureForm", Matchers.is("DIGIDOC_XML_1.1_hashcode"))
+                .body("documentName", Matchers.is("DIGIDOC-XML1.1_hashcode.ddoc"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
+    }
+
+    /**
+     *
+     * TestCaseID: DdocHashcode-ValidationPass-3
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     *
+     * Title: Validation of DDOC Hashcode v1.2
+     *
+     * Expected Result: Document passes the validation
+     *
+     * File: DIGIDOC-XML1.2_hashcode.ddoc
+     *
+     */
+    @Test @Ignore //TODO: VAL-324
+    public void ddocV1_2HashcodeShouldPass() {
+        post(validationRequestFor("DIGIDOC-XML1.2_hashcode.ddoc"))
+                .then()
+                .body("signatures[0].id", Matchers.is("S0"))
+                .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.2"))
+                .body("signatures[0].signatureLevel", Matchers.is(""))
+                .body("signatures[0].signedBy", Matchers.is("Eesti Ühispank: Ülekandejuhise kinnitus"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].signatureScopes[0].name", Matchers.is(""))
+                .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
+                .body("signatures[0].signatureScopes[0].content", Matchers.is(""))
+                .body("signatures[0].claimedSigningTime", Matchers.is("2003-10-24T10:57:19Z"))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is(""))
+                .body("signatureForm", Matchers.is("DIGIDOC_XML_1.2_hashcode"))
+                .body("documentName", Matchers.is("DIGIDOC-XML1.2_hashcode.ddoc"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
+    }
+
+    /**
+     *
+     * TestCaseID: DdocHashcode-ValidationPass-4
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     *
+     * Title: Validation of DDOC Hashcode v1.3
+     *
+     * Expected Result: Document passes the validation
+     *
+     * File: DIGIDOC-XML1.3_hashcode.ddoc
+     *
+     */
+    @Test @Ignore //TODO: VAL-324
+    public void ddocV1_3HashcodeShouldPass() {
+        post(validationRequestFor("DIGIDOC-XML1.3_hashcode.ddoc"))
+                .then()
+                .body("signatures[0].id", Matchers.is("S0"))
+                .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("signatures[0].signatureLevel", Matchers.is(""))
+                .body("signatures[0].signedBy", Matchers.is("LUKIN,LIISA,47710110274"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].signatureScopes[0].name", Matchers.is(""))
+                .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
+                .body("signatures[0].signatureScopes[0].content", Matchers.is(""))
+                .body("signatures[0].claimedSigningTime", Matchers.is("2012-10-03T07:46:31Z"))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is(""))
+                .body("signatureForm", Matchers.is("DIGIDOC_XML_1.3_hashcode"))
+                .body("documentName", Matchers.is("DIGIDOC-XML1.3_hashcode.ddoc"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
+    }
+
     @Override
     protected String getTestFilesDirectory() {
         return TEST_FILES_DIRECTORY;

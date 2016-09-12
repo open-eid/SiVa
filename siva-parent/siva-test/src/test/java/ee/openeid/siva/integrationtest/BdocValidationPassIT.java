@@ -40,7 +40,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2
      *
      * Title: Bdoc with single valid signature
      *
@@ -58,7 +58,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2
      *
      * Title: Bdoc TM with multiple valid signatures
      *
@@ -76,7 +76,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2
      *
      * Title: Bdoc with warning on signature
      *
@@ -96,7 +96,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2
      *
      * Title: Asice One LT signature with certificates from different countries
      *
@@ -119,7 +119,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2
      *
      * Title: Bdoc signed with Mobile-ID, ECC-SHA256 signature with prime256v1 key
      *
@@ -137,7 +137,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2
      *
      * Title: Asice Baseline-LT file
      *
@@ -161,7 +161,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2
      *
      * Title: Asice QES file
      *
@@ -185,7 +185,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2
      *
      * Title: Asice Baseline-LTA file
      *
@@ -209,7 +209,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2
      *
      * Title: Asice file signed with Mobile-ID, ECC-SHA256 signature with prime256v1 key
      *
@@ -233,7 +233,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2
      *
      * Title: Asice file with 	ESTEID-SK 2015 certificate chain
      *
@@ -258,7 +258,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2
      *
      * Title: Asice file with KLASS3-SK 2010 (EECCRCA) certificate chain
      *
@@ -283,7 +283,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2
      *
      * Title: Bdoc with Baseline-LT_TM and QES signature level and ESTEID-SK 2011 certificate chain with valid signature
      *
@@ -308,7 +308,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2
      *
      * Title: Bdoc TS with multiple valid signatures
      *
@@ -327,7 +327,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2
      *
      * Title: Bdoc-TM with special characters in data file
      *

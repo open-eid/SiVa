@@ -20,7 +20,7 @@ public class XRoadValidationPassIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: Bdoc with conformant EE signature
      *

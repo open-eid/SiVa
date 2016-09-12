@@ -26,7 +26,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:  http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement:  http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: Validation of pdf document acceptance
      *
@@ -48,7 +48,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:  http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement:  http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: Validation of bdoc document acceptance
      *
@@ -70,7 +70,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:  http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement:  http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: Validation of txt document rejection
      *
@@ -93,7 +93,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:  http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement:  http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: Validation of p7s document rejection
      *
@@ -116,7 +116,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:  http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement:  http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: Validation of zip document rejection
      *
@@ -139,7 +139,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:  http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement:  http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: Validation of doc document rejection
      *
@@ -162,7 +162,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:  http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement:  http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: Validation of XML document rejection
      *
@@ -185,7 +185,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID:  http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement:  http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: Validation of png document rejection
      *

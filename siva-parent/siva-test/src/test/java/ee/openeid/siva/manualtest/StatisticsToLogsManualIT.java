@@ -33,7 +33,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * RequirementID:
+     * Requirement:
      *
      * Title: Bdoc valid container is validated
      *
@@ -65,7 +65,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * RequirementID:
+     * Requirement:
      *
      * Title: Bdoc invalid container is validated
      *
@@ -96,7 +96,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * RequirementID:
+     * Requirement:
      *
      * Title: Bdoc not supported file is inserted
      *
@@ -120,7 +120,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * RequirementID:
+     * Requirement:
      *
      * Title: Bdoc with certificates from different countries.
      *
@@ -153,7 +153,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * RequirementID:
+     * Requirement:
      *
      * Title: Ddoc valid container is validated
      *
@@ -187,7 +187,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * RequirementID:
+     * Requirement:
      *
      * Title: Ddoc invalid container is validated
      *
@@ -219,7 +219,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * RequirementID:
+     * Requirement:
      *
      * Title: Ddoc not supported file is inserted
      *
@@ -243,7 +243,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * RequirementID:
+     * Requirement:
      *
      * Title: Ddoc with certificates from different countries.
      *
@@ -276,7 +276,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * RequirementID:
+     * Requirement:
      *
      * Title: Pdf valid container is validated
      *
@@ -309,7 +309,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * RequirementID:
+     * Requirement:
      *
      * Title: Pdf invalid container is validated
      *
@@ -342,7 +342,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * RequirementID:
+     * Requirement:
      *
      * Title: Pdf not supported file is inserted
      *
@@ -366,7 +366,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * RequirementID:
+     * Requirement:
      *
      * Title: Pdf with certificates from different countries.
      *
@@ -399,7 +399,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * RequirementID:
+     * Requirement:
      *
      * Title: Xroad valid container is validated
      *
@@ -436,7 +436,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * RequirementID:
+     * Requirement:
      *
      * Title: Xroad invalid container is validated
      *
@@ -473,7 +473,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * RequirementID:
+     * Requirement:
      *
      * Title: Xroad not supported file is inserted
      *

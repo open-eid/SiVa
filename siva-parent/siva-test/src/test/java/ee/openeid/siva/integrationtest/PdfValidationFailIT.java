@@ -18,7 +18,7 @@ public class PdfValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: The PDF-file has been signed with expired certificate (PAdES Baseline LT)
      *
@@ -46,7 +46,7 @@ public class PdfValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: The PDF-file has been signed with revoked certificate (PAdES Baseline LT)
      *
@@ -76,7 +76,7 @@ public class PdfValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: The PDF-file has been signed with certificate that missing signed attribute (PAdES Baseline LT)
      *
@@ -109,7 +109,7 @@ public class PdfValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: The PDF-file has been signed with certificate which has no non repudiation key usage attribute (PAdES Baseline LT)
      *
@@ -128,7 +128,7 @@ public class PdfValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: hellopadess been signed with an expired certificate, where signing time is within the original validity
      *                  period of the certificate, but OCSP confirmation and Time Stamp are current date (PAdES Baseline LT).
@@ -157,7 +157,7 @@ public class PdfValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: hellopadess been signed with an expired certificate, where signing time is within the original validity
      *                  period of the certificate, but OCSP confirmation and Time Stamp are current date (PAdES Baseline LT).
@@ -186,7 +186,7 @@ public class PdfValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: hellopadess been signed with an expired certificate, where signing time is within the original validity
      *                  period of the certificate, but OCSP confirmation and Time Stamp are current date (PAdES Baseline LT).

@@ -27,7 +27,7 @@ public class PdfValidationPassIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2
      *
      * Title: The PDF-file has been signed with certificate that is expired after signing (PAdES Baseline LT)
      *
@@ -45,7 +45,7 @@ public class PdfValidationPassIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2
      *
      * Title: The PDF-file has been signed with certificate that will expire in 7 days after signing (PAdES Baseline LT)
      *
@@ -63,7 +63,7 @@ public class PdfValidationPassIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2
      *
      * Title: Pdf with single valid signature
      *

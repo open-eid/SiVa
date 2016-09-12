@@ -36,7 +36,7 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * RequirementID:
+     * Requirement:
      *
      * Title: Pdf valid container is validated with x-authenticated-user set in header
      *
@@ -58,7 +58,7 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * RequirementID:
+     * Requirement:
      *
      * Title: Pdf valid container is validated with x-authenticated-user set in header
      *
@@ -80,7 +80,7 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * RequirementID:
+     * Requirement:
      *
      * Title: Pdf valid container is validated with x-authenticated-user set in header
      *
@@ -102,7 +102,7 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * RequirementID:
+     * Requirement:
      *
      * Title: Bdoc with certificates from different countries.
      *
@@ -126,7 +126,7 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * RequirementID:
+     * Requirement:
      *
      * Title: Asice-E TS is validated
      *
@@ -151,7 +151,7 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * RequirementID:
+     * Requirement:
      *
      * Title: Xroad valid container is validated
      *
@@ -176,7 +176,7 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * RequirementID:
+     * Requirement:
      *
      * Title: Ddoc not supported file is inserted
      *
@@ -200,7 +200,7 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * RequirementID:
+     * Requirement:
      *
      * Title: Ddoc invalid container is validated
      *

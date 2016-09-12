@@ -30,7 +30,7 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: SHA512 algorithms (PAdES Baseline LT)
      *
@@ -48,7 +48,7 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: SHA1 algorithms (PAdES Baseline LT)
      *
@@ -66,7 +66,7 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: ECDSA algorithms (PAdES Baseline LT)
      *
@@ -84,7 +84,7 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: ECDSA224 algorithms (PAdES Baseline LT)
      *
@@ -102,7 +102,7 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: ECDSA256 algorithms (PAdES Baseline LT)
      *
@@ -120,7 +120,7 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: RSA1024 algorithms (PAdES Baseline LT)
      *
@@ -148,11 +148,11 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: RSA1023 algorithms (PAdES Baseline LT)
      *
-     * Expected Result: Document signed with RSA1023 algorithm should pass
+     * Expected Result: Document signed with RSA1023 algorithm should fail
      *
      * File: hellopades-lt-sha256-rsa1023.pdf
      */
@@ -166,7 +166,7 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: RSA2047 algorithms (PAdES Baseline LT)
      *
@@ -184,7 +184,7 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: RSA2048 algorithms (PAdES Baseline LT)
      *

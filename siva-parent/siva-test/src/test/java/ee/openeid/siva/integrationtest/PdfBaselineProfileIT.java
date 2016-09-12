@@ -18,7 +18,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: The PDF has PAdES-B profile signature
      *
@@ -37,7 +37,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: The PDF has PAdES-T profile signature
      *
@@ -57,7 +57,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: The PDF has PAdES-LT profile signature
      *
@@ -75,7 +75,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: The PDF has PAdES-LTA profile signature
      *
@@ -93,7 +93,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: The PDF has PAdES-LT and B profile signature
      *
@@ -112,7 +112,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: PDF document message digest attribute value does not match calculate value
      *
@@ -140,7 +140,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: PDF file with a serial signature
      *
@@ -168,7 +168,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: PDF document signed with multiple signers parallel signature
      *
@@ -186,7 +186,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: PDF document signed with multiple signers parallel signature without Sscd
      *

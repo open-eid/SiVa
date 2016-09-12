@@ -13,11 +13,11 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2
      *
      * Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation more than 24 hours later than the signatures Time Stamp.
      *
-     * Expected Result: Document with over 24h delay should fail when signature policy is set to "EE"
+     * Expected Result: Document with over 24h delay should fail when signature policy is set to strict
      *
      * File: hellopades-lt-sha256-ocsp-28h.pdf
      */
@@ -32,7 +32,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1
      *
      * Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation more than 24 hours later than the signatures Time Stamp.
      *
@@ -51,7 +51,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
      *
      * Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation more than 24 hours later than the signatures Time Stamp.
      *
@@ -73,7 +73,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
      * Title: The PDF has LT and B profile signatures
      *
@@ -92,7 +92,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1
      *
      * Title: The PDF has LT and B profile signatures
      *
@@ -111,7 +111,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1
      *
      * Title: The PDF has LT and B profile signatures
      *
@@ -130,7 +130,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2
      *
      * Title: Bdoc with conformant EE signature
      *
@@ -141,25 +141,6 @@ public class SignaturePolicyIT extends SiVaRestTests {
     @Test
     public void bdocDocumentWithEESignaturePolicyInRequestShouldPass() {
         QualifiedReport report = postForReport("Valid_ID_sig.bdoc", VALID_SIGNATURE_POLICY_1);
-        assertAllSignaturesAreValid(report);
-    }
-
-    /**
-     * TestCaseID: Signature-Policy-7
-     *
-     * TestType: Automated
-     *
-     * RequirementID: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/
-     *
-     * Title: Bdoc with conformant EE signature
-     *
-     * Expected Result: Document should pass when signature policy is set to "ee"
-     *
-     * File: Valid_ID_sig.bdoc
-     */
-    @Test
-    public void BdocDocumentSignaturePolicyCaseInsensitivity() {
-        QualifiedReport report = postForReport("Valid_ID_sig.bdoc", SMALL_CASE_VALID_SIGNATURE_POLICY_1);
         assertAllSignaturesAreValid(report);
     }
 

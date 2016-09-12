@@ -29,7 +29,7 @@ public class LargeFileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * Requirement:
      *
      * Title: 9MB PDF files (PAdES Baseline LT).
      *
@@ -51,7 +51,7 @@ public class LargeFileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * Requirement:
      *
      * Title: 9MB ASIC-E file
      *
@@ -74,7 +74,7 @@ public class LargeFileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * Requirement:
      *
      * Title: 9MB BDOC-TM
      *
@@ -97,7 +97,7 @@ public class LargeFileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * RequirementID:
+     * Requirement:
      *
      * Title: 9MB DDOC
      *

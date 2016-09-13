@@ -23,8 +23,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     
-    <link rel="shortcut icon" type="image/x-icon" href="../../None">
-    <link rel="icon" type="image/x-icon" href="../../None">
+    <link rel="shortcut icon" type="image/x-icon" href="../../assets/images/favicon-e565ddfa3b.ico">
+    <link rel="icon" type="image/x-icon" href="../../assets/images/favicon-e565ddfa3b.ico">
     <style>
       @font-face {
       	font-family: 'Icon';
@@ -41,7 +41,7 @@
       	font-style: normal;
       }
     </style>
-    <link rel="stylesheet" href="../../assets/stylesheets/application-0dac3e5884.css">
+    <link rel="stylesheet" href="../../assets/stylesheets/application-a422ff04cc.css">
     
       <link rel="stylesheet" href="../../assets/stylesheets/palettes-05ab2406df.css">
     
@@ -49,7 +49,7 @@
       
       
       
-      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
       <style>
         body, input {
           font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
@@ -498,7 +498,7 @@
 </ul>
 <p><strong>Test case sample</strong></p>
 <p>Automatic and manual test cases will have the same description principles (shown below).</p>
-<pre class="codehilite"><code class="language-bash">/***
+<div class="codehilite"><pre>/***
  *
  * TestCaseID: PDF-BaselineProfileTests-1
  *
@@ -515,15 +515,16 @@
  ***/
 @Test
 
-public void baselineProfileLTDocumentShouldPass(){
-    String filename = &quot;hellopades-lt-b.pdf&quot;;
-    String encodeFile = Base64.encodeBase64String(readFile(filename));
-    String document = encodeFile;
-    ValidationRequest validationRequest = new ValidationRequest();
-    validationRequest.setDocumentType(parseFileExtension(filename.substring(filename.lastIndexOf(&quot;.&quot;) + 1)));
-    validationRequest.setDocument(document);
-    restTemplate.postForObject(sivaBaseUrl, validationRequest, String.class);
-}</code></pre>
+public void baselineProfileLTDocumentShouldPass<span class="o">(){</span>
+    String <span class="nv">filename</span> <span class="o">=</span> <span class="s2">&quot;hellopades-lt-b.pdf&quot;</span><span class="p">;</span>
+    String <span class="nv">encodeFile</span> <span class="o">=</span> Base64.encodeBase64String<span class="o">(</span>readFile<span class="o">(</span>filename<span class="o">))</span><span class="p">;</span>
+    String <span class="nv">document</span> <span class="o">=</span> encodeFile<span class="p">;</span>
+    ValidationRequest <span class="nv">validationRequest</span> <span class="o">=</span> new ValidationRequest<span class="o">()</span><span class="p">;</span>
+    validationRequest.setDocumentType<span class="o">(</span>parseFileExtension<span class="o">(</span>filename.substring<span class="o">(</span>filename.lastIndexOf<span class="o">(</span><span class="s2">&quot;.&quot;</span><span class="o">)</span> + 1<span class="o">)))</span><span class="p">;</span>
+    validationRequest.setDocument<span class="o">(</span>document<span class="o">)</span><span class="p">;</span>
+    restTemplate.postForObject<span class="o">(</span>sivaBaseUrl, validationRequest, String.class<span class="o">)</span><span class="p">;</span>
+<span class="o">}</span>
+</pre></div>
 
 
 <h3 id="defect-management">Defect management</h3>

@@ -323,6 +323,12 @@
             </li>
           
             <li class="anchor">
+              <a title="Testing of user statistics" href="#testing-of-user-statistics">
+                Testing of user statistics
+              </a>
+            </li>
+          
+            <li class="anchor">
               <a title="System Test introduction" href="#system-test-introduction">
                 System Test introduction
               </a>
@@ -443,9 +449,7 @@
 <p><strong> Unclear items that are not yet present in the plan </strong></p>
 <ul>
 <li>Testing of logs</li>
-<li>Testing of user statistics</li>
 <li>Configuration/administration of the service</li>
-<li>SOAP API testing</li>
 <li>System Testing of X-Road service</li>
 </ul>
 </div>
@@ -480,8 +484,8 @@
 <p>In all of the negative cases correctness of returned error message is checked.</p>
 <p>Specific test cases and input files can be found in:</p>
 <ul>
-<li><a href="../../siva/appendix/test_cases/#validationrequesttestsjava">Appendix 5 - ValidationRequestTests.java</a></li>
-<li><a href="../../siva/appendix/test_cases/#documentformattestsjava">Appendix 5 - DocumentFormatTests.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#validationrequestitjava">Appendix 5 - ValidationRequestIT.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#documentformatitjava">Appendix 5 - DocumentFormatIT.java</a></li>
 </ul>
 <h3 id="validation-report-tests">Validation Report tests</h3>
 <p>SiVa web service returns uniform Validation Report on all the supported document types. This also includes correct document types without actual signature (for example PDF document without signature). However not all values may be present for all the document types.</p>
@@ -495,13 +499,39 @@
 </ul>
 <p>Specific test cases and input files can be found in:</p>
 <ul>
-<li><a href="../../siva/appendix/test_cases/#validationreportvalueverificationjava">Appendix 5 - ValidationReportJsonStructureVerification.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#validationReportValueVerificationitjava">Appendix 5 - ValidationReportValueVerificationIT.java</a></li>
 </ul>
 <h2 id="testing-of-soap-api">Testing of SOAP API</h2>
-<div class="admonition development">
-<p class="admonition-title">Development</p>
-<p>Will be covered when SOAP API is implemented</p>
-</div>
+<p>The goal of the SOAP API testing is to check that the API is accepting the requests based on the specification and the output result (Validation Report) is in correct format and has all the required elements. In general the tests follow the same principles as with REST API.
+Compatibility with X-Road security server is out of scope for these tests and will be covered in X-Road System Test plan.</p>
+<h3 id="validation-soap-api-tests">Validation SOAP API tests</h3>
+<p>Following areas are tested on input:</p>
+<ul>
+<li>Wrong (not accepted) values in input parameters</li>
+<li>Empty values in input paramters</li>
+<li>Too many parameters</li>
+<li>Too few parameters</li>
+<li>Inconsistencies on stated parameters and actual data (wrong document type)</li>
+<li>Case insensitivity on parameter names</li>
+<li>Empty request</li>
+</ul>
+<p>In all of the negative cases correctness of returned error message is checked.</p>
+<p>Specific test cases and input files can be found in:</p>
+<ul>
+<li><a href="../../siva/appendix/test_cases/#soapvalidationrequestitjava">Appendix 5 - SoapValidationRequestIT.java</a></li>
+</ul>
+<h3 id="validation-report-tests_1">Validation Report tests</h3>
+<p>SiVa web service returns uniform Validation Report on all the supported document types. This also includes correct document types without actual signature (for example PDF document without signature). However not all values may be present for all the document types.</p>
+<p>Following areas are tested on output (Validation Report):</p>
+<ul>
+<li>Presence of the mandatory elements on DDOC, BDOC, PDF, ASIC-E and ASICE-E X-Road document types</li>
+<li>Presence of optional elements on DDOC, BDOC, PDF, ASIC-E and ASICE-E X-Road document types</li>
+<li>Verification of expected values</li>
+</ul>
+<p>Specific test cases and input files can be found in:</p>
+<ul>
+<li><a href="../../siva/appendix/test_cases/#soapvalidationreportvalueitjava">Appendix 5 - SoapValidationReportValueIT.java</a></li>
+</ul>
 <h2 id="testing-of-ddoc-signature-validation">Testing of DDOC signature validation</h2>
 <p>The goal of the DDOC signature validation testing is to check that the validation results given by JDigiDoc library are properly presented in validation report.</p>
 <p>The testing of DDOC signatures consists of following main cases:</p>
@@ -513,18 +543,14 @@
 </ul>
 <p>Specific test cases and input files can be found in:</p>
 <ul>
-<li><a href="../../siva/appendix/test_cases/#ddocvalidationfailjava">Appendix 5 - DdocValidationFail.java</a></li>
-<li><a href="../../siva/appendix/test_cases/#ddocvalidationpassjava">Appendix 5 - DdocValidationPass.java</a></li>
-<li><a href="../../siva/appendix/test_cases/#largefiletestsjava">Appendix 5 - LargeFileTests.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#ddocvalidationfailitjava">Appendix 5 - DdocValidationFailIT.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#ddocvalidationpassitjava">Appendix 5 - DdocValidationPassIT.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#largefileitjava">Appendix 5 - LargeFileIT.java</a></li>
 </ul>
 <p><strong>What is not tested:</strong></p>
 <ul>
 <li>Verification of different causes in container for invalid result is out of scope.</li>
 </ul>
-<div class="admonition development">
-<p class="admonition-title">Development</p>
-<p>Insert links to JDOC repos where these were tested.</p>
-</div>
 <h2 id="testing-of-bdoc-signature-validation">Testing of BDOC signature validation</h2>
 <p>The goal of the BDOC signature validation testing is to check that the validation results given by DigiDoc4J library are properly presented in validation report.</p>
 <p>The testing of BDOC signatures consists of following main cases:</p>
@@ -535,18 +561,14 @@
 </ul>
 <p>Specific test cases and input files can be found in:</p>
 <ul>
-<li><a href="../../siva/appendix/test_cases/#bdocvalidationfailjava">Appendix 5 - BdocValidationFail.java</a></li>
-<li><a href="../../siva/appendix/test_cases/#bdocvalidationpassjava">Appendix 5 - BdocValidationPass.java</a></li>
-<li><a href="../../siva/appendix/test_cases/#largefiletestsjava">Appendix 5 - LargeFileTests.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#bdocvalidationfailitjava">Appendix 5 - BdocValidationFailIT.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#bdocvalidationpassitjava">Appendix 5 - BdocValidationPassIT.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#largefileitjava">Appendix 5 - LargeFileIT.java</a></li>
 </ul>
 <p><strong>What is not tested:</strong></p>
 <ul>
 <li>Verification of different causes in container for invalid result is out of scope.</li>
 </ul>
-<div class="admonition development">
-<p class="admonition-title">Development</p>
-<p>Insert links where Digidoc4J repos where these were tested.</p>
-</div>
 <h2 id="testing-of-pdf-signature-validation">Testing of PDF signature validation</h2>
 <p>Portion of the validation rules for PDF documents are implemented in SiVa web apllication itself. Therefor different test area selection is used for PDF compared to other containers.</p>
 <p>The testing of PDF signatures consists of following main cases:</p>
@@ -561,26 +583,45 @@
 </ul>
 <p>Specific test cases and input files can be found in:</p>
 <ul>
-<li><a href="../../siva/appendix/test_cases/#pdfbaselineprofiletestsjava">Appendix 5 - PdfBaselineProfileTests.java</a></li>
-<li><a href="../../siva/appendix/test_cases/#pdfsignaturecryptographicalgorithmtestsjava">Appendix 5 - PdfSignatureCryptographicAlgorithmTests.java</a></li>
-<li><a href="../../siva/appendix/test_cases/#pdfvalidationfailjava">Appendix 5 - PdfValidationFail.java</a></li>
-<li><a href="../../siva/appendix/test_cases/#pdfvalidationpassjava">Appendix 5 - PdfValidationPass.java</a></li>
-<li><a href="../../siva/appendix/test_cases/#signaturerevocationvaluetestsjava">Appendix 5 - SignatureRevocationValueTests.java</a></li>
-<li><a href="../../siva/appendix/test_cases/#largefiletestsjava">Appendix 5 - LargeFileTests.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#pdfbaselineprofileitjava">Appendix 5 - PdfBaselineProfileIT.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#pdfsignaturecryptographicalgorithmitjava">Appendix 5 - PdfSignatureCryptographicAlgorithmIT.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#pdfvalidationfailitjava">Appendix 5 - PdfValidationFailIT.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#pdfvalidationpassitjava">Appendix 5 - PdfValidationPassIT.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#largefileitjava">Appendix 5 - LargeFileIT.java</a></li>
 </ul>
 <h2 id="testing-of-x-road-asice-signature-validation">Testing of X-Road ASICE signature validation</h2>
 <p>The goal of the ASICE signature validation testing is to check that the validation results given by X-Road signature validation utility are properly presented in validation report.</p>
-<p>It is possible to validate ASICE containers both via SOAP and REST interface. The same test cases are used for both interfaces.</p>
 <p>The testing of ASICE signatures consists of following main cases:</p>
 <ul>
 <li>Containers with valid signature(s) are validated</li>
 <li>Containers with invalid signature(s) and no signature are validated</li>
-<li>Containers sizes near maximum are validated</li>
 </ul>
 <p>Specific test cases and input files can be found in <a href="../../siva/appendix/test_cases/">Appendix 5 - Test Case Descriptions</a></p>
 <p><strong>What is not tested:</strong></p>
 <ul>
 <li>Verification of different causes in container for invalid result is out of scope.</li>
+</ul>
+<h2 id="testing-of-user-statistics">Testing of user statistics</h2>
+<p>Testing of user statistics is carried out in combination of automatic data preparation and generation by integration tests and manual verification of the results.
+SiVa supports two parallel ways of gathering user statistics:</p>
+<ul>
+<li>Validation results are printed to system log and can be gathered by any suitable means</li>
+<li>Validation results are sent to Google Analytics using Google Measurement Protocol API (requires creation and configuration of Google Analytics account and configuring SiVa service to send statistics to this account.)</li>
+</ul>
+<p>As both systems use the same data the testing follows the same principles for both. Following areas are covered:</p>
+<ul>
+<li>Statistics values are checked in log and Google Analytics for all container types (this also includes parameters not present in validation report)</li>
+<li>Valid and invalid signatures are validated</li>
+<li>Error situations on signature validation (instead of validation report, error message is returned)</li>
+</ul>
+<p>Specific test cases and input files can be found in:</p>
+<ul>
+<li><a href="../../siva/appendix/test_cases/#statisticstogamanualitjava">Appendix 5 - StatisticsToGAManualIT.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#statisticstologsmanualitjava">Appendix 5 - StatisticsToLogsManualIT.java</a></li>
+</ul>
+<p><strong>What is not tested:</strong></p>
+<ul>
+<li>Configuring Google Analytics reports is out of scope. Only verification of data presence is done.</li>
 </ul>
 <h2 id="system-test-introduction">System Test introduction</h2>
 <div class="admonition development">

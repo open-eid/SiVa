@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.AbstractMap;
+import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -29,7 +29,7 @@ class ValidationTaskRunner {
     private ValidationService jsonValidationService;
     private ValidationService soapValidationService;
 
-    private Map<ValidationResultType, String> validationResults = new ConcurrentHashMap<>();
+    private final Map<ValidationResultType, String> validationResults = new ConcurrentHashMap<>();
 
     void run(UploadedFile uploadedFile) throws InterruptedException {
         Map<ValidationResultType, ValidationService> serviceMap = getValidationServiceMap();
@@ -48,11 +48,11 @@ class ValidationTaskRunner {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    private AbstractMap.SimpleImmutableEntry<ValidationResultType, ValidationService> addEntry(
+    private static SimpleImmutableEntry<ValidationResultType, ValidationService> addEntry(
             ValidationResultType json,
             ValidationService jsonValidationService
     ) {
-        return new AbstractMap.SimpleImmutableEntry<>(json, jsonValidationService);
+        return new SimpleImmutableEntry<>(json, jsonValidationService);
     }
 
     private void validateFile(

@@ -1,7 +1,6 @@
-package ee.openeid.siva.sample.controller;
+package ee.openeid.siva.sample.siva;
 
 import ee.openeid.siva.sample.cache.UploadedFile;
-import ee.openeid.siva.sample.siva.FileType;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.codec.binary.Base64;

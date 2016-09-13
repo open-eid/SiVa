@@ -18,7 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * Load CI build number and commit hash and commiter name 
+ * Load CI build number and commit hash and committer name
  */
 @Component
 public class FilesystemBuildInfoFileLoader implements BuildInfoFileLoader {

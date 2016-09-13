@@ -3,7 +3,6 @@ package ee.openeid.siva.sample.siva;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ee.openeid.siva.sample.cache.UploadedFile;
 import ee.openeid.siva.sample.configuration.SivaRESTWebServiceConfigurationProperties;
-import ee.openeid.siva.sample.controller.ValidationRequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;

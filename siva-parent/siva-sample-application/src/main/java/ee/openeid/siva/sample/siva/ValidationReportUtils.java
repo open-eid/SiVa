@@ -16,6 +16,7 @@ public final class ValidationReportUtils {
     private static final String INVALID_CONTAINER = "INVALID";
     private static final String VALID_CONTAINER = "VALID";
     private static final String ERROR_VALIDATION = "ERROR";
+    private static final int GENERIC_ERROR = 101;
 
     public static String getValidateFilename(final String reportJSON) {
         if (isJSONNull(reportJSON)) {
@@ -53,7 +54,7 @@ public final class ValidationReportUtils {
     }
 
     public static String handleMissingJSON() throws JsonProcessingException {
-        return new ObjectMapper().writer().writeValueAsString(new ServiceError(101, "No JSON found in SiVa API response"));
+        return new ObjectMapper().writer().writeValueAsString(new ServiceError(GENERIC_ERROR, "No JSON found in SiVa API response"));
     }
 
     public static boolean isJSONNull(String json) {

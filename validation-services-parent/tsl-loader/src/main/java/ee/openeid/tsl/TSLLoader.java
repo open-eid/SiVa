@@ -47,7 +47,7 @@ public class TSLLoader {
         tslValidationJob.setCheckTSLSignatures(true);
     }
 
-    public void loadTSL() {
+    void loadTSL() {
         if (configurationProperties.isLoadFromCache()) {
             LOGGER.info("Loading TSL from cache");
             tslValidationJob.initRepository();

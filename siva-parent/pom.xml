@@ -155,7 +155,7 @@
             <dependency>
                 <groupId>org.webjars.bower</groupId>
                 <artifactId>bootstrap</artifactId>
-                <version>4.0.0-alpha.3</version>
+                <version>4.0.0-alpha.4</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.webjars.bower</groupId>

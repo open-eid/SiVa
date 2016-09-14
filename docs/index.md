@@ -1,6 +1,8 @@
 <!--# Introduction-->
 
-![alt](img/siva/eu_logo.svg)
+<div class="eu-logo">
+    <img src="img/siva/eu_logo.svg" />
+</div>
 
 SiVa is digital signature validation web service that provides SOAP and JSON
 API to validate following file types:

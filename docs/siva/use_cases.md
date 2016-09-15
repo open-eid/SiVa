@@ -49,14 +49,14 @@ Validation of SOAP request XML is done in the SiVa web application module.
 Document validation process is described in detail in [Digitally signed document validation process](#digitally-signed-document-validation-process)
 Validation report output id described in [Interface description](/siva/interface_description)
 
-## Authenticate JSON REST API user
-
-![JSON REST validation request](../img/siva/siva_remote_client_flowchart.png)
-
-Validation of JSON request is done in  SiVA web application module
-Document validation process is described in detail in [Digitally signed document validation process](#digitally-signed-document-validation-process)
-Validation report output id described in [Interface description](/siva/interface_description)
-
 ## TSL loading use case
 
+TSL implementd in seprate module. The process is executed in two ways.
+
+* When SiVa application is started
+* As scheduled job
+
+Loading process is required action when ASiCE (BDOC) or
+
 ![TSL loading process](../img/siva/siva_tsl_loading_process.png)
+

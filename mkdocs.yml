@@ -18,10 +18,9 @@ pages:
 - Definitions: siva/definitions.md
 - SiVa Service Overview: siva/overview.md
 - Component diagram: siva/component_diagram.md
-- Deployment view: siva/deployment_view.md
-- Interfaces: siva/interface_description.md
+- Interfaces: siva/v2/interfaces.md
+- Deployment: siva/v2/deployment.md
 - Use cases: siva/use_cases.md
-- Deployment: siva/deployment.md
 - Logging: siva/logging.md
 - QA Strategy: siva/qa_strategy.md
 - Test Plan: siva/test_plan.md

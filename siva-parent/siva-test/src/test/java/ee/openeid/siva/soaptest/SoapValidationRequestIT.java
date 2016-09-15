@@ -862,17 +862,19 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * Title: Ddoc file, not existing value in signaturePolicy
      *
-     * Expected Result: DDOC do not support signature policy selection, value is ignored
+     * Expected Result: Error is returned
      *
      * File: igasugust1.3.ddoc
      *
      ***/
-    @Test  @Ignore //TODO: Functionality changed with VAL-330, need to update test
+    @Test
     public void soapDdocValidationRequestWrongSignaturePolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
         post(validationRequestForDocumentExtended(encodedString, "igasugust1.3.ddoc", "DDOC", INVALID_SIGNATURE_POLICY))
                 .then()
-                .body("Envelope.Body.ValidateDocumentResponse.ValidationReport.ValidSignaturesCount", Matchers.is("3"));
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
+                .body("Envelope.Body.Fault.faultstring", Matchers.is("Invalid signature policy: "+INVALID_SIGNATURE_POLICY+"; Available abstractPolicies: ["+VALID_SIGNATURE_POLICY_1+", "+VALID_SIGNATURE_POLICY_2+"]"));
     }
 
     /***
@@ -1037,18 +1039,20 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * Title: X-road file, not existing value in signaturePolicy
      *
-     * Expected Result: X-Road do not support signature policy selection, value is ignored
+     * Expected Result: Error is returned
      *
      * File: xroad-simple.asice
      *
      ***/
-    @Test @Ignore //TODO: Functionality changed with VAL-330, need to update test
+    @Test //@Ignore //TODO: Functionality changed with VAL-330, need to update test
     public void soapXroadValidationRequestWrongSignaturePolicy() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
         post(validationRequestForDocumentExtended(encodedString, "xroad-simple.asice", "XROAD", INVALID_SIGNATURE_POLICY))
                 .then()
-                .body("Envelope.Body.ValidateDocumentResponse.ValidationReport.ValidSignaturesCount", Matchers.is("1"));
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
+                .body("Envelope.Body.Fault.faultstring", Matchers.is("Invalid signature policy: "+INVALID_SIGNATURE_POLICY+"; Available abstractPolicies: ["+VALID_SIGNATURE_POLICY_1+"]"));
     }
 
     /***

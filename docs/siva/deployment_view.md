@@ -28,4 +28,7 @@ issues.
 
 ## Security server
 
+Into XRoad v6 security server the SiVa validation service will be registered to provide service to other organisations
+using XRoad infrastructure. Setting up XRoad Security server is out of scope for SiVa documentaiton.
+
 

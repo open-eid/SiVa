@@ -2,6 +2,9 @@ server:
   port: 9000
   compression:
     enabled: true
+  session:
+    cookie:
+      http-only: false
 spring:
   http:
     multipart:
@@ -18,6 +21,6 @@ security:
     cache: false
 wro4j:
   filterUrl: /owr
-#  cacheName: owr
+  cacheName: owr
   managerFactory:
     preProcessors: removeSourceMaps, cssUrlRewriting, cssImport, cssMinJawr, semicolonAppender

@@ -5,8 +5,9 @@ import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.ValidationService;
+import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
-import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
+import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.validation.service.pdf.validator.EstonianPDFDocumentValidator;
 import ee.openeid.validation.service.pdf.validator.report.PDFQualifiedReportBuilder;
 import eu.europa.esig.dss.DSSDocument;
@@ -15,7 +16,6 @@ import eu.europa.esig.dss.InMemoryDocument;
 import eu.europa.esig.dss.MimeType;
 import eu.europa.esig.dss.validation.CertificateVerifier;
 import eu.europa.esig.dss.validation.DocumentValidator;
-import eu.europa.esig.dss.validation.executor.ValidationLevel;
 import eu.europa.esig.dss.validation.reports.Reports;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ public class PDFValidationService implements ValidationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(PDFValidationService.class);
 
     private CertificateVerifier certificateVerifier;
-    private SignaturePolicyService signaturePolicyService;
+    private ConstraintLoadingSignaturePolicyService signaturePolicyService;
     private final Object lock = new Object();
 
     @Override
@@ -55,8 +55,9 @@ public class PDFValidationService implements ValidationService {
             validator.setCertificateVerifier(certificateVerifier);
 
             final Reports reports;
+            final ConstraintDefinedPolicy policy = signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy());
             synchronized (lock) {
-                reports = validator.validateDocument(signaturePolicyService.getPolicyDataStreamFromPolicy(validationDocument.getSignaturePolicy()));
+                reports = validator.validateDocument(policy.getConstraintDataStream());
             }
 
             final ZonedDateTime validationTimeInGMT = ZonedDateTime.now(ZoneId.of("GMT"));
@@ -73,7 +74,8 @@ public class PDFValidationService implements ValidationService {
             final PDFQualifiedReportBuilder reportBuilder = new PDFQualifiedReportBuilder(
                     reports,
                     validationTimeInGMT,
-                    validationDocument.getName()
+                    validationDocument.getName(),
+                    policy
             );
             return reportBuilder.build();
         } catch (MalformedDocumentException | InvalidPolicyException e) {
@@ -108,7 +110,7 @@ public class PDFValidationService implements ValidationService {
 
     @Autowired
     @Qualifier(value = "PDFPolicyService")
-    public void setSignaturePolicyService(SignaturePolicyService signaturePolicyService) {
+    public void setSignaturePolicyService(ConstraintLoadingSignaturePolicyService signaturePolicyService) {
         this.signaturePolicyService = signaturePolicyService;
     }
 }

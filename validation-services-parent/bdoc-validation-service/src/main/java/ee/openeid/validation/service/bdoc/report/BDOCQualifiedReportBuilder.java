@@ -3,6 +3,7 @@ package ee.openeid.validation.service.bdoc.report;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
+import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import eu.europa.esig.dss.validation.policy.rules.SubIndication;
 import eu.europa.esig.dss.validation.reports.SignatureType;
 import eu.europa.esig.dss.validation.reports.SimpleReport;
@@ -17,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
 import static org.digidoc4j.X509Cert.SubjectName.CN;
 
@@ -34,16 +36,18 @@ public class BDOCQualifiedReportBuilder {
     private Container container;
     private String documentName;
     private Date validationTime;
+    private ValidationPolicy validationPolicy;
 
-    public BDOCQualifiedReportBuilder(Container container, String documentName, Date validationTime) {
+    public BDOCQualifiedReportBuilder(Container container, String documentName, Date validationTime, ValidationPolicy validationPolicy) {
         this.container = container;
         this.documentName = documentName;
         this.validationTime = validationTime;
+        this.validationPolicy = validationPolicy;
     }
 
     public QualifiedReport build() {
         QualifiedReport qualifiedReport = new QualifiedReport();
-        qualifiedReport.setPolicy(Policy.SIVA_DEFAULT);
+        qualifiedReport.setPolicy(createReportPolicy(validationPolicy));
         qualifiedReport.setValidationTime(ReportBuilderUtils.getDateFormatterWithGMTZone().format(validationTime));
         qualifiedReport.setDocumentName(documentName);
         qualifiedReport.setSignatureForm(BDOC_SIGNATURE_FORM);

@@ -3,6 +3,7 @@ package ee.openeid.validation.service.pdf.validator.report;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
+import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import eu.europa.esig.dss.jaxb.diagnostic.XmlSignatureScopeType;
 import eu.europa.esig.dss.validation.policy.rules.Indication;
 import eu.europa.esig.dss.validation.policy.rules.SubIndication;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
 
 public class PDFQualifiedReportBuilder {
@@ -27,16 +29,18 @@ public class PDFQualifiedReportBuilder {
     private Reports dssReports;
     private ZonedDateTime validationTime;
     private String documentName;
+    private ValidationPolicy validationPolicy;
 
-    public PDFQualifiedReportBuilder(Reports dssReports, ZonedDateTime validationTime, String documentName) {
+    public PDFQualifiedReportBuilder(Reports dssReports, ZonedDateTime validationTime, String documentName, ValidationPolicy policy) {
         this.dssReports = dssReports;
         this.validationTime = validationTime;
         this.documentName = documentName;
+        this.validationPolicy = policy;
     }
 
     public QualifiedReport build() {
         QualifiedReport report = new QualifiedReport();
-        report.setPolicy(Policy.SIVA_DEFAULT);
+        report.setPolicy(createReportPolicy(validationPolicy));
         report.setValidationTime(parseValidationTimeToString());
         report.setDocumentName(documentName);
         report.setSignatureForm(PDF_SIGNATURE_FORM);

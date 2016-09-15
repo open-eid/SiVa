@@ -1,12 +1,13 @@
 package ee.openeid.siva.validation.service.signature.policy.properties;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-@Data
-public class SignaturePolicyProperties {
+@Getter @Setter
+public class SignaturePolicyProperties<T extends ValidationPolicy> {
     private String abstractDefaultPolicy;
-    private Map<String, String> abstractPolicies = new HashMap<>();
+    private List<T> abstractPolicies = new ArrayList<>();
 }

@@ -30,7 +30,6 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
         assertEquals(PDF_WITH_ONE_VALID_SIGNATURE, report.getDocumentName());
         assertTrue(report.getValidSignaturesCount() == 1);
         assertTrue(report.getSignaturesCount() == 1);
-        System.out.println(report.toString());
     }
 
     @Test

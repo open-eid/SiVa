@@ -2,6 +2,7 @@ package ee.openeid.siva.xroad.validation;
 
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.siva.validation.util.CertUtil;
 import ee.ria.xroad.common.asic.AsicContainerVerifier;
 import org.apache.commons.lang.StringUtils;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
 
 
@@ -38,16 +40,18 @@ public class XROADQualifiedReportBuilder {
     private AsicContainerVerifier verifier;
     private String documentName;
     private Date validationTime;
+    private ValidationPolicy validationPolicy;
 
-    public XROADQualifiedReportBuilder(AsicContainerVerifier verifier, String documentName, Date validationTime) {
+    public XROADQualifiedReportBuilder(AsicContainerVerifier verifier, String documentName, Date validationTime, ValidationPolicy validationPolicy) {
         this.verifier = verifier;
         this.documentName = documentName;
         this.validationTime = validationTime;
+        this.validationPolicy = validationPolicy;
     }
 
     public QualifiedReport build() throws Exception {
         QualifiedReport qualifiedReport = new QualifiedReport();
-        qualifiedReport.setPolicy(Policy.SIVA_DEFAULT);
+        qualifiedReport.setPolicy(createReportPolicy(validationPolicy));
         qualifiedReport.setValidationTime(getDateFormatterWithGMTZone().format(validationTime));
         qualifiedReport.setDocumentName(documentName);
         qualifiedReport.setSignatureForm(getSignatureForm());

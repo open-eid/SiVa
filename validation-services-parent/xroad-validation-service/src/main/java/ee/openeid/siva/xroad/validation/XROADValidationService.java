@@ -4,6 +4,8 @@ import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.ValidationService;
+import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
+import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.siva.xroad.configuration.XROADValidationServiceProperties;
 import ee.ria.xroad.common.CodedException;
 import ee.ria.xroad.common.SystemProperties;
@@ -15,6 +17,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -27,10 +30,12 @@ import java.util.Date;
 public class XROADValidationService implements ValidationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(XROADValidationService.class);
     private XROADValidationServiceProperties properties;
+    private SignaturePolicyService<ValidationPolicy> signaturePolicyService;
 
     @Override
-    public QualifiedReport validateDocument(ValidationDocument wsDocument) {
-        final InputStream inputStream = new ByteArrayInputStream(Base64.decodeBase64(wsDocument.getDataBase64Encoded()));
+    public QualifiedReport validateDocument(ValidationDocument validationDocument) {
+        ValidationPolicy policy = signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy());
+        final InputStream inputStream = new ByteArrayInputStream(Base64.decodeBase64(validationDocument.getDataBase64Encoded()));
         AsicContainer container;
         try {
             container = AsicContainer.read(inputStream);
@@ -42,7 +47,7 @@ public class XROADValidationService implements ValidationService {
             final AsicContainerVerifier verifier = new AsicContainerVerifier(container);
             verifier.verify();
             onVerificationSucceeded(verifier);
-            return new XROADQualifiedReportBuilder(verifier, wsDocument.getName(), new Date()).build();
+            return new XROADQualifiedReportBuilder(verifier, validationDocument.getName(), new Date(), policy).build();
         } catch (Exception e) {
             LOGGER.warn("There was an error validating the document", e);
         }
@@ -75,5 +80,11 @@ public class XROADValidationService implements ValidationService {
     @Autowired
     public void setProperties(XROADValidationServiceProperties properties) {
         this.properties = properties;
+    }
+
+    @Autowired
+    @Qualifier(value = "XROADPolicyService")
+    public void setSignaturePolicyService(SignaturePolicyService<ValidationPolicy> signaturePolicyService) {
+        this.signaturePolicyService = signaturePolicyService;
     }
 }

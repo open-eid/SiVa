@@ -1,42 +1,61 @@
 package ee.openeid.validation.service.bdoc.configuration;
 
+import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.siva.validation.service.signature.policy.properties.SignaturePolicyProperties;
-import lombok.Data;
+import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import javax.annotation.PostConstruct;
-import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.util.AbstractMap.SimpleEntry;
+import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.NO_TYPE_POLICY;
+import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.QES_POLICY;
 
-@Data
+@Getter @Setter
 @ConfigurationProperties(prefix = "siva.bdoc.signaturePolicy")
-public class BDOCSignaturePolicyProperties extends SignaturePolicyProperties {
-    private static final String DEFAULT_BDOC_POLICY = "bdoc_constraint.xml";
-    private static final Map<String, String> DEFAULT_BDOC_POLICIES = Collections.unmodifiableMap(Stream.of(
-            new AbstractMap.SimpleEntry<>("EE", DEFAULT_BDOC_POLICY)
-    ).collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue)));
+public class BDOCSignaturePolicyProperties extends SignaturePolicyProperties<ConstraintDefinedPolicy> {
+
+    private static final String DEFAULT_BDOC_CONSTRAINT = "bdoc_constraint.xml";
 
     private String defaultPolicy;
-    private Map<String, String> policies = new HashMap<>();
+    private List<ConstraintDefinedPolicy> policies = new ArrayList<>();
 
     @PostConstruct
     public void init() {
         if (defaultPolicy == null) {
-            setAbstractDefaultPolicy(DEFAULT_BDOC_POLICY);
+            setAbstractDefaultPolicy(NO_TYPE_POLICY.getName());
         } else {
             setAbstractDefaultPolicy(defaultPolicy);
         }
 
         if (policies.isEmpty()) {
-            setAbstractPolicies(DEFAULT_BDOC_POLICIES);
+            setAbstractPolicies(getDefaultBdocPolicies());
         } else {
             setAbstractPolicies(policies);
         }
+    }
+
+    private List<ConstraintDefinedPolicy> getDefaultBdocPolicies() {
+        return Collections.unmodifiableList(Stream.of(getNoTypePolicy(), getQesPolicy()).collect(Collectors.toList()));
+    }
+
+    private ConstraintDefinedPolicy getQesPolicy() {
+        return createConstraintDefinedPolicy(QES_POLICY, DEFAULT_BDOC_CONSTRAINT);
+    }
+
+    private ConstraintDefinedPolicy getNoTypePolicy() {
+        return createConstraintDefinedPolicy(NO_TYPE_POLICY, DEFAULT_BDOC_CONSTRAINT);
+    }
+
+    private ConstraintDefinedPolicy createConstraintDefinedPolicy(ValidationPolicy validationPolicy, String constraintPath) {
+        ConstraintDefinedPolicy constraintDefinedPolicy = new ConstraintDefinedPolicy(validationPolicy);
+        constraintDefinedPolicy.setConstraintPath(constraintPath);
+        return constraintDefinedPolicy;
     }
 }

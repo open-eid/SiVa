@@ -1,43 +1,64 @@
 package ee.openeid.validation.service.pdf.configuration;
 
+import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.siva.validation.service.signature.policy.properties.SignaturePolicyProperties;
+import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import javax.annotation.PostConstruct;
-import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.NO_TYPE_POLICY;
+import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.QES_POLICY;
+
 @Data
 @EqualsAndHashCode(callSuper = true)
-@ConfigurationProperties( prefix = "siva.pdf.signaturePolicy")
-public class PDFSignaturePolicyProperties extends SignaturePolicyProperties {
-    protected static final String DEFAULT_PDF_POLICY = "pdf_constraint.xml";
-    private static final Map<String, String> DEFAULT_PDF_POLICIES = Collections.unmodifiableMap(Stream.of(
-            new SimpleEntry<>("EE", DEFAULT_PDF_POLICY)
-    ).collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue)));
+@ConfigurationProperties(prefix = "siva.pdf.signaturePolicy")
+public class PDFSignaturePolicyProperties extends SignaturePolicyProperties<ConstraintDefinedPolicy> {
+
+    private static final String NO_TYPE_CONSTRAINT = "pdf_constraint2.xml";
+    private static final String QES_CONSTRAINT = "pdf_constraint.xml";
 
     private String defaultPolicy;
-    private Map<String, String> policies = new HashMap<>();
+    private List<ConstraintDefinedPolicy> policies = new ArrayList<>();
 
     @PostConstruct
     public void initPolicySettings() {
-        getPolicyValue();
-        getPoliciesValue();
+        setPolicyValue();
+        setPoliciesValue();
     }
 
-    private void getPoliciesValue() {
-        Map<String, String> policiesMap = policies.isEmpty() ? DEFAULT_PDF_POLICIES : policies;
-        setAbstractPolicies(policiesMap);
+    private void setPoliciesValue() {
+        List<ConstraintDefinedPolicy> abstractPolicies = policies.isEmpty() ? getDefaultPdfPolicies() : policies;
+        setAbstractPolicies(abstractPolicies);
     }
 
-    private void getPolicyValue() {
-        final String policyName = defaultPolicy == null ? DEFAULT_PDF_POLICY : defaultPolicy;
+    private List<ConstraintDefinedPolicy> getDefaultPdfPolicies() {
+        return Collections.unmodifiableList(Stream.of(getNoTypePolicy(), getQesPolicy()).collect(Collectors.toList()));
+    }
+
+    private void setPolicyValue() {
+        final String policyName = defaultPolicy == null ? NO_TYPE_POLICY.getName() : defaultPolicy;
         setAbstractDefaultPolicy(policyName);
+    }
+
+    private ConstraintDefinedPolicy getQesPolicy() {
+        return createConstraintDefinedPolicy(QES_POLICY, QES_CONSTRAINT);
+    }
+
+    private ConstraintDefinedPolicy getNoTypePolicy() {
+        return createConstraintDefinedPolicy(NO_TYPE_POLICY, NO_TYPE_CONSTRAINT);
+    }
+
+    private ConstraintDefinedPolicy createConstraintDefinedPolicy(ValidationPolicy validationPolicy, String constraintPath) {
+        ConstraintDefinedPolicy constraintDefinedPolicy = new ConstraintDefinedPolicy(validationPolicy);
+        constraintDefinedPolicy.setConstraintPath(constraintPath);
+        return constraintDefinedPolicy;
     }
 }

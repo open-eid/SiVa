@@ -10,8 +10,6 @@ import javax.xml.bind.annotation.XmlElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Policy {
 
-    public static final Policy SIVA_DEFAULT = sivaDefaultPolicy();
-
     @XmlElement(name = "PolicyDescription", required = true)
     private String policyDescription;
 
@@ -20,16 +18,4 @@ public class Policy {
 
     @XmlElement(name = "PolicyUrl", required = true)
     private String policyUrl;
-
-    @XmlElement(name = "PolicyVersion", required = true)
-    private String policyVersion;
-
-    private static Policy sivaDefaultPolicy() {
-        Policy policy = new Policy();
-        policy.policyDescription = "SiVa validation policy";
-        policy.policyName = "SiVa validation policy";
-        policy.policyUrl = "http://open-eid.github.io/SiVa/siva/appendix/validation_policy/";
-        policy.policyVersion = "1.0";
-        return policy;
-    }
 }

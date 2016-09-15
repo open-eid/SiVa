@@ -62,3 +62,13 @@ table {
 table td:last-child {
     width: 100%;
 }
+
+.eu-logo {
+    width: 100%;
+}
+
+.eu-logo > img {
+    float: right;
+    margin: 1.2rem 0 .5rem 1rem;
+    height: 10rem;
+}

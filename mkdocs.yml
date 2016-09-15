@@ -24,13 +24,11 @@ pages:
 - Use cases: siva/use_cases.md
 - Deployment: siva/deployment.md
 - Logging: siva/logging.md
-- QA Strategy: siva/qa_strategy.md
+- Quality Assurance Strategy: siva/qa_strategy.md
 - Test Plan: siva/test_plan.md
 - References: siva/references.md
 - Appendixes:
-      - Appendix 1 - Non-Functional Requirements: siva/appendix/none_functional_requirements.md
-      - Appendix 2 - Functional Requirements: siva/appendix/functional_requirements.md
-      - Appendix 3 - Validation Policy: siva/appendix/validation_policy.md
-      - Appendix 4 - Validation Constraint Configuration: siva/appendix/validation_constraints.md
-      - Appendix 5 - Test Case Descriptions: siva/appendix/test_cases.md
-      - Appendix 6 - WSDL of SOAP Interface : siva/appendix/wsdl.md
+      - Appendix 1 - Validation Policy: siva/appendix/validation_policy.md
+      - Appendix 2 - Validation Constraint Configuration: siva/appendix/validation_constraints.md
+      - Appendix 3 - Test Case Descriptions: siva/appendix/test_cases.md
+      - Appendix 4 - WSDL of SOAP Interface : siva/appendix/wsdl.md

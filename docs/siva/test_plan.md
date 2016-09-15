@@ -49,8 +49,8 @@ In all of the negative cases correctness of returned error message is checked.
 
 Specific test cases and input files can be found in:
 
-  * [Appendix 5 - ValidationRequestIT.java](/siva/appendix/test_cases/#validationrequestitjava)
-  * [Appendix 5 - DocumentFormatIT.java](/siva/appendix/test_cases/#documentformatitjava)
+  * [ValidationRequestIT.java](/siva/appendix/test_cases/#validationrequestitjava)
+  * [DocumentFormatIT.java](/siva/appendix/test_cases/#documentformatitjava)
 
 
 
@@ -68,7 +68,7 @@ Following areas are tested on output (Validation Report):
 
 Specific test cases and input files can be found in:
 
-  * [Appendix 5 - ValidationReportValueVerificationIT.java](/siva/appendix/test_cases/#validationReportValueVerificationitjava)
+  * [ValidationReportValueVerificationIT.java](/siva/appendix/test_cases/#validationReportValueVerificationitjava)
 
 ## Testing of SOAP API
 
@@ -92,7 +92,7 @@ In all of the negative cases correctness of returned error message is checked.
 
 Specific test cases and input files can be found in:
 
-  * [Appendix 5 - SoapValidationRequestIT.java](/siva/appendix/test_cases/#soapvalidationrequestitjava)
+  * [SoapValidationRequestIT.java](/siva/appendix/test_cases/#soapvalidationrequestitjava)
 
 
 ### Validation Report tests
@@ -107,7 +107,7 @@ Following areas are tested on output (Validation Report):
 
 Specific test cases and input files can be found in:
 
-  * [Appendix 5 - SoapValidationReportValueIT.java](/siva/appendix/test_cases/#soapvalidationreportvalueitjava)
+  * [SoapValidationReportValueIT.java](/siva/appendix/test_cases/#soapvalidationreportvalueitjava)
 
 
 ## Testing of DDOC signature validation
@@ -123,9 +123,9 @@ The testing of DDOC signatures consists of following main cases:
 
 Specific test cases and input files can be found in:
 
-  * [Appendix 5 - DdocValidationFailIT.java](/siva/appendix/test_cases/#ddocvalidationfailitjava)
-  * [Appendix 5 - DdocValidationPassIT.java](/siva/appendix/test_cases/#ddocvalidationpassitjava)
-  * [Appendix 5 - LargeFileIT.java](/siva/appendix/test_cases/#largefileitjava)
+  * [DdocValidationFailIT.java](/siva/appendix/test_cases/#ddocvalidationfailitjava)
+  * [DdocValidationPassIT.java](/siva/appendix/test_cases/#ddocvalidationpassitjava)
+  * [LargeFileIT.java](/siva/appendix/test_cases/#largefileitjava)
 
 **What is not tested:**
 
@@ -144,9 +144,9 @@ The testing of BDOC signatures consists of following main cases:
 
 Specific test cases and input files can be found in:
 
-  * [Appendix 5 - BdocValidationFailIT.java](/siva/appendix/test_cases/#bdocvalidationfailitjava)
-  * [Appendix 5 - BdocValidationPassIT.java](/siva/appendix/test_cases/#bdocvalidationpassitjava)
-  * [Appendix 5 - LargeFileIT.java](/siva/appendix/test_cases/#largefileitjava)
+  * [BdocValidationFailIT.java](/siva/appendix/test_cases/#bdocvalidationfailitjava)
+  * [BdocValidationPassIT.java](/siva/appendix/test_cases/#bdocvalidationpassitjava)
+  * [LargeFileIT.java](/siva/appendix/test_cases/#largefileitjava)
 
 **What is not tested:**
 
@@ -169,11 +169,11 @@ The testing of PDF signatures consists of following main cases:
 
 Specific test cases and input files can be found in:
 
-  * [Appendix 5 - PdfBaselineProfileIT.java](/siva/appendix/test_cases/#pdfbaselineprofileitjava)
-  * [Appendix 5 - PdfSignatureCryptographicAlgorithmIT.java](/siva/appendix/test_cases/#pdfsignaturecryptographicalgorithmitjava)
-  * [Appendix 5 - PdfValidationFailIT.java](/siva/appendix/test_cases/#pdfvalidationfailitjava)
-  * [Appendix 5 - PdfValidationPassIT.java](/siva/appendix/test_cases/#pdfvalidationpassitjava)
-  * [Appendix 5 - LargeFileIT.java](/siva/appendix/test_cases/#largefileitjava)
+  * [PdfBaselineProfileIT.java](/siva/appendix/test_cases/#pdfbaselineprofileitjava)
+  * [PdfSignatureCryptographicAlgorithmIT.java](/siva/appendix/test_cases/#pdfsignaturecryptographicalgorithmitjava)
+  * [PdfValidationFailIT.java](/siva/appendix/test_cases/#pdfvalidationfailitjava)
+  * [PdfValidationPassIT.java](/siva/appendix/test_cases/#pdfvalidationpassitjava)
+  * [LargeFileIT.java](/siva/appendix/test_cases/#largefileitjava)
 
 ## Testing of X-Road ASICE signature validation
 
@@ -184,7 +184,7 @@ The testing of ASICE signatures consists of following main cases:
   * Containers with valid signature(s) are validated
   * Containers with invalid signature(s) and no signature are validated
 
-Specific test cases and input files can be found in [Appendix 5 - Test Case Descriptions](/siva/appendix/test_cases/)
+Specific test cases and input files can be found in [Test Case Descriptions](/siva/appendix/test_cases/)
 
 **What is not tested:**
 
@@ -206,8 +206,8 @@ As both systems use the same data the testing follows the same principles for bo
   
 Specific test cases and input files can be found in:
 
-  * [Appendix 5 - StatisticsToGAManualIT.java](/siva/appendix/test_cases/#statisticstogamanualitjava)
-  * [Appendix 5 - StatisticsToLogsManualIT.java](/siva/appendix/test_cases/#statisticstologsmanualitjava)
+  * [StatisticsToGAManualIT.java](/siva/appendix/test_cases/#statisticstogamanualitjava)
+  * [StatisticsToLogsManualIT.java](/siva/appendix/test_cases/#statisticstologsmanualitjava)
   
   **What is not tested:**
 

@@ -1,4 +1,4 @@
-<!--# QA Strategy-->
+<!--# Quality Assurance Strategy-->
 
 ## Introduction
 
@@ -10,8 +10,8 @@ The goal of this document is to give general overview of the used infrastructure
 
 There are different test environments for quality assurance, depending on the nature and aim.
 
-  1. TravisCI environment for public - Platform: Linux
-  2. Test environment for test and performance test - Platform: Linux
+  1. TravisCI environment for public CI - Platform: Linux
+  2. Test environment for local test and load test - Platform: Linux
 
 Instructions how to set up test enviroment and run tests together with more info can be found in [SiVa GitHub page](https://github.com/open-eid/SiVa)
 
@@ -25,8 +25,8 @@ Tools used:
 
   * TravisCI – is a continuous integration service used to build and test software projects hosted at GitHub
   * Jenkins – is an open source continuous integration tool written in Java.
-  * JMeter – tool for creating and running performance tests.
-  * IntelliJ IDEA – is a Java integrated development environment(IDE) for developing automated tests
+  * JMeter – tool for creating and running load tests.
+  * IntelliJ IDEA – is a Java integrated development environment(IDE) for developing and executing automated tests locally
   * Apache Tomcat - is an open source servlet container developed by the Apache Software Foundation.
   * Docker – is an open-source project that automates the deployment of applications inside software containers, by providing an additional layer of abstraction and automation of operating-system-level virtualization on Linux.
   * Rest-Assured - is a Java DSL(Domain-specific language) for simplifying testing of REST based Services built on top of HTTP Builder.
@@ -35,7 +35,7 @@ Tools used:
 
 Analysis will be tagged with identificators to enable cross-reference between requirements and corresponding tests. This includes both functional and non-functional requirements. Analysis of specific tasks must be done before the sprint planning meeting. This will ensure that upcoming sprint is planned in common grounds.
 
-Reference document [2]. and [3]. (see reference section)
+See documents[(2) and (3) in References](/siva/references/)
 
 ## Development
 
@@ -86,13 +86,13 @@ Unit tests are also automatically executed on each build, if the unit tests do n
 
 All changes (including changes in unit test code) are reviewed by another development team member using GitHub. The code must pass review before it is submitted to testing.
 
-SonarLint is used to validate code automatically. It integrates both suggested tools mentioned in reference document [3]. (see reference section)
+SonarLint is used to validate code automatically. It integrates both suggested tools mentioned in reference document [3]. [References](/siva/references/)
 
 ## Testing
 
 ### Approach and schedule
 
-Testing follows the principles described in reference document   [1]
+Testing follows the principles described in reference document [(1) in References](/siva/references/)
 
 The goal is to automate as much of the testing process as possible, however some aspects of the testing will be carried out manually.
 
@@ -108,7 +108,7 @@ The schedule of testing can be seen on the image below.
 
 ### Testing process
 
-All automatic tests, except load tests will follow the same execution process. The tests are ran automatically and all the actions are triggered by Jenkins. The full set of tests (unit, integration and system) will be ran on every test execution.
+All automatic tests, except load tests will follow the same execution process. The tests are ran automatically during the project build process by Travis CI after each code change push in GitHub.
 
 ![Testing process](../img/siva/qa_strategy/TestProcess.png)
 
@@ -121,7 +121,8 @@ Test cases are developed and maintained together with test automation code by th
 Following elements will be present in test cases:
 
   * TestCaseID: unique ID that makes possible to identify specific test case
-  * RequirementID: ID of the requirement that is tested
+  * TestType: Automated or Manual
+  * Requirement: Reference to the requirement that is tested
   * Title: Description of the test
   * Expected Result: expected outcome of the test (pass criteria for the test)
   * File: input test file that is used
@@ -131,32 +132,29 @@ Following elements will be present in test cases:
 Automatic and manual test cases will have the same description principles (shown below).
 
 ```bash
-/***
- *
- * TestCaseID: PDF-BaselineProfileTests-1
- *
- * TestType: Automated/Manual
- *
- * RequirementID: SiVa-I-8.1
- *
- * Title: The PDF-file has got signatures of two different profiles - Signing profiles PAdES Baseline-B and PAdES-LTA
- *
- * Expected Result: Signature profile Baseline - LTA should pass and signature baseline-b should fail
- *
- * File: hellopades-lt-b.pdf
- *
- ***/
-@Test
-
-public void baselineProfileLTDocumentShouldPass(){
-    String filename = "hellopades-lt-b.pdf";
-    String encodeFile = Base64.encodeBase64String(readFile(filename));
-    String document = encodeFile;
-    ValidationRequest validationRequest = new ValidationRequest();
-    validationRequest.setDocumentType(parseFileExtension(filename.substring(filename.lastIndexOf(".") + 1)));
-    validationRequest.setDocument(document);
-    restTemplate.postForObject(sivaBaseUrl, validationRequest, String.class);
-}
+    /**
+     * TestCaseID: Bdoc-ValidationFail-27
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     *
+     * Title: Bdoc 	OCSP response doesn't correspond to the signers certificate
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: NS28_WrongSignerCertInOCSPResp.bdoc
+     */
+    @Test
+    public void bdocWrongSignersCertInOcspResponse() {
+        setTestFilesDirectory("bdoc/live/timemark/");
+        post(validationRequestFor("NS28_WrongSignerCertInOCSPResp.bdoc"))
+                .then()
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is("TRY_LATER"))
+                .body("signatures[0].errors.content", Matchers.hasItem("No revocation data for the certificate"))
+                .body("validSignaturesCount", Matchers.is(0));
+    }
 ```
 
 ### Defect management
@@ -183,7 +181,7 @@ The scope of the tests is illustrated on the image below. The goal is to test th
 
 **System testing**
 
-The scope of the tests is illustrated on the image below. The goal of the test is to test the entire length of signature validation process and to test supportive functions. In addition REST/JSON Demo application is tested. X-Road application is used to test the flow, but application itself is not tested. More info about testing specifics can be found in Test Plan [System testing](/siva/test_plan/#system-test-introduction) section.
+The scope of the tests is illustrated on the image below. The goal of the test is to test the entire length of signature validation process and to test supportive functions. In addition Demo application is tested. More info about testing specifics can be found in Test Plan [System testing](/siva/test_plan/#system-test-introduction) section.
 
 ![System testing](../img/siva/qa_strategy/SystemTest.png)
 
@@ -195,18 +193,9 @@ Manual testing of the areas that are not covered by automatic tests based on the
 
 ### Additional testing activities
 
-**Performance testing**
+**Load Testing**
 
-Performance testing will be carried out using JMeter on Test Environment. The testing will be carried out for each type of validation service.
+Load testing will be carried out using JMeter on [Test Environment](/siva/qa_strategy/#environments-and-infrastructure). The testing will be carried out for each type of validation service.
 
-More info about performance testing specifics can be found in Test Plan [Performance testing](/siva/test_plan/#performance-test-introduction) section.
+More info about Load Testing specifics can be found in Test Plan [Load Test Introduction](/siva/test_plan/#load-test-introduction) section.
 
-## References
-
-!!! development
-    This section will be moved to general reference page
-
-  * [1] Lisa_6_Osa_I_SiVa_Testimise_korraldus.pdf
-  * [2] Lisa_4_Osa_I_SiVa_Valideerimisteenuse_analuus MUUDETUD.pdf
-  * [3] Lisa_3_RIA_Mittefunktsionaalsed_nouded.pdf
-  * [4] OWASP Testing Guide 4.0

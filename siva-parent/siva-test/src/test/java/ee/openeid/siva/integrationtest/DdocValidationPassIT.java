@@ -260,9 +260,9 @@ public class DdocValidationPassIT extends SiVaRestTests{
      * File: SK-XML1.0_hashcode.ddoc
      *
      */
-    @Test @Ignore //TODO: VAL-324
+    @Test @Ignore //TODO: Current file fails validation
     public void ddocV1_0HashcodeShouldPass() {
-        post(validationRequestFor("SK-XML1.0_hashcode.ddoc"))
+        post(validationRequestFor("SK-XML1_0_hashcode.ddoc"))
                 .then()
                 .body("signatures[0].id", Matchers.is("S0"))
                 .body("signatures[0].signatureFormat", Matchers.is("SK_XML_1.0"))
@@ -298,7 +298,7 @@ public class DdocValidationPassIT extends SiVaRestTests{
      * File: DIGIDOC-XML1.1_hashcode.ddoc
      *
      */
-    @Test @Ignore //TODO: VAL-324
+    @Test
     public void ddocV1_1HashcodeShouldPass() {
         post(validationRequestFor("DIGIDOC-XML1.1_hashcode.ddoc"))
                 .then()
@@ -309,9 +309,9 @@ public class DdocValidationPassIT extends SiVaRestTests{
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].errors", Matchers.hasSize(0))
-                .body("signatures[0].signatureScopes[0].name", Matchers.is(""))
-                .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
-                .body("signatures[0].signatureScopes[0].content", Matchers.is(""))
+                .body("signatures[0].signatureScopes[0].name", Matchers.is("puhkus_urmo_062006.doc"))
+                .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
+                .body("signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
                 .body("signatures[0].claimedSigningTime", Matchers.is("2006-06-26T12:15:40Z"))
                 .body("signatures[0].warnings", Matchers.hasSize(0))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is(""))
@@ -336,7 +336,7 @@ public class DdocValidationPassIT extends SiVaRestTests{
      * File: DIGIDOC-XML1.2_hashcode.ddoc
      *
      */
-    @Test @Ignore //TODO: VAL-324
+    @Test
     public void ddocV1_2HashcodeShouldPass() {
         post(validationRequestFor("DIGIDOC-XML1.2_hashcode.ddoc"))
                 .then()
@@ -347,9 +347,9 @@ public class DdocValidationPassIT extends SiVaRestTests{
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].errors", Matchers.hasSize(0))
-                .body("signatures[0].signatureScopes[0].name", Matchers.is(""))
-                .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
-                .body("signatures[0].signatureScopes[0].content", Matchers.is(""))
+                .body("signatures[0].signatureScopes[0].name", Matchers.is("RO219559508.pdf"))
+                .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
+                .body("signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
                 .body("signatures[0].claimedSigningTime", Matchers.is("2003-10-24T10:57:19Z"))
                 .body("signatures[0].warnings", Matchers.hasSize(0))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is(""))
@@ -374,7 +374,7 @@ public class DdocValidationPassIT extends SiVaRestTests{
      * File: DIGIDOC-XML1.3_hashcode.ddoc
      *
      */
-    @Test @Ignore //TODO: VAL-324
+    @Test
     public void ddocV1_3HashcodeShouldPass() {
         post(validationRequestFor("DIGIDOC-XML1.3_hashcode.ddoc"))
                 .then()
@@ -385,9 +385,9 @@ public class DdocValidationPassIT extends SiVaRestTests{
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].errors", Matchers.hasSize(0))
-                .body("signatures[0].signatureScopes[0].name", Matchers.is(""))
-                .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
-                .body("signatures[0].signatureScopes[0].content", Matchers.is(""))
+                .body("signatures[0].signatureScopes[0].name", Matchers.is("Glitter-rock-4_gallery.jpg"))
+                .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
+                .body("signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
                 .body("signatures[0].claimedSigningTime", Matchers.is("2012-10-03T07:46:31Z"))
                 .body("signatures[0].warnings", Matchers.hasSize(0))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is(""))

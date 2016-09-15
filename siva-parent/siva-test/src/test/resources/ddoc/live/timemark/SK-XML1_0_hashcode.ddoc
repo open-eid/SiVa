@@ -77,7 +77,7 @@ b8My+gvudUHjYC8=</X509Certificate></X509Data></KeyInfo>
 </SignedProperties><UnsignedProperties Target="#S0">
 <UnsignedSignatureProperties><CompleteCertificateRefs><Cert Id="S0-RESPONDER_CERTINFO">
 <CertDigest>
-<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></DigestMethod>
+<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
 <DigestValue>yi+f5CofZpJssWcth/dxlVCwxwc=</DigestValue>
 </CertDigest>
 <IssuerSerial>1016636872</IssuerSerial>
@@ -130,7 +130,8 @@ p9ZOG3YcqUIyRArXhYe8QJ10HLSIex+nvuP6I/T9N/lPQOTK1kvBK5bikTIadbrk
 xi8VzA==</EncapsulatedOCSPValue>
 </RevocationValues></UnsignedSignatureProperties>
 </UnsignedProperties></QualifyingProperties></Object>
-</Signature><Signature Id="S1" xmlns="http://www.w3.org/2000/09/xmldsig#">
+</Signature>
+<Signature Id="S1" xmlns="http://www.w3.org/2000/09/xmldsig#">
 <SignedInfo>
 <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315">
 </CanonicalizationMethod>
@@ -206,7 +207,7 @@ QfYMG43WWN/AkhaPe8+c</X509Certificate></X509Data></KeyInfo>
 </SignedProperties><UnsignedProperties Target="#S1">
 <UnsignedSignatureProperties><CompleteCertificateRefs><Cert Id="S1-RESPONDER_CERTINFO">
 <CertDigest>
-<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></DigestMethod>
+<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
 <DigestValue>yi+f5CofZpJssWcth/dxlVCwxwc=</DigestValue>
 </CertDigest>
 <IssuerSerial>1016636872</IssuerSerial>
@@ -259,4 +260,5 @@ EdU8RFw04S3mi+JrqWbkNiUI9hOC7EIcKiPSHgdnaRkku/SJs8yfeX7qff7RW+jz
 aKyrNA==</EncapsulatedOCSPValue>
 </RevocationValues></UnsignedSignatureProperties>
 </UnsignedProperties></QualifyingProperties></Object>
-</Signature></SignedDoc>
+</Signature>
+</SignedDoc>

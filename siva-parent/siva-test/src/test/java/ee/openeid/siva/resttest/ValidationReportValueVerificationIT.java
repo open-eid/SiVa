@@ -29,7 +29,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
         this.testFilesDirectory = testFilesDirectory;
     }
 
-    /***
+    /**
      *
      * TestCaseID: Bdoc-ValidationReportVerification-1
      *
@@ -43,7 +43,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * File: Valid_ID_sig.bdoc
      *
-     ***/
+     */
     @Test
     public void bdocCorrectValuesArePresentValidLtTmSignature() {
         post(validationRequestFor("Valid_ID_sig.bdoc"))
@@ -68,7 +68,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(1));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Bdoc-ValidationReportVerification-2
      *
@@ -82,7 +82,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * File: 23635_bdoc_ts_OCSP_random_nonce.bdoc
      *
-     ***/
+     */
     @Test
     public void bdocCorrectValuesArePresentValidLtSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
@@ -108,7 +108,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(1));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Bdoc-ValidationReportVerification-3
      *
@@ -122,7 +122,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
      *
-     ***/
+     */
     @Test @Ignore //TODO: this is not proper AdES!
     public void bdocCorrectValuesArePresentValidLtSignatureAdesWarning() {
         setTestFilesDirectory("bdoc/test/timemark/");
@@ -148,7 +148,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(1));
     }
 
-     /***
+     /**
      *
      * TestCaseID: Bdoc-ValidationReportVerification-5
      *
@@ -162,7 +162,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * File: 23200_weakdigest-wrong-nonce.asice
      *
-     ***/
+     */
     @Test
     public void bdocCorrectValuesArePresentInvalidLtSignatureAdesqc() {
         setTestFilesDirectory("bdoc/test/timemark/");
@@ -188,7 +188,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(1));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Bdoc-ValidationReportVerification-6
      *
@@ -202,7 +202,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * File: Baltic MoU digital signing_EST_LT_LV.bdoc
      *
-     ***/
+     */
     @Test @Ignore//TODO: VAL-244 was found with Valid_IDCard_MobID_signatures.bdoc file in addition to this file.
     public void bdocAllElementsArePresentValidMultipleSignatures() {
         post(validationRequestFor("Baltic MoU digital signing_EST_LT_LV.bdoc"))
@@ -227,7 +227,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(3));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Bdoc-ValidationReportVerification-7
      *
@@ -241,7 +241,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * File: test1-bdoc-unknown.bdoc
      *
-     ***/
+     */
     @Test @Ignore //TODO: Need a testfile with indeterminate status. With new DSS version indeterminate seems to be changed to total fail.
     public void bdocAllElementsArePresentIndeterminateSignature() {
         post(validationRequestFor("test1-bdoc-unknown.bdoc"))
@@ -266,7 +266,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(3));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Bdoc-ValidationReportVerification-8
      *
@@ -280,7 +280,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * File:BdocContainerNoSignature.bdoc
      *
-     ***/
+     */
     @Test
     public void bdocNoSignature() {
         setTestFilesDirectory("document_format_test_files/");
@@ -294,7 +294,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(0));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Pdf-ValidationReportVerification-1
      *
@@ -308,7 +308,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * File: hellopades-lt-sha256-ec256.pdf
      *
-     ***/
+     */
     @Test
     public void pdfAllElementsArePresentValidSignature() {
         setTestFilesDirectory("pdf/signature_cryptographic_algorithm_test_files/");
@@ -334,7 +334,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(1));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Pdf-ValidationReportVerification-2
      *
@@ -348,7 +348,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * File:
      *
-     ***/
+     */
     @Test
     public void pdfAllElementsArePresentValidmultipleSignatures() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
@@ -374,7 +374,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(2));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Pdf-ValidationReportVerification-3
      *
@@ -388,7 +388,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * File: hellopades-lt-b.pdf
      *
-     ***/
+     */
     @Test @Ignore //TODO: VAL-242
     public void pdfAllElementsArePresentInvalidSignature() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
@@ -414,7 +414,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(2));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Pdf-ValidationReportVerification-4
      *
@@ -428,7 +428,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * File: hellopades-lt-rsa1024-sha1-expired.pdf
      *
-     ***/
+     */
     @Test
     public void pdfAllElementsArePresentIndeterminateSignature() {
         setTestFilesDirectory("pdf/signing_certifacte_test_files/");
@@ -454,7 +454,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(1));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Pdf-ValidationReportVerification-5
      *
@@ -468,7 +468,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * File: PdfNoSignature.pdf
      *
-     ***/
+     */
     @Test
     public void pdfNoSignature() {
         setTestFilesDirectory("document_format_test_files/");
@@ -482,7 +482,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(0));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Ddoc-ValidationReportVerification-1
      *
@@ -496,7 +496,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * File: DIGIDOC-XML1.3.ddoc
      *
-     ***/
+     */
     @Test
     public void ddocAllElementsArePresentValidSignature() {
         setTestFilesDirectory("ddoc/live/timemark/");
@@ -522,7 +522,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(1));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Ddoc-ValidationReportVerification-2
      *
@@ -536,7 +536,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * File: test1-ddoc-revoked.ddoc
      *
-     ***/
+     */
     @Test
     public void ddocAllElementsArePresentInvalidSignature() {
         setTestFilesDirectory("ddoc/live/timemark/");
@@ -562,7 +562,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(1));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Ddoc-ValidationReportVerification-3
      *
@@ -576,7 +576,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * File: test1-ddoc-unknown.ddoc
      *
-     ***/
+     */
     @Test @Ignore //TODO: We are getting total-fail on all the files we expect to be indeterminate
     public void ddocAllElementsArePresentIndeterminateSignature() {
         setTestFilesDirectory("ddoc/live/timemark/");
@@ -602,7 +602,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(1));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Ddoc-ValidationReportVerification-4
      *
@@ -616,7 +616,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * File: ns6t3cp7.ddoc
      *
-     ***/
+     */
     @Test
     public void ddocOptionalWarningElementIsPresent() {
         setTestFilesDirectory("ddoc/live/timemark/");
@@ -642,7 +642,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(1));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Ddoc-ValidationReportVerification-5
      *
@@ -656,7 +656,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * File: DdocContainerNoSignature.ddoc
      *
-     ***/
+     */
     @Test
     public void ddocNoSignature() {
         setTestFilesDirectory("document_format_test_files/");
@@ -670,7 +670,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(0));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Ddoc-ValidationReportVerification-6
      *
@@ -684,7 +684,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * File: SK-XML1.0.ddoc
      *
-     ***/
+     */
     @Test @Ignore //TODO: VAL-238
     public void ddocCorrectValuesArePresentV1_0() {
         setTestFilesDirectory("ddoc/live/timemark/");
@@ -710,7 +710,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(2));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Ddoc-ValidationReportVerification-7
      *
@@ -724,7 +724,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * File: Igasugust1.1.ddoc
      *
-     ***/
+     */
     @Test
     public void ddocCorrectValuesArePresentV1_1() {
         setTestFilesDirectory("ddoc/live/timemark/");
@@ -750,7 +750,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(3));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Ddoc-ValidationReportVerification-8
      *
@@ -764,7 +764,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * File: Igasugust1.2.ddoc
      *
-     ***/
+     */
     @Test
     public void ddocCorrectValuesArePresentV1_2() {
         setTestFilesDirectory("ddoc/live/timemark/");
@@ -790,7 +790,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(3));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Ddoc-ValidationReportVerification-9
      *
@@ -804,7 +804,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * File: Igasugust1.3.ddoc
      *
-     ***/
+     */
     @Test
     public void ddocCorrectValuesArePresentV1_3() {
         setTestFilesDirectory("ddoc/live/timemark/");
@@ -830,7 +830,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(3));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Xroad-ValidationReportVerification-1
      *
@@ -844,7 +844,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * File: xroad-simple.asice
      *
-     ***/
+     */
     @Test
     public void xroadAllElementsArePresentValidSimpleSignature() {
         setTestFilesDirectory("xroad/");
@@ -871,7 +871,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(1));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Xroad-ValidationReportVerification-2
      *
@@ -885,7 +885,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * File: xroad-batchsignature.asice
      *
-     ***/
+     */
     @Test
     public void xroadAllElementsArePresentValidBatchSignature() {
         setTestFilesDirectory("xroad/");
@@ -912,7 +912,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(1));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Xroad-ValidationReportVerification-3
      *
@@ -926,7 +926,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * File: xroad-attachment.asice
      *
-     ***/
+     */
     @Test
     public void xroadAllElementsArePresentValidAttachmentSignature() {
         setTestFilesDirectory("xroad/");
@@ -953,7 +953,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(1));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Xroad-ValidationReportVerification-4
      *
@@ -967,7 +967,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * File: xroad-attachment.asice
      *
-     ***/
+     */
     @Test @Ignore //TODO: VAL-323
     public void xroadAllElementsArePresentInvalidSignature() {
         setTestFilesDirectory("xroad/");

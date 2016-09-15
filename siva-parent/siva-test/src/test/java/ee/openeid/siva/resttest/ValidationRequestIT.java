@@ -43,7 +43,7 @@ public class ValidationRequestIT extends SiVaRestTests {
         this.testFilesDirectory = testFilesDirectory;
     }
 
-     /***
+     /**
      *
      * TestCaseID: ValidationRequest-1
      *
@@ -57,7 +57,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void validationRequestEmptyInputs() {
         String json = post(validationRequestWithValidKeys("", "", "", "")).asString();
@@ -80,7 +80,7 @@ public class ValidationRequestIT extends SiVaRestTests {
         return key + " error or corresponding message was not in the response";
     }
 
-     /***
+     /**
      *
      * TestCaseID: ValidationRequest-2
      *
@@ -94,7 +94,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void validationRequestInvalidDocumentType() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -104,7 +104,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString(INVALID_DOCUMENT_TYPE));
     }
 
-     /***
+     /**
      *
      * TestCaseID: ValidationRequest-3
      *
@@ -118,7 +118,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void validationRequestInvalidDocumentKey() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -129,7 +129,7 @@ public class ValidationRequestIT extends SiVaRestTests {
         assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, INVALID_BASE_64) == 1);
     }
 
-     /***
+     /**
      *
      * TestCaseID: ValidationRequest-4
      *
@@ -143,7 +143,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void validationRequestXmlDocument() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -154,7 +154,7 @@ public class ValidationRequestIT extends SiVaRestTests {
 
     }
 
-     /***
+     /**
      *
      * TestCaseID: ValidationRequest-5
      *
@@ -168,7 +168,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void validationRequestLongFilename() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -180,7 +180,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("documentName",equalTo(filename));
     }
 
-     /***
+     /**
      *
      * TestCaseID: ValidationRequest-6
      *
@@ -194,7 +194,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: None
      *
-     ***/
+     */
     @Test
     public void validationRequestEmptyBody() {
         String response = post(new JSONObject().toString()).thenReturn().body().asString();
@@ -208,7 +208,7 @@ public class ValidationRequestIT extends SiVaRestTests {
         assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, INVALID_BASE_64)==1);
     }
 
-     /***
+     /**
      *
      * TestCaseID: ValidationRequest-7
      *
@@ -222,7 +222,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void validationRequestMoreKeysThanExpected() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -239,7 +239,7 @@ public class ValidationRequestIT extends SiVaRestTests {
 
     }
 
-     /***
+     /**
      *
      * TestCaseID: ValidationRequest-8
      *
@@ -253,7 +253,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void validationRequestUnusualChars() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -262,7 +262,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("documentName",equalTo("ÕValid_IDCard_MobID_signatures.bdocÄÖÜ"));
     }
 
-     /***
+     /**
      *
      * TestCaseID: ValidationRequest-9
      *
@@ -276,7 +276,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void validationRequestNonBase64Input() {
         String encodedString = ",:";
@@ -286,7 +286,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString(INVALID_BASE_64));
     }
 
-     /***
+     /**
      *
      * TestCaseID: Bdoc-ValidationRequest-1
      *
@@ -300,7 +300,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: PdfValidSingleSignature.pdf
      *
-     ***/
+     */
     @Test
     public void bdocValidationRequestNotMatchingDocumentTypeAndActualFilePdf() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
@@ -311,7 +311,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-     /***
+     /**
      *
      * TestCaseID: Bdoc-ValidationRequest-2
      *
@@ -325,7 +325,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: igasugust1.3.ddoc
      *
-     ***/
+     */
     @Test
     public void bdocValidationRequestNotMatchingDocumentTypeAndActualFileDdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
@@ -336,7 +336,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-     /***
+     /**
      *
      * TestCaseID: Bdoc-ValidationRequest-3
      *
@@ -350,7 +350,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: xroad-simple.asice
      *
-     ***/
+     */
     @Test
     public void bdocValidationRequestNotMatchingDocumentTypeAndActualFileXroad() {
         setTestFilesDirectory("xroad/");
@@ -362,7 +362,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-     /***
+     /**
      *
      * TestCaseID: Bdoc-ValidationRequest-4
      *
@@ -376,7 +376,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void bdocValidationRequestWrongSignaturePolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -387,7 +387,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString("Invalid signature policy: "+INVALID_SIGNATURE_POLICY+"; Available abstractPolicies: ["+VALID_SIGNATURE_POLICY_1+", "+VALID_SIGNATURE_POLICY_2+"]"));
     }
 
-     /***
+     /**
      *
      * TestCaseID: Bdoc-ValidationRequest-5
      *
@@ -401,7 +401,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void bdocValidationRequestCaseInsensitivePolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -410,7 +410,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("validSignaturesCount", Matchers.is(2));
     }
 
-     /***
+     /**
      *
      * TestCaseID: Bdoc-ValidationRequest-6
      *
@@ -424,7 +424,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void bdocValidationRequestNoPolicyKey() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -438,7 +438,7 @@ public class ValidationRequestIT extends SiVaRestTests {
 
     }
 
-     /***
+     /**
      *
      * TestCaseID: Bdoc-ValidationRequest-7
      *
@@ -452,7 +452,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void validationRequestRandomInputAsBdocDocument() {
         String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
@@ -463,7 +463,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-     /***
+     /**
      *
      * TestCaseID: Bdoc-ValidationRequest-8
      *
@@ -477,7 +477,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: bdoc21-TS.asice
      *
-     ***/
+     */
     @Test
     public void validationRequestDocumentTypeBdocAndFileAsice() {
         setTestFilesDirectory("bdoc/live/timestamp/");
@@ -488,7 +488,7 @@ public class ValidationRequestIT extends SiVaRestTests {
 
     }
 
-     /***
+     /**
      *
      * TestCaseID: Bdoc-ValidationRequest-9
      *
@@ -502,7 +502,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void validationRequestCaseChangeDocumentType() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -511,7 +511,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("validSignaturesCount",Matchers.is(2));
     }
 
-     /***
+     /**
      *
      * TestCaseID: Bdoc-ValidationRequest-10
      *
@@ -525,7 +525,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void bdocValidationRequestWrongFilename() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -535,7 +535,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("validSignaturesCount",Matchers.is(2));
     }
 
-     /***
+     /**
      *
      * TestCaseID: Bdoc-ValidationRequest-11
      *
@@ -549,7 +549,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void validationRequestInvalidFilename() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -559,7 +559,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString(INVALID_FILENAME));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Bdoc-ValidationRequest-12
      *
@@ -573,7 +573,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: xroad-batchsignature
      *
-     ***/
+     */
     @Test
     public void bdocValidationRequestNotMatchingDocumentTypeAndActualFileXroadBatch() {
         setTestFilesDirectory("xroad/");
@@ -585,7 +585,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Bdoc-ValidationRequest-13
      *
@@ -599,7 +599,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: xroad-attachment.asice
      *
-     ***/
+     */
     @Test
     public void bdocValidationRequestNotMatchingDocumentTypeAndActualFileXroadAttach() {
         setTestFilesDirectory("xroad/");
@@ -611,7 +611,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-     /***
+     /**
      *
      * TestCaseID: Pdf-ValidationRequest-1
      *
@@ -625,7 +625,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: igasugust1.3.ddoc
      *
-     ***/
+     */
     @Test
     public void pdfValidationRequestNotMatchingDocumentTypeAndActualFileDdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
@@ -636,7 +636,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-     /***
+     /**
      *
      * TestCaseID: Pdf-ValidationRequest-2
      *
@@ -650,7 +650,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void pdfValidationRequestNotMatchingDocumentTypeAndActualFileBdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -661,7 +661,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-     /***
+     /**
      *
      * TestCaseID: Pdf-ValidationRequest-3
      *
@@ -675,7 +675,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: xroad-simple.asice
      *
-     ***/
+     */
     @Test
     public void pdfValidationRequestNotMatchingDocumentTypeAndActualFileXroad() {
         setTestFilesDirectory("xroad/");
@@ -687,7 +687,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-     /***
+     /**
      *
      * TestCaseID: Pdf-ValidationRequest-4
      *
@@ -701,7 +701,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: PdfValidSingleSignature.pdf
      *
-     ***/
+     */
     @Test
     public void pdfValidationRequestWrongSignaturePolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
@@ -712,7 +712,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString("Invalid signature policy: "+INVALID_SIGNATURE_POLICY+"; Available abstractPolicies: ["+VALID_SIGNATURE_POLICY_1+", "+VALID_SIGNATURE_POLICY_2+"]"));
     }
 
-     /***
+     /**
      *
      * TestCaseID: Pdf-ValidationRequest-5
      *
@@ -726,7 +726,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void validationRequestRandomInputAsPdfDocument() {
         String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
@@ -737,7 +737,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Pdf-ValidationRequest-6
      *
@@ -751,7 +751,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void pdfValidationRequestWrongFilename() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
@@ -761,7 +761,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("validSignaturesCount",Matchers.is(1));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Pdf-ValidationRequest-7
      *
@@ -775,7 +775,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: xroad-batchsignature.asice
      *
-     ***/
+     */
     @Test
     public void pdfValidationRequestNotMatchingDocumentTypeAndActualFileXroadBatch() {
         setTestFilesDirectory("xroad/");
@@ -787,7 +787,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Pdf-ValidationRequest-8
      *
@@ -801,7 +801,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: xroad-attachment.asice
      *
-     ***/
+     */
     @Test
     public void pdfValidationRequestNotMatchingDocumentTypeAndActualFileXroadAttach() {
         setTestFilesDirectory("xroad/");
@@ -813,7 +813,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-     /***
+     /**
      *
      * TestCaseID: Ddoc-ValidationRequest-1
      *
@@ -827,7 +827,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void ddocValidationRequestNotMatchingDocumentTypeAndActualFileBdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -838,7 +838,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-     /***
+     /**
      *
      * TestCaseID: Ddoc-ValidationRequest-2
      *
@@ -852,7 +852,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: PdfValidSingleSignature.pdf
      *
-     ***/
+     */
     @Test
     public void ddocValidationRequestNotMatchingDocumentTypeAndActualFilePdf() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
@@ -863,7 +863,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-     /***
+     /**
      *
      * TestCaseID: Ddoc-ValidationRequest-3
      *
@@ -877,7 +877,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: xroad-simple.asice
      *
-     ***/
+     */
     @Test
     public void ddocValidationRequestNotMatchingDocumentTypeAndActualFileXroad() {
         setTestFilesDirectory("xroad/");
@@ -889,7 +889,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-     /***
+     /**
      *
      * TestCaseID: Ddoc-ValidationRequest-4
      *
@@ -903,7 +903,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: igasugust1.3.ddoc
      *
-     ***/
+     */
     @Test
     public void ddocValidationRequestWrongSignaturePolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
@@ -914,7 +914,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.is("Invalid signature policy: "+INVALID_SIGNATURE_POLICY+"; Available abstractPolicies: ["+VALID_SIGNATURE_POLICY_1+", "+VALID_SIGNATURE_POLICY_2+"]"));
     }
 
-     /***
+     /**
      *
      * TestCaseID: Ddoc-ValidationRequest-5
      *
@@ -928,7 +928,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File:
      *
-     ***/
+     */
     @Test
     public void validationRequestRandomInputAsDdocDocument() {
         String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
@@ -939,7 +939,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Ddoc-ValidationRequest-6
      *
@@ -953,7 +953,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: igasugust1.3.ddoc
      *
-     ***/
+     */
     @Test
     public void ddocValidationRequestWrongFilename() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
@@ -963,7 +963,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("validSignaturesCount",Matchers.is(3));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Ddoc-ValidationRequest-7
      *
@@ -977,7 +977,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: xroad-simple.asice
      *
-     ***/
+     */
     @Test
     public void ddocValidationRequestNotMatchingDocumentTypeAndActualFileXroadBatch() {
         setTestFilesDirectory("xroad/");
@@ -989,7 +989,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Ddoc-ValidationRequest-8
      *
@@ -1003,7 +1003,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: xroad-simple.asice
      *
-     ***/
+     */
     @Test
     public void ddocValidationRequestNotMatchingDocumentTypeAndActualFileXroadAttach() {
         setTestFilesDirectory("xroad/");
@@ -1015,7 +1015,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-     /***
+     /**
      *
      * TestCaseID: Xroad-ValidationRequest-1
      *
@@ -1029,7 +1029,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: PdfValidSingleSignature.pdf
      *
-     ***/
+     */
     @Test
     public void xroadValidationRequestNotMatchingDocumentTypeAndActualFilePdf() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
@@ -1040,7 +1040,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-     /***
+     /**
      *
      * TestCaseID: Xroad-ValidationRequest-2
      *
@@ -1054,7 +1054,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: igasugust1.3.ddoc
      *
-     ***/
+     */
     @Test
     public void xroadValidationRequestNotMatchingDocumentTypeAndActualFileDdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
@@ -1065,7 +1065,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-     /***
+     /**
      *
      * TestCaseID: Xroad-ValidationRequest-3
      *
@@ -1079,7 +1079,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void xroadValidationRequestNotMatchingDocumentTypeAndActualFileBdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -1090,7 +1090,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-     /***
+     /**
      *
      * TestCaseID: Xroad-ValidationRequest-4
      *
@@ -1104,7 +1104,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: xroad-simple.asice
      *
-     ***/
+     */
     @Test
     public void xroadValidationRequestWrongSignaturePolicy() {
         setTestFilesDirectory("xroad/");
@@ -1116,7 +1116,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.is("Invalid signature policy: "+INVALID_SIGNATURE_POLICY+"; Available abstractPolicies: ["+VALID_SIGNATURE_POLICY_1+"]"));
     }
 
-     /***
+     /**
      *
      * TestCaseID: Xroad-ValidationRequest-5
      *
@@ -1130,7 +1130,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File:
      *
-     ***/
+     */
     @Test
     public void validationRequestRandomInputAsXroadDocument() {
         String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
@@ -1141,7 +1141,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Xroad-ValidationRequest-6
      *
@@ -1155,7 +1155,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * File: xroad-simple.asice
      *
-     ***/
+     */
     @Test
     public void xroadValidationRequestWrongFilename() {
         setTestFilesDirectory("xroad/");

@@ -25,7 +25,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
         this.testFilesDirectory = testFilesDirectory;
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-ValidationRequest-1
      *
@@ -39,7 +39,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File:
      *
-     ***/
+     */
     @Test
     public void soapValidationRequestEmptyInputs() {
         post(validationRequestForDocumentExtended("", "", "", ""))
@@ -49,7 +49,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring",Matchers.is(DOCUMENT_NOT_BASE64));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-ValidationRequest-2
      *
@@ -63,7 +63,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void soapValidationRequestNonBase64Input() {
         String encodedString = ",:";
@@ -74,7 +74,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring",Matchers.is(DOCUMENT_NOT_BASE64));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-ValidationRequest-3
      *
@@ -88,7 +88,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void validationRequestInvalidDocumentType() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -99,7 +99,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring",Matchers.is(UNMARSHALING_ERROR_CVC_ENUMERATION_VALID+"Value 'CDOC'"+IS_NOT_FROM_DOCTYPE_ENUMERATION));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-ValidationRequest-4
      *
@@ -113,7 +113,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void soapValidationRequestCaseChangeDocumentType() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -124,7 +124,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring",Matchers.is(UNMARSHALING_ERROR_CVC_ENUMERATION_VALID+"Value 'bdoC'"+IS_NOT_FROM_DOCTYPE_ENUMERATION));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-ValidationRequest-5
      *
@@ -138,7 +138,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void soapValidationRequestXmlDocument() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -150,7 +150,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
 
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-ValidationRequest-6
      *
@@ -164,7 +164,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void soapValidationRequestLongFilename() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -232,7 +232,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.ValidateDocumentResponse.ValidationReport.DocumentName",Matchers.is(filename));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-ValidationRequest-7
      *
@@ -246,7 +246,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: None
      *
-     ***/
+     */
     @Test
     public void soapValidationRequestEmptyBody() {
         String emptyRequestBody = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
@@ -261,7 +261,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring",Matchers.is(DOCUMENT_NOT_BASE64));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-ValidationRequest-8
      *
@@ -275,7 +275,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void soapValidationRequestExtraKeyBetweenValues() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -299,7 +299,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring",Matchers.is("Unmarshalling Error: cvc-complex-type.2.4.a: Invalid content was found starting with element 'DocumentVersion'. One of '{SignaturePolicy}' is expected. "));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-ValidationRequest-9
      *
@@ -313,7 +313,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void soapValidationRequestExtraKeyAtTheEnd() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -338,7 +338,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring",Matchers.is("Unmarshalling Error: cvc-complex-type.2.4.d: Invalid content was found starting with element 'DocumentVersion'. No child element is expected at this point. "));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-ValidationRequest-10
      *
@@ -352,7 +352,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void soapValidationRequestUnusualChars() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -361,7 +361,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.ValidateDocumentResponse.ValidationReport.DocumentName",Matchers.is("ÕValid_IDCard_MobID_signatures.bdocÄÖÜ"));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-ValidationRequest-11
      *
@@ -375,7 +375,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void soapValidationRequestNoPolicyKey() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -396,7 +396,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.ValidateDocumentResponse.ValidationReport.ValidSignaturesCount", Matchers.is("2"));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-ValidationRequest-12
      *
@@ -410,7 +410,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void soapValidationRequestWithXmlExpansionAttack() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -443,7 +443,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring", Matchers.containsString("Error reading XMLStreamReader: Unrecognized XML directive; expected CDATA or comment"));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-ValidationRequest-13
      *
@@ -457,7 +457,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void soapValidationRequestXmlEntityAttack() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -481,7 +481,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring", Matchers.containsString("Error reading XMLStreamReader: Unrecognized XML directive; expected CDATA or comment"));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-ValidationRequest-14
      *
@@ -495,7 +495,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void soapValidationRequestWithEmptyDocument() {
         post(validationRequestForDocumentExtended("", "Valid_IDCard_MobID_signatures.bdoc", "BDOC", VALID_SIGNATURE_POLICY_1))
@@ -505,7 +505,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring",Matchers.is(DOCUMENT_NOT_BASE64));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-ValidationRequest-15
      *
@@ -519,7 +519,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void soapValidationRequestWithEmptyFilename() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -530,7 +530,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring",Matchers.is(INVALID_FILENAME));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-ValidationRequest-16
      *
@@ -538,13 +538,13 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
      *
-     * Title: Request with not allowed signature policy
+     * Title: Request with not allowed signature policy characters
      *
      * Expected Result: Error is returned
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void soapValidationWithNotAllowedSignaturePolicyContent() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -555,32 +555,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring",Matchers.is(INVALID_SIGNATURE_POLICY));
     }
 
-    /***
-     *
-     * TestCaseID: Soap-ValidationRequest-17
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
-     *
-     * Title: Request with invalid signature policy
-     *
-     * Expected Result: Error is returned
-     *
-     * File: Valid_IDCard_MobID_signatures.bdoc
-     *
-     ***/
-    @Test
-    public void soapValidationWithInvalidSignaturePolicy() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "BDOC", "BLA"))
-                .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("Envelope.Body.Fault.faultcode",Matchers.is(CLIENT_FAULT))
-                .body("Envelope.Body.Fault.faultstring",Matchers.is("Invalid signature policy: BLA; Available abstractPolicies: ["+VALID_SIGNATURE_POLICY_1+", " +VALID_SIGNATURE_POLICY_2 + "]"));
-    }
-
-    /***
+    /**
      *
      * TestCaseID: Soap-BdocValidationRequest-1
      *
@@ -594,7 +569,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void validationRequestRandomInputAsBdocDocument() {
         String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
@@ -605,7 +580,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring",Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-BdocValidationRequest-2
      *
@@ -619,7 +594,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void soapValidationRequestWrongFilename() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -628,7 +603,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.ValidateDocumentResponse.ValidationReport.DocumentName",Matchers.is("TotallyRandomFilename.exe"));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-BdocValidationRequest-3
      *
@@ -642,7 +617,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: PdfValidSingleSignature.pdf
      *
-     ***/
+     */
     @Test
     public void soapBdocValidationRequestNotMatchingDocumentTypeAndActualFilePdf() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
@@ -653,7 +628,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-BdocValidationRequest-4
      *
@@ -667,7 +642,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: igasugust1.3.ddoc
      *
-     ***/
+     */
     @Test
     public void soapBdocValidationRequestNotMatchingDocumentTypeAndActualFileDdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
@@ -678,7 +653,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-BdocValidationRequest-5
      *
@@ -692,7 +667,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void soapBdocValidationRequestWrongSignaturePolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -703,7 +678,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring", Matchers.containsString("Invalid signature policy: "+INVALID_SIGNATURE_POLICY+"; Available abstractPolicies: ["+VALID_SIGNATURE_POLICY_1+", " +VALID_SIGNATURE_POLICY_2 + "]"));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-BdocValidationRequest-6
      *
@@ -717,7 +692,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void soapBdocValidationRequestCaseInsensitivePolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -726,7 +701,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.ValidateDocumentResponse.ValidationReport.ValidSignaturesCount", Matchers.is("2"));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-DdocValidationRequest-7
      *
@@ -740,7 +715,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: xroad-simple.asice
      *
-     ***/
+     */
     @Test
     public void soapBdocValidationRequestNotMatchingDocumentTypeAndActualFileXroad() {
         setTestFilesDirectory("xroad/");
@@ -752,7 +727,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-DdocValidationRequest-1
      *
@@ -766,7 +741,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File:
      *
-     ***/
+     */
     @Test
     public void validationRequestRandomInputAsDdocDocument() {
         String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
@@ -777,7 +752,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring",Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-DdocValidationRequest-2
      *
@@ -791,7 +766,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void validationRequestNotMatchingDocumentTypeAndActualFileDdocBdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -802,7 +777,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-DdocValidationRequest-3
      *
@@ -816,7 +791,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void soapDdocValidationRequestNotMatchingDocumentTypeAndActualFileBdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -827,7 +802,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-DdocValidationRequest-4
      *
@@ -841,7 +816,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: PdfValidSingleSignature.pdf
      *
-     ***/
+     */
     @Test
     public void soapDdocValidationRequestNotMatchingDocumentTypeAndActualFilePdf() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
@@ -852,7 +827,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-DdocValidationRequest-5
      *
@@ -866,7 +841,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: igasugust1.3.ddoc
      *
-     ***/
+     */
     @Test
     public void soapDdocValidationRequestWrongSignaturePolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
@@ -877,7 +852,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring", Matchers.is("Invalid signature policy: "+INVALID_SIGNATURE_POLICY+"; Available abstractPolicies: ["+VALID_SIGNATURE_POLICY_1+", "+VALID_SIGNATURE_POLICY_2+"]"));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-DdocValidationRequest-6
      *
@@ -891,7 +866,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: xroad-attachment.asice
      *
-     ***/
+     */
     @Test
     public void soapDdocValidationRequestNotMatchingDocumentTypeAndActualFileXroad() {
         setTestFilesDirectory("xroad/");
@@ -903,7 +878,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-PdfValidationRequest-1
      *
@@ -917,7 +892,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void validationRequestRandomInputAsPdfDocument() {
         String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
@@ -928,7 +903,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring",Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-PdfValidationRequest-2
      *
@@ -942,7 +917,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void pdfValidationRequestNotMatchingDocumentTypeAndActualFileBdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -953,7 +928,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-PdfValidationRequest-3
      *
@@ -967,7 +942,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: igasugust1.3.ddoc
      *
-     ***/
+     */
     @Test
     public void soapPdfValidationRequestNotMatchingDocumentTypeAndActualFileDdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
@@ -978,7 +953,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-PdfValidationRequest-4
      *
@@ -992,7 +967,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: xroad-batchsignature.asice
      *
-     ***/
+     */
     @Test
     public void pdfValidationRequestNotMatchingDocumentTypeAndActualFileXroad() {
         setTestFilesDirectory("xroad/");
@@ -1004,7 +979,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-PdfValidationRequest-4
      *
@@ -1018,7 +993,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: PdfValidSingleSignature.pdf
      *
-     ***/
+     */
     @Test
     public void soapPdfValidationRequestWrongSignaturePolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
@@ -1029,7 +1004,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring", Matchers.is("Invalid signature policy: "+INVALID_SIGNATURE_POLICY+"; Available abstractPolicies: ["+VALID_SIGNATURE_POLICY_1+", "+VALID_SIGNATURE_POLICY_2+"]"));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-XroadValidationRequest-1
      *
@@ -1043,7 +1018,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: xroad-simple.asice
      *
-     ***/
+     */
     @Test
     public void soapXroadValidationRequestWrongSignaturePolicy() {
         setTestFilesDirectory("xroad/");
@@ -1055,7 +1030,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring", Matchers.is("Invalid signature policy: "+INVALID_SIGNATURE_POLICY+"; Available abstractPolicies: ["+VALID_SIGNATURE_POLICY_1+"]"));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-XroadValidationRequest-2
      *
@@ -1069,7 +1044,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: igasugust1.3.ddoc
      *
-     ***/
+     */
     @Test
     public void soapXroadValidationRequestNotMatchingDocumentTypeAndActualFileDdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
@@ -1080,7 +1055,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-XroadValidationRequest-3
      *
@@ -1094,7 +1069,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
      *
-     ***/
+     */
     @Test
     public void soapXroadValidationRequestNotMatchingDocumentTypeAndActualFileBdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -1105,7 +1080,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-    /***
+    /**
      *
      * TestCaseID: Soap-XroadValidationRequest-4
      *
@@ -1119,7 +1094,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * File: PdfValidSingleSignature.pdf
      *
-     ***/
+     */
     @Test
     public void soapXroadValidationRequestNotMatchingDocumentTypeAndActualFilePdf() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));

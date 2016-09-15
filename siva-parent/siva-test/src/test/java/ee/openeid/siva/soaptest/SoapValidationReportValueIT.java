@@ -26,7 +26,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         this.testFilesDirectory = testFilesDirectory;
     }
 
-    /***
+    /**
      *
      * TestCaseID: Bdoc-SoapValidationReportValue-1
      *
@@ -40,7 +40,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      * File: Valid_ID_sig.bdoc
      *
-     ***/
+     */
     @Test
     public void SoapBdocCorrectValuesArePresentValidLtTmSignature() {
         setTestFilesDirectory("bdoc/live/timemark/");
@@ -56,7 +56,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         assertEquals("SignatureForm should match expected", "ASiC_E", getQualifiedReportFromDom(report).getSignatureForm());
     }
 
-    /***
+    /**
      *
      * TestCaseID: Bdoc-SoapValidationReportValue-2
      *
@@ -70,7 +70,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      * File: 23635_bdoc_ts_OCSP_random_nonce.bdoc
      *
-     ***/
+     */
     @Test
     public void SoapBdocCorrectValuesArePresentValidLtSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
@@ -86,7 +86,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         assertEquals("SignatureForm should match expected", "ASiC_E", getQualifiedReportFromDom(report).getSignatureForm());
     }
 
-    /***
+    /**
      *
      * TestCaseID: Bdoc-SoapValidationReportValue-3
      *
@@ -100,7 +100,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
      *
-     ***/
+     */
     @Test
     public void SoapBdocCorrectValuesArePresentValidLtSignatureAdes() {
         setTestFilesDirectory("bdoc/test/timemark/");
@@ -116,7 +116,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         assertEquals("SignatureForm should match expected", "ASiC_E", getQualifiedReportFromDom(report).getSignatureForm());
     }
 
-    /***
+    /**
      *
      * TestCaseID: Bdoc-SoapValidationReportValue-4
      *
@@ -130,7 +130,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      * File: 23200_weakdigest-wrong-nonce.asice
      *
-     ***/
+     */
     @Test @Ignore //TODO: VAL-242 Subindication is empty although in case of failure it is expected to have value
     public void SoapBdocCorrectValuesArePresentValidLtSignatureAdesqc() {
         setTestFilesDirectory("bdoc/test/timemark/");
@@ -145,7 +145,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         assertEquals("SignatureForm should match expected", "ASiC_E", getQualifiedReportFromDom(report).getSignatureForm());
     }
 
-    /***
+    /**
      *
      * TestCaseID: Bdoc-SoapValidationReportValue-5
      *
@@ -159,7 +159,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      * File: EE_SER-AEX-B-LTA-V-24.bdoc
      *
-     ***/
+     */
     @Test
     public void SoapBdocCorrectValuesArePresentInvalidLtSignatureAdesqc() {
         setTestFilesDirectory("bdoc/live/timestamp/");
@@ -174,7 +174,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         assertEquals("SignatureForm should match expected", "ASiC_E", getQualifiedReportFromDom(report).getSignatureForm());
     }
 
-    /***
+    /**
      *
      * TestCaseID: Ddoc-SoapValidationReportValue-1
      *
@@ -188,7 +188,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      * File: SK-XML1.0.ddoc
      *
-     ***/
+     */
     @Test @Ignore //TODO: VAL-238 Travis fails the test, although in local machine it passes
     public void SoapDdocCorrectValuesArePresentV1_0() {
         setTestFilesDirectory("ddoc/live/timemark/");
@@ -203,7 +203,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         assertEquals("SignatureForm should match expected", "DIGIDOC_XML_1.0", getQualifiedReportFromDom(report).getSignatureForm());
     }
 
-    /***
+    /**
      *
      * TestCaseID: Ddoc-SoapValidationReportValue-2
      *
@@ -217,7 +217,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      * File: Igasugust1.1.ddoc
      *
-     ***/
+     */
     @Test
     public void SoapDdocCorrectValuesArePresentV1_1() {
         setTestFilesDirectory("ddoc/live/timemark/");
@@ -232,7 +232,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         assertEquals("SignatureForm should match expected", "DIGIDOC_XML_1.1", getQualifiedReportFromDom(report).getSignatureForm());
     }
 
-    /***
+    /**
      *
      * TestCaseID: Ddoc-SoapValidationReportValue-3
      *
@@ -246,7 +246,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      * File: Igasugust1.2.ddoc
      *
-     ***/
+     */
     @Test
     public void SoapDdocCorrectValuesArePresentV1_2() {
         setTestFilesDirectory("ddoc/live/timemark/");
@@ -261,7 +261,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         assertEquals("SignatureForm should match expected", "DIGIDOC_XML_1.2", getQualifiedReportFromDom(report).getSignatureForm());
     }
 
-    /***
+    /**
      *
      * TestCaseID: Ddoc-SoapValidationReportValue-4
      *
@@ -275,7 +275,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      * File: Igasugust1.3.ddoc
      *
-     ***/
+     */
     @Test
     public void SoapDdocCorrectValuesArePresentV1_3() {
         setTestFilesDirectory("ddoc/live/timemark/");
@@ -290,7 +290,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         assertEquals("SignatureForm should match expected", "DIGIDOC_XML_1.3", getQualifiedReportFromDom(report).getSignatureForm());
     }
 
-    /***
+    /**
      *
      * TestCaseID: Pdf-SoapValidationReportValue-1
      *
@@ -304,7 +304,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      * File: pades_lt_two_valid_sig.pdf
      *
-     ***/
+     */
     @Test
     public void SoapPdfCorrectValuesArePresentBaselineLtSignature() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
@@ -319,7 +319,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         assertEquals("SignatureForm should match expected", "PAdES", getQualifiedReportFromDom(report).getSignatureForm());
     }
 
-    /***
+    /**
      *
      * TestCaseID: Pdf-SoapValidationReportValue-2
      *
@@ -333,7 +333,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      * File: hellopades-pades-b-sha256-auth.pdf
      *
-     ***/
+     */
     @Test @Ignore //TODO: VAL-242
     public void SoapPdfCorrectValuesArePresentInvalidBaselineBSignature() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
@@ -348,7 +348,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         assertEquals("SignatureForm should match expected", "PAdES", getQualifiedReportFromDom(report).getSignatureForm());
     }
 
-    /***
+    /**
      *
      * TestCaseID: Xroad-SoapValidationReportValue-1
      *
@@ -362,7 +362,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      * File: xroad-simple.asice
      *
-     ***/
+     */
     @Test @Ignore //TODO: VAL-315
     public void SoapXroadCorrectValuesArePresentValidSimpleSignature() {
         setTestFilesDirectory("xroad/");
@@ -378,7 +378,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         assertEquals("SignatureForm should match expected", "ASIC_E", getQualifiedReportFromDom(report).getSignatureForm());
     }
 
-    /***
+    /**
      *
      * TestCaseID: Xroad-SoapValidationReportValue-2
      *
@@ -392,7 +392,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      * File: xroad-simple.asice
      *
-     ***/
+     */
     @Test @Ignore //TODO: VAL-323
     public void SoapXroadCorrectValuesArePresentInvalidSimpleSignature() {
         setTestFilesDirectory("xroad/");

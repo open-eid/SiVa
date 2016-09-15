@@ -79,6 +79,9 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         if (signaturePolicy != null) {
             jsonObject.put("signaturePolicy", signaturePolicy);
         }
+        else {
+            jsonObject.put("signaturePolicy", VALID_SIGNATURE_POLICY_2);
+        }
         String output = jsonObject.toString();
         return output;
     }

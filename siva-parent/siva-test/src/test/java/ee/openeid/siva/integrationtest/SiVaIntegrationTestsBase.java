@@ -42,6 +42,19 @@ public abstract class SiVaIntegrationTestsBase {
     protected static final String SMALL_CASE_VALID_SIGNATURE_POLICY_1 = "polv1";
     protected static final String SMALL_CASE_VALID_SIGNATURE_POLICY_2 = "polv2";
 
+    protected static final String POLICY_1_DESCRIPTION = "Policy for validating Electronic Signatures and Electronic " +
+            "Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), " +
+            "i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature " +
+            "(AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) " +
+            "does not change the total validation result of the signature.";
+    protected static final String POLICY_2_DESCRIPTION = "Policy for validating Qualified Electronic Signatures and " +
+            "Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been " +
+            "recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate " +
+            "(AdES/QC) do not produce a positive validation result.";
+
+    protected static final String POLICY_1_URL = "http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv1";
+    protected static final String POLICY_2_URL = "http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv2";
+
     @Value("${local.server.port}")
     protected int serverPort;
 

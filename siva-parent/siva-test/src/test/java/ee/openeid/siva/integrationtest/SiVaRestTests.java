@@ -64,7 +64,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
 
     @Override
     protected QualifiedReport postForReport(String file) {
-        return postForReport(file, null);
+        return postForReport(file, VALID_SIGNATURE_POLICY_2);
     }
 
     protected QualifiedReport postForReportAndPrintResponse(String file, String signaturePolicy) {

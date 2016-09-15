@@ -5,6 +5,8 @@ import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.ValidationService;
+import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
+import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.validation.service.ddoc.configuration.DDOCValidationServiceProperties;
 import ee.openeid.validation.service.ddoc.report.DDOCQualifiedReportBuilder;
 import ee.openeid.validation.service.ddoc.security.SecureSAXParsers;
@@ -17,6 +19,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -38,6 +41,7 @@ public class DDOCValidationService implements ValidationService {
     private final Object lock = new Object();
 
     private DDOCValidationServiceProperties properties;
+    private SignaturePolicyService<ValidationPolicy> signaturePolicyService;
 
     @PostConstruct
     protected void initConfig() throws DigiDocException, IOException, SAXNotSupportedException, SAXNotRecognizedException, ParserConfigurationException {
@@ -57,6 +61,8 @@ public class DDOCValidationService implements ValidationService {
 
     @Override
     public QualifiedReport validateDocument(ValidationDocument validationDocument) {
+        ValidationPolicy policy = signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy());
+
         if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
             Security.addProvider(new BouncyCastleProvider());
         }
@@ -74,7 +80,7 @@ public class DDOCValidationService implements ValidationService {
                     throw new MalformedDocumentException();
                 }
                 Date validationTime = new Date();
-                DDOCQualifiedReportBuilder reportBuilder = new DDOCQualifiedReportBuilder(signedDoc, validationDocument.getName(), validationTime);
+                DDOCQualifiedReportBuilder reportBuilder = new DDOCQualifiedReportBuilder(signedDoc, validationDocument.getName(), validationTime, policy);
                 return reportBuilder.build();
             } catch (DigiDocException e) {
                 LOGGER.warn("Unexpected exception when validating DDOC document: " + e.getMessage(), e);
@@ -100,5 +106,11 @@ public class DDOCValidationService implements ValidationService {
     @Autowired
     public void setProperties(DDOCValidationServiceProperties properties) {
         this.properties = properties;
+    }
+
+    @Autowired
+    @Qualifier(value = "DDOCPolicyService")
+    public void setSignaturePolicyService(SignaturePolicyService<ValidationPolicy> signaturePolicyService) {
+        this.signaturePolicyService = signaturePolicyService;
     }
 }

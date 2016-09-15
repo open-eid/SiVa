@@ -90,7 +90,7 @@ public class PdfValidationFailIT extends SiVaRestTests{
             // EU signature policy is used.
     public void missingSignedAttributeForSigningCertificate() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("missing_signing_certificate_attribute.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "missing_signing_certificate_attribute.pdf", "pdf", VALID_SIGNATURE_POLICY_2))
+        post(validationRequestWithValidKeys(encodedString, "missing_signing_certificate_attribute.pdf", "pdf", VALID_SIGNATURE_POLICY_1))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_T"))
                 .body("signatures[0].signatureLevel", Matchers.is("QES"))

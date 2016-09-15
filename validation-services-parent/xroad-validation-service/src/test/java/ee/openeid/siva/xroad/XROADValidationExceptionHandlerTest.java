@@ -3,6 +3,7 @@ package ee.openeid.siva.xroad;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.ValidationService;
+import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,7 +58,20 @@ public class XROADValidationExceptionHandlerTest {
                 .andExpect(status().isBadRequest())
                 .andReturn();
         String content = result.getResponse().getContentAsString();
-        assertEquals(content, "{\"key\":\"document\",\"message\":\"Document malformed or not matching documentType\"}");
+        assertEquals("{\"key\":\"document\",\"message\":\"Document malformed or not matching documentType\"}", content);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testInvalidPolicyExceptionOnValidationExceptionHandler() throws Exception {
+        when(validationService.validateDocument(any(ValidationDocument.class))).thenThrow(new InvalidPolicyException("some message"));
+        MvcResult result = mockMvc.perform(post("/xroad-validation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mockRequest().toString().getBytes()))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+        String content = result.getResponse().getContentAsString();
+        assertEquals("{\"key\":\"signaturePolicy\",\"message\":\"some message\"}", content);
     }
 
     private JSONObject mockRequest() {

@@ -83,7 +83,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      */
     @Test
     public void pdfDocumentWithBaselineProfilesBAndLTSignaturesValidatedAgainstEEPolicyOnlyLTShouldPass() {
-        QualifiedReport report = postForReport("hellopades-lt-b.pdf", VALID_SIGNATURE_POLICY_1);
+        QualifiedReport report = postForReport("hellopades-lt-b.pdf", VALID_SIGNATURE_POLICY_2);
         assertSomeSignaturesAreValid(report, 1);
     }
 
@@ -102,7 +102,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      */
     @Test
     public void pdfDocumentWithBaselineProfilesBAndLTSignaturesValidatedAgainstEUPolicyBothShouldPass() {
-        QualifiedReport report = postForReport("hellopades-lt-b.pdf", VALID_SIGNATURE_POLICY_2);
+        QualifiedReport report = postForReport("hellopades-lt-b.pdf", VALID_SIGNATURE_POLICY_1);
         assertAllSignaturesAreValid(report);
     }
 
@@ -121,7 +121,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      */
     @Test
     public void testPdfDocumentSignaturePolicyCaseInsensitivity() {
-        QualifiedReport report = postForReport("hellopades-lt-b.pdf", SMALL_CASE_VALID_SIGNATURE_POLICY_2);
+        QualifiedReport report = postForReport("hellopades-lt-b.pdf", SMALL_CASE_VALID_SIGNATURE_POLICY_1);
         assertAllSignaturesAreValid(report);
     }
 

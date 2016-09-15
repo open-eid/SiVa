@@ -4,8 +4,10 @@ import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.ValidationService;
+import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.validation.service.bdoc.report.BDOCQualifiedReportBuilder;
 import ee.openeid.validation.service.bdoc.signature.policy.BDOCConfigurationService;
+import ee.openeid.validation.service.bdoc.signature.policy.PolicyConfigurationWrapper;
 import eu.europa.esig.dss.DSSException;
 import org.apache.commons.lang.StringUtils;
 import org.digidoc4j.Configuration;
@@ -31,9 +33,10 @@ public class BDOCValidationService implements ValidationService {
 
     @Override
     public QualifiedReport validateDocument(ValidationDocument validationDocument) {
+        PolicyConfigurationWrapper policyConfiguration = configurationService.loadPolicyConfiguration(validationDocument.getSignaturePolicy());
         Container container;
         try {
-            container = createContainer(validationDocument);
+            container = createContainer(validationDocument, policyConfiguration.getConfiguration());
         } catch (DigiDoc4JException | DSSException e) {
             LOGGER.error("Unable to create container from validation document", e);
             throw new MalformedDocumentException(e);
@@ -42,7 +45,7 @@ public class BDOCValidationService implements ValidationService {
         try {
             container.validate();
             Date validationTime = new Date();
-            return new BDOCQualifiedReportBuilder(container, validationDocument.getName(), validationTime).build();
+            return new BDOCQualifiedReportBuilder(container, validationDocument.getName(), validationTime, policyConfiguration.getPolicy()).build();
         } catch (Exception e) {
             if (isXRoadContainer(container)) {
                 LOGGER.error("XROAD container passed to BDOC validator", e);
@@ -61,10 +64,8 @@ public class BDOCValidationService implements ValidationService {
                 .count() == 1;
     }
 
-    private Container createContainer(ValidationDocument validationDocument) {
+    private Container createContainer(ValidationDocument validationDocument, Configuration configuration) {
         InputStream containerInputStream = new ByteArrayInputStream(validationDocument.getBytes());
-
-        Configuration configuration = configurationService.loadConfiguration(validationDocument.getSignaturePolicy());
         return ContainerBuilder.aContainer()
                 .fromStream(containerInputStream)
                 .withConfiguration(configuration)

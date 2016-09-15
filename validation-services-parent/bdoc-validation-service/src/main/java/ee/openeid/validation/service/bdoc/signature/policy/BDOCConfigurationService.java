@@ -16,32 +16,30 @@ import java.util.concurrent.ConcurrentSkipListMap;
 @Component
 public class BDOCConfigurationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(BDOCConfigurationService.class);
-    private final Map<String, Configuration> policyList = new ConcurrentSkipListMap<>(String.CASE_INSENSITIVE_ORDER);
 
-    private Configuration configuration;
+    private final Map<String, PolicyConfigurationWrapper> policyList = new ConcurrentSkipListMap<>(String.CASE_INSENSITIVE_ORDER);
+    private PolicyConfigurationWrapper policyConfiguration;
     private BDOCSignaturePolicyProperties properties;
     private BDOCSignaturePolicyService policyService;
 
     @PostConstruct
     private void loadAllBDOCConfigurations() {
-        properties.getAbstractPolicies().entrySet().forEach(e -> {
-            Configuration tempConfiguration = configuration.copy();
-            tempConfiguration.setValidationPolicy(policyService.getAbsolutePath(e.getKey()));
-
-            LOGGER.info("Adding BDOC validation policy: {}", e.getKey());
-            policyList.putIfAbsent(e.getKey(), tempConfiguration);
+        properties.getAbstractPolicies().forEach(policy -> {
+            Configuration tempConfiguration = policyConfiguration.getConfiguration().copy();
+            tempConfiguration.setValidationPolicy(policyService.getAbsolutePath(policy.getName()));
+            LOGGER.info("Adding BDOC validation policy: {}", policy.getName());
+            policyList.putIfAbsent(policy.getName(), new PolicyConfigurationWrapper(tempConfiguration, policy));
         });
     }
 
-    public Configuration loadConfiguration(String signaturePolicy) {
-        return StringUtils.isEmpty(signaturePolicy) ? configuration : loadExistingPolicy(signaturePolicy);
+    public PolicyConfigurationWrapper loadPolicyConfiguration(String policyName) {
+        return StringUtils.isEmpty(policyName) ? policyConfiguration : loadExistingPolicy(policyName);
     }
 
-    private Configuration loadExistingPolicy(String policyName) {
+    private PolicyConfigurationWrapper loadExistingPolicy(String policyName) {
         if (!policyList.containsKey(policyName)) {
             throw new InvalidPolicyException(policyName, policyList.keySet());
         }
-
         return policyList.get(policyName);
     }
 
@@ -51,8 +49,8 @@ public class BDOCConfigurationService {
     }
 
     @Autowired
-    public void setConfiguration(Configuration configuration) {
-        this.configuration = configuration;
+    public void setConfiguration(PolicyConfigurationWrapper policyConfiguration) {
+        this.policyConfiguration = policyConfiguration;
     }
 
     @Autowired

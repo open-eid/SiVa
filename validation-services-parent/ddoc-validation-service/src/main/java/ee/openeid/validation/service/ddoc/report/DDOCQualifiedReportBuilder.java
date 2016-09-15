@@ -2,6 +2,7 @@ package ee.openeid.validation.service.ddoc.report;
 
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.siva.validation.util.CertUtil;
 import ee.sk.digidoc.DataFile;
 import ee.sk.digidoc.DigiDocException;
@@ -14,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
 
 public class DDOCQualifiedReportBuilder {
@@ -30,16 +32,18 @@ public class DDOCQualifiedReportBuilder {
     private SignedDoc signedDoc;
     private String documentName;
     private Date validationTime;
+    private ValidationPolicy validationPolicy;
 
-    public DDOCQualifiedReportBuilder(SignedDoc signedDoc, String documentName, Date validationTime) {
+    public DDOCQualifiedReportBuilder(SignedDoc signedDoc, String documentName, Date validationTime, ValidationPolicy validationPolicy) {
         this.signedDoc = signedDoc;
         this.documentName = documentName;
         this.validationTime = validationTime;
+        this.validationPolicy = validationPolicy;
     }
 
     public QualifiedReport build() {
         QualifiedReport qualifiedReport = new QualifiedReport();
-        qualifiedReport.setPolicy(Policy.SIVA_DEFAULT);
+        qualifiedReport.setPolicy(createReportPolicy(validationPolicy));
         qualifiedReport.setValidationTime(getDateFormatterWithGMTZone().format(validationTime));
         qualifiedReport.setDocumentName(documentName);
         qualifiedReport.setSignatureForm(getSignatureForm());

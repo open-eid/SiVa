@@ -2,6 +2,8 @@ package ee.openeid.siva.xroad.validation;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
+import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
+import ee.openeid.siva.xroad.configuration.XROADSignaturePolicyProperties;
 import ee.openeid.siva.xroad.configuration.XROADValidationServiceProperties;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
@@ -33,8 +35,13 @@ public class XROADTestUtils {
     static XROADValidationService initializeXROADValidationService() {
         XROADValidationServiceProperties properties = new XROADValidationServiceProperties();
         properties.setDefaultPath();
+
+        XROADSignaturePolicyProperties policyProperties = new XROADSignaturePolicyProperties();
+        policyProperties.initPolicySettings();
+
         XROADValidationService validationService = new XROADValidationService();
         validationService.setProperties(properties);
+        validationService.setSignaturePolicyService(new SignaturePolicyService<>(policyProperties));
         validationService.loadXroadConfigurationDirectory();
         return validationService;
     }

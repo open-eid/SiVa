@@ -1,7 +1,9 @@
 package ee.openeid.validation.service.bdoc.configuration;
 
-import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
+import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
+import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.validation.service.bdoc.signature.policy.BDOCSignaturePolicyService;
+import ee.openeid.validation.service.bdoc.signature.policy.PolicyConfigurationWrapper;
 import eu.europa.esig.dss.tsl.ServiceInfo;
 import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import org.apache.commons.lang.StringUtils;
@@ -22,14 +24,15 @@ import org.springframework.context.annotation.Bean;
 public class BDOCValidationServiceConfiguration {
 
     @Bean
-    public SignaturePolicyService signaturePolicyService(BDOCSignaturePolicyProperties properties) {
-        return new SignaturePolicyService(properties);
+    public ConstraintLoadingSignaturePolicyService signaturePolicyService(BDOCSignaturePolicyProperties properties) {
+        return new ConstraintLoadingSignaturePolicyService(properties);
     }
 
     @Bean
-    public Configuration configuration(TrustedListsCertificateSource trustedListSource, BDOCSignaturePolicyService bdocSignaturePolicyService) {
+    public PolicyConfigurationWrapper policyConfiguration(TrustedListsCertificateSource trustedListSource, BDOCSignaturePolicyService bdocSignaturePolicyService) {
         Configuration configuration = new Configuration();
-        configuration.setValidationPolicy(bdocSignaturePolicyService.getAbsolutePath(StringUtils.EMPTY));
+        ConstraintDefinedPolicy policy = bdocSignaturePolicyService.getPolicy(StringUtils.EMPTY);
+        configuration.setValidationPolicy(bdocSignaturePolicyService.getAbsolutePath(policy.getName()));
         TSLCertificateSource tslCertificateSource = new TSLCertificateSourceImpl();
 
         trustedListSource.getCertificates().forEach(certToken -> {
@@ -40,6 +43,6 @@ public class BDOCValidationServiceConfiguration {
             tslCertificateSource.addCertificate(certToken, serviceInfo);
         });
         configuration.setTSL(tslCertificateSource);
-        return configuration;
+        return new PolicyConfigurationWrapper(configuration, policy);
     }
 }

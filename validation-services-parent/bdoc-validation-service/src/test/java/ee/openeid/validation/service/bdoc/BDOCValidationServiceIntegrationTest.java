@@ -2,11 +2,10 @@ package ee.openeid.validation.service.bdoc;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Error;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
-import ee.openeid.siva.validation.document.report.SignatureScope;
-import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
-import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
+import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
+import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
 import ee.openeid.validation.service.bdoc.configuration.BDOCValidationServiceConfiguration;
@@ -22,6 +21,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.NO_TYPE_POLICY;
+import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.QES_POLICY;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
@@ -31,7 +32,7 @@ import static org.junit.Assert.*;
     BDOCValidationServiceConfiguration.class,
     BDOCValidationService.class,
     BDOCSignaturePolicyService.class,
-    SignaturePolicyService.class,
+    ConstraintLoadingSignaturePolicyService.class,
     BDOCConfigurationService.class
 })
 @ActiveProfiles("test")
@@ -50,8 +51,12 @@ public class BDOCValidationServiceIntegrationTest {
 
     @Test
     public void verifyCorrectPolicyIsLoadedToD4JConfiguration() throws Exception {
-        assertTrue(configurationService.loadConfiguration(null).getValidationPolicy().contains("siva-bdoc-default-constraint"));
-        assertTrue(configurationService.loadConfiguration("EE").getValidationPolicy().contains("siva-bdoc-EE-constraint"));
+        System.out.println(configurationService.loadPolicyConfiguration(null).getConfiguration().getValidationPolicy());
+        System.out.println(configurationService.loadPolicyConfiguration("POLv2").getConfiguration().getValidationPolicy());
+        System.out.println(configurationService.loadPolicyConfiguration("POLv1").getConfiguration().getValidationPolicy());
+        assertTrue(configurationService.loadPolicyConfiguration(null).getConfiguration().getValidationPolicy().contains("siva-bdoc-POLv1-constraint"));
+        assertTrue(configurationService.loadPolicyConfiguration("POLv2").getConfiguration().getValidationPolicy().contains("siva-bdoc-POLv2-constraint"));
+        assertTrue(configurationService.loadPolicyConfiguration("POLv1").getConfiguration().getValidationPolicy().contains("siva-bdoc-POLv1-constraint"));
     }
 
     @Test
@@ -172,6 +177,42 @@ public class BDOCValidationServiceIntegrationTest {
         String bestSignatureTime2 = report.getSignatures().get(1).getInfo().getBestSignatureTime();
         assertTrue(StringUtils.isNotBlank(bestSignatureTime1));
         assertTrue(StringUtils.isNotBlank(bestSignatureTime2));
+    }
+
+    @Test
+    public void validationReportShouldContainDefaultPolicyWhenPolicyIsNotExplicitlyGiven() throws Exception {
+        Policy policy = validateWithPolicy("").getPolicy();
+        assertEquals(NO_TYPE_POLICY.getName(), policy.getPolicyName());
+        assertEquals(NO_TYPE_POLICY.getDescription(), policy.getPolicyDescription());
+        assertEquals(NO_TYPE_POLICY.getUrl(), policy.getPolicyUrl());
+    }
+
+    @Test
+    public void validationReportShouldContainNoTypePolicyWhenNoTypePolicyIsGivenToValidator() throws Exception {
+        Policy policy = validateWithPolicy("POLv1").getPolicy();
+        assertEquals(NO_TYPE_POLICY.getName(), policy.getPolicyName());
+        assertEquals(NO_TYPE_POLICY.getDescription(), policy.getPolicyDescription());
+        assertEquals(NO_TYPE_POLICY.getUrl(), policy.getPolicyUrl());
+    }
+
+    @Test
+    public void validationReportShouldContainQESPolicyWhenQESPolicyIsGivenToValidator() throws Exception {
+        Policy policy = validateWithPolicy("POLv2").getPolicy();
+        assertEquals(QES_POLICY.getName(), policy.getPolicyName());
+        assertEquals(QES_POLICY.getDescription(), policy.getPolicyDescription());
+        assertEquals(QES_POLICY.getUrl(), policy.getPolicyUrl());
+    }
+
+    @Test
+    public void whenNonExistingPolicyIsGivenThenValidatorShouldThrowException() throws Exception {
+        expectedException.expect(InvalidPolicyException.class);
+        validateWithPolicy("non-existing-policy").getPolicy();
+    }
+
+    private QualifiedReport validateWithPolicy(String policyName) throws Exception {
+        ValidationDocument validationDocument = BDOCTestUtils.buildValidationDocument(BDOCTestUtils.VALID_BDOC_TM_2_SIGNATURES);
+        validationDocument.setSignaturePolicy(policyName);
+        return bdocValidationService.validateDocument(validationDocument);
     }
 
     private ValidationDocument bdocValid2Signatures() throws Exception {

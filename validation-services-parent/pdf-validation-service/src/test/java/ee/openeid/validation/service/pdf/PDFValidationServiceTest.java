@@ -4,13 +4,12 @@ import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
-import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
+import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.tsl.CustomCertificatesLoader;
 import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
 import ee.openeid.validation.service.pdf.configuration.PDFSignaturePolicyProperties;
 import ee.openeid.validation.service.pdf.configuration.PDFValidationServiceConfiguration;
-import ee.openeid.validation.service.pdf.signature.policy.PDFSignaturePolicyService;
 import eu.europa.esig.dss.validation.CertificateVerifier;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import org.junit.Before;
@@ -34,7 +33,7 @@ public class PDFValidationServiceTest {
 
     PDFValidationService validationService;
 
-    private SignaturePolicyService pdfSignaturePolicyService;
+    private ConstraintLoadingSignaturePolicyService signaturePolicyService;
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
@@ -50,16 +49,16 @@ public class PDFValidationServiceTest {
         validationService = new PDFValidationService();
         validationService.setCertificateVerifier(certificateVerifier);
 
-        pdfSignaturePolicyService = new PDFSignaturePolicyService(policySettings);
-        validationService.setSignaturePolicyService(pdfSignaturePolicyService);
+        signaturePolicyService = new ConstraintLoadingSignaturePolicyService(policySettings);
+        validationService.setSignaturePolicyService(signaturePolicyService);
     }
 
     @Test
     public void testConfiguration() {
         assertNotNull(certificateVerifier);
         assertTrue(certificateVerifier instanceof CommonCertificateVerifier);
-        assertEquals(1, pdfSignaturePolicyService.getSignaturePolicies().size());
-        assertNotNull(pdfSignaturePolicyService.getPolicyDataStreamFromPolicy(null));
+        assertEquals(2, signaturePolicyService.getSignaturePolicies().size());
+        assertNotNull(signaturePolicyService.getPolicy(null));
     }
 
     @Test

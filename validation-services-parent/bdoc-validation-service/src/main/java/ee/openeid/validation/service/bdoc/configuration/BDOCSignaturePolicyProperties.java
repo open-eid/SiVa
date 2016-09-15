@@ -21,7 +21,8 @@ import static ee.openeid.siva.validation.service.signature.policy.PredefinedVali
 @ConfigurationProperties(prefix = "siva.bdoc.signaturePolicy")
 public class BDOCSignaturePolicyProperties extends SignaturePolicyProperties<ConstraintDefinedPolicy> {
 
-    private static final String DEFAULT_BDOC_CONSTRAINT = "bdoc_constraint.xml";
+    private static final String QES_BDOC_CONSTRAINT = "bdoc_constraint_qes.xml";
+    private static final String NO_TYPE_BDOC_CONSTRAINT = "bdoc_constraint_no_type.xml";
 
     private String defaultPolicy;
     private List<ConstraintDefinedPolicy> policies = new ArrayList<>();
@@ -46,11 +47,11 @@ public class BDOCSignaturePolicyProperties extends SignaturePolicyProperties<Con
     }
 
     private ConstraintDefinedPolicy getQesPolicy() {
-        return createConstraintDefinedPolicy(QES_POLICY, DEFAULT_BDOC_CONSTRAINT);
+        return createConstraintDefinedPolicy(QES_POLICY, QES_BDOC_CONSTRAINT);
     }
 
     private ConstraintDefinedPolicy getNoTypePolicy() {
-        return createConstraintDefinedPolicy(NO_TYPE_POLICY, DEFAULT_BDOC_CONSTRAINT);
+        return createConstraintDefinedPolicy(NO_TYPE_POLICY, NO_TYPE_BDOC_CONSTRAINT);
     }
 
     private ConstraintDefinedPolicy createConstraintDefinedPolicy(ValidationPolicy validationPolicy, String constraintPath) {

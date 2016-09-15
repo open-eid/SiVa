@@ -25,6 +25,8 @@ public class DDOCQualifiedReportBuilder {
     private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final String FULL_DOCUMENT = "Full document";
     private static final String DDOC_SIGNATURE_FORM_PREFIX = "DIGIDOC_XML_";
+    private static final String DDOC_HASHCODE_SIGNATURE_FORM_SUFFIX = "_hashcode";
+    private static final String HASHCODE_CONTENT_TYPE = "HASHCODE";
     private static final String FULL_SIGNATURE_SCOPE = "FullSignatureScope";
     private static final int ERR_DF_INV_HASH_GOOD_ALT_HASH = 173;
     private static final int ERR_ISSUER_XMLNS = 176;
@@ -103,7 +105,20 @@ public class DDOCQualifiedReportBuilder {
     }
 
     private String getSignatureForm() {
-        return DDOC_SIGNATURE_FORM_PREFIX + signedDoc.getVersion();
+        return DDOC_SIGNATURE_FORM_PREFIX + signedDoc.getVersion() + getSignatureFormSuffix();
+    }
+
+    private String getSignatureFormSuffix() {
+        return isHashcodeForm() ? DDOC_HASHCODE_SIGNATURE_FORM_SUFFIX : StringUtils.EMPTY;
+    }
+
+    @SuppressWarnings("unchecked")
+    private boolean isHashcodeForm() {
+        List<DataFile> dataFiles = signedDoc.getDataFiles();
+        return dataFiles != null && !dataFiles.isEmpty() && dataFiles
+                .stream()
+                .filter(df -> StringUtils.equalsIgnoreCase(HASHCODE_CONTENT_TYPE, df.getContentType()))
+                .count() > 0;
     }
 
     private Info createEmptySignatureInfo() {

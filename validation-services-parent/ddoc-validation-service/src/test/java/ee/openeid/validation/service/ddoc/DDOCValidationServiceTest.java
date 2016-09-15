@@ -46,6 +46,9 @@ public class DDOCValidationServiceTest {
     private static final String TEST_FILES_LOCATION = "test-files/";
     private static final String VALID_DDOC_2_SIGNATURES = "ddoc_valid_2_signatures.ddoc";
     private static final String DATAFILE_XMLNS_MISSING = "datafile_xmlns_missing.ddoc";
+    private static final String DDOC_1_3_HASHCODE = "DigiDoc 1.3 hashcode.ddoc";
+    private static final String DDOC_1_0_HASHCODE = "DigiDoc 1.0 hashcode.ddoc";
+    private static final String DDOC_1_2_HASHCODE = "DigiDoc 1.2 hashcode.ddoc";
 
     private static DDOCValidationService validationService = new DDOCValidationService();
     private static DDOCSignaturePolicyProperties policyProperties = new DDOCSignaturePolicyProperties();
@@ -154,6 +157,24 @@ public class DDOCValidationServiceTest {
         assertTrue(signature.getErrors().isEmpty());
         assertTrue(signature.getWarnings().size() == 1);
         assertEquals("Bad digest for DataFile: D0 alternate digest matches!", signature.getWarnings().get(0).getDescription());
+    }
+
+    @Test
+    public void reportShouldHaveHashcodeSingnatureFormSuffixWhenValidatingDdocHashcode13Format() throws Exception {
+        QualifiedReport report = validationService.validateDocument(buildValidationDocument(DDOC_1_3_HASHCODE));
+        assertEquals("DIGIDOC_XML_1.3_hashcode", report.getSignatureForm());
+    }
+
+    @Test
+    public void reportShouldHaveHashcodeSingnatureFormSuffixWhenValidatingDdocHashcode10Format() throws Exception {
+        QualifiedReport report = validationService.validateDocument(buildValidationDocument(DDOC_1_0_HASHCODE));
+        assertEquals("DIGIDOC_XML_1.0_hashcode", report.getSignatureForm());
+    }
+
+    @Test
+    public void reportShouldHaveHashcodeSingnatureFormSuffixWhenValidatingDdocHashcode12Format() throws Exception {
+        QualifiedReport report = validationService.validateDocument(buildValidationDocument(DDOC_1_2_HASHCODE));
+        assertEquals("DIGIDOC_XML_1.2_hashcode", report.getSignatureForm());
     }
 
     @Test

@@ -1044,7 +1044,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: xroad-simple.asice
      *
      ***/
-    @Test //@Ignore //TODO: Functionality changed with VAL-330, need to update test
+    @Test
     public void soapXroadValidationRequestWrongSignaturePolicy() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));

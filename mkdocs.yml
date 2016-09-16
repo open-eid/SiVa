@@ -30,3 +30,4 @@ pages:
       - Appendix 2 - Validation Constraint Configuration: siva/appendix/validation_constraints.md
       - Appendix 3 - Test Case Descriptions: siva/appendix/test_cases.md
       - Appendix 4 - WSDL of SOAP Interface : siva/appendix/wsdl.md
+      - Appendix 5 - Known Issues : siva/appendix/known_issues.md

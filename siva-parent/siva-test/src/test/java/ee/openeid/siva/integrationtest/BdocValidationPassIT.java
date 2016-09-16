@@ -83,13 +83,16 @@ public class BdocValidationPassIT extends SiVaRestTests{
      *
      * Expected Result: The document should pass the validation but warning should be returned
      *
-     * File:
+     * File: bdoc_weak_warning_sha1.bdoc
      */
-    @Test @Ignore //TODO: need file with warnings
+    @Test @Ignore //TODO: DSS-760
     public void validSignatureWithWarning() {
-        QualifiedReport report = postForReport("warning.bdoc");
-        assertEquals(report.getSignaturesCount(), report.getValidSignaturesCount());
-        assertTrue(report.getSignatures().get(0).getWarnings().size() > 0);
+        setTestFilesDirectory("bdoc/live/timemark/");
+        post(validationRequestFor("bdoc_weak_warning_sha1.bdoc"))
+                .then()
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("validSignaturesCount", Matchers.is(2));
     }
 
     /**
@@ -170,7 +173,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
      *
      * File: bdoc21-TS.asice
      */
-    @Test @Ignore //TODO: Because DSS bug this file returns AdESqc not QES. Can be enabled when fix is available.
+    @Test @Ignore //TODO: DSS-915
     public void bdocQESProfileValidSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("bdoc21-TS.asice"))

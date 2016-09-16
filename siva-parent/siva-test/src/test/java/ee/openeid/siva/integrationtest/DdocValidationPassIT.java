@@ -247,6 +247,44 @@ public class DdocValidationPassIT extends SiVaRestTests{
 
     /**
      *
+     * TestCaseID: Ddoc-ValidationPass-15
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     *
+     * Title: Ddoc with warning should pass
+     *
+     * Expected Result: Document passes the validation
+     *
+     * File: 18912.ddoc
+     *
+     */
+    @Test
+    public void ddocWithWarningShouldPass() {
+        post(validationRequestFor("18912.ddoc"))
+                .then()
+                .body("signatures[0].id", Matchers.is("S0"))
+                .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("signatures[0].signatureLevel", Matchers.is(""))
+                .body("signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].signatureScopes[0].name", Matchers.is("readme"))
+                .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
+                .body("signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
+                .body("signatures[0].claimedSigningTime", Matchers.is("2012-09-21T11:56:53Z"))
+                .body("signatures[0].warnings[0].description", Matchers.is("Bad digest for DataFile: D0 alternate digest matches!"))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is(""))
+                .body("signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("documentName", Matchers.is("18912.ddoc"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
+    }
+
+    /**
+     *
      * TestCaseID: DdocHashcode-ValidationPass-1
      *
      * TestType: Automated

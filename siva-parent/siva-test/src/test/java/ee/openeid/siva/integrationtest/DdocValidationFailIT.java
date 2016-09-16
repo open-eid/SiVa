@@ -203,7 +203,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * File: Belgia_kandeavaldus_LIV.ddoc
      */
-    @Test //TODO: If this test returns failure it could be because of hardcoded signatures position in returned report. Expectation is that this position is always same.
+    @Test
     public void ddocSignersCertNotTrusted() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("Belgia_kandeavaldus_LIV.ddoc"))
@@ -226,12 +226,13 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * File: Tundmatu_OCSP_responder.ddoc
      */
-    @Test //TODO: The error message content is not checked currently as it is really sloppy
+    @Test
     public void ddocOCSPNotTrusted() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("Tundmatu_OCSP_responder.ddoc"))
                 .then()
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].errors[2].content", Matchers.containsString("No certificate for responder: 'byName: CN=Belgium OCSP Responder"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 

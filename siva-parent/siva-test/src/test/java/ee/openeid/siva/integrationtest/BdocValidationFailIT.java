@@ -336,7 +336,7 @@ public class BdocValidationFailIT extends SiVaRestTests{
      *
      * File: EE_SER-AEX-B-LT-V-34.asice
      */
-    @Test @Ignore //TODO: Needs investigation whether it is actually okay to ignore manifest errors as currently is done
+    @Test @Ignore //TODO: DSS-842, DSS-932
     public void bdocUnsignedDataFiles() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-V-34.asice"))
@@ -360,7 +360,7 @@ public class BdocValidationFailIT extends SiVaRestTests{
      *
      * File: 23613_TM_wrong-manifest-mimetype.bdoc
      */
-    @Test @Ignore //TODO: Needs investigation whether it is actually okay to ignore manifest errors as currently is done
+    @Test @Ignore //TODO: DSS-842, DSS-932
     public void bdocDifferentDataFileInSignature() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("23613_TM_wrong-manifest-mimetype.bdoc"))
@@ -507,7 +507,7 @@ public class BdocValidationFailIT extends SiVaRestTests{
      *
      * File: TM-16_unknown.4.asice
      */
-    @Test @Ignore //TODO: This file returns revoked status...
+    @Test @Ignore //TODO: DSS-922
     public void bdocTmOcspStatusUnknown() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("TM-16_unknown.4.asice"))

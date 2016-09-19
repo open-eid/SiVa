@@ -54,7 +54,7 @@ public class PdfValidationFailIT extends SiVaRestTests{
      *
      * File: pades_lt_revoked.pdf
      */
-    @Test @Ignore //TODO: PAdES doc with revoked sign cert gets validated as valid - Update: this should be fixed in DSS 4.7.RC2
+    @Test @Ignore //TODO: DSS-922, DSS-918
     public void documentSignedWithRevokedCertificateShouldFail() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades_lt_revoked.pdf"));
         post(validationRequestWithValidKeys(encodedString, "pades_lt_revoked.pdf", "pdf", VALID_SIGNATURE_POLICY_1))

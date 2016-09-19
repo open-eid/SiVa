@@ -135,9 +135,46 @@ docker run -it -p 8080:8080 mihkels/siva-webapp
 
 > NOTE: You can stop the service by pressing `Ctrl+C`
 
+## WAR and Tomcat setup for legacy systems
+
+> **NOTE**: We do not recommend using WAR deployment option because lack of testing done on different servlet 
+> containers also possible container application libraries conflicts
+
+First we need to download Tomcat web servlet container as of the writing latest version available in version 7 branch is 7.0.77. We will download it with `wget`
+
+```bash
+wget http://www-eu.apache.org/dist/tomcat/tomcat-7/v7.0.70/bin/apache-tomcat-7.0.70.tar.gz
+```
+
+Unpack it somewhere:
+
+```bash
+tar xf apache-tomcat-7.0.70.tar.gz
+```
+
+Now we should build the WAR file. We have created helper script with all the correct Maven parameters.
+
+```bash
+./war-build.sh
+```
+
+> **NOTE** The script will skip running the integration tests when building WAR files
+
+Final steps would be copying built WAR file into Tomcat `webapps` directory and starting the servlet container.
+
+```bash 
+cp siva-parent/siva-webapp/target/siva-webapp-2.0.2-SNAPSHOT.war apache-tomcat-7.0.70/webapps
+./apache-tomcat-7.0.77/bin/catalina.sh run
+```
+
+> **IMPORTANT** siva-webapp on startup creates `etc` directory where it copies the TSL validaiton certificates 
+> `siva-keystore.jks`. Default location for this directory is application root or `$CATALINA_HOME`. To change 
+> this default behavior you should set environment variable `DSS_DATA_FOLDER`
+
 ## How-to run tests
 
-Unit and integration tests are integral part of the SiVa code base. The tests are automatically executed every time the application is built. The build will fail if any of the tests fail.
+Unit and integration tests are integral part of the SiVa code base. The tests are automatically executed every
+time the application is built. The build will fail if any of the tests fail.
 
 To execute the tests from command line after application is built use:
 
@@ -148,8 +185,8 @@ To execute the tests from command line after application is built use:
 ### How to run load tests
 
 Load tests are disabled by default, but can be enabled with maven parameter `-DrunLoadTests=true`. By default all unit
-and integration tests will be executed prior the load tests, but it is possible to skip them. When executing the load tests, SiVa
-Web application has to be started before the tests are executed.
+and integration tests will be executed prior the load tests, but it is possible to skip them. When executing the load 
+tests, SiVa Web application has to be started before the tests are executed.
 
 > **Note**: PDF load test files contain test certificates. In order for PDF load tests to succeed
 > SiVa application should be started with test certificates preloaded.
@@ -188,7 +225,8 @@ It is possible to configure following parameters in load test (given defaults ar
 
 These values can be set in three different ways:
   * In JMeter test plan - these settings will be used when JMeter GUI is used to run the tests
-  * In `../siva-test/pom.xml` file - these settings will be used when the tests are run in non GUI mode and will overwrite the default values in test plans.
+  * In `../siva-test/pom.xml` file - these settings will be used when the tests are run in non GUI mode 
+    and will overwrite the default values in test plans.
   * As parameters when executing the tests - These values have highest priority and will overwrite other default values.
 
 To run the tests with modified parameters:

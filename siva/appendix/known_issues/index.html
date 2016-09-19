@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1">
     
       
-        <title>Appendix 1 - Non-Functional Requirements - SiVa - Validation Service Documentation</title>
+        <title>Appendix 5 - Known Issues - SiVa - Validation Service Documentation</title>
       
       
       
@@ -98,7 +98,7 @@
             
           </span>
         
-        Appendix 1 - Non-Functional Requirements
+        Appendix 5 - Known Issues
       </div>
     </div>
     
@@ -204,15 +204,6 @@
           
             
   <li>
-    <a class="" title="Regulatory environment" href="../../regulatory_environment/">
-      Regulatory environment
-    </a>
-    
-  </li>
-
-          
-            
-  <li>
     <a class="" title="Component diagram" href="../../component_diagram/">
       Component diagram
     </a>
@@ -222,8 +213,8 @@
           
             
   <li>
-    <a class="" title="Deployment view" href="../../deployment_view/">
-      Deployment view
+    <a class="" title="Interfaces" href="../../v2/interfaces/">
+      Interfaces
     </a>
     
   </li>
@@ -231,8 +222,8 @@
           
             
   <li>
-    <a class="" title="Interfaces" href="../../interface_description/">
-      Interfaces
+    <a class="" title="Deployment" href="../../v2/deployment/">
+      Deployment
     </a>
     
   </li>
@@ -249,15 +240,6 @@
           
             
   <li>
-    <a class="" title="Deployment" href="../../deployment/">
-      Deployment
-    </a>
-    
-  </li>
-
-          
-            
-  <li>
     <a class="" title="Logging" href="../../logging/">
       Logging
     </a>
@@ -267,8 +249,8 @@
           
             
   <li>
-    <a class="" title="QA Strategy" href="../../qa_strategy/">
-      QA Strategy
+    <a class="" title="Quality Assurance Strategy" href="../../qa_strategy/">
+      Quality Assurance Strategy
     </a>
     
   </li>
@@ -299,20 +281,8 @@
       
         
   <li>
-    <a class="current" title="Appendix 1 - Non-Functional Requirements" href="./">
-      Appendix 1 - Non-Functional Requirements
-    </a>
-    
-      
-      
-    
-  </li>
-
-      
-        
-  <li>
-    <a class="" title="Appendix 2 - Functional Requirements" href="../functional_requirements/">
-      Appendix 2 - Functional Requirements
+    <a class="" title="Appendix 1 - Validation Policy" href="../validation_policy/">
+      Appendix 1 - Validation Policy
     </a>
     
   </li>
@@ -320,8 +290,8 @@
       
         
   <li>
-    <a class="" title="Appendix 3 - Validation Policy" href="../validation_policy/">
-      Appendix 3 - Validation Policy
+    <a class="" title="Appendix 2 - Validation Constraint Configuration" href="../validation_constraints/">
+      Appendix 2 - Validation Constraint Configuration
     </a>
     
   </li>
@@ -329,8 +299,8 @@
       
         
   <li>
-    <a class="" title="Appendix 4 - Validation Constraint Configuration" href="../validation_constraints/">
-      Appendix 4 - Validation Constraint Configuration
+    <a class="" title="Appendix 3 - Test Case Descriptions" href="../test_cases/">
+      Appendix 3 - Test Case Descriptions
     </a>
     
   </li>
@@ -338,8 +308,8 @@
       
         
   <li>
-    <a class="" title="Appendix 5 - Test Case Descriptions" href="../test_cases/">
-      Appendix 5 - Test Case Descriptions
+    <a class="" title="Appendix 4 - WSDL of SOAP Interface" href="../wsdl/">
+      Appendix 4 - WSDL of SOAP Interface
     </a>
     
   </li>
@@ -347,9 +317,40 @@
       
         
   <li>
-    <a class="" title="Appendix 6 - WSDL of SOAP Interface" href="../wsdl/">
-      Appendix 6 - WSDL of SOAP Interface
+    <a class="current" title="Appendix 5 - Known Issues" href="./">
+      Appendix 5 - Known Issues
     </a>
+    
+      
+      
+        <ul>
+          
+            <li class="anchor">
+              <a title="General issues" href="#general-issues">
+                General issues
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="DIGIDOC-XML related issues" href="#digidoc-xml-related-issues">
+                DIGIDOC-XML related issues
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="BDOC/ASiC-E related issues" href="#bdocasic-e-related-issues">
+                BDOC/ASiC-E related issues
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="PAdES related issues" href="#pades-related-issues">
+                PAdES related issues
+              </a>
+            </li>
+          
+        </ul>
+      
     
   </li>
 
@@ -368,9 +369,49 @@
       <article class="article">
         <div class="wrapper">
           
-            <h1>Appendix 1 - Non-Functional Requirements</h1>
+            <h1>Appendix 5 - Known Issues</h1>
           
-          
+          <!--# SiVa Known Issues-->
+
+<h2 id="general-issues">General issues</h2>
+<ol>
+<li>German, Norwegian and Croatian TSLs are not loaded, signatures containing certificates included in the respective TSL lists can not be validated.</li>
+<li>During TSL refreshing/reloading, service could give wrong validation results. Service must be turned off for TSL refreshing time (at  3:00 AM, ca 1 minute). </li>
+<li>X-Road validation service is separated (do not follow general architectuse) because of different BouncyCastle version used in X-Road utility. X-Road validation module should use latest BouncyCastle version.</li>
+<li>Container validation errors are not returned as the current DSS-based validation report doesn't include a proper structure for container errors (https://esig-dss.atlassian.net/browse/DSS-932)</li>
+</ol>
+<h2 id="digidoc-xml-related-issues">DIGIDOC-XML related issues</h2>
+<ol>
+<li>(JDigiDoc) Validating DIGIDOC-XML 1.0..1.3 documents is supported in case of "EMBEDDED_BASE64" content type, i.e. "DETACHED" and "EMBEDDED" content types are not supported. </li>
+<li>(DigiDoc4j, JDigiDoc) Investigate JDD DDOC 1.0 validation issue in DD4j 1.0.4: https://www.pivotaltracker.com/story/show/125537231</li>
+<li>(JDigiDoc) DDOC validation is not thread safe, added synchronization block, only one request at time. https://www.pivotaltracker.com/story/show/86696334 and https://github.com/open-eid/digidoc4j/wiki/Questions-&amp;-Answers#using-ddoc-containers-in-multi-threaded-environment</li>
+</ol>
+<h2 id="bdocasic-e-related-issues">BDOC/ASiC-E related issues</h2>
+<ol>
+<li>(DigiDoc4j) Subindication is missing: https://www.pivotaltracker.com/story/show/128947235</li>
+<li>(DigiDoc4j) Improve API to return validation parameters: https://www.pivotaltracker.com/story/show/123789261</li>
+<li>(DigiDoc4j) return indeterminate https://www.pivotaltracker.com/story/show/129437879 </li>
+<li>(DigiDoc4j) Improve validation report: https://www.pivotaltracker.com/story/show/118940113</li>
+<li>(DigiDoc4j, DSS) Fix detecting signature qualification level based on TL information: https://www.pivotaltracker.com/story/show/128061699</li>
+<li>(DigiDoc4j, DSS) DSS doesn't properly validate manifest.xml, including not checking that data files in container would be listed in manifest.xml: https://esig-dss.atlassian.net/browse/DSS-842, https://esig-dss.atlassian.net/browse/DSS-932</li>
+<li>(DigiDoc4j, DSS) OCSP revocation errors are not included in simple report: https://esig-dss.atlassian.net/browse/DSS-922, https://www.pivotaltracker.com/n/projects/1110130/stories/129526189</li>
+<li>(DigiDoc4j, DSS) Validation warning is not returned when SHA-1 is used in the signature (https://www.pivotaltracker.com/story/show/129929643, https://esig-dss.atlassian.net/browse/DSS-760)</li>
+<li>(DigiDoc4j) In case of BDOC with time-stamp, the validation warning is not returned if time difference between time-stamp and OCSP issuance times exceeds 15 minutes: https://www.pivotaltracker.com/story/show/130098445</li>
+</ol>
+<h2 id="pades-related-issues">PAdES related issues</h2>
+<ol>
+<li>(DSS) PAdES validation is not thread safe, added synchronization block, only one request at time. https://esig-dss.atlassian.net/browse/DSS-923</li>
+<li>(DSS) Validation warning is not returned when SHA-1 is used in the signature (https://esig-dss.atlassian.net/browse/DSS-760)</li>
+<li>(DSS) Documents signed with revoked signature pass the validation https://esig-dss.atlassian.net/browse/DSS-922, https://esig-dss.atlassian.net/browse/DSS-918
+X-Road signatures' related issues</li>
+<li>(X-Road) Values of some validation report fields are not accessible via the X-Road library's API:  </li>
+<li>SignatureFormat – Format and profile (according to Baseline Profile) of the signature. Currently, hard coded values are used in the report. </li>
+<li>SignatureLevel – Indication whether the signature is Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES). Currently, the value is left empty, as the library doesn't enable determining legal level of the signature then POLv2 validation policy (only QES level signatures are accepted) is not supported for X-Road signatures. </li>
+<li>Indication, Errors and Warnings - in error situations, the verification process results in a CodedException extends RuntimeException. This Exception always contains a fault code String but it’s how should we determine if we should result in INDETERMINATE or TOTAL-FAILED result? Also since the rest of the verification process is not completed after the exception we only ever know the single error that was reached first. Also we can’t get warnings as we do in DSS.</li>
+<li>SubIndication – Additional subindication in case of failed or indeterminate validation result, according to EN 319 102-1 "Table 6: Validation Report Structure and Semantics".  </li>
+<li>SignatureScope - Contains information of the original data that is covered by the signature. Currently, a hard-coded value is used.  </li>
+<li>ClaimedSigningTime - Claimed signing time, i.e. user’s computer time during signature creation.</li>
+</ol>
           <aside class="copyright" role="note">
             
             Documentation built with
@@ -387,7 +428,7 @@
   <nav class="pagination" aria-label="Footer">
     <div class="previous">
       
-        <a href="../../references/" title="References">
+        <a href="../wsdl/" title="Appendix 4 - WSDL of SOAP Interface">
           <span class="direction">
             Previous
           </span>
@@ -397,7 +438,7 @@
             </div>
             <div class="stretch">
               <div class="title">
-                References
+                Appendix 4 - WSDL of SOAP Interface
               </div>
             </div>
           </div>
@@ -405,22 +446,6 @@
       
     </div>
     <div class="next">
-      
-        <a href="../functional_requirements/" title="Appendix 2 - Functional Requirements">
-          <span class="direction">
-            Next
-          </span>
-          <div class="page">
-            <div class="stretch">
-              <div class="title">
-                Appendix 2 - Functional Requirements
-              </div>
-            </div>
-            <div class="button button-next" role="button" aria-label="Next">
-              <i class="icon icon-forward"></i>
-            </div>
-          </div>
-        </a>
       
     </div>
   </nav>

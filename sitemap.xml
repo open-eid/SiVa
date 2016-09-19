@@ -3,112 +3,96 @@
 
     
     <url>
-     <loc>None/</loc>
-     <lastmod>2016-09-13</lastmod>
+     <loc>/</loc>
+     <lastmod>2016-09-19</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
 
     
     <url>
-     <loc>None/siva/version_info/</loc>
-     <lastmod>2016-09-13</lastmod>
+     <loc>/siva/version_info/</loc>
+     <lastmod>2016-09-19</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
 
     
     <url>
-     <loc>None/siva/definitions/</loc>
-     <lastmod>2016-09-13</lastmod>
+     <loc>/siva/definitions/</loc>
+     <lastmod>2016-09-19</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
 
     
     <url>
-     <loc>None/siva/overview/</loc>
-     <lastmod>2016-09-13</lastmod>
+     <loc>/siva/overview/</loc>
+     <lastmod>2016-09-19</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
 
     
     <url>
-     <loc>None/siva/regulatory_environment/</loc>
-     <lastmod>2016-09-13</lastmod>
+     <loc>/siva/component_diagram/</loc>
+     <lastmod>2016-09-19</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
 
     
     <url>
-     <loc>None/siva/component_diagram/</loc>
-     <lastmod>2016-09-13</lastmod>
+     <loc>/siva/v2/interfaces/</loc>
+     <lastmod>2016-09-19</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
 
     
     <url>
-     <loc>None/siva/deployment_view/</loc>
-     <lastmod>2016-09-13</lastmod>
+     <loc>/siva/v2/deployment/</loc>
+     <lastmod>2016-09-19</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
 
     
     <url>
-     <loc>None/siva/interface_description/</loc>
-     <lastmod>2016-09-13</lastmod>
+     <loc>/siva/use_cases/</loc>
+     <lastmod>2016-09-19</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
 
     
     <url>
-     <loc>None/siva/use_cases/</loc>
-     <lastmod>2016-09-13</lastmod>
+     <loc>/siva/logging/</loc>
+     <lastmod>2016-09-19</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
 
     
     <url>
-     <loc>None/siva/deployment/</loc>
-     <lastmod>2016-09-13</lastmod>
+     <loc>/siva/qa_strategy/</loc>
+     <lastmod>2016-09-19</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
 
     
     <url>
-     <loc>None/siva/logging/</loc>
-     <lastmod>2016-09-13</lastmod>
+     <loc>/siva/test_plan/</loc>
+     <lastmod>2016-09-19</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
 
     
     <url>
-     <loc>None/siva/qa_strategy/</loc>
-     <lastmod>2016-09-13</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    
-
-    
-    <url>
-     <loc>None/siva/test_plan/</loc>
-     <lastmod>2016-09-13</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    
-
-    
-    <url>
-     <loc>None/siva/references/</loc>
-     <lastmod>2016-09-13</lastmod>
+     <loc>/siva/references/</loc>
+     <lastmod>2016-09-19</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -116,38 +100,32 @@
     
         
     <url>
-     <loc>None/siva/appendix/none_functional_requirements/</loc>
-     <lastmod>2016-09-13</lastmod>
+     <loc>/siva/appendix/validation_policy/</loc>
+     <lastmod>2016-09-19</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
-     <loc>None/siva/appendix/functional_requirements/</loc>
-     <lastmod>2016-09-13</lastmod>
+     <loc>/siva/appendix/validation_constraints/</loc>
+     <lastmod>2016-09-19</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
-     <loc>None/siva/appendix/validation_policy/</loc>
-     <lastmod>2016-09-13</lastmod>
+     <loc>/siva/appendix/test_cases/</loc>
+     <lastmod>2016-09-19</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
-     <loc>None/siva/appendix/validation_constraints/</loc>
-     <lastmod>2016-09-13</lastmod>
+     <loc>/siva/appendix/wsdl/</loc>
+     <lastmod>2016-09-19</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
-     <loc>None/siva/appendix/test_cases/</loc>
-     <lastmod>2016-09-13</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
-     <loc>None/siva/appendix/wsdl/</loc>
-     <lastmod>2016-09-13</lastmod>
+     <loc>/siva/appendix/known_issues/</loc>
+     <lastmod>2016-09-19</lastmod>
      <changefreq>daily</changefreq>
     </url>
         

@@ -23,8 +23,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     
-    <link rel="shortcut icon" type="image/x-icon" href="../../assets/images/favicon-e565ddfa3b.ico">
-    <link rel="icon" type="image/x-icon" href="../../assets/images/favicon-e565ddfa3b.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="../../None">
+    <link rel="icon" type="image/x-icon" href="../../None">
     <style>
       @font-face {
       	font-family: 'Icon';
@@ -41,7 +41,7 @@
       	font-style: normal;
       }
     </style>
-    <link rel="stylesheet" href="../../assets/stylesheets/application-a422ff04cc.css">
+    <link rel="stylesheet" href="../../assets/stylesheets/application-0dac3e5884.css">
     
       <link rel="stylesheet" href="../../assets/stylesheets/palettes-05ab2406df.css">
     
@@ -49,7 +49,7 @@
       
       
       
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
       <style>
         body, input {
           font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
@@ -200,15 +200,6 @@
           
             
   <li>
-    <a class="" title="Regulatory environment" href="../regulatory_environment/">
-      Regulatory environment
-    </a>
-    
-  </li>
-
-          
-            
-  <li>
     <a class="" title="Component diagram" href="../component_diagram/">
       Component diagram
     </a>
@@ -218,8 +209,8 @@
           
             
   <li>
-    <a class="" title="Deployment view" href="../deployment_view/">
-      Deployment view
+    <a class="" title="Interfaces" href="../v2/interfaces/">
+      Interfaces
     </a>
     
   </li>
@@ -227,8 +218,8 @@
           
             
   <li>
-    <a class="" title="Interfaces" href="../interface_description/">
-      Interfaces
+    <a class="" title="Deployment" href="../v2/deployment/">
+      Deployment
     </a>
     
   </li>
@@ -238,15 +229,6 @@
   <li>
     <a class="" title="Use cases" href="../use_cases/">
       Use cases
-    </a>
-    
-  </li>
-
-          
-            
-  <li>
-    <a class="" title="Deployment" href="../deployment/">
-      Deployment
     </a>
     
   </li>
@@ -288,8 +270,8 @@
           
             
   <li>
-    <a class="" title="QA Strategy" href="../qa_strategy/">
-      QA Strategy
+    <a class="" title="Quality Assurance Strategy" href="../qa_strategy/">
+      Quality Assurance Strategy
     </a>
     
   </li>
@@ -320,8 +302,8 @@
       
         
   <li>
-    <a class="" title="Appendix 1 - Non-Functional Requirements" href="../appendix/none_functional_requirements/">
-      Appendix 1 - Non-Functional Requirements
+    <a class="" title="Appendix 1 - Validation Policy" href="../appendix/validation_policy/">
+      Appendix 1 - Validation Policy
     </a>
     
   </li>
@@ -329,8 +311,8 @@
       
         
   <li>
-    <a class="" title="Appendix 2 - Functional Requirements" href="../appendix/functional_requirements/">
-      Appendix 2 - Functional Requirements
+    <a class="" title="Appendix 2 - Validation Constraint Configuration" href="../appendix/validation_constraints/">
+      Appendix 2 - Validation Constraint Configuration
     </a>
     
   </li>
@@ -338,8 +320,8 @@
       
         
   <li>
-    <a class="" title="Appendix 3 - Validation Policy" href="../appendix/validation_policy/">
-      Appendix 3 - Validation Policy
+    <a class="" title="Appendix 3 - Test Case Descriptions" href="../appendix/test_cases/">
+      Appendix 3 - Test Case Descriptions
     </a>
     
   </li>
@@ -347,8 +329,8 @@
       
         
   <li>
-    <a class="" title="Appendix 4 - Validation Constraint Configuration" href="../appendix/validation_constraints/">
-      Appendix 4 - Validation Constraint Configuration
+    <a class="" title="Appendix 4 - WSDL of SOAP Interface" href="../appendix/wsdl/">
+      Appendix 4 - WSDL of SOAP Interface
     </a>
     
   </li>
@@ -356,17 +338,8 @@
       
         
   <li>
-    <a class="" title="Appendix 5 - Test Case Descriptions" href="../appendix/test_cases/">
-      Appendix 5 - Test Case Descriptions
-    </a>
-    
-  </li>
-
-      
-        
-  <li>
-    <a class="" title="Appendix 6 - WSDL of SOAP Interface" href="../appendix/wsdl/">
-      Appendix 6 - WSDL of SOAP Interface
+    <a class="" title="Appendix 5 - Known Issues" href="../appendix/known_issues/">
+      Appendix 5 - Known Issues
     </a>
     
   </li>
@@ -396,13 +369,11 @@ configured via the standard Logback configuration file. By default,
 logging works on the <code>INFO</code> level and logs are directed to the system
 console as well as a log file.</p>
 <p>The logback xml configuration file can be found at:</p>
-<div class="codehilite"><pre>pdfValidator/pdf-validator-webapp/src/main/resources/logback.xml
-</pre></div>
+<pre class="codehilite"><code>pdfValidator/pdf-validator-webapp/src/main/resources/logback.xml</code></pre>
 
 
 <p>and when compiled the file will reside at </p>
-<div class="codehilite"><pre>WEB-INF/classes/logback.xml
-</pre></div>
+<pre class="codehilite"><code>WEB-INF/classes/logback.xml</code></pre>
 
 
 <p>within the packaged war. There is also a possibility to set the location
@@ -410,8 +381,7 @@ of the default configuration file with a system
 property <code>logback.configurationFile</code> as a JVM argument. The value of
 this property can be a URL, a resource on the class path or a path to a
 file external to the application.</p>
-<div class="codehilite"><pre>java -Dlogback.configurationFile<span class="o">=</span>/path/to/config.xml
-</pre></div>
+<pre class="codehilite"><code class="language-bash">java -Dlogback.configurationFile=/path/to/config.xml</code></pre>
 
 
 <p>In this configuration file there are three appenders: <code>STDOUT</code> (logs to
@@ -421,25 +391,24 @@ commenting out its <code>appender-ref</code> is sufficient, but it is <em>recomm
 that the appender itself should also be commented out. For example to
 disable <code>SYSLOG</code> appender (which is the default configuration), then one
 can use following configuration:</p>
-<div class="codehilite"><pre><span class="c">&lt;!--</span>
-<span class="c">&lt;appender name=&quot;SYSLOG&quot; class=&quot;ch.qos.logback.classic.net.SyslogAppender&quot;&gt;</span>
-<span class="c">    &lt;syslogHost&gt;enter\_ip\_or\_hostname\_here&lt;/syslogHost&gt;</span>
-<span class="c">    &lt;port&gt;514&lt;/port&gt;</span>
-<span class="c">    &lt;facility&gt;USER&lt;/facility&gt;</span>
-<span class="c">    &lt;filter class=&quot;ch.qos.logback.classic.filter.ThresholdFilter&quot;&gt;</span>
-<span class="c">        &lt;level&gt;INFO&lt;/level&gt;</span>
-<span class="c">    &lt;/filter&gt;</span>
-<span class="c">    &lt;suffixPattern&gt;%-5level %logger{0}:%L \[%thread\] - %msg&lt;/suffixPattern&gt;</span>
-<span class="c">&lt;/appender&gt;</span>
-<span class="c">--&gt;</span>
+<pre class="codehilite"><code class="language-xml">&lt;!--
+&lt;appender name=&quot;SYSLOG&quot; class=&quot;ch.qos.logback.classic.net.SyslogAppender&quot;&gt;
+    &lt;syslogHost&gt;enter\_ip\_or\_hostname\_here&lt;/syslogHost&gt;
+    &lt;port&gt;514&lt;/port&gt;
+    &lt;facility&gt;USER&lt;/facility&gt;
+    &lt;filter class=&quot;ch.qos.logback.classic.filter.ThresholdFilter&quot;&gt;
+        &lt;level&gt;INFO&lt;/level&gt;
+    &lt;/filter&gt;
+    &lt;suffixPattern&gt;%-5level %logger{0}:%L \[%thread\] - %msg&lt;/suffixPattern&gt;
+&lt;/appender&gt;
+--&gt;
 
-<span class="nt">&lt;root</span> <span class="na">level=</span><span class="s">&quot;DEBUG&quot;</span><span class="nt">&gt;</span>
-<span class="nt">&lt;appender-ref</span> <span class="na">ref=</span><span class="s">&quot;STDOUT&quot;</span><span class="nt">/&gt;</span>
-<span class="nt">&lt;appender-ref</span> <span class="na">ref=</span><span class="s">&quot;FILE&quot;</span><span class="nt">/&gt;</span>
-<span class="c">&lt;!--&lt;appender-ref ref=&quot;SYSLOG&quot;/&gt;--&gt;</span>
+&lt;root level=&quot;DEBUG&quot;&gt;
+&lt;appender-ref ref=&quot;STDOUT&quot;/&gt;
+&lt;appender-ref ref=&quot;FILE&quot;/&gt;
+&lt;!--&lt;appender-ref ref=&quot;SYSLOG&quot;/&gt;--&gt;
 
-<span class="nt">&lt;/root&gt;</span>
-</pre></div>
+&lt;/root&gt;</code></pre>
 
 
 <p>Logback configuration manual: <a href="http://logback.qos.ch/manual/">http://logback.qos.ch/manual/</a></p>
@@ -460,13 +429,11 @@ can use following configuration:</p>
   currently working directory, i.e. where the application was started.
   (Current day's logfile path: <code>logs/pdf-validator-webapp.log</code>,
   prievious days pattern: </p>
-<div class="codehilite"><pre>    logs/pdf-validator-webapp.%d{yyyy-MM-dd}.log)
-</pre></div>
+<pre class="codehilite"><code>    logs/pdf-validator-webapp.%d{yyyy-MM-dd}.log)</code></pre>
 
 
 <ul>
-<li>Appender output pattern is:  <code>%d{HH:mm:ss.SSS} %-5level %logger{0}:%L \[%thread\] - %msg%n</code><div class="codehilite"><pre>-Dlogback.configurationFile=config.xml
-</pre></div>
+<li>Appender output pattern is:  <code>%d{HH:mm:ss.SSS} %-5level %logger{0}:%L \[%thread\] - %msg%n</code><pre class="codehilite"><code>-Dlogback.configurationFile=config.xml</code></pre>
 
 
 </li>
@@ -495,7 +462,7 @@ can use following configuration:</p>
   <nav class="pagination" aria-label="Footer">
     <div class="previous">
       
-        <a href="../deployment/" title="Deployment">
+        <a href="../use_cases/" title="Use cases">
           <span class="direction">
             Previous
           </span>
@@ -505,7 +472,7 @@ can use following configuration:</p>
             </div>
             <div class="stretch">
               <div class="title">
-                Deployment
+                Use cases
               </div>
             </div>
           </div>
@@ -514,14 +481,14 @@ can use following configuration:</p>
     </div>
     <div class="next">
       
-        <a href="../qa_strategy/" title="QA Strategy">
+        <a href="../qa_strategy/" title="Quality Assurance Strategy">
           <span class="direction">
             Next
           </span>
           <div class="page">
             <div class="stretch">
               <div class="title">
-                QA Strategy
+                Quality Assurance Strategy
               </div>
             </div>
             <div class="button button-next" role="button" aria-label="Next">

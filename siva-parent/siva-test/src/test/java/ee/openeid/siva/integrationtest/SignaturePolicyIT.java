@@ -368,7 +368,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File: hellopades-lt-b.pdf
      */
-    @Test
+    @Test @Ignore //TODO: VAL-331 changed constraint for polv1 to accept only BASELINE_LT & BASELINE_LTA signature formats
     public void pdfDocumentWithBaselineProfilesBAndLTSignaturesValidatedAgainstEUPolicyBothShouldPass() {
         QualifiedReport report = postForReport("hellopades-lt-b.pdf", VALID_SIGNATURE_POLICY_1);
         assertAllSignaturesAreValid(report);
@@ -387,7 +387,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File: hellopades-lt-b.pdf
      */
-    @Test
+    @Test @Ignore //TODO: VAL-331 changed constraint for polv1 to accept only BASELINE_LT & BASELINE_LTA signature formats
     public void testPdfDocumentSignaturePolicyCaseInsensitivity() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         QualifiedReport report = postForReport("hellopades-lt-b.pdf", SMALL_CASE_VALID_SIGNATURE_POLICY_1);

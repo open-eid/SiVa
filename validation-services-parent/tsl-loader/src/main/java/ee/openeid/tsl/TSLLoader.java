@@ -20,6 +20,7 @@ public class TSLLoader {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TSLLoader.class);
 
+    private TSLValidationJobFactory tslValidationJobFactory;
     private TSLValidationJob tslValidationJob;
     private TSLLoaderConfigurationProperties configurationProperties;
     private TrustedListsCertificateSource trustedListSource;
@@ -34,7 +35,7 @@ public class TSLLoader {
     }
 
     private void initTslValidatonJob() {
-        tslValidationJob = new TSLValidationJob();
+        tslValidationJob = tslValidationJobFactory.createValidationJob();
         tslValidationJob.setDataLoader(new CommonsDataLoader());
         TSLRepository tslRepository = new TSLRepository();
         tslRepository.setTrustedListsCertificateSource(trustedListSource);
@@ -55,8 +56,13 @@ public class TSLLoader {
         } else {
             LOGGER.info("Loading TSL over the network");
             tslValidationJob.refresh();
-            LOGGER.info("Finished loading TSL from cache");
+            LOGGER.info("Finished loading TSL over the network");
         }
+    }
+
+    @Autowired
+    public void setTslValidationJobFactory(TSLValidationJobFactory tslValidationJobFactory) {
+        this.tslValidationJobFactory = tslValidationJobFactory;
     }
 
     @Autowired

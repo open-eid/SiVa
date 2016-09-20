@@ -49,8 +49,7 @@ public class TSLLoaderConfiguration {
 
     @Bean
     public TrustedListsCertificateSource trustedListSource(KeyStoreCertificateSource keyStoreCertificateSource) {
-        TrustedListsCertificateSource trustedListsCertificateSource = new TrustedListsCertificateSource();
-        return trustedListsCertificateSource;
+        return new TrustedListsCertificateSource();
     }
 
     @Autowired

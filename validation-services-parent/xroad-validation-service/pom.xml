@@ -32,9 +32,21 @@
         </dependency>
 
         <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.6.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.6.7</version>
+        </dependency>
+
+        <dependency>
             <groupId>io.github.openeid.siva</groupId>
             <artifactId>xroad-asice-verifier</artifactId>
-            <version>1.0</version>
+            <version>1.0.3</version>
         </dependency>
 
         <dependency>
@@ -106,6 +118,11 @@
                                         <!-- Remove Bouncy Castle from fat JAR -->
                                         <delete dir="${project.build.directory}/tmp/org/bouncycastle" />
 
+                                        <!-- Remove servlet from fat JAR -->
+                                        <delete dir="${project.build.directory}/tmp/javax/servlet" />
+                                        <delete dir="${project.build.directory}/tmp/com/fasterxml/jackson/databind" />
+                                        <delete dir="${project.build.directory}/tmp/com/fasterxml/jackson/annotation" />
+
                                         <!-- Remove Apache XML security from fat JAR -->
                                         <delete dir="${project.build.directory}/tmp/org/apache/xml/security" />
 
@@ -129,7 +146,7 @@
                                 <configuration>
                                     <groupId>${project.groupId}</groupId>
                                     <artifactId>xroad-asice-verifier</artifactId>
-                                    <version>1.0</version>
+                                    <version>1.0.3</version>
                                     <localRepositoryPath>${basedir}/external-lib-repository</localRepositoryPath>
                                     <packaging>jar</packaging>
                                     <file>${xroad.jar.base}/${xroad.output.file}</file>

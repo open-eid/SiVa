@@ -137,8 +137,11 @@ docker run -it -p 8080:8080 mihkels/siva-webapp
 
 ## WAR and Tomcat setup for legacy systems
 
-> **NOTE**: We do not recommend using WAR deployment option because lack of testing done on different servlet 
+> **NOTE 1**: We do not recommend using WAR deployment option because lack of testing done on different servlet 
 > containers also possible container application libraries conflicts
+
+> **NOTE 2**: Each SiVa service **must** be deployed to separate instance of Tomcat to avoid Java JAR library version 
+> conflicts.
 
 First we need to download Tomcat web servlet container as of the writing latest version available in version 7 branch is 7.0.77. We will download it with `wget`
 
@@ -170,6 +173,17 @@ cp siva-parent/siva-webapp/target/siva-webapp-2.0.2-SNAPSHOT.war apache-tomcat-7
 > **IMPORTANT** siva-webapp on startup creates `etc` directory where it copies the TSL validaiton certificates 
 > `siva-keystore.jks`. Default location for this directory is application root or `$CATALINA_HOME`. To change 
 > this default behavior you should set environment variable `DSS_DATA_FOLDER`
+
+### How-to set WAR deployed SiVa `application.properties`
+
+SiVa override properties can be set using `application.properties` file. The file can locate anywhare in the host system. 
+To make properties file accessible for SiVa you need to create or edit `setenv.sh` placed inside `bin` directory. 
+
+Contents of the `setenv.sh` file should look like:
+
+```bash
+export CATALINA_OPTS="-Dspring.config.location=file:/path/to/application.properties"
+```
 
 ## How-to run tests
 

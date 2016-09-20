@@ -14,7 +14,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
     }
 
-    private static final String DEFAULT_TEST_FILES_DIRECTORY = "signature_policy_test_files/";
+    private static final String DEFAULT_TEST_FILES_DIRECTORY = "pdf/signing_certifacte_test_files/";
 
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
 
@@ -33,13 +33,12 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * Expected Result: Signatures are valid according to policy
      *
-     * File:
+     * File: soft-cert-signature.pdf
      */
-    @Test @Ignore //TODO: Need proper file
+    @Test
     public void pdfDocumentAdesNonSscdCompliantShouldPassWithGivenPolicy() {
-        setTestFilesDirectory("pdf/baseline_profile_test_files/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt1-lt2-parallel3.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "hellopades-lt-sha256-rsa1024.pdf", "pdf", VALID_SIGNATURE_POLICY_1))
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("soft-cert-signature.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "soft-cert-signature.pdf", "pdf", VALID_SIGNATURE_POLICY_1))
                 .then()
                 .body("policy.policyDescription", Matchers.is(POLICY_1_DESCRIPTION))
                 .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_1))
@@ -65,13 +64,12 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * Expected Result: Signatures are not valid according to policy
      *
-     * File:
+     * File: soft-cert-signature.pdf
      */
-    @Test @Ignore //TODO: Need proper file
+    @Test
     public void pdfDocumentAdesNonSscdCompliantShouldFailWithGivenPolicy() {
-        setTestFilesDirectory("pdf/baseline_profile_test_files/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt1-lt2-parallel3.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "hellopades-lt-sha256-rsa1024.pdf", "pdf", VALID_SIGNATURE_POLICY_2))
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("soft-cert-signature.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "soft-cert-signature.pdf", "pdf", VALID_SIGNATURE_POLICY_2))
                 .then()
                 .body("policy.policyDescription", Matchers.is(POLICY_2_DESCRIPTION))
                 .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_2))
@@ -79,8 +77,8 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("AdES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors.content", Matchers.hasSize(0))
+                .body("signatures[0].subIndication", Matchers.is("CHAIN_CONSTRAINTS_FAILURE"))
+                .body("signatures[0].errors[0].content", Matchers.containsString("The certificate is not qualified!"))
                 .body("signatures[0].warnings", Matchers.hasSize(0))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1));
@@ -97,13 +95,13 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * Expected Result: Signatures are valid according to policy ("weaker" policy is used)
      *
-     * File:
+     * File: pades_lt_two_valid_sig.pdf
      */
-    @Test @Ignore //TODO: Need proper file
+    @Test
     public void pdfDocumentQesSscdCompliantShouldPassWithAnyPolicy() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt1-lt2-parallel3.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "hellopades-lt-sha256-rsa1024.pdf", "pdf", VALID_SIGNATURE_POLICY_1))
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades_lt_two_valid_sig.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "pades_lt_two_valid_sig.pdf", "pdf", VALID_SIGNATURE_POLICY_1))
                 .then()
                 .body("policy.policyDescription", Matchers.is(POLICY_1_DESCRIPTION))
                 .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_1))
@@ -114,8 +112,8 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].errors.content", Matchers.hasSize(0))
                 .body("signatures[0].warnings", Matchers.hasSize(0))
-                .body("validSignaturesCount", Matchers.is(1))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validSignaturesCount", Matchers.is(2))
+                .body("signaturesCount", Matchers.is(2));
     }
 
     /**
@@ -129,13 +127,13 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * Expected Result: Signatures are valid according to policy
      *
-     * File:
+     * File: pades_lt_two_valid_sig.pdf
      */
-    @Test @Ignore //TODO: Need proper file
+    @Test
     public void pdfDocumentQesSscdCompliantShouldPassWithStrictPolicy() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt1-lt2-parallel3.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "hellopades-lt-sha256-rsa1024.pdf", "pdf", VALID_SIGNATURE_POLICY_2))
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades_lt_two_valid_sig.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "pades_lt_two_valid_sig.pdf", "pdf", VALID_SIGNATURE_POLICY_2))
                 .then()
                 .body("policy.policyDescription", Matchers.is(POLICY_2_DESCRIPTION))
                 .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_2))
@@ -146,8 +144,8 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].errors.content", Matchers.hasSize(0))
                 .body("signatures[0].warnings", Matchers.hasSize(0))
-                .body("validSignaturesCount", Matchers.is(1))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validSignaturesCount", Matchers.is(2))
+                .body("signaturesCount", Matchers.is(2));
     }
 
     /**

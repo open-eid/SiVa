@@ -25,6 +25,8 @@ public class StatisticsServiceTest {
 
     private static StatisticsService statisticsService;
 
+    private static final String LINE_SEPARATOR = System.lineSeparator();
+
     private static Logger loggerMock;
 
     @BeforeClass
@@ -53,17 +55,17 @@ public class StatisticsServiceTest {
         addSignatureValidationData(report, indication, subindication, countryCode);
 
         statisticsService.publishValidationStatistic(TimeUnit.MILLISECONDS.toNanos(validationDurationInMillis), report);
-        verify(loggerMock).info("{\n" +
-                "  \"stats\" : {\n" +
-                "    \"type\" : \"" + signatureForm + "\",\n" +
-                "    \"dur\" : "+ validationDurationInMillis + ",\n" +
-                "    \"sigCt\" : "+ totalSignatureCount + ",\n" +
-                "    \"vSigCt\" : "+ validSignaturesCount + ",\n" +
-                "    \"sigRslt\" : [ {\n" +
-                "      \"i\" : \"" + indication + "\",\n" +
-                "      \"cc\" : \"" + countryCode + "\"\n" +
-                "    } ]\n" +
-                "  }\n" +
+        verify(loggerMock).info("{" + LINE_SEPARATOR  +
+                "  \"stats\" : {" + LINE_SEPARATOR  +
+                "    \"type\" : \"" + signatureForm + "\"," + LINE_SEPARATOR  +
+                "    \"dur\" : "+ validationDurationInMillis + "," + LINE_SEPARATOR  +
+                "    \"sigCt\" : "+ totalSignatureCount + "," + LINE_SEPARATOR  +
+                "    \"vSigCt\" : "+ validSignaturesCount + "," + LINE_SEPARATOR  +
+                "    \"sigRslt\" : [ {" + LINE_SEPARATOR  +
+                "      \"i\" : \"" + indication + "\"," + LINE_SEPARATOR  +
+                "      \"cc\" : \"" + countryCode + "\"" + LINE_SEPARATOR  +
+                "    } ]" + LINE_SEPARATOR  +
+                "  }" + LINE_SEPARATOR  +
                 "}"
         );
     }
@@ -86,21 +88,21 @@ public class StatisticsServiceTest {
         addSignatureValidationData(report, secondSignatureIndication, secondSignatureSubindication, secondSignatureCountryCode);
 
         statisticsService.publishValidationStatistic(TimeUnit.MILLISECONDS.toNanos(validationDurationInMillis), report);
-        verify(loggerMock).info("{\n" +
-                "  \"stats\" : {\n" +
-                "    \"type\" : \"" + signatureForm + "\",\n" +
-                "    \"dur\" : "+ validationDurationInMillis + ",\n" +
-                "    \"sigCt\" : "+ totalSignatureCount + ",\n" +
-                "    \"vSigCt\" : "+ validSignaturesCount + ",\n" +
-                "    \"sigRslt\" : [ {\n" +
-                "      \"i\" : \"" + firstSignatureIndication + "\",\n" +
-                "      \"cc\" : \"" + firstSignatureCountryCode + "\"\n" +
-                "    }, {\n" +
-                "      \"i\" : \"" + secondSignatureIndication + "\",\n" +
-                "      \"si\" : \"" + secondSignatureSubindication + "\",\n" +
-                "      \"cc\" : \"" + secondSignatureCountryCode + "\"\n" +
-                "    } ]\n" +
-                "  }\n" +
+        verify(loggerMock).info("{" + LINE_SEPARATOR  +
+                "  \"stats\" : {" + LINE_SEPARATOR  +
+                "    \"type\" : \"" + signatureForm + "\"," + LINE_SEPARATOR  +
+                "    \"dur\" : "+ validationDurationInMillis + "," + LINE_SEPARATOR  +
+                "    \"sigCt\" : "+ totalSignatureCount + "," + LINE_SEPARATOR  +
+                "    \"vSigCt\" : "+ validSignaturesCount + "," + LINE_SEPARATOR  +
+                "    \"sigRslt\" : [ {" + LINE_SEPARATOR  +
+                "      \"i\" : \"" + firstSignatureIndication + "\"," + LINE_SEPARATOR  +
+                "      \"cc\" : \"" + firstSignatureCountryCode + "\"" + LINE_SEPARATOR  +
+                "    }, {" + LINE_SEPARATOR  +
+                "      \"i\" : \"" + secondSignatureIndication + "\"," + LINE_SEPARATOR  +
+                "      \"si\" : \"" + secondSignatureSubindication + "\"," + LINE_SEPARATOR  +
+                "      \"cc\" : \"" + secondSignatureCountryCode + "\"" + LINE_SEPARATOR  +
+                "    } ]" + LINE_SEPARATOR  +
+                "  }" + LINE_SEPARATOR  +
                 "}"
         );
     }

@@ -270,6 +270,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
      *
      * File: EE_SER-AEX-B-LT-V-28.asice
      */
+    @Ignore //TODO: VAL-331 changed constraint for polv1 to fail on SSCD, also see DSS-915 on why SSCD is not read from TSL
     @Test
     public void bdocKlass3Sk2010CertificateChainValidSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
@@ -320,6 +321,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
      *
      * File: BDOC-TS.bdoc
      */
+    @Ignore //TODO: VAL-331 changed constraint for polv1 to fail on SSCD, also see DSS-915 on why SSCD is not read from TSL
     @Test
     public void bdocTsValidMultipleSignatures() {
         setTestFilesDirectory("bdoc/live/timestamp/");

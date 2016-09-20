@@ -221,12 +221,13 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * Title: The bdoc is QES level and has SSCD/QSCD compliance
      *
-     * Expected Result: Signatures are valid according to policy ("weaker" policy is used)
+     * Expected Result: Signatures are valid according to policy ("non-strict" policy is used)
      *
      * File: Valid_ID_sig.bdoc
      */
     @Test
     public void bdocDocumentQesSscdCompliantShouldPassWithAnyPolicy() {
+        setTestFilesDirectory("bdoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_ID_sig.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "Valid_ID_sig.bdoc", "bdoc", VALID_SIGNATURE_POLICY_1))
                 .then()
@@ -258,6 +259,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      */
     @Test
     public void bdocDocumentQesSscdCompliantShouldPassWithStrictPolicy() {
+        setTestFilesDirectory("bdoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_ID_sig.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "Valid_ID_sig.bdoc", "bdoc", VALID_SIGNATURE_POLICY_2))
                 .then()
@@ -283,7 +285,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation more than 24 hours later than the signatures Time Stamp.
      *
-     * Expected Result: Document with over 24h delay should fail when signature policy is set to strict
+     * Expected Result: Document with over 24h delay should fail when signature policy is set to "strict"
      *
      * File: hellopades-lt-sha256-ocsp-28h.pdf
      */
@@ -302,13 +304,14 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation more than 24 hours later than the signatures Time Stamp.
      *
-     * Expected Result: Document with over 24h delay should pass when signature policy is set to "EU"
+     * Expected Result: Document with over 24h delay should pass when signature policy is set to "non-strict"
      *
      * File: hellopades-lt-sha256-ocsp-28h.pdf
      */
-    @Test
+    @Test //TODO: This needs to be checked with DSS freshness constraints. This test may be not valid.
     public void pdfDocumentWithOcspOver24hDelayWithEUPolicyShouldPassWithoutErrors() {
-        QualifiedReport report = postForReport("hellopades-lt-sha256-ocsp-28h.pdf", VALID_SIGNATURE_POLICY_2);
+        setTestFilesDirectory("pdf/signature_revocation_value_test_files/");
+        QualifiedReport report = postForReport("hellopades-lt-sha256-ocsp-28h.pdf", VALID_SIGNATURE_POLICY_1);
         assertAllSignaturesAreValid(report);
     }
 
@@ -325,13 +328,23 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File: hellopades-lt-sha256-ocsp-28h.pdf
      */
-    @Test @Ignore //TODO: With DigiDoc4J 1.0.4 update this error functionality is no longer implemented
+    @Test @Ignore //TODO: With DigiDoc4J 1.0.4 update this error functionality is no longer implemented. This test may be invalid.
     public void ifSignaturePolicyIsNotSetOrEmptyPdfDocumentShouldGetValidatedAgainstEEPolicy() {
-        QualifiedReport report = postForReport("hellopades-lt-sha256-ocsp-28h.pdf", null);
-        assertAllSignaturesAreInvalid(report);
-
-        report = postForReport("hellopades-lt-sha256-ocsp-28h.pdf", "");
-        assertAllSignaturesAreInvalid(report);
+        setTestFilesDirectory("pdf/signature_revocation_value_test_files/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-sha256-ocsp-28h.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "hellopades-lt-sha256-ocsp-28h.pdf", "pdf", VALID_SIGNATURE_POLICY_1))
+                .then()
+                .body("policy.policyDescription", Matchers.is(POLICY_2_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_2))
+                .body("policy.policyUrl", Matchers.is(POLICY_2_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors.content", Matchers.hasSize(0))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -343,12 +356,13 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * Title: The PDF has LT and B profile signatures
      *
-     * Expected Result: 1 of 2 signatures' should pass when signature policy is set to "EE"
+     * Expected Result: 1 of 2 signatures' should pass when signature policy is set to "strict"
      *
      * File: hellopades-lt-b.pdf
      */
     @Test
     public void pdfDocumentWithBaselineProfilesBAndLTSignaturesValidatedAgainstEEPolicyOnlyLTShouldPass() {
+        setTestFilesDirectory("pdf/baseline_profile_test_files/");
         QualifiedReport report = postForReport("hellopades-lt-b.pdf", VALID_SIGNATURE_POLICY_2);
         assertSomeSignaturesAreValid(report, 1);
     }
@@ -362,34 +376,15 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * Title: The PDF has LT and B profile signatures
      *
-     * Expected Result: 2 of 2 signatures' validation should pass when signature policy is set to "EU"
+     * Expected Result: 1 of 2 signatures' validation should pass when signature policy is set to "non-strict"
      *
      * File: hellopades-lt-b.pdf
      */
-    @Test @Ignore //TODO: VAL-331 changed constraint for polv1 to accept only BASELINE_LT & BASELINE_LTA signature formats
+    @Test
     public void pdfDocumentWithBaselineProfilesBAndLTSignaturesValidatedAgainstEUPolicyBothShouldPass() {
-        QualifiedReport report = postForReport("hellopades-lt-b.pdf", VALID_SIGNATURE_POLICY_1);
-        assertAllSignaturesAreValid(report);
-    }
-
-    /**
-     * TestCaseID: Signature-Policy-5
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1
-     *
-     * Title: The PDF has LT and B profile signatures
-     *
-     * Expected Result: 2 of 2 signatures' validation should pass when signature policy is set to "eU"
-     *
-     * File: hellopades-lt-b.pdf
-     */
-    @Test @Ignore //TODO: VAL-331 changed constraint for polv1 to accept only BASELINE_LT & BASELINE_LTA signature formats
-    public void testPdfDocumentSignaturePolicyCaseInsensitivity() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
-        QualifiedReport report = postForReport("hellopades-lt-b.pdf", SMALL_CASE_VALID_SIGNATURE_POLICY_1);
-        assertAllSignaturesAreValid(report);
+        QualifiedReport report = postForReport("hellopades-lt-b.pdf", VALID_SIGNATURE_POLICY_1);
+        assertSomeSignaturesAreValid(report, 1);
     }
 
     @Override

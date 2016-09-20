@@ -9,10 +9,24 @@ import org.junit.Test;
 import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.NO_TYPE_POLICY;
 import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.QES_POLICY;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class PDFSignaturePolicyTest extends PDFValidationServiceTest {
 
     private static final String PDF_WITH_ONE_VALID_SIGNATURE = "hellopades-pades-lt-sha256-sign.pdf";
+    private static final String PDF_WITH_SOFT_CERT_SIGNATURE = "soft-cert-signature.pdf";
+
+    @Test
+    public void softCertSignatureShouldBeValidWithNoTypePolicy() throws Exception {
+        QualifiedReport report = validateWithPolicy("POLv1", PDF_WITH_SOFT_CERT_SIGNATURE);
+        assertEquals(report.getSignaturesCount(), report.getValidSignaturesCount());
+    }
+
+    @Test
+    public void softCertSignatureShouldBeInvalidWithQESPolicy() throws Exception {
+        QualifiedReport report = validateWithPolicy("POLv2", PDF_WITH_SOFT_CERT_SIGNATURE);
+        assertTrue(report.getValidSignaturesCount() == 0);
+    }
 
     @Test
     public void validationReportShouldContainDefaultPolicyWhenPolicyIsNotExplicitlyGiven() throws Exception {
@@ -45,7 +59,11 @@ public class PDFSignaturePolicyTest extends PDFValidationServiceTest {
     }
 
     private QualifiedReport validateWithPolicy(String policyName) throws Exception {
-        ValidationDocument validationDocument = buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE);
+        return validateWithPolicy(policyName, PDF_WITH_ONE_VALID_SIGNATURE);
+    }
+
+    private QualifiedReport validateWithPolicy(String policyName, String document) throws Exception {
+        ValidationDocument validationDocument = buildValidationDocument(document);
         validationDocument.setSignaturePolicy(policyName);
         return validationService.validateDocument(validationDocument);
     }

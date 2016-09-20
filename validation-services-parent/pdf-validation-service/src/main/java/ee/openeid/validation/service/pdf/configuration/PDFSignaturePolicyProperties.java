@@ -22,8 +22,8 @@ import static ee.openeid.siva.validation.service.signature.policy.PredefinedVali
 @ConfigurationProperties(prefix = "siva.pdf.signaturePolicy")
 public class PDFSignaturePolicyProperties extends SignaturePolicyProperties<ConstraintDefinedPolicy> {
 
-    private static final String NO_TYPE_CONSTRAINT = "pdf_constraint2.xml";
-    private static final String QES_CONSTRAINT = "pdf_constraint.xml";
+    private static final String NO_TYPE_CONSTRAINT = "pdf_constraint_no_type.xml";
+    private static final String QES_CONSTRAINT = "pdf_constraint_qes.xml";
 
     private String defaultPolicy;
     private List<ConstraintDefinedPolicy> policies = new ArrayList<>();

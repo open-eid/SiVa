@@ -52,6 +52,12 @@ public class ValidationRequestToProxyDocumentTransformerTest {
     }
 
     @Test
+    public void xroadTypeIsCorrectlyTransformedToDocumentType() {
+        validationRequest.setType("xroad");
+        assertEquals(DocumentType.XROAD, transformer.transform(validationRequest).getDocumentType());
+    }
+
+    @Test
     public void contentIsCorrectlyTransformedToBytes() {
         ProxyDocument proxyDocument = transformer.transform(validationRequest);
         Assert.assertEquals(validationRequest.getDocument(), Base64.encodeBase64String(proxyDocument.getBytes()));
@@ -65,11 +71,18 @@ public class ValidationRequestToProxyDocumentTransformerTest {
         transformer.transform(validationRequest);
     }
 
+    @Test
+    public void signaturePolicyRemainsUnchanged() {
+        ProxyDocument proxyDocument = transformer.transform(validationRequest);
+        Assert.assertEquals(validationRequest.getSignaturePolicy(), proxyDocument.getSignaturePolicy());
+    }
+
     private void setValidPdfValidationRequest() throws Exception {
         Path filepath = Paths.get(getClass().getClassLoader().getResource(VALID_PDF_FILE).toURI());
         validationRequest = MockValidationRequestBuilder
                 .aValidationRequest()
                 .withType("pdf")
+                .withSignaturePolicy("POL")
                 .withDocument(filepath)
                 .build();
     }

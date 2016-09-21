@@ -27,6 +27,11 @@ public class MockValidationRequestBuilder {
         return this;
     }
 
+    public MockValidationRequestBuilder withSignaturePolicy(String policy) {
+        this.validationRequest.signaturePolicy = policy;
+        return this;
+    }
+
     public MockValidationRequestBuilder withType(String type) {
         this.validationRequest.type = type;
         return this;

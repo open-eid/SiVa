@@ -7,6 +7,7 @@ import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import ee.openeid.tsl.TSLLoader;
+import ee.openeid.tsl.TSLValidationJobFactory;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
 import ee.openeid.validation.service.bdoc.configuration.BDOCValidationServiceConfiguration;
 import ee.openeid.validation.service.bdoc.signature.policy.BDOCConfigurationService;
@@ -29,6 +30,7 @@ import static org.junit.Assert.*;
 @SpringBootTest(classes = {
     TSLLoaderConfiguration.class,
     TSLLoader.class,
+    TSLValidationJobFactory.class,
     BDOCValidationServiceConfiguration.class,
     BDOCValidationService.class,
     BDOCSignaturePolicyService.class,

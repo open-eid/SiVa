@@ -188,7 +188,7 @@ Jul 20 03:00:01 siva siva-webapp.jar[15965]: 20.07.2016 03:00:01.450 INFO  [pool
 `httpie` is more user friendly version of `curl` and we will use to verify that SiVa was installed
 and started correctly on our server.
 
-#### Ubuntu 16.04
+### Ubuntu 16.04
 
 On Ubuntu You can install it using `apt` package manager:
 
@@ -196,7 +196,7 @@ On Ubuntu You can install it using `apt` package manager:
 sudo apt-get install -y httpie
 ````
 
-#### Mac OS X
+### Mac OS X
 
 On Mac it's strongly recommended to install it using package manager like Homebrew by issuing
 belwo command:
@@ -210,7 +210,7 @@ brew install httpie
 On Windows there is no prebuilt package that can be installed but `httpie` installation instruction in
 [Scott Hanselmans blog post](http://www.hanselman.com/blog/InstallingHTTPIEHTTPForHumansOnWindowsGreatForASPNETWebAPIAndRESTfulJSONServices.aspx)
 
-#### Cross platform
+### Cross platform
 
 Alternative option if You have Python and its package manager `pip` installed. Then You can issue
 below command:
@@ -241,4 +241,48 @@ Output of this command should look like below screenshot. Look for `signatureCou
 
 ![HTTPIE output validation](../../img/siva/siva-output.png)
 
+### SiVa configuration overrides
 
+All override configuration properties
+
+```properties
+# BDOC validation service override properties
+siva.bdoc.digidoc4JConfigurationFile=/path/to/digidoc4j.yml
+siva.bdoc.signaturePolicy.defaultPolicy=policy_name
+siva.bdoc.signaturePolicy.policies.pol_v1=/path/to/policy1.xml
+siva.bdoc.signaturePolicy.policies.pol_v2=/path/to/policy2.xml
+
+# DDOC validation service override properties
+siva.ddoc.jdigidocConfigurationFile=/path/to/jdigidoc.cfg
+siva.ddoc.signaturePolicy.defaultPolicy=policy_name
+siva.ddoc.signaturePolicy.policies.pol_v1=/path/to/policy1.xml
+siva.ddoc.signaturePolicy.policies.pol_v2=/path/to/policy2.xml
+
+# PadES validation service override properties
+siva.pdf.signaturePolicy.defaultPolicy=policy_name
+siva.pdf.signaturePolicy.policies.pol_v1=/path/to/policy1.xml
+siva.pdf.signaturePolicy.policies.pol_v2=/path/to/policy2.xml
+
+# X-road validation service settings
+siva.xroad.validation.service.configurationDirectoryPath=''
+siva.xroad.signaturePolicy.defaultPolicy=policy_name
+siva.xroad.signaturePolicy.policies.pol_v1=/path/to/policy1.xml
+siva.xroad.signaturePolicy.policies.pol_v2=/path/to/policy2.xml
+
+# TSL trusted certificaes keystore settings
+siva.keystore.type=JKS
+siva.keystore.filename=/path/to/siva-keystore.jks
+siva.keystore.password=siva-keystore-password
+
+# SiVa Proxy Settings
+siva.proxy.xroadUrl=http://localhost:8081
+
+siva.statistics.google-analytics.url=http://www.google-analytics.com/batch
+siva.statistics.google-analytics.trackingId=UA-83206619-1
+siva.statistics.google-analytics.dataSourceName=SiVa
+
+siva.tsl.loader.loadFromCache=false
+siva.tsl.loader.url=https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml
+siva.tsl.loader.code=EU
+siva.tsl.loader.schedulerCron=0 0 3 * * ?
+```

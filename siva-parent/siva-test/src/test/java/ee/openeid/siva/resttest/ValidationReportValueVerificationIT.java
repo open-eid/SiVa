@@ -163,7 +163,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      * File: 23200_weakdigest-wrong-nonce.asice
      *
      */
-    @Ignore //TODO: VAL-331 changed constraint for polv1 to fail on SSCD, also see DSS-915 on why SSCD is not read from TSL
+    @Ignore //TODO: VAL-331 changed constraint for polv1 to fail on SSCD, also see DSS-915 on why SSCD is not read from TSL. New Adesqc file is needed.
     @Test
     public void bdocCorrectValuesArePresentInvalidLtSignatureAdesqc() {
         setTestFilesDirectory("bdoc/test/timemark/");

@@ -86,8 +86,7 @@ public class PdfValidationFailIT extends SiVaRestTests{
      */
     @Test @Ignore //TODO: VAL-331 changed constraint for polv1 to accept only BASELINE_LT & BASELINE_LTA signature formats
             // Since DSS 4.7.1.RC1 the given file is identified as PAdES_BASELINE_T
-            // When PAdES_BASELINE_T is not in constraint.xml's AcceptableFormats -> Error: The expected format is not found!
-            // EU signature policy is used.
+
     public void missingSignedAttributeForSigningCertificate() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("missing_signing_certificate_attribute.pdf"));
         post(validationRequestWithValidKeys(encodedString, "missing_signing_certificate_attribute.pdf", "pdf", VALID_SIGNATURE_POLICY_1))

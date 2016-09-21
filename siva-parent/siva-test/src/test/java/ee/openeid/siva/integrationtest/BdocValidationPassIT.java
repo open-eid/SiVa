@@ -270,14 +270,15 @@ public class BdocValidationPassIT extends SiVaRestTests{
      *
      * File: EE_SER-AEX-B-LT-V-28.asice
      */
-    @Ignore //TODO: VAL-331 changed constraint for polv1 to fail on SSCD, also see DSS-915 on why SSCD is not read from TSL
+    @Ignore //TODO: VAL-331 changed constraint for polv2 to fail on SSCD, also see DSS-915 on why SSCD is not read from TSL
     @Test
     public void bdocKlass3Sk2010CertificateChainValidSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
-        post(validationRequestFor("EE_SER-AEX-B-LT-V-28.asice"))
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("EE_SER-AEX-B-LT-V-28.asice"));
+        post(validationRequestWithValidKeys(encodedString, "EE_SER-AEX-B-LT-V-28.asice", "BDOC", VALID_SIGNATURE_POLICY_1))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("signatures[0].signatureLevel", Matchers.is("AdESqc"))
+                .body("signatures[0].signatureLevel", Matchers.is("QES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validSignaturesCount", Matchers.is(1));
@@ -319,13 +320,12 @@ public class BdocValidationPassIT extends SiVaRestTests{
      *
      * Expected Result: The document should pass the validation
      *
-     * File: BDOC-TS.bdoc
+     * File: Test_id_aa.asice
      */
-    @Ignore //TODO: VAL-331 changed constraint for polv1 to fail on SSCD, also see DSS-915 on why SSCD is not read from TSL
     @Test
     public void bdocTsValidMultipleSignatures() {
         setTestFilesDirectory("bdoc/live/timestamp/");
-        assertAllSignaturesAreValid(postForReport("BDOC-TS.bdoc"));
+        assertAllSignaturesAreValid(postForReport("Test_id_aa.asice"));
     }
 
     /**

@@ -240,11 +240,11 @@ public class BdocValidationFailIT extends SiVaRestTests{
      *
      * File:  TM-01_bdoc21-unknown-resp.bdoc
      */
-    @Ignore //TODO: VAL-331 changed constraint for polv1 to fail on SSCD, also see DSS-915 on why SSCD is not read from TSL
     @Test
     public void bdocNotTrustedOcspCert() {
         setTestFilesDirectory("bdoc/live/timemark/");
-        post(validationRequestFor("TM-01_bdoc21-unknown-resp.bdoc"))
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("TM-01_bdoc21-unknown-resp.bdoc"));
+        post(validationRequestWithValidKeys(encodedString, "TM-01_bdoc21-unknown-resp.bdoc", "bdoc", VALID_SIGNATURE_POLICY_1))
                 .then()
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
@@ -265,11 +265,11 @@ public class BdocValidationFailIT extends SiVaRestTests{
      *
      * File: TS-05_23634_TS_unknown_TSA.asice
      */
-    @Ignore //TODO: VAL-331 changed constraint for polv1 to fail on SSCD, also see DSS-915 on why SSCD is not read from TSL
-    @Test //TODO: Should the indication be INDERMINATE instead of TOTAL-FAILED?
+    @Test
     public void bdocNotTrustedTsaCert() {
         setTestFilesDirectory("bdoc/live/timestamp/");
-        post(validationRequestFor("TS-05_23634_TS_unknown_TSA.asice"))
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("TS-05_23634_TS_unknown_TSA.asice"));
+        post(validationRequestWithValidKeys(encodedString, "TS-05_23634_TS_unknown_TSA.asice", "bdoc", VALID_SIGNATURE_POLICY_1))
                 .then()
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
@@ -290,7 +290,7 @@ public class BdocValidationFailIT extends SiVaRestTests{
      *
      * File: EE_SER-AEX-B-LT-R-25.asice
      */
-    @Test //TODO: Should the indication be INDERMINATE instead of TOTAL-FAILED? Should subindication be REVOKED_NO_POE?
+    @Test
     public void bdocTsOcspStatusRevoked() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-R-25.asice"))
@@ -314,11 +314,11 @@ public class BdocValidationFailIT extends SiVaRestTests{
      *
      * File: EE_SER-AEX-B-LT-V-20.asice
      */
-    @Ignore //TODO: VAL-331 changed constraint for polv1 to fail on SSCD, also see DSS-915 on why SSCD is not read from TSL
     @Test
     public void bdocOcspAndTsDifferenceOver24H() {
         setTestFilesDirectory("bdoc/live/timestamp/");
-        post(validationRequestFor("EE_SER-AEX-B-LT-V-20.asice"))
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("EE_SER-AEX-B-LT-V-20.asice"));
+        post(validationRequestWithValidKeys(encodedString, "EE_SER-AEX-B-LT-V-20.asice", "bdoc", VALID_SIGNATURE_POLICY_1))
                 .then()
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
@@ -411,7 +411,6 @@ public class BdocValidationFailIT extends SiVaRestTests{
      *
      * File: signWithIdCard_d4j_1.0.4_BES.asice
      */
-    @Ignore //TODO: VAL-331 changed constraint to accept only BASELINE_LT, BASELINE_LT_TM & BASELINE_LTA signature formats
     @Test
     public void bdocBaselineBesSignatureLevel() {
         setTestFilesDirectory("bdoc/live/timestamp/");
@@ -419,8 +418,8 @@ public class BdocValidationFailIT extends SiVaRestTests{
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is("TRY_LATER"))
-                .body("signatures[0].errors.content", Matchers.hasItems("No revocation data for the certificate"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors.content", Matchers.hasItems("The expected format is not found!"))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -438,16 +437,15 @@ public class BdocValidationFailIT extends SiVaRestTests{
      *
      * File: TM-04_kehtivuskinnituset.4.asice
      */
-    @Ignore //TODO: VAL-331 changed constraint to accept only BASELINE_LT, BASELINE_LT_TM & BASELINE_LTA signature formats
-    @Test //TODO: Should the indication be INDERMINATE instead of TOTAL-FAILED?
+    @Test
     public void bdocBaselineEpesSignatureLevel() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("TM-04_kehtivuskinnituset.4.asice"))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_EPES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is("TRY_LATER"))
-                .body("signatures[0].errors.content", Matchers.hasItems("No revocation data for the certificate"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors.content", Matchers.hasItems("The expected format is not found!"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -464,7 +462,7 @@ public class BdocValidationFailIT extends SiVaRestTests{
      *
      * File: SS-4_teadmataCA.4.asice
      */
-    @Test //TODO: Should the indication be INDERMINATE instead of TOTAL-FAILED?
+    @Test
     public void bdocSignersCertNotTrusted() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("SS-4_teadmataCA.4.asice"))
@@ -488,7 +486,7 @@ public class BdocValidationFailIT extends SiVaRestTests{
      *
      * File: TM-15_revoked.4.asice
      */
-    @Test //TODO: Should the indication be INDERMINATE instead of TOTAL-FAILED? Should the subIndication be REVOKED_NO_POE instead?
+    @Test
     public void bdocTmOcspStatusRevoked() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("TM-15_revoked.4.asice"))
@@ -536,7 +534,7 @@ public class BdocValidationFailIT extends SiVaRestTests{
      *
      * File: TM-16_unknown.4.asice
      */
-    @Test //TODO: Should the indication be INDERMINATE instead of TOTAL-FAILED?
+    @Test
     public void bdocSignedFileRemoved() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("KS-21_fileeemaldatud.4.asice"))
@@ -584,11 +582,11 @@ public class BdocValidationFailIT extends SiVaRestTests{
      *
      * File: TM-10_noncevale.4.asice
      */
-    @Ignore //TODO: VAL-331 changed constraint for polv1 to fail on SSCD, also see DSS-915 on why SSCD is not read from TSL
     @Test
     public void bdocWrongOcspNonce() {
         setTestFilesDirectory("bdoc/live/timemark/");
-        post(validationRequestFor("TM-10_noncevale.4.asice"))
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("TM-10_noncevale.4.asice"));
+        post(validationRequestWithValidKeys(encodedString, "TM-10_noncevale.4.asice", "bdoc", VALID_SIGNATURE_POLICY_1))
                 .then()
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
@@ -633,13 +631,13 @@ public class BdocValidationFailIT extends SiVaRestTests{
      *
      * File: TS-06_23634_TS_missing_OCSP.asice
      */
-    @Ignore //TODO: VAL-331 changed constraint for polv1 to fail on SSCD, also see DSS-915 on why SSCD is not read from TSL
     @Test
     public void bdocBaselineTSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
-        post(validationRequestFor("TS-06_23634_TS_missing_OCSP.asice"))
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("TS-06_23634_TS_missing_OCSP.asice"));
+        post(validationRequestWithValidKeys(encodedString, "TS-06_23634_TS_missing_OCSP.asice", "bdoc", VALID_SIGNATURE_POLICY_1))
                 .then()
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT")) //TODO: Shouldnt it return XAdES_BASELINE_T instead?
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is("TRY_LATER"))
                 .body("signatures[0].errors.content", Matchers.hasItem("No revocation data for the certificate"))
@@ -659,7 +657,7 @@ public class BdocValidationFailIT extends SiVaRestTests{
      *
      * File: NS28_WrongSignerCertInOCSPResp.bdoc
      */
-    @Ignore //TODO: VAL-331 changed constraint to accept only BASELINE_LT, BASELINE_LT_TM & BASELINE_LTA signature formats
+    @Ignore //TODO: VAL-331 changed constraint to accept only BASELINE_LT, BASELINE_LT_TM & BASELINE_LTA signature formats. New file is needed!
     @Test
     public void bdocWrongSignersCertInOcspResponse() {
         setTestFilesDirectory("bdoc/live/timemark/");
@@ -684,11 +682,11 @@ public class BdocValidationFailIT extends SiVaRestTests{
      *
      * File: 23154_test1-old-sig-sigat-OK-prodat-NOK-1.bdoc
      */
-    @Ignore //TODO: VAL-331 changed constraint for polv1 to fail on SSCD, also see DSS-915 on why SSCD is not read from TSL
     @Test
     public void bdocCertificateValidityOutOfOcspRange() {
         setTestFilesDirectory("bdoc/live/timemark/");
-        post(validationRequestFor("23154_test1-old-sig-sigat-OK-prodat-NOK-1.bdoc"))
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("23154_test1-old-sig-sigat-OK-prodat-NOK-1.bdoc"));
+        post(validationRequestWithValidKeys(encodedString, "23154_test1-old-sig-sigat-OK-prodat-NOK-1.bdoc", "bdoc", VALID_SIGNATURE_POLICY_1))
                 .then()
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is("")) //TODO: VAL-242 Subindication should not be empty.

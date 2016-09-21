@@ -102,7 +102,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
      *
      */
-    @Ignore //TODO: VAL-331 changed constraint for polv1 and added QC qualifiers to test CA-s
+    @Ignore //TODO: VAL-331 changed constraint for polv1 and added QC qualifiers to test CA-s. New AdES file is needed.
     @Test
     public void SoapBdocCorrectValuesArePresentValidLtSignatureAdes() {
         setTestFilesDirectory("bdoc/test/timemark/");
@@ -114,7 +114,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         assertEquals("SignatureLevel should match expected", "AdES", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureLevel());
         assertEquals("SignatureScopes should match expected", "FullSignatureScope", getQualifiedReportFromDom(report).getSignatures().get(0).getSignatureScopes().get(0).getScope());
         assertTrue("Errors should be empty", getQualifiedReportFromDom(report).getSignatures().get(0).getErrors().isEmpty());
-        assertEquals("Warnings should match expected", "The certificate is not supported by SSCD!", getQualifiedReportFromDom(report).getSignatures().get(0).getWarnings().get(0).getDescription());
+//        assertEquals("Warnings should match expected", "The certificate is not supported by SSCD!", getQualifiedReportFromDom(report).getSignatures().get(0).getWarnings().get(0).getDescription());
         assertEquals("SignatureForm should match expected", "ASiC_E", getQualifiedReportFromDom(report).getSignatureForm());
     }
 
@@ -133,7 +133,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      * File: 23200_weakdigest-wrong-nonce.asice
      *
      */
-    @Test @Ignore //TODO: VAL-242 Subindication is empty although in case of failure it is expected to have value
+    @Test @Ignore //TODO: VAL-242 Subindication is empty although in case of failure it is expected to have value. New Adesqc file may be needed
     public void SoapBdocCorrectValuesArePresentValidLtSignatureAdesqc() {
         setTestFilesDirectory("bdoc/test/timemark/");
         Document report = extractReportDom(post(validationRequestForDocument("23200_weakdigest-wrong-nonce.asice")).andReturn().body().asString());

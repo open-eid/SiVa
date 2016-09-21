@@ -23,8 +23,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     
-    <link rel="shortcut icon" type="image/x-icon" href="../../../None">
-    <link rel="icon" type="image/x-icon" href="../../../None">
+    <link rel="shortcut icon" type="image/x-icon" href="../../../assets/images/favicon-e565ddfa3b.ico">
+    <link rel="icon" type="image/x-icon" href="../../../assets/images/favicon-e565ddfa3b.ico">
     <style>
       @font-face {
       	font-family: 'Icon';
@@ -41,7 +41,7 @@
       	font-style: normal;
       }
     </style>
-    <link rel="stylesheet" href="../../../assets/stylesheets/application-0dac3e5884.css">
+    <link rel="stylesheet" href="../../../assets/stylesheets/application-a422ff04cc.css">
     
       <link rel="stylesheet" href="../../../assets/stylesheets/palettes-05ab2406df.css">
     
@@ -49,7 +49,7 @@
       
       
       
-      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
       <style>
         body, input {
           font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
@@ -200,8 +200,8 @@
           
             
   <li>
-    <a class="" title="Component diagram" href="../../component_diagram/">
-      Component diagram
+    <a class="" title="Structure and activities" href="../structure_and_activities/">
+      Structure and activities
     </a>
     
   </li>
@@ -239,24 +239,6 @@
   <li>
     <a class="" title="Deployment" href="../deployment/">
       Deployment
-    </a>
-    
-  </li>
-
-          
-            
-  <li>
-    <a class="" title="Use cases" href="../../use_cases/">
-      Use cases
-    </a>
-    
-  </li>
-
-          
-            
-  <li>
-    <a class="" title="Logging" href="../../logging/">
-      Logging
     </a>
     
   </li>
@@ -366,11 +348,13 @@
 <p>In the following subsections, the SiVa validation request and response interfaces are described in detail.</p>
 <h2 id="validation-request-interface">Validation request interface</h2>
 <p><strong> REST JSON Endpoint </strong></p>
-<pre class="codehilite"><code>POST https://&lt;server url&gt;/validate</code></pre>
+<div class="codehilite"><pre>POST https://&lt;server url&gt;/validate
+</pre></div>
 
 
 <p><strong> SOAP Endpoint </strong></p>
-<pre class="codehilite"><code>POST https://&lt;server url&gt;/soap/validationWebService/validateDocument</code></pre>
+<div class="codehilite"><pre>POST https://&lt;server url&gt;/soap/validationWebService/validateDocument
+</pre></div>
 
 
 <h3 id="validation-request-parameters">Validation request parameters</h3>
@@ -412,28 +396,30 @@
 </tbody>
 </table>
 <h3 id="sample-json-request">Sample JSON request</h3>
-<pre class="codehilite"><code class="language-json">{
-  &quot;filename&quot;:&quot;sample.ddoc&quot;,
-  &quot;documentType&quot;:&quot;DDOC&quot;,
-  &quot;document&quot;:&quot;PD94bWwgdmVyc2lvbj0iMS4....&quot;,
-  &quot;signaturePolicy&quot;: &quot;POLv1&quot;
-}</code></pre>
+<div class="codehilite"><pre><span class="p">{</span>
+  <span class="nt">&quot;filename&quot;</span><span class="p">:</span><span class="s2">&quot;sample.ddoc&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;documentType&quot;</span><span class="p">:</span><span class="s2">&quot;DDOC&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;document&quot;</span><span class="p">:</span><span class="s2">&quot;PD94bWwgdmVyc2lvbj0iMS4....&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;signaturePolicy&quot;</span><span class="p">:</span> <span class="s2">&quot;POLv1&quot;</span>
+<span class="p">}</span>
+</pre></div>
 
 
 <h3 id="sample-soap-request">Sample SOAP request</h3>
-<pre class="codehilite"><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;soap:Envelope xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
-  &lt;soap:Body&gt;
-    &lt;ns2:ValidateDocument xmlns:ns2=&quot;http://soap.webapp.siva.openeid.ee/&quot;&gt;
-      &lt;ns2:ValidationRequest&gt;
-        &lt;Document&gt;PD94bWwgdmVyc2lvbj0iMS4....&lt;/Document&gt;
-        &lt;Filename&gt;sample.ddoc&lt;/Filename&gt;
-        &lt;DocumentType&gt;DDOC&lt;/DocumentType&gt;
-        &lt;SignaturePolicy&gt;POLv1&lt;/SignaturePolicy&gt;
-      &lt;/ns2:ValidationRequest&gt;
-    &lt;/ns2:ValidateDocument&gt;
-  &lt;/soap:Body&gt;
-&lt;/soap:Envelope&gt;</code></pre>
+<div class="codehilite"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;soap:Envelope</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;soap:Body&gt;</span>
+    <span class="nt">&lt;ns2:ValidateDocument</span> <span class="na">xmlns:ns2=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;ns2:ValidationRequest&gt;</span>
+        <span class="nt">&lt;Document&gt;</span>PD94bWwgdmVyc2lvbj0iMS4....<span class="nt">&lt;/Document&gt;</span>
+        <span class="nt">&lt;Filename&gt;</span>sample.ddoc<span class="nt">&lt;/Filename&gt;</span>
+        <span class="nt">&lt;DocumentType&gt;</span>DDOC<span class="nt">&lt;/DocumentType&gt;</span>
+        <span class="nt">&lt;SignaturePolicy&gt;</span>POLv1<span class="nt">&lt;/SignaturePolicy&gt;</span>
+      <span class="nt">&lt;/ns2:ValidationRequest&gt;</span>
+    <span class="nt">&lt;/ns2:ValidateDocument&gt;</span>
+  <span class="nt">&lt;/soap:Body&gt;</span>
+<span class="nt">&lt;/soap:Envelope&gt;</span>
+</pre></div>
 
 
 <h2 id="validation-response-interface">Validation response interface</h2>
@@ -591,98 +577,102 @@
 </tbody>
 </table>
 <h3 id="sample-json-response-successful-scenario">Sample JSON response (successful scenario)</h3>
-<pre class="codehilite"><code class="language-json">{
-    &quot;policy&quot;: {
-        &quot;policyName&quot;: &quot;POLv2&quot;,
-        &quot;policyDescription&quot;: &quot;Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result.&quot;,
-        &quot;policyUrl&quot;: &quot;http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv2&quot;
-    },
-    &quot;signaturesCount&quot;: 1,
-    &quot;validSignaturesCount&quot;: 1,
-    &quot;validationTime&quot;: &quot;2016-07-28T14:41:45Z&quot;,
-    &quot;documentName&quot;: &quot;sample.bdoc&quot;,
-    &quot;signatures&quot;: [
-        {
-            &quot;claimedSigningTime&quot;: &quot;2016-05-11T10:17:57Z&quot;,
-            &quot;errors&quot;: [],
-            &quot;id&quot;: &quot;S0&quot;,
-            &quot;indication&quot;: &quot;TOTAL-PASSED&quot;,
-            &quot;info&quot;: {
-                &quot;bestSignatureTime&quot;: &quot;2016-05-11T10:18:06Z&quot;
-            },
-            &quot;signatureFormat&quot;: &quot;XAdES_BASELINE_LT_TM&quot;,
-            &quot;signatureLevel&quot;: &quot;QES&quot;,
-            &quot;signatureScopes&quot;: [],
-            &quot;signedBy&quot;: &quot;NURM,AARE,38211015222&quot;,
-            &quot;subIndication&quot;: &quot;&quot;,
-            &quot;warnings&quot;: []
-        }
-    ]
-}</code></pre>
+<div class="codehilite"><pre><span class="p">{</span>
+    <span class="nt">&quot;policy&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;policyName&quot;</span><span class="p">:</span> <span class="s2">&quot;POLv2&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;policyDescription&quot;</span><span class="p">:</span> <span class="s2">&quot;Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result.&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;policyUrl&quot;</span><span class="p">:</span> <span class="s2">&quot;http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv2&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;signaturesCount&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nt">&quot;validSignaturesCount&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nt">&quot;validationTime&quot;</span><span class="p">:</span> <span class="s2">&quot;2016-07-28T14:41:45Z&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;documentName&quot;</span><span class="p">:</span> <span class="s2">&quot;sample.bdoc&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;signatures&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;claimedSigningTime&quot;</span><span class="p">:</span> <span class="s2">&quot;2016-05-11T10:17:57Z&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;errors&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;S0&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;indication&quot;</span><span class="p">:</span> <span class="s2">&quot;TOTAL-PASSED&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;info&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;bestSignatureTime&quot;</span><span class="p">:</span> <span class="s2">&quot;2016-05-11T10:18:06Z&quot;</span>
+            <span class="p">},</span>
+            <span class="nt">&quot;signatureFormat&quot;</span><span class="p">:</span> <span class="s2">&quot;XAdES_BASELINE_LT_TM&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;signatureLevel&quot;</span><span class="p">:</span> <span class="s2">&quot;QES&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;signatureScopes&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="nt">&quot;signedBy&quot;</span><span class="p">:</span> <span class="s2">&quot;NURM,AARE,38211015222&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;subIndication&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;warnings&quot;</span><span class="p">:</span> <span class="p">[]</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
 
 
 <h3 id="sample-soap-response-successful-scenario">Sample SOAP response (successful scenario)</h3>
-<pre class="codehilite"><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;soap:Envelope xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
-  &lt;soap:Body&gt;
-    &lt;ns2:ValidateDocumentResponse xmlns:ns2=&quot;http://soap.webapp.siva.openeid.ee/&quot;&gt;
-      &lt;ns2:ValidationReport&gt;
-        &lt;Policy&gt;
-          &lt;PolicyDescription&gt;Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.&lt;/PolicyDescription&gt;
-          &lt;PolicyName&gt;POLv1&lt;/PolicyName&gt;
-          &lt;PolicyUrl&gt;http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv1&lt;/PolicyUrl&gt;
-        &lt;/Policy&gt;
-        &lt;ValidationTime&gt;2016-08-31T16:26:20Z&lt;/ValidationTime&gt;
-        &lt;DocumentName&gt;default.bdoc&lt;/DocumentName&gt;
-        &lt;SignatureForm&gt;ASiC_E&lt;/SignatureForm&gt;
-        &lt;Signatures&gt;
-          &lt;Signature&gt;
-            &lt;Id&gt;S0&lt;/Id&gt;
-            &lt;SignatureFormat&gt;XAdES_BASELINE_LT_TM&lt;/SignatureFormat&gt;
-            &lt;SignatureLevel&gt;QES&lt;/SignatureLevel&gt;
-            &lt;SignedBy&gt;NURM,AARE,38211015222&lt;/SignedBy&gt;
-            &lt;Indication&gt;TOTAL_PASSED&lt;/Indication&gt;
-            &lt;SubIndication/&gt;
-            &lt;Errors/&gt;
-            &lt;SignatureScopes&gt;
-              &lt;SignatureScope&gt;
-                &lt;Name&gt;lama.jpg&lt;/Name&gt;
-                &lt;Scope&gt;FullSignatureScope&lt;/Scope&gt;
-                &lt;Content&gt;Full document&lt;/Content&gt;
-              &lt;/SignatureScope&gt;
-            &lt;/SignatureScopes&gt;
-            &lt;ClaimedSigningTime&gt;2013-11-25T13:16:42Z&lt;/ClaimedSigningTime&gt;
-            &lt;Warnings/&gt;
-            &lt;Info&gt;
-              &lt;bestSignatureTime&gt;2013-11-25T13:16:59Z&lt;/bestSignatureTime&gt;
-            &lt;/Info&gt;
-          &lt;/Signature&gt;
-        &lt;/Signatures&gt;
-        &lt;ValidSignaturesCount&gt;1&lt;/ValidSignaturesCount&gt;
-        &lt;SignaturesCount&gt;1&lt;/SignaturesCount&gt;
-      &lt;/ns2:ValidationReport&gt;
-    &lt;/ns2:ValidateDocumentResponse&gt;
-  &lt;/soap:Body&gt;
-&lt;/soap:Envelope&gt;</code></pre>
+<div class="codehilite"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;soap:Envelope</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;soap:Body&gt;</span>
+    <span class="nt">&lt;ns2:ValidateDocumentResponse</span> <span class="na">xmlns:ns2=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;ns2:ValidationReport&gt;</span>
+        <span class="nt">&lt;Policy&gt;</span>
+          <span class="nt">&lt;PolicyDescription&gt;</span>Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.<span class="nt">&lt;/PolicyDescription&gt;</span>
+          <span class="nt">&lt;PolicyName&gt;</span>POLv1<span class="nt">&lt;/PolicyName&gt;</span>
+          <span class="nt">&lt;PolicyUrl&gt;</span>http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv1<span class="nt">&lt;/PolicyUrl&gt;</span>
+        <span class="nt">&lt;/Policy&gt;</span>
+        <span class="nt">&lt;ValidationTime&gt;</span>2016-08-31T16:26:20Z<span class="nt">&lt;/ValidationTime&gt;</span>
+        <span class="nt">&lt;DocumentName&gt;</span>default.bdoc<span class="nt">&lt;/DocumentName&gt;</span>
+        <span class="nt">&lt;SignatureForm&gt;</span>ASiC_E<span class="nt">&lt;/SignatureForm&gt;</span>
+        <span class="nt">&lt;Signatures&gt;</span>
+          <span class="nt">&lt;Signature&gt;</span>
+            <span class="nt">&lt;Id&gt;</span>S0<span class="nt">&lt;/Id&gt;</span>
+            <span class="nt">&lt;SignatureFormat&gt;</span>XAdES_BASELINE_LT_TM<span class="nt">&lt;/SignatureFormat&gt;</span>
+            <span class="nt">&lt;SignatureLevel&gt;</span>QES<span class="nt">&lt;/SignatureLevel&gt;</span>
+            <span class="nt">&lt;SignedBy&gt;</span>NURM,AARE,38211015222<span class="nt">&lt;/SignedBy&gt;</span>
+            <span class="nt">&lt;Indication&gt;</span>TOTAL_PASSED<span class="nt">&lt;/Indication&gt;</span>
+            <span class="nt">&lt;SubIndication/&gt;</span>
+            <span class="nt">&lt;Errors/&gt;</span>
+            <span class="nt">&lt;SignatureScopes&gt;</span>
+              <span class="nt">&lt;SignatureScope&gt;</span>
+                <span class="nt">&lt;Name&gt;</span>lama.jpg<span class="nt">&lt;/Name&gt;</span>
+                <span class="nt">&lt;Scope&gt;</span>FullSignatureScope<span class="nt">&lt;/Scope&gt;</span>
+                <span class="nt">&lt;Content&gt;</span>Full document<span class="nt">&lt;/Content&gt;</span>
+              <span class="nt">&lt;/SignatureScope&gt;</span>
+            <span class="nt">&lt;/SignatureScopes&gt;</span>
+            <span class="nt">&lt;ClaimedSigningTime&gt;</span>2013-11-25T13:16:42Z<span class="nt">&lt;/ClaimedSigningTime&gt;</span>
+            <span class="nt">&lt;Warnings/&gt;</span>
+            <span class="nt">&lt;Info&gt;</span>
+              <span class="nt">&lt;bestSignatureTime&gt;</span>2013-11-25T13:16:59Z<span class="nt">&lt;/bestSignatureTime&gt;</span>
+            <span class="nt">&lt;/Info&gt;</span>
+          <span class="nt">&lt;/Signature&gt;</span>
+        <span class="nt">&lt;/Signatures&gt;</span>
+        <span class="nt">&lt;ValidSignaturesCount&gt;</span>1<span class="nt">&lt;/ValidSignaturesCount&gt;</span>
+        <span class="nt">&lt;SignaturesCount&gt;</span>1<span class="nt">&lt;/SignaturesCount&gt;</span>
+      <span class="nt">&lt;/ns2:ValidationReport&gt;</span>
+    <span class="nt">&lt;/ns2:ValidateDocumentResponse&gt;</span>
+  <span class="nt">&lt;/soap:Body&gt;</span>
+<span class="nt">&lt;/soap:Envelope&gt;</span>
+</pre></div>
 
 
 <h3 id="sample-json-response-error-situation">Sample JSON response (error situation)</h3>
-<pre class="codehilite"><code class="language-json">{&quot;requestErrors&quot;: [{
-    &quot;message&quot;: &quot;Document malformed or not matching documentType&quot;,
-    &quot;key&quot;: &quot;document&quot;
-}]}</code></pre>
+<div class="codehilite"><pre><span class="p">{</span><span class="nt">&quot;requestErrors&quot;</span><span class="p">:</span> <span class="p">[{</span>
+    <span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Document malformed or not matching documentType&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;document&quot;</span>
+<span class="p">}]}</span>
+</pre></div>
 
 
 <h3 id="sample-soap-response-error-situation">Sample SOAP response (error situation)</h3>
-<pre class="codehilite"><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;soap:Envelope xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
-  &lt;soap:Body&gt;
-    &lt;soap:Fault&gt;
-      &lt;faultcode&gt;soap:Server&lt;/faultcode&gt;
-      &lt;faultstring&gt;Document malformed or not matching documentType&lt;/faultstring&gt;
-    &lt;/soap:Fault&gt;
-  &lt;/soap:Body&gt;
-&lt;/soap:Envelope&gt;</code></pre>
+<div class="codehilite"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;soap:Envelope</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;soap:Body&gt;</span>
+    <span class="nt">&lt;soap:Fault&gt;</span>
+      <span class="nt">&lt;faultcode&gt;</span>soap:Server<span class="nt">&lt;/faultcode&gt;</span>
+      <span class="nt">&lt;faultstring&gt;</span>Document malformed or not matching documentType<span class="nt">&lt;/faultstring&gt;</span>
+    <span class="nt">&lt;/soap:Fault&gt;</span>
+  <span class="nt">&lt;/soap:Body&gt;</span>
+<span class="nt">&lt;/soap:Envelope&gt;</span>
+</pre></div>
           <aside class="copyright" role="note">
             
             Documentation built with
@@ -699,7 +689,7 @@
   <nav class="pagination" aria-label="Footer">
     <div class="previous">
       
-        <a href="../../component_diagram/" title="Component diagram">
+        <a href="../structure_and_activities/" title="Structure and activities">
           <span class="direction">
             Previous
           </span>
@@ -709,7 +699,7 @@
             </div>
             <div class="stretch">
               <div class="title">
-                Component diagram
+                Structure and activities
               </div>
             </div>
           </div>

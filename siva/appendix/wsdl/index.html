@@ -23,8 +23,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     
-    <link rel="shortcut icon" type="image/x-icon" href="../../../None">
-    <link rel="icon" type="image/x-icon" href="../../../None">
+    <link rel="shortcut icon" type="image/x-icon" href="../../../assets/images/favicon-e565ddfa3b.ico">
+    <link rel="icon" type="image/x-icon" href="../../../assets/images/favicon-e565ddfa3b.ico">
     <style>
       @font-face {
       	font-family: 'Icon';
@@ -41,7 +41,7 @@
       	font-style: normal;
       }
     </style>
-    <link rel="stylesheet" href="../../../assets/stylesheets/application-0dac3e5884.css">
+    <link rel="stylesheet" href="../../../assets/stylesheets/application-a422ff04cc.css">
     
       <link rel="stylesheet" href="../../../assets/stylesheets/palettes-05ab2406df.css">
     
@@ -49,7 +49,7 @@
       
       
       
-      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
       <style>
         body, input {
           font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
@@ -204,8 +204,8 @@
           
             
   <li>
-    <a class="" title="Component diagram" href="../../component_diagram/">
-      Component diagram
+    <a class="" title="Structure and activities" href="../../v2/structure_and_activities/">
+      Structure and activities
     </a>
     
   </li>
@@ -224,24 +224,6 @@
   <li>
     <a class="" title="Deployment" href="../../v2/deployment/">
       Deployment
-    </a>
-    
-  </li>
-
-          
-            
-  <li>
-    <a class="" title="Use cases" href="../../use_cases/">
-      Use cases
-    </a>
-    
-  </li>
-
-          
-            
-  <li>
-    <a class="" title="Logging" href="../../logging/">
-      Logging
     </a>
     
   </li>
@@ -346,183 +328,184 @@
           <!--# WSDL of SOAP interface-->
 
 <p>See also <a href="../../interface_description">Interfaces</a> for more information about the SOAP interface. </p>
-<pre class="codehilite"><code class="language-xml">&lt;?xml version='1.0' encoding='UTF-8'?&gt;&lt;wsdl:definitions xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; 
-xmlns:wsdl=&quot;http://schemas.xmlsoap.org/wsdl/&quot; xmlns:tns=&quot;http://soap.webapp.siva.openeid.ee/&quot; 
-xmlns:soap=&quot;http://schemas.xmlsoap.org/wsdl/soap/&quot; xmlns:ns1=&quot;http://schemas.xmlsoap.org/soap/http&quot; 
-name=&quot;SignatureValidationService&quot; targetNamespace=&quot;http://soap.webapp.siva.openeid.ee/&quot;&gt;
+<div class="codehilite"><pre><span class="cp">&lt;?xml version=&#39;1.0&#39; encoding=&#39;UTF-8&#39;?&gt;</span><span class="nt">&lt;wsdl:definitions</span> <span class="na">xmlns:xsd=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> 
+<span class="na">xmlns:wsdl=</span><span class="s">&quot;http://schemas.xmlsoap.org/wsdl/&quot;</span> <span class="na">xmlns:tns=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span> 
+<span class="na">xmlns:soap=</span><span class="s">&quot;http://schemas.xmlsoap.org/wsdl/soap/&quot;</span> <span class="na">xmlns:ns1=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/http&quot;</span> 
+<span class="na">name=</span><span class="s">&quot;SignatureValidationService&quot;</span> <span class="na">targetNamespace=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span><span class="nt">&gt;</span>
 
-  &lt;wsdl:types&gt;
-    &lt;xs:schema xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:tns=&quot;http://soap.webapp.siva.openeid.ee/&quot; elementFormDefault=&quot;unqualified&quot; targetNamespace=&quot;http://soap.webapp.siva.openeid.ee/&quot; version=&quot;1.0&quot;&gt;
+  <span class="nt">&lt;wsdl:types&gt;</span>
+    <span class="nt">&lt;xs:schema</span> <span class="na">xmlns:xs=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns:tns=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span> <span class="na">elementFormDefault=</span><span class="s">&quot;unqualified&quot;</span> <span class="na">targetNamespace=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span> <span class="na">version=</span><span class="s">&quot;1.0&quot;</span><span class="nt">&gt;</span>
 
-      &lt;xs:element name=&quot;ValidateDocument&quot; type=&quot;tns:validateDocument&quot;/&gt;
+      <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;ValidateDocument&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:validateDocument&quot;</span><span class="nt">/&gt;</span>
 
-      &lt;xs:element name=&quot;ValidateDocumentResponse&quot; type=&quot;tns:ValidateDocumentResponse&quot;/&gt;
+      <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;ValidateDocumentResponse&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:ValidateDocumentResponse&quot;</span><span class="nt">/&gt;</span>
 
-      &lt;xs:element name=&quot;ValidationReport&quot; type=&quot;tns:qualifiedReport&quot;/&gt;
+      <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;ValidationReport&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:qualifiedReport&quot;</span><span class="nt">/&gt;</span>
 
-      &lt;xs:element name=&quot;ValidationRequest&quot; type=&quot;tns:soapValidationRequest&quot;/&gt;
+      <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;ValidationRequest&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:soapValidationRequest&quot;</span><span class="nt">/&gt;</span>
 
-      &lt;xs:complexType name=&quot;validateDocument&quot;&gt;
-        &lt;xs:sequence&gt;
-          &lt;xs:element ref=&quot;tns:ValidationRequest&quot;/&gt;
-        &lt;/xs:sequence&gt;
-      &lt;/xs:complexType&gt;
+      <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;validateDocument&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:sequence&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">ref=</span><span class="s">&quot;tns:ValidationRequest&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:sequence&gt;</span>
+      <span class="nt">&lt;/xs:complexType&gt;</span>
 
-      &lt;xs:complexType name=&quot;soapValidationRequest&quot;&gt;
-        &lt;xs:sequence&gt;
-          &lt;xs:element name=&quot;Document&quot; type=&quot;xs:string&quot;/&gt;
-          &lt;xs:element name=&quot;Filename&quot; type=&quot;xs:string&quot;/&gt;
-          &lt;xs:element name=&quot;DocumentType&quot; type=&quot;tns:documentType&quot;/&gt;
-          &lt;xs:element minOccurs=&quot;0&quot; name=&quot;SignaturePolicy&quot; type=&quot;xs:string&quot;/&gt;
-        &lt;/xs:sequence&gt;
-      &lt;/xs:complexType&gt;
+      <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;soapValidationRequest&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:sequence&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Document&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Filename&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;DocumentType&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:documentType&quot;</span><span class="nt">/&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">name=</span><span class="s">&quot;SignaturePolicy&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:sequence&gt;</span>
+      <span class="nt">&lt;/xs:complexType&gt;</span>
 
-      &lt;xs:complexType name=&quot;ValidateDocumentResponse&quot;&gt;
-        &lt;xs:sequence&gt;
-          &lt;xs:element minOccurs=&quot;0&quot; ref=&quot;tns:ValidationReport&quot;/&gt;
-        &lt;/xs:sequence&gt;
-      &lt;/xs:complexType&gt;
+      <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;ValidateDocumentResponse&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:sequence&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">ref=</span><span class="s">&quot;tns:ValidationReport&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:sequence&gt;</span>
+      <span class="nt">&lt;/xs:complexType&gt;</span>
 
-      &lt;xs:complexType name=&quot;qualifiedReport&quot;&gt;
-        &lt;xs:sequence&gt;
-          &lt;xs:element name=&quot;Policy&quot; type=&quot;tns:policy&quot;/&gt;
-          &lt;xs:element name=&quot;ValidationTime&quot; type=&quot;xs:string&quot;/&gt;
-          &lt;xs:element name=&quot;DocumentName&quot; type=&quot;xs:string&quot;/&gt;
-          &lt;xs:element name=&quot;SignatureForm&quot; type=&quot;xs:string&quot;/&gt;
-          &lt;xs:element name=&quot;Signatures&quot;&gt;
-            &lt;xs:complexType&gt;
-              &lt;xs:sequence&gt;
-                &lt;xs:element maxOccurs=&quot;unbounded&quot; minOccurs=&quot;0&quot; name=&quot;Signature&quot; type=&quot;tns:signatureValidationData&quot;/&gt;
-              &lt;/xs:sequence&gt;
-            &lt;/xs:complexType&gt;
-          &lt;/xs:element&gt;
-          &lt;xs:element name=&quot;ValidSignaturesCount&quot; type=&quot;xs:int&quot;/&gt;
-          &lt;xs:element name=&quot;SignaturesCount&quot; type=&quot;xs:int&quot;/&gt;
-        &lt;/xs:sequence&gt;
-      &lt;/xs:complexType&gt;
+      <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;qualifiedReport&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:sequence&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Policy&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:policy&quot;</span><span class="nt">/&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;ValidationTime&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;DocumentName&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;SignatureForm&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Signatures&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;xs:complexType&gt;</span>
+              <span class="nt">&lt;xs:sequence&gt;</span>
+                <span class="nt">&lt;xs:element</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">name=</span><span class="s">&quot;Signature&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:signatureValidationData&quot;</span><span class="nt">/&gt;</span>
+              <span class="nt">&lt;/xs:sequence&gt;</span>
+            <span class="nt">&lt;/xs:complexType&gt;</span>
+          <span class="nt">&lt;/xs:element&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;ValidSignaturesCount&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:int&quot;</span><span class="nt">/&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;SignaturesCount&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:int&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:sequence&gt;</span>
+      <span class="nt">&lt;/xs:complexType&gt;</span>
 
-      &lt;xs:complexType name=&quot;policy&quot;&gt;
-        &lt;xs:sequence&gt;
-          &lt;xs:element name=&quot;PolicyDescription&quot; type=&quot;xs:string&quot;/&gt;
-          &lt;xs:element name=&quot;PolicyName&quot; type=&quot;xs:string&quot;/&gt;
-          &lt;xs:element name=&quot;PolicyUrl&quot; type=&quot;xs:string&quot;/&gt;
-          &lt;xs:element name=&quot;PolicyVersion&quot; type=&quot;xs:string&quot;/&gt;
-        &lt;/xs:sequence&gt;
-      &lt;/xs:complexType&gt;
+      <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;policy&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:sequence&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;PolicyDescription&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;PolicyName&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;PolicyUrl&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;PolicyVersion&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:sequence&gt;</span>
+      <span class="nt">&lt;/xs:complexType&gt;</span>
 
-      &lt;xs:complexType name=&quot;signatureValidationData&quot;&gt;
-        &lt;xs:sequence&gt;
-          &lt;xs:element name=&quot;Id&quot; type=&quot;xs:string&quot;/&gt;
-          &lt;xs:element name=&quot;SignatureFormat&quot; type=&quot;xs:string&quot;/&gt;
-          &lt;xs:element name=&quot;SignatureLevel&quot; type=&quot;xs:string&quot;/&gt;
-          &lt;xs:element name=&quot;SignedBy&quot; type=&quot;xs:string&quot;/&gt;
-          &lt;xs:element name=&quot;Indication&quot; type=&quot;tns:indication&quot;/&gt;
-          &lt;xs:element name=&quot;SubIndication&quot; type=&quot;xs:string&quot;/&gt;
-          &lt;xs:element name=&quot;Errors&quot;&gt;
-            &lt;xs:complexType&gt;
-              &lt;xs:sequence&gt;
-                &lt;xs:element maxOccurs=&quot;unbounded&quot; minOccurs=&quot;0&quot; name=&quot;Error&quot; type=&quot;tns:error&quot;/&gt;
-              &lt;/xs:sequence&gt;
-            &lt;/xs:complexType&gt;
-          &lt;/xs:element&gt;
-          &lt;xs:element name=&quot;SignatureScopes&quot;&gt;
-            &lt;xs:complexType&gt;
-              &lt;xs:sequence&gt;
-                &lt;xs:element maxOccurs=&quot;unbounded&quot; name=&quot;SignatureScope&quot; type=&quot;tns:signatureScope&quot;/&gt;
-              &lt;/xs:sequence&gt;
-            &lt;/xs:complexType&gt;
-          &lt;/xs:element&gt;
-          &lt;xs:element name=&quot;ClaimedSigningTime&quot; type=&quot;xs:string&quot;/&gt;
-          &lt;xs:element name=&quot;Warnings&quot;&gt;
-            &lt;xs:complexType&gt;
-              &lt;xs:sequence&gt;
-                &lt;xs:element maxOccurs=&quot;unbounded&quot; minOccurs=&quot;0&quot; name=&quot;Warning&quot; type=&quot;tns:warning&quot;/&gt;
-              &lt;/xs:sequence&gt;
-            &lt;/xs:complexType&gt;
-          &lt;/xs:element&gt;
-          &lt;xs:element name=&quot;Info&quot; type=&quot;tns:info&quot;/&gt;
-        &lt;/xs:sequence&gt;
-      &lt;/xs:complexType&gt;
+      <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;signatureValidationData&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:sequence&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Id&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;SignatureFormat&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;SignatureLevel&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;SignedBy&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Indication&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:indication&quot;</span><span class="nt">/&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;SubIndication&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Errors&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;xs:complexType&gt;</span>
+              <span class="nt">&lt;xs:sequence&gt;</span>
+                <span class="nt">&lt;xs:element</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">name=</span><span class="s">&quot;Error&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:error&quot;</span><span class="nt">/&gt;</span>
+              <span class="nt">&lt;/xs:sequence&gt;</span>
+            <span class="nt">&lt;/xs:complexType&gt;</span>
+          <span class="nt">&lt;/xs:element&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;SignatureScopes&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;xs:complexType&gt;</span>
+              <span class="nt">&lt;xs:sequence&gt;</span>
+                <span class="nt">&lt;xs:element</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span> <span class="na">name=</span><span class="s">&quot;SignatureScope&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:signatureScope&quot;</span><span class="nt">/&gt;</span>
+              <span class="nt">&lt;/xs:sequence&gt;</span>
+            <span class="nt">&lt;/xs:complexType&gt;</span>
+          <span class="nt">&lt;/xs:element&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;ClaimedSigningTime&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Warnings&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;xs:complexType&gt;</span>
+              <span class="nt">&lt;xs:sequence&gt;</span>
+                <span class="nt">&lt;xs:element</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">name=</span><span class="s">&quot;Warning&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:warning&quot;</span><span class="nt">/&gt;</span>
+              <span class="nt">&lt;/xs:sequence&gt;</span>
+            <span class="nt">&lt;/xs:complexType&gt;</span>
+          <span class="nt">&lt;/xs:element&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Info&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:info&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:sequence&gt;</span>
+      <span class="nt">&lt;/xs:complexType&gt;</span>
 
-      &lt;xs:complexType name=&quot;error&quot;&gt;
-        &lt;xs:sequence&gt;
-          &lt;xs:element name=&quot;Content&quot; type=&quot;xs:string&quot;/&gt;
-        &lt;/xs:sequence&gt;
-      &lt;/xs:complexType&gt;
+      <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;error&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:sequence&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Content&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:sequence&gt;</span>
+      <span class="nt">&lt;/xs:complexType&gt;</span>
 
-      &lt;xs:complexType name=&quot;signatureScope&quot;&gt;
-        &lt;xs:sequence&gt;
-          &lt;xs:element name=&quot;Name&quot; type=&quot;xs:string&quot;/&gt;
-          &lt;xs:element name=&quot;Scope&quot; type=&quot;xs:string&quot;/&gt;
-          &lt;xs:element name=&quot;Content&quot; type=&quot;xs:string&quot;/&gt;
-        &lt;/xs:sequence&gt;
-      &lt;/xs:complexType&gt;
+      <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;signatureScope&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:sequence&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Name&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Scope&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Content&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:sequence&gt;</span>
+      <span class="nt">&lt;/xs:complexType&gt;</span>
 
-      &lt;xs:complexType name=&quot;warning&quot;&gt;
-        &lt;xs:sequence&gt;
-          &lt;xs:element name=&quot;Description&quot; type=&quot;xs:string&quot;/&gt;
-        &lt;/xs:sequence&gt;
-      &lt;/xs:complexType&gt;
+      <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;warning&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:sequence&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Description&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:sequence&gt;</span>
+      <span class="nt">&lt;/xs:complexType&gt;</span>
 
-      &lt;xs:complexType name=&quot;info&quot;&gt;
-        &lt;xs:sequence&gt;
-          &lt;xs:element minOccurs=&quot;0&quot; name=&quot;bestSignatureTime&quot; type=&quot;xs:string&quot;/&gt;
-        &lt;/xs:sequence&gt;
-      &lt;/xs:complexType&gt;
+      <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;info&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:sequence&gt;</span>
+          <span class="nt">&lt;xs:element</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">name=</span><span class="s">&quot;bestSignatureTime&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:sequence&gt;</span>
+      <span class="nt">&lt;/xs:complexType&gt;</span>
 
-      &lt;xs:simpleType name=&quot;documentType&quot;&gt;
-        &lt;xs:restriction base=&quot;xs:string&quot;&gt;
-          &lt;xs:enumeration value=&quot;PDF&quot;/&gt;
-          &lt;xs:enumeration value=&quot;XROAD&quot;/&gt;
-          &lt;xs:enumeration value=&quot;BDOC&quot;/&gt;
-          &lt;xs:enumeration value=&quot;DDOC&quot;/&gt;
-        &lt;/xs:restriction&gt;
-      &lt;/xs:simpleType&gt;
+      <span class="nt">&lt;xs:simpleType</span> <span class="na">name=</span><span class="s">&quot;documentType&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:restriction</span> <span class="na">base=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;PDF&quot;</span><span class="nt">/&gt;</span>
+          <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;XROAD&quot;</span><span class="nt">/&gt;</span>
+          <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;BDOC&quot;</span><span class="nt">/&gt;</span>
+          <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;DDOC&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:restriction&gt;</span>
+      <span class="nt">&lt;/xs:simpleType&gt;</span>
 
-      &lt;xs:simpleType name=&quot;indication&quot;&gt;
-        &lt;xs:restriction base=&quot;xs:string&quot;&gt;
-          &lt;xs:enumeration value=&quot;TOTAL_PASSED&quot;/&gt;
-          &lt;xs:enumeration value=&quot;TOTAL_FAILED&quot;/&gt;
-          &lt;xs:enumeration value=&quot;INDETERMINATE&quot;/&gt;
-        &lt;/xs:restriction&gt;
-      &lt;/xs:simpleType&gt;
+      <span class="nt">&lt;xs:simpleType</span> <span class="na">name=</span><span class="s">&quot;indication&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:restriction</span> <span class="na">base=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;TOTAL_PASSED&quot;</span><span class="nt">/&gt;</span>
+          <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;TOTAL_FAILED&quot;</span><span class="nt">/&gt;</span>
+          <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;INDETERMINATE&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:restriction&gt;</span>
+      <span class="nt">&lt;/xs:simpleType&gt;</span>
 
-    &lt;/xs:schema&gt;
-  &lt;/wsdl:types&gt;
-  &lt;wsdl:message name=&quot;ValidateDocument&quot;&gt;
-    &lt;wsdl:part element=&quot;tns:ValidateDocument&quot; name=&quot;parameters&quot;&gt;
-    &lt;/wsdl:part&gt;
-  &lt;/wsdl:message&gt;
-  &lt;wsdl:message name=&quot;ValidateDocumentResponse&quot;&gt;
-    &lt;wsdl:part element=&quot;tns:ValidateDocumentResponse&quot; name=&quot;parameters&quot;&gt;
-    &lt;/wsdl:part&gt;
-  &lt;/wsdl:message&gt;
-  &lt;wsdl:portType name=&quot;ValidationWebService&quot;&gt;
-    &lt;wsdl:operation name=&quot;ValidateDocument&quot;&gt;
-      &lt;wsdl:input message=&quot;tns:ValidateDocument&quot; name=&quot;ValidateDocument&quot;&gt;
-    &lt;/wsdl:input&gt;
-      &lt;wsdl:output message=&quot;tns:ValidateDocumentResponse&quot; name=&quot;ValidateDocumentResponse&quot;&gt;
-    &lt;/wsdl:output&gt;
-    &lt;/wsdl:operation&gt;
-  &lt;/wsdl:portType&gt;
-  &lt;wsdl:binding name=&quot;SignatureValidationServiceSoapBinding&quot; type=&quot;tns:ValidationWebService&quot;&gt;
-    &lt;soap:binding style=&quot;document&quot; transport=&quot;http://schemas.xmlsoap.org/soap/http&quot;/&gt;
-    &lt;wsdl:operation name=&quot;ValidateDocument&quot;&gt;
-      &lt;soap:operation soapAction=&quot;&quot; style=&quot;document&quot;/&gt;
-      &lt;wsdl:input name=&quot;ValidateDocument&quot;&gt;
-        &lt;soap:body use=&quot;literal&quot;/&gt;
-      &lt;/wsdl:input&gt;
-      &lt;wsdl:output name=&quot;ValidateDocumentResponse&quot;&gt;
-        &lt;soap:body use=&quot;literal&quot;/&gt;
-      &lt;/wsdl:output&gt;
-    &lt;/wsdl:operation&gt;
-  &lt;/wsdl:binding&gt;
-  &lt;wsdl:service name=&quot;SignatureValidationService&quot;&gt;
-    &lt;wsdl:port binding=&quot;tns:SignatureValidationServiceSoapBinding&quot; name=&quot;ValidationWebServiceImplPort&quot;&gt;
-      &lt;soap:address location=&quot;http://localhost:8080/soap/validationWebService&quot;/&gt;
-    &lt;/wsdl:port&gt;
-  &lt;/wsdl:service&gt;
-&lt;/wsdl:definitions&gt;</code></pre>
+    <span class="nt">&lt;/xs:schema&gt;</span>
+  <span class="nt">&lt;/wsdl:types&gt;</span>
+  <span class="nt">&lt;wsdl:message</span> <span class="na">name=</span><span class="s">&quot;ValidateDocument&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;wsdl:part</span> <span class="na">element=</span><span class="s">&quot;tns:ValidateDocument&quot;</span> <span class="na">name=</span><span class="s">&quot;parameters&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;/wsdl:part&gt;</span>
+  <span class="nt">&lt;/wsdl:message&gt;</span>
+  <span class="nt">&lt;wsdl:message</span> <span class="na">name=</span><span class="s">&quot;ValidateDocumentResponse&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;wsdl:part</span> <span class="na">element=</span><span class="s">&quot;tns:ValidateDocumentResponse&quot;</span> <span class="na">name=</span><span class="s">&quot;parameters&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;/wsdl:part&gt;</span>
+  <span class="nt">&lt;/wsdl:message&gt;</span>
+  <span class="nt">&lt;wsdl:portType</span> <span class="na">name=</span><span class="s">&quot;ValidationWebService&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;wsdl:operation</span> <span class="na">name=</span><span class="s">&quot;ValidateDocument&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;wsdl:input</span> <span class="na">message=</span><span class="s">&quot;tns:ValidateDocument&quot;</span> <span class="na">name=</span><span class="s">&quot;ValidateDocument&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;/wsdl:input&gt;</span>
+      <span class="nt">&lt;wsdl:output</span> <span class="na">message=</span><span class="s">&quot;tns:ValidateDocumentResponse&quot;</span> <span class="na">name=</span><span class="s">&quot;ValidateDocumentResponse&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;/wsdl:output&gt;</span>
+    <span class="nt">&lt;/wsdl:operation&gt;</span>
+  <span class="nt">&lt;/wsdl:portType&gt;</span>
+  <span class="nt">&lt;wsdl:binding</span> <span class="na">name=</span><span class="s">&quot;SignatureValidationServiceSoapBinding&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:ValidationWebService&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;soap:binding</span> <span class="na">style=</span><span class="s">&quot;document&quot;</span> <span class="na">transport=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/http&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wsdl:operation</span> <span class="na">name=</span><span class="s">&quot;ValidateDocument&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;soap:operation</span> <span class="na">soapAction=</span><span class="s">&quot;&quot;</span> <span class="na">style=</span><span class="s">&quot;document&quot;</span><span class="nt">/&gt;</span>
+      <span class="nt">&lt;wsdl:input</span> <span class="na">name=</span><span class="s">&quot;ValidateDocument&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;soap:body</span> <span class="na">use=</span><span class="s">&quot;literal&quot;</span><span class="nt">/&gt;</span>
+      <span class="nt">&lt;/wsdl:input&gt;</span>
+      <span class="nt">&lt;wsdl:output</span> <span class="na">name=</span><span class="s">&quot;ValidateDocumentResponse&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;soap:body</span> <span class="na">use=</span><span class="s">&quot;literal&quot;</span><span class="nt">/&gt;</span>
+      <span class="nt">&lt;/wsdl:output&gt;</span>
+    <span class="nt">&lt;/wsdl:operation&gt;</span>
+  <span class="nt">&lt;/wsdl:binding&gt;</span>
+  <span class="nt">&lt;wsdl:service</span> <span class="na">name=</span><span class="s">&quot;SignatureValidationService&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;wsdl:port</span> <span class="na">binding=</span><span class="s">&quot;tns:SignatureValidationServiceSoapBinding&quot;</span> <span class="na">name=</span><span class="s">&quot;ValidationWebServiceImplPort&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;soap:address</span> <span class="na">location=</span><span class="s">&quot;http://localhost:8080/soap/validationWebService&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/wsdl:port&gt;</span>
+  <span class="nt">&lt;/wsdl:service&gt;</span>
+<span class="nt">&lt;/wsdl:definitions&gt;</span>
+</pre></div>
           <aside class="copyright" role="note">
             
             Documentation built with

@@ -23,8 +23,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     
-    <link rel="shortcut icon" type="image/x-icon" href="../../None">
-    <link rel="icon" type="image/x-icon" href="../../None">
+    <link rel="shortcut icon" type="image/x-icon" href="../../assets/images/favicon-e565ddfa3b.ico">
+    <link rel="icon" type="image/x-icon" href="../../assets/images/favicon-e565ddfa3b.ico">
     <style>
       @font-face {
       	font-family: 'Icon';
@@ -41,7 +41,7 @@
       	font-style: normal;
       }
     </style>
-    <link rel="stylesheet" href="../../assets/stylesheets/application-0dac3e5884.css">
+    <link rel="stylesheet" href="../../assets/stylesheets/application-a422ff04cc.css">
     
       <link rel="stylesheet" href="../../assets/stylesheets/palettes-05ab2406df.css">
     
@@ -49,7 +49,7 @@
       
       
       
-      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
       <style>
         body, input {
           font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
@@ -200,8 +200,8 @@
           
             
   <li>
-    <a class="" title="Component diagram" href="../component_diagram/">
-      Component diagram
+    <a class="" title="Structure and activities" href="../v2/structure_and_activities/">
+      Structure and activities
     </a>
     
   </li>
@@ -220,24 +220,6 @@
   <li>
     <a class="" title="Deployment" href="../v2/deployment/">
       Deployment
-    </a>
-    
-  </li>
-
-          
-            
-  <li>
-    <a class="" title="Use cases" href="../use_cases/">
-      Use cases
-    </a>
-    
-  </li>
-
-          
-            
-  <li>
-    <a class="" title="Logging" href="../logging/">
-      Logging
     </a>
     
   </li>
@@ -466,29 +448,30 @@
 </ul>
 <p><strong>Test case sample</strong></p>
 <p>Automatic and manual test cases will have the same description principles (shown below).</p>
-<pre class="codehilite"><code class="language-bash">    /**
+<div class="codehilite"><pre>    /**
      * TestCaseID: Bdoc-ValidationFail-27
      *
      * TestType: Automated
      *
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
-     * Title: Bdoc  OCSP response doesn't correspond to the signers certificate
+     * Title: Bdoc  OCSP response doesn<span class="err">&#39;</span>t correspond to the signers certificate
      *
      * Expected Result: The document should fail the validation
      *
      * File: NS28_WrongSignerCertInOCSPResp.bdoc
      */
     @Test
-    public void bdocWrongSignersCertInOcspResponse() {
-        setTestFilesDirectory(&quot;bdoc/live/timemark/&quot;);
-        post(validationRequestFor(&quot;NS28_WrongSignerCertInOCSPResp.bdoc&quot;))
-                .then()
-                .body(&quot;signatures[0].indication&quot;, Matchers.is(&quot;TOTAL-FAILED&quot;))
-                .body(&quot;signatures[0].subIndication&quot;, Matchers.is(&quot;TRY_LATER&quot;))
-                .body(&quot;signatures[0].errors.content&quot;, Matchers.hasItem(&quot;No revocation data for the certificate&quot;))
-                .body(&quot;validSignaturesCount&quot;, Matchers.is(0));
-    }</code></pre>
+    public void bdocWrongSignersCertInOcspResponse<span class="o">()</span> <span class="o">{</span>
+        setTestFilesDirectory<span class="o">(</span><span class="s2">&quot;bdoc/live/timemark/&quot;</span><span class="o">)</span><span class="p">;</span>
+        post<span class="o">(</span>validationRequestFor<span class="o">(</span><span class="s2">&quot;NS28_WrongSignerCertInOCSPResp.bdoc&quot;</span><span class="o">))</span>
+                .then<span class="o">()</span>
+                .body<span class="o">(</span><span class="s2">&quot;signatures[0].indication&quot;</span>, Matchers.is<span class="o">(</span><span class="s2">&quot;TOTAL-FAILED&quot;</span><span class="o">))</span>
+                .body<span class="o">(</span><span class="s2">&quot;signatures[0].subIndication&quot;</span>, Matchers.is<span class="o">(</span><span class="s2">&quot;TRY_LATER&quot;</span><span class="o">))</span>
+                .body<span class="o">(</span><span class="s2">&quot;signatures[0].errors.content&quot;</span>, Matchers.hasItem<span class="o">(</span><span class="s2">&quot;No revocation data for the certificate&quot;</span><span class="o">))</span>
+                .body<span class="o">(</span><span class="s2">&quot;validSignaturesCount&quot;</span>, Matchers.is<span class="o">(</span>0<span class="o">))</span><span class="p">;</span>
+    <span class="o">}</span>
+</pre></div>
 
 
 <h3 id="defect-management">Defect management</h3>
@@ -536,7 +519,7 @@ Manual testing of the areas that are not covered by automatic tests based on the
   <nav class="pagination" aria-label="Footer">
     <div class="previous">
       
-        <a href="../logging/" title="Logging">
+        <a href="../v2/deployment/" title="Deployment">
           <span class="direction">
             Previous
           </span>
@@ -546,7 +529,7 @@ Manual testing of the areas that are not covered by automatic tests based on the
             </div>
             <div class="stretch">
               <div class="title">
-                Logging
+                Deployment
               </div>
             </div>
           </div>

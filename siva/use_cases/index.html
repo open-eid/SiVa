@@ -23,8 +23,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     
-    <link rel="shortcut icon" type="image/x-icon" href="../../None">
-    <link rel="icon" type="image/x-icon" href="../../None">
+    <link rel="shortcut icon" type="image/x-icon" href="../../assets/images/favicon-e565ddfa3b.ico">
+    <link rel="icon" type="image/x-icon" href="../../assets/images/favicon-e565ddfa3b.ico">
     <style>
       @font-face {
       	font-family: 'Icon';
@@ -41,7 +41,7 @@
       	font-style: normal;
       }
     </style>
-    <link rel="stylesheet" href="../../assets/stylesheets/application-0dac3e5884.css">
+    <link rel="stylesheet" href="../../assets/stylesheets/application-a422ff04cc.css">
     
       <link rel="stylesheet" href="../../assets/stylesheets/palettes-05ab2406df.css">
     
@@ -49,7 +49,7 @@
       
       
       
-      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
       <style>
         body, input {
           font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
@@ -200,6 +200,15 @@
           
             
   <li>
+    <a class="" title="Regulatory environment" href="../regulatory_environment/">
+      Regulatory environment
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
     <a class="" title="Component diagram" href="../component_diagram/">
       Component diagram
     </a>
@@ -209,8 +218,8 @@
           
             
   <li>
-    <a class="" title="Interfaces" href="../v2/interfaces/">
-      Interfaces
+    <a class="" title="Deployment view" href="../deployment_view/">
+      Deployment view
     </a>
     
   </li>
@@ -218,8 +227,8 @@
           
             
   <li>
-    <a class="" title="Deployment" href="../v2/deployment/">
-      Deployment
+    <a class="" title="Interfaces" href="../interface_description/">
+      Interfaces
     </a>
     
   </li>
@@ -254,6 +263,12 @@
             </li>
           
             <li class="anchor">
+              <a title="Authenticate JSON REST API user" href="#authenticate-json-rest-api-user">
+                Authenticate JSON REST API user
+              </a>
+            </li>
+          
+            <li class="anchor">
               <a title="TSL loading use case" href="#tsl-loading-use-case">
                 TSL loading use case
               </a>
@@ -261,6 +276,15 @@
           
         </ul>
       
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Deployment" href="../deployment/">
+      Deployment
+    </a>
     
   </li>
 
@@ -276,8 +300,8 @@
           
             
   <li>
-    <a class="" title="Quality Assurance Strategy" href="../qa_strategy/">
-      Quality Assurance Strategy
+    <a class="" title="QA Strategy" href="../qa_strategy/">
+      QA Strategy
     </a>
     
   </li>
@@ -308,8 +332,8 @@
       
         
   <li>
-    <a class="" title="Appendix 1 - Validation Policy" href="../appendix/validation_policy/">
-      Appendix 1 - Validation Policy
+    <a class="" title="Appendix 1 - Non-Functional Requirements" href="../appendix/none_functional_requirements/">
+      Appendix 1 - Non-Functional Requirements
     </a>
     
   </li>
@@ -317,8 +341,8 @@
       
         
   <li>
-    <a class="" title="Appendix 2 - Validation Constraint Configuration" href="../appendix/validation_constraints/">
-      Appendix 2 - Validation Constraint Configuration
+    <a class="" title="Appendix 2 - Functional Requirements" href="../appendix/functional_requirements/">
+      Appendix 2 - Functional Requirements
     </a>
     
   </li>
@@ -326,8 +350,8 @@
       
         
   <li>
-    <a class="" title="Appendix 3 - Test Case Descriptions" href="../appendix/test_cases/">
-      Appendix 3 - Test Case Descriptions
+    <a class="" title="Appendix 3 - Validation Policy" href="../appendix/validation_policy/">
+      Appendix 3 - Validation Policy
     </a>
     
   </li>
@@ -335,8 +359,8 @@
       
         
   <li>
-    <a class="" title="Appendix 4 - WSDL of SOAP Interface" href="../appendix/wsdl/">
-      Appendix 4 - WSDL of SOAP Interface
+    <a class="" title="Appendix 4 - Validation Constraint Configuration" href="../appendix/validation_constraints/">
+      Appendix 4 - Validation Constraint Configuration
     </a>
     
   </li>
@@ -344,8 +368,17 @@
       
         
   <li>
-    <a class="" title="Appendix 5 - Known Issues" href="../appendix/known_issues/">
-      Appendix 5 - Known Issues
+    <a class="" title="Appendix 5 - Test Case Descriptions" href="../appendix/test_cases/">
+      Appendix 5 - Test Case Descriptions
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="Appendix 6 - WSDL of SOAP Interface" href="../appendix/wsdl/">
+      Appendix 6 - WSDL of SOAP Interface
     </a>
     
   </li>
@@ -405,13 +438,12 @@ as input source.</p>
 <p>Validation of SOAP request XML is done in the SiVa web application module.
 Document validation process is described in detail in <a href="#digitally-signed-document-validation-process">Digitally signed document validation process</a>
 Validation report output id described in <a href="../../siva/interface_description">Interface description</a></p>
+<h2 id="authenticate-json-rest-api-user">Authenticate JSON REST API user</h2>
+<p><img alt="JSON REST validation request" src="../../img/siva/siva_remote_client_flowchart.png" /></p>
+<p>Validation of JSON request is done in  SiVA web application module
+Document validation process is described in detail in <a href="#digitally-signed-document-validation-process">Digitally signed document validation process</a>
+Validation report output id described in <a href="../../siva/interface_description">Interface description</a></p>
 <h2 id="tsl-loading-use-case">TSL loading use case</h2>
-<p>TSL implementd in seprate module. The process is executed in two ways.</p>
-<ul>
-<li>When SiVa application is started</li>
-<li>As scheduled job</li>
-</ul>
-<p>Loading process is required action when ASiCE (BDOC) or</p>
 <p><img alt="TSL loading process" src="../../img/siva/siva_tsl_loading_process.png" /></p>
           <aside class="copyright" role="note">
             
@@ -429,7 +461,7 @@ Validation report output id described in <a href="../../siva/interface_descripti
   <nav class="pagination" aria-label="Footer">
     <div class="previous">
       
-        <a href="../v2/deployment/" title="Deployment">
+        <a href="../interface_description/" title="Interfaces">
           <span class="direction">
             Previous
           </span>
@@ -439,7 +471,7 @@ Validation report output id described in <a href="../../siva/interface_descripti
             </div>
             <div class="stretch">
               <div class="title">
-                Deployment
+                Interfaces
               </div>
             </div>
           </div>
@@ -448,14 +480,14 @@ Validation report output id described in <a href="../../siva/interface_descripti
     </div>
     <div class="next">
       
-        <a href="../logging/" title="Logging">
+        <a href="../deployment/" title="Deployment">
           <span class="direction">
             Next
           </span>
           <div class="page">
             <div class="stretch">
               <div class="title">
-                Logging
+                Deployment
               </div>
             </div>
             <div class="button button-next" role="button" aria-label="Next">

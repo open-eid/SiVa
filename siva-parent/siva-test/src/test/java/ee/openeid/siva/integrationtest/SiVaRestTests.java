@@ -62,7 +62,6 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         return mapToReport(post(validationRequestFor(file, signaturePolicy)).andReturn().body().asString());
     }
 
-    @Override
     protected QualifiedReport postForReport(String file) {
         return postForReport(file, VALID_SIGNATURE_POLICY_2);
     }

@@ -32,8 +32,8 @@ public class SoapFaultResponseInterceptor extends AbstractSoapInterceptor {
             return;
         }
 
+        f.setStatusCode(200);
         if (isClientException(cause)) {
-            f.setStatusCode(400);
             f.setFaultCode(new QName("Client"));
         }
     }

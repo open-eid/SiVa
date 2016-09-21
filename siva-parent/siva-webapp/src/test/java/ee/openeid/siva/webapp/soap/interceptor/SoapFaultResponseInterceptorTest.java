@@ -49,7 +49,7 @@ public class SoapFaultResponseInterceptorTest {
         Fault fault = new Fault(new MalformedDocumentException());
         doReturn(fault).when(message).getContent(any());
         soapFaultResponseInterceptor.handleMessage(message);
-        assertTrue(fault.getStatusCode() == 400);
+        assertTrue(fault.getStatusCode() == 200);
         assertEquals("Client", fault.getFaultCode().toString());
     }
 
@@ -58,7 +58,7 @@ public class SoapFaultResponseInterceptorTest {
         Fault fault = new Fault(new InvalidPolicyException(""));
         doReturn(fault).when(message).getContent(any());
         soapFaultResponseInterceptor.handleMessage(message);
-        assertTrue(fault.getStatusCode() == 400);
+        assertTrue(fault.getStatusCode() == 200);
         assertEquals("Client", fault.getFaultCode().toString());
     }
 
@@ -67,7 +67,7 @@ public class SoapFaultResponseInterceptorTest {
         Fault fault = new Fault(new UnmarshalException("Some message.."));
         doReturn(fault).when(message).getContent(any());
         soapFaultResponseInterceptor.handleMessage(message);
-        assertTrue(fault.getStatusCode() == 400);
+        assertTrue(fault.getStatusCode() == 200);
         assertEquals("Client", fault.getFaultCode().toString());
     }
 
@@ -78,7 +78,7 @@ public class SoapFaultResponseInterceptorTest {
         Fault fault = new Fault(new RESTValidationProxyException(error));
         doReturn(fault).when(message).getContent(any());
         soapFaultResponseInterceptor.handleMessage(message);
-        assertTrue(fault.getStatusCode() == 400);
+        assertTrue(fault.getStatusCode() == 200);
         assertEquals("Client", fault.getFaultCode().toString());
     }
 }

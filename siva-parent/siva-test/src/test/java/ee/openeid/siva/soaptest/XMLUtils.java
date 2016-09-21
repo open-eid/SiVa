@@ -23,9 +23,9 @@ public class XMLUtils {
         return findElementByXPath(document, xPath, Collections.emptyMap());
     }
 
-    public static Element findElementByXPath(Document document, String xPath, Map<String, String> napespacePrefixesToUris) {
+    public static Element findElementByXPath(Document document, String xPath, Map<String, String> namespacePrefixesToUris) {
         try {
-            NodeList nodes = (NodeList) createXPathExpression(xPath, napespacePrefixesToUris).evaluate(document, XPathConstants.NODESET);
+            NodeList nodes = (NodeList) createXPathExpression(xPath, namespacePrefixesToUris).evaluate(document, XPathConstants.NODESET);
             return (Element) nodes.item(0);
         } catch (XPathExpressionException e) {
             throw new RuntimeException(e);

@@ -28,6 +28,7 @@ public class SoapRequestValidationInterceptorTest {
     private static final String INVALID_BASE64 = "Document is not encoded in a valid base64 string";
     private static final String INVALID_FILENAME = "Invalid filename";
     private static final String INVALID_POLICY = "Invalid signature policy";
+    private static final String INVALID_DOCUMENTTYPE = "Invalid document type";
 
     @Mock
     private SoapMessage message;
@@ -44,9 +45,12 @@ public class SoapRequestValidationInterceptorTest {
     @Mock
     private Node documentNode;
     @Mock
+    private Node documentTypeNode;
+    @Mock
     private Node policyNode;
     private NodeList fileNameNodeList;
     private NodeList documentNodeList;
+    private NodeList documentTypeNodeList;
     private NodeList policyNodeList;
 
     @Mock
@@ -69,28 +73,35 @@ public class SoapRequestValidationInterceptorTest {
 
     @Test
     public void whenFilenameIsInvalidThenFaultIsThrownWithInvalidFilenameMessage() throws SOAPException {
-        mockSoapMessage("*:?!", "AABBBAA", "AA");
+        mockSoapMessage("*:?!", "AABBBAA", "BDOC", "AA");
         Fault soapFault = handleMessageInInterceptor(message);
         assertFaultWithExpectedMessage(soapFault, INVALID_FILENAME);
     }
 
     @Test
     public void whenDocumentIsInvalidThenFaultIsThrownWithInvalidDocumentMessage() throws SOAPException {
-        mockSoapMessage("filename", "ÖÄÜ", "AA");
+        mockSoapMessage("filename", "ÖÄÜ", "BDOC", "AA");
         Fault soapFault = handleMessageInInterceptor(message);
         assertFaultWithExpectedMessage(soapFault, INVALID_BASE64);
     }
 
     @Test
+    public void whenDocumentTypeIsInvalidThenFaultIsThrownWithInvalidPolicyMessage() throws SOAPException {
+        mockSoapMessage("filename", "AABBBAA", "BLAH", ";:::;;");
+        Fault soapFault = handleMessageInInterceptor(message);
+        assertFaultWithExpectedMessage(soapFault, INVALID_DOCUMENTTYPE);
+    }
+
+    @Test
     public void whenPolicyIsInvalidThenFaultIsThrownWithInvalidPolicyMessage() throws SOAPException {
-        mockSoapMessage("filename", "AABBBAA", ";:::;;");
+        mockSoapMessage("filename", "AABBBAA", "BDOC", ";:::;;");
         Fault soapFault = handleMessageInInterceptor(message);
         assertFaultWithExpectedMessage(soapFault, INVALID_POLICY);
     }
 
     @Test
     public void noSoapFaultIsThrownWithValidRequest() throws SOAPException {
-        mockSoapMessage("filename", "AABBBAA", "AA");
+        mockSoapMessage("filename", "AABBBAA", "BDOC", "AA");
         Fault soapFault = handleMessageInInterceptor(message);
         assertNull(soapFault);
     }
@@ -115,13 +126,14 @@ public class SoapRequestValidationInterceptorTest {
         doReturn(null).when(message).getContent(any());
     }
 
-    private void mockSoapMessage(String filename, String document, String policy) throws SOAPException {
+    private void mockSoapMessage(String filename, String document, String documentType, String policy) throws SOAPException {
         doReturn(body).when(envelope).getBody();
         doReturn(envelope).when(soapPart).getEnvelope();
         doReturn(soapPart).when(soapMessage).getSOAPPart();
         doReturn(soapMessage).when(message).getContent(SOAPMessage.class);
         mockFilenameNode(filename);
         mockDocumentNode(document);
+        mockDocumentTypeNode(documentType);
         mockPolicyNode(policy);
     }
 
@@ -131,6 +143,10 @@ public class SoapRequestValidationInterceptorTest {
 
     private void mockFilenameNode(String filename) {
         mockNode(filenameNode, fileNameNodeList, "Filename", filename);
+    }
+
+    private void mockDocumentTypeNode(String documentType) {
+        mockNode(documentTypeNode, documentTypeNodeList, "DocumentType", documentType);
     }
 
     private void mockPolicyNode(String policy) {

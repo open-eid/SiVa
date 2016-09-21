@@ -2,7 +2,7 @@ package ee.openeid.siva.soaptest;
 
 import com.jayway.restassured.response.Response;
 import ee.openeid.siva.integrationtest.SiVaIntegrationTestsBase;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.webapp.soap.QualifiedReport;
 import org.apache.commons.codec.binary.Base64;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -19,15 +19,13 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
 
     private static final String SOAP_ENDPOINT = "/soap/validationWebService";
 
-    protected static final String SERVER_FAULT = "soap:Server";
     protected static final String CLIENT_FAULT = "soap:Client";
 
     protected static final String DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE = "Document malformed or not matching documentType";
     protected static final String DOCUMENT_NOT_BASE64 = "Document is not encoded in a valid base64 string";
     protected static final String INVALID_FILENAME = "Invalid filename";
     protected static final String INVALID_SIGNATURE_POLICY = "Invalid signature policy";
-    protected static final String UNMARSHALING_ERROR_CVC_ENUMERATION_VALID = "Unmarshalling Error: cvc-enumeration-valid: ";
-    protected static final String IS_NOT_FROM_DOCTYPE_ENUMERATION = " is not facet-valid with respect to enumeration '[PDF, XROAD, BDOC, DDOC]'. It must be a value from the enumeration. ";
+    protected static final String INVALID_DOCUMENT_TYPE = "Invalid document type";
 
     protected static String createXMLValidationRequest(String base64Document, String documentType, String filename) {
         return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
@@ -99,19 +97,6 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    protected int validSignatures(Document report) {
-        String stringResult = XMLUtils.findElementByXPath(
-                report,
-                "//d:ValidationReport/ValidSignaturesCount",
-                Collections.singletonMap("d", "http://soap.webapp.siva.openeid.ee/")).getTextContent();
-        return Integer.parseInt(stringResult);
-    }
-
-    @Override
-    protected QualifiedReport postForReport(String filename) {
-        return getQualifiedReportFromDom(extractReportDom(post(validationRequestForDocument(filename)).andReturn().body().asString()));
     }
 
 }

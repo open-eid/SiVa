@@ -3,8 +3,10 @@ package ee.openeid.siva.webapp.soap.interceptor;
 
 import ee.openeid.siva.webapp.request.validation.annotations.NotNullValidFilenamePattern;
 import ee.openeid.siva.webapp.request.validation.annotations.ValidSignaturePolicyPattern;
+import ee.openeid.siva.webapp.soap.DocumentType;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.enums.EnumUtils;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.binding.soap.interceptor.AbstractSoapInterceptor;
 import org.apache.cxf.binding.soap.interceptor.SoapInterceptor;
@@ -44,6 +46,7 @@ public class SoapRequestValidationInterceptor extends AbstractSoapInterceptor {
 
             validateDocumentElement(body);
             validateFilenameElement(body);
+            validateDocumentTypeElement(body);
             validateSignaturePolicyElement(body);
 
         } catch (SOAPException e) {
@@ -67,6 +70,13 @@ public class SoapRequestValidationInterceptor extends AbstractSoapInterceptor {
         }
     }
 
+    private void validateDocumentTypeElement(SOAPBody body) {
+        String documentValue = getElementValueFromBody(body, "DocumentType");
+        if (!isValidDocumentType(documentValue)) {
+            throwFault(messageSource.getMessage("validation.error.message.documentType", null, null));
+        }
+    }
+
     private void validateSignaturePolicyElement(SOAPBody body) {
         String signaturePolicyValue = getElementValueFromBody(body, "SignaturePolicy");
         Pattern pattern = Pattern.compile(ValidSignaturePolicyPattern.PATTERN);
@@ -81,6 +91,16 @@ public class SoapRequestValidationInterceptor extends AbstractSoapInterceptor {
         elementNode = elementNode == null ? null : elementNode.getFirstChild();
         return elementNode == null ? "" : elementNode.getNodeValue();
     }
+
+    private boolean isValidDocumentType(String inputDocumentType) {
+        for (DocumentType dt : DocumentType.values()) {
+            if (dt.name().equals(inputDocumentType)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     private void throwFault(String message) {
         Fault fault = new Fault(new Exception(message));

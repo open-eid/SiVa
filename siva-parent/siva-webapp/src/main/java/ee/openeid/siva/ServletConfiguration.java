@@ -45,6 +45,7 @@ public class ServletConfiguration {
     @Bean
     public Endpoint endpoint(SpringBus springBus, ValidationWebService validationWebService) {
         EndpointImpl endpoint = new EndpointImpl(springBus, validationWebService);
+        endpoint.setWsdlLocation("wsdl/siva.wsdl");
         endpoint.publish(ENDPOINT);
         return endpoint;
     }

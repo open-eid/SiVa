@@ -1,27 +1,30 @@
 package ee.openeid.siva.webapp.soap;
 
 import ee.openeid.siva.proxy.ValidationProxy;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
-import ee.openeid.siva.webapp.soap.request.SOAPValidationRequest;
-import ee.openeid.siva.webapp.transformer.ValidationRequestToProxyDocumentTransformer;
+import ee.openeid.siva.webapp.soap.transformer.QualifiedReportSoapResponseTransformer;
+import ee.openeid.siva.webapp.soap.transformer.SoapValidationRequestToProxyDocumentTransformer;
+import org.apache.cxf.annotations.SchemaValidation;
 import org.apache.cxf.interceptor.InInterceptors;
 import org.apache.cxf.interceptor.OutFaultInterceptors;
+import org.apache.cxf.interceptor.OutInterceptors;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.jws.WebService;
-
 @InInterceptors(interceptors = {"ee.openeid.siva.webapp.soap.interceptor.SoapRequestValidationInterceptor"})
-@OutFaultInterceptors(interceptors = {"ee.openeid.siva.webapp.soap.interceptor.SoapFaultResponseInterceptor"})
-@WebService(serviceName = "SignatureValidationService", endpointInterface = "ee.openeid.siva.webapp.soap.ValidationWebService")
+@OutInterceptors(interceptors = {"ee.openeid.siva.webapp.soap.interceptor.SoapResponseHeaderInterceptor"})
+@OutFaultInterceptors(interceptors = {"ee.openeid.siva.webapp.soap.interceptor.SoapFaultResponseInterceptor", "ee.openeid.siva.webapp.soap.interceptor.SoapResponseHeaderInterceptor"})
+@SchemaValidation(type = SchemaValidation.SchemaValidationType.IN)
 public class ValidationWebServiceImpl implements ValidationWebService {
 
     private ValidationProxy validationProxy;
-    private ValidationRequestToProxyDocumentTransformer transformer;
+    private SoapValidationRequestToProxyDocumentTransformer requestTransformer;
+    private QualifiedReportSoapResponseTransformer responseTransformer;
 
     @Override
-    public QualifiedReport validate(SOAPValidationRequest validationRequest) {
-        return validationProxy.validate(transformer.transform(validationRequest));
+    public QualifiedReport validateDocument(SoapValidationRequest validationRequest) {
+        ee.openeid.siva.validation.document.report.QualifiedReport qualifiedReport = validationProxy.validate(requestTransformer.transform(validationRequest));
+        return responseTransformer.toSoapResponse(qualifiedReport);
     }
+
 
     @Autowired
     public void setValidationProxy(ValidationProxy validationProxy) {
@@ -29,7 +32,13 @@ public class ValidationWebServiceImpl implements ValidationWebService {
     }
 
     @Autowired
-    public void setTransformer(ValidationRequestToProxyDocumentTransformer transformer) {
-        this.transformer = transformer;
+    public void setRequestTransformer(SoapValidationRequestToProxyDocumentTransformer requestTransformer) {
+        this.requestTransformer = requestTransformer;
     }
+
+    @Autowired
+    public void setResponseransformer(QualifiedReportSoapResponseTransformer responseTransformer) {
+        this.responseTransformer = responseTransformer;
+    }
+
 }

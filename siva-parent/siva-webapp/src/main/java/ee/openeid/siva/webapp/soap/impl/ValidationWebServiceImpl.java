@@ -1,6 +1,9 @@
-package ee.openeid.siva.webapp.soap;
+package ee.openeid.siva.webapp.soap.impl;
 
 import ee.openeid.siva.proxy.ValidationProxy;
+import ee.openeid.siva.webapp.soap.QualifiedReport;
+import ee.openeid.siva.webapp.soap.SoapValidationRequest;
+import ee.openeid.siva.webapp.soap.ValidationWebService;
 import ee.openeid.siva.webapp.soap.transformer.QualifiedReportSoapResponseTransformer;
 import ee.openeid.siva.webapp.soap.transformer.SoapValidationRequestToProxyDocumentTransformer;
 import org.apache.cxf.annotations.SchemaValidation;

@@ -116,7 +116,6 @@
                	&lt;Document&gt;${__property(TESTFILE_BASE64)}&lt;/Document&gt;&#xd;
                     &lt;Filename&gt;${TESTFILE}&lt;/Filename&gt;&#xd;
                     &lt;DocumentType&gt;${FILETYPE}&lt;/DocumentType&gt;&#xd;
-                    &lt;SignaturePolicy&gt;${SIGNATURE_POLICY}&lt;/SignaturePolicy&gt;&#xd;
           	&lt;/soap:ValidationRequest&gt;&#xd;
      	&lt;/soap:ValidateDocument&gt;&#xd;
 	&lt;/soapenv:Body&gt;&#xd;

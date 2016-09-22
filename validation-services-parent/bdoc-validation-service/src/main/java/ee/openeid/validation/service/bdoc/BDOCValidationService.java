@@ -4,7 +4,6 @@ import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.ValidationService;
-import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.validation.service.bdoc.report.BDOCQualifiedReportBuilder;
 import ee.openeid.validation.service.bdoc.signature.policy.BDOCConfigurationService;
 import ee.openeid.validation.service.bdoc.signature.policy.PolicyConfigurationWrapper;

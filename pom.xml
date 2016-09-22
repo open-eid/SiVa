@@ -132,6 +132,7 @@
                         <exclude>**/extra-jars/**</exclude>
                         <exclude>**/ext-lib/**</exclude>
                         <exclude>**/xroad-jars/**</exclude>
+                        <exclude>**/wsdlimport/**</exclude>
                     </excludes>
                 </configuration>
                 <executions>

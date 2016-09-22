@@ -90,7 +90,7 @@ public class UploadControllerTest {
     @Test
     public void displayStartPageCheckPresenceOfUploadForm() throws Exception {
         final HtmlPage startPage = webClient.getPage("/");
-        assertThat(startPage.getHtmlElementById("siva-dropzone").getAttribute("action")).isEqualTo("/upload");
+        assertThat(startPage.getHtmlElementById("siva-dropzone").getAttribute("action")).isEqualTo("upload");
     }
 
     @Test

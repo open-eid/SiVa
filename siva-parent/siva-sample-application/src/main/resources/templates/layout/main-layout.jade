@@ -4,23 +4,23 @@ html
         meta(charset="utf-8")
         meta(http-equiv="Content-Type", content="text/html; charset=utf-8")
         meta(name="viewport",content="width=device-width, initial-scale=1")
-        link(rel="stylesheet", href="/owr/site.css")
+        link(rel="stylesheet", href="owr/site.css")
     body
         block notificationBlock
         nav#top-navbar.navbar.navbar-dark.bg-inverse.navbar-sticky-top
             .navbar-header
                 .container
-                    a.navbar-brand(href="/")
+                    a.navbar-brand(href="#")
                         img(src="img/open-eid-logo.svg")
-                    a.navbar-brand(href="/")
+                    a.navbar-brand(href="#")
                         span SiVa Sample Application
         .container#content
             .row
                 .col-md-12.col-lg-12
                     block content
-        script(src="/owr/site.js")
+        script(src="owr/site.js")
         if googleTrackingId != null
-            script(src="/js/google-tracking-init.js")
+            script(src="js/google-tracking-init.js")
             script.
                 var trackingId = '#{googleTrackingId}';
                 ga('create', trackingId, 'auto');

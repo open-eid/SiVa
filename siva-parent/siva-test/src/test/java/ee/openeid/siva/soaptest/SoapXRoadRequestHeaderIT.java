@@ -25,6 +25,21 @@ public class SoapXRoadRequestHeaderIT extends SiVaSoapTests {
         this.testFilesDirectory = testFilesDirectory;
     }
 
+    /**
+     *
+     * TestCaseID: XroadSoap-RequestVerification-1
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     *
+     * Title: Soap headers are returned in response
+     *
+     * Expected Result: Same headers are in response as in request
+     *
+     * File: Valid_IDCard_MobID_signatures.bdoc
+     *
+     */
     @Test
     public void soapRequestHeadersAreReturnedInResponse() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -80,6 +95,21 @@ public class SoapXRoadRequestHeaderIT extends SiVaSoapTests {
         assertThat(httpResponseBody, containsString(expectedSoapResponseHeader));
     }
 
+    /**
+     *
+     * TestCaseID: XroadSoap-RequestVerification-2
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     *
+     * Title: Soap headers are returned in correct order
+     *
+     * Expected Result: Same headers are in response as in request
+     *
+     * File: Valid_IDCard_MobID_signatures.bdoc
+     *
+     */
     @Test
     public void soapRequestHeadersAreReturnedInSameOrderInResponse() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
@@ -135,6 +165,21 @@ public class SoapXRoadRequestHeaderIT extends SiVaSoapTests {
         assertThat(httpResponseBody, containsString(expectedSoapResponseHeader));
     }
 
+    /**
+     *
+     * TestCaseID: XroadSoap-RequestVerification-3
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     *
+     * Title: Soap headers are returned in error response
+     *
+     * Expected Result: Same headers are in response as in request
+     *
+     * File:
+     *
+     */
     @Test
     public void soapRequestHeadersAreReturnedInFaultResponse() {
         String encodedString = "YmxhaA==";

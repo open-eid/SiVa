@@ -36,16 +36,20 @@ public class BDOCConfigurationService {
     }
 
     public PolicyConfigurationWrapper loadPolicyConfiguration(String policyName) {
-        PolicyConfigurationWrapper policyConfigurationWrapper =  StringUtils.isEmpty(policyName) ?
-                loadExistingPolicy(properties.getDefaultPolicy()) :
-                loadExistingPolicy(policyName);
+        PolicyConfigurationWrapper policyConfigurationWrapper = getExistingOrDefaultPolicy(policyName);
         reloadTrustedCertificatesIfNecessary(policyConfigurationWrapper);
         return policyConfigurationWrapper;
     }
 
+    private PolicyConfigurationWrapper getExistingOrDefaultPolicy(String policyName) {
+        return StringUtils.isEmpty(policyName) ?
+                loadExistingPolicy(properties.getDefaultPolicy()) :
+                loadExistingPolicy(policyName);
+    }
+
     private void reloadTrustedCertificatesIfNecessary(PolicyConfigurationWrapper policyConfiguration) {
         Configuration configuration = policyConfiguration.getConfiguration();
-        if (configuration.getTSL().getCertificatePool().getCertificateTokens().size() != trustedListSource.getCertificates().size()) {
+        if (configuration.getTSL().getCertificates().size() != trustedListSource.getCertificates().size()) {
             LOGGER.debug("some or all trusted certificates are not added to D4J configuration, repopulating from cert pool");
             policyConfiguration.getConfiguration().setTSL(TSLUtils.createTSLFromTrustedCertSource(trustedListSource));
         }

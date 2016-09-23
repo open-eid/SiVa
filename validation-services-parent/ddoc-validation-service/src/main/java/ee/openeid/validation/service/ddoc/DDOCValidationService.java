@@ -71,10 +71,10 @@ public class DDOCValidationService implements ValidationService {
 
         synchronized (lock) {
             SignedDoc signedDoc = null;
-            List<DigiDocException> signedDocInitializationErrors = new ArrayList<>();
 
             try {
                 DigiDocFactory digiDocFactory = ConfigManager.instance().getDigiDocFactory();
+                List<DigiDocException> signedDocInitializationErrors = new ArrayList<>();
                 signedDoc = digiDocFactory.readSignedDocFromStreamOfType(new ByteArrayInputStream(validationDocument.getBytes()), false, signedDocInitializationErrors);
                 if (signedDoc == null) {
                     throw new MalformedDocumentException();

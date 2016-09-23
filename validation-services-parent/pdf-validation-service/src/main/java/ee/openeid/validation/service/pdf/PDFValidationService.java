@@ -52,6 +52,7 @@ public class PDFValidationService implements ValidationService {
             }
 
             final DocumentValidator validator = new EstonianPDFDocumentValidator(dssDocument);
+            LOGGER.info("PDF certificate pool size: {}", getCertificatePoolSize());
             validator.setCertificateVerifier(certificateVerifier);
 
             final Reports reports;
@@ -85,6 +86,10 @@ public class PDFValidationService implements ValidationService {
             endExceptionally(e);
             throw new ValidationServiceException(getClass().getSimpleName(), e);
         }
+    }
+
+    private int getCertificatePoolSize() {
+        return certificateVerifier.getTrustedCertSource().getCertificatePool().getNumberOfCertificates();
     }
 
     private DSSDocument createDssDocument(final ValidationDocument ValidationDocument) {

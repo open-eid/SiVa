@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -29,41 +29,59 @@ public class CustomCertificatesLoaderTest {
 
     @Test
     public void allTestCertificatesShouldBeAddedToTSL() {
-        List<CertificateToken> certTokens = trustedListSource.getCertificatePool().getCertificateTokens();
+        List<CertificateToken> certTokens = getCertificateTokens();
         assertEquals(7, certTokens.size());
     }
 
     @Test
-    public void testSKCAsShouldBeLoadedWithQCServiceInfoQualifiers() {
-        List<CertificateToken> certTokens = trustedListSource.getCertificatePool().getCertificateTokens();
-        Set<CertificateToken> nonManagementCertTokens = certTokens
-                .stream()
-                .filter(ct -> !(StringUtils.contains(ct.getIssuerDN().getName(), "CN=ManagementCA")))
-                .collect(Collectors.toSet());
-
-        nonManagementCertTokens.stream()
-                .map(ct -> (ServiceInfo) ct.getAssociatedTSPS().toArray()[0]).filter(si -> StringUtils.equals("http://uri.etsi.org/TrstSvc/Svctype/CA/QC", si.getType()))
-                .forEach(si -> {
-                    Set<String> qualifiers = si.getQualifiersAndConditions().keySet();
-                    assertTrue(qualifiers.contains("http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/QCForESig"));
-                    assertTrue(qualifiers.contains("http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/QCWithQSCD"));
-                    assertTrue(qualifiers.contains("http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/QCStatement"));
-                });
+    public void softCertCAShouldNotBeLoadedWithQCServiceInfoQualifiers() {
+        getServiceInfoStream()
+                .filter(this::isManagementServiceInfo)
+                .forEach(this::assertNoQualifiers);
     }
 
     @Test
-    public void softCertCAShouldNotBeLoadedWithQCServiceInfoQualifiers() {
-        List<CertificateToken> certTokens = trustedListSource.getCertificatePool().getCertificateTokens();
-        List<CertificateToken> managementCertTokens = certTokens
-                .stream()
-                .filter(ct -> (StringUtils.contains(ct.getIssuerDN().getName(), "CN=ManagementCA")))
-                .collect(Collectors.toList());
-
-        managementCertTokens.stream()
-                .map(ct -> (ServiceInfo) ct.getAssociatedTSPS().toArray()[0])
-                .forEach(si -> {
-                    Set<String> qualifiers = si.getQualifiersAndConditions().keySet();
-                    assertTrue(qualifiers.isEmpty());
-                });
+    public void testSKCAsShouldBeLoadedWithQCServiceInfoQualifiers() {
+        getServiceInfoStream()
+                .filter(this::isNonManagementCA)
+                .forEach(this::assertQcQualifiers);
     }
+
+    private Stream<ServiceInfo> getServiceInfoStream() {
+        return getCertificateTokens()
+                .stream()
+                .map(this::getServiceInfo);
+    }
+
+    private boolean isManagementServiceInfo(ServiceInfo serviceInfo) {
+        return StringUtils.contains(serviceInfo.getServiceName(), "Management");
+    }
+
+    private boolean isNonManagementCA(ServiceInfo serviceInfo) {
+        return StringUtils.equals("http://uri.etsi.org/TrstSvc/Svctype/CA/QC", serviceInfo.getType()) &&
+                !isManagementServiceInfo(serviceInfo);
+    }
+
+    private List<CertificateToken> getCertificateTokens() {
+        return trustedListSource
+                .getCertificatePool()
+                .getCertificateTokens();
+    }
+
+    private void assertNoQualifiers(ServiceInfo serviceInfo) {
+        assertTrue(serviceInfo.getQualifiersAndConditions().keySet().isEmpty());
+    }
+
+    private void assertQcQualifiers(ServiceInfo serviceInfo) {
+        Set<String> qualifiers = serviceInfo.getQualifiersAndConditions().keySet();
+        assertTrue(qualifiers.contains("http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/QCForESig"));
+        assertTrue(qualifiers.contains("http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/QCWithQSCD"));
+        assertTrue(qualifiers.contains("http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/QCStatement"));
+    }
+
+    private ServiceInfo getServiceInfo(CertificateToken certificateToken) {
+        return (ServiceInfo) certificateToken.getAssociatedTSPS().toArray()[0];
+    }
+
+
 }

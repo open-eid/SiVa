@@ -10,6 +10,7 @@ final class BDOCTestUtils {
     static final String VALID_ID_CARD_MOB_ID = "Valid_IDCard_MobID_signatures.bdoc";
     static final String XROAD_BATCHSIGNATURE_CONTAINER = "xroad-batchsignature.asice";
     static final String XROAD_SIMPLE_CONTAINER = "xroad-simple.asice";
+    static final String BDOC_TEST_OF_KLASS3_CHAIN = "etoken_CPP.bdoc";
 
     private BDOCTestUtils() {
     }

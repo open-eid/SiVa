@@ -55,7 +55,7 @@ class UploadController {
 
     @ResponseBody
     @RequestMapping(value = "/upload", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ValidationResponse getUploadedFile(@RequestParam(value = "file") MultipartFile file, Model model) {
+    public ValidationResponse getUploadedFile(@RequestParam(value = "file") MultipartFile file, @RequestParam String policy, Model model) {
         if (file.isEmpty()) {
             model.addAttribute("error", "File upload failed");
             return validationResponse(model);
@@ -64,7 +64,7 @@ class UploadController {
         long timestamp = System.currentTimeMillis() / SECOND_IN_MILLISECONDS;
         try {
             final UploadedFile uploadedFile = fileUploadService.addUploadedFile(timestamp, file);
-            validationTaskRunner.run(uploadedFile);
+            validationTaskRunner.run(policy, uploadedFile);
 
             setModelFlashAttributes(model);
         } catch (IOException e) {

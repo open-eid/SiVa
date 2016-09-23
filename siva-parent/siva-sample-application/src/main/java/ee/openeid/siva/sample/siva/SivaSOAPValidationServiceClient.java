@@ -41,13 +41,13 @@ public class SivaSOAPValidationServiceClient implements ValidationService {
     private RestTemplate restTemplate;
 
     @Override
-    public Observable<String> validateDocument(UploadedFile file) throws IOException {
+    public Observable<String> validateDocument(String policy, UploadedFile file) throws IOException {
         if (file == null) {
             throw new IOException("File not found");
         }
 
         FileType serviceType = ValidationRequestUtils.getValidationServiceType(file);
-        String requestBody = createXMLValidationRequest(file.getEncodedFile(), serviceType.name(), file.getFilename());
+        String requestBody = createXMLValidationRequest(file.getEncodedFile(), serviceType.name(), file.getFilename(), policy);
 
         String fullUrl = properties.getServiceHost() + properties.getSoapServicePath();
         return Observable.just(formatXML(restTemplate.postForObject(fullUrl, requestBody, String.class)));
@@ -69,7 +69,7 @@ public class SivaSOAPValidationServiceClient implements ValidationService {
         return xmlOutput.getWriter().toString().replace("?>", "?>" + LINE_SEPARATOR);
     }
 
-    private static String createXMLValidationRequest(String base64Document, String documentType, String filename) {
+    private static String createXMLValidationRequest(String base64Document, String documentType, String filename, String policy) {
         return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">" + LINE_SEPARATOR +
                 "   <soapenv:Header/>" + LINE_SEPARATOR +
                 "   <soapenv:Body>" + LINE_SEPARATOR +
@@ -78,6 +78,7 @@ public class SivaSOAPValidationServiceClient implements ValidationService {
                 "            <Document>" + base64Document + "</Document>" + LINE_SEPARATOR +
                 "            <Filename>" + filename + "</Filename>" + LINE_SEPARATOR +
                 "            <DocumentType>" + documentType + "</DocumentType>" + LINE_SEPARATOR +
+                "            <SignaturePolicy>" + policy + "</SignaturePolicy>" + LINE_SEPARATOR +
                 "         </soap:ValidationRequest>" + LINE_SEPARATOR +
                 "      </soap:ValidateDocument>" + LINE_SEPARATOR +
                 "   </soapenv:Body>" + LINE_SEPARATOR +

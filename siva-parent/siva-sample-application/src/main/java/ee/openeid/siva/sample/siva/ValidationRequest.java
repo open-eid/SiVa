@@ -23,4 +23,5 @@ public class ValidationRequest {
     private FileType documentType;
     private String filename;
     private String document;
+    private String signaturePolicy;
 }

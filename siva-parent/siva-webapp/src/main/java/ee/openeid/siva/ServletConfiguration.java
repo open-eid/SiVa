@@ -1,7 +1,7 @@
 package ee.openeid.siva;
 
 import ee.openeid.siva.webapp.soap.ValidationWebService;
-import ee.openeid.siva.webapp.soap.ValidationWebServiceImpl;
+import ee.openeid.siva.webapp.soap.impl.ValidationWebServiceImpl;
 import org.apache.cxf.Bus;
 import org.apache.cxf.bus.spring.SpringBus;
 import org.apache.cxf.jaxws.EndpointImpl;

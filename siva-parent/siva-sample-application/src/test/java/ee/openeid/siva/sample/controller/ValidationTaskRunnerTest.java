@@ -52,10 +52,10 @@ public class ValidationTaskRunnerTest {
         final Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
         logger.addAppender(mockAppender);
 
-        given(validationServiceJson.validateDocument(any(UploadedFile.class)))
+        given(validationServiceJson.validateDocument(any(String.class), any(UploadedFile.class)))
                 .willReturn(Observable.just("{}"));
 
-        given(validationServiceSoap.validateDocument(any(UploadedFile.class)))
+        given(validationServiceSoap.validateDocument(any(String.class), any(UploadedFile.class)))
                 .willReturn(Observable.just("<soap></soap>"));
     }
 
@@ -67,7 +67,7 @@ public class ValidationTaskRunnerTest {
 
     @Test
     public void givenValidUploadFileReturnsValidationResultOfAllServices() throws Exception {
-        validationTaskRunner.run(new UploadedFile());
+        validationTaskRunner.run("", new UploadedFile());
 
         assertThat(validationTaskRunner.getValidationResult(ValidationResultType.JSON)).isEqualTo("{}");
         assertThat(validationTaskRunner.getValidationResult(ValidationResultType.SOAP)).isEqualTo("<soap></soap>");
@@ -75,7 +75,7 @@ public class ValidationTaskRunnerTest {
 
     @Test
     public void givenClearCommandReturnsEmptyMapValueAsNull() throws Exception {
-        validationTaskRunner.run(new UploadedFile());
+        validationTaskRunner.run("", new UploadedFile());
         validationTaskRunner.clearValidationResults();
 
         assertThat(validationTaskRunner.getValidationResult(ValidationResultType.JSON)).isNull();
@@ -83,8 +83,8 @@ public class ValidationTaskRunnerTest {
 
     @Test
     public void validationServiceThrowsExceptionLogMessageIsWritten() throws Exception {
-        given(validationServiceJson.validateDocument(any(UploadedFile.class))).willThrow(new IOException());
-        validationTaskRunner.run(new UploadedFile());
+        given(validationServiceJson.validateDocument(any(String.class), any(UploadedFile.class))).willThrow(new IOException());
+        validationTaskRunner.run("", new UploadedFile());
 
         verify(mockAppender).doAppend(captorLoggingEvent.capture());
 

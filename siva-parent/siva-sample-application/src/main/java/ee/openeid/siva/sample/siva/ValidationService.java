@@ -23,5 +23,5 @@ import java.io.IOException;
 
 @FunctionalInterface
 public interface ValidationService {
-    Observable<String> validateDocument(UploadedFile file) throws IOException;
+    Observable<String> validateDocument(String policy, UploadedFile file) throws IOException;
 }

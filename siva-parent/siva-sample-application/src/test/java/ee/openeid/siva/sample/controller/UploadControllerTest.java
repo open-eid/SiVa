@@ -110,7 +110,7 @@ public class UploadControllerTest {
                 "bdoc content".getBytes()
         );
 
-        mockMvc.perform(fileUpload("/upload").file(uploadFile))
+        mockMvc.perform(fileUpload("/upload").file(uploadFile).param("policy", ""))
                 .andExpect(status().is(200))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
     }
@@ -127,7 +127,7 @@ public class UploadControllerTest {
                 "bdoc content".getBytes()
         );
 
-        mockMvc.perform(fileUpload("/upload").file(uploadFile))
+        mockMvc.perform(fileUpload("/upload").file(uploadFile).param("policy", ""))
                 .andExpect(status().is(200));
     }
 
@@ -140,13 +140,13 @@ public class UploadControllerTest {
                 "".getBytes()
         );
 
-        mockMvc.perform(fileUpload("/upload").file(uploadFile))
+        mockMvc.perform(fileUpload("/upload").file(uploadFile).param("policy", ""))
                 .andExpect(status().is(200));
     }
 
     @Test
     public void webServiceTaskRunnerThrowsInterruptedExceptionExpectLogMessage() throws Exception {
-        doThrow(new InterruptedException("SiVa Service failure")).when(taskRunner).run(any());
+        doThrow(new InterruptedException("SiVa Service failure")).when(taskRunner).run(any(), any());
         MockMultipartFile uploadFile = new MockMultipartFile(
                 "file",
                 "random.bdoc",
@@ -154,7 +154,7 @@ public class UploadControllerTest {
                 "bdoc content".getBytes()
         );
 
-        mockMvc.perform(fileUpload("/upload").file(uploadFile))
+        mockMvc.perform(fileUpload("/upload").file(uploadFile).param("policy", ""))
                 .andExpect(status().is(200));
 
         verify(mockAppender).doAppend(captorLoggingEvent.capture());

@@ -47,12 +47,12 @@ class ValidationTaskRunner {
 
     private final Map<ValidationResultType, String> validationResults = new ConcurrentHashMap<>();
 
-    void run(UploadedFile uploadedFile) throws InterruptedException {
+    void run(String policy, UploadedFile uploadedFile) throws InterruptedException {
         Map<ValidationResultType, ValidationService> serviceMap = getValidationServiceMap();
 
         ExecutorService executorService = Executors.newFixedThreadPool(serviceMap.size());
         serviceMap.entrySet().forEach(entry -> {
-            executorService.submit(() -> validateFile(entry.getValue(), entry.getKey(), uploadedFile));
+            executorService.submit(() -> validateFile(entry.getValue(), entry.getKey(), uploadedFile, policy));
         });
 
         executorService.shutdown();
@@ -74,10 +74,11 @@ class ValidationTaskRunner {
     private void validateFile(
             ValidationService validationService,
             ValidationResultType resultType,
-            UploadedFile uploadedFile
+            UploadedFile uploadedFile,
+            String policy
     ) {
         try {
-            String validationResult = validationService.validateDocument(uploadedFile)
+            String validationResult = validationService.validateDocument(policy, uploadedFile)
                     .toBlocking()
                     .first();
 

@@ -30,8 +30,10 @@
         sivaDropzone.removeAllFiles();
     });
 
-    sivaDropzone.on('sending', function () {
+    sivaDropzone.on('sending', function (file, xhr, formData) {
         $('#result-area, #validation-summery').addClass("hide");
+        var policy = $('select#policy-select').val();
+        formData.append("policy", policy);
     });
 
     sivaDropzone.on('uploadprogress', function (file, progress) {

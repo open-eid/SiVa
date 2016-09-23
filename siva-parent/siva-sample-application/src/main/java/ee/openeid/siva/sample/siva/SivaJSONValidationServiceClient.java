@@ -36,7 +36,7 @@ public class SivaJSONValidationServiceClient implements ValidationService {
     private SivaValidationServiceErrorHandler errorHandler;
 
     @Override
-    public Observable<String> validateDocument(final UploadedFile file) throws IOException {
+    public Observable<String> validateDocument(final String policy, final UploadedFile file) throws IOException {
         if (file == null) {
             throw new IOException("Invalid file object given");
         }
@@ -45,7 +45,7 @@ public class SivaJSONValidationServiceClient implements ValidationService {
 
         final ValidationRequest validationRequest = new ValidationRequest();
         validationRequest.setDocument(base64EncodedFile);
-
+        validationRequest.setSignaturePolicy(policy);
         final String filename = file.getFilename();
         validationRequest.setFilename(filename);
         setValidationDocumentType(validationRequest, file);

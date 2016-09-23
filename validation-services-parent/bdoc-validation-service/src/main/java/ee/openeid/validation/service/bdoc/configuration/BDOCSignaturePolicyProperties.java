@@ -30,16 +30,13 @@ public class BDOCSignaturePolicyProperties extends SignaturePolicyProperties<Con
     @PostConstruct
     public void init() {
         if (defaultPolicy == null) {
-            setAbstractDefaultPolicy(NO_TYPE_POLICY.getName());
-        } else {
-            setAbstractDefaultPolicy(defaultPolicy);
+            setDefaultPolicy(NO_TYPE_POLICY.getName());
         }
-
         if (policies.isEmpty()) {
-            setAbstractPolicies(getDefaultBdocPolicies());
-        } else {
-            setAbstractPolicies(policies);
+            setPolicies(getDefaultBdocPolicies());
         }
+        setAbstractDefaultPolicy(getDefaultPolicy());
+        setAbstractPolicies(getPolicies());
     }
 
     private List<ConstraintDefinedPolicy> getDefaultBdocPolicies() {

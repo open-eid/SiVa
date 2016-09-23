@@ -2,6 +2,8 @@ package ee.openeid.validation.service.bdoc.signature.policy;
 
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import ee.openeid.validation.service.bdoc.configuration.BDOCSignaturePolicyProperties;
+import ee.openeid.validation.service.bdoc.configuration.TSLUtils;
+import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import org.apache.commons.lang.StringUtils;
 import org.digidoc4j.Configuration;
 import org.slf4j.Logger;
@@ -21,6 +23,7 @@ public class BDOCConfigurationService {
     private PolicyConfigurationWrapper policyConfiguration;
     private BDOCSignaturePolicyProperties properties;
     private BDOCSignaturePolicyService policyService;
+    private TrustedListsCertificateSource trustedListSource;
 
     @PostConstruct
     private void loadAllBDOCConfigurations() {
@@ -33,7 +36,19 @@ public class BDOCConfigurationService {
     }
 
     public PolicyConfigurationWrapper loadPolicyConfiguration(String policyName) {
-        return StringUtils.isEmpty(policyName) ? policyConfiguration : loadExistingPolicy(policyName);
+        PolicyConfigurationWrapper policyConfigurationWrapper =  StringUtils.isEmpty(policyName) ?
+                loadExistingPolicy(properties.getDefaultPolicy()) :
+                loadExistingPolicy(policyName);
+        reloadTrustedCertificatesIfNecessary(policyConfigurationWrapper);
+        return policyConfigurationWrapper;
+    }
+
+    private void reloadTrustedCertificatesIfNecessary(PolicyConfigurationWrapper policyConfiguration) {
+        Configuration configuration = policyConfiguration.getConfiguration();
+        if (configuration.getTSL().getCertificatePool().getCertificateTokens().size() != trustedListSource.getCertificates().size()) {
+            LOGGER.debug("some or all trusted certificates are not added to D4J configuration, repopulating from cert pool");
+            policyConfiguration.getConfiguration().setTSL(TSLUtils.createTSLFromTrustedCertSource(trustedListSource));
+        }
     }
 
     private PolicyConfigurationWrapper loadExistingPolicy(String policyName) {
@@ -56,5 +71,10 @@ public class BDOCConfigurationService {
     @Autowired
     public void setProperties(BDOCSignaturePolicyProperties properties) {
         this.properties = properties;
+    }
+
+    @Autowired
+    public void setTrustedListSource(TrustedListsCertificateSource trustedListSource) {
+        this.trustedListSource = trustedListSource;
     }
 }

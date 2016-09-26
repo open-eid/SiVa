@@ -14,6 +14,10 @@
  * See the Licence for the specific language governing permissions and limitations under the Licence.
  */
 
+.top-buffer {
+    margin-top:20px;
+}
+
 .hide {
     display: none;
 }
@@ -31,7 +35,7 @@
 }
 
 .progress {
-    margin-top: 2.5rem;
+    margin-top: 2.5em;
 }
 
 .footer {
@@ -50,7 +54,9 @@
 }
 
 .navbar-brand {
-    padding: 0px;
+    display: inline-block;
+    padding: 0;
+    margin-right: 1.5em;
 }
 
 .navbar-brand > img {
@@ -95,7 +101,7 @@
 }
 
 #content {
-    margin-top: 1rem;
+    margin-top: 1em;
 }
 
 .eu-brand {
@@ -124,7 +130,7 @@
     }
 
     .navbar-brand {
-        float:none;
+        float: none;
     }
 
     .footer-icons {

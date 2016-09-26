@@ -19,12 +19,12 @@ block content
     .row
         .col-md-4
             .input-group
-                span.input-group-addon#policy-addon Policy:
+                span.input-group-addon#policy-addon Validation policy:
                 select.form-control#policy-select(aria-describedby="policy-addon")
                     option(value="") default
                     option(value="POLv1") POLv1
                     option(value="POLv2") POLv2
-    .row
+    .row.top-buffer
         .col-md-12
             form#siva-dropzone.dropzone(action="upload", style="width: 100%", method="POST", enctype="multipart/form-data")
                 input.hide(type="file", name="file")

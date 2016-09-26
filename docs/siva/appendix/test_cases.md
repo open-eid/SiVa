@@ -252,6 +252,8 @@ List of Test Cases
   * Expected Result: The document should fail the validation
   * File: NS28_WrongSignerCertInOCSPResp.bdoc
 
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
 
 **TestCaseID: Bdoc-ValidationFail-28**
 
@@ -298,7 +300,7 @@ List of Test Cases
   * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2)
   * Title: Bdoc with warning on signature
   * Expected Result: The document should pass the validation but warning should be returned
-  * File:
+  * File: bdoc_weak_warning_sha1.bdoc
 
   **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
@@ -376,6 +378,8 @@ List of Test Cases
   * Expected Result: The document should pass the validation
   * File: EE_SER-AEX-B-LT-V-28.asice
 
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+
 
 **TestCaseID: Bdoc-ValidationPass-12**
 
@@ -392,7 +396,7 @@ List of Test Cases
   * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2)
   * Title: Bdoc TS with multiple valid signatures
   * Expected Result: The document should pass the validation
-  * File: BDOC-TS.bdoc
+  * File: Test_id_aa.asice
 
 
 **TestCaseID: Bdoc-ValidationPass-14**
@@ -713,6 +717,15 @@ List of Test Cases
   * File: EID-SK 2011 _ SK OCSP RESPONDER 2011.ddoc
 
 
+**TestCaseID: Ddoc-ValidationPass-15**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
+  * Title: Ddoc with warning should pass
+  * Expected Result: Document passes the validation
+  * File: 18912.ddoc
+
+
 **TestCaseID: DdocHashcode-ValidationPass-1**
 
   * TestType: Automated
@@ -878,8 +891,8 @@ List of Test Cases
 
   * TestType: Automated
   * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
-  * Title: The PDF has PAdES-B profile signature
-  * Expected Result: Document validation should fail
+  * Title: The PDF has PAdES-B profile signature POLv1
+  * Expected Result: Document validation should fail as the profile is not supported with any policy
   * File: hellopades-pades-b-sha256-auth.pdf
 
 
@@ -887,34 +900,66 @@ List of Test Cases
 
   * TestType: Automated
   * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
-  * Title: The PDF has PAdES-T profile signature
-  * Expected Result: Document validation should fail
-  * File:
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+  * Title: The PDF has PAdES-B profile signature POLv2
+  * Expected Result: Document validation should fail as the profile is supported with any policy
+  * File: hellopades-pades-b-sha256-auth.pdf
 
 
 **TestCaseID: PDF-BaselineProfile-3**
 
   * TestType: Automated
   * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
-  * Title: The PDF has PAdES-LT profile signature
-  * Expected Result: Document validation should pass
-  * File: hellopades-pades-lt-sha256-sign.pdf
+  * Title: The PDF has PAdES-T profile signature POLv1
+  * Expected Result: Document validation should fail with any policy
+  * File: pades-baseline-t-live-aj.pdf
 
 
 **TestCaseID: PDF-BaselineProfile-4**
 
   * TestType: Automated
   * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
-  * Title: The PDF has PAdES-LTA profile signature
-  * Expected Result: Document validation should pass
-  * File:
-
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
+  * Title: The PDF has PAdES-T profile signature POLv2
+  * Expected Result: Document validation should fail with any policy
+  * File: pades-baseline-t-live-aj.pdf
 
 
 **TestCaseID: PDF-BaselineProfile-5**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
+  * Title: The PDF has PAdES-LT profile signature POLv1
+  * Expected Result: Document validation should pass with any policy
+  * File: hellopades-pades-lt-sha256-sign.pdf
+
+
+**TestCaseID: PDF-BaselineProfile-6**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
+  * Title: The PDF has PAdES-LT profile signature POLv2
+  * Expected Result: Document validation should pass with any policy
+  * File: hellopades-pades-lt-sha256-sign.pdf
+
+
+**TestCaseID: PDF-BaselineProfile-7**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
+  * Title: The PDF has PAdES-LTA profile signature POLv1
+  * Expected Result: Document validation should pass with any policy
+  * File: pades-baseline-lta-live-aj.pdf
+
+
+**TestCaseID: PDF-BaselineProfile-8**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
+  * Title: The PDF has PAdES-LTA profile signature POLv2
+  * Expected Result: Document validation should pass with any policy
+  * File: pades-baseline-lta-live-aj.pdf
+
+
+**TestCaseID: PDF-BaselineProfile-9**
 
   * TestType: Automated
   * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
@@ -923,7 +968,7 @@ List of Test Cases
   * File: hellopades-lt-b.pdf
 
 
-**TestCaseID: PDF-BaselineProfile-6**
+**TestCaseID: PDF-BaselineProfile-10**
 
   * TestType: Automated
   * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
@@ -932,7 +977,7 @@ List of Test Cases
   * File: hellopades-lt1-lt2-wrongDigestValue.pdf
 
 
-**TestCaseID: PDF-BaselineProfile-7**
+**TestCaseID: PDF-BaselineProfile-11**
 
   * TestType: Automated
   * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
@@ -940,24 +985,13 @@ List of Test Cases
   * Expected Result: Document signed with multiple signers with serial signatures should pass
   * File: hellopades-lt1-lt2-Serial.pdf
 
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
-
-**TestCaseID: PDF-BaselineProfile-8**
+**TestCaseID: PDF-BaselineProfile-12**
 
   * TestType: Automated
   * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
   * Title: PDF document signed with multiple signers parallel signature
-  * Expected Result: Document with parallel signatures should pass
-  * File: hellopades-lt1-lt2-parallel3.pdf
-
-
-**TestCaseID: PDF-BaselineProfile-9**
-
-  * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
-  * Title: PDF document signed with multiple signers parallel signature without Sscd
-  * Expected Result: Document with no qualified and without SSCD should warn
+  * Expected Result: Document with parallel signatures should fail
   * File: hellopades-lt1-lt2-parallel3.pdf
 
   **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
@@ -1032,8 +1066,6 @@ List of Test Cases
   * Expected Result: Document signed with RSA1023 algorithm should fail
   * File: hellopades-lt-sha256-rsa1023.pdf
 
-  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
-
 
 **TestCaseID: PDF-SigCryptoAlg-8**
 
@@ -1083,6 +1115,8 @@ List of Test Cases
   * Title: The PDF-file has been signed with certificate that missing signed attribute (PAdES Baseline LT)
   * Expected Result: PDF-file validation should fail
   * File: missing_signing_certificate_attribute.pdf
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 
 **TestCaseID: PDF-ValidationFail-4**
@@ -1158,70 +1192,79 @@ List of Test Cases
 ## SignaturePolicyIT.java
 
 
-**TestCaseID: Signature-Policy-1**
+**TestCaseID: Pdf-Signature-Policy-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2)
-  * Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation more than 24 hours later than the signatures Time Stamp.
-  * Expected Result: Document with over 24h delay should fail when signature policy is set to strict
-  * File: hellopades-lt-sha256-ocsp-28h.pdf
+  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1)
+  * Title: The PDF-file is not QES level and misses SSCD/QSCD compliance
+  * Expected Result: Signatures are valid according to policy
+  * File: soft-cert-signature.pdf
+
+
+**TestCaseID: Pdf-Signature-Policy-2**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1)
+  * Title: The PDF-file is not QES level and misses SSCD/QSCD compliance
+  * Expected Result: Signatures are not valid according to policy
+  * File: soft-cert-signature.pdf
+
+
+**TestCaseID: Pdf-Signature-Policy-3**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1)
+  * Title: The PDF-file is QES level and has SSCD/QSCD compliance
+  * Expected Result: Signatures are valid according to policy ("weaker" policy is used)
+  * File: pades_lt_two_valid_sig.pdf
+
+
+**TestCaseID: Pdf-Signature-Policy-4**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1)
+  * Title: The PDF-file is QES level and has SSCD/QSCD compliance
+  * Expected Result: Signatures are valid according to policy
+  * File: pades_lt_two_valid_sig.pdf
+
+
+**TestCaseID: Bdoc-Signature-Policy-1**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1)
+  * Title: The bdoc is not QES level and misses SSCD/QSCD compliance
+  * Expected Result: Signatures are valid according to policy
+  * File:
 
   **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 
-**TestCaseID: Signature-Policy-2**
+**TestCaseID: Bdoc-Signature-Policy-2**
 
   * TestType: Automated
   * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1)
-  * Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation more than 24 hours later than the signatures Time Stamp.
-  * Expected Result: Document with over 24h delay should pass when signature policy is set to "EU"
-  * File: hellopades-lt-sha256-ocsp-28h.pdf
-
-
-**TestCaseID: Signature-Policy-2**
-
-  * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface](http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface)
-  * Title: The PDF-file has PAdES-LT profile signature and an OCSP confirmation more than 24 hours later than the signatures Time Stamp.
-  * Expected Result: Document with over 24h delay should fail when signature policy is not set or empty, because it defaults to "EE"
-  * File: hellopades-lt-sha256-ocsp-28h.pdf
+  * Title: The bdoc is not QES level and misses SSCD/QSCD compliance
+  * Expected Result: Signatures are not valid according to policy
+  * File:
 
   **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 
-**TestCaseID: Signature-Policy-3**
-
-  * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
-  * Title: The PDF has LT and B profile signatures
-  * Expected Result: 1 of 2 signatures' should pass when signature policy is set to "EE"
-  * File: hellopades-lt-b.pdf
-
-
-**TestCaseID: Signature-Policy-4**
+**TestCaseID: Bdoc-Signature-Policy-3**
 
   * TestType: Automated
   * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1)
-  * Title: The PDF has LT and B profile signatures
-  * Expected Result: 2 of 2 signatures' validation should pass when signature policy is set to "EU"
-  * File: hellopades-lt-b.pdf
+  * Title: The bdoc is QES level and has SSCD/QSCD compliance
+  * Expected Result: Signatures are valid according to policy ("non-strict" policy is used)
+  * File: Valid_ID_sig.bdoc
 
 
-**TestCaseID: Signature-Policy-5**
+**TestCaseID: Bdoc-Signature-Policy-4**
 
   * TestType: Automated
   * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1)
-  * Title: The PDF has LT and B profile signatures
-  * Expected Result: 2 of 2 signatures' validation should pass when signature policy is set to "eU"
-  * File: hellopades-lt-b.pdf
-
-
-**TestCaseID: Signature-Policy-6**
-
-  * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2)
-  * Title: Bdoc with conformant EE signature
-  * Expected Result: Document should pass when signature policy is set to "EE"
+  * Title: The bdoc is QES level and has SSCD/QSCD compliance
+  * Expected Result: Signatures are valid according to policy
   * File: Valid_ID_sig.bdoc
 
 
@@ -1495,6 +1538,8 @@ List of Test Cases
   * Title: Verification of values in Validation Report XAdES_BASELINE_LT-TM, AdESqc
   * Expected Result: All required elements are present and meet the expected values.
   * File: 23200_weakdigest-wrong-nonce.asice
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 
 **TestCaseID: Bdoc-ValidationReportVerification-6**
@@ -2003,7 +2048,7 @@ List of Test Cases
   * TestType: Automated
   * Requirement: [http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface](http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface)
   * Title: Ddoc file, not existing value in signaturePolicy
-  * Expected Result: DDOC do not support signature policy selection, value is ignored
+  * Expected Result: Error is returned
   * File: igasugust1.3.ddoc
 
 
@@ -2075,7 +2120,7 @@ List of Test Cases
   * TestType: Automated
   * Requirement: [http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface](http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface)
   * Title: X-road file, not existing value in signaturePolicy
-  * Expected Result: X-Road do not support signature policy selection, value is ignored
+  * Expected Result: Error is returned
   * File: xroad-simple.asice
 
 
@@ -2125,6 +2170,8 @@ List of Test Cases
   * Title: Verification of values in Validation Report XAdES_BASELINE_LT, AdES, FullSignatureScope
   * Expected Result: All required elements are present and meet the expected values.
   * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
+
+  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** 
 
 
 **TestCaseID: Bdoc-SoapValidationReportValue-4**
@@ -2369,16 +2416,7 @@ List of Test Cases
 
   * TestType: Automated
   * Requirement: [http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface](http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface)
-  * Title: Request with not allowed signature policy
-  * Expected Result: Error is returned
-  * File: Valid_IDCard_MobID_signatures.bdoc
-
-
-**TestCaseID: Soap-ValidationRequest-17**
-
-  * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface](http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface)
-  * Title: Request with invalid signature policy
+  * Title: Request with not allowed signature policy characters
   * Expected Result: Error is returned
   * File: Valid_IDCard_MobID_signatures.bdoc
 
@@ -2487,7 +2525,7 @@ List of Test Cases
   * TestType: Automated
   * Requirement: [http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface](http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface)
   * Title: Ddoc file, not existing value in signaturePolicy
-  * Expected Result: DDOC do not support signature policy selection, value is ignored
+  * Expected Result: Error is returned
   * File: igasugust1.3.ddoc
 
 
@@ -2550,7 +2588,7 @@ List of Test Cases
   * TestType: Automated
   * Requirement: [http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface](http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface)
   * Title: X-road file, not existing value in signaturePolicy
-  * Expected Result: X-Road do not support signature policy selection, value is ignored
+  * Expected Result: Error is returned
   * File: xroad-simple.asice
 
 
@@ -2579,4 +2617,34 @@ List of Test Cases
   * Title: Mismatch in documentType and actual document (bdoc and pdf)
   * Expected Result: Error is returned
   * File: PdfValidSingleSignature.pdf
+
+
+## SoapXRoadRequestHeaderIT.java
+
+
+**TestCaseID: XroadSoap-RequestVerification-1**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface](http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface)
+  * Title: Soap headers are returned in response
+  * Expected Result: Same headers are in response as in request
+  * File: Valid_IDCard_MobID_signatures.bdoc
+
+
+**TestCaseID: XroadSoap-RequestVerification-2**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface](http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface)
+  * Title: Soap headers are returned in correct order
+  * Expected Result: Same headers are in response as in request
+  * File: Valid_IDCard_MobID_signatures.bdoc
+
+
+**TestCaseID: XroadSoap-RequestVerification-3**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface](http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface)
+  * Title: Soap headers are returned in error response
+  * Expected Result: Same headers are in response as in request
+  * File:
 

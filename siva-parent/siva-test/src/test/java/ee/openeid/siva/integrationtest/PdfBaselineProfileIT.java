@@ -4,6 +4,7 @@ import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -11,7 +12,18 @@ import org.junit.experimental.categories.Category;
 @Category(IntegrationTest.class)
 public class PdfBaselineProfileIT extends SiVaRestTests{
 
-    private static final String TEST_FILES_DIRECTORY = "pdf/baseline_profile_test_files/";
+    @Before
+    public void DirectoryBackToDefault() {
+        setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
+    }
+
+    private static final String DEFAULT_TEST_FILES_DIRECTORY = "pdf/baseline_profile_test_files/";
+
+    private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
+
+    public void setTestFilesDirectory(String testFilesDirectory) {
+        this.testFilesDirectory = testFilesDirectory;
+    }
 
     /**
      * TestCaseID: PDF-BaselineProfile-1
@@ -20,16 +32,25 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
-     * Title: The PDF has PAdES-B profile signature
+     * Title: The PDF has PAdES-B profile signature POLv1
      *
-     * Expected Result: Document validation should fail
+     * Expected Result: Document validation should fail as the profile is not supported with any policy
      *
      * File: hellopades-pades-b-sha256-auth.pdf
      */
     @Test
-    public void baselineProfileBDocumentShouldFail() {
-        QualifiedReport report = postForReport("hellopades-pades-b-sha256-auth.pdf");
-        assertAllSignaturesAreInvalid(report);
+    public void baselineProfileBDocumentShouldFailPolv1() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-pades-b-sha256-auth.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "hellopades-pades-b-sha256-auth.pdf", "pdf", VALID_SIGNATURE_POLICY_1))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_B"))
+                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors.content", Matchers.hasItems("The expected format is not found!"))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -39,17 +60,25 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
-     * Title: The PDF has PAdES-T profile signature
+     * Title: The PDF has PAdES-B profile signature POLv2
      *
-     * Expected Result: Document validation should fail
+     * Expected Result: Document validation should fail as the profile is supported with any policy
      *
-     * File:
+     * File: hellopades-pades-b-sha256-auth.pdf
      */
-    @Ignore
-    @Test //TODO: need test file
-    public void baselineProfileTDocumentShouldFail() {
-        QualifiedReport report = postForReport("some_file.pdf");
-        assertInvalidWithError(report.getSignatures().get(0), "The signature format is not allowed by the validation policy constraint!");
+    @Test
+    public void baselineProfileBDocumentShouldFailPolv2() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-pades-b-sha256-auth.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "hellopades-pades-b-sha256-auth.pdf", "pdf", VALID_SIGNATURE_POLICY_2))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_B"))
+                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors.content", Matchers.hasItems("The expected format is not found!"))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -59,15 +88,25 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
-     * Title: The PDF has PAdES-LT profile signature
+     * Title: The PDF has PAdES-T profile signature POLv1
      *
-     * Expected Result: Document validation should pass
+     * Expected Result: Document validation should fail with any policy
      *
-     * File: hellopades-pades-lt-sha256-sign.pdf
+     * File: pades-baseline-t-live-aj.pdf
      */
     @Test
-    public void baselineProfileLTDocumentShouldPass() {
-        assertAllSignaturesAreValid(postForReport("hellopades-pades-lt-sha256-sign.pdf"));
+    public void baselineProfileTDocumentShouldFailPolv1() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades-baseline-t-live-aj.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "pades-baseline-t-live-aj.pdf", "pdf", VALID_SIGNATURE_POLICY_1))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_T"))
+                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors.content", Matchers.hasItems("The expected format is not found!"))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -77,19 +116,141 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
-     * Title: The PDF has PAdES-LTA profile signature
+     * Title: The PDF has PAdES-T profile signature POLv2
      *
-     * Expected Result: Document validation should pass
+     * Expected Result: Document validation should fail with any policy
      *
-     * File:
+     * File: pades-baseline-t-live-aj.pdf
      */
-    @Test @Ignore //TODO: need test file
-    public void baselineProfileLTADocumentShouldPass() {
-        assertAllSignaturesAreValid(postForReport("some_file.pdf"));
+    @Test
+    public void baselineProfileTDocumentShouldFailPolv2() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades-baseline-t-live-aj.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "pades-baseline-t-live-aj.pdf", "pdf", VALID_SIGNATURE_POLICY_2))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_T"))
+                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors.content", Matchers.hasItems("The expected format is not found!"))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
      * TestCaseID: PDF-BaselineProfile-5
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     *
+     * Title: The PDF has PAdES-LT profile signature POLv1
+     *
+     * Expected Result: Document validation should pass with any policy
+     *
+     * File: hellopades-pades-lt-sha256-sign.pdf
+     */
+    @Test
+    public void baselineProfileLTDocumentShouldPassPolv1() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-pades-lt-sha256-sign.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "hellopades-pades-lt-sha256-sign.pdf", "pdf", VALID_SIGNATURE_POLICY_1))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
+    }
+
+    /**
+     * TestCaseID: PDF-BaselineProfile-6
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     *
+     * Title: The PDF has PAdES-LT profile signature POLv2
+     *
+     * Expected Result: Document validation should pass with any policy
+     *
+     * File: hellopades-pades-lt-sha256-sign.pdf
+     */
+    @Test
+    public void baselineProfileLTDocumentShouldPassPolv2() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-pades-lt-sha256-sign.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "hellopades-pades-lt-sha256-sign.pdf", "pdf", VALID_SIGNATURE_POLICY_2))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
+    }
+
+    /**
+     * TestCaseID: PDF-BaselineProfile-7
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     *
+     * Title: The PDF has PAdES-LTA profile signature POLv1
+     *
+     * Expected Result: Document validation should pass with any policy
+     *
+     * File: pades-baseline-lta-live-aj.pdf
+     */
+    @Test
+    public void baselineProfileLTADocumentShouldPassPolv1() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades-baseline-lta-live-aj.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "pades-baseline-lta-live-aj.pdf", "pdf", VALID_SIGNATURE_POLICY_1))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LTA"))
+                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
+    }
+
+    /**
+     * TestCaseID: PDF-BaselineProfile-8
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     *
+     * Title: The PDF has PAdES-LTA profile signature POLv2
+     *
+     * Expected Result: Document validation should pass with any policy
+     *
+     * File: pades-baseline-lta-live-aj.pdf
+     */
+    @Test
+    public void baselineProfileLTADocumentShouldPassPolv2() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades-baseline-lta-live-aj.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "pades-baseline-lta-live-aj.pdf", "pdf", VALID_SIGNATURE_POLICY_2))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LTA"))
+                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
+    }
+
+    /**
+     * TestCaseID: PDF-BaselineProfile-9
      *
      * TestType: Automated
      *
@@ -103,12 +264,27 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      */
     @Test
     public void documentWithBaselineProfilesBAndLTSignaturesShouldFail() {
-        QualifiedReport report = postForReport("hellopades-lt-b.pdf");
-        assertSomeSignaturesAreValid(report, 1);
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-b.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "hellopades-lt-b.pdf", "pdf", ""))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("signatures[1].signatureFormat", Matchers.is("PAdES_BASELINE_B"))
+                .body("signatures[1].signatureLevel", Matchers.is("QES"))
+                .body("signatures[1].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[1].subIndication", Matchers.is(""))
+                .body("signatures[1].errors.content", Matchers.hasItems("The expected format is not found!"))
+                .body("signatures[1].warnings", Matchers.hasSize(0))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(2));
     }
 
     /**
-     * TestCaseID: PDF-BaselineProfile-6
+     * TestCaseID: PDF-BaselineProfile-10
      *
      * TestType: Automated
      *
@@ -136,7 +312,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
     }
 
     /**
-     * TestCaseID: PDF-BaselineProfile-7
+     * TestCaseID: PDF-BaselineProfile-11
      *
      * TestType: Automated
      *
@@ -148,7 +324,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * File: hellopades-lt1-lt2-Serial.pdf
      */
-    @Test @Ignore //TODO: Warnings are not returned when validationLevel is set to ARCHIVAL_DATA (default level)
+    @Test
     public void documentSignedWithMultipleSignersSerialSignature() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt1-lt2-Serial.pdf"));
         post(validationRequestWithValidKeys(encodedString, "hellopades-lt1-lt2-Serial.pdf", "pdf", ""))
@@ -164,7 +340,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
     }
 
     /**
-     * TestCaseID: PDF-BaselineProfile-8
+     * TestCaseID: PDF-BaselineProfile-12
      *
      * TestType: Automated
      *
@@ -172,38 +348,17 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * Title: PDF document signed with multiple signers parallel signature
      *
-     * Expected Result: Document with parallel signatures should pass
+     * Expected Result: Document with parallel signatures should fail
      *
      * File: hellopades-lt1-lt2-parallel3.pdf
      */
-    @Test
+    @Test @Ignore //TODO: proper test file is needed!
     public void documentSignedWithMultipleSignersParallelSignature() {
-        assertAllSignaturesAreValid(postForReport("hellopades-lt1-lt2-parallel3.pdf"));
-    }
-
-    /**
-     * TestCaseID: PDF-BaselineProfile-9
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
-     * Title: PDF document signed with multiple signers parallel signature without Sscd
-     *
-     * Expected Result: Document with no qualified and without SSCD should warn
-     *
-     * File: hellopades-lt1-lt2-parallel3.pdf
-     */
-    @Test @Ignore //TODO: Warnings are not returned when validationLevel is set to ARCHIVAL_DATA (default level)
-    public void ifSignerCertificateIsNotQualifiedAndWithoutSscdItIsAcceptedWithWarning() {
-        QualifiedReport report = postForReport("hellopades-lt1-lt2-parallel3.pdf");
-        assertHasWarning(report.getSignatures().get(0), "The certificate is not qualified!");
-        assertHasWarning(report.getSignatures().get(1), "The certificate is not qualified!");
-        assertAllSignaturesAreValid(report);
+        assertAllSignaturesAreInvalid(postForReport("hellopades-lt1-lt2-parallel3.pdf"));
     }
 
     @Override
     protected String getTestFilesDirectory() {
-        return TEST_FILES_DIRECTORY;
+        return testFilesDirectory;
     }
 }

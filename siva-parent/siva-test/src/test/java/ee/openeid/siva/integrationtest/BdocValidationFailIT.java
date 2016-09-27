@@ -256,13 +256,13 @@ public class BdocValidationFailIT extends SiVaRestTests{
      *
      * File:  TM-01_bdoc21-unknown-resp.bdoc
      */
-    @Test @Ignore //TODO: Test broke when fixing bug that BDOC validator never retunrs INDETERMINATE indication
+    @Test
     public void bdocNotTrustedOcspCert() {
         setTestFilesDirectory("bdoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("TM-01_bdoc21-unknown-resp.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "TM-01_bdoc21-unknown-resp.bdoc", "bdoc", VALID_SIGNATURE_POLICY_1))
                 .then()
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
                 .body("signatures[0].errors.content", Matchers.hasItems("The certificate chain for revocation data is not trusted, there is no trusted anchor."))
                 .body("validSignaturesCount", Matchers.is(0));
@@ -478,12 +478,12 @@ public class BdocValidationFailIT extends SiVaRestTests{
      *
      * File: SS-4_teadmataCA.4.asice
      */
-    @Test @Ignore //TODO: Test broke when fixing bug that BDOC validator never retunrs INDETERMINATE indication
+    @Test
     public void bdocSignersCertNotTrusted() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("SS-4_teadmataCA.4.asice"))
                 .then()
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
                 .body("signatures[0].errors[0].content", Matchers.is("The certificate chain for signature is not trusted, there is no trusted anchor."))
                 .body("validSignaturesCount", Matchers.is(0));
@@ -548,7 +548,7 @@ public class BdocValidationFailIT extends SiVaRestTests{
      *
      * Expected Result: The document should fail the validation
      *
-     * File: TM-16_unknown.4.asice
+     * File: KS-21_fileeemaldatud.4.asice
      */
     @Test @Ignore //TODO: Test broke when fixing bug that BDOC validator never retunrs INDETERMINATE indication
     public void bdocSignedFileRemoved() {
@@ -647,14 +647,14 @@ public class BdocValidationFailIT extends SiVaRestTests{
      *
      * File: TS-06_23634_TS_missing_OCSP.asice
      */
-    @Test @Ignore //TODO: Test broke when fixing bug that BDOC validator never retunrs INDETERMINATE indication
+    @Test
     public void bdocBaselineTSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("TS-06_23634_TS_missing_OCSP.asice"));
         post(validationRequestWithValidKeys(encodedString, "TS-06_23634_TS_missing_OCSP.asice", "bdoc", VALID_SIGNATURE_POLICY_1))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT")) //TODO: Shouldnt it return XAdES_BASELINE_T instead?
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("signatures[0].subIndication", Matchers.is("TRY_LATER"))
                 .body("signatures[0].errors.content", Matchers.hasItem("No revocation data for the certificate"))
                 .body("validSignaturesCount", Matchers.is(0));

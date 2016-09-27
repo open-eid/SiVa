@@ -24,12 +24,13 @@ import eu.europa.esig.dss.validation.policy.rules.SubIndication;
 import eu.europa.esig.dss.validation.reports.SignatureType;
 import eu.europa.esig.dss.validation.reports.SimpleReport;
 import org.apache.commons.lang.StringUtils;
-import org.apache.xml.security.signature.Reference;
 import org.digidoc4j.*;
 import org.digidoc4j.exceptions.DigiDoc4JException;
 import org.digidoc4j.impl.bdoc.BDocSignature;
 import org.slf4j.LoggerFactory;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -148,12 +149,11 @@ public class BDOCQualifiedReportBuilder {
     }
 
     private List<Warning> getWarnings(BDocSignature bDocSignature) {
-        List<Warning> warnings = bDocSignature.validateSignature().getWarnings()
+        return bDocSignature.validateSignature().getWarnings()
                 .stream()
                 .map(BDOCQualifiedReportBuilder::mapDigidoc4JWarning)
                 .collect(Collectors.toList());
 
-        return warnings;
     }
 
     private static Warning mapDigidoc4JWarning(DigiDoc4JException digiDoc4JException) {
@@ -165,26 +165,34 @@ public class BDOCQualifiedReportBuilder {
     private List<SignatureScope> getSignatureScopes(BDocSignature bDocSignature, List<String> dataFileNames) {
         return bDocSignature.getOrigin().getReferences()
                 .stream()
-                .filter(r -> dataFileNames.contains(r.getURI())) //filters out Signed Properties
-                .map(BDOCQualifiedReportBuilder::mapDssReference)
+                .map(r -> decodeUriIfPossible(r.getURI()))
+                .filter(dataFileNames::contains) //filters out Signed Properties
+                .map(BDOCQualifiedReportBuilder::createFullSignatureScopeForDataFile)
                 .collect(Collectors.toList());
     }
 
-    private static SignatureScope mapDssReference(Reference reference) {
+    private String decodeUriIfPossible(String uri) {
+        try {
+            return URLDecoder.decode(uri, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            LOGGER.warn("datafile " + uri + " has unsupported encoding", e);
+            return uri;
+        }
+    }
+
+    private static SignatureScope createFullSignatureScopeForDataFile(String filename) {
         SignatureScope signatureScope = new SignatureScope();
-        signatureScope.setName(reference.getURI());
+        signatureScope.setName(filename);
         signatureScope.setScope(FULL_SIGNATURE_SCOPE);
         signatureScope.setContent(FULL_DOCUMENT);
         return signatureScope;
     }
 
     private List<Error> getErrors(BDocSignature bDocSignature) {
-        List<Error> errors = bDocSignature.validateSignature().getErrors()
+        return bDocSignature.validateSignature().getErrors()
                 .stream()
                 .map(BDOCQualifiedReportBuilder::mapDigidoc4JException)
                 .collect(Collectors.toList());
-
-        return errors;
     }
 
     private static Error mapDigidoc4JException(DigiDoc4JException digiDoc4JException) {

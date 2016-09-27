@@ -87,8 +87,6 @@ public class BDOCValidationServiceIntegrationTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
-
-
     @Test
     public void verifyCorrectPolicyIsLoadedToD4JConfiguration() throws Exception {
         System.out.println(configurationService.loadPolicyConfiguration(null).getConfiguration().getValidationPolicy());
@@ -139,6 +137,22 @@ public class BDOCValidationServiceIntegrationTest {
         assertTrue(validationResult2Signatures.getSignatures().size() == 2);
         assertTrue(validationResult2Signatures.getValidSignaturesCount() == 2);
         assertTrue(validationResult2Signatures.getSignaturesCount() == 2);
+    }
+
+    @Test
+    public void signatureScopeShouldBeCorrectWhenDatafilesContainSpacesOrParenthesis() throws Exception {
+        QualifiedReport report = bdocValidationService.validateDocument(buildValidationDocument(VALID_ID_CARD_MOB_ID));
+        report.getSignatures().forEach(sig -> assertContainsScope(sig, "Proov (2).txt"));
+        QualifiedReport report2 = bdocValidationService.validateDocument(buildValidationDocument(VALID_BALTIC_EST_LT));
+        report2.getSignatures().forEach(sig -> assertContainsScope(sig, "Baltic MoU digital signing_04112015.docx"));
+    }
+
+    private void assertContainsScope(SignatureValidationData signature, String filename) {
+        assertTrue(signature.getSignatureScopes()
+                .stream()
+                .map(SignatureScope::getName)
+                .filter(name -> StringUtils.equals(filename, name))
+                .count() > 0);
     }
 
     @Test
@@ -337,10 +351,6 @@ public class BDOCValidationServiceIntegrationTest {
 
     private ValidationDocument bdocValid2Signatures() throws Exception {
         return buildValidationDocument(VALID_BDOC_TM_2_SIGNATURES);
-    }
-
-    private ValidationDocument bdocTSIndeterminateNoManifest() throws Exception {
-        return buildValidationDocument(BDOCTestUtils.TS_NO_MANIFEST);
     }
 
     private ValidationDocument bdocValidIdCardAndMobIdSignatures() throws Exception {

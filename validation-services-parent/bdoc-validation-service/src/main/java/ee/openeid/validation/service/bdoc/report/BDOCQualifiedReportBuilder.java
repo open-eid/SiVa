@@ -122,7 +122,7 @@ public class BDOCQualifiedReportBuilder {
         SignatureValidationResult validationResult = bDocSignature.validateSignature();
         if (validationResult.isValid()) {
             return SignatureValidationData.Indication.TOTAL_PASSED;
-        } else if (REPORT_INDICATION_INDETERMINATE.equals(getDssSimpleReport(bDocSignature).getIndication(bDocSignature.getId()))) {
+        } else if (REPORT_INDICATION_INDETERMINATE.equals(getDssSimpleReport(bDocSignature).getIndication(bDocSignature.getId()).name())) {
             return SignatureValidationData.Indication.INDETERMINATE;
         } else {
             return SignatureValidationData.Indication.TOTAL_FAILED;

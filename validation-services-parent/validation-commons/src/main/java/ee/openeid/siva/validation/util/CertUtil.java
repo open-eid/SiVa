@@ -18,6 +18,7 @@ package ee.openeid.siva.validation.util;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.x500.RDN;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
@@ -36,13 +37,26 @@ public final class CertUtil {
 
     public static String getCountryCode(X509Certificate cert) {
         try {
-            X500Name x500name = new JcaX509CertificateHolder(cert).getSubject();
-            RDN c = x500name.getRDNs(BCStyle.C)[0];
-            return IETFUtils.valueToString(c.getFirst().getValue());
+           return getValueByObjectIdentifier(cert, BCStyle.C);
         } catch (CertificateEncodingException e) {
             LOGGER.error("Error extracting country from certificate", e.getMessage(), e);
             return null;
         }
+    }
+
+    public static String getCommonName(X509Certificate cert) {
+        try {
+            return getValueByObjectIdentifier(cert, BCStyle.CN);
+        } catch (CertificateEncodingException e) {
+            LOGGER.error("Error extracting common name from certificate", e.getMessage(), e);
+            return null;
+        }
+    }
+
+    private static String getValueByObjectIdentifier(X509Certificate cert, ASN1ObjectIdentifier identifier) throws CertificateEncodingException {
+        X500Name x500name = new JcaX509CertificateHolder(cert).getSubject();
+        RDN c = x500name.getRDNs(identifier)[0];
+        return IETFUtils.valueToString(c.getFirst().getValue());
     }
 
 }

@@ -33,13 +33,17 @@ public final class ReportBuilderUtils {
     private static final String GREENWICH_MEAN_TIME = "Etc/GMT";
 
     public static String emptyWhenNull(String value) {
-        return value != null ? value : StringUtils.EMPTY;
+        return value != null ? value : valueNotPresent();
     }
 
     public static SimpleDateFormat getDateFormatterWithGMTZone() {
         SimpleDateFormat sdf = new SimpleDateFormat(DEFAULT_DATE_TIME_FORMAT);
         sdf.setTimeZone(TimeZone.getTimeZone(GREENWICH_MEAN_TIME));
         return sdf;
+    }
+
+    public static String valueNotPresent() {
+        return StringUtils.EMPTY;
     }
 
     public static Policy createReportPolicy(ValidationPolicy validationPolicy) {

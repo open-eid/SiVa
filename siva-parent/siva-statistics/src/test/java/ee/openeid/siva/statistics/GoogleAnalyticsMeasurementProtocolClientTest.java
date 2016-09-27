@@ -33,7 +33,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -41,12 +40,9 @@ import java.util.concurrent.TimeUnit;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 
@@ -91,7 +87,7 @@ public class GoogleAnalyticsMeasurementProtocolClientTest {
         String subindication = "";
         String countryCode = "EE";
 
-        SimpleValidationReport report = createDummySimpleValidationReport(TimeUnit.MILLISECONDS.toNanos(validationDurationinMillis), validSignaturesCount, totalSignatureCount);
+        SimpleValidationReport report = createDummySimpleValidationReport(TimeUnit.MILLISECONDS.toNanos(validationDurationinMillis), validSignaturesCount, totalSignatureCount, "N/A");
         addSimpleSignatureReport(report, indication, subindication, countryCode);
 
         properties.setEnabled(false);
@@ -112,14 +108,14 @@ public class GoogleAnalyticsMeasurementProtocolClientTest {
         String subindication = "";
         String countryCode = "EE";
 
-        SimpleValidationReport report = createDummySimpleValidationReport(TimeUnit.MILLISECONDS.toNanos(validationDurationinMillis), validSignaturesCount, totalSignatureCount);
+        SimpleValidationReport report = createDummySimpleValidationReport(TimeUnit.MILLISECONDS.toNanos(validationDurationinMillis), validSignaturesCount, totalSignatureCount, "N/A");
         addSimpleSignatureReport(report, indication, subindication, countryCode);
 
         properties.setEnabled(true);
 
-        HttpServletRequest mockedRequest = mock(HttpServletRequest.class);
-        gaClient.setHttpRequest(mockedRequest);
-        when(mockedRequest.getHeader(X_AUTHENTICATED_USER)).thenReturn("");
+        //HttpServletRequest mockedRequest = mock(HttpServletRequest.class);
+        //gaClient.setHttpRequest(mockedRequest);
+        //when(mockedRequest.getHeader(X_AUTHENTICATED_USER)).thenReturn("");
 
         mockServer.expect(requestTo(properties.getUrl()))
                 .andExpect(method(HttpMethod.POST))
@@ -141,8 +137,8 @@ public class GoogleAnalyticsMeasurementProtocolClientTest {
         String secondSignatureIndication = "TOTAL_FAILED";
         String secondSignatureSubindication = "CERTIFICATE_CHAIN_NOT_FOUND";
         String secondSignatureCountryCode = "US";
-
-        SimpleValidationReport report = createDummySimpleValidationReport(TimeUnit.MILLISECONDS.toNanos(validationDurationinMillis), validSignaturesCount, totalSignatureCount);
+        String xAuthenticatedUser = "some_user";
+        SimpleValidationReport report = createDummySimpleValidationReport(TimeUnit.MILLISECONDS.toNanos(validationDurationinMillis), validSignaturesCount, totalSignatureCount, xAuthenticatedUser);
         addSimpleSignatureReport(report, firstSignatureIndication, firstSignatureSubindication, firstSignatureCountryCode);
         addSimpleSignatureReport(report, secondSignatureIndication, secondSignatureSubindication, secondSignatureCountryCode);
 
@@ -151,10 +147,10 @@ public class GoogleAnalyticsMeasurementProtocolClientTest {
         properties.setDataSourceName("some_data_source");
         properties.setTrackingId("some_tracking_id");
 
-        String xAuthenticatedUser = "some_user";
-        HttpServletRequest mockedRequest = mock(HttpServletRequest.class);
-        gaClient.setHttpRequest(mockedRequest);
-        when(mockedRequest.getHeader(X_AUTHENTICATED_USER)).thenReturn(xAuthenticatedUser);
+
+        //HttpServletRequest mockedRequest = mock(HttpServletRequest.class);
+        //gaClient.setHttpRequest(mockedRequest);
+        //when(mockedRequest.getHeader(X_AUTHENTICATED_USER)).thenReturn(xAuthenticatedUser);
 
         mockServer.expect(requestTo(properties.getUrl()))
                 .andExpect(method(HttpMethod.POST))
@@ -164,12 +160,13 @@ public class GoogleAnalyticsMeasurementProtocolClientTest {
         gaClient.sendStatisticalData(report);
     }
 
-    private SimpleValidationReport createDummySimpleValidationReport(long duration, int validSignaturesCount, int totalSignaturesCount) {
+    private SimpleValidationReport createDummySimpleValidationReport(long duration, int validSignaturesCount, int totalSignaturesCount, String xAuthenticatedUser) {
         SimpleValidationReport report = new SimpleValidationReport();
         report.setDuration(duration);
         report.setSignatureCount(totalSignaturesCount);
         report.setContainerType(CONTAINER_TYPE);
         report.setValidSignatureCount(validSignaturesCount);
+        report.setUserIdentifier(xAuthenticatedUser);
         return report;
     }
 

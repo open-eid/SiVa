@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +42,7 @@ public class StatisticsService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StatisticsService.class);
 
+    private HttpServletRequest httpRequest;
     private GoogleAnalyticsMeasurementProtocolClient googleAnalyticsMeasurementProtocolClient;
 
     public void publishValidationStatistic(long validationDurationInNanos, QualifiedReport report) {
@@ -60,7 +62,7 @@ public class StatisticsService {
         simpleValidationReport.setValidSignatureCount(report.getValidSignaturesCount());
         simpleValidationReport.setSimpleSignatureReports(createSimpleSignatureReports(report));
         simpleValidationReport.setContainerType(report.getSignatureForm());
-
+        simpleValidationReport.setUserIdentifier(getUserIdentifier());
         return  simpleValidationReport;
     }
 
@@ -87,9 +89,19 @@ public class StatisticsService {
         return ow.writeValueAsString(stats);
     }
 
+    private String getUserIdentifier() {
+        String userIdentifier = httpRequest.getHeader("x-authenticated-user");
+        return StringUtils.isEmpty(userIdentifier) ? "N/A" : userIdentifier;
+    }
+
     @Autowired
     public void setGoogleAnalyticsMeasurementClient(GoogleAnalyticsMeasurementProtocolClient googleAnalyticsMeasurementProtocolClient) {
         this.googleAnalyticsMeasurementProtocolClient = googleAnalyticsMeasurementProtocolClient;
+    }
+
+    @Autowired
+    public void setHttpRequest(HttpServletRequest httpRequest) {
+        this.httpRequest = httpRequest;
     }
 
 }

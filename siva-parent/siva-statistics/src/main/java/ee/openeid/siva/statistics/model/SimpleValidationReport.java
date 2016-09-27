@@ -23,7 +23,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-@JsonPropertyOrder({ "type", "dur", "sigCt", "vSigCt", "sigRslt" })
+@JsonPropertyOrder({ "type", "usrId", "dur", "sigCt", "vSigCt", "sigRslt" })
 public class SimpleValidationReport {
 
     @JsonProperty("dur")
@@ -40,5 +40,8 @@ public class SimpleValidationReport {
 
     @JsonProperty("type")
     private String containerType;
+
+    @JsonProperty("usrId")
+    private String userIdentifier;
 
 }

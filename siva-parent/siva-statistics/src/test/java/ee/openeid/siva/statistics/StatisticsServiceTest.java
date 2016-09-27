@@ -27,7 +27,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -42,6 +42,7 @@ public class StatisticsServiceTest {
     private static StatisticsService statisticsService;
 
     private static final String LINE_SEPARATOR = System.lineSeparator();
+    private static final String X_AUTHENTICATED_USER = "x-authenticated-user";
 
     private static Logger loggerMock;
 
@@ -55,6 +56,9 @@ public class StatisticsServiceTest {
         GoogleAnalyticsMeasurementProtocolClient ga = mock(GoogleAnalyticsMeasurementProtocolClient.class);
         statisticsService.setGoogleAnalyticsMeasurementClient(ga);
         doNothing().when(ga).sendStatisticalData(any(SimpleValidationReport.class));
+
+        HttpServletRequest mockedRequest = mock(HttpServletRequest.class);
+        statisticsService.setHttpRequest(mockedRequest);
     }
 
     @Test
@@ -66,14 +70,20 @@ public class StatisticsServiceTest {
         SignatureValidationData.Indication indication = SignatureValidationData.Indication.TOTAL_PASSED;
         String subindication = "";
         String countryCode = "EE";
+        String xAuthenticatedUser = "N/A";
 
         QualifiedReport report = createDummyQualifiedReport(signatureForm, validSignaturesCount, totalSignatureCount);
         addSignatureValidationData(report, indication, subindication, countryCode);
+
+        HttpServletRequest mockedRequest = mock(HttpServletRequest.class);
+        statisticsService.setHttpRequest(mockedRequest);
+        when(mockedRequest.getHeader(X_AUTHENTICATED_USER)).thenReturn("");
 
         statisticsService.publishValidationStatistic(TimeUnit.MILLISECONDS.toNanos(validationDurationInMillis), report);
         verify(loggerMock).info("{" + LINE_SEPARATOR  +
                 "  \"stats\" : {" + LINE_SEPARATOR  +
                 "    \"type\" : \"" + signatureForm + "\"," + LINE_SEPARATOR  +
+                "    \"usrId\" : \"" + xAuthenticatedUser + "\"," + LINE_SEPARATOR  +
                 "    \"dur\" : "+ validationDurationInMillis + "," + LINE_SEPARATOR  +
                 "    \"sigCt\" : "+ totalSignatureCount + "," + LINE_SEPARATOR  +
                 "    \"vSigCt\" : "+ validSignaturesCount + "," + LINE_SEPARATOR  +
@@ -98,15 +108,21 @@ public class StatisticsServiceTest {
         SignatureValidationData.Indication secondSignatureIndication = SignatureValidationData.Indication.TOTAL_FAILED;
         String secondSignatureSubindication = "CERTIFICATE_CHAIN_NOT_FOUND";
         String secondSignatureCountryCode = "US";
+        String xAuthenticatedUser = "some_user";
 
         QualifiedReport report = createDummyQualifiedReport(signatureForm, validSignaturesCount, totalSignatureCount);
         addSignatureValidationData(report, firstSignatureIndication, firstSignatureSubindication, firstSignatureCountryCode);
         addSignatureValidationData(report, secondSignatureIndication, secondSignatureSubindication, secondSignatureCountryCode);
 
+        HttpServletRequest mockedRequest = mock(HttpServletRequest.class);
+        statisticsService.setHttpRequest(mockedRequest);
+        when(mockedRequest.getHeader(X_AUTHENTICATED_USER)).thenReturn(xAuthenticatedUser);
+
         statisticsService.publishValidationStatistic(TimeUnit.MILLISECONDS.toNanos(validationDurationInMillis), report);
         verify(loggerMock).info("{" + LINE_SEPARATOR  +
                 "  \"stats\" : {" + LINE_SEPARATOR  +
                 "    \"type\" : \"" + signatureForm + "\"," + LINE_SEPARATOR  +
+                "    \"usrId\" : \"" + xAuthenticatedUser + "\"," + LINE_SEPARATOR  +
                 "    \"dur\" : "+ validationDurationInMillis + "," + LINE_SEPARATOR  +
                 "    \"sigCt\" : "+ totalSignatureCount + "," + LINE_SEPARATOR  +
                 "    \"vSigCt\" : "+ validSignaturesCount + "," + LINE_SEPARATOR  +

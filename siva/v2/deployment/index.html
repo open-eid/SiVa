@@ -23,8 +23,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     
-    <link rel="shortcut icon" type="image/x-icon" href="../../../assets/images/favicon-e565ddfa3b.ico">
-    <link rel="icon" type="image/x-icon" href="../../../assets/images/favicon-e565ddfa3b.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="../../../None">
+    <link rel="icon" type="image/x-icon" href="../../../None">
     <style>
       @font-face {
       	font-family: 'Icon';
@@ -41,7 +41,7 @@
       	font-style: normal;
       }
     </style>
-    <link rel="stylesheet" href="../../../assets/stylesheets/application-a422ff04cc.css">
+    <link rel="stylesheet" href="../../../assets/stylesheets/application-0dac3e5884.css">
     
       <link rel="stylesheet" href="../../../assets/stylesheets/palettes-05ab2406df.css">
     
@@ -49,7 +49,7 @@
       
       
       
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
       <style>
         body, input {
           font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
@@ -372,21 +372,18 @@ web service:</p>
 </ul>
 <h3 id="building-siva-validation-web-service-on-ubuntu-1604">Building SiVa validation web service on Ubuntu 16.04</h3>
 <p>First we need to install Git and Java SDK 8 by issuing below commands:</p>
-<div class="codehilite"><pre>sudo apt-get update
+<pre class="codehilite"><code class="language-bash">sudo apt-get update
 sudo apt-get install git -y
-sudo apt-get install default-jdk -y
-</pre></div>
+sudo apt-get install default-jdk -y</code></pre>
 
 
 <p>Next we need to clone the SiVa Github repository:</p>
-<div class="codehilite"><pre>git clone https://github.com/open-eid/SiVa.git --branch develop
-</pre></div>
+<pre class="codehilite"><code class="language-bash">git clone https://github.com/open-eid/SiVa.git --branch develop</code></pre>
 
 
 <p>Final step is building the SiVa project using Maven Wrapper</p>
-<div class="codehilite"><pre><span class="nb">cd </span>SiVa
-./mvnw install
-</pre></div>
+<pre class="codehilite"><code class="language-bash">cd SiVa
+./mvnw install</code></pre>
 
 
 <div class="admonition note">
@@ -396,7 +393,7 @@ required dependencies</p>
 </div>
 <p>To verify that SiVa project built successfully look for <code>BUILD SUCCESS</code> in build compilation output last lines.
 The last lines of build output should look very similar to below image:</p>
-<div class="codehilite"><pre>[INFO] Reactor Summary:
+<pre class="codehilite"><code class="language-text">[INFO] Reactor Summary:
 [INFO]
 [INFO] SiVa Digitally signed documents validation service . SUCCESS [ 25.258 s]
 [INFO] validation-services-parent ......................... SUCCESS [  0.479 s]
@@ -418,8 +415,7 @@ The last lines of build output should look very similar to below image:</p>
 [INFO] Total time: 18:30 min
 [INFO] Finished at: 2016-07-22T13:40:31+00:00
 [INFO] Final Memory: 80M/250M
-[INFO] ------------------------------------------------------------------------
-</pre></div>
+[INFO] ------------------------------------------------------------------------</code></pre>
 
 
 <h3 id="setting-up-systemd-service">Setting up systemd service</h3>
@@ -427,8 +423,7 @@ The last lines of build output should look very similar to below image:</p>
 single JAR file. It makes a lot easier to deploy it into servers.</p>
 <p>Easiest option to setup SiVa is as <code>systemd</code> service in Ubuntu servers.</p>
 <p>For that we first need to create service file:</p>
-<div class="codehilite"><pre>vim siva-webapp.service
-</pre></div>
+<pre class="codehilite"><code class="language-bash">vim siva-webapp.service</code></pre>
 
 
 <p>Inside it we need to paste below text. You need and can change few things in service setup file.</p>
@@ -437,19 +432,18 @@ single JAR file. It makes a lot easier to deploy it into servers.</p>
 <li>Second You can change Java JVM options by modifying the <code>JAVA_OPTS</code> inside the <code>siva-webapp.service</code> file.</li>
 <li>Also You can change the SiVa application configuration options by modifying <code>RUN_ARGS</code> section in file</li>
 </ul>
-<div class="codehilite"><pre><span class="k">[Unit]</span>
-<span class="na">Description</span><span class="o">=</span><span class="s">siva-webapp</span>
-<span class="na">After</span><span class="o">=</span><span class="s">syslog.target</span>
+<pre class="codehilite"><code class="language-ini">[Unit]
+Description=siva-webapp
+After=syslog.target
 
-<span class="k">[Service]</span>
-<span class="na">User</span><span class="o">=</span><span class="s">root</span>
-<span class="na">ExecStart</span><span class="o">=</span><span class="s">/var/apps/siva-webapp.jar</span>
-<span class="na">Environment</span><span class="o">=</span><span class="s">JAVA_OPTS=-Xmx320m RUN_ARGS=--server.port=80</span>
-<span class="na">SuccessExitStatus</span><span class="o">=</span><span class="s">143</span>
+[Service]
+User=root
+ExecStart=/var/apps/siva-webapp.jar
+Environment=JAVA_OPTS=-Xmx320m RUN_ARGS=--server.port=80
+SuccessExitStatus=143
 
-<span class="k">[Install]</span>
-<span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
-</pre></div>
+[Install]
+WantedBy=multi-user.target</code></pre>
 
 
 <p>Save and close the <code>siva-webapp.service</code> file.
@@ -459,42 +453,38 @@ JAR file to <code>siva-webapp.jar</code>. match</p>
 <p class="admonition-title">Note</p>
 <p>The copied JAR filename must match option <code>ExecStart</code> in  <code>siva-webaapp.servcie</code> file</p>
 </div>
-<div class="codehilite"><pre>sudo mkdir /var/apps
-sudo cp siva-parent/siva-webapp/target/executable/siva-webapp-2.0.2-SNAPSHOT.jar /var/apps/siva-webapp.jar
-</pre></div>
+<pre class="codehilite"><code class="language-bash">sudo mkdir /var/apps
+sudo cp siva-parent/siva-webapp/target/executable/siva-webapp-2.0.2-SNAPSHOT.jar /var/apps/siva-webapp.jar</code></pre>
 
 
 <p>Next we need to copy the <code>siva-webapp.service</code> file into <code>/lib/systemd/system</code> directory.
 Then we are ready to start the <code>siva-webapp</code> service.</p>
-<div class="codehilite"><pre>sudo cp siva-webapp.service /lib/systemd/system
-sudo systemctl start siva-webapp
-</pre></div>
+<pre class="codehilite"><code class="language-bash">sudo cp siva-webapp.service /lib/systemd/system
+sudo systemctl start siva-webapp</code></pre>
 
 
 <p>Final step of setting up the <code>siva-webapp</code> service is to verify that service started correctly by issuing below
 command.</p>
-<div class="codehilite"><pre>systemctl status siva-webapp
-</pre></div>
+<pre class="codehilite"><code class="language-bash">systemctl status siva-webapp</code></pre>
 
 
 <p>It should print out similar to below picture:</p>
-<div class="codehilite"><pre><span class="err">●</span> <span class="nt">siva-webapp</span><span class="nc">.service</span> <span class="nt">-</span> <span class="nt">siva-webapp</span>
-   <span class="nt">Loaded</span><span class="o">:</span> <span class="nt">loaded</span> <span class="o">(/</span><span class="nt">lib</span><span class="o">/</span><span class="nt">systemd</span><span class="o">/</span><span class="nt">system</span><span class="o">/</span><span class="nt">siva-webapp</span><span class="nc">.service</span><span class="o">;</span> <span class="nt">disabled</span><span class="o">;</span> <span class="nt">vendor</span> <span class="nt">preset</span><span class="o">:</span> <span class="nt">enabled</span><span class="o">)</span>
-   <span class="nt">Active</span><span class="o">:</span> <span class="nt">active</span> <span class="o">(</span><span class="nt">running</span><span class="o">)</span> <span class="nt">since</span> <span class="nt">Thu</span> <span class="nt">2016-07-21</span> <span class="nt">08</span><span class="nd">:48:14</span> <span class="nt">EDT</span><span class="o">;</span> <span class="nt">1</span> <span class="nt">day</span> <span class="nt">2h</span> <span class="nt">ago</span>
- <span class="nt">Main</span> <span class="nt">PID</span><span class="o">:</span> <span class="nt">15965</span> <span class="o">(</span><span class="nt">siva-webapp</span><span class="nc">.jar</span><span class="o">)</span>
-    <span class="nt">Tasks</span><span class="o">:</span> <span class="nt">34</span>
-   <span class="nt">Memory</span><span class="o">:</span> <span class="nt">429</span><span class="nc">.6M</span>
-      <span class="nt">CPU</span><span class="o">:</span> <span class="nt">2min</span> <span class="nt">5</span><span class="nc">.721s</span>
-   <span class="nt">CGroup</span><span class="o">:</span> <span class="o">/</span><span class="nt">system</span><span class="nc">.slice</span><span class="o">/</span><span class="nt">siva-webapp</span><span class="nc">.service</span>
-           <span class="err">├─</span><span class="nt">15965</span> <span class="o">/</span><span class="nt">bin</span><span class="o">/</span><span class="nt">bash</span> <span class="o">/</span><span class="nt">var</span><span class="o">/</span><span class="nt">apps</span><span class="o">/</span><span class="nt">stage</span><span class="o">/</span><span class="nt">siva-webapp</span><span class="nc">.jar</span>
-           <span class="err">└─</span><span class="nt">15982</span> <span class="o">/</span><span class="nt">usr</span><span class="o">/</span><span class="nt">bin</span><span class="o">/</span><span class="nt">java</span> <span class="nt">-Dsun</span><span class="nc">.misc.URLClassPath.disableJarChecking</span><span class="o">=</span><span class="nt">true</span> <span class="nt">-Xmx320m</span> <span class="nt">-jar</span> <span class="o">/</span><span class="nt">var</span><span class="o">/</span><span class="nt">apps</span><span class="o">/</span><span class="nt">stage</span><span class="o">/</span><span class="nt">siva-webapp</span><span class="nc">.jar</span>
+<pre class="codehilite"><code>● siva-webapp.service - siva-webapp
+   Loaded: loaded (/lib/systemd/system/siva-webapp.service; disabled; vendor preset: enabled)
+   Active: active (running) since Thu 2016-07-21 08:48:14 EDT; 1 day 2h ago
+ Main PID: 15965 (siva-webapp.jar)
+    Tasks: 34
+   Memory: 429.6M
+      CPU: 2min 5.721s
+   CGroup: /system.slice/siva-webapp.service
+           ├─15965 /bin/bash /var/apps/stage/siva-webapp.jar
+           └─15982 /usr/bin/java -Dsun.misc.URLClassPath.disableJarChecking=true -Xmx320m -jar /var/apps/stage/siva-webapp.jar
 
-<span class="nt">Jul</span> <span class="nt">20</span> <span class="nt">03</span><span class="nd">:00:01</span> <span class="nt">siva</span> <span class="nt">siva-webapp</span><span class="nc">.jar</span><span class="cp">[</span><span class="mi">15965</span><span class="cp">]</span><span class="o">:</span>         <span class="nt">at</span> <span class="nt">eu</span><span class="nc">.europa.esig.dss.tsl.service.TSLParser.getTslModel</span><span class="o">(</span><span class="nt">TSLParser</span><span class="nc">.java</span><span class="nd">:143</span><span class="o">)</span>
-<span class="nt">Jul</span> <span class="nt">20</span> <span class="nt">03</span><span class="nd">:00:01</span> <span class="nt">siva</span> <span class="nt">siva-webapp</span><span class="nc">.jar</span><span class="cp">[</span><span class="mi">15965</span><span class="cp">]</span><span class="o">:</span>         <span class="nt">at</span> <span class="nt">eu</span><span class="nc">.europa.esig.dss.tsl.service.TSLParser.call</span><span class="o">(</span><span class="nt">TSLParser</span><span class="nc">.java</span><span class="nd">:129</span><span class="o">)</span>
-<span class="nt">Jul</span> <span class="nt">20</span> <span class="nt">03</span><span class="nd">:00:01</span> <span class="nt">siva</span> <span class="nt">siva-webapp</span><span class="nc">.jar</span><span class="cp">[</span><span class="mi">15965</span><span class="cp">]</span><span class="o">:</span>         <span class="o">...</span> <span class="nt">5</span> <span class="nt">common</span> <span class="nt">frames</span> <span class="nt">omitted</span>
-<span class="nt">Jul</span> <span class="nt">20</span> <span class="nt">03</span><span class="nd">:00:01</span> <span class="nt">siva</span> <span class="nt">siva-webapp</span><span class="nc">.jar</span><span class="cp">[</span><span class="mi">15965</span><span class="cp">]</span><span class="o">:</span> <span class="nt">20</span><span class="nc">.07.2016</span> <span class="nt">03</span><span class="nd">:00:01</span><span class="nc">.450</span> <span class="nt">INFO</span>  <span class="cp">[</span><span class="nx">pool</span><span class="o">-</span><span class="mi">3</span><span class="na">-thread</span><span class="o">-</span><span class="mi">1</span><span class="cp">]</span> <span class="cp">[</span><span class="nx">e.e.e.dss.tsl.service.TSLRepository.sync</span>
-<span class="nx">Jul</span> <span class="mi">20</span> <span class="mi">03</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">01</span> <span class="nx">siva</span> <span class="nx">siva</span><span class="na">-webapp.jar</span><span class="err">[</span><span class="mi">15965</span><span class="cp">]</span><span class="o">:</span> <span class="nt">20</span><span class="nc">.07.2016</span> <span class="nt">03</span><span class="nd">:00:01</span><span class="nc">.450</span> <span class="nt">INFO</span>  <span class="cp">[</span><span class="nx">pool</span><span class="o">-</span><span class="mi">3</span><span class="na">-thread</span><span class="o">-</span><span class="mi">1</span><span class="cp">]</span> <span class="cp">[</span><span class="nx">e.e.e.dss.tsl.service.TSLRepository.sync</span>
-</pre></div>
+Jul 20 03:00:01 siva siva-webapp.jar[15965]:         at eu.europa.esig.dss.tsl.service.TSLParser.getTslModel(TSLParser.java:143)
+Jul 20 03:00:01 siva siva-webapp.jar[15965]:         at eu.europa.esig.dss.tsl.service.TSLParser.call(TSLParser.java:129)
+Jul 20 03:00:01 siva siva-webapp.jar[15965]:         ... 5 common frames omitted
+Jul 20 03:00:01 siva siva-webapp.jar[15965]: 20.07.2016 03:00:01.450 INFO  [pool-3-thread-1] [e.e.e.dss.tsl.service.TSLRepository.sync
+Jul 20 03:00:01 siva siva-webapp.jar[15965]: 20.07.2016 03:00:01.450 INFO  [pool-3-thread-1] [e.e.e.dss.tsl.service.TSLRepository.sync</code></pre>
 
 
 <h3 id="installing-httpie">Installing HTTPIE</h3>
@@ -502,15 +492,13 @@ command.</p>
 and started correctly on our server.</p>
 <h3 id="ubuntu-1604">Ubuntu 16.04</h3>
 <p>On Ubuntu You can install it using <code>apt</code> package manager:</p>
-<div class="codehilite"><pre>sudo apt-get install -y httpie
-</pre></div>
+<pre class="codehilite"><code class="language-bash">sudo apt-get install -y httpie</code></pre>
 
 
 <h3 id="mac-os-x">Mac OS X</h3>
 <p>On Mac it's strongly recommended to install it using package manager like Homebrew by issuing
 belwo command:</p>
-<div class="codehilite"><pre>brew install httpie
-</pre></div>
+<pre class="codehilite"><code class="language-bash">brew install httpie</code></pre>
 
 
 <h4 id="windows">Windows</h4>
@@ -519,21 +507,18 @@ belwo command:</p>
 <h3 id="cross-platform">Cross platform</h3>
 <p>Alternative option if You have Python and its package manager <code>pip</code> installed. Then You can issue
 below command:</p>
-<div class="codehilite"><pre>pip install httpie
-</pre></div>
+<pre class="codehilite"><code class="language-bash">pip install httpie</code></pre>
 
 
 <h3 id="verify-digitally-signed-file">Verify digitally signed file</h3>
 <p>After You have successfully installed HTTPIE. Then we need to download sample JSON request file with below
 command</p>
-<div class="codehilite"><pre>http --download https://raw.githubusercontent.com/open-eid/SiVa/develop/build-helpers/bdoc_pass.json
-</pre></div>
+<pre class="codehilite"><code class="language-bash">http --download https://raw.githubusercontent.com/open-eid/SiVa/develop/build-helpers/bdoc_pass.json</code></pre>
 
 
 <p>After successful download issue below command in same directory where You downloaded the file using
 the above command.</p>
-<div class="codehilite"><pre>http POST http://10.211.55.9:8080/validate &lt; bdoc_pass.json
-</pre></div>
+<pre class="codehilite"><code class="language-bash">http POST http://10.211.55.9:8080/validate &lt; bdoc_pass.json</code></pre>
 
 
 <p>Output of this command should look like below screenshot. Look for <code>signatureCount</code> and
@@ -541,46 +526,45 @@ the above command.</p>
 <p><img alt="HTTPIE output validation" src="../../../img/siva/siva-output.png" /></p>
 <h3 id="siva-configuration-overrides">SiVa configuration overrides</h3>
 <p>All override configuration properties</p>
-<div class="codehilite"><pre><span class="c"># BDOC validation service override properties</span>
-<span class="na">siva.bdoc.digidoc4JConfigurationFile</span><span class="o">=</span><span class="s">/path/to/digidoc4j.yml</span>
-<span class="na">siva.bdoc.signaturePolicy.defaultPolicy</span><span class="o">=</span><span class="s">policy_name</span>
-<span class="na">siva.bdoc.signaturePolicy.policies.pol_v1</span><span class="o">=</span><span class="s">/path/to/policy1.xml</span>
-<span class="na">siva.bdoc.signaturePolicy.policies.pol_v2</span><span class="o">=</span><span class="s">/path/to/policy2.xml</span>
+<pre class="codehilite"><code class="language-properties"># BDOC validation service override properties
+siva.bdoc.digidoc4JConfigurationFile=/path/to/digidoc4j.yml
+siva.bdoc.signaturePolicy.defaultPolicy=policy_name
+siva.bdoc.signaturePolicy.policies.pol_v1=/path/to/policy1.xml
+siva.bdoc.signaturePolicy.policies.pol_v2=/path/to/policy2.xml
 
-<span class="c"># DDOC validation service override properties</span>
-<span class="na">siva.ddoc.jdigidocConfigurationFile</span><span class="o">=</span><span class="s">/path/to/jdigidoc.cfg</span>
-<span class="na">siva.ddoc.signaturePolicy.defaultPolicy</span><span class="o">=</span><span class="s">policy_name</span>
-<span class="na">siva.ddoc.signaturePolicy.policies.pol_v1</span><span class="o">=</span><span class="s">/path/to/policy1.xml</span>
-<span class="na">siva.ddoc.signaturePolicy.policies.pol_v2</span><span class="o">=</span><span class="s">/path/to/policy2.xml</span>
+# DDOC validation service override properties
+siva.ddoc.jdigidocConfigurationFile=/path/to/jdigidoc.cfg
+siva.ddoc.signaturePolicy.defaultPolicy=policy_name
+siva.ddoc.signaturePolicy.policies.pol_v1=/path/to/policy1.xml
+siva.ddoc.signaturePolicy.policies.pol_v2=/path/to/policy2.xml
 
-<span class="c"># PadES validation service override properties</span>
-<span class="na">siva.pdf.signaturePolicy.defaultPolicy</span><span class="o">=</span><span class="s">policy_name</span>
-<span class="na">siva.pdf.signaturePolicy.policies.pol_v1</span><span class="o">=</span><span class="s">/path/to/policy1.xml</span>
-<span class="na">siva.pdf.signaturePolicy.policies.pol_v2</span><span class="o">=</span><span class="s">/path/to/policy2.xml</span>
+# PadES validation service override properties
+siva.pdf.signaturePolicy.defaultPolicy=policy_name
+siva.pdf.signaturePolicy.policies.pol_v1=/path/to/policy1.xml
+siva.pdf.signaturePolicy.policies.pol_v2=/path/to/policy2.xml
 
-<span class="c"># X-road validation service settings</span>
-<span class="na">siva.xroad.validation.service.configurationDirectoryPath</span><span class="o">=</span><span class="s">&#39;&#39;</span>
-<span class="na">siva.xroad.signaturePolicy.defaultPolicy</span><span class="o">=</span><span class="s">policy_name</span>
-<span class="na">siva.xroad.signaturePolicy.policies.pol_v1</span><span class="o">=</span><span class="s">/path/to/policy1.xml</span>
-<span class="na">siva.xroad.signaturePolicy.policies.pol_v2</span><span class="o">=</span><span class="s">/path/to/policy2.xml</span>
+# X-road validation service settings
+siva.xroad.validation.service.configurationDirectoryPath=''
+siva.xroad.signaturePolicy.defaultPolicy=policy_name
+siva.xroad.signaturePolicy.policies.pol_v1=/path/to/policy1.xml
+siva.xroad.signaturePolicy.policies.pol_v2=/path/to/policy2.xml
 
-<span class="c"># TSL trusted certificaes keystore settings</span>
-<span class="na">siva.keystore.type</span><span class="o">=</span><span class="s">JKS</span>
-<span class="na">siva.keystore.filename</span><span class="o">=</span><span class="s">/path/to/siva-keystore.jks</span>
-<span class="na">siva.keystore.password</span><span class="o">=</span><span class="s">siva-keystore-password</span>
+# TSL trusted certificaes keystore settings
+siva.keystore.type=JKS
+siva.keystore.filename=/path/to/siva-keystore.jks
+siva.keystore.password=siva-keystore-password
 
-<span class="c"># SiVa Proxy Settings</span>
-<span class="na">siva.proxy.xroadUrl</span><span class="o">=</span><span class="s">http://localhost:8081</span>
+# SiVa Proxy Settings
+siva.proxy.xroadUrl=http://localhost:8081
 
-<span class="na">siva.statistics.google-analytics.url</span><span class="o">=</span><span class="s">http://www.google-analytics.com/batch</span>
-<span class="na">siva.statistics.google-analytics.trackingId</span><span class="o">=</span><span class="s">UA-83206619-1</span>
-<span class="na">siva.statistics.google-analytics.dataSourceName</span><span class="o">=</span><span class="s">SiVa</span>
+siva.statistics.google-analytics.url=http://www.google-analytics.com/batch
+siva.statistics.google-analytics.trackingId=UA-83206619-1
+siva.statistics.google-analytics.dataSourceName=SiVa
 
-<span class="na">siva.tsl.loader.loadFromCache</span><span class="o">=</span><span class="s">false</span>
-<span class="na">siva.tsl.loader.url</span><span class="o">=</span><span class="s">https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml</span>
-<span class="na">siva.tsl.loader.code</span><span class="o">=</span><span class="s">EU</span>
-<span class="na">siva.tsl.loader.schedulerCron</span><span class="o">=</span><span class="s">0 0 3 * * ?</span>
-</pre></div>
+siva.tsl.loader.loadFromCache=false
+siva.tsl.loader.url=https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml
+siva.tsl.loader.code=EU
+siva.tsl.loader.schedulerCron=0 0 3 * * ?</code></pre>
           <aside class="copyright" role="note">
             
             Documentation built with

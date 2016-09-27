@@ -23,8 +23,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     
-    <link rel="shortcut icon" type="image/x-icon" href="../../../assets/images/favicon-e565ddfa3b.ico">
-    <link rel="icon" type="image/x-icon" href="../../../assets/images/favicon-e565ddfa3b.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="../../../None">
+    <link rel="icon" type="image/x-icon" href="../../../None">
     <style>
       @font-face {
       	font-family: 'Icon';
@@ -41,7 +41,7 @@
       	font-style: normal;
       }
     </style>
-    <link rel="stylesheet" href="../../../assets/stylesheets/application-a422ff04cc.css">
+    <link rel="stylesheet" href="../../../assets/stylesheets/application-0dac3e5884.css">
     
       <link rel="stylesheet" href="../../../assets/stylesheets/palettes-05ab2406df.css">
     
@@ -49,7 +49,7 @@
       
       
       
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
       <style>
         body, input {
           font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
@@ -363,10 +363,10 @@
 
 <h2 id="general-issues">General issues</h2>
 <ol>
-<li>German, Norwegian and Croatian TSLs are not loaded, signatures containing certificates included in the respective TSL lists can not be validated.</li>
-<li>During TSL refreshing/reloading, service could give wrong validation results. Service must be turned off for TSL refreshing time (at  3:00 AM, ca 1 minute). </li>
-<li>X-Road validation service is separated (do not follow general architectuse) because of different BouncyCastle version used in X-Road utility. X-Road validation module should use latest BouncyCastle version.</li>
-<li>Container validation errors are not returned as the current DSS-based validation report doesn't include a proper structure for container errors: <a href="https://esig-dss.atlassian.net/browse/DSS-932">https://esig-dss.atlassian.net/browse/DSS-932</a></li>
+<li>(PAdES/ASiC-E) German, Norwegian and Croatian TSLs are not loaded, signatures containing certificates included in the respective TSL lists can not be validated.</li>
+<li>(All) During TSL refreshing/reloading, service could give wrong validation results. Service must be turned off for TSL refreshing time (at  3:00 AM, ca 1 minute). </li>
+<li>(X-Road ASiC-E) X-Road validation service is separated (do not follow general architectuse) because of different BouncyCastle version used in X-Road utility. X-Road validation module should use latest BouncyCastle version.</li>
+<li>(BDOC/ASiC-E) Container validation errors are not returned as the current DSS-based validation report doesn't include a proper structure for container errors: <a href="https://esig-dss.atlassian.net/browse/DSS-932">https://esig-dss.atlassian.net/browse/DSS-932</a></li>
 </ol>
 <h2 id="digidoc-xml-related-issues">DIGIDOC-XML related issues</h2>
 <ol>
@@ -391,16 +391,17 @@
 <li>(DSS) PAdES validation is not thread safe, added synchronization block, only one request at time: <a href="https://esig-dss.atlassian.net/browse/DSS-923">https://esig-dss.atlassian.net/browse/DSS-923</a></li>
 <li>(DSS) Validation warning is not returned when SHA-1 is used in the signature: <a href="https://esig-dss.atlassian.net/browse/DSS-760">https://esig-dss.atlassian.net/browse/DSS-760</a></li>
 <li>(DSS) Documents signed with revoked signature pass the validation: <a href="https://esig-dss.atlassian.net/browse/DSS-922">https://esig-dss.atlassian.net/browse/DSS-922</a>, <a href="https://esig-dss.atlassian.net/browse/DSS-918">https://esig-dss.atlassian.net/browse/DSS-918</a></li>
+<li>(DSS) Signature qualification level is not correctly determined by dss based on TL <a href="https://esig-dss.atlassian.net/browse/DSS-915">https://esig-dss.atlassian.net/browse/DSS-915</a></li>
 </ol>
 <h2 id="x-road-signatures-related-issues">X-Road signatures' related issues</h2>
 <ol>
-<li>(X-Road) Values of some validation report fields are not accessible via the X-Road library's API:  </li>
-<li>SignatureFormat – Format and profile (according to Baseline Profile) of the signature. Currently, hard coded values are used in the report. </li>
-<li>SignatureLevel – Indication whether the signature is Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES). Currently, the value is left empty, as the library doesn't enable determining legal level of the signature then POLv2 validation policy (only QES level signatures are accepted) is not supported for X-Road signatures. </li>
-<li>Indication, Errors and Warnings - in error situations, the verification process results in a CodedException extends RuntimeException. This Exception always contains a fault code String but it’s how should we determine if we should result in INDETERMINATE or TOTAL-FAILED result? Also since the rest of the verification process is not completed after the exception we only ever know the single error that was reached first. Also we can’t get warnings as we do in DSS.</li>
-<li>SubIndication – Additional subindication in case of failed or indeterminate validation result, according to EN 319 102-1 "Table 6: Validation Report Structure and Semantics".  </li>
-<li>SignatureScope - Contains information of the original data that is covered by the signature. Currently, a hard-coded value is used.  </li>
-<li>ClaimedSigningTime - Claimed signing time, i.e. user’s computer time during signature creation.</li>
+<li>(X-Road Asicverifier) Values of some validation report fields are not accessible via the X-Road library's API:  </li>
+<li>(X-Road Asicverifier) SignatureFormat – Format and profile (according to Baseline Profile) of the signature. Currently, hard coded values are used in the report. </li>
+<li>(X-Road Asicverifier) SignatureLevel – Indication whether the signature is Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES). Currently, the value is left empty, as the library doesn't enable determining legal level of the signature then POLv2 validation policy (only QES level signatures are accepted) is not supported for X-Road signatures. </li>
+<li>(X-Road Asicverifier) Indication, Errors and Warnings - in error situations, the verification process results in a CodedException extends RuntimeException. This Exception always contains a fault code String but it’s how should we determine if we should result in INDETERMINATE or TOTAL-FAILED result? Also since the rest of the verification process is not completed after the exception we only ever know the single error that was reached first. Also we can’t get warnings as we do in DSS.</li>
+<li>(X-Road ASiC-E) SubIndication – Additional subindication in case of failed or indeterminate validation result, according to EN 319 102-1 "Table 6: Validation Report Structure and Semantics".  </li>
+<li>(X-Road Asicverifier) SignatureScope - Contains information of the original data that is covered by the signature. Currently, a hard-coded value is used.  </li>
+<li>(X-Road Asicverifier) ClaimedSigningTime - Claimed signing time, i.e. user’s computer time during signature creation.</li>
 </ol>
           <aside class="copyright" role="note">
             

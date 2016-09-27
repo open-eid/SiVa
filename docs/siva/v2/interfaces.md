@@ -1,13 +1,15 @@
 <!--# Interface description-->
 
-In this section the SiVa signature validation service's external interfaces that are provided for the service's clients are described. For information of internal components and their interfaces, please refer to [**Component diagram**](component_diagram).
+In this section the SiVa signature validation service's external interfaces that are provided for the service's clients are described. For information of internal components and their interfaces, please refer to [**Component diagram**](component_diagram). 
 
 SiVa service provides **REST JSON** and **SOAP** interfaces that enable the service users to:
 
-* request validation of signatures in a digitally signed document (i.e. signature container like BDOC/ASiC-E or PDF);
+* request validation of signatures in a digitally signed document (i.e. signature container like BDOC/ASiC-E or PDF); 
 * receive a response with the validation result of all the signatures in the document.
 
-In the following subsections, the SiVa validation request and response interfaces are described in detail.
+SiVa service SOAP interface supports X-Road v6. However, it is optional whether to integrate SiVa service using X-Road or using "plain" SOAP interface. This document only describes the SiVa service part of the interface, for the X-Road specifics visit Riigi Infosüsteemi Amet [webpage](https://www.ria.ee/ee/x-tee.html).
+
+In the following subsections, the SiVa validation request and response interfaces are described in detail. 
 
 ## Validation request interface
 
@@ -23,9 +25,14 @@ POST https://<server url>/validate
 POST https://<server url>/soap/validationWebService/validateDocument
 ```
 
+** SOAP WSDL **
+```
+POST https://<server url>/soap/validationWebService/validateDocument?wsdl
+```
+
 ### Validation request parameters
 
-Validation request parameters for JSON and SOAP interfaces are described in the table below. Data types of SOAP parameters are defined in the [SiVa WSDL document](appendix/wsdl).
+Validation request parameters for JSON and SOAP interfaces are described in the table below. Data types of SOAP parameters are defined in the [SiVa WSDL document](appendix/wsdl).    
 
 | JSON parameter | SOAP parameter | Mandatory | Description | JSON data type |
 |-----------------|-----------------|-----------|-------------|

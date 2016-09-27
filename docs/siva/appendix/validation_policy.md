@@ -84,7 +84,7 @@ http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv2
 ### General constraints
 
 1. The validation result returned by SiVa determines whether a signature is technically valid and also conforms to a set of validation constraints that are specific to Estonian legislation and local practices of digital signing. **The policy may not be suitable for signatures created in other territories.** 
-2.  The validation result returned by SiVa comprises validation results of the all the signatures in a single signature container. Overall validation result for the whole container is not determined.
+2.  The validation result returned by SiVa comprises validation results of all the signatures in a single signature container (in case of detached signatures) or all signatures in a signed document (in case of enveloped or enveloping signatures). I.e. in case of multiple detached/enveloped/enveloping signatures, overall validation result correspoinding to the collection of signatures is not determined.
 
 ### Signature format constraints
 <a name="common_format"></a>

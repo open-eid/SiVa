@@ -19,13 +19,13 @@ package ee.openeid.siva.proxy.http;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-public class RESTValidationProxyException extends RuntimeException {
+public class RESTValidationProxyRequestException extends RESTValidationProxyException {
 
     @Getter
-    private final HttpStatus httpStatus;
+    private final String errorKey;
 
-    public RESTValidationProxyException(String message, HttpStatus httpStatus) {
-        super(message);
-        this.httpStatus = httpStatus;
+    public RESTValidationProxyRequestException(String key, String message, HttpStatus httpStatus) {
+        super(message, httpStatus);
+        this.errorKey = key;
     }
 }

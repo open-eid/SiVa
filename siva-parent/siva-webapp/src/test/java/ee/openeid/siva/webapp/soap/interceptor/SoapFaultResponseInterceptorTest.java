@@ -16,12 +16,10 @@
 
 package ee.openeid.siva.webapp.soap.interceptor;
 
-import ee.openeid.siva.proxy.http.RESTProxyError;
-import ee.openeid.siva.proxy.http.RESTValidationProxyException;
+import ee.openeid.siva.proxy.http.RESTValidationProxyRequestException;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import org.apache.cxf.binding.soap.SoapMessage;
-import org.apache.cxf.common.i18n.Exception;
 import org.apache.cxf.interceptor.Fault;
 import org.junit.Before;
 import org.junit.Test;
@@ -88,10 +86,8 @@ public class SoapFaultResponseInterceptorTest {
     }
 
     @Test
-    public void whenSoapFaultIsCausedByRESTValidationProxyExceptionWithBadRequestStatusCodeThenFaultStatusAndCodeAreChanged() {
-        RESTProxyError error = new RESTProxyError();
-        error.setHttpStatus(HttpStatus.BAD_REQUEST);
-        Fault fault = new Fault(new RESTValidationProxyException(error));
+    public void whenSoapFaultIsCausedByRESTValidationProxyRequestExceptionWithBadRequestStatusCodeThenFaultStatusAndCodeAreChanged() {
+        Fault fault = new Fault(new RESTValidationProxyRequestException(null, null, HttpStatus.BAD_REQUEST));
         doReturn(fault).when(message).getContent(any());
         soapFaultResponseInterceptor.handleMessage(message);
         assertTrue(fault.getStatusCode() == 200);

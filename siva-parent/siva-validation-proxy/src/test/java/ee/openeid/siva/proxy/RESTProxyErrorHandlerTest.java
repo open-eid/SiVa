@@ -17,6 +17,7 @@
 package ee.openeid.siva.proxy;
 
 import ee.openeid.siva.proxy.http.RESTValidationProxyException;
+import ee.openeid.siva.proxy.http.RESTValidationProxyRequestException;
 import ee.openeid.siva.proxy.http.RestProxyErrorHandler;
 import org.junit.Before;
 import org.junit.Test;
@@ -65,21 +66,38 @@ public class RESTProxyErrorHandlerTest {
 
     @Test
     public void errorHandlerThrowsRESTValidationProxyExceptionWithInfoFromResponseBodyWhenHandlingError() throws Exception {
-        createResponseWithBody();
+        createBadRequestResponseWithBody();
         try {
             restProxyErrorHandler.handleError(httpResponse);
-        } catch (RESTValidationProxyException e) {
+        } catch (RESTValidationProxyRequestException e) {
             assertEquals("some key", e.getErrorKey());
-            assertEquals("some message", e.getErrorMessage());
+            assertEquals("some message", e.getMessage());
             assertTrue(HttpStatus.BAD_REQUEST == e.getHttpStatus());
         }
     }
 
-    private ClientHttpResponse createResponseWithBody() throws IOException {
-        when(httpResponse.getStatusCode()).thenReturn(HttpStatus.BAD_REQUEST);
-        when(httpResponse.getStatusText()).thenReturn("Bad Request");
-        String body = "{\"key\":\"some key\",\"message\":\"some message\"}";
+    @Test
+    public void errorHandlerThrowsExceptionWithoutErrorKeyWhenNoKeyIsProvidedInErroneousResponse() throws Exception {
+        createInternalServerErrorResponseWithBody();
+        try {
+            restProxyErrorHandler.handleError(httpResponse);
+        } catch (RESTValidationProxyException e) {
+            assertEquals("This is just some message", e.getMessage());
+            assertTrue(HttpStatus.INTERNAL_SERVER_ERROR == e.getHttpStatus());
+        }
+    }
+
+    private void createInternalServerErrorResponseWithBody() throws IOException {
+        createResponseWithBody(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", "{\"message\":\"This is just some message\"}");
+    }
+
+    private void createBadRequestResponseWithBody() throws IOException {
+        createResponseWithBody(HttpStatus.BAD_REQUEST, "Bad Request", "{\"key\":\"some key\",\"message\":\"some message\"}");
+    }
+
+    private void createResponseWithBody(HttpStatus httpStatus, String statusText, String body) throws IOException {
+        when(httpResponse.getStatusCode()).thenReturn(httpStatus);
+        when(httpResponse.getStatusText()).thenReturn(statusText);
         when(httpResponse.getBody()).thenReturn(new ByteArrayInputStream(body.getBytes()));
-        return httpResponse;
     }
 }

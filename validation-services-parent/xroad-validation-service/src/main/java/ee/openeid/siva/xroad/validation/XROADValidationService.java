@@ -3,6 +3,7 @@ package ee.openeid.siva.xroad.validation;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
+import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
@@ -22,7 +23,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 
@@ -43,38 +43,30 @@ public class XROADValidationService implements ValidationService {
             LOGGER.error("Unable to create AsicContainer from validation document", e);
             throw new MalformedDocumentException(e);
         }
+        final AsicContainerVerifier verifier = new AsicContainerVerifier(container);
         try {
-            final AsicContainerVerifier verifier = new AsicContainerVerifier(container);
             verifier.verify();
-            onVerificationSucceeded(verifier);
+            LOGGER.info(AsicUtils.buildSuccessOutput(verifier));
             return new XROADQualifiedReportBuilder(verifier, validationDocument.getName(), new Date(), policy).build();
+        } catch (CodedException codedException) {
+            LOGGER.info(AsicUtils.buildFailureOutput(codedException));
+            return new XROADQualifiedReportBuilder(verifier, validationDocument.getName(), new Date(), policy, codedException).build();
         } catch (Exception e) {
             LOGGER.warn("There was an error validating the document", e);
+            throw new ValidationServiceException(getClass().getSimpleName(), e);
         }
-        return null;
     }
 
     @PostConstruct
     void loadXroadConfigurationDirectory() {
         String configurationDirectoryPath = properties.getConfigurationDirectoryPath();
         System.setProperty(SystemProperties.CONFIGURATION_PATH, configurationDirectoryPath);
-
         LOGGER.info("Loading configuration from path: {}", configurationDirectoryPath);
         try {
             GlobalConf.reload();
-//            verifyConfPathCorrectness();
         } catch (CodedException e) {
             LOGGER.error("Unable to load configuration: ", e);
         }
-    }
-
-    private void onVerificationSucceeded(AsicContainerVerifier verifier) throws IOException {
-        LOGGER.info(AsicUtils.buildSuccessOutput(verifier));
-
-        verifier.getAsic();
-        verifier.getSignature();
-
-        LOGGER.info("");
     }
 
     @Autowired

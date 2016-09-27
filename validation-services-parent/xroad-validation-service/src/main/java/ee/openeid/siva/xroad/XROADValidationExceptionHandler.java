@@ -1,6 +1,7 @@
 package ee.openeid.siva.xroad;
 
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
+import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -24,6 +25,12 @@ public class XROADValidationExceptionHandler {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ErroneousResponse handleInvalidPolicyException(InvalidPolicyException e) {
         return new ErroneousResponse("signaturePolicy", e.getMessage());
+    }
+
+    @ExceptionHandler(ValidationServiceException.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErroneousResponse handleValidationServiceException(ValidationServiceException e) {
+        return new ErroneousResponse(null, messageSource.getMessage("validation.service.error.message", null, null));
     }
 
     @Autowired

@@ -17,6 +17,7 @@
 package ee.openeid.siva.webapp;
 
 import ee.openeid.siva.proxy.http.RESTValidationProxyException;
+import ee.openeid.siva.proxy.http.RESTValidationProxyRequestException;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
@@ -56,11 +57,16 @@ public class ValidationExceptionHandler {
         return requestValidationError;
     }
 
-    @ExceptionHandler(RESTValidationProxyException.class)
-    public ResponseEntity<RequestValidationError> handleRESTValidationProxyException(RESTValidationProxyException e) {
+    @ExceptionHandler(RESTValidationProxyRequestException.class)
+    public ResponseEntity<RequestValidationError> handleRESTValidationProxyException(RESTValidationProxyRequestException e) {
         RequestValidationError requestValidationError = new RequestValidationError();
-        requestValidationError.addFieldError(e.getErrorKey(), e.getErrorMessage());
+        requestValidationError.addFieldError(e.getErrorKey(), e.getMessage());
         return ResponseEntity.status(e.getHttpStatus()).body(requestValidationError);
+    }
+
+    @ExceptionHandler(RESTValidationProxyException.class)
+    public ResponseEntity<String> handleRESTValidationProxyException(RESTValidationProxyException e) {
+        return ResponseEntity.status(e.getHttpStatus()).body(e.getMessage());
     }
 
 

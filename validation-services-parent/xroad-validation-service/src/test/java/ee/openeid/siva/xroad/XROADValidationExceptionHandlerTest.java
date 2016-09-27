@@ -2,6 +2,7 @@ package ee.openeid.siva.xroad;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
+import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import org.json.JSONObject;
@@ -72,6 +73,19 @@ public class XROADValidationExceptionHandlerTest {
                 .andReturn();
         String content = result.getResponse().getContentAsString();
         assertEquals("{\"key\":\"signaturePolicy\",\"message\":\"some message\"}", content);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testValidationServiceExceptionOnValidationExceptionHandler() throws Exception {
+        when(validationService.validateDocument(any(ValidationDocument.class))).thenThrow(ValidationServiceException.class);
+        MvcResult result = mockMvc.perform(post("/xroad-validation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mockRequest().toString().getBytes()))
+                .andExpect(status().isInternalServerError())
+                .andReturn();
+        String content = result.getResponse().getContentAsString();
+        assertEquals("{\"message\":\"Unfortunately there was an error validating your document\"}", content);
     }
 
     private JSONObject mockRequest() {

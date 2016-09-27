@@ -23,7 +23,6 @@ import org.springframework.http.HttpStatus;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RESTProxyError {
-    private HttpStatus httpStatus;
     private String key;
     private String message;
 }

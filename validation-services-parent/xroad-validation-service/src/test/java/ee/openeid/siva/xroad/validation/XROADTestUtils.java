@@ -12,7 +12,7 @@ import java.io.InputStream;
 
 public class XROADTestUtils {
 
-    static final String TEST_FILES_LOCATION = "test-files/";
+    private static final String TEST_FILES_LOCATION = "test-files/";
     static final String XROAD_SIMPLE = "xroad-simple.asice";
     static final String XROAD_BATCHSIGNATURE = "xroad-batchsignature.asice";
 

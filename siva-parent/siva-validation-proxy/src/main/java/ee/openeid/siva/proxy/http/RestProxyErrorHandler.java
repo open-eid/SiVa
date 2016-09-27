@@ -47,7 +47,9 @@ public class RestProxyErrorHandler implements ResponseErrorHandler {
         LOGGER.error("Response body: {}", responseBody);
 
         RESTProxyError error = new ObjectMapper().readValue(responseBody, RESTProxyError.class);
-        error.setHttpStatus(statusCode);
-        throw new RESTValidationProxyException(error);
+        if (error.getKey() != null) {
+            throw new RESTValidationProxyRequestException(error.getKey(), error.getMessage(), statusCode);
+        }
+        throw new RESTValidationProxyException(error.getMessage(), statusCode);
     }
 }

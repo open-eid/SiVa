@@ -148,15 +148,15 @@ The signature validation report (i.e. the validation response) for JSON and SOAP
 <?xml version="1.0" encoding="UTF-8"?>
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
   <soap:Body>
-    <ns2:ValidateDocumentResponse xmlns:ns2="http://soap.webapp.siva.openeid.ee/">
+    <ns2:ValidateDocumentResponse xmlns:ns2="http://soap.webapp.siva.openeid.ee/" xmlns:ns3="http://x-road.eu/xsd/identifiers" xmlns:ns4="http://x-road.eu/xsd/xroad.xsd">
       <ns2:ValidationReport>
         <Policy>
           <PolicyDescription>Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.</PolicyDescription>
           <PolicyName>POLv1</PolicyName>
           <PolicyUrl>http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv1</PolicyUrl>
         </Policy>
-        <ValidationTime>2016-08-31T16:26:20Z</ValidationTime>
-        <DocumentName>default.bdoc</DocumentName>
+        <ValidationTime>2016-09-27T06:42:33Z</ValidationTime>
+        <DocumentName>Valid_ID_sig.bdoc</DocumentName>
         <SignatureForm>ASiC_E</SignatureForm>
         <Signatures>
           <Signature>
@@ -164,20 +164,20 @@ The signature validation report (i.e. the validation response) for JSON and SOAP
             <SignatureFormat>XAdES_BASELINE_LT_TM</SignatureFormat>
             <SignatureLevel>QES</SignatureLevel>
             <SignedBy>NURM,AARE,38211015222</SignedBy>
-            <Indication>TOTAL_PASSED</Indication>
+            <Indication>TOTAL-PASSED</Indication>
             <SubIndication/>
             <Errors/>
             <SignatureScopes>
               <SignatureScope>
-                <Name>lama.jpg</Name>
+                <Name>Proov.txt</Name>
                 <Scope>FullSignatureScope</Scope>
                 <Content>Full document</Content>
               </SignatureScope>
             </SignatureScopes>
-            <ClaimedSigningTime>2013-11-25T13:16:42Z</ClaimedSigningTime>
+            <ClaimedSigningTime>2016-05-12T10:09:09Z</ClaimedSigningTime>
             <Warnings/>
             <Info>
-              <bestSignatureTime>2013-11-25T13:16:59Z</bestSignatureTime>
+              <bestSignatureTime>2016-05-12T10:09:20Z</bestSignatureTime>
             </Info>
           </Signature>
         </Signatures>

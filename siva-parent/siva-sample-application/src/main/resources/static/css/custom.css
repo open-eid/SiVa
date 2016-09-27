@@ -56,12 +56,11 @@
 .navbar-brand {
     display: inline-block;
     padding: 0;
-    margin-right: 1.5em;
+    margin-right: .8em;
 }
 
 .navbar-brand > img {
-    height: 2%;
-    width: auto;
+    height: 20px;
     margin-top: 5px;
 }
 

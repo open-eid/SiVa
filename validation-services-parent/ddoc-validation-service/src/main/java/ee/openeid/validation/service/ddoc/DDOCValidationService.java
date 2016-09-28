@@ -61,18 +61,21 @@ public class DDOCValidationService implements ValidationService {
 
     @PostConstruct
     protected void initConfig() throws DigiDocException, IOException, SAXNotSupportedException, SAXNotRecognizedException, ParserConfigurationException {
-        final File file = File.createTempFile("siva-ddoc-jdigidoc-", ".cfg");
-        try (
-            InputStream inputStream = getClass().getResourceAsStream(properties.getJdigidocConfigurationFile());
-            OutputStream outputStream = new FileOutputStream(file)
-        ) {
-            LOGGER.info("Copying DDOC configuration file: {}", file.getAbsolutePath());
-            IOUtils.copy(inputStream, outputStream);
-        } finally {
-            LOGGER.info("Removing configuration file: {}", file.getAbsolutePath());
-            file.deleteOnExit();
+        synchronized (lock) {
+            final File file = File.createTempFile("siva-ddoc-jdigidoc-", ".cfg");
+            try (
+                InputStream inputStream = getClass().getResourceAsStream(properties.getJdigidocConfigurationFile());
+                OutputStream outputStream = new FileOutputStream(file)
+            ) {
+                LOGGER.info("Copying DDOC configuration file: {}", file.getAbsolutePath());
+                IOUtils.copy(inputStream, outputStream);
+            } finally {
+                LOGGER.info("Removing configuration file: {}", file.getAbsolutePath());
+                file.deleteOnExit();
+            }
+            ConfigManager.init(file.getAbsolutePath());
+            LOGGER.info("DDOC hashcode support in configuration load is: {}", ConfigManager.instance().getProperty("DATAFILE_HASHCODE_MODE"));
         }
-        ConfigManager.init(file.getAbsolutePath());
     }
 
     @Override
@@ -88,6 +91,7 @@ public class DDOCValidationService implements ValidationService {
         synchronized (lock) {
             SignedDoc signedDoc = null;
 
+            LOGGER.info("DDOC hashcode support in validation is: {}", ConfigManager.instance().getProperty("DATAFILE_HASHCODE_MODE"));
             try {
                 DigiDocFactory digiDocFactory = ConfigManager.instance().getDigiDocFactory();
                 List<DigiDocException> signedDocInitializationErrors = new ArrayList<>();

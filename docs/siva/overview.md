@@ -69,6 +69,7 @@ to validate X-Road signature files.
 - Service handles DDOC files starting from version 1.0 or later
 - Service supports BDOC files starting from version 2.1 or later
 - Service supports X-Road 6 security server ASiCE containers
+- Service supports up to 10MB file size upload
 - SiVa uses European Commission’s TSL (Trusted Service
   Status List) for certificate chain validation for PDF and BDOC files.
 	- European Commission’s TSL contains references to TSLs of

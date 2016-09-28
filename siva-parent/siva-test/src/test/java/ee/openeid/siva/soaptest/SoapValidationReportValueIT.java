@@ -408,22 +408,23 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
      *
-     * File: xroad-simple.asice
+     * File: invalid-digest.asice
      *
      */
-    @Test @Ignore //TODO: VAL-323
+    @Test
     public void SoapXroadCorrectValuesArePresentInvalidSimpleSignature() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("invalid-digest.asice"));
         Document report = extractReportDom(post(validationRequestForDocumentExtended(encodedString, "invalid-digest.asice", "XROAD","")).andReturn().body().asString());
-        assertEquals("validSignaturesCount should equal with signaturesCount", getQualifiedReportFromDom(report).getValidSignaturesCount(), getQualifiedReportFromDom(report).getSignaturesCount());
+        assertEquals("validSignaturesCount is zero", 0, getQualifiedReportFromDom(report).getValidSignaturesCount());
         assertEquals("SignatureFormat should match expected", "XAdES_BASELINE_LT", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSignatureFormat());
         assertEquals("Indication should match expected", "TOTAL-FAILED", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getIndication().value());
         assertTrue("There should be no subIndication", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSubIndication().isEmpty());
+        assertEquals("Error message should match expected", "MissingHeaderField: Required field 'protocolVersion' is missing", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getErrors().getError().get(0).getContent());
         assertEquals("SignatureLevel should match expected", "", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSignatureLevel());
-        assertEquals("SignatureScopes should match expected", "FullSignatureScope", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
+        assertEquals("SignatureScopes should match expected", "", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
         assertTrue("Warnings should be empty", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getWarnings().getWarning().isEmpty());
-        assertEquals("SignatureForm should match expected", "ASIC_E", getQualifiedReportFromDom(report).getSignatureForm());
+        assertEquals("SignatureForm should match expected","ASiC_E", getQualifiedReportFromDom(report).getSignatureForm());
     }
 
     @Override

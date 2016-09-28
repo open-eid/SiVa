@@ -30,8 +30,7 @@
 			"minLength": 1
           },
           "signedBy": {
-            "type": "string",
-			"minLength": 1
+            "type": "string"
           },
           "claimedSigningTime": {
             "type": "string"

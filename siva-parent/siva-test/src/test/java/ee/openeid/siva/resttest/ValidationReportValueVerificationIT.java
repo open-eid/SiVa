@@ -984,7 +984,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      * File: xroad-attachment.asice
      *
      */
-    @Test @Ignore //TODO: VAL-323
+    @Test
     public void xroadAllElementsArePresentInvalidSignature() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("invalid-digest.asice"));
@@ -994,19 +994,19 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signatures[0].id", Matchers.is("signature"))
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("signatures[0].signatureLevel", Matchers.is(""))
-                .body("signatures[0].signedBy", Matchers.is("Riigi Infosüsteemi Amet"))
-                .body("signatures[0].indication", Matchers.is(""))
+                .body("signatures[0].signedBy", Matchers.is(""))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors", Matchers.hasSize(0))
-                .body("signatures[0].signatureScopes[0].name", Matchers.is("somename"))
+                .body("signatures[0].errors.content", Matchers.hasItem("MissingHeaderField: Required field 'protocolVersion' is missing"))
+                .body("signatures[0].signatureScopes[0].name", Matchers.is(""))
                 .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
                 .body("signatures[0].signatureScopes[0].content", Matchers.is(""))
                 .body("signatures[0].claimedSigningTime", Matchers.is(""))
                 .body("signatures[0].warnings", Matchers.hasSize(0))
-                .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-04-27T12:30:10Z"))
-                .body("signatureForm", Matchers.is("ASiC_E_batchsignature"))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is(""))
+                .body("signatureForm", Matchers.is("ASiC_E"))
                 .body("documentName", Matchers.is("invalid-digest.asice"))
-                .body("validSignaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1));
     }
 

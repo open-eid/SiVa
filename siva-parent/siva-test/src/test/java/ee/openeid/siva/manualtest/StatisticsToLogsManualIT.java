@@ -460,7 +460,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * File: invalid-digest.asice
      */
-    @Test @Ignore //TODO: VAL-323
+    @Test
     public void xroadWithInvalidSignature() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("invalid-digest.asice"));

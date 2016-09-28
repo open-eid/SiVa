@@ -59,12 +59,16 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      */
     @Test
     public void bdocWithValidSignatures() {
-        QualifiedReport report = postForReport("Valid_IDCard_MobID_signatures.bdoc", VALID_SIGNATURE_POLICY_1);
-        assertAllSignaturesAreValid((report));
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
+        postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "bdoc", VALID_SIGNATURE_POLICY_1), "XAuthTest")
+                .then()
+                .statusCode(HttpStatus.OK.value());
     /*
     Expected result:
 {
    "stats": {
+      "type" : "ASiC_E",
+      "usrId" : "XAuthTest",
       "dur": 1334, <- Can vary, verify that its present
       "sigCt": 2,
       "vSigCt": 2,
@@ -91,17 +95,21 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      */
     @Test
     public void bdocWithInvalidSignatures() {
-        QualifiedReport report = postForReport("SS-4_teadmataCA.4.asice", VALID_SIGNATURE_POLICY_1);
-        assertAllSignaturesAreInvalid((report));
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("SS-4_teadmataCA.4.asice"));
+        postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "SS-4_teadmataCA.4.asice", "bdoc", VALID_SIGNATURE_POLICY_1), "XAuthTest")
+                .then()
+                .statusCode(HttpStatus.OK.value());
     /*
     Expected result:
 {
    "stats": {
+      "type" : "ASiC_E",
+      "usrId" : "XAuthTest",
       "dur": 1334, <- Can vary, verify that its present
       "sigCt": 1,
       "vSigCt": 0,
       "sigRslt": [
-         {"i":"TOTAL-FAILED", "si":"NO_CERTIFICATE_CHAIN_FOUND", "cc":"EE"}
+         {"i":"INDETERMINATE", "si":"NO_CERTIFICATE_CHAIN_FOUND", "cc":"EE"}
       ]
    }
 }        */
@@ -146,12 +154,16 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      */
     @Test
     public void bdocWithSignaturesFromDifferentCountries() {
-        QualifiedReport report = postForReport("Baltic MoU digital signing_EST_LT_LV.bdoc", VALID_SIGNATURE_POLICY_1);
-        assertAllSignaturesAreValid((report));
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Baltic MoU digital signing_EST_LT_LV.bdoc"));
+        postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "Baltic MoU digital signing_EST_LT_LV.bdoc", "bdoc", VALID_SIGNATURE_POLICY_1), "XAuthTest")
+                .then()
+                .statusCode(HttpStatus.OK.value());
     /*
     Expected result:
 {
    "stats": {
+      "type" : "ASiC_E",
+      "usrId" : "XAuthTest",
       "dur": 1334, <- Can vary, verify that its present
       "sigCt": 3,
       "vSigCt": 3,
@@ -180,12 +192,16 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     @Test
     public void ddocWithValidSignatures() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        QualifiedReport report = postForReport("igasugust1.3.ddoc", VALID_SIGNATURE_POLICY_1);
-        assertAllSignaturesAreValid((report));
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
+        postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "igasugust1.3.ddoc", "ddoc", VALID_SIGNATURE_POLICY_1), "XAuthTest")
+                .then()
+                .statusCode(HttpStatus.OK.value());
     /*
     Expected result:
 {
    "stats": {
+      "type" : "DIGIDOC_XML_1.3",
+      "usrId" : "XAuthTest",
       "dur": 1334, <- Can vary, verify that its present
       "sigCt": 3,
       "vSigCt": 3,
@@ -214,12 +230,16 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     @Test
     public void ddocWithInvalidSignatures() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        QualifiedReport report = postForReport("ilma_kehtivuskinnituseta.ddoc", VALID_SIGNATURE_POLICY_1);
-        assertAllSignaturesAreInvalid((report));
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("ilma_kehtivuskinnituseta.ddoc"));
+        postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "ilma_kehtivuskinnituseta.ddoc", "ddoc", VALID_SIGNATURE_POLICY_1), "XAuthTest")
+                .then()
+                .statusCode(HttpStatus.OK.value());
     /*
     Expected result:
 {
    "stats": {
+      "type" : "DIGIDOC_XML_1.3",
+      "usrId" : "XAuthTest",
       "dur": 1334, <- Can vary, verify that its present
       "sigCt": 1,
       "vSigCt": 0,
@@ -270,12 +290,16 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     @Test
     public void ddocWithSignaturesFromDifferentCountries() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        QualifiedReport report = postForReport("Belgia_kandeavaldus_LIV.ddoc", VALID_SIGNATURE_POLICY_1);
-        assertSomeSignaturesAreValid(report, 1);
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Belgia_kandeavaldus_LIV.ddoc"));
+        postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "Belgia_kandeavaldus_LIV.ddoc", "ddoc", VALID_SIGNATURE_POLICY_1), "XAuthTest")
+                .then()
+                .statusCode(HttpStatus.OK.value());
     /*
     Expected result:
 {
    "stats": {
+      "type" : "DIGIDOC_XML_1.3",
+      "usrId" : "XAuthTest",
       "dur": 1334, <- Can vary, verify that its present
       "sigCt": 2,
       "vSigCt": 1,
@@ -303,12 +327,16 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     @Test
     public void pdfWithValidSignatures() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
-        QualifiedReport report = postForReport("pades_lt_two_valid_sig.pdf", VALID_SIGNATURE_POLICY_1);
-        assertAllSignaturesAreValid((report));
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades_lt_two_valid_sig.pdf"));
+        postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "pades_lt_two_valid_sig.pdf", "pdf", VALID_SIGNATURE_POLICY_1), "XAuthTest")
+                .then()
+                .statusCode(HttpStatus.OK.value());
     /*
     Expected result:
 {
    "stats": {
+      "type" : "PAdES",
+      "usrId" : "XAuthTest",
       "dur": 1334, <- Can vary, verify that its present
       "sigCt": 2,
       "vSigCt": 2,
@@ -336,12 +364,16 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     @Test
     public void pdfWithInvalidSignatures() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
-        QualifiedReport report = postForReport("hellopades-lt1-lt2-wrongDigestValue.pdf", VALID_SIGNATURE_POLICY_1);
-        assertSomeSignaturesAreValid(report, 1);
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt1-lt2-wrongDigestValue.pdf"));
+        postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "hellopades-lt1-lt2-wrongDigestValue.pdf", "pdf", VALID_SIGNATURE_POLICY_1), "XAuthTest")
+                .then()
+                .statusCode(HttpStatus.OK.value());
     /*
     Expected result:
 {
    "stats": {
+      "type" : "PAdES",
+      "usrId" : "XAuthTest",
       "dur": 1334, <- Can vary, verify that its present
       "sigCt": 2,
       "vSigCt": 0,
@@ -384,7 +416,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * Requirement:
      *
-     * Title: Pdf with certificates from different countries.
+     * Title: Pdf with certificates from non Estonian countries.
      *
      * Expected Result: Correct data is shown in the log with correct structure
      *
@@ -393,18 +425,22 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     @Test
     public void pdfWithSignaturesFromDifferentCountries() {
         setTestFilesDirectory("pdf/signing_certifacte_test_files/");
-        QualifiedReport report = postForReport("Regulatione-signedbyco-legislators.pdf", VALID_SIGNATURE_POLICY_2);
-        assertAllSignaturesAreInvalid((report));
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Regulatione-signedbyco-legislators.pdf"));
+        postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "Regulatione-signedbyco-legislators.pdf", "pdf", VALID_SIGNATURE_POLICY_1), "XAuthTest")
+                .then()
+                .statusCode(HttpStatus.OK.value());
     /*
     Expected result:
 {
    "stats": {
+      "type" : "PAdES",
+      "usrId" : "XAuthTest",
       "dur": 1334, <- Can vary, verify that its present
       "sigCt": 2,
       "vSigCt": 0,
       "sigRslt": [
-         { "i" : "INDETERMINATE", "si" : "OUT_OF_BOUNDS_NO_POE", "cc" : "BE"},
-         { "i" : "INDETERMINATE", "si" : "TRY_LATER", "cc" : "BE"}
+         { "i" : "TOTAL-FAILED", "cc" : "BE"},
+         { "i" : "TOTAL-FAILED", "cc" : "BE"}
       ]
    }
 }        */
@@ -427,16 +463,15 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     public void xroadWithValidSignatures() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-batchsignature.asice"));
-        QualifiedReport report = mapToReport(
-                post(validationRequestWithValidKeys(encodedString, "xroad-batchsignature.asice", "xroad", ""))
-                        .body()
-                        .asString()
-        );
-        assertAllSignaturesAreValid(report);
+        postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "xroad-batchsignature.asice", "xroad", VALID_SIGNATURE_POLICY_1), "XAuthTest")
+                .then()
+                .statusCode(HttpStatus.OK.value());
     /*
     Expected result:
 {
    "stats": {
+      "type" : "ASiC_E_batchsignature",
+      "usrId" : "XAuthTest",
       "dur": 1334, <- Can vary, verify that its present
       "sigCt": 1,
       "vSigCt": 1,
@@ -464,17 +499,16 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     public void xroadWithInvalidSignature() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("invalid-digest.asice"));
-        QualifiedReport report = mapToReport(
-                post(validationRequestWithValidKeys(encodedString, "invalid-digest.asice", "xroad", ""))
-                        .body()
-                        .asString()
-        );
-        assertAllSignaturesAreInvalid(report);
+        postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "invalid-digest.asice", "xroad", VALID_SIGNATURE_POLICY_1), "XAuthTest")
+                .then()
+                .statusCode(HttpStatus.OK.value());
     /*
     Expected result:
 {
    "stats": {
-      "dur": 1334, <- Can vary, verify that its present
+      "type" : "ASiC_E",
+      "usrId" : "XAuthTest",
+      "dur": 134, <- Can vary, verify that its present
       "sigCt": 1,
       "vSigCt": 0,
       "sigRslt": [

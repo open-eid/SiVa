@@ -1,5 +1,6 @@
 language: java
 sudo: false
+cache: false
 jdk:
 - oraclejdk8
 env:
@@ -29,8 +30,8 @@ branchespython-dev:
   only:
   - develop
 install: true
-script:
-- "./mvnw clean install -q"
+before_script: ls -al $TMPDIR
+script: ./mvnw clean install -q
 after_success:
 - "./mvnw jacoco:report coveralls:report -q -Dcoveralls.repo.token=$COVERALLS_REPO_TOKEN"
 - "./mvnw -pl siva-parent/siva-webapp -pl validation-services-parent/xroad-validation-service -pl siva-parent/siva-sample-application package docker:build docker:push -DskipTests -Dsettings.security=settings-security.xml -s settings.xml"

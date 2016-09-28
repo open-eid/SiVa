@@ -74,7 +74,7 @@ public class DDOCValidationServiceTest {
     @BeforeClass
     public static void setUpClass() throws Exception {
         DDOCValidationServiceProperties properties = new DDOCValidationServiceProperties();
-        properties.setJdigidocConfigurationFile("/jdigidoc.cfg");
+        properties.setJdigidocConfigurationFile("/siva-jdigidoc.cfg");
 
         policyProperties.initPolicySettings();
         signaturePolicyService = new SignaturePolicyService<>(policyProperties);

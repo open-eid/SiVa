@@ -219,9 +219,10 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      * File: Baltic MoU digital signing_EST_LT_LV.bdoc
      *
      */
-    @Test @Ignore//TODO: VAL-244 was found with Valid_IDCard_MobID_signatures.bdoc file in addition to this file.
+    @Test //@Ignore//TODO: VAL-244 was found with Valid_IDCard_MobID_signatures.bdoc file in addition to this file.
     public void bdocAllElementsArePresentValidMultipleSignatures() {
-        post(validationRequestFor("Baltic MoU digital signing_EST_LT_LV.bdoc"))
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Baltic MoU digital signing_EST_LT_LV.bdoc"));
+        post(validationRequestWithValidKeys(encodedString, "Baltic MoU digital signing_EST_LT_LV.bdoc", "bdoc", VALID_SIGNATURE_POLICY_1))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
                 .body("signatures[0].id", Matchers.is("S0"))
@@ -231,11 +232,11 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].errors", Matchers.hasSize(0))
-                .body("signatures[0].signatureScopes[0].name", Matchers.is("Baltic MoU digital signing_04112015_0.docx"))
+                .body("signatures[0].signatureScopes[0].name", Matchers.is("Baltic MoU digital signing_04112015.docx"))
                 .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
                 .body("signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
                 .body("signatures[0].claimedSigningTime", Matchers.is("2015-11-04T10:24:11Z"))
-                .body("signatures[0].warnings[0].description", Matchers.is("The certificate is not supported by SSCD!"))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2015-11-04T10:24:20Z"))
                 .body("signatureForm", Matchers.is("ASiC_E"))
                 .body("documentName", Matchers.is("Baltic MoU digital signing_EST_LT_LV.bdoc"))

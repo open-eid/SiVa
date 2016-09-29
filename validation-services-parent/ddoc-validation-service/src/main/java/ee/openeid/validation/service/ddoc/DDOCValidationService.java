@@ -46,6 +46,8 @@ import javax.annotation.PostConstruct;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.Security;
 import java.util.ArrayList;
 import java.util.Date;
@@ -69,9 +71,9 @@ public class DDOCValidationService implements ValidationService {
             ) {
                 LOGGER.info("Copying DDOC configuration file: {}", file.getAbsolutePath());
                 LOGGER.info("jdigidoc.cfg original path: {}", getClass().getResource(properties.getJdigidocConfigurationFile()));
-//                LOGGER.info(IOUtils.toString(inputStream, "UTF-8"));
 
                 IOUtils.copy(inputStream, outputStream);
+                LOGGER.info("jdigidoc.cfg contents: {}", Files.readAllLines(Paths.get(file.getAbsolutePath())));
             } finally {
                 LOGGER.info("Removing configuration file: {}", file.getAbsolutePath());
                 file.deleteOnExit();

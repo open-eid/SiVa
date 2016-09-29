@@ -424,6 +424,36 @@ public class BdocValidationPassIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(1));
     }
 
+    /**
+     * TestCaseID: Bdoc-ValidationPass-17
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     *
+     * Title: Bdoc-TS with special characters in data file
+     *
+     * Expected Result: The document should pass the validation with correct signature scope
+     *
+     * File: Nonconventionalcharacters.asice
+     */
+    @Test
+    public void asiceWithSpecialCharactersInDataFileShouldPass() {
+        setTestFilesDirectory("bdoc/live/timestamp/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Nonconventionalcharacters.asice"));
+        post(validationRequestWithValidKeys(encodedString, "Nonconventionalcharacters.asice", "BDOC", ""))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].signatureScopes[0].name", Matchers.is("!~#¤%%&()=+-_.txt"))
+                .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
+                .body("signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
+    }
+
     @Override
     protected String getTestFilesDirectory() {
         return testFilesDirectory;

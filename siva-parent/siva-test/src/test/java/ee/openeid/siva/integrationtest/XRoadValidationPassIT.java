@@ -19,6 +19,7 @@ package ee.openeid.siva.integrationtest;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import org.apache.commons.codec.binary.Base64;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -37,21 +38,75 @@ public class XRoadValidationPassIT extends SiVaRestTests {
      *
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
-     * Title: Bdoc with conformant EE signature
+     * Title: Simple xroad document
      *
-     * Expected Result: Document should pass when signature policy is set to "ee"
+     * Expected Result: Document should pass
      *
-     * File: Valid_ID_sig.bdoc
+     * File: xroad-simple.asice
      */
     @Test
-    public void validatingAnXroadDocumentShouldReturnAReport() {
+    public void validatingSimpleXroadDocumentShouldReturnAReport() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        QualifiedReport report = mapToReport(
-                post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", "xroad", ""))
-                        .body()
-                        .asString()
-        );
-        assertAllSignaturesAreValid(report);
+        post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", "xroad", VALID_SIGNATURE_POLICY_1))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors.content", Matchers.hasSize(0))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
+    }
+
+    /**
+     * TestCaseID: Xroad-ValidationPass-2
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     *
+     * Title: Batchsignature xroad document
+     *
+     * Expected Result: Document should pass
+     *
+     * File: xroad-batchsignature.asice
+     */
+    @Test
+    public void validatingBatchXroadDocumentShouldReturnAReport() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-batchsignature.asice"));
+        post(validationRequestWithValidKeys(encodedString, "xroad-batchsignature.asice", "xroad", VALID_SIGNATURE_POLICY_1))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors.content", Matchers.hasSize(0))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
+    }
+
+    /**
+     * TestCaseID: Xroad-ValidationPass-3
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     *
+     * Title: Attachment xroad document
+     *
+     * Expected Result: Document should pass
+     *
+     * File: xroad-attachment.asice
+     */
+    @Test
+    public void validatingAttachXroadDocumentShouldReturnAReport() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-batchsignature.asice"));
+        post(validationRequestWithValidKeys(encodedString, "xroad-batchsignature.asice", "xroad", VALID_SIGNATURE_POLICY_1))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors.content", Matchers.hasSize(0))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
 }

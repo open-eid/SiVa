@@ -240,7 +240,7 @@ public class DDOCValidationServiceTest {
 
             DDOCValidationService validationServiceSpy = spy(new DDOCValidationService());
             validationServiceSpy.setSignaturePolicyService(signaturePolicyService);
-            doNothing().when(validationServiceSpy).validateAgainstXMLEntityAttacks(any(byte[].class));
+            DDOCValidationService.validateAgainstXMLEntityAttacks(any(byte[].class));
 
             expectedException.expect(ValidationServiceException.class);
             validationServiceSpy.validateDocument(validationDocument);

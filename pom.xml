@@ -20,7 +20,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.github.openeid.siva</groupId>
+    <groupId>ee.openid.siva</groupId>
     <artifactId>siva</artifactId>
     <version>2.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>

@@ -395,13 +395,16 @@
 </ol>
 <h2 id="x-road-signatures-related-issues">X-Road signatures' related issues</h2>
 <ol>
-<li>(X-Road Asicverifier) Values of some validation report fields are not accessible via the X-Road library's API:  </li>
+<li>(X-Road Asicverifier) Values of some validation report fields are not accessible via the X-Road library's API:  <ol>
 <li>(X-Road Asicverifier) SignatureFormat – Format and profile (according to Baseline Profile) of the signature. Currently, hard coded values are used in the report. </li>
 <li>(X-Road Asicverifier) SignatureLevel – Indication whether the signature is Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES). Currently, the value is left empty, as the library doesn't enable determining legal level of the signature then POLv2 validation policy (only QES level signatures are accepted) is not supported for X-Road signatures. </li>
 <li>(X-Road Asicverifier) Indication, Errors and Warnings - in error situations, the verification process results in a CodedException extends RuntimeException. This Exception always contains a fault code String but it’s how should we determine if we should result in INDETERMINATE or TOTAL-FAILED result? Also since the rest of the verification process is not completed after the exception we only ever know the single error that was reached first. Also we can’t get warnings as we do in DSS.</li>
 <li>(X-Road Asicverifier) SubIndication – Additional subindication in case of failed or indeterminate validation result, according to EN 319 102-1 "Table 6: Validation Report Structure and Semantics".  </li>
 <li>(X-Road Asicverifier) SignatureScope - Contains information of the original data that is covered by the signature. Currently, a hard-coded value is used.  </li>
 <li>(X-Road Asicverifier) ClaimedSigningTime - Claimed signing time, i.e. user’s computer time during signature creation.</li>
+</ol>
+</li>
+<li>(X-Road Asicverifier) Qualified electronic signature validation process - the Asicverifier library doesn't check if the issuer's certificate was issued by a qualified trust service provider (i.e. based on the data in TL trust list).   </li>
 </ol>
           <aside class="copyright" role="note">
             

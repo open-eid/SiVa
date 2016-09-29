@@ -46,7 +46,6 @@ import javax.annotation.PostConstruct;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import java.io.*;
-import java.nio.charset.Charset;
 import java.security.Security;
 import java.util.ArrayList;
 import java.util.Date;
@@ -65,12 +64,12 @@ public class DDOCValidationService implements ValidationService {
         synchronized (lock) {
             final File file = File.createTempFile("siva-ddoc-jdigidoc-", ".cfg");
             try (
-                    InputStream inputStream = getClass().getResourceAsStream(properties.getJdigidocConfigurationFile());
-                    OutputStream outputStream = new FileOutputStream(file)
+                InputStream inputStream = getClass().getResourceAsStream(properties.getJdigidocConfigurationFile());
+                OutputStream outputStream = new FileOutputStream(file)
             ) {
                 LOGGER.info("Copying DDOC configuration file: {}", file.getAbsolutePath());
                 LOGGER.info("jdigidoc.cfg original path: {}", getClass().getResource(properties.getJdigidocConfigurationFile()));
-                LOGGER.info(IOUtils.toString(inputStream, Charset.defaultCharset()));
+//                LOGGER.info(IOUtils.toString(inputStream, "UTF-8"));
 
                 IOUtils.copy(inputStream, outputStream);
             } finally {
@@ -93,8 +92,9 @@ public class DDOCValidationService implements ValidationService {
         validateAgainstXMLEntityAttacks(validationDocument.getBytes());
 
         synchronized (lock) {
-            LOGGER.info("DDOC hashcode support in validation is: {}", ConfigManager.instance().getProperty("DATAFILE_HASHCODE_MODE"));
             SignedDoc signedDoc = null;
+
+            LOGGER.info("DDOC hashcode support in validation is: {}", ConfigManager.instance().getProperty("DATAFILE_HASHCODE_MODE"));
             try {
                 DigiDocFactory digiDocFactory = ConfigManager.instance().getDigiDocFactory();
                 List<DigiDocException> signedDocInitializationErrors = new ArrayList<>();
@@ -116,7 +116,7 @@ public class DDOCValidationService implements ValidationService {
         }
     }
 
-    protected static void validateAgainstXMLEntityAttacks(byte[] xmlContent) {
+    protected void validateAgainstXMLEntityAttacks(byte[] xmlContent) {
         try {
             SAXParser saxParser = SecureSAXParsers.createParser();
             saxParser.getXMLReader().parse(new InputSource(new ByteArrayInputStream(xmlContent)));

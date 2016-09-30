@@ -28,16 +28,16 @@ import java.io.InputStream;
 import java.util.Arrays;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ValidationRequestUtils {
+final class ValidationRequestUtils {
     private static final String FILENAME_EXTENSION_SEPARATOR = ".";
     private static final String XROAD_XSD = "http://x-road.eu/xsd/xroad.xsd";
     private static final String UNIQUE_XROAD_ASICE_FILE = "message.xml";
 
-    public static FileType getValidationServiceType(UploadedFile validationRequest) throws IOException {
+    static FileType getValidationServiceType(UploadedFile validationRequest) throws IOException {
         final String filename = validationRequest.getFilename();
         FileType parsedFileType = parseFileExtension(filename.substring(filename.lastIndexOf(FILENAME_EXTENSION_SEPARATOR) + 1));
 
-        if (isAsiceFileExtension(parsedFileType)) {
+        if (isAsiceFileExtension(parsedFileType) || FileType.SCE == parsedFileType) {
             parsedFileType = FileType.BDOC;
         }
 

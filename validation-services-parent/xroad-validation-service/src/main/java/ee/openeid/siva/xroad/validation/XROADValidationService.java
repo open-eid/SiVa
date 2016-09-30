@@ -28,7 +28,6 @@ import ee.ria.xroad.common.CodedException;
 import ee.ria.xroad.common.SystemProperties;
 import ee.ria.xroad.common.asic.AsicContainer;
 import ee.ria.xroad.common.asic.AsicContainerVerifier;
-import ee.ria.xroad.common.asic.AsicUtils;
 import ee.ria.xroad.common.conf.globalconf.GlobalConf;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
@@ -62,10 +61,8 @@ public class XROADValidationService implements ValidationService {
         final AsicContainerVerifier verifier = new AsicContainerVerifier(container);
         try {
             verifier.verify();
-            LOGGER.info(AsicUtils.buildSuccessOutput(verifier));
             return new XROADQualifiedReportBuilder(verifier, validationDocument.getName(), new Date(), policy).build();
         } catch (CodedException codedException) {
-            LOGGER.info(AsicUtils.buildFailureOutput(codedException));
             return new XROADQualifiedReportBuilder(verifier, validationDocument.getName(), new Date(), policy, codedException).build();
         } catch (Exception e) {
             LOGGER.warn("There was an error validating the document", e);

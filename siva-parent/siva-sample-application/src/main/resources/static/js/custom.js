@@ -33,7 +33,9 @@
     sivaDropzone.on('sending', function (file, xhr, formData) {
         $('#result-area, #validation-summery').addClass("hide");
         var policy = $('select#policy-select').val();
+        console.log('Validation policy: ' + policy);
         formData.append("policy", policy);
+        formData.append("encodedFilename", encodeURI(file.name));
     });
 
     sivaDropzone.on('uploadprogress', function (file, progress) {

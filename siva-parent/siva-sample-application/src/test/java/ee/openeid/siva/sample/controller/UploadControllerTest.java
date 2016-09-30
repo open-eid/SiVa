@@ -61,7 +61,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(UploadController.class)
-@ImportAutoConfiguration({Jade4JAutoConfiguration.class, Wro4jAutoConfiguration.class})
+@ImportAutoConfiguration({Wro4jAutoConfiguration.class, Jade4JAutoConfiguration.class})
 public class UploadControllerTest {
 
     @Autowired
@@ -87,6 +87,8 @@ public class UploadControllerTest {
 
     @Captor
     private ArgumentCaptor<LoggingEvent> captorLoggingEvent;
+
+    private String encodedFilename = "random.bdoc";
 
     @Before
     public void setUp() throws Exception {
@@ -116,7 +118,7 @@ public class UploadControllerTest {
 
         UploadedFile uploadedFile = new UploadedFile();
         uploadedFile.setFilename("random.bdoc");
-        given(hazelcastUploadFileCacheService.addUploadedFile(anyLong(), any(MultipartFile.class)))
+        given(hazelcastUploadFileCacheService.addUploadedFile(anyLong(), any(MultipartFile.class), anyString()))
                 .willReturn(uploadedFile);
 
         final MockMultipartFile uploadFile = new MockMultipartFile(
@@ -126,14 +128,16 @@ public class UploadControllerTest {
                 "bdoc content".getBytes()
         );
 
-        mockMvc.perform(fileUpload("/upload").file(uploadFile).param("policy", ""))
+        mockMvc.perform(fileUpload("/upload").file(uploadFile)
+                .param("policy", "")
+                .param("encodedFilename", "ranodom.bdoc"))
                 .andExpect(status().is(200))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
     }
 
     @Test
     public void fileUploadFailedRedirectedBackToStartPage() throws Exception {
-        given(hazelcastUploadFileCacheService.addUploadedFile(anyLong(), any(MultipartFile.class)))
+        given(hazelcastUploadFileCacheService.addUploadedFile(anyLong(), any(MultipartFile.class), anyString()))
                 .willThrow(new IOException("File upload failed"));
 
         final MockMultipartFile uploadFile = new MockMultipartFile(
@@ -143,7 +147,9 @@ public class UploadControllerTest {
                 "bdoc content".getBytes()
         );
 
-        mockMvc.perform(fileUpload("/upload").file(uploadFile).param("policy", ""))
+        mockMvc.perform(fileUpload("/upload").file(uploadFile)
+                .param("policy", "")
+                .param("encodedFilename", "ranodom.bdoc"))
                 .andExpect(status().is(200));
     }
 
@@ -156,7 +162,9 @@ public class UploadControllerTest {
                 "".getBytes()
         );
 
-        mockMvc.perform(fileUpload("/upload").file(uploadFile).param("policy", ""))
+        mockMvc.perform(fileUpload("/upload").file(uploadFile)
+                .param("policy", "")
+                .param("encodedFilename", "ranodom.bdoc"))
                 .andExpect(status().is(200));
     }
 
@@ -170,7 +178,9 @@ public class UploadControllerTest {
                 "bdoc content".getBytes()
         );
 
-        mockMvc.perform(fileUpload("/upload").file(uploadFile).param("policy", ""))
+        mockMvc.perform(fileUpload("/upload").file(uploadFile)
+                .param("policy", "")
+                .param("encodedFilename", "ranodom.bdoc"))
                 .andExpect(status().is(200));
 
         verify(mockAppender).doAppend(captorLoggingEvent.capture());

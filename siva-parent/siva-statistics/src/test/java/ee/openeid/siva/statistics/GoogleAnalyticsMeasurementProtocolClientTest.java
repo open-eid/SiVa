@@ -22,6 +22,7 @@ import ee.openeid.siva.statistics.model.SimpleSignatureReport;
 import ee.openeid.siva.statistics.model.SimpleValidationReport;
 import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.util.URIUtil;
+import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,8 +55,6 @@ public class GoogleAnalyticsMeasurementProtocolClientTest {
 
     private static final String MOCKED_UUID_STRING = "mocked-uuid";
 
-    private static final String X_AUTHENTICATED_USER = "x-authenticated-user";
-
     private GoogleAnalyticsMeasurementProtocolClient gaClient = new GoogleAnalyticsMeasurementProtocolClient();
 
     private GoogleAnalyticsMeasurementProtocolProperties properties = new GoogleAnalyticsMeasurementProtocolProperties();
@@ -86,9 +85,10 @@ public class GoogleAnalyticsMeasurementProtocolClientTest {
         String indication = "TOTAL_PASSED";
         String subindication = "";
         String countryCode = "EE";
+        String signatureFormat = "FORMAT";
 
         SimpleValidationReport report = createDummySimpleValidationReport(TimeUnit.MILLISECONDS.toNanos(validationDurationinMillis), validSignaturesCount, totalSignatureCount, "N/A");
-        addSimpleSignatureReport(report, indication, subindication, countryCode);
+        addSimpleSignatureReport(report, indication, subindication, countryCode, signatureFormat);
 
         properties.setEnabled(false);
 
@@ -107,15 +107,12 @@ public class GoogleAnalyticsMeasurementProtocolClientTest {
         String indication = "TOTAL_PASSED";
         String subindication = "";
         String countryCode = "EE";
+        String signatureFormat = "FORMAT";
 
         SimpleValidationReport report = createDummySimpleValidationReport(TimeUnit.MILLISECONDS.toNanos(validationDurationinMillis), validSignaturesCount, totalSignatureCount, "N/A");
-        addSimpleSignatureReport(report, indication, subindication, countryCode);
+        addSimpleSignatureReport(report, indication, subindication, countryCode, signatureFormat);
 
         properties.setEnabled(true);
-
-        //HttpServletRequest mockedRequest = mock(HttpServletRequest.class);
-        //gaClient.setHttpRequest(mockedRequest);
-        //when(mockedRequest.getHeader(X_AUTHENTICATED_USER)).thenReturn("");
 
         mockServer.expect(requestTo(properties.getUrl()))
                 .andExpect(method(HttpMethod.POST))
@@ -134,23 +131,20 @@ public class GoogleAnalyticsMeasurementProtocolClientTest {
         String firstSignatureIndication = "TOTAL_PASSED";
         String firstSignatureSubindication = "";
         String firstSignatureCountryCode = "EE";
+        String firstSignatureFormat = "FORMAT";
         String secondSignatureIndication = "TOTAL_FAILED";
         String secondSignatureSubindication = "CERTIFICATE_CHAIN_NOT_FOUND";
         String secondSignatureCountryCode = "US";
+        String secondSignatureFormat = "";
         String xAuthenticatedUser = "some_user";
         SimpleValidationReport report = createDummySimpleValidationReport(TimeUnit.MILLISECONDS.toNanos(validationDurationinMillis), validSignaturesCount, totalSignatureCount, xAuthenticatedUser);
-        addSimpleSignatureReport(report, firstSignatureIndication, firstSignatureSubindication, firstSignatureCountryCode);
-        addSimpleSignatureReport(report, secondSignatureIndication, secondSignatureSubindication, secondSignatureCountryCode);
+        addSimpleSignatureReport(report, firstSignatureIndication, firstSignatureSubindication, firstSignatureCountryCode, firstSignatureFormat);
+        addSimpleSignatureReport(report, secondSignatureIndication, secondSignatureSubindication, secondSignatureCountryCode, secondSignatureFormat);
 
         properties.setEnabled(true);
         properties.setUrl("http://www.someurl.com/some_path");
         properties.setDataSourceName("some_data_source");
         properties.setTrackingId("some_tracking_id");
-
-
-        //HttpServletRequest mockedRequest = mock(HttpServletRequest.class);
-        //gaClient.setHttpRequest(mockedRequest);
-        //when(mockedRequest.getHeader(X_AUTHENTICATED_USER)).thenReturn(xAuthenticatedUser);
 
         mockServer.expect(requestTo(properties.getUrl()))
                 .andExpect(method(HttpMethod.POST))
@@ -170,7 +164,7 @@ public class GoogleAnalyticsMeasurementProtocolClientTest {
         return report;
     }
 
-    private void addSimpleSignatureReport(SimpleValidationReport report, String indication, String subindication, String country) {
+    private void addSimpleSignatureReport(SimpleValidationReport report, String indication, String subindication, String country, String signatureFormat) {
         if (report.getSimpleSignatureReports() == null) {
             report.setSimpleSignatureReports(new ArrayList<>());
         }
@@ -178,6 +172,7 @@ public class GoogleAnalyticsMeasurementProtocolClientTest {
         sigReport.setIndication(indication);
         sigReport.setSubIndication(subindication);
         sigReport.setCountryCode(country);
+        sigReport.setSignatureFormat(signatureFormat);
         report.getSimpleSignatureReports().add(sigReport);
     }
 
@@ -187,10 +182,15 @@ public class GoogleAnalyticsMeasurementProtocolClientTest {
         sb.append(URIUtil.encodeQuery("v=1&t=event&ds=" + properties.getDataSourceName() + "&tid=" + properties.getTrackingId() + "&cid=" + MOCKED_UUID_STRING + "&cd1=" + userIdentifier + "&ec=" + CONTAINER_TYPE + "&ea=Container validation&el=signaturesCount&ev=" + report.getSignatureCount()) + "\n");
         sb.append(URIUtil.encodeQuery("v=1&t=event&ds=" + properties.getDataSourceName() + "&tid=" + properties.getTrackingId() + "&cid=" + MOCKED_UUID_STRING + "&cd1=" + userIdentifier + "&ec=" + CONTAINER_TYPE + "&ea=Container validation&el=validSignaturesCount&ev=" + report.getValidSignatureCount()) + "\n");
         for (SimpleSignatureReport sigReport : report.getSimpleSignatureReports()) {
-            sb.append(URIUtil.encodeQuery("v=1&t=event&ds=" + properties.getDataSourceName() + "&tid=" + properties.getTrackingId() + "&cid=" + MOCKED_UUID_STRING + "&cd1=" + userIdentifier + "&ec=" + CONTAINER_TYPE + "&ea=Signature validation&el=" + sigReport.getIndication() + "&geoid=" + sigReport.getCountryCode()) + "\n");
-            sb.append(URIUtil.encodeQuery("v=1&t=event&ds=" + properties.getDataSourceName() + "&tid=" + properties.getTrackingId() + "&cid=" + MOCKED_UUID_STRING + "&cd1=" + userIdentifier + "&ec=" + CONTAINER_TYPE + "&ea=Signature validation&el=" + sigReport.getSubIndication() + "&geoid=" + sigReport.getCountryCode()) + "\n");
+            String indicationSubIndicationPair = expectedIndicationSubIndicationPair(sigReport.getIndication(), sigReport.getSubIndication());
+            String containerTypeSigFormatPair = CONTAINER_TYPE + "/" + sigReport.getSignatureFormat();
+            sb.append(URIUtil.encodeQuery("v=1&t=event&ds=" + properties.getDataSourceName() + "&tid=" + properties.getTrackingId() + "&cid=" + MOCKED_UUID_STRING + "&cd1=" + userIdentifier + "&ec=" + containerTypeSigFormatPair + "&ea=Signature validation&el=" + indicationSubIndicationPair + "&geoid=" + sigReport.getCountryCode()) + "\n");
         }
         return sb.toString();
+    }
+
+    private String expectedIndicationSubIndicationPair(String indication, String subIndication) {
+        return indication + (StringUtils.isEmpty(subIndication) ? "" : "/" + subIndication);
     }
 
 }

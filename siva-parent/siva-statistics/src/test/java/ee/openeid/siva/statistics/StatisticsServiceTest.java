@@ -64,16 +64,18 @@ public class StatisticsServiceTest {
     @Test
     public void testValidationStatisticsLoggingWhereAllSignaturesInQualifiedReportAreValid() {
         long validationDurationInMillis = 1000L;
-        String signatureForm = "PAdES";
+        String signatureForm = "ASiC_E";
+        String expectedContainerType = "ASiC-E";
         int validSignaturesCount = 1;
         int totalSignatureCount = 1;
         SignatureValidationData.Indication indication = SignatureValidationData.Indication.TOTAL_PASSED;
         String subindication = "";
         String countryCode = "EE";
         String xAuthenticatedUser = "N/A";
+        String signatureFormat = "FORMAT";
 
         QualifiedReport report = createDummyQualifiedReport(signatureForm, validSignaturesCount, totalSignatureCount);
-        addSignatureValidationData(report, indication, subindication, countryCode);
+        addSignatureValidationData(report, indication, subindication, countryCode, signatureFormat);
 
         HttpServletRequest mockedRequest = mock(HttpServletRequest.class);
         statisticsService.setHttpRequest(mockedRequest);
@@ -82,14 +84,15 @@ public class StatisticsServiceTest {
         statisticsService.publishValidationStatistic(TimeUnit.MILLISECONDS.toNanos(validationDurationInMillis), report);
         verify(loggerMock).info("{" + LINE_SEPARATOR  +
                 "  \"stats\" : {" + LINE_SEPARATOR  +
-                "    \"type\" : \"" + signatureForm + "\"," + LINE_SEPARATOR  +
+                "    \"type\" : \"" + expectedContainerType + "\"," + LINE_SEPARATOR  +
                 "    \"usrId\" : \"" + xAuthenticatedUser + "\"," + LINE_SEPARATOR  +
                 "    \"dur\" : "+ validationDurationInMillis + "," + LINE_SEPARATOR  +
                 "    \"sigCt\" : "+ totalSignatureCount + "," + LINE_SEPARATOR  +
                 "    \"vSigCt\" : "+ validSignaturesCount + "," + LINE_SEPARATOR  +
                 "    \"sigRslt\" : [ {" + LINE_SEPARATOR  +
                 "      \"i\" : \"" + indication + "\"," + LINE_SEPARATOR  +
-                "      \"cc\" : \"" + countryCode + "\"" + LINE_SEPARATOR  +
+                "      \"cc\" : \"" + countryCode + "\"," + LINE_SEPARATOR  +
+                "      \"sf\" : \"" + signatureFormat + "\"" + LINE_SEPARATOR  +
                 "    } ]" + LINE_SEPARATOR  +
                 "  }" + LINE_SEPARATOR  +
                 "}"
@@ -105,14 +108,16 @@ public class StatisticsServiceTest {
         SignatureValidationData.Indication firstSignatureIndication = SignatureValidationData.Indication.TOTAL_PASSED;
         String firstSignatureSubindication = "";
         String firstSignatureCountryCode = "EE";
+        String firstSignatureFormat = "FORMAT";
         SignatureValidationData.Indication secondSignatureIndication = SignatureValidationData.Indication.TOTAL_FAILED;
         String secondSignatureSubindication = "CERTIFICATE_CHAIN_NOT_FOUND";
         String secondSignatureCountryCode = "US";
+        String secondSignatureFormat = "";
         String xAuthenticatedUser = "some_user";
 
         QualifiedReport report = createDummyQualifiedReport(signatureForm, validSignaturesCount, totalSignatureCount);
-        addSignatureValidationData(report, firstSignatureIndication, firstSignatureSubindication, firstSignatureCountryCode);
-        addSignatureValidationData(report, secondSignatureIndication, secondSignatureSubindication, secondSignatureCountryCode);
+        addSignatureValidationData(report, firstSignatureIndication, firstSignatureSubindication, firstSignatureCountryCode, firstSignatureFormat);
+        addSignatureValidationData(report, secondSignatureIndication, secondSignatureSubindication, secondSignatureCountryCode, secondSignatureFormat);
 
         HttpServletRequest mockedRequest = mock(HttpServletRequest.class);
         statisticsService.setHttpRequest(mockedRequest);
@@ -128,7 +133,8 @@ public class StatisticsServiceTest {
                 "    \"vSigCt\" : "+ validSignaturesCount + "," + LINE_SEPARATOR  +
                 "    \"sigRslt\" : [ {" + LINE_SEPARATOR  +
                 "      \"i\" : \"" + firstSignatureIndication + "\"," + LINE_SEPARATOR  +
-                "      \"cc\" : \"" + firstSignatureCountryCode + "\"" + LINE_SEPARATOR  +
+                "      \"cc\" : \"" + firstSignatureCountryCode + "\"," + LINE_SEPARATOR  +
+                "      \"sf\" : \"" + firstSignatureFormat + "\"" + LINE_SEPARATOR  +
                 "    }, {" + LINE_SEPARATOR  +
                 "      \"i\" : \"" + secondSignatureIndication + "\"," + LINE_SEPARATOR  +
                 "      \"si\" : \"" + secondSignatureSubindication + "\"," + LINE_SEPARATOR  +
@@ -147,7 +153,7 @@ public class StatisticsServiceTest {
         return report;
     }
 
-    private void addSignatureValidationData(QualifiedReport report, SignatureValidationData.Indication indication, String subindication, String country) {
+    private void addSignatureValidationData(QualifiedReport report, SignatureValidationData.Indication indication, String subindication, String country, String signatureFormat) {
         if (report.getSignatures() == null) {
             report.setSignatures(new ArrayList<>());
         }
@@ -155,6 +161,7 @@ public class StatisticsServiceTest {
         sigData.setIndication(indication);
         sigData.setSubIndication(subindication);
         sigData.setCountryCode(country);
+        sigData.setSignatureFormat(signatureFormat);
         report.getSignatures().add(sigData);
     }
 

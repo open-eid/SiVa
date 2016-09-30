@@ -23,7 +23,7 @@ import lombok.Data;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({ "i", "si", "cc" })
+@JsonPropertyOrder({ "i", "si", "cc", "sf" })
 public class SimpleSignatureReport {
 
     @JsonProperty("i")
@@ -34,5 +34,8 @@ public class SimpleSignatureReport {
 
     @JsonProperty("cc")
     private String countryCode;
+
+    @JsonProperty("sf")
+    private String signatureFormat;
 
 }

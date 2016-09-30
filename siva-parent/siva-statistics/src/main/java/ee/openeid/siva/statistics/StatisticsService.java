@@ -37,6 +37,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static ee.openeid.siva.statistics.SignatureFormToContainerTypeTransormer.transformToContainerTypeOrEmpty;
+
 @Service
 public class StatisticsService {
 
@@ -61,7 +63,7 @@ public class StatisticsService {
         simpleValidationReport.setSignatureCount(report.getSignaturesCount());
         simpleValidationReport.setValidSignatureCount(report.getValidSignaturesCount());
         simpleValidationReport.setSimpleSignatureReports(createSimpleSignatureReports(report));
-        simpleValidationReport.setContainerType(report.getSignatureForm());
+        simpleValidationReport.setContainerType(transformToContainerTypeOrEmpty(report.getSignatureForm()));
         simpleValidationReport.setUserIdentifier(getUserIdentifier());
         return  simpleValidationReport;
     }
@@ -74,6 +76,7 @@ public class StatisticsService {
         SimpleSignatureReport simpleSignatureReport = new SimpleSignatureReport();
         simpleSignatureReport.setIndication(signatureValidationData.getIndication());
         simpleSignatureReport.setSubIndication(signatureValidationData.getSubIndication());
+        simpleSignatureReport.setSignatureFormat(signatureValidationData.getSignatureFormat());
 
         String countryCode = StringUtils.isEmpty(signatureValidationData.getCountryCode()) ? "XX" : signatureValidationData.getCountryCode();
         simpleSignatureReport.setCountryCode(countryCode);

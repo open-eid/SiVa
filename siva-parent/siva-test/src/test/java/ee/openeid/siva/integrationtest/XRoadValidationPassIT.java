@@ -98,8 +98,8 @@ public class XRoadValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void validatingAttachXroadDocumentShouldReturnAReport() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-batchsignature.asice"));
-        post(validationRequestWithValidKeys(encodedString, "xroad-batchsignature.asice", "xroad", VALID_SIGNATURE_POLICY_1))
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-attachment.asice"));
+        post(validationRequestWithValidKeys(encodedString, "xroad-attachment.asice", "xroad", VALID_SIGNATURE_POLICY_1))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))

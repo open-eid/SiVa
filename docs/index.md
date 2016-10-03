@@ -39,8 +39,7 @@ SiVa architecture document will cover:
   SiVa web service
 * [**Logging**](siva/logging) - how to configure and setup SiVa validation
   service logging support
-* [**Quality Assurance Strategy**](siva/qa_strategy) - overview of quality assurance strategy
-* [**Test Plan**](siva/test_plan) - overview of test planning
+* [**Quality Assurance**](siva/qa_strategy) - overview of quality assurance strategy and testing
 
 ## Download documentation
 

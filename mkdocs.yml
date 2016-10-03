@@ -23,8 +23,7 @@ pages:
 - Deployment: siva/v2/deployment.md
 #- Use cases: siva/use_cases.md
 #- Logging: siva/logging.md
-- Quality Assurance Strategy: siva/qa_strategy.md
-- Test Plan: siva/test_plan.md
+- Quality Assurance: siva/qa_strategy.md
 - References: siva/references.md
 - Appendixes:
       - Appendix 1 - Validation Policy: siva/appendix/validation_policy.md

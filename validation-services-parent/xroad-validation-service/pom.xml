@@ -48,21 +48,26 @@
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.7.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.6.7</version>
+            <version>2.7.7</version>
         </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.6.7</version>
+            <version>2.7.7</version>
         </dependency>
 
         <dependency>
-            <!--<groupId>io.github.openeid.siva</groupId>-->
             <groupId>ee.openid.siva</groupId>
             <artifactId>xroad-asice-verifier</artifactId>
-            <version>1.0.3</version>
+            <version>1.0.4</version>
         </dependency>
 
         <dependency>
@@ -136,8 +141,9 @@
 
                                         <!-- Remove servlet from fat JAR -->
                                         <delete dir="${project.build.directory}/tmp/javax/servlet" />
-                                        <delete dir="${project.build.directory}/tmp/com/fasterxml/jackson/databind" />
-                                        <delete dir="${project.build.directory}/tmp/com/fasterxml/jackson/annotation" />
+
+                                        <!-- Remove Jackson -->
+                                        <delete dir="${project.build.directory}/tmp/com/fasterxml/jackson" />
 
                                         <!-- Remove Apache XML security from fat JAR -->
                                         <delete dir="${project.build.directory}/tmp/org/apache/xml/security" />
@@ -162,7 +168,7 @@
                                 <configuration>
                                     <groupId>${project.groupId}</groupId>
                                     <artifactId>xroad-asice-verifier</artifactId>
-                                    <version>1.0.3</version>
+                                    <version>1.0.4</version>
                                     <localRepositoryPath>${basedir}/external-lib-repository</localRepositoryPath>
                                     <packaging>jar</packaging>
                                     <file>${xroad.jar.base}/${xroad.output.file}</file>

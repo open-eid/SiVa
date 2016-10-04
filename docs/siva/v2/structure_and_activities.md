@@ -45,7 +45,7 @@ When HTTP authentication header have been set the reporting service will also ad
 After the report object have been created the data will be sent to configured reporting service. SiVa is preconfigured to work with
 Google Analytics.
 
-More info and specifics about the statistics service can be found in [SiVa_statistics.pdf](/SiVa/pdf-files/SiVa_statistics.pdf)
+More info and specifics about the statistics service can be found in [SiVa_statistics.pdf](/pdf-files/SiVa_statistics.pdf)
 
 ### TSL Loader
 

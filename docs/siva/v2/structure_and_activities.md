@@ -37,13 +37,15 @@ service is returned to Web API module.
 
 ### Validation reporting service
 
-**Validation reporting service** is optional module that can be turned on or off using configuration file. It's Spring Boot module and
-main purpose is to collect data about: incoming request, validation reports and errors that have been reported during validation process.
+**Validation reporting service** is optional module that can be turned on or off using configuration file. It is Spring Boot module and
+main purpose for it to collect data about: incoming request, validation reports and errors that have been reported during validation process.
 
-When HTTP authentication header have been set the reporting service will also collect its and adds to required statistics reports.
+When HTTP authentication header have been set the reporting service will also add this info to statistics report.
 
 After the report object have been created the data will be sent to configured reporting service. SiVa is preconfigured to work with
 Google Analytics.
+
+More info and specifics about the statistics service can be found in [SiVa_statistics.pdf](/SiVa/pdf-files/SiVa_statistics.pdf)
 
 ### TSL Loader
 

@@ -73,8 +73,8 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
       "sigCt": 2,
       "vSigCt": 2,
       "sigRslt": [
-         {"i":"TOTAL-PASSED", "cc":"EE"},
-         {"i":"TOTAL-PASSED", "cc":"EE"}
+         {"i":"TOTAL-PASSED", "cc":"EE", "sf" : "XAdES_BASELINE_LT_TM"},
+         {"i":"TOTAL-PASSED", "cc":"EE", "sf" : "XAdES_BASELINE_LT_TM"}
       ]
    }
 }        */
@@ -109,7 +109,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
       "sigCt": 1,
       "vSigCt": 0,
       "sigRslt": [
-         {"i":"INDETERMINATE", "si":"NO_CERTIFICATE_CHAIN_FOUND", "cc":"EE"}
+         {"i":"INDETERMINATE", "si":"NO_CERTIFICATE_CHAIN_FOUND", "cc":"EE", "sf" : "XAdES_BASELINE_LT_TM"}
       ]
    }
 }        */
@@ -168,9 +168,9 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
       "sigCt": 3,
       "vSigCt": 3,
       "sigRslt": [
-         {"i":"TOTAL-PASSED", "cc":"EE"},
-         {"i":"TOTAL-PASSED", "cc":"LT"},
-         {"i":"TOTAL-PASSED", "cc":"LV"}
+         {"i":"TOTAL-PASSED", "cc":"EE", "sf" : "XAdES_BASELINE_LT_TM"},
+         {"i":"TOTAL-PASSED", "cc":"LT", "sf" : "XAdES_BASELINE_LT_TM"},
+         {"i":"TOTAL-PASSED", "cc":"LV", "sf" : "XAdES_BASELINE_LT_TM"}
       ]
    }
 }        */
@@ -200,15 +200,15 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     Expected result:
 {
    "stats": {
-      "type" : "DIGIDOC_XML_1.3",
+      "type" : "XAdES",
       "usrId" : "XAuthTest",
       "dur": 1334, <- Can vary, verify that its present
       "sigCt": 3,
       "vSigCt": 3,
       "sigRslt": [
-         {"i":"TOTAL-PASSED", "cc":"EE"},
-         {"i":"TOTAL-PASSED", "cc":"EE"},
-         {"i":"TOTAL-PASSED", "cc":"EE"}
+         {"i":"TOTAL-PASSED", "cc":"EE", "sf" : "DIGIDOC_XML_1.3"},
+         {"i":"TOTAL-PASSED", "cc":"EE", "sf" : "DIGIDOC_XML_1.3"},
+         {"i":"TOTAL-PASSED", "cc":"EE", "sf" : "DIGIDOC_XML_1.3"}
       ]
    }
 }        */
@@ -238,13 +238,13 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     Expected result:
 {
    "stats": {
-      "type" : "DIGIDOC_XML_1.3",
+      "type" : "XAdES",
       "usrId" : "XAuthTest",
       "dur": 1334, <- Can vary, verify that its present
       "sigCt": 1,
       "vSigCt": 0,
       "sigRslt": [
-         {"i":"TOTAL-FAILED", "cc":"EE"}
+         {"i":"TOTAL-FAILED", "cc":"EE", "sf" : "DIGIDOC_XML_1.2"}
       ]
    }
 }        */
@@ -298,14 +298,14 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     Expected result:
 {
    "stats": {
-      "type" : "DIGIDOC_XML_1.3",
+      "type" : "XAdES",
       "usrId" : "XAuthTest",
       "dur": 1334, <- Can vary, verify that its present
       "sigCt": 2,
       "vSigCt": 1,
       "sigRslt": [
-         {"i":"TOTAL-PASSED", "cc":"EE"},
-         {"i":"TOTAL-FAILED", "cc":"BE"},
+         {"i":"TOTAL-PASSED", "cc":"EE", "sf" : "DIGIDOC_XML_1.3"},
+         {"i":"TOTAL-FAILED", "cc":"BE", "sf" : "DIGIDOC_XML_1.3"},
       ]
    }
 }        */
@@ -341,8 +341,8 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
       "sigCt": 2,
       "vSigCt": 2,
       "sigRslt": [
-         {"i":"TOTAL-PASSED", "cc":"EE"},
-         {"i":"TOTAL-PASSED", "cc":"EE"}
+         {"i":"TOTAL-PASSED", "cc":"EE", "sf" : "PAdES_BASELINE_LT"},
+         {"i":"TOTAL-PASSED", "cc":"EE", "sf" : "PAdES_BASELINE_LT"}
       ]
    }
 }        */
@@ -378,8 +378,8 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
       "sigCt": 2,
       "vSigCt": 0,
       "sigRslt": [
-         { "i" : "INDETERMINATE", "si" : "OUT_OF_BOUNDS_NO_POE", "cc":"EE"},
-         { "i" : "TOTAL-FAILED",  "si" : "HASH_FAILURE", "cc" : "EE"}
+         { "i" : "TOTAL-PASSED", "cc":"EE", "sf" : "PAdES_BASELINE_LTA"},
+         { "i" : "TOTAL-FAILED",  "si" : "HASH_FAILURE", "cc" : "EE", "sf" : "PAdES_BASELINE_LTA"}
       ]
    }
 }        */
@@ -439,8 +439,8 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
       "sigCt": 2,
       "vSigCt": 0,
       "sigRslt": [
-         { "i" : "TOTAL-FAILED", "cc" : "BE"},
-         { "i" : "TOTAL-FAILED", "cc" : "BE"}
+         { "i" : "TOTAL-FAILED", "cc" : "BE", "sf" : "PAdES_BASELINE_B"},
+         { "i" : "TOTAL-FAILED", "cc" : "BE", "sf" : "PAdES_BASELINE_B"}
       ]
    }
 }        */
@@ -470,13 +470,13 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     Expected result:
 {
    "stats": {
-      "type" : "ASiC_E_batchsignature",
+      "type" : "ASiC-E (BatchSignature)",
       "usrId" : "XAuthTest",
       "dur": 1334, <- Can vary, verify that its present
       "sigCt": 1,
       "vSigCt": 1,
       "sigRslt": [
-         {"i":"TOTAL-PASSED", "cc":"XX"}
+         {"i":"TOTAL-PASSED", "cc":"XX", "sf" : "XAdES_BASELINE_B_BES"}
       ]
    }
 }        */
@@ -512,7 +512,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
       "sigCt": 1,
       "vSigCt": 0,
       "sigRslt": [
-         { "i" : "TOTAL-FAILED", "si" : "", "cc":"XX"}
+         { "i" : "TOTAL-FAILED", "si" : "", "cc":"XX", "sf" : "XAdES_BASELINE_LT"}
       ]
    }
 }        */

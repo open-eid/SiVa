@@ -25,13 +25,13 @@ SiVa architecture document will cover:
   it's main features.
 * [**Regulatory environment**](siva/regulatory_environment) - legal analysis
   and standards that are used when building SiVa application
-* [**Component diagram**](siva/component_diagram) - gives overview of
+* [**Component diagram**](siva/v2/siva_service_overview) - gives overview of
   main SiVa subsystems and and and base validation Java libraries
   used for different validation services
-* [**Deployment view**](siva/deployment_view) - gives general overview of
+* [**Deployment view**](siva/v2/deployment) - gives general overview of
   servers required when deploying SiVa validation web service
   into production
-* [**Interfaces**](siva/interface_description) - Description of SiVa
+* [**Interfaces**](siva/v2/interfaces) - Description of SiVa
   SOAP and JSON API request and response
 * [**Use cases**](siva/use_cases) - describes main processes in SiVa
   validation web service

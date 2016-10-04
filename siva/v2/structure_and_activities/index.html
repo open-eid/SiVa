@@ -359,11 +359,12 @@ validation service module must be Maven dependency of <code>siva-validation-prox
 would be <code>BDOCValidationService</code>.</p>
 </div>
 <h3 id="validation-reporting-service">Validation reporting service</h3>
-<p><strong>Validation reporting service</strong> is optional module that can be turned on or off using configuration file. It's Spring Boot module and
-main purpose is to collect data about: incoming request, validation reports and errors that have been reported during validation process.</p>
-<p>When HTTP authentication header have been set the reporting service will also collect its and adds to required statistics reports.</p>
+<p><strong>Validation reporting service</strong> is optional module that can be turned on or off using configuration file. It is Spring Boot module and
+main purpose for it to collect data about: incoming request, validation reports and errors that have been reported during validation process.</p>
+<p>When HTTP authentication header have been set the reporting service will also add this info to statistics report.</p>
 <p>After the report object have been created the data will be sent to configured reporting service. SiVa is preconfigured to work with
 Google Analytics.</p>
+<p>More info and specifics about the statistics service can be found in <a href="../../../SiVa/pdf-files/SiVa_statistics.pdf">SiVa_statistics.pdf</a></p>
 <h3 id="tsl-loader">TSL Loader</h3>
 <p>TSL loader loads in contents of TSL file from given URL in online mode or from directory when
 using offline mode in predefined interval.</p>

@@ -27,7 +27,7 @@ Below is list of Java libraries we use and for which digitally signed document f
   that are compliant with ASiCE standard
 * [DigiDoc4J DSS fork](https://github.com/open-eid/sd-dss) - to validate digitally signed PDF files that
   comply with Estonian laws
-* [asicverifier](https://github.com/vrk-kpa/xroad-public/tree/master/src/asicverifier) is used to validate 
+* [asicverifier](https://github.com/vrk-kpa/xroad-public/tree/master/src/asicverifier) is used to validate
   XRoad signature containers
 
 ## Requirements
@@ -137,10 +137,10 @@ docker run -it -p 8080:8080 mihkels/siva-webapp
 
 ## WAR and Tomcat setup for legacy systems
 
-> **NOTE 1**: We do not recommend using WAR deployment option because lack of testing done on different servlet 
+> **NOTE 1**: We do not recommend using WAR deployment option because lack of testing done on different servlet
 > containers also possible container application libraries conflicts
 
-> **NOTE 2**: Each SiVa service **must** be deployed to separate instance of Tomcat to avoid Java JAR library version 
+> **NOTE 2**: Each SiVa service **must** be deployed to separate instance of Tomcat to avoid Java JAR library version
 > conflicts.
 
 First we need to download Tomcat web servlet container as of the writing latest version available in version 7 branch is 7.0.77. We will download it with `wget`
@@ -165,19 +165,19 @@ Now we should build the WAR file. We have created helper script with all the cor
 
 Final steps would be copying built WAR file into Tomcat `webapps` directory and starting the servlet container.
 
-```bash 
+```bash
 cp siva-parent/siva-webapp/target/siva-webapp-2.0.2-SNAPSHOT.war apache-tomcat-7.0.70/webapps
 ./apache-tomcat-7.0.77/bin/catalina.sh run
 ```
 
-> **IMPORTANT** siva-webapp on startup creates `etc` directory where it copies the TSL validaiton certificates 
-> `siva-keystore.jks`. Default location for this directory is application root or `$CATALINA_HOME`. To change 
+> **IMPORTANT** siva-webapp on startup creates `etc` directory where it copies the TSL validaiton certificates
+> `siva-keystore.jks`. Default location for this directory is application root or `$CATALINA_HOME`. To change
 > this default behavior you should set environment variable `DSS_DATA_FOLDER`
 
 ### How-to set WAR deployed SiVa `application.properties`
 
-SiVa override properties can be set using `application.properties` file. The file can locate anywhare in the host system. 
-To make properties file accessible for SiVa you need to create or edit `setenv.sh` placed inside `bin` directory. 
+SiVa override properties can be set using `application.properties` file. The file can locate anywhare in the host system.
+To make properties file accessible for SiVa you need to create or edit `setenv.sh` placed inside `bin` directory.
 
 Contents of the `setenv.sh` file should look like:
 
@@ -199,7 +199,7 @@ To execute the tests from command line after application is built use:
 ### How to run load tests
 
 Load tests are disabled by default, but can be enabled with maven parameter `-DrunLoadTests=true`. By default all unit
-and integration tests will be executed prior the load tests, but it is possible to skip them. When executing the load 
+and integration tests will be executed prior the load tests, but it is possible to skip them. When executing the load
 tests, SiVa Web application has to be started before the tests are executed.
 
 > **Note**: PDF load test files contain test certificates. In order for PDF load tests to succeed
@@ -239,7 +239,7 @@ It is possible to configure following parameters in load test (given defaults ar
 
 These values can be set in three different ways:
   * In JMeter test plan - these settings will be used when JMeter GUI is used to run the tests
-  * In `../siva-test/pom.xml` file - these settings will be used when the tests are run in non GUI mode 
+  * In `../siva-test/pom.xml` file - these settings will be used when the tests are run in non GUI mode
     and will overwrite the default values in test plans.
   * As parameters when executing the tests - These values have highest priority and will overwrite other default values.
 
@@ -250,6 +250,11 @@ To run the tests with modified parameters:
 ```
 
 Test results will be available at `/siva-parent/siva-test/target/jmeter/results/reports/` folder
+
+## Open source software used to build SiVa
+
+Full list of open source Java libraries used to build SiVa can be found in our
+[Open Source Software used page](OSS_USED.md)
 
 ## Documentation
 

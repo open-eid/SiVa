@@ -60,6 +60,19 @@
                 <role>developer</role>
             </roles>
         </developer>
+        <developer>
+            <name>riit Reiser</name>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>naare</id>
+            <name>Aare Nurm</name>
+            <roles>
+                <role>quality assurance</role>
+            </roles>
+        </developer>
     </developers>
 
     <!--

@@ -231,17 +231,8 @@
           
             
   <li>
-    <a class="" title="Quality Assurance Strategy" href="../../qa_strategy/">
-      Quality Assurance Strategy
-    </a>
-    
-  </li>
-
-          
-            
-  <li>
-    <a class="" title="Test Plan" href="../../test_plan/">
-      Test Plan
+    <a class="" title="Quality Assurance" href="../../qa_strategy/">
+      Quality Assurance
     </a>
     
   </li>
@@ -358,6 +349,12 @@
             </li>
           
             <li class="anchor">
+              <a title="XRoadValidationFailIT.java" href="#xroadvalidationfailitjava">
+                XRoadValidationFailIT.java
+              </a>
+            </li>
+          
+            <li class="anchor">
               <a title="XRoadValidationPassIT.java" href="#xroadvalidationpassitjava">
                 XRoadValidationPassIT.java
               </a>
@@ -402,6 +399,12 @@
             <li class="anchor">
               <a title="SoapXRoadRequestHeaderIT.java" href="#soapxroadrequestheaderitjava">
                 SoapXRoadRequestHeaderIT.java
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="XRoad Soap System Test" href="#xroad-soap-system-test">
+                XRoad Soap System Test
               </a>
             </li>
           
@@ -622,8 +625,9 @@
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2">http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2</a></li>
 <li>Title: Bdoc signed data file has been removed from the container</li>
 <li>Expected Result: The document should fail the validation</li>
-<li>File: TM-16_unknown.4.asice</li>
+<li>File: KS-21_fileeemaldatud.4.asice</li>
 </ul>
+<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <p><strong>TestCaseID: Bdoc-ValidationFail-23</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -812,6 +816,14 @@
 <li>Title: *.sce file with TimeStamp</li>
 <li>Expected Result: The document should pass the validation</li>
 <li>File: ASICE_TS_LTA_content_as_sce.sce</li>
+</ul>
+<p><strong>TestCaseID: Bdoc-ValidationPass-17</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2">http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2</a></li>
+<li>Title: Bdoc-TS with special characters in data file</li>
+<li>Expected Result: The document should pass the validation with correct signature scope</li>
+<li>File: Nonconventionalcharacters.asice</li>
 </ul>
 <h2 id="ddocvalidationfailitjava">DdocValidationFailIT.java</h2>
 <p><strong>TestCaseID: Ddoc-ValidationFail-1</strong></p>
@@ -1534,14 +1546,39 @@
 <li>Expected Result: Signatures are valid according to policy</li>
 <li>File: Valid_ID_sig.bdoc</li>
 </ul>
+<h2 id="xroadvalidationfailitjava">XRoadValidationFailIT.java</h2>
+<p><strong>TestCaseID: Xroad-ValidationFail-1</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2">http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2</a></li>
+<li>Title: Simple xroad document with container fault</li>
+<li>Expected Result: Document should fail validation</li>
+<li>File: invalid-digest.asice</li>
+</ul>
 <h2 id="xroadvalidationpassitjava">XRoadValidationPassIT.java</h2>
 <p><strong>TestCaseID: Xroad-ValidationPass-1</strong></p>
 <ul>
 <li>TestType: Automated</li>
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2">http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2</a></li>
-<li>Title: Bdoc with conformant EE signature</li>
-<li>Expected Result: Document should pass when signature policy is set to "ee"</li>
-<li>File: Valid_ID_sig.bdoc</li>
+<li>Title: Simple xroad document</li>
+<li>Expected Result: Document should pass</li>
+<li>File: xroad-simple.asice</li>
+</ul>
+<p><strong>TestCaseID: Xroad-ValidationPass-2</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2">http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2</a></li>
+<li>Title: Batchsignature xroad document</li>
+<li>Expected Result: Document should pass</li>
+<li>File: xroad-batchsignature.asice</li>
+</ul>
+<p><strong>TestCaseID: Xroad-ValidationPass-3</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2">http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2</a></li>
+<li>Title: Attachment xroad document</li>
+<li>Expected Result: Document should pass</li>
+<li>File: xroad-attachment.asice</li>
 </ul>
 <h2 id="statisticstogamanualitjava">StatisticsToGAManualIT.java</h2>
 <p><strong>Note: All tests in this class expect manual configuration of Google Analytics before executing the tests.</strong>
@@ -1705,7 +1742,7 @@
 <ul>
 <li>TestType: Manual</li>
 <li>Requirement: <a href=""></a></li>
-<li>Title: Pdf with certificates from different countries.</li>
+<li>Title: Pdf with certificates from non Estonian countries.</li>
 <li>Expected Result: Correct data is shown in the log with correct structure</li>
 <li>File: Regulatione-signedbyco-legislators.pdf</li>
 </ul>
@@ -1725,7 +1762,6 @@
 <li>Expected Result: Correct data is shown in the log with correct structure</li>
 <li>File: invalid-digest.asice</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <p><strong>TestCaseID: Xroad-Statistics-Log-3</strong></p>
 <ul>
 <li>TestType: Manual</li>
@@ -1942,7 +1978,6 @@
 <li>Expected Result: Report is returned with required elements</li>
 <li>File: xroad-attachment.asice</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <h2 id="validationrequestitjava">ValidationRequestIT.java</h2>
 <p><strong>TestCaseID: ValidationRequest-1</strong></p>
 <ul>
@@ -2404,9 +2439,8 @@
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface">http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface</a></li>
 <li>Title: Verification of values in Validation Report, xroad-simple invalid container</li>
 <li>Expected Result: All required elements are present and meet the expected values and other values are empty as expected.</li>
-<li>File: xroad-simple.asice</li>
+<li>File: invalid-digest.asice</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
 <h2 id="soapvalidationrequestitjava">SoapValidationRequestIT.java</h2>
 <p><strong>TestCaseID: Soap-ValidationRequest-1</strong></p>
 <ul>
@@ -2735,6 +2769,103 @@
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface">http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface</a></li>
 <li>Title: Soap headers are returned in error response</li>
 <li>Expected Result: Same headers are in response as in request</li>
+<li>File:</li>
+</ul>
+<h2 id="xroad-soap-system-test">XRoad Soap System Test</h2>
+<p><strong>TestCaseID: Xroad-Validate-Ddoc-1</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>Requirement: </li>
+<li>Title: Validate valid Ddoc</li>
+<li>Expected Result: The document should return validation report with one valid signature</li>
+<li>File: DIGIDOC-XML1.3.ddoc</li>
+</ul>
+<p><strong>TestCaseID: Xroad-Validate-Ddoc-2</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>Requirement: </li>
+<li>Title: Validate invalid Ddoc</li>
+<li>Expected Result: The document should return validation report with no valid signature</li>
+<li>File: test-non-repu1.ddoc</li>
+</ul>
+<p><strong>TestCaseID: Xroad-Validate-Ddoc-3</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>Requirement: </li>
+<li>Title: Invalid Request</li>
+<li>Expected Result: Soap error should be returned</li>
+<li>File:</li>
+</ul>
+<p><strong>TestCaseID: Xroad-Validate-Bdoc-1</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>Requirement: </li>
+<li>Title: Validate valid Bdoc</li>
+<li>Expected Result: The document should return validation report with one valid signature</li>
+<li>File: Šužlikud sõid ühe õuna ära.bdoc</li>
+</ul>
+<p><strong>TestCaseID: Xroad-Validate-Bdoc-2</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>Requirement: </li>
+<li>Title: Validate invalid Bdoc</li>
+<li>Expected Result: The document should return validation report with no valid signature</li>
+<li>File: TM-15_revoked.4.asice</li>
+</ul>
+<p><strong>TestCaseID: Xroad-Validate-Bdoc-3</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>Requirement: </li>
+<li>Title: Invalid Request</li>
+<li>Expected Result: Soap error should be returned</li>
+<li>File:</li>
+</ul>
+<p><strong>TestCaseID: Xroad-Validate-Pdf-1</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>Requirement: </li>
+<li>Title: Validate valid Pdf</li>
+<li>Expected Result: The document should return validation report with one valid signature</li>
+<li>File: pades-baseline-lta-live-aj.pdf</li>
+</ul>
+<p><strong>TestCaseID: Xroad-Validate-Pdf-2</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>Requirement: </li>
+<li>Title: Validate invalid Pdf</li>
+<li>Expected Result: The document should return validation report with no valid signature</li>
+<li>File: pades-baseline-t-live-aj.pdf</li>
+</ul>
+<p><strong>TestCaseID: Xroad-Validate-Pdf-3</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>Requirement: </li>
+<li>Title: Invalid Request</li>
+<li>Expected Result: Soap error should be returned</li>
+<li>File:</li>
+</ul>
+<p><strong>TestCaseID: Xroad-Validate-Xroad-1</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>Requirement: </li>
+<li>Title: Validate valid Xroad</li>
+<li>Expected Result: The document should return validation report with one valid signature</li>
+<li>File: xroad-batchsignature.asice</li>
+</ul>
+<p><strong>TestCaseID: Xroad-Validate-Xroad-2</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>Requirement: </li>
+<li>Title: Validate invalid Xroad</li>
+<li>Expected Result: The document should return validation report with no valid signature</li>
+<li>File: invalid-digest.asice</li>
+</ul>
+<p><strong>TestCaseID: Xroad-Validate-Xroad-3</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>Requirement: </li>
+<li>Title: Invalid Request</li>
+<li>Expected Result: Soap error should be returned</li>
 <li>File:</li>
 </ul>
           <aside class="copyright" role="note">

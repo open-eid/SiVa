@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1">
     
       
-        <title>Quality Assurance Strategy - SiVa - Validation Service Documentation</title>
+        <title>Quality Assurance - SiVa - Validation Service Documentation</title>
       
       
       
@@ -94,7 +94,7 @@
             
           </span>
         
-        Quality Assurance Strategy
+        Quality Assurance
       </div>
     </div>
     
@@ -227,8 +227,8 @@
           
             
   <li>
-    <a class="current" title="Quality Assurance Strategy" href="./">
-      Quality Assurance Strategy
+    <a class="current" title="Quality Assurance" href="./">
+      Quality Assurance
     </a>
     
       
@@ -265,17 +265,86 @@
               </a>
             </li>
           
+            <li class="anchor">
+              <a title="Integration Test introduction" href="#integration-test-introduction">
+                Integration Test introduction
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Testing of REST API" href="#testing-of-rest-api">
+                Testing of REST API
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Testing of SOAP API" href="#testing-of-soap-api">
+                Testing of SOAP API
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Testing of DDOC signature validation" href="#testing-of-ddoc-signature-validation">
+                Testing of DDOC signature validation
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Testing of BDOC signature validation" href="#testing-of-bdoc-signature-validation">
+                Testing of BDOC signature validation
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Testing of PDF signature validation" href="#testing-of-pdf-signature-validation">
+                Testing of PDF signature validation
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Testing of X-Road ASICE signature validation" href="#testing-of-x-road-asice-signature-validation">
+                Testing of X-Road ASICE signature validation
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Testing of user statistics" href="#testing-of-user-statistics">
+                Testing of user statistics
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="System Test introduction" href="#system-test-introduction">
+                System Test introduction
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Testing through X-Road security server" href="#testing-through-x-road-security-server">
+                Testing through X-Road security server
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Configuration/administration testing" href="#configurationadministration-testing">
+                Configuration/administration testing
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="SiVa Sample Application tests" href="#siva-sample-application-tests">
+                SiVa Sample Application tests
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Load Test introduction" href="#load-test-introduction">
+                Load Test introduction
+              </a>
+            </li>
+          
         </ul>
       
-    
-  </li>
-
-          
-            
-  <li>
-    <a class="" title="Test Plan" href="../test_plan/">
-      Test Plan
-    </a>
     
   </li>
 
@@ -353,12 +422,13 @@
       <article class="article">
         <div class="wrapper">
           
-            <h1>Quality Assurance Strategy</h1>
+            <h1>Quality Assurance</h1>
           
-          <!--# Quality Assurance Strategy-->
+          <!--# Quality Assurance -->
 
 <h2 id="introduction">Introduction</h2>
-<p>The goal of this document is to give general overview of the used infrastructure, processes, schedule and actions to ensure good quality delivery. The document describes activities in the whole software development process. Analysis, development and testing are separated for the sake of structure and transparency although they are integral parts of the development cycle.</p>
+<p>The goal of this document is to give general overview of the used infrastructure, processes, schedule and actions to ensure good quality delivery. The document describes activities in the whole software development process. Analysis, development and testing are separated for the sake of structure and transparency although they are integral parts of the development cycle.
+This is living document and will be constantly updated as the project evolves.</p>
 <h2 id="environments-and-infrastructure">Environments and infrastructure</h2>
 <p><img alt="Enviroment" src="../../img/siva/qa_strategy/Env.png" /></p>
 <p>There are different test environments for quality assurance, depending on the nature and aim.</p>
@@ -498,10 +568,245 @@
 <p>Regression testing will consist of two parts:
 Running all automated tests (unit, integration and system tests)
 Manual testing of the areas that are not covered by automatic tests based on the regression test checklist</p>
-<h3 id="additional-testing-activities">Additional testing activities</h3>
-<p><strong>Load Testing</strong></p>
-<p>Load testing will be carried out using JMeter on <a href="../../siva/qa_strategy/#environments-and-infrastructure">Test Environment</a>. The testing will be carried out for each type of validation service.</p>
-<p>More info about Load Testing specifics can be found in Test Plan <a href="../../siva/test_plan/#load-test-introduction">Load Test Introduction</a> section.</p>
+<h2 id="integration-test-introduction">Integration Test introduction</h2>
+<p>Overview of the SiVa (Signature Validation) web service can be found in the <a href="../../siva/overview/">Overview</a> section of the document.</p>
+<p>This section of the document gives overview of Integration Testing carried out on SiVa web service.</p>
+<p>Integration testing is using RestAssured library v2.5.0 to implement automatic checks for REST/SOAP based tests.</p>
+<p>The testing of the SiVa web service is divided into sections based on the software architecture and functionalities provided to the users. The sections are:</p>
+<ul>
+<li>REST API</li>
+<li>SOAP API</li>
+<li>DDOC signature validation</li>
+<li>BDOC signature validation</li>
+<li>PDF signature validation</li>
+<li>X-Road ASICE signature validation</li>
+</ul>
+<p>The goal is to focus testing on functionalities implemented in SiVa application. Functionalities provided by <a href="../../siva/overview/#validation-libraries">Validation libraries</a> are not explicitly tested.</p>
+<h2 id="testing-of-rest-api">Testing of REST API</h2>
+<p>The goal of the REST API testing is to check that the API is accepting the requests based on the specification and the output result (Validation Report) is in correct format and has all the required elements.</p>
+<h3 id="validation-rest-api-tests">Validation REST API tests</h3>
+<p>Following areas are tested on input:</p>
+<ul>
+<li>Wrong (not accepted) values in input parameters</li>
+<li>Empty values in input paramters</li>
+<li>Too many parameters</li>
+<li>Too few parameters</li>
+<li>Inconsistencies on stated parameters and actual data (wrong document type)</li>
+<li>Case insensitivity on parameter names</li>
+<li>Empty request</li>
+</ul>
+<p>In all of the negative cases correctness of returned error message is checked.</p>
+<p>Specific test cases and input files can be found in:</p>
+<ul>
+<li><a href="../../siva/appendix/test_cases/#validationrequestitjava">ValidationRequestIT.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#documentformatitjava">DocumentFormatIT.java</a></li>
+</ul>
+<h3 id="validation-report-tests">Validation Report tests</h3>
+<p>SiVa web service returns uniform Validation Report on all the supported document types. This also includes correct document types without actual signature (for example PDF document without signature). However not all values may be present for all the document types.</p>
+<p>Following areas are tested on output (Validation Report):</p>
+<ul>
+<li>JSON structure on DDOC, BDOC, PDF, ASIC-E and ASICE-E X-Road document types</li>
+<li>Presence of the mandatory elements on DDOC, BDOC, PDF, ASIC-E and ASICE-E X-Road document types</li>
+<li>Presence of optional elements on DDOC, BDOC, PDF, ASIC-E and ASICE-E X-Road document types</li>
+<li>Verification of expected values</li>
+<li>JSON structure on containers without signatures</li>
+</ul>
+<p>Specific test cases and input files can be found in:</p>
+<ul>
+<li><a href="../../siva/appendix/test_cases/#validationReportValueVerificationitjava">ValidationReportValueVerificationIT.java</a></li>
+</ul>
+<h2 id="testing-of-soap-api">Testing of SOAP API</h2>
+<p>The goal of the SOAP API testing is to check that the API is accepting the requests based on the specification and the output result (Validation Report) is in correct format and has all the required elements. In general the tests follow the same principles as with REST API.
+Compatibility with X-Road security server is out of scope for these tests and will be covered in X-Road System Test plan.</p>
+<h3 id="validation-soap-api-tests">Validation SOAP API tests</h3>
+<p>Following areas are tested on input:</p>
+<ul>
+<li>Wrong (not accepted) values in input parameters</li>
+<li>Empty values in input paramters</li>
+<li>Too many parameters</li>
+<li>Too few parameters</li>
+<li>Inconsistencies on stated parameters and actual data (wrong document type)</li>
+<li>Case insensitivity on parameter names</li>
+<li>Empty request</li>
+</ul>
+<p>In all of the negative cases correctness of returned error message is checked.</p>
+<p>Specific test cases and input files can be found in:</p>
+<ul>
+<li><a href="../../siva/appendix/test_cases/#soapvalidationrequestitjava">SoapValidationRequestIT.java</a></li>
+</ul>
+<h3 id="validation-report-tests_1">Validation Report tests</h3>
+<p>SiVa web service returns uniform Validation Report on all the supported document types. This also includes correct document types without actual signature (for example PDF document without signature). However not all values may be present for all the document types.</p>
+<p>Following areas are tested on output (Validation Report):</p>
+<ul>
+<li>Presence of the mandatory elements on DDOC, BDOC, PDF, ASIC-E and ASICE-E X-Road document types</li>
+<li>Presence of optional elements on DDOC, BDOC, PDF, ASIC-E and ASICE-E X-Road document types</li>
+<li>Verification of expected values</li>
+</ul>
+<p>Specific test cases and input files can be found in:</p>
+<ul>
+<li><a href="../../siva/appendix/test_cases/#soapvalidationreportvalueitjava">SoapValidationReportValueIT.java</a></li>
+</ul>
+<h2 id="testing-of-ddoc-signature-validation">Testing of DDOC signature validation</h2>
+<p>The goal of the DDOC signature validation testing is to check that the validation results given by JDigiDoc library are properly presented in validation report.</p>
+<p>The testing of DDOC signatures consists of following main cases:</p>
+<ul>
+<li>Containers with valid signature(s) are validated.</li>
+<li>Containers with invalid signature(s) or no signature are validated</li>
+<li>Containers sizes near maximum are validated</li>
+<li>Containers with DDOC v1.0 - 1.3 are validated</li>
+</ul>
+<p>Specific test cases and input files can be found in:</p>
+<ul>
+<li><a href="../../siva/appendix/test_cases/#ddocvalidationfailitjava">DdocValidationFailIT.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#ddocvalidationpassitjava">DdocValidationPassIT.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#largefileitjava">LargeFileIT.java</a></li>
+</ul>
+<p><strong>What is not tested:</strong></p>
+<ul>
+<li>Verification of different causes in container for invalid result is out of scope.</li>
+</ul>
+<h2 id="testing-of-bdoc-signature-validation">Testing of BDOC signature validation</h2>
+<p>The goal of the BDOC signature validation testing is to check that the validation results given by DigiDoc4J library are properly presented in validation report.</p>
+<p>The testing of BDOC signatures consists of following main cases:</p>
+<ul>
+<li>Containers with valid signature(s) are validated</li>
+<li>Containers with invalid signature(s) or no signature are validated</li>
+<li>Containers sizes near maximum are validated</li>
+</ul>
+<p>Specific test cases and input files can be found in:</p>
+<ul>
+<li><a href="../../siva/appendix/test_cases/#bdocvalidationfailitjava">BdocValidationFailIT.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#bdocvalidationpassitjava">BdocValidationPassIT.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#largefileitjava">LargeFileIT.java</a></li>
+</ul>
+<p><strong>What is not tested:</strong></p>
+<ul>
+<li>Verification of different causes in container for invalid result is out of scope.</li>
+</ul>
+<h2 id="testing-of-pdf-signature-validation">Testing of PDF signature validation</h2>
+<p>Portion of the validation rules for PDF documents are implemented in SiVa web apllication itself. Therefor different test area selection is used for PDF compared to other containers.</p>
+<p>The testing of PDF signatures consists of following main cases:</p>
+<ul>
+<li>Containers with invalid signature(s) (different reasons for failure) are validated</li>
+<li>Containers with no signature are validated</li>
+<li>Containers sizes near maximum are validated</li>
+<li>Containers with different baseline profiles are validated</li>
+<li>Containers with serial and parallel signatures are validated</li>
+<li>Containers with different signature cryptocaphic algorithms are validated</li>
+<li>Containers with OCSP values inside and outside bounds are validated</li>
+</ul>
+<p>Specific test cases and input files can be found in:</p>
+<ul>
+<li><a href="../../siva/appendix/test_cases/#pdfbaselineprofileitjava">PdfBaselineProfileIT.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#pdfsignaturecryptographicalgorithmitjava">PdfSignatureCryptographicAlgorithmIT.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#pdfvalidationfailitjava">PdfValidationFailIT.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#pdfvalidationpassitjava">PdfValidationPassIT.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#largefileitjava">LargeFileIT.java</a></li>
+</ul>
+<h2 id="testing-of-x-road-asice-signature-validation">Testing of X-Road ASICE signature validation</h2>
+<p>The goal of the ASICE signature validation testing is to check that the validation results given by X-Road signature validation utility are properly presented in validation report.</p>
+<p>The testing of ASICE signatures consists of following main cases:</p>
+<ul>
+<li>Containers with valid signature(s) are validated</li>
+<li>Containers with invalid signature(s) are validated</li>
+</ul>
+<p>Specific test cases and input files can be found in:</p>
+<ul>
+<li><a href="../../siva/appendix/test_cases/#xroadvalidationpassitjava">XroadValidationPassIT.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#xroadvalidationfailitjava">XroadValidationFailIT.java</a></li>
+</ul>
+<p><strong>What is not tested:</strong></p>
+<ul>
+<li>Verification of different causes in container for invalid result is out of scope.</li>
+</ul>
+<h2 id="testing-of-user-statistics">Testing of user statistics</h2>
+<p>Testing of user statistics is carried out in combination of automatic data preparation and generation by integration tests and manual verification of the results.
+SiVa supports two parallel ways of gathering user statistics:</p>
+<ul>
+<li>Validation results are printed to system log and can be gathered by any suitable means</li>
+<li>Validation results are sent to Google Analytics using Google Measurement Protocol API</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Testing of Google Analytics requires creation and configuration of Google Analytics account and configuring SiVa service to send statistics to this account. Configuration of SiVa service is explained in <a href="../../siva/v2/deployment/#siva-system-deployment">SiVa system deployment.</a></p>
+</div>
+<p>As both systems use the same data the testing follows the same principles for both. Following areas are covered:</p>
+<ul>
+<li>Statistics values are checked in log and Google Analytics for all container types (this also includes parameters not present in validation report)</li>
+<li>Valid and invalid signatures are validated</li>
+<li>Error situations on signature validation (instead of validation report, error message is returned)</li>
+</ul>
+<p>Specific test cases and input files can be found in:</p>
+<ul>
+<li><a href="../../siva/appendix/test_cases/#statisticstogamanualitjava">StatisticsToGAManualIT.java</a></li>
+<li><a href="../../siva/appendix/test_cases/#statisticstologsmanualitjava">StatisticsToLogsManualIT.java</a></li>
+</ul>
+<p><strong>What is not tested:</strong></p>
+<ul>
+<li>Configuring Google Analytics reports is out of scope. Only verification of data presence is done.</li>
+</ul>
+<h2 id="system-test-introduction">System Test introduction</h2>
+<p>While Integration Tests were carried out automatically then System Testing is using combination of automatic and manual testing..</p>
+<p>System testing is carried out using two access points:</p>
+<ul>
+<li>Testing through SiVa Sample Application</li>
+<li>Testing through X-Road security server using SoapUI</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Testing through X-Road security server requires presence and configuration of X-Road security server to use SiVa service.  Tests are run using SoapUI that simulates request to X-Road security server.</p>
+</div>
+<h2 id="testing-through-x-road-security-server">Testing through X-Road security server</h2>
+<p>Following areas are covered:</p>
+<ul>
+<li>Validation of valid signature</li>
+<li>Validation of invalid signatur</li>
+<li>Validation that returns Soap error</li>
+</ul>
+<p>All of the above test cases are run with BDOC, DDOC, PDF and X-Road ASiC-E containers. Tests along with test case descriptions are available for rerun in github.</p>
+<h2 id="configurationadministration-testing">Configuration/administration testing</h2>
+<div class="admonition development">
+<p class="admonition-title">Development</p>
+</div>
+<h2 id="siva-sample-application-tests">SiVa Sample Application tests</h2>
+<p>In addition to testing the service as such, SiVa Sample Application itself is tested. The main cases are:</p>
+<ul>
+<li>Cross browser usage (IE, Edge, Chrome, Firefox and Safari)</li>
+<li>File upload (different sizes, suported and unsupported file types)</li>
+<li>Displayment of Validation Report</li>
+</ul>
+<h2 id="load-test-introduction">Load Test introduction</h2>
+<p>The goals of the load test was to:</p>
+<ul>
+<li>Determine the throughput capabilities of a single Siva node and how it handles requests under increasing load.</li>
+<li>Test whether the SiVa service throughput is horizontally scalable up to 50 requests per second.</li>
+</ul>
+<p>Each container type was load-tested separately since the business logic and underlying mechanics for validating specific container types are vastly different.</p>
+<p>Load tests were run in three stages – firstly a single Siva service node was tested to determine the baseline performance metrics. Second and third stage involved adding additional service node to previous setup and testing the horizontal scalability performance.
+All three target Siva service nodes had identical virtual machine set-up. Virtual machines were installed on separate physical hardware.
+Siva web service nodes on a target Linux virtual machine were packaged inside a Docker container (along with Java with 4 GB allocated for Heap). The test runner (JMeter plugin used by Maven) resided on a separate machine on local area network. Simple reverse proxy was used as a load balancer to distribute the load between nodes (using round robin algorithm).</p>
+<p>Load testing is carried out on following environments:</p>
+<ul>
+<li>System under test enviroment (processor: Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz memory: 10GB (4GB allocated for Java heap))</li>
+<li>Load balancer enviroment (processor: Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz memory: 13GB)</li>
+<li>Jmeter executer enviroment (processor: Intel(R) Xeon(R) CPU E5-2620 v2 @ 2.10GHz memory: 6GB)</li>
+</ul>
+<p>Following test data is used in load test:</p>
+<ul>
+<li>BDOC-TS file with two valid signatures (~100KB and 5MB)</li>
+<li>BDOC-TM file with two valid signatures (~100KB and 5MB)</li>
+<li>PDF file with two valid signatures (~200KB and 5MB)</li>
+<li>DDOC file with two valid signatures (~300KB and 5MB)</li>
+<li>ASIC-E X-Road container with one valid signature (~10KB)</li>
+</ul>
+<p>Each of the files are validated through REST interface. SOAP interface is used with small files for a comparison. It is evaluated that the interface (REST or SOAP) do not play noticeable effect on overall results.</p>
+<p>Each of the tested files follow the same test plan:</p>
+<ul>
+<li>Five concurrent requests are made per second</li>
+<li>This load is held for period of time</li>
+<li>Concurrent requests are increased by five until 50 concurrent requests per second is achieved</li>
+<li>Latency and throughput is measured on each concurrent request steps</li>
+</ul>
           <aside class="copyright" role="note">
             
             Documentation built with
@@ -537,14 +842,14 @@ Manual testing of the areas that are not covered by automatic tests based on the
     </div>
     <div class="next">
       
-        <a href="../test_plan/" title="Test Plan">
+        <a href="../references/" title="References">
           <span class="direction">
             Next
           </span>
           <div class="page">
             <div class="stretch">
               <div class="title">
-                Test Plan
+                References
               </div>
             </div>
             <div class="button button-next" role="button" aria-label="Next">

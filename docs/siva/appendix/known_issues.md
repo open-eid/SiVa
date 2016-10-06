@@ -6,6 +6,7 @@
 2.	(All) During TSL refreshing/reloading, service could give wrong validation results. Service must be turned off for TSL refreshing time (at  3:00 AM, ca 1 minute). 
 3.	(X-Road ASiC-E) X-Road validation service is separated (do not follow general architectuse) because of different BouncyCastle version used in X-Road utility. X-Road validation module should use latest BouncyCastle version.
 4.	(BDOC/ASiC-E) Container validation errors are not returned as the current DSS-based validation report doesn't include a proper structure for container errors: [https://esig-dss.atlassian.net/browse/DSS-932](https://esig-dss.atlassian.net/browse/DSS-932)
+5.  (X-Road ASiC-E) Only one invalid X-Road ASiC-E file was available for testing. This file had X-Road protocol error in it, there for the actual fail case for signature validation is not tested. It is expected that this has been tested in X-Road Asicverifier project.
 
 ## DIGIDOC-XML related issues
 

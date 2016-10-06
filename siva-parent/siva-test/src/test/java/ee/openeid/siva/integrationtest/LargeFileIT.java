@@ -19,6 +19,7 @@ package ee.openeid.siva.integrationtest;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -45,7 +46,7 @@ public class LargeFileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement:
+     * Requirement: http://open-eid.github.io/SiVa/siva/overview/#main-features-of-siva-validation-service
      *
      * Title: 9MB PDF files (PAdES Baseline LT).
      *
@@ -63,11 +64,33 @@ public class LargeFileIT extends SiVaRestTests{
     }
 
     /**
+     * TestCaseID: PDF-LargeFiles-2
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/overview/#main-features-of-siva-validation-service
+     *
+     * Title: 23MB PDF file
+     *
+     * Expected Result: Validation is not done on files over 10MB
+     *
+     * File: hellopades-lta-no-ocsp.pdf
+     */
+    @Test @Ignore //TODO: This should return HTTP bad request?
+    public void pdf23MegabyteFileShouldBeRejected() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lta-no-ocsp.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "hellopades-lta-no-ocsp.pdf", "pdf",""))
+                .then()
+                .body("signatures[0].signatureFormat",equalTo("PAdES_BASELINE_LT"))
+                .body("documentName",equalTo("9MB_PDF.pdf"));
+    }
+
+    /**
      * TestCaseID: Bdoc-LargeFiles-1
      *
      * TestType: Automated
      *
-     * Requirement:
+     * Requirement: http://open-eid.github.io/SiVa/siva/overview/#main-features-of-siva-validation-service
      *
      * Title: 9MB ASIC-E file
      *
@@ -90,7 +113,7 @@ public class LargeFileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement:
+     * Requirement: http://open-eid.github.io/SiVa/siva/overview/#main-features-of-siva-validation-service
      *
      * Title: 9MB BDOC-TM
      *
@@ -113,7 +136,7 @@ public class LargeFileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement:
+     * Requirement: http://open-eid.github.io/SiVa/siva/overview/#main-features-of-siva-validation-service
      *
      * Title: 9MB DDOC
      *

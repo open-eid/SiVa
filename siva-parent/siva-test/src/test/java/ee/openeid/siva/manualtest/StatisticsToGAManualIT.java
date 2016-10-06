@@ -51,7 +51,7 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement:
+     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf
      *
      * Title: Pdf valid container is validated with x-authenticated-user set in header
      *
@@ -73,7 +73,7 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement:
+     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf
      *
      * Title: Pdf valid container is validated with x-authenticated-user set in header
      *
@@ -95,7 +95,7 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement:
+     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf
      *
      * Title: Pdf valid container is validated with x-authenticated-user set in header
      *
@@ -117,7 +117,7 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement:
+     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf
      *
      * Title: Bdoc with certificates from different countries.
      *
@@ -141,7 +141,7 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement:
+     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf
      *
      * Title: Asice-E TS is validated
      *
@@ -166,7 +166,7 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement:
+     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf
      *
      * Title: Xroad valid container is validated
      *
@@ -191,7 +191,7 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement:
+     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf
      *
      * Title: Ddoc not supported file is inserted
      *
@@ -215,7 +215,7 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement:
+     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf
      *
      * Title: Ddoc invalid container is validated
      *

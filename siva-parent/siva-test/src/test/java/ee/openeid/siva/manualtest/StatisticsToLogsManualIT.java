@@ -49,7 +49,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement:
+     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf
      *
      * Title: Bdoc valid container is validated
      *
@@ -85,7 +85,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement:
+     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf
      *
      * Title: Bdoc invalid container is validated
      *
@@ -120,7 +120,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement:
+     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf
      *
      * Title: Bdoc not supported file is inserted
      *
@@ -144,7 +144,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement:
+     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf
      *
      * Title: Bdoc with certificates from different countries.
      *
@@ -181,7 +181,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement:
+     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf
      *
      * Title: Ddoc valid container is validated
      *
@@ -219,7 +219,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement:
+     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf
      *
      * Title: Ddoc invalid container is validated
      *
@@ -255,7 +255,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement:
+     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf
      *
      * Title: Ddoc not supported file is inserted
      *
@@ -279,7 +279,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement:
+     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf
      *
      * Title: Ddoc with certificates from different countries.
      *
@@ -316,7 +316,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement:
+     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf
      *
      * Title: Pdf valid container is validated
      *
@@ -353,7 +353,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement:
+     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf
      *
      * Title: Pdf invalid container is validated
      *
@@ -390,7 +390,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement:
+     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf
      *
      * Title: Pdf not supported file is inserted
      *
@@ -414,7 +414,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement:
+     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf
      *
      * Title: Pdf with certificates from non Estonian countries.
      *
@@ -451,7 +451,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement:
+     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf
      *
      * Title: Xroad valid container is validated
      *
@@ -487,7 +487,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement:
+     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf
      *
      * Title: Xroad invalid container is validated
      *
@@ -523,7 +523,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement:
+     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf
      *
      * Title: Xroad not supported file is inserted
      *

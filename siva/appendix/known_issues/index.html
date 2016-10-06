@@ -299,32 +299,8 @@
         <ul>
           
             <li class="anchor">
-              <a title="General issues" href="#general-issues">
-                General issues
-              </a>
-            </li>
-          
-            <li class="anchor">
-              <a title="DIGIDOC-XML related issues" href="#digidoc-xml-related-issues">
-                DIGIDOC-XML related issues
-              </a>
-            </li>
-          
-            <li class="anchor">
-              <a title="BDOC/ASiC-E related issues" href="#bdocasic-e-related-issues">
-                BDOC/ASiC-E related issues
-              </a>
-            </li>
-          
-            <li class="anchor">
-              <a title="PAdES related issues" href="#pades-related-issues">
-                PAdES related issues
-              </a>
-            </li>
-          
-            <li class="anchor">
-              <a title="X-Road signatures' related issues" href="#x-road-signatures-related-issues">
-                X-Road signatures' related issues
+              <a title="Known issues" href="#known-issues">
+                Known issues
               </a>
             </li>
           
@@ -352,52 +328,8 @@
           
           <!--# SiVa Known Issues-->
 
-<h2 id="general-issues">General issues</h2>
-<ol>
-<li>(PAdES/ASiC-E) German, Norwegian and Croatian TSLs are not loaded, signatures containing certificates included in the respective TSL lists can not be validated.</li>
-<li>(All) During TSL refreshing/reloading, service could give wrong validation results. Service must be turned off for TSL refreshing time (at  3:00 AM, ca 1 minute). </li>
-<li>(X-Road ASiC-E) X-Road validation service is separated (do not follow general architectuse) because of different BouncyCastle version used in X-Road utility. X-Road validation module should use latest BouncyCastle version.</li>
-<li>(BDOC/ASiC-E) Container validation errors are not returned as the current DSS-based validation report doesn't include a proper structure for container errors: <a href="https://esig-dss.atlassian.net/browse/DSS-932">https://esig-dss.atlassian.net/browse/DSS-932</a></li>
-<li>(X-Road ASiC-E) Only one invalid X-Road ASiC-E file was available for testing. This file had X-Road protocol error in it, there for the actual fail case for signature validation is not tested. It is expected that this has been tested in X-Road Asicverifier project.</li>
-</ol>
-<h2 id="digidoc-xml-related-issues">DIGIDOC-XML related issues</h2>
-<ol>
-<li>(JDigiDoc) Validating DIGIDOC-XML 1.0..1.3 documents is supported in case of "EMBEDDED_BASE64" content type, i.e. "DETACHED" and "EMBEDDED" content types are not supported. </li>
-<li>(DigiDoc4j, JDigiDoc) Investigate JDD DDOC 1.0 validation issue in DD4j 1.0.4: <a href="https://www.pivotaltracker.com/story/show/125537231">https://www.pivotaltracker.com/story/show/125537231</a></li>
-<li>(JDigiDoc) DDOC validation is not thread safe, added synchronization block, only one request at time: <a href="https://www.pivotaltracker.com/story/show/86696334">https://www.pivotaltracker.com/story/show/86696334</a> and <a href="https://github.com/open-eid/digidoc4j/wiki/Questions-&amp;-Answers#using-ddoc-containers-in-multi-threaded-environment">https://github.com/open-eid/digidoc4j/wiki/Questions-&amp;-Answers#using-ddoc-containers-in-multi-threaded-environment</a></li>
-</ol>
-<h2 id="bdocasic-e-related-issues">BDOC/ASiC-E related issues</h2>
-<ol>
-<li>(DigiDoc4j) Subindication is missing: <a href="https://www.pivotaltracker.com/story/show/128947235">https://www.pivotaltracker.com/story/show/128947235</a></li>
-<li>(DigiDoc4j) Improve API to return validation parameters: <a href="https://www.pivotaltracker.com/story/show/123789261">https://www.pivotaltracker.com/story/show/123789261</a></li>
-<li>(DigiDoc4j) return indeterminate <a href="https://www.pivotaltracker.com/story/show/129437879">https://www.pivotaltracker.com/story/show/129437879</a> </li>
-<li>(DigiDoc4j) Improve validation report: <a href="https://www.pivotaltracker.com/story/show/118940113">https://www.pivotaltracker.com/story/show/118940113</a></li>
-<li>(DigiDoc4j, DSS) Fix detecting signature qualification level based on TL information: <a href="https://www.pivotaltracker.com/story/show/128061699">https://www.pivotaltracker.com/story/show/128061699</a></li>
-<li>(DigiDoc4j, DSS) DSS doesn't properly validate manifest.xml, including not checking that data files in container would be listed in manifest.xml: <a href="https://esig-dss.atlassian.net/browse/DSS-842">https://esig-dss.atlassian.net/browse/DSS-842</a>, <a href="https://esig-dss.atlassian.net/browse/DSS-932">https://esig-dss.atlassian.net/browse/DSS-932</a></li>
-<li>(DigiDoc4j, DSS) OCSP revocation errors are not included in simple report: <a href="https://esig-dss.atlassian.net/browse/DSS-922">https://esig-dss.atlassian.net/browse/DSS-922</a>, <a href="https://www.pivotaltracker.com/n/projects/1110130/stories/129526189">https://www.pivotaltracker.com/n/projects/1110130/stories/129526189</a></li>
-<li>(DigiDoc4j, DSS) Validation warning is not returned when SHA-1 is used in the signature <a href="https://www.pivotaltracker.com/story/show/129929643">https://www.pivotaltracker.com/story/show/129929643</a>, <a href="https://esig-dss.atlassian.net/browse/DSS-760">https://esig-dss.atlassian.net/browse/DSS-760</a></li>
-<li>(DigiDoc4j) In case of BDOC with time-stamp, the validation warning is not returned if time difference between time-stamp and OCSP issuance times exceeds 15 minutes: <a href="https://www.pivotaltracker.com/story/show/130098445">https://www.pivotaltracker.com/story/show/130098445</a></li>
-</ol>
-<h2 id="pades-related-issues">PAdES related issues</h2>
-<ol>
-<li>(DSS) PAdES validation is not thread safe, added synchronization block, only one request at time: <a href="https://esig-dss.atlassian.net/browse/DSS-923">https://esig-dss.atlassian.net/browse/DSS-923</a></li>
-<li>(DSS) Validation warning is not returned when SHA-1 is used in the signature: <a href="https://esig-dss.atlassian.net/browse/DSS-760">https://esig-dss.atlassian.net/browse/DSS-760</a></li>
-<li>(DSS) Documents signed with revoked signature pass the validation: <a href="https://esig-dss.atlassian.net/browse/DSS-922">https://esig-dss.atlassian.net/browse/DSS-922</a>, <a href="https://esig-dss.atlassian.net/browse/DSS-918">https://esig-dss.atlassian.net/browse/DSS-918</a></li>
-<li>(DSS) Signature qualification level is not correctly determined by dss based on TL <a href="https://esig-dss.atlassian.net/browse/DSS-915">https://esig-dss.atlassian.net/browse/DSS-915</a></li>
-</ol>
-<h2 id="x-road-signatures-related-issues">X-Road signatures' related issues</h2>
-<ol>
-<li>(X-Road Asicverifier) Values of some validation report fields are not accessible via the X-Road library's API:  <ol>
-<li>(X-Road Asicverifier) SignatureFormat – Format and profile (according to Baseline Profile) of the signature. Currently, hard coded values are used in the report. </li>
-<li>(X-Road Asicverifier) SignatureLevel – Indication whether the signature is Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES). Currently, the value is left empty, as the library doesn't enable determining legal level of the signature then POLv2 validation policy (only QES level signatures are accepted) is not supported for X-Road signatures. </li>
-<li>(X-Road Asicverifier) Indication, Errors and Warnings - in error situations, the verification process results in a CodedException extends RuntimeException. This Exception always contains a fault code String but it’s how should we determine if we should result in INDETERMINATE or TOTAL-FAILED result? Also since the rest of the verification process is not completed after the exception we only ever know the single error that was reached first. Also we can’t get warnings as we do in DSS.</li>
-<li>(X-Road Asicverifier) SubIndication – Additional subindication in case of failed or indeterminate validation result, according to EN 319 102-1 "Table 6: Validation Report Structure and Semantics".  </li>
-<li>(X-Road Asicverifier) SignatureScope - Contains information of the original data that is covered by the signature. Currently, a hard-coded value is used.  </li>
-<li>(X-Road Asicverifier) ClaimedSigningTime - Claimed signing time, i.e. user’s computer time during signature creation.</li>
-</ol>
-</li>
-<li>(X-Road Asicverifier) Qualified electronic signature validation process - the Asicverifier library doesn't check if the issuer's certificate was issued by a qualified trust service provider (i.e. based on the data in TL trust list).   </li>
-</ol>
+<h2 id="known-issues">Known issues</h2>
+<p>All known issues should be reported and managed under GitHub project <a href="https://github.com/open-eid/SiVa/issues">issues section</a></p>
           <aside class="copyright" role="note">
             
             Documentation built with

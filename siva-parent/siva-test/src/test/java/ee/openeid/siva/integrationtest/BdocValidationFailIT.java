@@ -174,9 +174,9 @@ public class BdocValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement:
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
-     * Title: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Title: Wrong signature timestamp
      *
      * Expected Result: The document should fail the validation
      *

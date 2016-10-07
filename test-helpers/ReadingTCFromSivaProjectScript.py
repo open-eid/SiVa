@@ -7,7 +7,6 @@ Test_cases.write("List of Test Cases\n")
 Test_cases.write("==================\n")
 
 new_file = 1
-count_ignores = 0
         
 for root, dirs, filenames in os.walk(source_in_dir):
     for f in filenames:
@@ -19,8 +18,9 @@ for root, dirs, filenames in os.walk(source_in_dir):
             if '* Note:' in a_line:
                 if (new_file):
                     Test_cases.write("\n## "+f+"\n\n")   
+                    Test_cases.write("!!! Note\n\n")
                     new_file = 0
-                Test_cases.write("**"+a_line.lstrip("* ").rstrip()+"**\n")
+                Test_cases.write("    "+a_line.lstrip("* Note:").rstrip()+"\n")
             
             if '* TestCaseID:' in a_line:
                 if (new_file):
@@ -39,10 +39,8 @@ for root, dirs, filenames in os.walk(source_in_dir):
                 Test_cases.write("  "+a_line.lstrip().rstrip()+"\n\n")
             elif '@Ignore' in a_line:
                 Test_cases.write("  **Attention! This test is disabled, check [GitHub](https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva) for specifics** \n\n")
-                count_ignores = count_ignores+1
         a_file.close()
 Test_cases.close()
-print(count_ignores)
             
 
 

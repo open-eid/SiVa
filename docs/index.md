@@ -21,24 +21,17 @@ when deploying it to production environment.
 Below list will give You an overview of what each section of the
 SiVa architecture document will cover:
 
+* [**Definitions**](siva/definitions) - defines and explines most common concepts used in SiVa documentation
 * [**Overview**](siva/overview) - gives overview what SiVa is and
   it's main features.
-* [**Regulatory environment**](siva/regulatory_environment) - legal analysis
-  and standards that are used when building SiVa application
-* [**Component diagram**](siva/v2/siva_service_overview) - gives overview of
+* [**Structure and activities**](siva/v2/structure_and_activities) - gives overview of
   main SiVa subsystems and and and base validation Java libraries
   used for different validation services
-* [**Deployment view**](siva/v2/deployment) - gives general overview of
+* [**Interfaces**](siva/v2/interfaces) - Description of SiVa
+   SOAP and JSON API request and response
+* [**Deployment**](siva/v2/deployment) - gives general overview of
   servers required when deploying SiVa validation web service
   into production
-* [**Interfaces**](siva/v2/interfaces) - Description of SiVa
-  SOAP and JSON API request and response
-* [**Use cases**](siva/use_cases) - describes main processes in SiVa
-  validation web service
-* [**Deploying**](siva/deployment) - how to build, deploy and configure
-  SiVa web service
-* [**Logging**](siva/logging) - how to configure and setup SiVa validation
-  service logging support
 * [**Quality Assurance**](siva/qa_strategy) - overview of quality assurance strategy and testing
 
 ## Download documentation

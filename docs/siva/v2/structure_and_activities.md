@@ -99,7 +99,7 @@ as input source.
 
 Validation of SOAP request XML is done in the SiVa web application module.
 Document validation process is described in detail in [Digitally signed document validation process](#digitally-signed-document-validation-process)
-Validation report output id described in [Interface description](/siva/interface_description)
+Validation report output id described in [Interface description](/siva/v2/interfaces)
 
 ### TSL loading use case
 

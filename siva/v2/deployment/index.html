@@ -164,8 +164,8 @@
           
             
   <li>
-    <a class="" title="Introduction" href="../../..">
-      Introduction
+    <a class="" title="Version history" href="../../version_info/">
+      Version history
     </a>
     
   </li>
@@ -173,8 +173,8 @@
           
             
   <li>
-    <a class="" title="Version info" href="../../version_info/">
-      Version info
+    <a class="" title="Introduction" href="../../..">
+      Introduction
     </a>
     
   </li>
@@ -233,8 +233,8 @@
             </li>
           
             <li class="anchor">
-              <a title="SiVa System deployment" href="#siva-system-deployment">
-                SiVa System deployment
+              <a title="SiVa system deployment" href="#siva-system-deployment">
+                SiVa system deployment
               </a>
             </li>
           
@@ -329,29 +329,41 @@
             <h1>Deployment</h1>
           
           <h2 id="deployment-diagram">Deployment diagram</h2>
+<p>The deployment view of the architecture describes the various physical nodes in the most typical configuration for SiVa service provider.</p>
 <p><img alt="SiVa Deployment view" src="../../../img/siva/uml_siva_deployment_diagram.png" /></p>
-<h3 id="load-balancer">Load balancer</h3>
-<p>Load balancer can distribute traffic between SiVa nodes when there is more then one instance running.
-SiVa do not set any specific requirements for load balancer but in diagram the Nginx reverse proxy option is used.</p>
-<h3 id="siva-web-application">SiVa web application</h3>
-<p>SiVa web appliction is executable Spring Boot JAR file. This means all the dependencies and servlet containers are
-packaged inside single JAR file. The JAR file can be placed anywhere in server and the JAR must be marked executable
-if its not already.</p>
-<p>There also should be separate user created to run executalbe JAR as Linux service.</p>
-<p>Read more about running
-<a href="https://docs.spring.io/spring-boot/docs/current/reference/html/deployment-install.html#deployment-service">Spring Boot applications as Linux system service</a></p>
-<h3 id="siva-x-road-validation-service">SiVa X-Road validation service</h3>
-<p>SiVa X-Road validation service is also Spring Boot executable JAR application and also should be installed as Linux
-service. X-Road validation service communicates with SiVa web application over HTTP and default port is 8081</p>
-<p>X-Road separate installation is required to avoid BouncyCastle libraries version conflicts and class loader
-issues.</p>
-<h3 id="security-server">Security server</h3>
-<p>Into XRoad v6 security server the SiVa validation service will be registered to provide service to other organisations
-using XRoad infrastructure. Setting up XRoad Security server is out of scope for SiVa documentaiton.</p>
-<h2 id="siva-system-deployment">SiVa System deployment</h2>
+<h3 id="servers">Servers</h3>
+<p>In the following section, a description of each network node element is described in detail.</p>
+<table>
+<thead>
+<tr>
+<th>Node</th>
+<th>Setup description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Load balancer server</strong></td>
+<td>Load balancer distributes traffic between SiVa server nodes when there is more than one Siva server instance running. SiVa does not set any specific requirements for load balancer. As an example, the nginx reverse proxy is used.</td>
+</tr>
+<tr>
+<td><strong>Siva server</strong></td>
+<td>Two separate services are set up to run on SiVa server: the <strong>SiVa webapp</strong> itself and the <strong>X-road validation webapp</strong>, to provide X-road support<ul><li>SiVa webapp</li></ul><br/>SiVa web appliction is executable Spring Boot JAR file. This means all the dependencies and servlet containers are packaged inside single JAR file. The JAR file can be placed anywhere in server and the JAR must be marked executable if its not already.<br/><br/>There also should be separate user created to run executalbe JAR as Linux service.<br/><br/>Read more about running <a href="https://docs.spring.io/spring-boot/docs/current/reference/html/deployment-install.html#deployment-service">Spring Boot applications as Linux system service</a><br/><ul><li>X-road validation webapp</li></ul><br/>SiVa X-Road validation service is also Spring Boot executable JAR application and also should be installed as Linux service. X-Road validation service communicates with SiVa web application over HTTP and default port is 8081<br/><br/>Note that X-Road separate installation is required to avoid BouncyCastle library version conflicts and class loader issues.</td>
+</tr>
+<tr>
+<td><strong>X-road security server</strong></td>
+<td>A standard X-road security server setup. The SiVa validation service wsdl has to be registered to provide service to other organisations using XRoad infrastructure. Setting up XRoad Security server is out of scope for SiVa documentaton (see the <a href="https://www.ria.ee/en/x-road-instructions.html#v6">official installation instructions</a>).</td>
+</tr>
+<tr>
+<td><strong>Demo server</strong></td>
+<td>Demo server hosts the <strong>Demo webapp</strong> provided within SiVa project as a reference client implementation. <ul><li>Demo webapp - single Java web application that provides a simple form to upload and validate a signed file in Siva webapp. Demo webapp serves as a tool for evaluating and testing the validation service. </li></ul></td>
+</tr>
+</tbody>
+</table>
+<h3 id="horizontal-scaling">Horizontal scaling</h3>
+<p>Neither the <strong>Siva webapp</strong>, <strong>X-road validation webapp</strong>, nor <strong>Demo wbapp</strong> persist their state in sessions between requests. Therefore it is possible to install multiple instances of these services behind respective load balancers.</p>
+<h2 id="siva-system-deployment">SiVa system deployment</h2>
 <h3 id="system-requirements">System requirements</h3>
-<p>Following are minimum requirements to build and deploy SiVa validation
-web service:</p>
+<p>Following are the minimum requirements to build and deploy a SiVa webapp as a service:</p>
 <ul>
 <li>Java 8 or above Oracle JVM is supported</li>
 <li>Git version control system version 1.8 or above is recommended</li>
@@ -361,7 +373,7 @@ web service:</p>
 <li>1GB of free disk space</li>
 <li>Supported operating system is Ubuntu 14.04 LTS</li>
 </ul>
-<h3 id="building-siva-validation-web-service-on-ubuntu-1604">Building SiVa validation web service on Ubuntu 16.04</h3>
+<h3 id="building-siva-webapps-on-ubuntu-1604">Building SiVa webapps on Ubuntu 16.04</h3>
 <p>First we need to install Git and Java SDK 8 by issuing below commands:</p>
 <pre class="codehilite"><code class="language-bash">sudo apt-get update
 sudo apt-get install git -y
@@ -409,7 +421,25 @@ The last lines of build output should look very similar to below image:</p>
 [INFO] ------------------------------------------------------------------------</code></pre>
 
 
-<h3 id="setting-up-systemd-service">Setting up systemd service</h3>
+<h3 id="starting-webapps-from-command-line">Starting webapps from command line</h3>
+<p>SiVa project compiles <strong>3 fat executable JAR</strong> files that You can run after successfully building the
+project by issuing below commands:</p>
+<p><strong>First start SiVa REST and SOAP web service</strong></p>
+<pre class="codehilite"><code class="language-bash">./siva-parent/siva-webapp/target/siva-webapp-2.0.2-SNAPSHOT.jar</code></pre>
+
+
+<p><strong>Second we need to start SiVa XRoad validation service</strong></p>
+<pre class="codehilite"><code class="language-bash">./validation-services-parent/xroad-validation-service/target/xroad-validation-service-2.0.2-SNAPSHOT.jar</code></pre>
+
+
+<p>The SiVa webapp by default runs on port <strong>8080</strong> and XRoad validation service starts up on port <strong>8081</strong>.
+Easiest way to test out validation is run SiVa demo application.</p>
+<p><strong>Start SiVa Demo Application</strong></p>
+<pre class="codehilite"><code class="language-bash">./siva-parent/siva-sample-application/target/siva-sample-application-2.0.2-SNAPSHOT.jar</code></pre>
+
+
+<p>Now point Your browser to URL: <a href="http://localhost:9000">http://localhost:9000</a></p>
+<h3 id="running-webapps-as-systemd-services">Running webapps as systemd services</h3>
 <p>Maven build generates executable JAR files. This means web container and all its dependencies are package inside
 single JAR file. It makes a lot easier to deploy it into servers.</p>
 <p>Easiest option to setup SiVa is as <code>systemd</code> service in Ubuntu servers.</p>
@@ -417,7 +447,7 @@ single JAR file. It makes a lot easier to deploy it into servers.</p>
 <pre class="codehilite"><code class="language-bash">vim siva-webapp.service</code></pre>
 
 
-<p>Inside it we need to paste below text. You need and can change few things in service setup file.</p>
+<p>Inside it we need to paste below text. You need to change few things in service setup file.</p>
 <ul>
 <li>First you <strong>must not</strong> run service as <code>root</code>. So it's strongly recommended to change line <code>User=root</code></li>
 <li>Second You can change Java JVM options by modifying the <code>JAVA_OPTS</code> inside the <code>siva-webapp.service</code> file.</li>
@@ -442,7 +472,7 @@ Next we need to move <code>siva-webapp-2.0.2-SNAPSHOT.jar</code> into newly crea
 JAR file to <code>siva-webapp.jar</code>. match</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The copied JAR filename must match option <code>ExecStart</code> in  <code>siva-webaapp.servcie</code> file</p>
+<p>The copied JAR filename must match option <code>ExecStart</code> in  <code>siva-webapp.service</code> file</p>
 </div>
 <pre class="codehilite"><code class="language-bash">sudo mkdir /var/apps
 sudo cp siva-parent/siva-webapp/target/executable/siva-webapp-2.0.2-SNAPSHOT.jar /var/apps/siva-webapp.jar</code></pre>

@@ -63,7 +63,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Input empty values
      *
@@ -100,7 +100,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Verification of wrong document type as input
      *
@@ -124,7 +124,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Request has invalid key on document position
      *
@@ -149,7 +149,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Request has XML as document type (special case, XML is similar to ddoc and was a accepted document type in earlier versions)
      *
@@ -174,7 +174,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Request has long (38784 characters) in filename field
      *
@@ -200,7 +200,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Totally empty request body is sent
      *
@@ -228,7 +228,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Request with more parameters than expected is sent
      *
@@ -259,7 +259,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Request with special chars is sent
      *
@@ -282,7 +282,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Request with not base64 string as document
      *
@@ -306,7 +306,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Mismatch in documentType and actual document (bdoc and pdf)
      *
@@ -331,7 +331,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Mismatch in documentType and actual document (bdoc and ddoc)
      *
@@ -356,7 +356,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Mismatch in documentType and actual document (bdoc and xroad)
      *
@@ -382,7 +382,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Bdoc file, not existing value in signaturePolicy
      *
@@ -407,7 +407,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Bdoc file, policy fiels should be case insensitive
      *
@@ -430,7 +430,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Request without optional signaturePolicy field
      *
@@ -458,7 +458,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Input random base64 string as document with bdoc document type
      *
@@ -483,7 +483,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Acceptance of ASICE as BDOC document type
      *
@@ -508,7 +508,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Verification of case insensitivity in document type
      *
@@ -531,7 +531,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Verification of filename value (filename do not match the actual file)
      *
@@ -555,7 +555,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Request has invalid character in filename
      *
@@ -579,7 +579,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Mismatch in documentType and actual document (bdoc and xroad)
      *
@@ -605,7 +605,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Mismatch in documentType and actual document (bdoc and xroad)
      *
@@ -631,7 +631,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Mismatch in documentType and actual document (pdf and ddoc)
      *
@@ -656,7 +656,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Mismatch in documentType and actual document (pdf and bdoc)
      *
@@ -681,7 +681,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Mismatch in documentType and actual document (pdf and xroad)
      *
@@ -707,7 +707,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: PDF file, not existing value in signaturePolicy
      *
@@ -732,7 +732,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Input random base64 string as document with pdf document type
      *
@@ -757,7 +757,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Verification of filename value (filename do not match the actual file)
      *
@@ -781,7 +781,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Mismatch in documentType and actual document (pdf and xroad)
      *
@@ -807,7 +807,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Mismatch in documentType and actual document (pdf and xroad)
      *
@@ -833,7 +833,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Mismatch in documentType and actual document (ddoc and bdoc)
      *
@@ -858,7 +858,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Mismatch in documentType and actual document (ddoc and pdf)
      *
@@ -883,7 +883,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Mismatch in documentType and actual document (ddoc and xroad)
      *
@@ -909,7 +909,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Ddoc file, not existing value in signaturePolicy
      *
@@ -934,7 +934,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Input random base64 string as document with ddoc document type
      *
@@ -959,7 +959,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Verification of filename value (filename do not match the actual file)
      *
@@ -983,7 +983,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Mismatch in documentType and actual document (ddoc and xroad)
      *
@@ -1009,7 +1009,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Mismatch in documentType and actual document (ddoc and xroad)
      *
@@ -1035,7 +1035,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Mismatch in documentType and actual document (xroad and pdf)
      *
@@ -1060,7 +1060,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Mismatch in documentType and actual document (xroad and ddoc)
      *
@@ -1085,7 +1085,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Mismatch in documentType and actual document (xroad and bdoc)
      *
@@ -1110,7 +1110,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: X-road file, not existing value in signaturePolicy
      *
@@ -1136,7 +1136,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Input random base64 string as document with xroad document type
      *
@@ -1161,7 +1161,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
      *
      * Title: Verification of filename value (filename do not match the actual file)
      *

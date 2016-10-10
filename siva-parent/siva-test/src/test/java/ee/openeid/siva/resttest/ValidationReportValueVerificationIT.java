@@ -50,7 +50,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface#validation-request-interface
      *
      * Title: Verification of values in Validation Report XAdES_BASELINE_LT_TM, QES, FullSignatureScope
      *
@@ -89,7 +89,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: Verification of values in Validation Report XAdES_BASELINE_LT, QES, FullSignatureScope
      *
@@ -129,7 +129,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: Verification of values in Validation Report XAdES_BASELINE_LT, AdES, FullSignatureScope, warning
      *
@@ -169,7 +169,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: Verification of values in Validation Report XAdES_BASELINE_LT-TM, AdESqc
      *
@@ -210,7 +210,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: JSON structure has all elements (Bdoc valid multiple signatures)
      *
@@ -250,7 +250,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: JSON structure has all elements (Bdoc indeterminate status)
      *
@@ -289,7 +289,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title:  Bdoc report with no signatures
      *
@@ -317,7 +317,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: JSON structure has all elements (Pdf valid single signature)
      *
@@ -357,7 +357,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: JSON structure has all elements (Pdf valid Multiple signatures)
      *
@@ -397,7 +397,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: JSON structure has all elements (Pdf invalid signature)
      *
@@ -437,7 +437,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: JSON structure has all elements (Pdf indeterminate status)
      *
@@ -477,7 +477,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title:  Pdf report with no signatures
      *
@@ -505,7 +505,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: JSON structure has all elements (ddoc valid single signature)
      *
@@ -545,7 +545,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: JSON structure has all elements (ddoc invalid signature)
      *
@@ -585,7 +585,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: JSON structure has all elements (ddoc indeterminate status)
      *
@@ -625,7 +625,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: Check for optional warning element
      *
@@ -665,7 +665,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title:  Ddoc report with no signatures
      *
@@ -693,7 +693,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: Verification of values in Validation Report, xml v1.0, checks for missing info
      *
@@ -733,7 +733,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: Verification of values in Validation Report, xml v1.1, checks for missing info
      *
@@ -773,7 +773,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: Verification of values in Validation Report, xml v1.2, checks for missing info
      *
@@ -813,7 +813,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: Verification of values in Validation Report, xml v1.3, checks for missing info
      *
@@ -853,7 +853,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: Verification of values in Validation Report, xroad-simple container
      *
@@ -894,7 +894,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: Verification of values in Validation Report, xroad-batchsignature container
      *
@@ -935,7 +935,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: Verification of values in Validation Report, xroad-attachment container
      *
@@ -976,7 +976,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: Verification of values in Validation Report with invalid xroad container
      *

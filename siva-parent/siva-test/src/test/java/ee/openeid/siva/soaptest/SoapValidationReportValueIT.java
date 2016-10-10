@@ -49,7 +49,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: Verification of values in Validation Report XAdES_BASELINE_LT_TM, QES, FullSignatureScope
      *
@@ -79,7 +79,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: Verification of values in Validation Report XAdES_BASELINE_LT, QES, FullSignatureScope
      *
@@ -109,7 +109,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: Verification of values in Validation Report XAdES_BASELINE_LT, AdES, FullSignatureScope
      *
@@ -140,7 +140,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: Verification of values in Validation Report XAdES_BASELINE_LT_TM, AdESqc, FullSignatureScope
      *
@@ -169,7 +169,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: Verification of values in Validation Report XAdES_BASELINE_LTA, QES, FullSignatureScope
      *
@@ -198,7 +198,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: Verification of values in Validation Report, xml v1.0, checks for missing info
      *
@@ -227,7 +227,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: Verification of values in Validation Report, xml v1.1, checks for missing info
      *
@@ -256,7 +256,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: Verification of values in Validation Report, xml v1.2, checks for missing info
      *
@@ -285,7 +285,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: Verification of values in Validation Report, xml v1.3, checks for missing info
      *
@@ -314,7 +314,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: Verification of values in Validation Report, PAdES_baseline_LT, checks for missing info
      *
@@ -343,7 +343,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: Verification of values in Validation Report, PAdES_baseline_B, checks for missing info
      *
@@ -372,7 +372,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: Verification of values in Validation Report, xroad-simple container
      *
@@ -402,7 +402,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
      * Title: Verification of values in Validation Report, xroad-simple invalid container
      *

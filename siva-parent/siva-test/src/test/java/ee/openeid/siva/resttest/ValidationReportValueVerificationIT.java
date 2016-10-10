@@ -178,7 +178,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      * File: 23200_weakdigest-wrong-nonce.asice
      *
      */
-    @Ignore //TODO: VAL-331 changed constraint for polv1 to fail on SSCD, also see DSS-915 on why SSCD is not read from TSL. New Adesqc file is needed.
+    @Ignore //TODO: https://github.com/open-eid/SiVa/issues/24 See DSS-915 on why SSCD is not read from TSL. New Adesqc file may be needed.
     @Test
     public void bdocCorrectValuesArePresentInvalidLtSignatureAdesqc() {
         setTestFilesDirectory("bdoc/test/timemark/");
@@ -406,7 +406,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      * File: hellopades-lt-b.pdf
      *
      */
-    @Test @Ignore //TODO: VAL-242
+    @Test
     public void pdfAllElementsArePresentInvalidSignature() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         post(validationRequestFor("hellopades-lt-b.pdf"))
@@ -702,7 +702,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      * File: SK-XML1.0.ddoc
      *
      */
-    @Test @Ignore //TODO: VAL-238
+    @Test @Ignore //TODO: https://github.com/open-eid/SiVa/issues/11
     public void ddocCorrectValuesArePresentV1_0() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("SK-XML1.0.ddoc"))

@@ -1,9 +1,12 @@
 <!--# Quality Assurance -->
 
+## QA Strategy
+
 ## Introduction
 
 The goal of this document is to give general overview of the used infrastructure, processes, schedule and actions to ensure good quality delivery. The document describes activities in the whole software development process. Analysis, development and testing are separated for the sake of structure and transparency although they are integral parts of the development cycle.
 This is living document and will be constantly updated as the project evolves.
+
 ## Environments and infrastructure
 
 ![Enviroment](../img/siva/qa_strategy/Env.png)
@@ -86,7 +89,7 @@ Unit tests are also automatically executed on each build, if the unit tests do n
 
 All changes (including changes in unit test code) are reviewed by another development team member using GitHub. The code must pass review before it is submitted to testing.
 
-SonarLint is used to validate code automatically. It integrates both suggested tools mentioned in reference document [3]. [References](/siva/references/)
+SonarLint is used to validate code automatically. It integrates both suggested tools mentioned in reference document [(3) References](/siva/references/)
 
 ## Testing
 
@@ -191,13 +194,12 @@ Regression testing will consist of two parts:
 Running all automated tests (unit, integration and system tests)
 Manual testing of the areas that are not covered by automatic tests based on the regression test checklist
 
+## Test Plan
 ## Integration Test introduction
 
-Overview of the SiVa (Signature Validation) web service can be found in the [Overview](/siva/overview/) section of the document.
+This section of the document gives overview of Integration Testing carried out on SiVa web service and SiVa Sample application.
 
-This section of the document gives overview of Integration Testing carried out on SiVa web service.
-
-Integration testing is using RestAssured library v2.5.0 to implement automatic checks for REST/SOAP based tests.
+SiVa web service Integration Testing is using RestAssured library v2.5.0 to implement automatic checks for REST/SOAP based tests.
 
 The testing of the SiVa web service is divided into sections based on the software architecture and functionalities provided to the users. The sections are:
 
@@ -208,7 +210,9 @@ The testing of the SiVa web service is divided into sections based on the softwa
   * PDF signature validation
   * X-Road ASICE signature validation
 
-The goal is to focus testing on functionalities implemented in SiVa application. Functionalities provided by [Validation libraries](/siva/overview/#validation-libraries) are not explicitly tested.
+The goal is to focus testing on functionalities implemented in SiVa web service application. Functionalities provided by [Validation libraries](/siva/overview/#validation-libraries) are not explicitly tested.
+
+In addition SiVa Sample Application is tested. These tests are carried out manually.
 
 ## Testing of REST API
 
@@ -401,11 +405,20 @@ Specific test cases and input files can be found in:
   **What is not tested:**
 
   * Configuring Google Analytics reports is out of scope. Only verification of data presence is done.
+  
+## SiVa Sample Application tests
 
+Testing of SiVa Sample Application is done manually. The main cases are:
+
+  * Cross browser usage (IE, Edge, Chrome, Firefox and Safari)
+  * File upload (different sizes, suported and unsupported file types)
+  * Displayment of Validation Report both for REST and SOAP
+  * Layout of the page
+  * Error representation 
   
 ## System Test introduction
 
-While Integration Tests were carried out automatically then System Testing is using combination of automatic and manual testing..
+While Integration Tests were mostly carried out automatically then System Testing is mostly depending on manual testing.
 
 System testing is carried out using two access points:
 
@@ -415,8 +428,6 @@ System testing is carried out using two access points:
 !!! Note
  
 	Testing through X-Road security server requires presence and configuration of X-Road security server to use SiVa service.  Tests are run using SoapUI that simulates request to X-Road security server.
-
-
 
 ## Testing through X-Road security server
 
@@ -433,15 +444,6 @@ All of the above test cases are run with BDOC, DDOC, PDF and X-Road ASiC-E conta
 
 !!! development
 	
-
-## SiVa Sample Application tests
-
-In addition to testing the service as such, SiVa Sample Application itself is tested. The main cases are:
-
-  * Cross browser usage (IE, Edge, Chrome, Firefox and Safari)
-  * File upload (different sizes, suported and unsupported file types)
-  * Displayment of Validation Report
-
 
 ## Load Test introduction
 

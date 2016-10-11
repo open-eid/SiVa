@@ -355,7 +355,7 @@ public class BdocValidationFailIT extends SiVaRestTests{
      *
      * File: EE_SER-AEX-B-LT-V-34.asice
      */
-    @Test @Ignore //TODO: DSS-842, DSS-932
+    @Test @Ignore //TODO: https://github.com/open-eid/SiVa/issues/18
     public void bdocUnsignedDataFiles() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-V-34.asice"))
@@ -379,7 +379,7 @@ public class BdocValidationFailIT extends SiVaRestTests{
      *
      * File: 23613_TM_wrong-manifest-mimetype.bdoc
      */
-    @Test @Ignore //TODO: DSS-842, DSS-932
+    @Test @Ignore //TODO: https://github.com/open-eid/SiVa/issues/18
     public void bdocDifferentDataFileInSignature() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("23613_TM_wrong-manifest-mimetype.bdoc"))
@@ -526,7 +526,7 @@ public class BdocValidationFailIT extends SiVaRestTests{
      *
      * File: TM-16_unknown.4.asice
      */
-    @Test @Ignore //TODO: DSS-922
+    @Test @Ignore //TODO: https://github.com/open-eid/SiVa/issues/23
     public void bdocTmOcspStatusUnknown() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("TM-16_unknown.4.asice"))
@@ -550,12 +550,12 @@ public class BdocValidationFailIT extends SiVaRestTests{
      *
      * File: KS-21_fileeemaldatud.4.asice
      */
-    @Test @Ignore //TODO: Test broke when fixing bug that BDOC validator never retunrs INDETERMINATE indication
+    @Test
     public void bdocSignedFileRemoved() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("KS-21_fileeemaldatud.4.asice"))
                 .then()
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("signatures[0].subIndication", Matchers.is("SIGNED_DATA_NOT_FOUND"))
                 .body("signatures[0].errors[0].content", Matchers.is("The reference data object(s) is not found!"))
                 .body("validSignaturesCount", Matchers.is(0));
@@ -667,21 +667,21 @@ public class BdocValidationFailIT extends SiVaRestTests{
      *
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
      *
-     * Title: Bdoc 	OCSP response doesn't correspond to the signers certificate
+     * Title: Bdoc OCSP response is not the one expected
      *
      * Expected Result: The document should fail the validation
      *
-     * File: NS28_WrongSignerCertInOCSPResp.bdoc
+     * File: 23608-bdoc21-TM-ocsp-bad-nonce.bdoc
      */
-    @Ignore //TODO: VAL-331 changed constraint to accept only BASELINE_LT, BASELINE_LT_TM & BASELINE_LTA signature formats. New file is needed!
     @Test
     public void bdocWrongSignersCertInOcspResponse() {
         setTestFilesDirectory("bdoc/live/timemark/");
-        post(validationRequestFor("NS28_WrongSignerCertInOCSPResp.bdoc"))
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("23608-bdoc21-TM-ocsp-bad-nonce.bdoc"));
+        post(validationRequestWithValidKeys(encodedString, "23608-bdoc21-TM-ocsp-bad-nonce.bdoc", "bdoc", VALID_SIGNATURE_POLICY_1))
                 .then()
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is("TRY_LATER"))
-                .body("signatures[0].errors.content", Matchers.hasItem("No revocation data for the certificate"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors.content", Matchers.hasItem("Nonce is invalid"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -705,7 +705,7 @@ public class BdocValidationFailIT extends SiVaRestTests{
         post(validationRequestWithValidKeys(encodedString, "23154_test1-old-sig-sigat-OK-prodat-NOK-1.bdoc", "bdoc", VALID_SIGNATURE_POLICY_1))
                 .then()
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is("")) //TODO: VAL-242 Subindication should not be empty.
+                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].errors.content", Matchers.hasItem("Signature has been created with expired certificate"))
                 .body("validSignaturesCount", Matchers.is(0));
     }

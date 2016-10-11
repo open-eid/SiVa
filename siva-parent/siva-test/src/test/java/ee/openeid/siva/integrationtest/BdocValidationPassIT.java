@@ -101,7 +101,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
      *
      * File: bdoc_weak_warning_sha1.bdoc
      */
-    @Test @Ignore //TODO: DSS-760
+    @Test @Ignore //TODO: https://github.com/open-eid/SiVa/issues/20
     public void validSignatureWithWarning() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("bdoc_weak_warning_sha1.bdoc"))
@@ -187,12 +187,12 @@ public class BdocValidationPassIT extends SiVaRestTests{
      *
      * Expected Result: The document should pass the validation
      *
-     * File: bdoc21-TS.asice
+     * File: ValidLiveSignature.asice
      */
-    @Test @Ignore //TODO: DSS-915
+    @Test
     public void bdocQESProfileValidSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
-        post(validationRequestFor("bdoc21-TS.asice"))
+        post(validationRequestFor("ValidLiveSignature.asice"))
                 .then()
                 .body("signatures[0].signatureLevel", Matchers.is("QES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -286,7 +286,6 @@ public class BdocValidationPassIT extends SiVaRestTests{
      *
      * File: EE_SER-AEX-B-LT-V-28.asice
      */
-    @Ignore //TODO: VAL-331 changed constraint for polv2 to fail on SSCD, also see DSS-915 on why SSCD is not read from TSL
     @Test
     public void bdocKlass3Sk2010CertificateChainValidSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
@@ -294,7 +293,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
         post(validationRequestWithValidKeys(encodedString, "EE_SER-AEX-B-LT-V-28.asice", "BDOC", VALID_SIGNATURE_POLICY_1))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].signatureLevel", Matchers.is("AdESqc")) //TODO: This should be QES but https://github.com/open-eid/SiVa/issues/24
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validSignaturesCount", Matchers.is(1));

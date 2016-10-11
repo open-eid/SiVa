@@ -233,8 +233,20 @@
             </li>
           
             <li class="anchor">
-              <a title="SiVa system deployment" href="#siva-system-deployment">
-                SiVa system deployment
+              <a title="Building" href="#building">
+                Building
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Deploying" href="#deploying">
+                Deploying
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Custom configuration" href="#custom-configuration">
+                Custom configuration
               </a>
             </li>
           
@@ -361,18 +373,8 @@
 </table>
 <h3 id="horizontal-scaling">Horizontal scaling</h3>
 <p>Neither the <strong>Siva webapp</strong>, <strong>X-road validation webapp</strong>, nor <strong>Demo wbapp</strong> persist their state in sessions between requests. Therefore it is possible to install multiple instances of these services behind respective load balancers.</p>
-<h2 id="siva-system-deployment">SiVa system deployment</h2>
-<h3 id="system-requirements">System requirements</h3>
-<p>Following are the minimum requirements to build and deploy a SiVa webapp as a service:</p>
-<ul>
-<li>Java 8 or above Oracle JVM is supported</li>
-<li>Git version control system version 1.8 or above is recommended</li>
-<li>Minimum 2 GB of RAM. Recommended at least 4 GB of RAM</li>
-<li>Minimum 1 processor core</li>
-<li>Open internet connection</li>
-<li>1GB of free disk space</li>
-<li>Supported operating system is Ubuntu 14.04 LTS</li>
-</ul>
+<hr />
+<h2 id="building">Building</h2>
 <h3 id="building-siva-webapps-on-ubuntu-1604">Building SiVa webapps on Ubuntu 16.04</h3>
 <p>First we need to install Git and Java SDK 8 by issuing below commands:</p>
 <pre class="codehilite"><code class="language-bash">sudo apt-get update
@@ -421,7 +423,19 @@ The last lines of build output should look very similar to below image:</p>
 [INFO] ------------------------------------------------------------------------</code></pre>
 
 
-<h3 id="starting-webapps-from-command-line">Starting webapps from command line</h3>
+<h2 id="deploying">Deploying</h2>
+<h3 id="system-requirements">System requirements</h3>
+<p>Following are the minimum requirements to build and deploy a SiVa webapps as a service:</p>
+<ul>
+<li>Java 8 or above Oracle JVM is supported</li>
+<li>Git version control system version 1.8 or above is recommended</li>
+<li>Minimum 2 GB of RAM. Recommended at least 4 GB of RAM</li>
+<li>Minimum 1 processor core</li>
+<li>Open internet connection</li>
+<li>1GB of free disk space</li>
+<li>Supported operating system is Ubuntu 14.04 LTS</li>
+</ul>
+<h3 id="option-1-starting-webapps-from-command-line">OPTION 1 - starting webapps from command line</h3>
 <p>SiVa project compiles <strong>3 fat executable JAR</strong> files that You can run after successfully building the
 project by issuing below commands:</p>
 <p><strong>First start SiVa REST and SOAP web service</strong></p>
@@ -439,7 +453,7 @@ Easiest way to test out validation is run SiVa demo application.</p>
 
 
 <p>Now point Your browser to URL: <a href="http://localhost:9000">http://localhost:9000</a></p>
-<h3 id="running-webapps-as-systemd-services">Running webapps as systemd services</h3>
+<h3 id="option-2-running-webapps-as-systemd-services">OPTION 2 - running webapps as systemd services</h3>
 <p>Maven build generates executable JAR files. This means web container and all its dependencies are package inside
 single JAR file. It makes a lot easier to deploy it into servers.</p>
 <p>Easiest option to setup SiVa is as <code>systemd</code> service in Ubuntu servers.</p>
@@ -508,84 +522,268 @@ Jul 20 03:00:01 siva siva-webapp.jar[15965]: 20.07.2016 03:00:01.450 INFO  [pool
 Jul 20 03:00:01 siva siva-webapp.jar[15965]: 20.07.2016 03:00:01.450 INFO  [pool-3-thread-1] [e.e.e.dss.tsl.service.TSLRepository.sync</code></pre>
 
 
-<h3 id="installing-httpie">Installing HTTPIE</h3>
-<p><code>httpie</code> is more user friendly version of <code>curl</code> and we will use to verify that SiVa was installed
+<h3 id="option-3-deploy-webapps-as-war-files-tomcat-setup-for-legacy-systems">OPTION 3  - deploy webapps as war files (Tomcat setup for legacy systems)</h3>
+<blockquote>
+<p><strong>NOTE 1</strong>: We do not recommend using WAR deployment option because lack of testing done on different servlet
+containers also possible container application libraries conflicts</p>
+<p><strong>NOTE 2</strong>: Each SiVa service <strong>must</strong> be deployed to separate instance of Tomcat to avoid Java JAR library version
+conflicts.</p>
+</blockquote>
+<p>First we need to download Tomcat web servlet container as of the writing latest version available in version 7 branch is 7.0.77. We will download it with <code>wget</code></p>
+<pre class="codehilite"><code class="language-bash">wget http://www-eu.apache.org/dist/tomcat/tomcat-7/v7.0.70/bin/apache-tomcat-7.0.70.tar.gz</code></pre>
+
+
+<p>Unpack it somewhere:</p>
+<pre class="codehilite"><code class="language-bash">tar xf apache-tomcat-7.0.70.tar.gz</code></pre>
+
+
+<p>Now we should build the WAR file. We have created helper script with all the correct Maven parameters.</p>
+<pre class="codehilite"><code class="language-bash">./war-build.sh</code></pre>
+
+
+<blockquote>
+<p><strong>NOTE</strong> The script will skip running the integration tests when building WAR files</p>
+</blockquote>
+<p>Final steps would be copying built WAR file into Tomcat <code>webapps</code> directory and starting the servlet container.</p>
+<pre class="codehilite"><code class="language-bash">cp siva-parent/siva-webapp/target/siva-webapp-2.0.2-SNAPSHOT.war apache-tomcat-7.0.70/webapps
+./apache-tomcat-7.0.77/bin/catalina.sh run</code></pre>
+
+
+<blockquote>
+<p><strong>IMPORTANT</strong> siva-webapp on startup creates <code>etc</code> directory where it copies the TSL validaiton certificates
+<code>siva-keystore.jks</code>. Default location for this directory is application root or <code>$CATALINA_HOME</code>. To change
+this default behavior you should set environment variable <code>DSS_DATA_FOLDER</code></p>
+</blockquote>
+<h3 id="how-to-set-war-deployed-siva-applicationproperties">How-to set WAR deployed SiVa <code>application.properties</code></h3>
+<p>SiVa override properties can be set using <code>application.properties</code> file. The file can locate anywhare in the host system.
+To make properties file accessible for SiVa you need to create or edit <code>setenv.sh</code> placed inside <code>bin</code> directory.</p>
+<p>Contents of the <code>setenv.sh</code> file should look like:</p>
+<pre class="codehilite"><code class="language-bash">export CATALINA_OPTS=&quot;-Dspring.config.location=file:/path/to/application.properties&quot;</code></pre>
+
+
+<h3 id="smoke-testing-your-deployed-system">Smoke testing your deployed system</h3>
+<p><strong>Step 1</strong>. Install HTTPIE
+<code>httpie</code> is more user friendly version of <code>curl</code> and we will use to verify that SiVa was installed
 and started correctly on our server.</p>
-<h3 id="ubuntu-1604">Ubuntu 16.04</h3>
-<p>On Ubuntu You can install it using <code>apt</code> package manager:</p>
-<pre class="codehilite"><code class="language-bash">sudo apt-get install -y httpie</code></pre>
-
-
-<h3 id="mac-os-x">Mac OS X</h3>
-<p>On Mac it's strongly recommended to install it using package manager like Homebrew by issuing
-belwo command:</p>
-<pre class="codehilite"><code class="language-bash">brew install httpie</code></pre>
-
-
-<h4 id="windows">Windows</h4>
-<p>On Windows there is no prebuilt package that can be installed but <code>httpie</code> installation instruction in
-<a href="http://www.hanselman.com/blog/InstallingHTTPIEHTTPForHumansOnWindowsGreatForASPNETWebAPIAndRESTfulJSONServices.aspx">Scott Hanselmans blog post</a></p>
-<h3 id="cross-platform">Cross platform</h3>
-<p>Alternative option if You have Python and its package manager <code>pip</code> installed. Then You can issue
-below command:</p>
+<p>If you have Python and its package manager <code>pip</code> installed. Then You can issue below command:</p>
 <pre class="codehilite"><code class="language-bash">pip install httpie</code></pre>
 
 
-<h3 id="verify-digitally-signed-file">Verify digitally signed file</h3>
-<p>After You have successfully installed HTTPIE. Then we need to download sample JSON request file with below
-command</p>
-<pre class="codehilite"><code class="language-bash">http --download https://raw.githubusercontent.com/open-eid/SiVa/develop/build-helpers/bdoc_pass.json</code></pre>
+<p><strong>Step 2</strong>. Download a sample JSON request file.</p>
+<pre class="codehilite"><code class="language-bash">http --download https://raw.githubusercontent.com/open-eid/SiVa/develop/build-helpers/sample-requests/bdoc_pass.json</code></pre>
 
 
-<p>After successful download issue below command in same directory where You downloaded the file using
-the above command.</p>
+<p><strong>Step 3</strong>. After successful download issue below command in same directory where you downloaded the file using
+the command below.</p>
 <pre class="codehilite"><code class="language-bash">http POST http://10.211.55.9:8080/validate &lt; bdoc_pass.json</code></pre>
 
 
-<p>Output of this command should look like below screenshot. Look for <code>signatureCount</code> and
+<p><strong>Step 4</strong>. Verify the output. The output of previous command should look like below screenshot. Look for <code>signatureCount</code> and
 <code>validSignatureCount</code> they <strong>must</strong> be equal.</p>
 <p><img alt="HTTPIE output validation" src="../../../img/siva/siva-output.png" /></p>
-<h3 id="siva-configuration-overrides">SiVa configuration overrides</h3>
-<p>All override configuration properties</p>
-<pre class="codehilite"><code class="language-properties"># BDOC validation service override properties
-siva.bdoc.digidoc4JConfigurationFile=/path/to/digidoc4j.yml
-siva.bdoc.signaturePolicy.defaultPolicy=policy_name
-siva.bdoc.signaturePolicy.policies.pol_v1=/path/to/policy1.xml
-siva.bdoc.signaturePolicy.policies.pol_v2=/path/to/policy2.xml
+<hr />
+<h2 id="custom-configuration">Custom configuration</h2>
+<p>All SiVa webapps have been designed to run with predetermined defaults after building and without additional configuration.
+However, all the properties can be overridden on the service or embedded web server level, if necessary.</p>
+<p>By default, the service loads it's global configuration from the application.yml file that is packaged inside the jar file.
+Default configuration parameters can be overridden by providing custom application.yml in the <a href="http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html#boot-features-external-config-application-property-files">following locations</a>, or using command line parameters or by using other <a href="http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html">externalized configuration methods</a> methods.</p>
+<p>See the reference list of common application properties <a href="http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html">provided by Spring boot</a></p>
+<p>For example, to configure the embedded Undertow web server inside a fat jar to run on different port (default is 8080), change the <strong>server.port</strong> following property:</p>
+<pre class="codehilite"><code class="language-bash">server.port=8080</code></pre>
 
-# DDOC validation service override properties
-siva.ddoc.jdigidocConfigurationFile=/path/to/jdigidoc.cfg
-siva.ddoc.signaturePolicy.defaultPolicy=policy_name
-siva.ddoc.signaturePolicy.policies.pol_v1=/path/to/policy1.xml
-siva.ddoc.signaturePolicy.policies.pol_v2=/path/to/policy2.xml
 
-# PadES validation service override properties
-siva.pdf.signaturePolicy.defaultPolicy=policy_name
-siva.pdf.signaturePolicy.policies.pol_v1=/path/to/policy1.xml
-siva.pdf.signaturePolicy.policies.pol_v2=/path/to/policy2.xml
+<h3 id="logging">Logging</h3>
+<p>Logging functionality is handled by the SLF4J logging facade and on top of the Logback framework. As a result, logging can be configured via the standard Logback configuration file through Spring boot.</p>
+<pre class="codehilite"><code class="language-bash">logging.config=/path/to/logback.xml</code></pre>
 
-# X-road validation service settings
-siva.xroad.validation.service.configurationDirectoryPath=''
-siva.xroad.signaturePolicy.defaultPolicy=policy_name
-siva.xroad.signaturePolicy.policies.pol_v1=/path/to/policy1.xml
-siva.xroad.signaturePolicy.policies.pol_v2=/path/to/policy2.xml
 
-# TSL trusted certificaes keystore settings
-siva.keystore.type=JKS
-siva.keystore.filename=/path/to/siva-keystore.jks
-siva.keystore.password=siva-keystore-password
-
-# SiVa Proxy Settings
-siva.proxy.xroadUrl=http://localhost:8081
-
-siva.statistics.google-analytics.url=http://www.google-analytics.com/batch
-siva.statistics.google-analytics.trackingId=UA-83206619-1
-siva.statistics.google-analytics.dataSourceName=SiVa
-
-siva.tsl.loader.loadFromCache=false
-siva.tsl.loader.url=https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml
-siva.tsl.loader.code=EU
-siva.tsl.loader.schedulerCron=0 0 3 * * ?</code></pre>
+<p>By default, logging works on the INFO level and logs are directed to the system console. Additional logging appenders can be added (consult logback documentation for more details)</p>
+<p>See the reference list of other common logging properties <a href="http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html">provided by Spring boot</a></p>
+<h3 id="updating-tsl">Updating TSL</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>siva.tsl.loader.loadFromCache</strong></td>
+<td>A boolean value that determines, whether the disk cache is used to load TLS <ul><li>Default: <strong>false</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.tsl.loader.url</strong></td>
+<td>A url value that points to the external TSL <ul><li>Default: <strong>https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.tsl.loader.code</strong></td>
+<td>Sets the LOTL code in DSS <ul><li>Default: <strong>EU</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.tsl.loader.schedulerCron</strong></td>
+<td>A string in a <a href="http://www.manpagez.com/man/5/crontab/">Crontab expression format</a> that defines the interval at which the TSL renewal process is started. The default is 03:00 every day (local time) <ul><li>Default: <strong>0 0 3 * * ?</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.keystore.type</strong></td>
+<td>Keystore type. Keystore that contains public keys to verify the signed TSL <ul><li>Default: <strong>JKS</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.keystore.filename</strong></td>
+<td>Keystore filename. Keystore that contains public keys to verify the signed TSL <ul><li>Default: <strong>siva-keystore.jks</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.keystore.password</strong></td>
+<td>Keystore password. Keystore that contains public keys to verify the signed TSL <ul><li>Default: <strong>siva-keystore-password</strong></li></ul></td>
+</tr>
+</tbody>
+</table>
+<h3 id="forward-to-custom-x-road-webapp-instance">Forward to custom X-road webapp instance</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>siva.proxy.xroadUrl</strong></td>
+<td>A URL where the X-Road validation requests are forwarded <ul><li>Default: <strong>http://localhost:8081</strong></li></ul></td>
+</tr>
+</tbody>
+</table>
+<h3 id="collecting-statistics-with-google-analytics">Collecting statistics with Google Analytics</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>siva.statistics.google-analytics.enabled</strong></td>
+<td>Enables/disables the service <ul><li>Default: <strong>false</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.statistics.google-analytics.url</strong></td>
+<td>Statistics endpoint URL <ul><li>Default: <strong>http://www.google-analytics.com/batch</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.statistics.google-analytics.trackingId</strong></td>
+<td>The Google Analytics tracking ID <ul><li>Default: <strong>UA-83206619-1</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.statistics.google-analytics.dataSourceName</strong></td>
+<td>Descriptive text of the system <ul><li>Default: <strong>SiVa</strong></li></ul></td>
+</tr>
+</tbody>
+</table>
+<h3 id="bdoc-validation">BDOC validation</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>siva.bdoc.digidoc4JConfigurationFile</strong></td>
+<td>Path to Digidoc4j configuration override <ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.bdoc.signaturePolicy.defaultPolicy</strong></td>
+<td><ul><li>Default: <strong>policy_name</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.bdoc.signaturePolicy.policies.pol_v1</strong></td>
+<td><ul><li>Default: <strong>/path/to/policy1.xml</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.bdoc.signaturePolicy.policies.pol_v2</strong></td>
+<td><ul><li>Default: <strong>/path/to/policy2.xml</strong></li></ul></td>
+</tr>
+</tbody>
+</table>
+<h3 id="ddoc-validation">DDOC validation</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>siva.ddoc.jdigidocConfigurationFile</strong></td>
+<td>Path to JDigidoc configuration file. Determines the Jdigidoc configuration parameters (see <a href="https://github.com/open-eid/jdigidoc/blob/master/doc/SK-JDD-PRG-GUIDE.pdf">JDigidoc manual</a> for details.<ul><li>Default: <strong>/siva-jdigidoc.cfg</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.ddoc.signaturePolicy.defaultPolicy</strong></td>
+<td><ul><li>Default: <strong>policy_name</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.ddoc.signaturePolicy.policies.pol_v1</strong></td>
+<td><ul><li>Default: <strong>/path/to/policy1.xml</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.ddoc.signaturePolicy.policies.pol_v2</strong></td>
+<td><ul><li>Default: <strong>/path/to/policy2.xml</strong></li></ul></td>
+</tr>
+</tbody>
+</table>
+<h3 id="pades-validation">PadES validation</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>siva.pdf.signaturePolicy.defaultPolicy</strong></td>
+<td><ul><li>Default: <strong>policy_name</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.pdf.signaturePolicy.policies.pol_v1</strong></td>
+<td><ul><li>Default: <strong>/path/to/policy1.xml</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.pdf.signaturePolicy.policies.pol_v2</strong></td>
+<td><ul><li>Default: <strong>/path/to/policy2.xml</strong></li></ul></td>
+</tr>
+</tbody>
+</table>
+<h3 id="x-road-validation">X-road validation</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>siva.xroad.validation.service.configurationDirectoryPath</strong></td>
+<td>Directory that contains the certs of approved CA's, TSA's and list of members <ul><li>Default: <strong>/verificationconf</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.xroad.signaturePolicy.defaultPolicy</strong></td>
+<td><ul><li>Default: <strong>policy_name</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.xroad.signaturePolicy.policies.pol_v1</strong></td>
+<td><ul><li>Default: <strong>/path/to/policy1.xml</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.xroad.signaturePolicy.policies.pol_v2</strong></td>
+<td><ul><li>Default: <strong>/path/to/policy2.xml</strong></li></ul></td>
+</tr>
+</tbody>
+</table>
           <aside class="copyright" role="note">
             
             Documentation built with

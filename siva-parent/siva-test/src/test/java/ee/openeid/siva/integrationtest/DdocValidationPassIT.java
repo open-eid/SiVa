@@ -40,7 +40,7 @@ public class DdocValidationPassIT extends SiVaRestTests{
      *
      * File: SK-XML1.0.ddoc
      */
-    @Test @Ignore //TODO:  VAL-238 Travis fails the test, although in local machine it passes.
+    @Test @Ignore //TODO:  https://github.com/open-eid/SiVa/issues/11
     public void ddocValidMultipleSignaturesV1_0() {
         assertAllSignaturesAreValid(postForReport("SK-XML1.0.ddoc"));
     }
@@ -314,7 +314,7 @@ public class DdocValidationPassIT extends SiVaRestTests{
      * File: SK-XML1.0_hashcode.ddoc
      *
      */
-    @Test @Ignore
+    @Test @Ignore //TODO: this test fails in Travis. https://github.com/open-eid/SiVa/issues/11
     public void ddocV1_0HashcodeShouldPass() {
         post(validationRequestFor("SK-XML1_0_hashcode.ddoc"))
                 .then()

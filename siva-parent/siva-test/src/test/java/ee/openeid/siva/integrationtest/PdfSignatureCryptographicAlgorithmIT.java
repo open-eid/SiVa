@@ -92,7 +92,17 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      */
     @Test @Ignore //TODO: current test file's signature doesn't contain ocsp
     public void documentSignedWithSha256EcdsaAlgoShouldPass() {
-        assertAllSignaturesAreValid(postForReport("hellopades-ecdsa.pdf"));
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-ecdsa.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "hellopades-ecdsa.pdf", "pdf", ""))
+                .then()
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -144,7 +154,7 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      *
      * File: hellopades-lt-sha256-rsa1024.pdf
      */
-    @Test @Ignore //TODO: Need new test file as the cert has expired
+    @Test
     public void documentSignedWithSha256Rsa1024AlgoShouldPass() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-sha256-rsa1024.pdf"));
         post(validationRequestWithValidKeys(encodedString, "hellopades-lt-sha256-rsa1024.pdf", "pdf", ""))

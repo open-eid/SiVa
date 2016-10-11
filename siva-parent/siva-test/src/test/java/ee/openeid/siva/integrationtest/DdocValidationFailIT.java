@@ -402,7 +402,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * File: opensc-error(1.2).ddoc
      */
-    @Test @Ignore //TODO: VAL-310 This testfile requires TEST-SK OCSP RESPONDER 2005 certification
+    @Test @Ignore //TODO: This testfile requires TEST-SK OCSP RESPONDER 2005 certification to run. Test certs are not added by default and have to be added manually.
     public void ddocOcspStatusRevoked() {
         setTestFilesDirectory("ddoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("opensc-error(1.2).ddoc"));
@@ -423,19 +423,19 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * Title: Ddoc XML namespace error in container
      *
-     * Expected Result: The document should fail the validation
+     * Expected Result: The document should pass with warning
      *
      * File: ns6t3cp7.ddoc
      */
-    @Test @Ignore //TODO: VAL-280 maps this error as a warning so this container should now pass with warning, digidoc3 client also shows valid with warning
+    @Test
     public void ddocNamespaceErrorShouldFail() {
         setTestFilesDirectory("ddoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("ns6t3cp7.ddoc"));
         post(validationRequestWithValidKeys(encodedString, "ns6t3cp7.ddoc", "ddoc", ""))
                 .then()
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].errors[0].content", Matchers.is("Bad digest for DataFile: D0 alternate digest matches!"))
-                .body("validSignaturesCount", Matchers.is(0))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].warnings[0].description", Matchers.is("Bad digest for DataFile: D0 alternate digest matches!"))
+                .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
     @Override

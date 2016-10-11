@@ -355,24 +355,6 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(2));
     }
 
-    /**
-     * TestCaseID: PDF-BaselineProfile-12
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
-     * Title: PDF document signed with multiple signers parallel signature
-     *
-     * Expected Result: Document with parallel signatures should fail
-     *
-     * File: hellopades-lt1-lt2-parallel3.pdf
-     */
-    @Test @Ignore //TODO: proper test file is needed!
-    public void documentSignedWithMultipleSignersParallelSignature() {
-        assertAllSignaturesAreInvalid(postForReport("hellopades-lt1-lt2-parallel3.pdf"));
-    }
-
     @Override
     protected String getTestFilesDirectory() {
         return testFilesDirectory;

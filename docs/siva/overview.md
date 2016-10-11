@@ -1,6 +1,6 @@
 <!--# SiVa overview-->
 
-## SiVa overview
+## What is SiVa?
 
 SiVa (Signature Validation) web service
 is continued development of PDF Validation web service. Service provides

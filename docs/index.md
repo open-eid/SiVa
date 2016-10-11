@@ -34,7 +34,3 @@ SiVa architecture document will cover:
   into production
 * [**Quality Assurance**](siva/qa_strategy) - overview of quality assurance strategy and testing
 
-## Download documentation
-
-* [**Download SiVa documentation as PDF**](http://open-eid.github.io/SiVa/pdf-files/siva.pdf)
-

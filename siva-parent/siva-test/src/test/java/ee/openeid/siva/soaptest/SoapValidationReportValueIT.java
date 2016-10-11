@@ -118,14 +118,13 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
      *
      */
-    @Ignore //TODO: VAL-331 changed constraint for polv1 and added QC qualifiers to test CA-s. New AdES file is needed.
     @Test
     public void SoapBdocCorrectValuesArePresentValidLtSignatureAdes() {
         setTestFilesDirectory("bdoc/test/timemark/");
         Document report = extractReportDom(post(validationRequestForDocument("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc")).andReturn().body().asString());
         assertEquals("validSignaturesCount should equal with signaturesCount", getQualifiedReportFromDom(report).getValidSignaturesCount(),getQualifiedReportFromDom(report).getSignaturesCount());
         assertEquals("SignatureFormat should match expected", "XAdES_BASELINE_LT_TM", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSignatureFormat());
-        assertEquals("Indication should match expected", "TOTAL-PASSED", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getIndication());
+        assertEquals("Indication should match expected", "TOTAL-PASSED", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getIndication().value());
         assertTrue("There should be no subIndication", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSubIndication().isEmpty());
         assertEquals("SignatureLevel should match expected", "AdES", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSignatureLevel());
         assertEquals("SignatureScopes should match expected", "FullSignatureScope", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
@@ -149,14 +148,14 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      * File: 23200_weakdigest-wrong-nonce.asice
      *
      */
-    @Test @Ignore //TODO: VAL-242 Subindication is empty although in case of failure it is expected to have value. New Adesqc file may be needed
+    @Test
     public void SoapBdocCorrectValuesArePresentValidLtSignatureAdesqc() {
         setTestFilesDirectory("bdoc/test/timemark/");
         Document report = extractReportDom(post(validationRequestForDocument("23200_weakdigest-wrong-nonce.asice")).andReturn().body().asString());
         assertTrue("validSignaturesCount should be zero", getQualifiedReportFromDom(report).getValidSignaturesCount()== 0);
         assertEquals("SignatureFormat should match expected", "XAdES_BASELINE_LT_TM", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSignatureFormat());
         assertEquals("Indication should match expected", "TOTAL-FAILED", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getIndication().value());
-        assertEquals("SubIndication should match expected", "ReplaceWithCorrectValue", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSubIndication());
+        assertEquals("SubIndication should match expected", "", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSubIndication());
         assertEquals("SignatureLevel should match expected", "AdESqc", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSignatureLevel());
         assertEquals("SignatureScopes should match expected", "FullSignatureScope", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
         assertTrue("Warnings should be empty", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getWarnings().getWarning().isEmpty());
@@ -207,7 +206,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      * File: SK-XML1.0.ddoc
      *
      */
-    @Test @Ignore //TODO: VAL-238 Travis fails the test, although in local machine it passes
+    @Test @Ignore //TODO: https://github.com/open-eid/SiVa/issues/11
     public void SoapDdocCorrectValuesArePresentV1_0() {
         setTestFilesDirectory("ddoc/live/timemark/");
         Document report = extractReportDom(post(validationRequestForDocument("SK-XML1.0.ddoc")).andReturn().body().asString());
@@ -352,14 +351,14 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      * File: hellopades-pades-b-sha256-auth.pdf
      *
      */
-    @Test @Ignore //TODO: VAL-242
+    @Test
     public void SoapPdfCorrectValuesArePresentInvalidBaselineBSignature() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         Document report = extractReportDom(post(validationRequestForDocument("hellopades-pades-b-sha256-auth.pdf")).andReturn().body().asString());
         assertTrue("validSignaturesCount should be zero", getQualifiedReportFromDom(report).getValidSignaturesCount()==0);
         assertEquals("SignatureFormat should match expected", "PAdES_BASELINE_B", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSignatureFormat());
         assertEquals("Indication should match expected", "TOTAL-FAILED", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getIndication().value());
-        assertEquals("SubIndication should match expected", "ReplaceWithCorrectValue", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSubIndication());
+        assertEquals("SubIndication should match expected", "", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSubIndication());
         assertEquals("SignatureLevel should match expected", "QES", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSignatureLevel());
         assertEquals("SignatureScopes should match expected", "FullSignatureScope", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
         assertTrue("Warnings should be empty", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getWarnings().getWarning().isEmpty());
@@ -381,7 +380,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      * File: xroad-simple.asice
      *
      */
-    @Test @Ignore //TODO: VAL-315
+    @Test @Ignore //TODO: https://github.com/open-eid/SiVa/issues/25
     public void SoapXroadCorrectValuesArePresentValidSimpleSignature() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));

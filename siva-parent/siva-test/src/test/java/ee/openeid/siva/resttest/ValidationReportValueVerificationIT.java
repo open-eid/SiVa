@@ -131,17 +131,18 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
-     * Title: Verification of values in Validation Report XAdES_BASELINE_LT, AdES, FullSignatureScope, warning
+     * Title: Verification of values in Validation Report XAdES_BASELINE_LT, AdES, FullSignatureScope
      *
      * Expected Result: All required elements are present and meet the expected values.
      *
      * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
      *
      */
-    @Test @Ignore //TODO: this is not proper AdES!
+    @Test
     public void bdocCorrectValuesArePresentValidLtSignatureAdesWarning() {
         setTestFilesDirectory("bdoc/test/timemark/");
-        post(validationRequestFor("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc"))
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc"));
+        post(validationRequestWithValidKeys(encodedString, "23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc", "bdoc", VALID_SIGNATURE_POLICY_1))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
                 .body("signatures[0].id", Matchers.is("S0"))
@@ -155,7 +156,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
                 .body("signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
                 .body("signatures[0].claimedSigningTime", Matchers.is("2014-07-11T14:10:07Z"))
-                .body("signatures[0].warnings[0].description", Matchers.is("The certificate is not supported by SSCD!"))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2011-10-15T14:59:35Z"))
                 .body("signatureForm", Matchers.is("ASiC_E"))
                 .body("documentName", Matchers.is("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc"))
@@ -190,7 +191,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signatures[0].signatureLevel", Matchers.is("AdESqc"))
                 .body("signatures[0].signedBy", Matchers.is("ŽAIKOVSKI,IGOR,37101010021"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is("")) //TODO: VAL-242
+                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].errors[0].content", Matchers.is("Nonce is invalid"))
                 .body("signatures[0].signatureScopes[0].name", Matchers.is("test.txt"))
                 .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
@@ -219,7 +220,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      * File: Baltic MoU digital signing_EST_LT_LV.bdoc
      *
      */
-    @Test //@Ignore//TODO: VAL-244 was found with Valid_IDCard_MobID_signatures.bdoc file in addition to this file.
+    @Test
     public void bdocAllElementsArePresentValidMultipleSignatures() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Baltic MoU digital signing_EST_LT_LV.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "Baltic MoU digital signing_EST_LT_LV.bdoc", "bdoc", VALID_SIGNATURE_POLICY_1))
@@ -256,31 +257,32 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * Expected Result: All required elements are present according to BdocDocSimpleReportSchema.json
      *
-     * File: test1-bdoc-unknown.bdoc
+     * File: SS-4_teadmataCA.4.asice
      *
      */
-    @Test @Ignore //TODO: Need a testfile with indeterminate status. With new DSS version indeterminate seems to be changed to total fail.
+    @Test
     public void bdocAllElementsArePresentIndeterminateSignature() {
-        post(validationRequestFor("test1-bdoc-unknown.bdoc"))
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("SS-4_teadmataCA.4.asice"));
+        post(validationRequestWithValidKeys(encodedString, "SS-4_teadmataCA.4.asice", "bdoc", VALID_SIGNATURE_POLICY_1))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
                 .body("signatures[0].id", Matchers.is("S0"))
-                .body("signatures[0].signatureFormat", Matchers.is(""))
-                .body("signatures[0].signatureLevel", Matchers.is(""))
-                .body("signatures[0].signedBy", Matchers.is(""))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].signatureLevel", Matchers.is("AdES"))
+                .body("signatures[0].signedBy", Matchers.is("signer1"))
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors", Matchers.hasSize(0))
-                .body("signatures[0].signatureScopes[0].name", Matchers.is(""))
+                .body("signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
+                .body("signatures[0].errors[0].content", Matchers.is("The certificate chain for signature is not trusted, there is no trusted anchor."))
+                .body("signatures[0].signatureScopes[0].name", Matchers.is("test1.txt"))
                 .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
                 .body("signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
-                .body("signatures[0].claimedSigningTime", Matchers.is(""))
-                .body("signatures[0].warnings[0].description", Matchers.is(""))
-                .body("signatures[0].info.bestSignatureTime", Matchers.is(""))
+                .body("signatures[0].claimedSigningTime", Matchers.is("2013-10-11T08:15:47Z"))
+                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2013-10-11T08:15:47Z"))
                 .body("signatureForm", Matchers.is("ASiC_E"))
-                .body("documentName", Matchers.is(""))
-                .body("validSignaturesCount", Matchers.is(3))
-                .body("signaturesCount", Matchers.is(3));
+                .body("documentName", Matchers.is("SS-4_teadmataCA.4.asice"))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -594,10 +596,10 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      * File: test1-ddoc-unknown.ddoc
      *
      */
-    @Test @Ignore //TODO: We are getting total-fail on all the files we expect to be indeterminate
+    @Test @Ignore //TODO: https://github.com/open-eid/SiVa/issues/15
     public void ddocAllElementsArePresentIndeterminateSignature() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestFor("test1-ddoc-unknown.ddoc"))
+        post(validationRequestFor("Belgia_kandeavaldus_LIV.ddoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"))
                 .body("signatures[0].id", Matchers.is("S0"))

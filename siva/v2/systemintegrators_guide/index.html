@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="no-js ie6"><![endif]-->
+<!--[if IE 7 ]><html class="no-js ie7"><![endif]-->
+<!--[if IE 8 ]><html class="no-js ie8"><![endif]-->
+<!--[if IE 9 ]><html class="no-js ie9"><![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1">
+    
+      
+        <title>5.2 System integrator's guide - SiVa - Validation Service Documentation</title>
+      
+      
+      
+      
+    
+    <meta property="og:url" content="None">
+    <meta property="og:title" content="SiVa - Validation Service Documentation">
+    <meta property="og:image" content="None/../../../">
+    <meta name="apple-mobile-web-app-title" content="SiVa - Validation Service Documentation">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    
+    <link rel="shortcut icon" type="image/x-icon" href="../../../assets/images/favicon-e565ddfa3b.ico">
+    <link rel="icon" type="image/x-icon" href="../../../assets/images/favicon-e565ddfa3b.ico">
+    <style>
+      @font-face {
+      	font-family: 'Icon';
+      	src: url('../../../assets/fonts/icon.eot?52m981');
+      	src: url('../../../assets/fonts/icon.eot?#iefix52m981')
+               format('embedded-opentype'),
+      		   url('../../../assets/fonts/icon.woff?52m981')
+               format('woff'),
+      		   url('../../../assets/fonts/icon.ttf?52m981')
+               format('truetype'),
+      		   url('../../../assets/fonts/icon.svg?52m981#icon')
+               format('svg');
+      	font-weight: normal;
+      	font-style: normal;
+      }
+    </style>
+    <link rel="stylesheet" href="../../../assets/stylesheets/application-a422ff04cc.css">
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/palettes-05ab2406df.css">
+    
+    
+      
+      
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
+      <style>
+        body, input {
+          font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
+        }
+        pre, code {
+          font-family: 'Roboto Mono', 'Courier New', 'Courier', monospace;
+        }
+      </style>
+    
+    
+      <link rel="stylesheet" href="../../../override.css">
+    
+    <script src="../../../assets/javascripts/modernizr-4ab42b99fd.js"></script>
+    
+  </head>
+  
+  
+  
+  <body class="palette-primary-cyan palette-accent-light-blue">
+    
+      
+      
+    
+    <div class="backdrop">
+      <div class="backdrop-paper"></div>
+    </div>
+    <input class="toggle" type="checkbox" id="toggle-drawer">
+    <input class="toggle" type="checkbox" id="toggle-search">
+    <label class="toggle-button overlay" for="toggle-drawer"></label>
+    <header class="header">
+      <nav aria-label="Header">
+  <div class="bar default">
+    <div class="button button-menu" role="button" aria-label="Menu">
+      <label class="toggle-button icon icon-menu" for="toggle-drawer">
+        <span></span>
+      </label>
+    </div>
+    <div class="stretch">
+      <div class="title">
+        
+          <span class="path">
+            
+              
+                5. DEPLOYMENT <i class="icon icon-link"></i>
+              
+            
+          </span>
+        
+        5.2 System integrator's guide
+      </div>
+    </div>
+    
+    
+    <div class="button button-search" role="button" aria-label="Search">
+      <label class="toggle-button icon icon-search" title="Search" for="toggle-search"></label>
+    </div>
+  </div>
+  <div class="bar search">
+    <div class="button button-close" role="button" aria-label="Close">
+      <label class="toggle-button icon icon-back" for="toggle-search"></label>
+    </div>
+    <div class="stretch">
+      <div class="field">
+        <input class="query" type="text" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck>
+      </div>
+    </div>
+    <div class="button button-reset" role="button" aria-label="Search">
+      <button class="toggle-button icon icon-close" id="reset-search"></button>
+    </div>
+  </div>
+</nav>
+    </header>
+    <main class="main">
+      
+      <div class="drawer">
+        <nav aria-label="Navigation">
+  
+  <a href="https://github.com/open-eid/SiVa" class="project">
+    <div class="banner">
+      
+      <div class="name">
+        <strong>
+          SiVa - Validation Service Documentation
+          <span class="version">
+            
+          </span>
+        </strong>
+        
+          <br>
+          open-eid/SiVa
+        
+      </div>
+    </div>
+  </a>
+  <div class="scrollable">
+    <div class="wrapper">
+      
+        <ul class="repo">
+          <li class="repo-download">
+            
+            <a href="https://github.com/open-eid/SiVa/archive/master.zip" target="_blank" title="Download" data-action="download">
+              <i class="icon icon-download"></i> Download
+            </a>
+          </li>
+          <li class="repo-stars">
+            <a href="https://github.com/open-eid/SiVa/stargazers" target="_blank" title="Stargazers" data-action="star">
+              <i class="icon icon-star"></i> Stars
+              <span class="count">&ndash;</span>
+            </a>
+          </li>
+        </ul>
+        <hr>
+      
+      <div class="toc">
+        <ul>
+          
+            
+  <li>
+    <a class="" title="VERSION HISTORY" href="../../version_info/">
+      VERSION HISTORY
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="INTRODUCTION" href="../../..">
+      INTRODUCTION
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="1. DEFINITIONS" href="../../definitions/">
+      1. DEFINITIONS
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="2. BACKGROUND" href="../../overview/">
+      2. BACKGROUND
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <span class="section">3. STRUCTURE & ACTIVITIES</span>
+    <ul>
+      
+        
+  <li>
+    <a class="" title="3.1 Component model" href="../structure_and_activities/">
+      3.1 Component model
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="3.2 Use cases" href="../use_cases/">
+      3.2 Use cases
+    </a>
+    
+  </li>
+
+      
+    </ul>
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="4. INTERFACES" href="../interfaces/">
+      4. INTERFACES
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <span class="section">5. DEPLOYMENT</span>
+    <ul>
+      
+        
+  <li>
+    <a class="" title="5.1 Deployment model" href="../deployment/">
+      5.1 Deployment model
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="current" title="5.2 System integrator's guide" href="./">
+      5.2 System integrator's guide
+    </a>
+    
+      
+      
+        <ul>
+          
+            <li class="anchor">
+              <a title="System requirements" href="#system-requirements">
+                System requirements
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Building" href="#building">
+                Building
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Deploying" href="#deploying">
+                Deploying
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Custom configuration" href="#custom-configuration">
+                Custom configuration
+              </a>
+            </li>
+          
+        </ul>
+      
+    
+  </li>
+
+      
+    </ul>
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="6. QUALITY ASSURANCE" href="../../qa_strategy/">
+      6. QUALITY ASSURANCE
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="7. REFERENCES" href="../../references/">
+      7. REFERENCES
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <span class="section">APPENDICES</span>
+    <ul>
+      
+        
+  <li>
+    <a class="" title="Appendix 1 - Validation Policy" href="../../appendix/validation_policy/">
+      Appendix 1 - Validation Policy
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="Appendix 2 - Test Case Descriptions" href="../../appendix/test_cases/">
+      Appendix 2 - Test Case Descriptions
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="Appendix 3 - WSDL of SOAP Interface" href="../../appendix/wsdl/">
+      Appendix 3 - WSDL of SOAP Interface
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="Appendix 4 - Known Issues" href="../../appendix/known_issues/">
+      Appendix 4 - Known Issues
+    </a>
+    
+  </li>
+
+      
+    </ul>
+  </li>
+
+          
+        </ul>
+        
+      </div>
+    </div>
+  </div>
+</nav>
+      </div>
+      <article class="article">
+        <div class="wrapper">
+          
+            <h1>5.2 System integrator's guide</h1>
+          
+          <h3 id="system-requirements">System requirements</h3>
+<p>Following are the minimum requirements to build and deploy a SiVa webapps as a service:</p>
+<ul>
+<li>Java 8 or above Oracle JVM is supported</li>
+<li>Git version control system version 1.8 or above is recommended</li>
+<li>Minimum 2 GB of RAM. Recommended at least 4 GB of RAM</li>
+<li>Minimum 1 processor core</li>
+<li>Open internet connection</li>
+<li>1GB of free disk space</li>
+<li>Supported operating system is Ubuntu 14.04 LTS</li>
+</ul>
+<h2 id="building">Building</h2>
+<h3 id="building-siva-webapps-on-ubuntu-1604">Building SiVa webapps on Ubuntu 16.04</h3>
+<p>First we need to install Git and Java SDK 8 by issuing below commands:</p>
+<pre class="codehilite"><code class="language-bash">sudo apt-get update
+sudo apt-get install git -y
+sudo apt-get install default-jdk -y</code></pre>
+
+
+<p>Next we need to clone the SiVa Github repository:</p>
+<pre class="codehilite"><code class="language-bash">git clone https://github.com/open-eid/SiVa.git --branch develop</code></pre>
+
+
+<p>Final step is building the SiVa project using Maven Wrapper</p>
+<pre class="codehilite"><code class="language-bash">cd SiVa
+./mvnw install</code></pre>
+
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The build can take up to <strong>30 minutes</strong> because there are lot of tests that will be run through and downloading of the
+required dependencies</p>
+</div>
+<p>To verify that SiVa project built successfully look for <code>BUILD SUCCESS</code> in build compilation output last lines.
+The last lines of build output should look very similar to below image:</p>
+<pre class="codehilite"><code class="language-text">[INFO] Reactor Summary:
+[INFO]
+[INFO] SiVa Digitally signed documents validation service . SUCCESS [ 25.258 s]
+[INFO] validation-services-parent ......................... SUCCESS [  0.479 s]
+[INFO] validation-commons ................................. SUCCESS [01:45 min]
+[INFO] tsl-loader ......................................... SUCCESS [ 16.507 s]
+[INFO] PDF Validation Service ............................. SUCCESS [ 42.263 s]
+[INFO] BDOC Validation Service ............................ SUCCESS [ 58.864 s]
+[INFO] DDOC Validation Service ............................ SUCCESS [  9.929 s]
+[INFO] xroad-validation-service ........................... SUCCESS [  5.664 s]
+[INFO] SIVa webapp and other core modules ................. SUCCESS [  0.315 s]
+[INFO] SiVa validation service proxy ...................... SUCCESS [ 43.098 s]
+[INFO] siva-webapp ........................................ SUCCESS [04:06 min]
+[INFO] SiVa Sample Web application ........................ SUCCESS [04:31 min]
+[INFO] SiVa Web Service integration tests ................. SUCCESS [03:41 min]
+[INFO] siva-distribution .................................. SUCCESS [ 56.941 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 18:30 min
+[INFO] Finished at: 2016-07-22T13:40:31+00:00
+[INFO] Final Memory: 80M/250M
+[INFO] ------------------------------------------------------------------------</code></pre>
+
+
+<h2 id="deploying">Deploying</h2>
+<h3 id="option-1-starting-webapps-from-command-line">OPTION 1 - starting webapps from command line</h3>
+<p>SiVa project compiles <strong>3 fat executable JAR</strong> files that You can run after successfully building the
+project by issuing below commands:</p>
+<p><strong>First start SiVa REST and SOAP web service</strong></p>
+<pre class="codehilite"><code class="language-bash">./siva-parent/siva-webapp/target/siva-webapp-2.0.2-SNAPSHOT.jar</code></pre>
+
+
+<p><strong>Second we need to start SiVa XRoad validation service</strong></p>
+<pre class="codehilite"><code class="language-bash">./validation-services-parent/xroad-validation-service/target/xroad-validation-service-2.0.2-SNAPSHOT.jar</code></pre>
+
+
+<p>The SiVa webapp by default runs on port <strong>8080</strong> and XRoad validation service starts up on port <strong>8081</strong>.
+Easiest way to test out validation is run SiVa demo application.</p>
+<p><strong>Start SiVa Demo Application</strong></p>
+<pre class="codehilite"><code class="language-bash">./siva-parent/siva-sample-application/target/siva-sample-application-2.0.2-SNAPSHOT.jar</code></pre>
+
+
+<p>Now point Your browser to URL: <a href="http://localhost:9000">http://localhost:9000</a></p>
+<h3 id="option-2-running-webapps-as-systemd-services">OPTION 2 - running webapps as systemd services</h3>
+<p>Maven build generates executable JAR files. This means web container and all its dependencies are package inside
+single JAR file. It makes a lot easier to deploy it into servers.</p>
+<p>Easiest option to setup SiVa is as <code>systemd</code> service in Ubuntu servers.</p>
+<p>For that we first need to create service file:</p>
+<pre class="codehilite"><code class="language-bash">vim siva-webapp.service</code></pre>
+
+
+<p>Inside it we need to paste below text. You need to change few things in service setup file.</p>
+<ul>
+<li>First you <strong>must not</strong> run service as <code>root</code>. So it's strongly recommended to change line <code>User=root</code></li>
+<li>Second You can change Java JVM options by modifying the <code>JAVA_OPTS</code> inside the <code>siva-webapp.service</code> file.</li>
+<li>Also You can change the SiVa application configuration options by modifying <code>RUN_ARGS</code> section in file</li>
+</ul>
+<pre class="codehilite"><code class="language-ini">[Unit]
+Description=siva-webapp
+After=syslog.target
+
+[Service]
+User=root
+ExecStart=/var/apps/siva-webapp.jar
+Environment=JAVA_OPTS=-Xmx320m RUN_ARGS=--server.port=80
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+
+
+<p>Save and close the <code>siva-webapp.service</code> file.
+Next we need to move <code>siva-webapp-2.0.2-SNAPSHOT.jar</code> into newly created <code>/var/apps</code> directory and rename to
+JAR file to <code>siva-webapp.jar</code>. match</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The copied JAR filename must match option <code>ExecStart</code> in  <code>siva-webapp.service</code> file</p>
+</div>
+<pre class="codehilite"><code class="language-bash">sudo mkdir /var/apps
+sudo cp siva-parent/siva-webapp/target/executable/siva-webapp-2.0.2-SNAPSHOT.jar /var/apps/siva-webapp.jar</code></pre>
+
+
+<p>Next we need to copy the <code>siva-webapp.service</code> file into <code>/lib/systemd/system</code> directory.
+Then we are ready to start the <code>siva-webapp</code> service.</p>
+<pre class="codehilite"><code class="language-bash">sudo cp siva-webapp.service /lib/systemd/system
+sudo systemctl start siva-webapp</code></pre>
+
+
+<p>Final step of setting up the <code>siva-webapp</code> service is to verify that service started correctly by issuing below
+command.</p>
+<pre class="codehilite"><code class="language-bash">systemctl status siva-webapp</code></pre>
+
+
+<p>It should print out similar to below picture:</p>
+<pre class="codehilite"><code>● siva-webapp.service - siva-webapp
+   Loaded: loaded (/lib/systemd/system/siva-webapp.service; disabled; vendor preset: enabled)
+   Active: active (running) since Thu 2016-07-21 08:48:14 EDT; 1 day 2h ago
+ Main PID: 15965 (siva-webapp.jar)
+    Tasks: 34
+   Memory: 429.6M
+      CPU: 2min 5.721s
+   CGroup: /system.slice/siva-webapp.service
+           ├─15965 /bin/bash /var/apps/stage/siva-webapp.jar
+           └─15982 /usr/bin/java -Dsun.misc.URLClassPath.disableJarChecking=true -Xmx320m -jar /var/apps/stage/siva-webapp.jar
+
+Jul 20 03:00:01 siva siva-webapp.jar[15965]:         at eu.europa.esig.dss.tsl.service.TSLParser.getTslModel(TSLParser.java:143)
+Jul 20 03:00:01 siva siva-webapp.jar[15965]:         at eu.europa.esig.dss.tsl.service.TSLParser.call(TSLParser.java:129)
+Jul 20 03:00:01 siva siva-webapp.jar[15965]:         ... 5 common frames omitted
+Jul 20 03:00:01 siva siva-webapp.jar[15965]: 20.07.2016 03:00:01.450 INFO  [pool-3-thread-1] [e.e.e.dss.tsl.service.TSLRepository.sync
+Jul 20 03:00:01 siva siva-webapp.jar[15965]: 20.07.2016 03:00:01.450 INFO  [pool-3-thread-1] [e.e.e.dss.tsl.service.TSLRepository.sync</code></pre>
+
+
+<h3 id="option-3-deploy-webapps-as-war-files-tomcat-setup-for-legacy-systems">OPTION 3  - deploy webapps as war files (Tomcat setup for legacy systems)</h3>
+<blockquote>
+<p><strong>NOTE 1</strong>: We do not recommend using WAR deployment option because lack of testing done on different servlet
+containers also possible container application libraries conflicts</p>
+<p><strong>NOTE 2</strong>: Each SiVa service <strong>must</strong> be deployed to separate instance of Tomcat to avoid Java JAR library version
+conflicts.</p>
+<p><strong>NOTE 3</strong>: To limit your webapp request size (this is set automatically when deploying service as jar) one needs to configure the container manually. For example, when using <a href="http://tomcat.apache.org/tomcat-8.0-doc/config/http.html">Tomcat 7</a> or <a href="http://tomcat.apache.org/tomcat-8.0-doc/config/http.html">Tomcat 8</a> -
+the http connector parameter <code>maxPostSize</code> should be configured with the desired limit.</p>
+</blockquote>
+<p>First we need to download Tomcat web servlet container as of the writing latest version available in version 7 branch is 7.0.77. We will download it with <code>wget</code></p>
+<pre class="codehilite"><code class="language-bash">wget http://www-eu.apache.org/dist/tomcat/tomcat-7/v7.0.70/bin/apache-tomcat-7.0.70.tar.gz</code></pre>
+
+
+<p>Unpack it somewhere:</p>
+<pre class="codehilite"><code class="language-bash">tar xf apache-tomcat-7.0.70.tar.gz</code></pre>
+
+
+<p>Now we should build the WAR file. We have created helper script with all the correct Maven parameters.</p>
+<pre class="codehilite"><code class="language-bash">./war-build.sh</code></pre>
+
+
+<blockquote>
+<p><strong>NOTE</strong> The script will skip running the integration tests when building WAR files</p>
+</blockquote>
+<p>Final steps would be copying built WAR file into Tomcat <code>webapps</code> directory and starting the servlet container.</p>
+<pre class="codehilite"><code class="language-bash">cp siva-parent/siva-webapp/target/siva-webapp-2.0.2-SNAPSHOT.war apache-tomcat-7.0.70/webapps
+./apache-tomcat-7.0.77/bin/catalina.sh run</code></pre>
+
+
+<blockquote>
+<p><strong>IMPORTANT</strong> siva-webapp on startup creates <code>etc</code> directory where it copies the TSL validaiton certificates
+<code>siva-keystore.jks</code>. Default location for this directory is application root or <code>$CATALINA_HOME</code>. To change
+this default behavior you should set environment variable <code>DSS_DATA_FOLDER</code></p>
+</blockquote>
+<h3 id="how-to-set-war-deployed-siva-applicationproperties">How-to set WAR deployed SiVa <code>application.properties</code></h3>
+<p>SiVa override properties can be set using <code>application.properties</code> file. The file can locate anywhare in the host system.
+To make properties file accessible for SiVa you need to create or edit <code>setenv.sh</code> placed inside <code>bin</code> directory.</p>
+<p>Contents of the <code>setenv.sh</code> file should look like:</p>
+<pre class="codehilite"><code class="language-bash">export CATALINA_OPTS=&quot;-Dspring.config.location=file:/path/to/application.properties&quot;</code></pre>
+
+
+<h3 id="smoke-testing-your-deployed-system">Smoke testing your deployed system</h3>
+<p><strong>Step 1</strong>. Install HTTPIE
+<code>httpie</code> is more user friendly version of <code>curl</code> and we will use to verify that SiVa was installed
+and started correctly on our server.</p>
+<p>If you have Python and its package manager <code>pip</code> installed. Then You can issue below command:</p>
+<pre class="codehilite"><code class="language-bash">pip install httpie</code></pre>
+
+
+<p><strong>Step 2</strong>. Download a sample JSON request file.</p>
+<pre class="codehilite"><code class="language-bash">http --download https://raw.githubusercontent.com/open-eid/SiVa/develop/build-helpers/sample-requests/bdoc_pass.json</code></pre>
+
+
+<p><strong>Step 3</strong>. After successful download issue below command in same directory where you downloaded the file using
+the command below.</p>
+<pre class="codehilite"><code class="language-bash">http POST http://10.211.55.9:8080/validate &lt; bdoc_pass.json</code></pre>
+
+
+<p><strong>Step 4</strong>. Verify the output. The output of previous command should look like below screenshot. Look for <code>signatureCount</code> and
+<code>validSignatureCount</code> they <strong>must</strong> be equal.</p>
+<p><img alt="HTTPIE output validation" src="../../../img/siva/siva-output.png" /></p>
+<hr />
+<h2 id="custom-configuration">Custom configuration</h2>
+<p>All SiVa webapps have been designed to run with predetermined defaults after building and without additional configuration.
+However, all the properties can be overridden on the service or embedded web server level, if necessary.</p>
+<p>By default, the service loads it's global configuration from the application.yml file that is packaged inside the jar file.
+Default configuration parameters can be overridden by providing custom application.yml in the <a href="http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html#boot-features-external-config-application-property-files">following locations</a>, or using command line parameters or by using other <a href="http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html">externalized configuration methods</a> methods.</p>
+<p>See the reference list of common application properties <a href="http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html">provided by Spring boot</a></p>
+<p>For example, to configure the embedded Undertow web server inside a fat jar to run on different port (default is 8080), change the <strong>server.port</strong> following property:</p>
+<pre class="codehilite"><code class="language-bash">server.port=8080</code></pre>
+
+
+<h3 id="logging">Logging</h3>
+<p>Logging functionality is handled by the SLF4J logging facade and on top of the Logback framework. As a result, logging can be configured via the standard Logback configuration file through Spring boot.</p>
+<pre class="codehilite"><code class="language-bash">logging.config=/path/to/logback.xml</code></pre>
+
+
+<p>By default, logging works on the INFO level and logs are directed to the system console. Additional logging appenders can be added (consult logback documentation for more details)</p>
+<p>See the reference list of other common logging properties <a href="http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html">provided by Spring boot</a></p>
+<h3 id="updating-tsl">Updating TSL</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>siva.tsl.loader.loadFromCache</strong></td>
+<td>A boolean value that determines, whether the disk cache is used to load TLS <ul><li>Default: <strong>false</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.tsl.loader.url</strong></td>
+<td>A url value that points to the external TSL <ul><li>Default: <strong>https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.tsl.loader.code</strong></td>
+<td>Sets the LOTL code in DSS <ul><li>Default: <strong>EU</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.tsl.loader.schedulerCron</strong></td>
+<td>A string in a <a href="http://www.manpagez.com/man/5/crontab/">Crontab expression format</a> that defines the interval at which the TSL renewal process is started. The default is 03:00 every day (local time) <ul><li>Default: <strong>0 0 3 * * ?</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.keystore.type</strong></td>
+<td>Keystore type. Keystore that contains public keys to verify the signed TSL <ul><li>Default: <strong>JKS</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.keystore.filename</strong></td>
+<td>Keystore filename. Keystore that contains public keys to verify the signed TSL <ul><li>Default: <strong>siva-keystore.jks</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.keystore.password</strong></td>
+<td>Keystore password. Keystore that contains public keys to verify the signed TSL <ul><li>Default: <strong>siva-keystore-password</strong></li></ul></td>
+</tr>
+</tbody>
+</table>
+<h3 id="forward-to-custom-x-road-webapp-instance">Forward to custom X-road webapp instance</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>siva.proxy.xroadUrl</strong></td>
+<td>A URL where the X-Road validation requests are forwarded <ul><li>Default: <strong>http://localhost:8081</strong></li></ul></td>
+</tr>
+</tbody>
+</table>
+<h3 id="collecting-statistics-with-google-analytics">Collecting statistics with Google Analytics</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>siva.statistics.google-analytics.enabled</strong></td>
+<td>Enables/disables the service <ul><li>Default: <strong>false</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.statistics.google-analytics.url</strong></td>
+<td>Statistics endpoint URL <ul><li>Default: <strong>http://www.google-analytics.com/batch</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.statistics.google-analytics.trackingId</strong></td>
+<td>The Google Analytics tracking ID <ul><li>Default: <strong>UA-83206619-1</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.statistics.google-analytics.dataSourceName</strong></td>
+<td>Descriptive text of the system <ul><li>Default: <strong>SiVa</strong></li></ul></td>
+</tr>
+</tbody>
+</table>
+<h3 id="bdoc-validation">BDOC validation</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>siva.bdoc.digidoc4JConfigurationFile</strong></td>
+<td>Path to Digidoc4j configuration override <ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.bdoc.signaturePolicy.defaultPolicy</strong></td>
+<td><ul><li>Default: <strong>policy_name</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.bdoc.signaturePolicy.policies.pol_v1</strong></td>
+<td><ul><li>Default: <strong>/bdoc_constraint_no_type.xml</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.bdoc.signaturePolicy.policies.pol_v2</strong></td>
+<td><ul><li>Default: <strong>/bdoc_constraint_qes.xml</strong></li></ul></td>
+</tr>
+</tbody>
+</table>
+<h3 id="pades-validation">PadES validation</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>siva.pdf.signaturePolicy.defaultPolicy</strong></td>
+<td><ul><li>Default: <strong>pol_v1</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.pdf.signaturePolicy.policies.pol_v1</strong></td>
+<td><ul><li>Default: <strong>/pdf_constraint_no_type.xml</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.pdf.signaturePolicy.policies.pol_v2</strong></td>
+<td><ul><li>Default: <strong>/pdf_constraint_qes.xml</strong></li></ul></td>
+</tr>
+</tbody>
+</table>
+<h3 id="x-road-validation">X-road validation</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>siva.xroad.validation.service.configurationDirectoryPath</strong></td>
+<td>Directory that contains the certs of approved CA's, TSA's and list of members <ul><li>Default: <strong>/verificationconf</strong></li></ul></td>
+</tr>
+<tr>
+<td>&gt; <strong>NOTE</strong> Currently supports only POL_V1 as a default policy</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="ddoc-validation">DDOC validation</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>siva.ddoc.jdigidocConfigurationFile</strong></td>
+<td>Path to JDigidoc configuration file. Determines the Jdigidoc configuration parameters (see <a href="https://github.com/open-eid/jdigidoc/blob/master/doc/SK-JDD-PRG-GUIDE.pdf">JDigidoc manual</a> for details.<ul><li>Default: <strong>/siva-jdigidoc.cfg</strong></li></ul></td>
+</tr>
+</tbody>
+</table>
+          <aside class="copyright" role="note">
+            
+            Documentation built with
+            <a href="http://www.mkdocs.org" target="_blank">MkDocs</a>
+            using the
+            <a href="http://squidfunk.github.io/mkdocs-material/" target="_blank">
+              Material
+            </a>
+            theme.
+          </aside>
+          
+            <footer class="footer">
+              
+  <nav class="pagination" aria-label="Footer">
+    <div class="previous">
+      
+        <a href="../deployment/" title="5.1 Deployment model">
+          <span class="direction">
+            Previous
+          </span>
+          <div class="page">
+            <div class="button button-previous" role="button" aria-label="Previous">
+              <i class="icon icon-back"></i>
+            </div>
+            <div class="stretch">
+              <div class="title">
+                5.1 Deployment model
+              </div>
+            </div>
+          </div>
+        </a>
+      
+    </div>
+    <div class="next">
+      
+        <a href="../../qa_strategy/" title="6. QUALITY ASSURANCE">
+          <span class="direction">
+            Next
+          </span>
+          <div class="page">
+            <div class="stretch">
+              <div class="title">
+                6. QUALITY ASSURANCE
+              </div>
+            </div>
+            <div class="button button-next" role="button" aria-label="Next">
+              <i class="icon icon-forward"></i>
+            </div>
+          </div>
+        </a>
+      
+    </div>
+  </nav>
+
+            </footer>
+          
+        </div>
+      </article>
+      <div class="results" role="status" aria-live="polite">
+        <div class="scrollable">
+          <div class="wrapper">
+            <div class="meta"></div>
+            <div class="list"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script>
+      var base_url = '../../..';
+      var repo_id  = 'open-eid/SiVa';
+    </script>
+    <script src="../../../assets/javascripts/application-997097ee0c.js"></script>
+    
+    
+  </body>
+</html>

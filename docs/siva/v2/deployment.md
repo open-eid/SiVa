@@ -2,7 +2,7 @@ The deployment view of the architecture describes the various physical nodes in 
 
 ![SiVa Deployment view](../../img/siva/uml_siva_deployment_diagram.png)
 
-### Servers
+### Nodes
 
 In the following section, a description of each network node element is described in detail.
 

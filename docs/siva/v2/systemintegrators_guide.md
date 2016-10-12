@@ -1,3 +1,15 @@
+### System requirements
+
+Following are the minimum requirements to build and deploy a SiVa webapps as a service:
+
+* Java 8 or above Oracle JVM is supported
+* Git version control system version 1.8 or above is recommended
+* Minimum 2 GB of RAM. Recommended at least 4 GB of RAM
+* Minimum 1 processor core
+* Open internet connection
+* 1GB of free disk space
+* Supported operating system is Ubuntu 14.04 LTS
+
 ## Building
 
 ### Building SiVa webapps on Ubuntu 16.04
@@ -58,18 +70,6 @@ The last lines of build output should look very similar to below image:
 
 
 ## Deploying
-
-### System requirements
-
-Following are the minimum requirements to build and deploy a SiVa webapps as a service:
-
-* Java 8 or above Oracle JVM is supported
-* Git version control system version 1.8 or above is recommended
-* Minimum 2 GB of RAM. Recommended at least 4 GB of RAM
-* Minimum 1 processor core
-* Open internet connection
-* 1GB of free disk space
-* Supported operating system is Ubuntu 14.04 LTS
 
 ### OPTION 1 - starting webapps from command line
 SiVa project compiles **3 fat executable JAR** files that You can run after successfully building the
@@ -187,6 +187,9 @@ Jul 20 03:00:01 siva siva-webapp.jar[15965]: 20.07.2016 03:00:01.450 INFO  [pool
 
 > **NOTE 2**: Each SiVa service **must** be deployed to separate instance of Tomcat to avoid Java JAR library version
 > conflicts.
+
+> **NOTE 3**: To limit your webapp request size (this is set automatically when deploying service as jar) one needs to configure the container manually. For example, when using [Tomcat 7](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html) or [Tomcat 8](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html) -
+the http connector parameter `maxPostSize` should be configured with the desired limit.
 
 First we need to download Tomcat web servlet container as of the writing latest version available in version 7 branch is 7.0.77. We will download it with `wget`
 
@@ -321,31 +324,26 @@ See the reference list of other common logging properties [provided by Spring bo
 | -------- | ----------- |
 | **siva.bdoc.digidoc4JConfigurationFile** | Path to Digidoc4j configuration override <ul><li>Default: **N/A**</li></ul> |
 | **siva.bdoc.signaturePolicy.defaultPolicy** | <ul><li>Default: **policy_name**</li></ul> |
-| **siva.bdoc.signaturePolicy.policies.pol_v1** | <ul><li>Default: **/path/to/policy1.xml**</li></ul> |
-| **siva.bdoc.signaturePolicy.policies.pol_v2** | <ul><li>Default: **/path/to/policy2.xml**</li></ul> |
-
-### DDOC validation
-| Property | Description |
-| -------- | ----------- |
-|**siva.ddoc.jdigidocConfigurationFile**| Path to JDigidoc configuration file. Determines the Jdigidoc configuration parameters (see [JDigidoc manual](https://github.com/open-eid/jdigidoc/blob/master/doc/SK-JDD-PRG-GUIDE.pdf) for details.<ul><li>Default: **/siva-jdigidoc.cfg**</li></ul>|
-|**siva.ddoc.signaturePolicy.defaultPolicy**| <ul><li>Default: **policy_name**</li></ul>|
-|**siva.ddoc.signaturePolicy.policies.pol_v1**| <ul><li>Default: **/path/to/policy1.xml**</li></ul>|
-|**siva.ddoc.signaturePolicy.policies.pol_v2**| <ul><li>Default: **/path/to/policy2.xml**</li></ul>|
+| **siva.bdoc.signaturePolicy.policies.pol_v1** | <ul><li>Default: **/bdoc_constraint_no_type.xml**</li></ul> |
+| **siva.bdoc.signaturePolicy.policies.pol_v2** | <ul><li>Default: **/bdoc_constraint_qes.xml**</li></ul> |
 
 ### PadES validation
 | Property | Description |
 | -------- | ----------- |
-|**siva.pdf.signaturePolicy.defaultPolicy**| <ul><li>Default: **policy_name**</li></ul>|
-|**siva.pdf.signaturePolicy.policies.pol_v1**| <ul><li>Default: **/path/to/policy1.xml**</li></ul>|
-|**siva.pdf.signaturePolicy.policies.pol_v2**| <ul><li>Default: **/path/to/policy2.xml**</li></ul>|
-
+|**siva.pdf.signaturePolicy.defaultPolicy**| <ul><li>Default: **pol_v1**</li></ul>|
+|**siva.pdf.signaturePolicy.policies.pol_v1**| <ul><li>Default: **/pdf_constraint_no_type.xml**</li></ul>|
+|**siva.pdf.signaturePolicy.policies.pol_v2**| <ul><li>Default: **/pdf_constraint_qes.xml**</li></ul>|
 
 ### X-road validation
 | Property | Description |
 | -------- | ----------- |
 |**siva.xroad.validation.service.configurationDirectoryPath**| Directory that contains the certs of approved CA's, TSA's and list of members <ul><li>Default: **/verificationconf**</li></ul> |
-|**siva.xroad.signaturePolicy.defaultPolicy**| <ul><li>Default: **policy_name**</li></ul>|
-|**siva.xroad.signaturePolicy.policies.pol_v1**| <ul><li>Default: **/path/to/policy1.xml**</li></ul>|
-|**siva.xroad.signaturePolicy.policies.pol_v2**| <ul><li>Default: **/path/to/policy2.xml**</li></ul>|
+> **NOTE** Currently supports only POL_V1 as a default policy
+
+### DDOC validation
+| Property | Description |
+| -------- | ----------- |
+|**siva.ddoc.jdigidocConfigurationFile**| Path to JDigidoc configuration file. Determines the Jdigidoc configuration parameters (see [JDigidoc manual](https://github.com/open-eid/jdigidoc/blob/master/doc/SK-JDD-PRG-GUIDE.pdf) for details.<ul><li>Default: **/siva-jdigidoc.cfg**</li></ul>|
+
 
 

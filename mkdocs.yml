@@ -16,15 +16,18 @@ pages:
 - Version history: siva/version_info.md
 - Introduction: index.md
 - Definitions: siva/definitions.md
-- SiVa Service Overview: siva/overview.md
-- Structure and activities: siva/v2/structure_and_activities.md
+- Overview: siva/overview.md
+- Structure and activities:
+      - Component model: siva/v2/structure_and_activities.md
+      - Use cases: siva/v2/use_cases.md
 - Interfaces: siva/v2/interfaces.md
-- Deployment: siva/v2/deployment.md
+- Deployment:
+      - Deployment model: siva/v2/deployment.md
+      - System integrator's guide: siva/v2/systemintegrators_guide.md
 - Quality Assurance: siva/qa_strategy.md
 - References: siva/references.md
 - Appendixes:
       - Appendix 1 - Validation Policy: siva/appendix/validation_policy.md
-      - Appendix 2 - Validation Constraint Configuration: siva/appendix/validation_constraints.md
-      - Appendix 3 - Test Case Descriptions: siva/appendix/test_cases.md
-      - Appendix 4 - WSDL of SOAP Interface : siva/appendix/wsdl.md
-      - Appendix 5 - Known Issues : siva/appendix/known_issues.md
+      - Appendix 2 - Test Case Descriptions: siva/appendix/test_cases.md
+      - Appendix 3 - WSDL of SOAP Interface : siva/appendix/wsdl.md
+      - Appendix 4 - Known Issues : siva/appendix/known_issues.md

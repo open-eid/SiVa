@@ -1,6 +1,9 @@
+This guide describes how to integrate SiVa service with other applications.
+The following is for system integrators who need to set-up, configure, manage, and troubleshoot SiVa system.
+
 ### System requirements
 
-Following are the minimum requirements to build and deploy a SiVa webapps as a service:
+Following are the minimum requirements to build and deploy SiVa webapps as a service:
 
 * Java 8 or above Oracle JVM is supported
 * Git version control system version 1.8 or above is recommended
@@ -72,16 +75,16 @@ The last lines of build output should look very similar to below image:
 ## Deploying
 
 ### OPTION 1 - starting webapps from command line
-SiVa project compiles **3 fat executable JAR** files that You can run after successfully building the
+SiVa project compiles **3 fat executable JAR** files that you can run after successfully building the
 project by issuing below commands:
 
-**First start SiVa REST and SOAP web service**
+**First start the Siva webapp**
 
 ```bash
 ./siva-parent/siva-webapp/target/siva-webapp-2.0.2-SNAPSHOT.jar
 ```
 
-**Second we need to start SiVa XRoad validation service**
+**Second we need to start X-road validation webapp**
 
 ```bash
 ./validation-services-parent/xroad-validation-service/target/xroad-validation-service-2.0.2-SNAPSHOT.jar
@@ -90,7 +93,7 @@ project by issuing below commands:
 The SiVa webapp by default runs on port **8080** and XRoad validation service starts up on port **8081**.
 Easiest way to test out validation is run SiVa demo application.
 
-**Start SiVa Demo Application**
+**Start the Demo webapp**
 
 ```bash
 ./siva-parent/siva-sample-application/target/siva-sample-application-2.0.2-SNAPSHOT.jar
@@ -234,7 +237,6 @@ export CATALINA_OPTS="-Dspring.config.location=file:/path/to/application.propert
 ```
 
 
-
 ### Smoke testing your deployed system
 
 **Step 1**. Install HTTPIE
@@ -266,8 +268,17 @@ http POST http://10.211.55.9:8080/validate < bdoc_pass.json
 ![HTTPIE output validation](../../img/siva/siva-output.png)
 
 
+## Logging
+
+By default, logging works on the INFO level and logs are directed to the system console. Logging functionality is handled by the SLF4J logging facade and on top of the Logback framework. As a result, logging can be configured via the standard Logback configuration file through Spring boot. Additional logging appenders can be added. Consult [logback documentation](http://logback.qos.ch/documentation.html) for more details.
+
+For example, adding application.properties to classpath with the **logging.config** property
+```bash
+logging.config=/path/to/logback.xml
+```
+
 --------------------------------------------------------------------------------------
-## Common configuration
+## Configuration parameters
 
 All SiVa webapps have been designed to run with predetermined defaults after building and without additional configuration.
 However, all the properties can be overridden on the service or embedded web server level, if necessary.
@@ -287,17 +298,9 @@ server.max-http-post-size: 13981016
 
 See the reference list of all common [application properties](http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html) provided by Spring boot
 
-### Logging
+### Siva webapp parameters
 
-By default, logging works on the INFO level and logs are directed to the system console. Logging functionality is handled by the SLF4J logging facade and on top of the Logback framework. As a result, logging can be configured via the standard Logback configuration file through Spring boot. Additional logging appenders can be added. Consult [logback documentation](http://logback.qos.ch/documentation.html) for more details.
-
-```bash
-logging.config=/path/to/logback.xml
-```
-
-## Siva webapp parameters
-
-### Updating TSL
+* Updating TSL
 
 | Property | Description |
 | -------- | ----------- |
@@ -309,12 +312,14 @@ logging.config=/path/to/logback.xml
 | **siva.keystore.filename** | Keystore filename. Keystore that contains public keys to verify the signed TSL <ul><li>Default: **siva-keystore.jks**</li></ul> |
 | **siva.keystore.password** | Keystore password. Keystore that contains public keys to verify the signed TSL <ul><li>Default: **siva-keystore-password**</li></ul> |
 
-### Forward to custom X-road webapp instance
+* Forward to custom X-road webapp instance
+
 | Property | Description |
 | ------ | ----------- |
 | **siva.proxy.xroadUrl** | A URL where the X-Road validation requests are forwarded <ul><li>Default: **http://localhost:8081**</li></ul>|
 
-### Collecting statistics with Google Analytics
+* Collecting statistics with Google Analytics
+
 | Property | Description |
 | -------- | ----------- |
 | **siva.statistics.google-analytics.enabled** | Enables/disables the service <ul><li>Default: **false**</li></ul> |
@@ -322,7 +327,8 @@ logging.config=/path/to/logback.xml
 | **siva.statistics.google-analytics.trackingId** | The Google Analytics tracking ID <ul><li>Default: **UA-83206619-1**</li></ul> |
 | **siva.statistics.google-analytics.dataSourceName** | Descriptive text of the system <ul><li>Default: **SiVa**</li></ul> |
 
-### BDOC validation
+* BDOC validation
+
 | Property | Description |
 | -------- | ----------- |
 | **siva.bdoc.digidoc4JConfigurationFile** | Path to Digidoc4j configuration override <ul><li>Default: **N/A**</li></ul> |
@@ -330,34 +336,44 @@ logging.config=/path/to/logback.xml
 | **siva.bdoc.signaturePolicy.policies.pol_v1** | <ul><li>Default: **/bdoc_constraint_no_type.xml**</li></ul> |
 | **siva.bdoc.signaturePolicy.policies.pol_v2** | <ul><li>Default: **/bdoc_constraint_qes.xml**</li></ul> |
 
-### PadES validation
+* PadES validation
+
 | Property | Description |
 | -------- | ----------- |
 |**siva.pdf.signaturePolicy.defaultPolicy**| <ul><li>Default: **pol_v1**</li></ul>|
 |**siva.pdf.signaturePolicy.policies.pol_v1**| <ul><li>Default: **/pdf_constraint_no_type.xml**</li></ul>|
 |**siva.pdf.signaturePolicy.policies.pol_v2**| <ul><li>Default: **/pdf_constraint_qes.xml**</li></ul>|
 
-### DDOC validation
+* DDOC validation
+
 | Property | Description |
 | -------- | ----------- |
 |**siva.ddoc.jdigidocConfigurationFile**| Path to JDigidoc configuration file. Determines the Jdigidoc configuration parameters (see [JDigidoc manual](https://github.com/open-eid/jdigidoc/blob/master/doc/SK-JDD-PRG-GUIDE.pdf) for details.<ul><li>Default: **/siva-jdigidoc.cfg**</li></ul>|
 
-## X-road validation webapp parameters
+### X-road validation webapp parameters
 
-### X-road validation
+* X-road validation
+
 | Property | Description |
 | -------- | ----------- |
 |**siva.xroad.validation.service.configurationDirectoryPath**| Directory that contains the certs of approved CA's, TSA's and list of members <ul><li>Default: **/verificationconf**</li></ul> |
 > **NOTE** Currently supports only POL_V1 as a default policy
 
-## Demo webapp parameters
+### Demo webapp parameters
+
+* Linking to SiVa webapp
+
 | Property | Description |
 | -------- | ----------- |
 |**siva.service.serviceHost**| An HTTP URL link to the Siva webapp <ul><li>Default: **http://localhost:8080**</li></ul> |
 |**siva.service.jsonServicePath**| Service path in Siva webapp to access the REST/JSON API<ul><li>Default: **/validate**</li></ul> |
 |**siva.service.soapServicePath**| Service path in Siva webapp to access the SOAP API <ul><li>Default: **/soap/validationWebService/validateDocument**</li></ul> |
 
+## FAQ
 
+---------------------------------------------------
+Q: SiVa webapp API-s require that you specify the document type? Is it possible to detect the container/file type automatically based on the provided file.
 
+A: There is a demo webapp that provides a reference solution. See `ee.openeid.siva.sample.siva.ValidationRequestUtils` for reference.
 
-
+---------------------------------------------------

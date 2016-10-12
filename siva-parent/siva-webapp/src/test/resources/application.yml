@@ -1,0 +1,1 @@
+server.max-http-post-size: 13000000 # 10 MB (+ ~30% base64 encoding overhead)

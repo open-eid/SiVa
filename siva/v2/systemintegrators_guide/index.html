@@ -281,8 +281,26 @@
             </li>
           
             <li class="anchor">
-              <a title="Custom configuration" href="#custom-configuration">
-                Custom configuration
+              <a title="Common configuration" href="#common-configuration">
+                Common configuration
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Siva webapp parameters" href="#siva-webapp-parameters">
+                Siva webapp parameters
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="X-road validation webapp parameters" href="#x-road-validation-webapp-parameters">
+                X-road validation webapp parameters
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Demo webapp parameters" href="#demo-webapp-parameters">
+                Demo webapp parameters
               </a>
             </li>
           
@@ -581,23 +599,26 @@ the command below.</p>
 <code>validSignatureCount</code> they <strong>must</strong> be equal.</p>
 <p><img alt="HTTPIE output validation" src="../../../img/siva/siva-output.png" /></p>
 <hr />
-<h2 id="custom-configuration">Custom configuration</h2>
+<h2 id="common-configuration">Common configuration</h2>
 <p>All SiVa webapps have been designed to run with predetermined defaults after building and without additional configuration.
 However, all the properties can be overridden on the service or embedded web server level, if necessary.</p>
 <p>By default, the service loads it's global configuration from the application.yml file that is packaged inside the jar file.
 Default configuration parameters can be overridden by providing custom application.yml in the <a href="http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html#boot-features-external-config-application-property-files">following locations</a>, or using command line parameters or by using other <a href="http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html">externalized configuration methods</a> methods.</p>
-<p>See the reference list of common application properties <a href="http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html">provided by Spring boot</a></p>
 <p>For example, to configure the embedded Undertow web server inside a fat jar to run on different port (default is 8080), change the <strong>server.port</strong> following property:</p>
 <pre class="codehilite"><code class="language-bash">server.port=8080</code></pre>
 
 
+<p>Or to increase or modify the default http request limit, override the <strong>server.max-http-post-size</strong> property:</p>
+<pre class="codehilite"><code class="language-bash">server.max-http-post-size: 13981016</code></pre>
+
+
+<p>See the reference list of all common <a href="http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html">application properties</a> provided by Spring boot</p>
 <h3 id="logging">Logging</h3>
-<p>Logging functionality is handled by the SLF4J logging facade and on top of the Logback framework. As a result, logging can be configured via the standard Logback configuration file through Spring boot.</p>
+<p>By default, logging works on the INFO level and logs are directed to the system console. Logging functionality is handled by the SLF4J logging facade and on top of the Logback framework. As a result, logging can be configured via the standard Logback configuration file through Spring boot. Additional logging appenders can be added. Consult <a href="http://logback.qos.ch/documentation.html">logback documentation</a> for more details.</p>
 <pre class="codehilite"><code class="language-bash">logging.config=/path/to/logback.xml</code></pre>
 
 
-<p>By default, logging works on the INFO level and logs are directed to the system console. Additional logging appenders can be added (consult logback documentation for more details)</p>
-<p>See the reference list of other common logging properties <a href="http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html">provided by Spring boot</a></p>
+<h2 id="siva-webapp-parameters">Siva webapp parameters</h2>
 <h3 id="updating-tsl">Updating TSL</h3>
 <table>
 <thead>
@@ -729,6 +750,22 @@ Default configuration parameters can be overridden by providing custom applicati
 </tr>
 </tbody>
 </table>
+<h3 id="ddoc-validation">DDOC validation</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>siva.ddoc.jdigidocConfigurationFile</strong></td>
+<td>Path to JDigidoc configuration file. Determines the Jdigidoc configuration parameters (see <a href="https://github.com/open-eid/jdigidoc/blob/master/doc/SK-JDD-PRG-GUIDE.pdf">JDigidoc manual</a> for details.<ul><li>Default: <strong>/siva-jdigidoc.cfg</strong></li></ul></td>
+</tr>
+</tbody>
+</table>
+<h2 id="x-road-validation-webapp-parameters">X-road validation webapp parameters</h2>
 <h3 id="x-road-validation">X-road validation</h3>
 <table>
 <thead>
@@ -748,7 +785,7 @@ Default configuration parameters can be overridden by providing custom applicati
 </tr>
 </tbody>
 </table>
-<h3 id="ddoc-validation">DDOC validation</h3>
+<h2 id="demo-webapp-parameters">Demo webapp parameters</h2>
 <table>
 <thead>
 <tr>
@@ -758,8 +795,16 @@ Default configuration parameters can be overridden by providing custom applicati
 </thead>
 <tbody>
 <tr>
-<td><strong>siva.ddoc.jdigidocConfigurationFile</strong></td>
-<td>Path to JDigidoc configuration file. Determines the Jdigidoc configuration parameters (see <a href="https://github.com/open-eid/jdigidoc/blob/master/doc/SK-JDD-PRG-GUIDE.pdf">JDigidoc manual</a> for details.<ul><li>Default: <strong>/siva-jdigidoc.cfg</strong></li></ul></td>
+<td><strong>siva.service.serviceHost</strong></td>
+<td>An HTTP URL link to the Siva webapp <ul><li>Default: <strong>http://localhost:8080</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.service.jsonServicePath</strong></td>
+<td>Service path in Siva webapp to access the REST/JSON API<ul><li>Default: <strong>/validate</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.service.soapServicePath</strong></td>
+<td>Service path in Siva webapp to access the SOAP API <ul><li>Default: <strong>/soap/validationWebService/validateDocument</strong></li></ul></td>
 </tr>
 </tbody>
 </table>

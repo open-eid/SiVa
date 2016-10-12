@@ -13,20 +13,20 @@ markdown_extensions:
   - grid_tables
   - def_list
 pages:
-- Version history: siva/version_info.md
-- Introduction: index.md
-- Definitions: siva/definitions.md
-- Overview: siva/overview.md
-- Structure and activities:
-      - Component model: siva/v2/structure_and_activities.md
-      - Use cases: siva/v2/use_cases.md
-- Interfaces: siva/v2/interfaces.md
-- Deployment:
-      - Deployment model: siva/v2/deployment.md
-      - System integrator's guide: siva/v2/systemintegrators_guide.md
-- Quality Assurance: siva/qa_strategy.md
-- References: siva/references.md
-- Appendixes:
+- VERSION HISTORY: siva/version_info.md
+- INTRODUCTION: index.md
+- 1. DEFINITIONS: siva/definitions.md
+- 2. BACKGROUND: siva/overview.md
+- 3. STRUCTURE & ACTIVITIES:
+      - 3.1 Component model: siva/v2/structure_and_activities.md
+      - 3.2 Use cases: siva/v2/use_cases.md
+- 4. INTERFACES: siva/v2/interfaces.md
+- 5. DEPLOYMENT:
+      - 5.1 Deployment model: siva/v2/deployment.md
+      - 5.2 System integrator's guide: siva/v2/systemintegrators_guide.md
+- 6. QUALITY ASSURANCE: siva/qa_strategy.md
+- 7. REFERENCES: siva/references.md
+- APPENDICES:
       - Appendix 1 - Validation Policy: siva/appendix/validation_policy.md
       - Appendix 2 - Test Case Descriptions: siva/appendix/test_cases.md
       - Appendix 3 - WSDL of SOAP Interface : siva/appendix/wsdl.md

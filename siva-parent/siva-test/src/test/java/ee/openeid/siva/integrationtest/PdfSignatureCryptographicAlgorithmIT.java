@@ -78,34 +78,6 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
     }
 
     /**
-     * TestCaseID: PDF-SigCryptoAlg-3
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
-     * Title: ECDSA algorithms (PAdES Baseline LT)
-     *
-     * Expected Result: Document signed with ECDSA algorithm should pass
-     *
-     * File: hellopades-ecdsa.pdf
-     */
-    @Test @Ignore //TODO: current test file's signature doesn't contain ocsp
-    public void documentSignedWithSha256EcdsaAlgoShouldPass() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-ecdsa.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "hellopades-ecdsa.pdf", "pdf", ""))
-                .then()
-                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
-                .body("signatures[0].signatureLevel", Matchers.is("QES"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors", Matchers.hasSize(0))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
-                .body("validSignaturesCount", Matchers.is(1))
-                .body("signaturesCount", Matchers.is(1));
-    }
-
-    /**
      * TestCaseID: PDF-SigCryptoAlg-4
      *
      * TestType: Automated

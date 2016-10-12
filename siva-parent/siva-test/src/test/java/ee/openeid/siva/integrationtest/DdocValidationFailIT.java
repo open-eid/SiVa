@@ -390,31 +390,6 @@ public class DdocValidationFailIT extends SiVaRestTests{
     }
 
     /**
-     * TestCaseID: Ddoc-ValidationFail-16
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
-     * Title: Ddoc OCSP status is revoked
-     *
-     * Expected Result: The document should fail the validation
-     *
-     * File: opensc-error(1.2).ddoc
-     */
-    @Test @Ignore //TODO: This testfile requires TEST-SK OCSP RESPONDER 2005 certification to run. Test certs are not added by default and have to be added manually.
-    public void ddocOcspStatusRevoked() {
-        setTestFilesDirectory("ddoc/live/timemark/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("opensc-error(1.2).ddoc"));
-        post(validationRequestWithValidKeys(encodedString, "opensc-error(1.2).ddoc", "ddoc", ""))
-                .then()
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].errors[0].content", Matchers.is("Certificate has been revoked!"))
-                .body("validSignaturesCount", Matchers.is(0))
-                .body("signaturesCount", Matchers.is(1));
-    }
-
-    /**
      * TestCaseID: Ddoc-ValidationFail-17
      *
      * TestType: Automated

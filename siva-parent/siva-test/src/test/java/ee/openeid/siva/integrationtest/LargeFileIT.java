@@ -64,28 +64,6 @@ public class LargeFileIT extends SiVaRestTests{
     }
 
     /**
-     * TestCaseID: PDF-LargeFiles-2
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva/overview/#main-features-of-siva-validation-service
-     *
-     * Title: 23MB PDF file
-     *
-     * Expected Result: Validation is not done on files over 10MB
-     *
-     * File: hellopades-lta-no-ocsp.pdf
-     */
-    @Test @Ignore //TODO: This should return HTTP bad request?
-    public void pdf23MegabyteFileShouldBeRejected() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lta-no-ocsp.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "hellopades-lta-no-ocsp.pdf", "pdf",""))
-                .then()
-                .body("signatures[0].signatureFormat",equalTo("PAdES_BASELINE_LT"))
-                .body("documentName",equalTo("9MB_PDF.pdf"));
-    }
-
-    /**
      * TestCaseID: Bdoc-LargeFiles-1
      *
      * TestType: Automated

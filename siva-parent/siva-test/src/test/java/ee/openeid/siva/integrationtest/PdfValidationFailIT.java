@@ -88,38 +88,6 @@ public class PdfValidationFailIT extends SiVaRestTests{
     }
 
     /**
-     * TestCaseID: PDF-ValidationFail-3
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
-     * Title: The PDF-file has been signed with certificate that missing signed attribute (PAdES Baseline LT)
-     *
-     * Expected Result: PDF-file validation should fail
-     *
-     * File: missing_signing_certificate_attribute.pdf
-     */
-    @Test @Ignore //TODO: VAL-331 changed constraint for polv1 to accept only BASELINE_LT & BASELINE_LTA signature formats
-            // Since DSS 4.7.1.RC1 the given file is identified as PAdES_BASELINE_T
-
-    public void missingSignedAttributeForSigningCertificate() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("missing_signing_certificate_attribute.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "missing_signing_certificate_attribute.pdf", "pdf", VALID_SIGNATURE_POLICY_1))
-                .then()
-                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_T"))
-                .body("signatures[0].signatureLevel", Matchers.is("QES"))
-                .body("signatures[0].signedBy", Matchers.is("ALAS,RISTO,38109300259"))
-                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("signatures[0].subIndication", Matchers.is("NO_SIGNING_CERTIFICATE_FOUND"))
-                .body("signatures[0].errors[0].content", Matchers.is("The signed attribute: 'signing-certificate' is absent!"))
-                .body("signatures[0].claimedSigningTime", Matchers.is("2015-05-20T12:51:32Z"))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
-                .body("validSignaturesCount", Matchers.is(0))
-                .body("signaturesCount", Matchers.is(1));
-    }
-
-    /**
      * TestCaseID: PDF-ValidationFail-4
      *
      * TestType: Automated

@@ -23,8 +23,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     
-    <link rel="shortcut icon" type="image/x-icon" href="../../../None">
-    <link rel="icon" type="image/x-icon" href="../../../None">
+    <link rel="shortcut icon" type="image/x-icon" href="../../../assets/images/favicon-e565ddfa3b.ico">
+    <link rel="icon" type="image/x-icon" href="../../../assets/images/favicon-e565ddfa3b.ico">
     <style>
       @font-face {
       	font-family: 'Icon';
@@ -41,7 +41,7 @@
       	font-style: normal;
       }
     </style>
-    <link rel="stylesheet" href="../../../assets/stylesheets/application-0dac3e5884.css">
+    <link rel="stylesheet" href="../../../assets/stylesheets/application-a422ff04cc.css">
     
       <link rel="stylesheet" href="../../../assets/stylesheets/palettes-05ab2406df.css">
     
@@ -49,7 +49,7 @@
       
       
       
-      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
       <style>
         body, input {
           font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
@@ -281,26 +281,20 @@
             </li>
           
             <li class="anchor">
-              <a title="Common configuration" href="#common-configuration">
-                Common configuration
+              <a title="Logging" href="#logging">
+                Logging
               </a>
             </li>
           
             <li class="anchor">
-              <a title="Siva webapp parameters" href="#siva-webapp-parameters">
-                Siva webapp parameters
+              <a title="Configuration parameters" href="#configuration-parameters">
+                Configuration parameters
               </a>
             </li>
           
             <li class="anchor">
-              <a title="X-road validation webapp parameters" href="#x-road-validation-webapp-parameters">
-                X-road validation webapp parameters
-              </a>
-            </li>
-          
-            <li class="anchor">
-              <a title="Demo webapp parameters" href="#demo-webapp-parameters">
-                Demo webapp parameters
+              <a title="FAQ" href="#faq">
+                FAQ
               </a>
             </li>
           
@@ -389,8 +383,10 @@
           
             <h1>5.2 System integrator's guide</h1>
           
-          <h3 id="system-requirements">System requirements</h3>
-<p>Following are the minimum requirements to build and deploy a SiVa webapps as a service:</p>
+          <p>This guide describes how to integrate SiVa service with other applications.
+The following is for system integrators who need to set-up, configure, manage, and troubleshoot SiVa system.</p>
+<h3 id="system-requirements">System requirements</h3>
+<p>Following are the minimum requirements to build and deploy SiVa webapps as a service:</p>
 <ul>
 <li>Java 8 or above Oracle JVM is supported</li>
 <li>Git version control system version 1.8 or above is recommended</li>
@@ -451,19 +447,19 @@ The last lines of build output should look very similar to below image:</p>
 
 <h2 id="deploying">Deploying</h2>
 <h3 id="option-1-starting-webapps-from-command-line">OPTION 1 - starting webapps from command line</h3>
-<p>SiVa project compiles <strong>3 fat executable JAR</strong> files that You can run after successfully building the
+<p>SiVa project compiles <strong>3 fat executable JAR</strong> files that you can run after successfully building the
 project by issuing below commands:</p>
-<p><strong>First start SiVa REST and SOAP web service</strong></p>
+<p><strong>First start the Siva webapp</strong></p>
 <pre class="codehilite"><code class="language-bash">./siva-parent/siva-webapp/target/siva-webapp-2.0.2-SNAPSHOT.jar</code></pre>
 
 
-<p><strong>Second we need to start SiVa XRoad validation service</strong></p>
+<p><strong>Second we need to start X-road validation webapp</strong></p>
 <pre class="codehilite"><code class="language-bash">./validation-services-parent/xroad-validation-service/target/xroad-validation-service-2.0.2-SNAPSHOT.jar</code></pre>
 
 
 <p>The SiVa webapp by default runs on port <strong>8080</strong> and XRoad validation service starts up on port <strong>8081</strong>.
 Easiest way to test out validation is run SiVa demo application.</p>
-<p><strong>Start SiVa Demo Application</strong></p>
+<p><strong>Start the Demo webapp</strong></p>
 <pre class="codehilite"><code class="language-bash">./siva-parent/siva-sample-application/target/siva-sample-application-2.0.2-SNAPSHOT.jar</code></pre>
 
 
@@ -598,8 +594,14 @@ the command below.</p>
 <p><strong>Step 4</strong>. Verify the output. The output of previous command should look like below screenshot. Look for <code>signatureCount</code> and
 <code>validSignatureCount</code> they <strong>must</strong> be equal.</p>
 <p><img alt="HTTPIE output validation" src="../../../img/siva/siva-output.png" /></p>
+<h2 id="logging">Logging</h2>
+<p>By default, logging works on the INFO level and logs are directed to the system console. Logging functionality is handled by the SLF4J logging facade and on top of the Logback framework. As a result, logging can be configured via the standard Logback configuration file through Spring boot. Additional logging appenders can be added. Consult <a href="http://logback.qos.ch/documentation.html">logback documentation</a> for more details.</p>
+<p>For example, adding application.properties to classpath with the <strong>logging.config</strong> property</p>
+<pre class="codehilite"><code class="language-bash">logging.config=/path/to/logback.xml</code></pre>
+
+
 <hr />
-<h2 id="common-configuration">Common configuration</h2>
+<h2 id="configuration-parameters">Configuration parameters</h2>
 <p>All SiVa webapps have been designed to run with predetermined defaults after building and without additional configuration.
 However, all the properties can be overridden on the service or embedded web server level, if necessary.</p>
 <p>By default, the service loads it's global configuration from the application.yml file that is packaged inside the jar file.
@@ -613,13 +615,10 @@ Default configuration parameters can be overridden by providing custom applicati
 
 
 <p>See the reference list of all common <a href="http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html">application properties</a> provided by Spring boot</p>
-<h3 id="logging">Logging</h3>
-<p>By default, logging works on the INFO level and logs are directed to the system console. Logging functionality is handled by the SLF4J logging facade and on top of the Logback framework. As a result, logging can be configured via the standard Logback configuration file through Spring boot. Additional logging appenders can be added. Consult <a href="http://logback.qos.ch/documentation.html">logback documentation</a> for more details.</p>
-<pre class="codehilite"><code class="language-bash">logging.config=/path/to/logback.xml</code></pre>
-
-
-<h2 id="siva-webapp-parameters">Siva webapp parameters</h2>
-<h3 id="updating-tsl">Updating TSL</h3>
+<h3 id="siva-webapp-parameters">Siva webapp parameters</h3>
+<ul>
+<li>Updating TSL</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -658,7 +657,9 @@ Default configuration parameters can be overridden by providing custom applicati
 </tr>
 </tbody>
 </table>
-<h3 id="forward-to-custom-x-road-webapp-instance">Forward to custom X-road webapp instance</h3>
+<ul>
+<li>Forward to custom X-road webapp instance</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -673,7 +674,9 @@ Default configuration parameters can be overridden by providing custom applicati
 </tr>
 </tbody>
 </table>
-<h3 id="collecting-statistics-with-google-analytics">Collecting statistics with Google Analytics</h3>
+<ul>
+<li>Collecting statistics with Google Analytics</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -700,7 +703,9 @@ Default configuration parameters can be overridden by providing custom applicati
 </tr>
 </tbody>
 </table>
-<h3 id="bdoc-validation">BDOC validation</h3>
+<ul>
+<li>BDOC validation</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -727,7 +732,9 @@ Default configuration parameters can be overridden by providing custom applicati
 </tr>
 </tbody>
 </table>
-<h3 id="pades-validation">PadES validation</h3>
+<ul>
+<li>PadES validation</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -750,7 +757,9 @@ Default configuration parameters can be overridden by providing custom applicati
 </tr>
 </tbody>
 </table>
-<h3 id="ddoc-validation">DDOC validation</h3>
+<ul>
+<li>DDOC validation</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -765,8 +774,10 @@ Default configuration parameters can be overridden by providing custom applicati
 </tr>
 </tbody>
 </table>
-<h2 id="x-road-validation-webapp-parameters">X-road validation webapp parameters</h2>
-<h3 id="x-road-validation">X-road validation</h3>
+<h3 id="x-road-validation-webapp-parameters">X-road validation webapp parameters</h3>
+<ul>
+<li>X-road validation</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -785,7 +796,10 @@ Default configuration parameters can be overridden by providing custom applicati
 </tr>
 </tbody>
 </table>
-<h2 id="demo-webapp-parameters">Demo webapp parameters</h2>
+<h3 id="demo-webapp-parameters">Demo webapp parameters</h3>
+<ul>
+<li>Linking to SiVa webapp</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -808,6 +822,11 @@ Default configuration parameters can be overridden by providing custom applicati
 </tr>
 </tbody>
 </table>
+<h2 id="faq">FAQ</h2>
+<hr />
+<p>Q: SiVa webapp API-s require that you specify the document type? Is it possible to detect the container/file type automatically based on the provided file.</p>
+<p>A: There is a demo webapp that provides a reference solution. See <code>ee.openeid.siva.sample.siva.ValidationRequestUtils</code> for reference.</p>
+<hr />
           <aside class="copyright" role="note">
             
             Documentation built with

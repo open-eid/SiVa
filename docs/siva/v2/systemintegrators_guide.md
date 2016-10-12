@@ -267,7 +267,7 @@ http POST http://10.211.55.9:8080/validate < bdoc_pass.json
 
 
 --------------------------------------------------------------------------------------
-## Custom configuration
+## Common configuration
 
 All SiVa webapps have been designed to run with predetermined defaults after building and without additional configuration.
 However, all the properties can be overridden on the service or embedded web server level, if necessary.
@@ -275,24 +275,27 @@ However, all the properties can be overridden on the service or embedded web ser
 By default, the service loads it's global configuration from the application.yml file that is packaged inside the jar file.
 Default configuration parameters can be overridden by providing custom application.yml in the [following locations](http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html#boot-features-external-config-application-property-files), or using command line parameters or by using other [externalized configuration methods](http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html) methods.
 
-See the reference list of common application properties [provided by Spring boot](http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html)
-
 For example, to configure the embedded Undertow web server inside a fat jar to run on different port (default is 8080), change the **server.port** following property:
 ```bash
 server.port=8080
 ```
 
+Or to increase or modify the default http request limit, override the **server.max-http-post-size** property:
+```bash
+server.max-http-post-size: 13981016
+```
+
+See the reference list of all common [application properties](http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html) provided by Spring boot
+
 ### Logging
 
-Logging functionality is handled by the SLF4J logging facade and on top of the Logback framework. As a result, logging can be configured via the standard Logback configuration file through Spring boot.
+By default, logging works on the INFO level and logs are directed to the system console. Logging functionality is handled by the SLF4J logging facade and on top of the Logback framework. As a result, logging can be configured via the standard Logback configuration file through Spring boot. Additional logging appenders can be added. Consult [logback documentation](http://logback.qos.ch/documentation.html) for more details.
 
 ```bash
 logging.config=/path/to/logback.xml
 ```
 
-By default, logging works on the INFO level and logs are directed to the system console. Additional logging appenders can be added (consult logback documentation for more details)
-
-See the reference list of other common logging properties [provided by Spring boot](http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html)
+## Siva webapp parameters
 
 ### Updating TSL
 
@@ -334,16 +337,27 @@ See the reference list of other common logging properties [provided by Spring bo
 |**siva.pdf.signaturePolicy.policies.pol_v1**| <ul><li>Default: **/pdf_constraint_no_type.xml**</li></ul>|
 |**siva.pdf.signaturePolicy.policies.pol_v2**| <ul><li>Default: **/pdf_constraint_qes.xml**</li></ul>|
 
+### DDOC validation
+| Property | Description |
+| -------- | ----------- |
+|**siva.ddoc.jdigidocConfigurationFile**| Path to JDigidoc configuration file. Determines the Jdigidoc configuration parameters (see [JDigidoc manual](https://github.com/open-eid/jdigidoc/blob/master/doc/SK-JDD-PRG-GUIDE.pdf) for details.<ul><li>Default: **/siva-jdigidoc.cfg**</li></ul>|
+
+## X-road validation webapp parameters
+
 ### X-road validation
 | Property | Description |
 | -------- | ----------- |
 |**siva.xroad.validation.service.configurationDirectoryPath**| Directory that contains the certs of approved CA's, TSA's and list of members <ul><li>Default: **/verificationconf**</li></ul> |
 > **NOTE** Currently supports only POL_V1 as a default policy
 
-### DDOC validation
+## Demo webapp parameters
 | Property | Description |
 | -------- | ----------- |
-|**siva.ddoc.jdigidocConfigurationFile**| Path to JDigidoc configuration file. Determines the Jdigidoc configuration parameters (see [JDigidoc manual](https://github.com/open-eid/jdigidoc/blob/master/doc/SK-JDD-PRG-GUIDE.pdf) for details.<ul><li>Default: **/siva-jdigidoc.cfg**</li></ul>|
+|**siva.service.serviceHost**| An HTTP URL link to the Siva webapp <ul><li>Default: **http://localhost:8080**</li></ul> |
+|**siva.service.jsonServicePath**| Service path in Siva webapp to access the REST/JSON API<ul><li>Default: **/validate**</li></ul> |
+|**siva.service.soapServicePath**| Service path in Siva webapp to access the SOAP API <ul><li>Default: **/soap/validationWebService/validateDocument**</li></ul> |
+
+
 
 
 

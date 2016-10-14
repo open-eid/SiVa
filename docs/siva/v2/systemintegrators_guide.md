@@ -28,7 +28,7 @@ sudo apt-get install default-jdk -y
 Next we need to clone the SiVa Github repository:
 
 ```bash
-git clone https://github.com/open-eid/SiVa.git --branch develop
+git clone https://github.com/open-eid/SiVa.git --branch master
 ```
 
 Final step is building the SiVa project using Maven Wrapper

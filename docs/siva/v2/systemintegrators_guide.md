@@ -194,6 +194,8 @@ Jul 20 03:00:01 siva siva-webapp.jar[15965]: 20.07.2016 03:00:01.450 INFO  [pool
 > **NOTE 3**: To limit your webapp request size (this is set automatically when deploying service as jar) one needs to configure the container manually. For example, when using [Tomcat 7](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html) or [Tomcat 8](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html) -
 the http connector parameter `maxPostSize` should be configured with the desired limit.
 
+> **NOTE 4**: The war file must be deployed to Tomcat ROOT.
+
 First we need to download Tomcat web servlet container as of the writing latest version available in version 7 branch is 7.0.77. We will download it with `wget`
 
 ```bash
@@ -270,12 +272,35 @@ http POST http://10.211.55.9:8080/validate < bdoc_pass.json
 
 ## Logging
 
-By default, logging works on the INFO level and logs are directed to the system console. Logging functionality is handled by the SLF4J logging facade and on top of the Logback framework. As a result, logging can be configured via the standard Logback configuration file through Spring boot. Additional logging appenders can be added. Consult [logback documentation](http://logback.qos.ch/documentation.html) for more details.
+By default, logging works on the INFO level and logs are directed to the system console only. Logging functionality is handled by the SLF4J logging facade and on top of the Logback framework. As a result, logging can be configured via the standard Logback configuration file through Spring boot. Additional logging appenders can be added. Consult [logback documentation](http://logback.qos.ch/documentation.html) for more details on log file structure.
 
 For example, adding application.properties to classpath with the **logging.config** property
 ```bash
 logging.config=/path/to/logback.xml
 ```
+
+## Statistics
+
+For every report validated, a statistical report is composed that collects the following data:
+
+| Data | Description |
+| ----- | ----- |
+| Validation duration | The time it takes to process an incoming request - measured in milliseconds |
+| Container type | Container type ( text value that identifies the signature type of the incoming document: ASiC-E, XAdES, PAdES or ASiC-E (BatchSignature) ) |
+| Siva User ID | String (Text data that contains the SiVa user identifier for reports (from the HTTP x-authenticated-user header) or `N/A`) |
+| Total signatures count | The value of the `signaturesCount` element in the validation report
+| Valid signatures count | The value of the `validSignaturesCount` element in the validation report
+| Signature validation indication(s) | Values of elements signatures/indication and signatures/subindication from the validation report. `indication[/subindication]` |
+| Signature country/countries | Country code extracted from the signer certs. The ISO-3166-1 alpha-2 country code that is associated with signature (the signing certificate). Or constant string "XX" if the country cannot be determined. |
+| Signature format(s) | Values of element signatures/signatureFormat from the validation report. <signatureFormat> |
+
+There are two channels where this information is sent:
+
+1. Log feeds (at INFO level) which can be redirected to files or to a syslog feed.
+
+2. **Google Analytics service** (as GA events). Turned off by default. See [Configuration parameters](/siva/v2/systemintegrators_guide/#configuration-parameters) for further details.
+
+The format and events are described in more detail in [SiVa_statistics.pdf](/pdf-files/SiVa_statistics.pdf)
 
 --------------------------------------------------------------------------------------
 ## Configuration parameters
@@ -298,19 +323,27 @@ server.max-http-post-size: 13981016
 
 See the reference list of all common [application properties](http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html) provided by Spring boot
 
+
 ### Siva webapp parameters
 
 * Updating TSL
 
 | Property | Description |
 | -------- | ----------- |
-| **siva.tsl.loader.loadFromCache** | A boolean value that determines, whether the disk cache is used to load TLS <ul><li>Default: **false**</li></ul> |
+| **siva.tsl.loader.loadFromCache** | A boolean value that determines, whether the TSL disk cache is updated by downloading a new TSL in a predetermined interval<br/><br/>Note that the cache is by default stored in a system temporary folder (can be set with system property `java.io.tmpdir`) in a subdirectory named `dss_cache_tsl`<ul><li>When set to **false** the cache is refreshed periodically by SiVa in a predetermined interval specified by `siva.tsl.loader.schedulerCron` using `siva.tsl.loader.url`</li><li>When set to **true** the siva uses existing cache as it's TSL. No direct polling for updates are performed. </li><li>Default: **false**</li></ul> |
 | **siva.tsl.loader.url** | A url value that points to the external TSL <ul><li>Default: **https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml**</li></ul> |
 | **siva.tsl.loader.code** | Sets the LOTL code in DSS <ul><li>Default: **EU**</li></ul> |
 | **siva.tsl.loader.schedulerCron** | A string in a [Crontab expression format](http://www.manpagez.com/man/5/crontab/) that defines the interval at which the TSL renewal process is started. The default is 03:00 every day (local time) <ul><li>Default: **0 0 3 * * ?**</li></ul> |
 | **siva.keystore.type** | Keystore type. Keystore that contains public keys to verify the signed TSL <ul><li>Default: **JKS**</li></ul> |
-| **siva.keystore.filename** | Keystore filename. Keystore that contains public keys to verify the signed TSL <ul><li>Default: **siva-keystore.jks**</li></ul> |
+| **siva.keystore.filename** | Keystore that contains public keys to verify the signed TSL <ul><li>Default: **siva-keystore.jks**</li></ul> |
 | **siva.keystore.password** | Keystore password. Keystore that contains public keys to verify the signed TSL <ul><li>Default: **siva-keystore-password**</li></ul> |
+
+!!! note
+    Note that the keystore file location can be overriden using environment variable `DSS_DATA_FOLDER`. By default the keystore file location, is expected to be on local filesystem in `etc` directory which is at the same level with the fat jar file (one is created, if no such directory exists).
+
+!!! note
+    TSL is currently used only by PDF and BDOC validators
+
 
 * Forward to custom X-road webapp instance
 
@@ -327,28 +360,100 @@ See the reference list of all common [application properties](http://docs.spring
 | **siva.statistics.google-analytics.trackingId** | The Google Analytics tracking ID <ul><li>Default: **UA-83206619-1**</li></ul> |
 | **siva.statistics.google-analytics.dataSourceName** | Descriptive text of the system <ul><li>Default: **SiVa**</li></ul> |
 
-* BDOC validation
+* BDOC validation parameters
 
 | Property | Description |
 | -------- | ----------- |
 | **siva.bdoc.digidoc4JConfigurationFile** | Path to Digidoc4j configuration override <ul><li>Default: **N/A**</li></ul> |
-| **siva.bdoc.signaturePolicy.defaultPolicy** | <ul><li>Default: **policy_name**</li></ul> |
-| **siva.bdoc.signaturePolicy.policies.pol_v1** | <ul><li>Default: **/bdoc_constraint_no_type.xml**</li></ul> |
-| **siva.bdoc.signaturePolicy.policies.pol_v2** | <ul><li>Default: **/bdoc_constraint_qes.xml**</li></ul> |
 
-* PadES validation
+Customizing BDOC validation policies
 
 | Property | Description |
 | -------- | ----------- |
-|**siva.pdf.signaturePolicy.defaultPolicy**| <ul><li>Default: **pol_v1**</li></ul>|
-|**siva.pdf.signaturePolicy.policies.pol_v1**| <ul><li>Default: **/pdf_constraint_no_type.xml**</li></ul>|
-|**siva.pdf.signaturePolicy.policies.pol_v2**| <ul><li>Default: **/pdf_constraint_qes.xml**</li></ul>|
+|**siva.bdoc.signaturePolicy.defaultPolicy**| Selected default policy name <ul><li>Default: **N/A**</li></ul>|
+|**siva.bdoc.signaturePolicy.policies[`index`].name**| Policy name <ul><li>Default: **N/A**</li></ul>|
+|**siva.bdoc.signaturePolicy.policies[`index`].description**| Policy description <ul><li>Default: **N/A**</li></ul>|
+|**siva.bdoc.signaturePolicy.policies[`index`].constraintPath**| Constraint XML file path for the policy. An absolute path or a reference to a resource on the classpath<ul><li>Default: **N/A**</li></ul>|
+|**siva.bdoc.signaturePolicy.policies[`index`].url**| Policy URL <ul><li>Default: **N/A**</li></ul>|
+
+By default, the following configuration is used
+```text
+siva.bdoc.signaturePolicy.policies[0].name=POLv1
+siva.bdoc.signaturePolicy.policies[0].description=Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.
+siva.bdoc.signaturePolicy.policies[0].url=http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv1
+siva.bdoc.signaturePolicy.policies[0].constraintPath=bdoc_constraint_no_type.xml
+
+siva.bdoc.signaturePolicy.policies[1].name=POLv2
+siva.bdoc.signaturePolicy.policies[1].description=Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result.
+siva.bdoc.signaturePolicy.policies[1].url=http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv2
+siva.bdoc.signaturePolicy.policies[1].constraintPath=bdoc_constraint_qes.xml
+
+siva.bdoc.signaturePolicy.defaultPolicy=POLv1
+```
+
+!!! note
+    Default policy configuration is lost when policy detail properties (name, description, url or constraintPath) are overridden or new custom policies added in custom configuration files (in this case, the existing default policies must be redefined in configuration files explicitly)
+
+* PadES validation - customize validation policies
+
+| Property | Description |
+| -------- | ----------- |
+|**siva.pdf.signaturePolicy.defaultPolicy**| Selected default policy name <ul><li>Default: **N/A**</li></ul>|
+|**siva.pdf.signaturePolicy.policies[`index`].name**| Policy name <ul><li>Default: **N/A**</li></ul>|
+|**siva.pdf.signaturePolicy.policies[`index`].description**| Policy description <ul><li>Default: **N/A**</li></ul>|
+|**siva.pdf.signaturePolicy.policies[`index`].constraintPath**| Constraint XML file path for the policy. An absolute path or a reference to a resource on the classpath<ul><li>Default: **N/A**</li></ul>|
+|**siva.pdf.signaturePolicy.policies[`index`].url**| Policy URL <ul><li>Default: **N/A**</li></ul>|
+
+By default, the following configuration is used
+```text
+siva.pdf.signaturePolicy.policies[0].name=POLv1
+siva.pdf.signaturePolicy.policies[0].description=Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.
+siva.pdf.signaturePolicy.policies[0].url=http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv1
+siva.pdf.signaturePolicy.policies[0].constraintPath=pdf_constraint_no_type.xml
+
+siva.pdf.signaturePolicy.policies[1].name=POLv2
+siva.pdf.signaturePolicy.policies[1].description=Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result.
+siva.pdf.signaturePolicy.policies[1].url=http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv2
+siva.pdf.signaturePolicy.policies[1].constraintPath=pdf_constraint_qes.xml
+
+siva.pdf.signaturePolicy.defaultPolicy=POLv1
+```
+
+!!! note
+    Default policy configuration is lost when policy detail properties (name, description, url or constraintPath) are overridden or new custom policies added in custom configuration files (in this case, the existing default policies must be redefined in configuration files explicitly)
 
 * DDOC validation
 
 | Property | Description |
 | -------- | ----------- |
 |**siva.ddoc.jdigidocConfigurationFile**| Path to JDigidoc configuration file. Determines the Jdigidoc configuration parameters (see [JDigidoc manual](https://github.com/open-eid/jdigidoc/blob/master/doc/SK-JDD-PRG-GUIDE.pdf) for details.<ul><li>Default: **/siva-jdigidoc.cfg**</li></ul>|
+
+Customizing DDOC validation policies:
+
+| Property | Description |
+| -------- | ----------- |
+|**siva.ddoc.signaturePolicy.defaultPolicy**| Selected default policy name <ul><li>Default: **N/A**</li></ul>|
+|**siva.ddoc.signaturePolicy.policies[`index`].name**| Policy name <ul><li>Default: **N/A**</li></ul>|
+|**siva.ddoc.signaturePolicy.policies[`index`].description**| Policy description <ul><li>Default: **N/A**</li></ul>|
+|**siva.ddoc.signaturePolicy.policies[`index`].constraintPath**| Constraint XML file path for the policy. An absolute path or a reference to a resource on the classpath<ul><li>Default: **N/A**</li></ul>|
+|**siva.ddoc.signaturePolicy.policies[`index`].url**| Policy URL <ul><li>Default: **N/A**</li></ul>|
+
+By default, the following configuration is used
+```text
+siva.ddoc.signaturePolicy.policies[0].name=POLv1
+siva.ddoc.signaturePolicy.policies[0].description=Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.
+siva.ddoc.signaturePolicy.policies[0].url=http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv1
+siva.ddoc.signaturePolicy.policies[0].constraintPath=pdf_constraint_no_type.xml
+
+siva.ddoc.signaturePolicy.policies[1].name=POLv2
+siva.ddoc.signaturePolicy.policies[1].description=Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result.
+siva.ddoc.signaturePolicy.policies[1].url=http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv2
+siva.ddoc.signaturePolicy.policies[1].constraintPath=pdf_constraint_qes.xml
+
+siva.ddoc.signaturePolicy.defaultPolicy=POLv1
+```
+!!! note
+    Default policy configuration is lost when policy detail properties (name, description, url or constraintPath) are overridden or new custom policies added in custom configuration files (in this case, the existing default policies must be redefined in configuration files explicitly)
 
 ### X-road validation webapp parameters
 
@@ -357,7 +462,31 @@ See the reference list of all common [application properties](http://docs.spring
 | Property | Description |
 | -------- | ----------- |
 |**siva.xroad.validation.service.configurationDirectoryPath**| Directory that contains the certs of approved CA's, TSA's and list of members <ul><li>Default: **/verificationconf**</li></ul> |
-> **NOTE** Currently supports only POL_V1 as a default policy
+
+
+| Property | Description |
+| -------- | ----------- |
+|**siva.ddoc.signaturePolicy.defaultPolicy**| Selected default policy name <ul><li>Default: **N/A**</li></ul>|
+|**siva.ddoc.signaturePolicy.policies[`index`].name**| Policy name <ul><li>Default: **N/A**</li></ul>|
+|**siva.ddoc.signaturePolicy.policies[`index`].description**| Policy description <ul><li>Default: **N/A**</li></ul>|
+|**siva.ddoc.signaturePolicy.policies[`index`].constraintPath**| Constraint XML file path for the policy. An absolute path or a reference to a resource on the classpath<ul><li>Default: **N/A**</li></ul>|
+|**siva.ddoc.signaturePolicy.policies[`index`].url**| Policy URL <ul><li>Default: **N/A**</li></ul>|
+
+By default, the following configuration is used
+```text
+siva.ddoc.signaturePolicy.policies[0].name=POLv1
+siva.ddoc.signaturePolicy.policies[0].description=Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.
+siva.ddoc.signaturePolicy.policies[0].url=http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv1
+siva.ddoc.signaturePolicy.policies[0].constraintPath=pdf_constraint_no_type.xml
+
+siva.ddoc.signaturePolicy.defaultPolicy= POLv1
+```
+
+!!! note
+    Default policy configuration is lost when policy detail properties (name, description, url or constraintPath) are overridden or new custom policies added in custom configuration files (in this case, the existing default policies must be redefined in configuration files explicitly)
+!!! note
+    By default, X-road validation currently supports only POLv1
+
 
 ### Demo webapp parameters
 

@@ -74,11 +74,19 @@
     
 
     
+        
     <url>
      <loc>None/siva/qa_strategy/</loc>
      <lastmod>2016-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url>
+        
+    <url>
+     <loc>None/siva/test_plan/</loc>
+     <lastmod>2016-10-14</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
     
 
     

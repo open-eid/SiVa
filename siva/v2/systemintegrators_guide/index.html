@@ -287,6 +287,12 @@
             </li>
           
             <li class="anchor">
+              <a title="Statistics" href="#statistics">
+                Statistics
+              </a>
+            </li>
+          
+            <li class="anchor">
               <a title="Configuration parameters" href="#configuration-parameters">
                 Configuration parameters
               </a>
@@ -541,6 +547,7 @@ containers also possible container application libraries conflicts</p>
 conflicts.</p>
 <p><strong>NOTE 3</strong>: To limit your webapp request size (this is set automatically when deploying service as jar) one needs to configure the container manually. For example, when using <a href="http://tomcat.apache.org/tomcat-8.0-doc/config/http.html">Tomcat 7</a> or <a href="http://tomcat.apache.org/tomcat-8.0-doc/config/http.html">Tomcat 8</a> -
 the http connector parameter <code>maxPostSize</code> should be configured with the desired limit.</p>
+<p><strong>NOTE 4</strong>: The war file must be deployed to Tomcat ROOT.</p>
 </blockquote>
 <p>First we need to download Tomcat web servlet container as of the writing latest version available in version 7 branch is 7.0.77. We will download it with <code>wget</code></p>
 <pre class="codehilite"><code class="language-bash">wget http://www-eu.apache.org/dist/tomcat/tomcat-7/v7.0.70/bin/apache-tomcat-7.0.70.tar.gz</code></pre>
@@ -595,11 +602,65 @@ the command below.</p>
 <code>validSignatureCount</code> they <strong>must</strong> be equal.</p>
 <p><img alt="HTTPIE output validation" src="../../../img/siva/siva-output.png" /></p>
 <h2 id="logging">Logging</h2>
-<p>By default, logging works on the INFO level and logs are directed to the system console. Logging functionality is handled by the SLF4J logging facade and on top of the Logback framework. As a result, logging can be configured via the standard Logback configuration file through Spring boot. Additional logging appenders can be added. Consult <a href="http://logback.qos.ch/documentation.html">logback documentation</a> for more details.</p>
+<p>By default, logging works on the INFO level and logs are directed to the system console only. Logging functionality is handled by the SLF4J logging facade and on top of the Logback framework. As a result, logging can be configured via the standard Logback configuration file through Spring boot. Additional logging appenders can be added. Consult <a href="http://logback.qos.ch/documentation.html">logback documentation</a> for more details on log file structure.</p>
 <p>For example, adding application.properties to classpath with the <strong>logging.config</strong> property</p>
 <pre class="codehilite"><code class="language-bash">logging.config=/path/to/logback.xml</code></pre>
 
 
+<h2 id="statistics">Statistics</h2>
+<p>For every report validated, a statistical report is composed that collects the following data:</p>
+<table>
+<thead>
+<tr>
+<th>Data</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Validation duration</td>
+<td>The time it takes to process an incoming request - measured in milliseconds</td>
+</tr>
+<tr>
+<td>Container type</td>
+<td>Container type ( text value that identifies the signature type of the incoming document: ASiC-E, XAdES, PAdES or ASiC-E (BatchSignature) )</td>
+</tr>
+<tr>
+<td>Siva User ID</td>
+<td>String (Text data that contains the SiVa user identifier for reports (from the HTTP x-authenticated-user header) or <code>N/A</code>)</td>
+</tr>
+<tr>
+<td>Total signatures count</td>
+<td>The value of the <code>signaturesCount</code> element in the validation report</td>
+</tr>
+<tr>
+<td>Valid signatures count</td>
+<td>The value of the <code>validSignaturesCount</code> element in the validation report</td>
+</tr>
+<tr>
+<td>Signature validation indication(s)</td>
+<td>Values of elements signatures/indication and signatures/subindication from the validation report. <code>indication[/subindication]</code></td>
+</tr>
+<tr>
+<td>Signature country/countries</td>
+<td>Country code extracted from the signer certs. The ISO-3166-1 alpha-2 country code that is associated with signature (the signing certificate). Or constant string "XX" if the country cannot be determined.</td>
+</tr>
+<tr>
+<td>Signature format(s)</td>
+<td>Values of element signatures/signatureFormat from the validation report. <signatureFormat></td>
+</tr>
+</tbody>
+</table>
+<p>There are two channels where this information is sent:</p>
+<ol>
+<li>
+<p>Log feeds (at INFO level) which can be redirected to files or to a syslog feed.</p>
+</li>
+<li>
+<p><strong>Google Analytics service</strong> (as GA events). Turned off by default. See <a href="../../../siva/v2/systemintegrators_guide/#configuration-parameters">Configuration parameters</a> for further details.</p>
+</li>
+</ol>
+<p>The format and events are described in more detail in <a href="../../../pdf-files/SiVa_statistics.pdf">SiVa_statistics.pdf</a></p>
 <hr />
 <h2 id="configuration-parameters">Configuration parameters</h2>
 <p>All SiVa webapps have been designed to run with predetermined defaults after building and without additional configuration.
@@ -629,7 +690,7 @@ Default configuration parameters can be overridden by providing custom applicati
 <tbody>
 <tr>
 <td><strong>siva.tsl.loader.loadFromCache</strong></td>
-<td>A boolean value that determines, whether the disk cache is used to load TLS <ul><li>Default: <strong>false</strong></li></ul></td>
+<td>A boolean value that determines, whether the TSL disk cache is updated by downloading a new TSL in a predetermined interval<br/><br/>Note that the cache is by default stored in a system temporary folder (can be set with system property <code>java.io.tmpdir</code>) in a subdirectory named <code>dss_cache_tsl</code><ul><li>When set to <strong>false</strong> the cache is refreshed periodically by SiVa in a predetermined interval specified by <code>siva.tsl.loader.schedulerCron</code> using <code>siva.tsl.loader.url</code></li><li>When set to <strong>true</strong> the siva uses existing cache as it's TSL. No direct polling for updates are performed. </li><li>Default: <strong>false</strong></li></ul></td>
 </tr>
 <tr>
 <td><strong>siva.tsl.loader.url</strong></td>
@@ -649,7 +710,7 @@ Default configuration parameters can be overridden by providing custom applicati
 </tr>
 <tr>
 <td><strong>siva.keystore.filename</strong></td>
-<td>Keystore filename. Keystore that contains public keys to verify the signed TSL <ul><li>Default: <strong>siva-keystore.jks</strong></li></ul></td>
+<td>Keystore that contains public keys to verify the signed TSL <ul><li>Default: <strong>siva-keystore.jks</strong></li></ul></td>
 </tr>
 <tr>
 <td><strong>siva.keystore.password</strong></td>
@@ -657,6 +718,14 @@ Default configuration parameters can be overridden by providing custom applicati
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Note that the keystore file location can be overriden using environment variable <code>DSS_DATA_FOLDER</code>. By default the keystore file location, is expected to be on local filesystem in <code>etc</code> directory which is at the same level with the fat jar file (one is created, if no such directory exists).</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>TSL is currently used only by PDF and BDOC validators</p>
+</div>
 <ul>
 <li>Forward to custom X-road webapp instance</li>
 </ul>
@@ -704,7 +773,7 @@ Default configuration parameters can be overridden by providing custom applicati
 </tbody>
 </table>
 <ul>
-<li>BDOC validation</li>
+<li>BDOC validation parameters</li>
 </ul>
 <table>
 <thead>
@@ -718,22 +787,59 @@ Default configuration parameters can be overridden by providing custom applicati
 <td><strong>siva.bdoc.digidoc4JConfigurationFile</strong></td>
 <td>Path to Digidoc4j configuration override <ul><li>Default: <strong>N/A</strong></li></ul></td>
 </tr>
+</tbody>
+</table>
+<p>Customizing BDOC validation policies</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><strong>siva.bdoc.signaturePolicy.defaultPolicy</strong></td>
-<td><ul><li>Default: <strong>policy_name</strong></li></ul></td>
+<td>Selected default policy name <ul><li>Default: <strong>N/A</strong></li></ul></td>
 </tr>
 <tr>
-<td><strong>siva.bdoc.signaturePolicy.policies.pol_v1</strong></td>
-<td><ul><li>Default: <strong>/bdoc_constraint_no_type.xml</strong></li></ul></td>
+<td><strong>siva.bdoc.signaturePolicy.policies[<code>index</code>].name</strong></td>
+<td>Policy name <ul><li>Default: <strong>N/A</strong></li></ul></td>
 </tr>
 <tr>
-<td><strong>siva.bdoc.signaturePolicy.policies.pol_v2</strong></td>
-<td><ul><li>Default: <strong>/bdoc_constraint_qes.xml</strong></li></ul></td>
+<td><strong>siva.bdoc.signaturePolicy.policies[<code>index</code>].description</strong></td>
+<td>Policy description <ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.bdoc.signaturePolicy.policies[<code>index</code>].constraintPath</strong></td>
+<td>Constraint XML file path for the policy. An absolute path or a reference to a resource on the classpath<ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.bdoc.signaturePolicy.policies[<code>index</code>].url</strong></td>
+<td>Policy URL <ul><li>Default: <strong>N/A</strong></li></ul></td>
 </tr>
 </tbody>
 </table>
+<p>By default, the following configuration is used</p>
+<pre class="codehilite"><code class="language-text">siva.bdoc.signaturePolicy.policies[0].name=POLv1
+siva.bdoc.signaturePolicy.policies[0].description=Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.
+siva.bdoc.signaturePolicy.policies[0].url=http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv1
+siva.bdoc.signaturePolicy.policies[0].constraintPath=bdoc_constraint_no_type.xml
+
+siva.bdoc.signaturePolicy.policies[1].name=POLv2
+siva.bdoc.signaturePolicy.policies[1].description=Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result.
+siva.bdoc.signaturePolicy.policies[1].url=http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv2
+siva.bdoc.signaturePolicy.policies[1].constraintPath=bdoc_constraint_qes.xml
+
+siva.bdoc.signaturePolicy.defaultPolicy=POLv1</code></pre>
+
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Default policy configuration is lost when policy detail properties (name, description, url or constraintPath) are overridden or new custom policies added in custom configuration files (in this case, the existing default policies must be redefined in configuration files explicitly)</p>
+</div>
 <ul>
-<li>PadES validation</li>
+<li>PadES validation - customize validation policies</li>
 </ul>
 <table>
 <thead>
@@ -745,18 +851,44 @@ Default configuration parameters can be overridden by providing custom applicati
 <tbody>
 <tr>
 <td><strong>siva.pdf.signaturePolicy.defaultPolicy</strong></td>
-<td><ul><li>Default: <strong>pol_v1</strong></li></ul></td>
+<td>Selected default policy name <ul><li>Default: <strong>N/A</strong></li></ul></td>
 </tr>
 <tr>
-<td><strong>siva.pdf.signaturePolicy.policies.pol_v1</strong></td>
-<td><ul><li>Default: <strong>/pdf_constraint_no_type.xml</strong></li></ul></td>
+<td><strong>siva.pdf.signaturePolicy.policies[<code>index</code>].name</strong></td>
+<td>Policy name <ul><li>Default: <strong>N/A</strong></li></ul></td>
 </tr>
 <tr>
-<td><strong>siva.pdf.signaturePolicy.policies.pol_v2</strong></td>
-<td><ul><li>Default: <strong>/pdf_constraint_qes.xml</strong></li></ul></td>
+<td><strong>siva.pdf.signaturePolicy.policies[<code>index</code>].description</strong></td>
+<td>Policy description <ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.pdf.signaturePolicy.policies[<code>index</code>].constraintPath</strong></td>
+<td>Constraint XML file path for the policy. An absolute path or a reference to a resource on the classpath<ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.pdf.signaturePolicy.policies[<code>index</code>].url</strong></td>
+<td>Policy URL <ul><li>Default: <strong>N/A</strong></li></ul></td>
 </tr>
 </tbody>
 </table>
+<p>By default, the following configuration is used</p>
+<pre class="codehilite"><code class="language-text">siva.pdf.signaturePolicy.policies[0].name=POLv1
+siva.pdf.signaturePolicy.policies[0].description=Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.
+siva.pdf.signaturePolicy.policies[0].url=http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv1
+siva.pdf.signaturePolicy.policies[0].constraintPath=pdf_constraint_no_type.xml
+
+siva.pdf.signaturePolicy.policies[1].name=POLv2
+siva.pdf.signaturePolicy.policies[1].description=Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result.
+siva.pdf.signaturePolicy.policies[1].url=http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv2
+siva.pdf.signaturePolicy.policies[1].constraintPath=pdf_constraint_qes.xml
+
+siva.pdf.signaturePolicy.defaultPolicy=POLv1</code></pre>
+
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Default policy configuration is lost when policy detail properties (name, description, url or constraintPath) are overridden or new custom policies added in custom configuration files (in this case, the existing default policies must be redefined in configuration files explicitly)</p>
+</div>
 <ul>
 <li>DDOC validation</li>
 </ul>
@@ -774,6 +906,55 @@ Default configuration parameters can be overridden by providing custom applicati
 </tr>
 </tbody>
 </table>
+<p>Customizing DDOC validation policies:</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>siva.ddoc.signaturePolicy.defaultPolicy</strong></td>
+<td>Selected default policy name <ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.ddoc.signaturePolicy.policies[<code>index</code>].name</strong></td>
+<td>Policy name <ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.ddoc.signaturePolicy.policies[<code>index</code>].description</strong></td>
+<td>Policy description <ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.ddoc.signaturePolicy.policies[<code>index</code>].constraintPath</strong></td>
+<td>Constraint XML file path for the policy. An absolute path or a reference to a resource on the classpath<ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.ddoc.signaturePolicy.policies[<code>index</code>].url</strong></td>
+<td>Policy URL <ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+</tbody>
+</table>
+<p>By default, the following configuration is used</p>
+<pre class="codehilite"><code class="language-text">siva.ddoc.signaturePolicy.policies[0].name=POLv1
+siva.ddoc.signaturePolicy.policies[0].description=Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.
+siva.ddoc.signaturePolicy.policies[0].url=http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv1
+siva.ddoc.signaturePolicy.policies[0].constraintPath=pdf_constraint_no_type.xml
+
+siva.ddoc.signaturePolicy.policies[1].name=POLv2
+siva.ddoc.signaturePolicy.policies[1].description=Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result.
+siva.ddoc.signaturePolicy.policies[1].url=http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv2
+siva.ddoc.signaturePolicy.policies[1].constraintPath=pdf_constraint_qes.xml
+
+siva.ddoc.signaturePolicy.defaultPolicy=POLv1</code></pre>
+
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Default policy configuration is lost when policy detail properties (name, description, url or constraintPath) are overridden or new custom policies added in custom configuration files (in this case, the existing default policies must be redefined in configuration files explicitly)</p>
+</div>
 <h3 id="x-road-validation-webapp-parameters">X-road validation webapp parameters</h3>
 <ul>
 <li>X-road validation</li>
@@ -790,12 +971,55 @@ Default configuration parameters can be overridden by providing custom applicati
 <td><strong>siva.xroad.validation.service.configurationDirectoryPath</strong></td>
 <td>Directory that contains the certs of approved CA's, TSA's and list of members <ul><li>Default: <strong>/verificationconf</strong></li></ul></td>
 </tr>
+</tbody>
+</table>
+<table>
+<thead>
 <tr>
-<td>&gt; <strong>NOTE</strong> Currently supports only POL_V1 as a default policy</td>
-<td></td>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>siva.ddoc.signaturePolicy.defaultPolicy</strong></td>
+<td>Selected default policy name <ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.ddoc.signaturePolicy.policies[<code>index</code>].name</strong></td>
+<td>Policy name <ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.ddoc.signaturePolicy.policies[<code>index</code>].description</strong></td>
+<td>Policy description <ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.ddoc.signaturePolicy.policies[<code>index</code>].constraintPath</strong></td>
+<td>Constraint XML file path for the policy. An absolute path or a reference to a resource on the classpath<ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.ddoc.signaturePolicy.policies[<code>index</code>].url</strong></td>
+<td>Policy URL <ul><li>Default: <strong>N/A</strong></li></ul></td>
 </tr>
 </tbody>
 </table>
+<p>By default, the following configuration is used</p>
+<pre class="codehilite"><code class="language-text">siva.ddoc.signaturePolicy.policies[0].name=POLv1
+siva.ddoc.signaturePolicy.policies[0].description=Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.
+siva.ddoc.signaturePolicy.policies[0].url=http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv1
+siva.ddoc.signaturePolicy.policies[0].constraintPath=pdf_constraint_no_type.xml
+
+siva.ddoc.signaturePolicy.defaultPolicy= POLv1</code></pre>
+
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Default policy configuration is lost when policy detail properties (name, description, url or constraintPath) are overridden or new custom policies added in custom configuration files (in this case, the existing default policies must be redefined in configuration files explicitly)</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>By default, X-road validation currently supports only POLv1</p>
+</div>
 <h3 id="demo-webapp-parameters">Demo webapp parameters</h3>
 <ul>
 <li>Linking to SiVa webapp</li>

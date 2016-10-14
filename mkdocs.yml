@@ -24,7 +24,9 @@ pages:
 - 5. DEPLOYMENT:
       - 5.1 Deployment model: siva/v2/deployment.md
       - 5.2 System integrator's guide: siva/v2/systemintegrators_guide.md
-- 6. QUALITY ASSURANCE: siva/qa_strategy.md
+- 6. QUALITY ASSURANCE: 
+      - 6.1 QA Strategy: siva/qa_strategy.md
+      - 6.2 Test Plan: siva/test_plan.md
 - 7. REFERENCES: siva/references.md
 - APPENDICES:
       - Appendix 1 - Validation Policy: siva/appendix/validation_policy.md

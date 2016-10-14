@@ -2709,3 +2709,76 @@ List of Test Cases
   * Expected Result: Soap error should be returned
   * File:
 
+## Configuration System Test
+
+**TestCaseID: Configuration-webapp-TSL-1**
+
+  * TestType: Manual
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/](http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/)
+  * Title: TSL update over network
+  * Expected Result: TSL is updated from configured path
+  * File: -
+
+**TestCaseID: Configuration-webapp-TSL-3**
+
+  * TestType: Manual
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/](http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/)
+  * Title: TSL update disabled
+  * Expected Result: Local cashe is used
+  * File: -
+  
+**TestCaseID: Configuration-webapp-keystore-1**
+
+  * TestType: Manual
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/](http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/)
+  * Title: Keystore change
+  * Expected Result: configured keystore is used
+  * File: -
+  
+**TestCaseID: Configuration-webapp-scheduler-1**
+
+  * TestType: Manual
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/](http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/)
+  * Title: Update time is configured
+  * Expected Result: configured time is used
+  * File: -
+  
+**TestCaseID: Configuration-webapp-xroad-1**
+
+  * TestType: Manual
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/](http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/)
+  * Title: X-Road validator service address is changed
+  * Expected Result: correct address is used
+  * File: -
+  
+**TestCaseID: Configuration-webapp-GA-1**
+
+  * TestType: Manual
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/](http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/)
+  * Title: Google Analytics is configured
+  * Expected Result: Data is transfered to GA
+  * File: -
+  
+**TestCaseID: Configuration-webapp-policy-1**
+
+  * TestType: Manual
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/](http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/)
+  * Title: Configure policy for bdoc
+  * Expected Result: Configuration is used
+  * File: -
+
+**TestCaseID: Configuration-webapp-policy-2**
+
+  * TestType: Manual
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/](http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/)
+  * Title: Configure policy for pdf
+  * Expected Result: Configuration is used
+  * File: -
+  
+**TestCaseID: Configuration-sample-application-1**
+
+  * TestType: Manual
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/](http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/)
+  * Title: Configuration of SiVa Web Service access
+  * Expected Result: Correct web service is used
+  * File: -

@@ -1,9 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2016 Riigi Infosüsteemide Amet
+  ~
+  ~ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+  ~ the European Commission - subsequent versions of the EUPL (the "Licence");
+  ~ You may not use this work except in compliance with the Licence.
+  ~ You may obtain a copy of the Licence at:
+  ~
+  ~ https://joinup.ec.europa.eu/software/page/eupl
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+  ~ distributed on an "AS IS" basis,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the Licence for the specific language governing permissions and limitations under the Licence.
+  -->
+
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>siva</artifactId>
-        <groupId>io.github.openeid.siva</groupId>
+        <groupId>ee.openid.siva</groupId>
         <version>2.0.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -23,7 +38,7 @@
         <project.encoding>UTF-8</project.encoding>
         <language.level>1.8</language.level>
         <dss.version>4.7.RC1.d4j.1</dss.version>
-        <spring.boot.version>1.4.0.RELEASE</spring.boot.version>
+        <spring.boot.version>1.4.1.RELEASE</spring.boot.version>
         <digidoc4j.version>1.0.4</digidoc4j.version>
         <powermock.version>1.6.5</powermock.version>
     </properties>

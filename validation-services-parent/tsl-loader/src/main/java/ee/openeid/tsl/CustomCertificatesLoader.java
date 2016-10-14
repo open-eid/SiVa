@@ -1,9 +1,23 @@
+/*
+ * Copyright 2016 Riigi Infosüsteemide Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
+
 package ee.openeid.tsl;
 
 import eu.europa.esig.dss.DSSUtils;
-import eu.europa.esig.dss.tsl.ServiceInfo;
-import eu.europa.esig.dss.tsl.ServiceInfoStatus;
-import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
+import eu.europa.esig.dss.tsl.*;
 import eu.europa.esig.dss.x509.CertificateToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +32,14 @@ import java.util.List;
 @Component
 @Profile("test")
 public class CustomCertificatesLoader {
+
+    private static final String QC_WITH_QSCD = "http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/QCWithQSCD";
+    private static final String QC_STATEMENT = "http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/QCStatement";
+    private static final String QC_FOR_ESIG = "http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/QCForESig";
+
+    private static final String CA_QC = "http://uri.etsi.org/TrstSvc/Svctype/CA/QC";
+    private static final String OCSP_QC = "http://uri.etsi.org/TrstSvc/Svctype/Certstatus/OCSP/QC";
+    private static final String UNDER_SUPERVISION = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/undersupervision";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TSLLoader.class);
 
@@ -57,7 +79,7 @@ public class CustomCertificatesLoader {
                         "tH3vIMUPPiKdiNkGjVLSdChwkW3z+m0EvAjyD9rnGCmjeEm5diLFu7VMNVqupsbZ" +
                         "SfDzzBLc5+6TqgQTOG7GaZk2diMkn03iLdHGFrh8ML+mXG9SjEPI");
 
-        tlCertSource.addCertificate(certToken, getCAServiceInfo(certToken));
+        tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "TEST of EE Certification Centre Root CA"));
 
         // TEST of ESTEID-SK 2011
         certToken = DSSUtils.loadCertificateFromBase64EncodedString(
@@ -89,7 +111,7 @@ public class CustomCertificatesLoader {
                         "2c0eVE4OxRulZ3KmBLPWbJKZ0TyGa/Aooc+TorEjxz//WzcF/Sklp4FeD0MU" +
                         "39UURIlg7LfEcm832bPzZzVGFd4drBd5Dy0Uquu63kW7RDqr+wQFSxKr9DIH");
 
-        tlCertSource.addCertificate(certToken, getCAServiceInfo(certToken));
+        tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "TEST of ESTEID-SK 2011"));
 
         // TEST of KLASS3-SK 2010
         certToken = DSSUtils.loadCertificateFromBase64EncodedString(
@@ -120,7 +142,7 @@ public class CustomCertificatesLoader {
                         "0yczX3d8+I3EBNBlzfPMsyU1LCn6Opbs2/DGF/4enhRGk/49L6ltfOyOA73buSog" +
                         "S2JkvCweSx6Y2cs1fXVyFszm2HJmQgwbZYfR");
 
-        tlCertSource.addCertificate(certToken, getCAServiceInfo(certToken));
+        tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "TEST of KLASS3-SK 2010"));
 
         // TEST of SK OCSP RESPONDER 2011
         certToken = DSSUtils.loadCertificateFromBase64EncodedString(
@@ -190,7 +212,7 @@ public class CustomCertificatesLoader {
                         "VjdeCe3o0E9dUVSBgp4Ulu3x9hLJ9ps1+xt/HtM2VYEDiIlF5CLzyhm/0Egdss8o" +
                         "+TJRSQWq43roK5RW7Gle");
 
-        tlCertSource.addCertificate(certToken, getCAServiceInfo(certToken));
+        tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "QuoVadis Time-Stamp Authority 1"));
 
         // QuoVadis Time-Stamp Authority 2
         certToken = DSSUtils.loadCertificateFromBase64EncodedString(
@@ -229,29 +251,80 @@ public class CustomCertificatesLoader {
                         "0QFoiIbPLv8vFH/ObkV/tivBelxHNYZt0JrgNQQAG7TcQ4GSxWzxmXU35BHvaOuj" +
                         "h2qLqIv3l1rSlPt82HY=");
 
-        tlCertSource.addCertificate(certToken, getCAServiceInfo(certToken));
+        tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "QuoVadis Time-Stamp Authority 2"));
+
+        //Management CA for soft cert
+        certToken = DSSUtils.loadCertificateFromBase64EncodedString(
+                        "MIIDWzCCAkOgAwIBAgIIM8q/reh6L2QwDQYJKoZIhvcNAQELBQAwOzEVMBMGA1UE" +
+                        "AwwMTWFuYWdlbWVudENBMRUwEwYDVQQKDAxFSkJDQSBTYW1wbGUxCzAJBgNVBAYT" +
+                        "AlNFMB4XDTE0MTAyMDIxMzYwNFoXDTI0MTAxNzIxMzYwNFowOzEVMBMGA1UEAwwM" +
+                        "TWFuYWdlbWVudENBMRUwEwYDVQQKDAxFSkJDQSBTYW1wbGUxCzAJBgNVBAYTAlNF" +
+                        "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgWlIWRGePfPPJNUPsT+X" +
+                        "WdYN/ZP0IvNqODFRf8mGuZ/Pj5tmdCQBEwFKNP+R8VkXvYRXkZDQ4WQkul3MZ7c8" +
+                        "bxBcUN3K+nzP3JEafWR4E+zWHNSjB0VPDIGNl33zi1zD6c3eAdVwnm9h9eHFoM6V" +
+                        "b45BR6E9wrp/YnkDVq9bBBL6CzXlkLYw6VSPOzs22KScTl2hGB4NRdfoermyx8JV" +
+                        "o1NreK9SlKINit+/M7hBTQ5p3hYOL2SulVkgw0/38Qc0sS7Emps8Ejr38BgPNQji" +
+                        "jkuXwpfRujROrVGExhBVdLNvZpERxpr03PzvhiX73nlzoCLw+uC4sm8uS/NdR6dF" +
+                        "dQIDAQABo2MwYTAdBgNVHQ4EFgQUPW27M+6uIGgi3cf1zgBipX/FI8swDwYDVR0T" +
+                        "AQH/BAUwAwEB/zAfBgNVHSMEGDAWgBQ9bbsz7q4gaCLdx/XOAGKlf8UjyzAOBgNV" +
+                        "HQ8BAf8EBAMCAYYwDQYJKoZIhvcNAQELBQADggEBAF/ezoK6KPtNWEcXwWxAgZoc" +
+                        "f1ZrE6rM+TZ20jFKHVlQu1u4rluAxnxORLJwKaZNVbO1FYf2Jh3ksfgVoB7K2i15" +
+                        "RPcqJovMiZZ8koWJuMv2UJDVCwRPP1xXupmUc4lDv32TNIK3LorvhgoJs+yMQSdz" +
+                        "jva6a6MGLHF2T6kFiQeMVobGM6GF5WJIWGA6oPbwwaBjHk7+3jY38wUNMre/7um3" +
+                        "B7TYeIrgMTT01SNXY0cC+cWAqHot6NWZQtKOGwu8TlqTjkZd7E0sq3a6QWBb5/22" +
+                        "0xDd5B09RzzLbIhKS/PKsdVR/UQNdYOhQ/H3kBRCJeMENNRi2iuUtw2SAyRBwHY=");
+
+        tlCertSource.addCertificate(certToken, getCAServiceInfo(certToken, "Management CA"));
 
         LOGGER.info("Finished Loading Estonian Test Certificates");
     }
 
-    private ServiceInfo getCAServiceInfo(CertificateToken certToken) {
+    private ServiceInfo getCAServiceInfo(CertificateToken certToken, String serviceName) {
         ServiceInfo serviceInfo = new ServiceInfo();
         serviceInfo.setStatus(getServiceInfoStatuses(certToken));
-        serviceInfo.setType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
+        serviceInfo.setType(CA_QC);
+        serviceInfo.setServiceName(serviceName);
         return serviceInfo;
     }
+
+    private ServiceInfo getCAServiceInfoWithQcConditions(CertificateToken certToken, String serviceName) {
+        ServiceInfo serviceInfo = getCAServiceInfo(certToken, serviceName);
+        serviceInfo.addQualifierAndCondition(QC_WITH_QSCD, createDigitalSignatureOrNonRepudiationListCondition());
+        serviceInfo.addQualifierAndCondition(QC_STATEMENT, createNonRepudiationCriteriaListCondition());
+        serviceInfo.addQualifierAndCondition(QC_FOR_ESIG, createNonRepudiationCriteriaListCondition());
+        serviceInfo.setTlWellSigned(true);
+        return serviceInfo;
+    }
+
+    private CriteriaListCondition createNonRepudiationCriteriaListCondition() {
+        CriteriaListCondition condition = new CriteriaListCondition(MatchingCriteriaIndicator.all);
+        condition.addChild(new KeyUsageCondition(KeyUsageBit.nonRepudiation, true));
+        return condition;
+    }
+
+    private CriteriaListCondition createDigitalSignatureOrNonRepudiationListCondition() {
+        CriteriaListCondition condition = new CriteriaListCondition(MatchingCriteriaIndicator.atLeastOne);
+        condition.addChild(new KeyUsageCondition(KeyUsageBit.digitalSignature, true));
+        condition.addChild(new KeyUsageCondition(KeyUsageBit.nonRepudiation, true));
+        return condition;
+    }
+
 
     private ServiceInfo getOCSPServiceInfo(CertificateToken certToken) {
         ServiceInfo serviceInfo = new ServiceInfo();
         serviceInfo.setStatus(getServiceInfoStatuses(certToken));
-        serviceInfo.setType("http://uri.etsi.org/TrstSvc/Svctype/Certstatus/OCSP/QC");
+        serviceInfo.setType(OCSP_QC);
         return serviceInfo;
     }
 
     private List<ServiceInfoStatus> getServiceInfoStatuses(CertificateToken certToken) {
         List<ServiceInfoStatus> serviceInfoStatuses = new ArrayList<>();
-        serviceInfoStatuses.add(new ServiceInfoStatus("http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/undersupervision", certToken.getCertificate().getNotBefore(), null));
+        serviceInfoStatuses.add(createUnderSupervisionStatus(certToken));
         return serviceInfoStatuses;
+    }
+
+    private ServiceInfoStatus createUnderSupervisionStatus(CertificateToken certToken) {
+        return new ServiceInfoStatus(UNDER_SUPERVISION, certToken.getCertificate().getNotBefore(), null);
     }
 
     @Autowired

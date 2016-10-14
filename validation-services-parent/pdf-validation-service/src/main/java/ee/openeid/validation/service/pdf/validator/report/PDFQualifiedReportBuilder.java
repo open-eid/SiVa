@@ -1,8 +1,25 @@
+/*
+ * Copyright 2016 Riigi Infosüsteemide Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
+
 package ee.openeid.validation.service.pdf.validator.report;
 
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
+import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import eu.europa.esig.dss.jaxb.diagnostic.XmlSignatureScopeType;
 import eu.europa.esig.dss.validation.policy.rules.Indication;
 import eu.europa.esig.dss.validation.policy.rules.SubIndication;
@@ -14,8 +31,10 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
 
 public class PDFQualifiedReportBuilder {
@@ -26,16 +45,18 @@ public class PDFQualifiedReportBuilder {
     private Reports dssReports;
     private ZonedDateTime validationTime;
     private String documentName;
+    private ValidationPolicy validationPolicy;
 
-    public PDFQualifiedReportBuilder(Reports dssReports, ZonedDateTime validationTime, String documentName) {
+    public PDFQualifiedReportBuilder(Reports dssReports, ZonedDateTime validationTime, String documentName, ValidationPolicy policy) {
         this.dssReports = dssReports;
         this.validationTime = validationTime;
         this.documentName = documentName;
+        this.validationPolicy = policy;
     }
 
     public QualifiedReport build() {
         QualifiedReport report = new QualifiedReport();
-        report.setPolicy(Policy.SIVA_DEFAULT);
+        report.setPolicy(createReportPolicy(validationPolicy));
         report.setValidationTime(parseValidationTimeToString());
         report.setDocumentName(documentName);
         report.setSignatureForm(PDF_SIGNATURE_FORM);
@@ -70,6 +91,8 @@ public class PDFQualifiedReportBuilder {
         signatureValidationData.setErrors(parseSignatureErrors(signatureId));
         signatureValidationData.setWarnings(parseSignatureWarnings(signatureId));
         signatureValidationData.setInfo(parseSignatureInfo(signatureId));
+        signatureValidationData.setCountryCode(getCountryCode());
+
         return signatureValidationData;
     }
 
@@ -156,5 +179,14 @@ public class PDFQualifiedReportBuilder {
     private String getFormattedTimeValue(ZonedDateTime zonedDateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT);
         return zonedDateTime.format(formatter);
+    }
+
+    private String getCountryCode() {
+        String signingCertId = dssReports.getDiagnosticData().getSigningCertificateId();
+        Optional<String> countryCode = dssReports.getDiagnosticData().getUsedCertificates().stream()
+                .filter( cert -> cert.getId().equals(signingCertId) )
+                .map( cert -> cert.getCountryName() )
+                .findFirst();
+        return countryCode.isPresent() ? countryCode.get() : null;
     }
 }

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016 Riigi Infosüsteemide Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
+
 package ee.openeid.siva.sample.ci.info;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -18,7 +34,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * Load CI build number and commit hash and commiter name 
+ * Load CI build number and commit hash and committer name
  */
 @Component
 public class FilesystemBuildInfoFileLoader implements BuildInfoFileLoader {
@@ -32,12 +48,12 @@ public class FilesystemBuildInfoFileLoader implements BuildInfoFileLoader {
 
     @Override
     public Observable<BuildInfo> loadBuildInfo() throws IOException {
-        final byte[] yamlFile = loadYamlFile();
+        byte[] yamlFile = loadYamlFile();
         return Observable.just(mapToBuildInfo(yamlFile)) ;
     }
 
     private static BuildInfo mapToBuildInfo(byte[] yamlFile) throws IOException {
-        final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         try {
@@ -50,7 +66,7 @@ public class FilesystemBuildInfoFileLoader implements BuildInfoFileLoader {
     }
 
     private byte[] loadYamlFile() throws IOException {
-        final Path yamlFilePath = getBuildInfoFilePath();
+        Path yamlFilePath = getBuildInfoFilePath();
         if (!Files.exists(yamlFilePath)) {
             LOGGER.warn("No such file exists: {}", yamlFilePath);
             return EMPTY_CONTENT;
@@ -61,9 +77,9 @@ public class FilesystemBuildInfoFileLoader implements BuildInfoFileLoader {
     }
 
     private Path getBuildInfoFilePath() {
-        final String defaultPath = Paths.get("").toAbsolutePath() + File.separator;
-        final String infoFile = properties.getInfoFile();
-        final String infoFilePath = isFullPathToInfoFile(infoFile) ? infoFile : defaultPath + infoFile;
+        String defaultPath = Paths.get("").toAbsolutePath() + File.separator;
+        String infoFile = properties.getInfoFile();
+        String infoFilePath = isFullPathToInfoFile(infoFile) ? infoFile : defaultPath + infoFile;
 
         return Paths.get(infoFilePath);
     }

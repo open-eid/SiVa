@@ -1,22 +1,32 @@
 extends layout/main-layout
 include mixins/footer-mixins
 
+block notificationBlock
+    #notification.alert.alert-warning.hide(role="alert")
+        button.close(type="button", data-dismiss="alert") ×
+        strong Warning!&nbsp;
+        | Content uploaded to SiVa demo validation service may be visible to third parties.
+        | Upload only content that does not contain confidential information.
+
 block content
     .row
-        .col-md-12
-            .alert.alert-warning
-                .col-md-1.col-sm-2.hidden-md-down
-                    img.icon-alert(src="img/icon-alert.svg")
-                .col-md-11
-                    strong Warning!&nbsp;
-                    | Content uploaded to SiVa demo validation service may be visible to third parties.
-                    | Upload only content that does not contain confidential information.
-                .clearfix
-        .col-md-12
+        .col-lg-6
             h1.hidden-md-down Upload a digitally signed file
             h3.hidden-md-up Upload signed file
-            p.hidden-md-down Supported file types are: BDOC, DDOC and PDF
-            form#siva-dropzone.dropzone(action="/upload", style="width: 100%", method="POST", enctype="multipart/form-data")
+            p.hidden-md-down Supported file types are: BDOC, DDOC, PDF and XRoad ASiCE
+        .col-lg-2.hidden-md-down.pull-lg-right
+            img.pull-lg-right.eu-brand(src="img/eu-logo.svg")
+    .row
+        .col-md-4
+            .input-group
+                span.input-group-addon#policy-addon Validation policy:
+                select.form-control#policy-select(aria-describedby="policy-addon")
+                    option(value="") default
+                    option(value="POLv1") POLv1
+                    option(value="POLv2") POLv2
+    .row.top-buffer
+        .col-md-12
+            form#siva-dropzone.dropzone(action="upload", style="width: 100%", method="POST", enctype="multipart/form-data")
                 input.hide(type="file", name="file")
     .row.hide#validation-summery
         .col-md-12

@@ -1,15 +1,30 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2016 Riigi Infosüsteemide Amet
+  ~
+  ~ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+  ~ the European Commission - subsequent versions of the EUPL (the "Licence");
+  ~ You may not use this work except in compliance with the Licence.
+  ~ You may obtain a copy of the Licence at:
+  ~
+  ~ https://joinup.ec.europa.eu/software/page/eupl
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+  ~ distributed on an "AS IS" basis,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the Licence for the specific language governing permissions and limitations under the Licence.
+  -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>siva</artifactId>
-        <groupId>io.github.openeid.siva</groupId>
+        <groupId>ee.openid.siva</groupId>
         <version>2.0.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>siva-parent</artifactId>
     <packaging>pom</packaging>
-    <name>SIVa webapp and other core modules</name>
+    <name>SiVa webapp and other core modules</name>
     <version>2.0.2-SNAPSHOT</version>
 
     <modules>
@@ -18,17 +33,19 @@
         <module>siva-sample-application</module>
         <module>siva-test</module>
         <module>siva-distribution</module>
+        <module>siva-statistics</module>
     </modules>
 
     <properties>
         <project.encoding>UTF-8</project.encoding>
         <language.level>1.8</language.level>
-        <spring.boot.version>1.4.0.RELEASE</spring.boot.version>
+        <spring.boot.version>1.4.1.RELEASE</spring.boot.version>
         <junit.version>4.12</junit.version>
         <mockito.version>2.0.2-beta</mockito.version>
         <powermock.version>1.6.2</powermock.version>
         <dss.version>4.7.RC1.d4j.1</dss.version>
         <cxf.version>3.1.4</cxf.version>
+        <powermock.version>1.6.5</powermock.version>
     </properties>
 
     <dependencyManagement>
@@ -84,33 +101,38 @@
             </dependency>
 
             <dependency>
-                <groupId>io.github.openeid.siva</groupId>
+                <groupId>ee.openid.siva</groupId>
                 <artifactId>validation-commons</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.github.openeid.siva</groupId>
+                <groupId>ee.openid.siva</groupId>
                 <artifactId>pdf-validation-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.github.openeid.siva</groupId>
+                <groupId>ee.openid.siva</groupId>
                 <artifactId>bdoc-validation-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.github.openeid.siva</groupId>
+                <groupId>ee.openid.siva</groupId>
                 <artifactId>ddoc-validation-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.github.openeid.siva</groupId>
+                <groupId>ee.openid.siva</groupId>
                 <artifactId>xroad-validation-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.github.openeid.siva</groupId>
+                <groupId>ee.openid.siva</groupId>
                 <artifactId>tsl-loader</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ee.openid.siva</groupId>
+                <artifactId>siva-statistics</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -148,7 +170,7 @@
             <dependency>
                 <groupId>org.webjars.bower</groupId>
                 <artifactId>bootstrap</artifactId>
-                <version>4.0.0-alpha.3</version>
+                <version>4.0.0-alpha.4</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.webjars.bower</groupId>
@@ -180,6 +202,11 @@
                 <groupId>org.webjars.bower</groupId>
                 <artifactId>bootstrap-fileinput</artifactId>
                 <version>4.3.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars.bower</groupId>
+                <artifactId>js-cookie</artifactId>
+                <version>2.1.2</version>
             </dependency>
 
             <!-- Public Dependencies -->
@@ -237,6 +264,26 @@
                 <groupId>org.hsqldb</groupId>
                 <artifactId>hsqldb</artifactId>
                 <version>1.8.0.10</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-httpclient</groupId>
+                <artifactId>commons-httpclient</artifactId>
+                <version>3.1</version>
+            </dependency>
+
+            <!-- Powermock for testing -->
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-api-mockito</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-module-junit4</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

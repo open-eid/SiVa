@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016 Riigi Infosüsteemide Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
+
 package ee.openeid.validation.service.bdoc;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
@@ -6,6 +22,7 @@ import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.validation.service.bdoc.report.BDOCQualifiedReportBuilder;
 import ee.openeid.validation.service.bdoc.signature.policy.BDOCConfigurationService;
+import ee.openeid.validation.service.bdoc.signature.policy.PolicyConfigurationWrapper;
 import eu.europa.esig.dss.DSSException;
 import org.apache.commons.lang.StringUtils;
 import org.digidoc4j.Configuration;
@@ -31,9 +48,10 @@ public class BDOCValidationService implements ValidationService {
 
     @Override
     public QualifiedReport validateDocument(ValidationDocument validationDocument) {
+        PolicyConfigurationWrapper policyConfiguration = configurationService.loadPolicyConfiguration(validationDocument.getSignaturePolicy());
         Container container;
         try {
-            container = createContainer(validationDocument);
+            container = createContainer(validationDocument, policyConfiguration.getConfiguration());
         } catch (DigiDoc4JException | DSSException e) {
             LOGGER.error("Unable to create container from validation document", e);
             throw new MalformedDocumentException(e);
@@ -42,7 +60,7 @@ public class BDOCValidationService implements ValidationService {
         try {
             container.validate();
             Date validationTime = new Date();
-            return new BDOCQualifiedReportBuilder(container, validationDocument.getName(), validationTime).build();
+            return new BDOCQualifiedReportBuilder(container, validationDocument.getName(), validationTime, policyConfiguration.getPolicy()).build();
         } catch (Exception e) {
             if (isXRoadContainer(container)) {
                 LOGGER.error("XROAD container passed to BDOC validator", e);
@@ -61,10 +79,8 @@ public class BDOCValidationService implements ValidationService {
                 .count() == 1;
     }
 
-    private Container createContainer(ValidationDocument validationDocument) {
+    private Container createContainer(ValidationDocument validationDocument, Configuration configuration) {
         InputStream containerInputStream = new ByteArrayInputStream(validationDocument.getBytes());
-
-        Configuration configuration = configurationService.loadConfiguration(validationDocument.getSignaturePolicy());
         return ContainerBuilder.aContainer()
                 .fromStream(containerInputStream)
                 .withConfiguration(configuration)

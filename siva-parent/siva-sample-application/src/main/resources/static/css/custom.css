@@ -1,5 +1,21 @@
-body {
-    padding-top: 5rem;
+/*
+ * Copyright 2016 Riigi Infosüsteemide Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
+
+.top-buffer {
+    margin-top:20px;
 }
 
 .hide {
@@ -18,6 +34,10 @@ body {
     color: red;
 }
 
+.progress {
+    margin-top: 2.5em;
+}
+
 .footer {
     font-size: .8em;
     color: #999;
@@ -34,12 +54,13 @@ body {
 }
 
 .navbar-brand {
-    padding: 0px;
+    display: inline-block;
+    padding: 0;
+    margin-right: .8em;
 }
 
 .navbar-brand > img {
-    height: 2%;
-    width: auto;
+    height: 20px;
     margin-top: 5px;
 }
 
@@ -54,6 +75,22 @@ body {
     font-size: .9em;
 }
 
+#top-navbar {
+    margin: 0;
+}
+
+#top-navbar.affix {
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+#notification {
+    margin-bottom: 0;
+    border: none;
+    border-radius: 0;
+}
+
 .dropzone .dz-message {
     margin: 1em 0;
     min-height: 10%;
@@ -62,11 +99,16 @@ body {
     background-size: 10%;
 }
 
-@media screen and (max-width: 768px) {
-    body {
-        padding-top: 4rem;
-    }
+#content {
+    margin-top: 1em;
+}
 
+.eu-brand {
+    height: 7%;
+    width: auto;
+}
+
+@media screen and (max-width: 768px) {
     .dropzone .dz-message {
         margin: 1em 0;
         min-height: 10%;
@@ -87,7 +129,7 @@ body {
     }
 
     .navbar-brand {
-        float:none;
+        float: none;
     }
 
     .footer-icons {

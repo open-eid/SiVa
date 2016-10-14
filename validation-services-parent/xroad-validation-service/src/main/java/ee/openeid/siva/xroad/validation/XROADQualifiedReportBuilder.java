@@ -1,162 +1,86 @@
+/*
+ * Copyright 2016 Riigi Infosüsteemide Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl5
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
+
 package ee.openeid.siva.xroad.validation;
 
-import ee.openeid.siva.validation.document.report.Error;
-import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
+import ee.ria.xroad.common.CodedException;
+import ee.ria.xroad.common.asic.AsicContainer;
 import ee.ria.xroad.common.asic.AsicContainerVerifier;
+import ee.ria.xroad.common.signature.Signature;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.naming.InvalidNameException;
-import javax.naming.ldap.LdapName;
-import javax.security.auth.x500.X500Principal;
-import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
 import java.util.stream.Collectors;
 
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
-
+import static ee.openeid.siva.validation.document.report.SignatureValidationData.Indication.TOTAL_PASSED;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.*;
 
 public class XROADQualifiedReportBuilder {
 
-    private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-    private static final String XADES_FORMAT_PREFIX = "XAdES_BASELINE_";
-    private static final String REPORT_INDICATION_INDETERMINATE = "INDETERMINATE";
-    private static final String GREENWICH_MEAN_TIME = "Etc/GMT";
     private static final String XROAD_SIGNATURE_FORM = "ASiC_E_batchsignature";
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(XROADQualifiedReportBuilder.class);
+    private static final String ASICE_SIGNATURE_FORM = "ASiC_E";
 
     private AsicContainerVerifier verifier;
     private String documentName;
     private Date validationTime;
+    private ValidationPolicy validationPolicy;
+    private XROADSignatureValidationDataBuilder signatureValidationDataBuilder;
 
-    public XROADQualifiedReportBuilder(AsicContainerVerifier verifier, String documentName, Date validationTime) {
+    public XROADQualifiedReportBuilder(AsicContainerVerifier verifier,
+                                       String documentName,
+                                       Date validationTime,
+                                       ValidationPolicy validationPolicy,
+                                       CodedException... exceptions)
+    {
         this.verifier = verifier;
         this.documentName = documentName;
         this.validationTime = validationTime;
+        this.validationPolicy = validationPolicy;
+        this.signatureValidationDataBuilder = new XROADSignatureValidationDataBuilder(verifier, Arrays.asList(exceptions));
     }
 
-    public QualifiedReport build() throws Exception {
+    public QualifiedReport build() {
         QualifiedReport qualifiedReport = new QualifiedReport();
-        qualifiedReport.setPolicy(Policy.SIVA_DEFAULT);
+        qualifiedReport.setPolicy(createReportPolicy(validationPolicy));
         qualifiedReport.setValidationTime(getDateFormatterWithGMTZone().format(validationTime));
         qualifiedReport.setDocumentName(documentName);
-        qualifiedReport.setSignatureForm(getSignatureForm());
-        qualifiedReport.setSignaturesCount(getTotalSignatureCount());
-        qualifiedReport.setSignatures(Collections.singletonList(createSignatureValidationData()));
+        qualifiedReport.setSignatureForm(getSignatureForm(verifier.getAsic()));
+        qualifiedReport.setSignaturesCount(getTotalSignatureCount(verifier.getSignature()));
+        qualifiedReport.setSignatures(Collections.singletonList(signatureValidationDataBuilder.build()));
         qualifiedReport.setValidSignaturesCount(
                 qualifiedReport.getSignatures()
                         .stream()
-                        .filter(vd -> StringUtils.equals(vd.getIndication(), SignatureValidationData.Indication.TOTAL_PASSED.toString()))
+                        .filter(signatures -> StringUtils.equals(signatures.getIndication(), TOTAL_PASSED.toString()))
                         .collect(Collectors.toList())
                         .size());
-
         return qualifiedReport;
     }
 
-    private int getTotalSignatureCount() {
-        return verifier.getSignature() != null ? 1 : 0;
+    private int getTotalSignatureCount(Signature signature) {
+        return signature != null ? 1 : 0;
     }
 
-    private SignatureValidationData createSignatureValidationData() throws Exception {
-        SignatureValidationData signatureValidationData = new SignatureValidationData();
-        signatureValidationData.setId(verifier.getSignature().getXmlSignature().getId());
-        signatureValidationData.setSignatureFormat(XADES_FORMAT_PREFIX + "LT");
-        signatureValidationData.setSignatureLevel(getSignatureLevel());
-        //verifier.getAsic().getSignature().isBatchSignature();
-
-        signatureValidationData.setSignedBy(parseCNFromX500Principal(verifier.getSignerCert().getSubjectX500Principal()));
-        signatureValidationData.setIndication(getIndication());
-        signatureValidationData.setSubIndication(getSubIndication());
-        signatureValidationData.setErrors(getErrors());
-        signatureValidationData.setSignatureScopes(getSignatureScopes());
-
-        signatureValidationData.setClaimedSigningTime(getClaimedSigningTime());
-
-        signatureValidationData.setWarnings(getWarnings());
-        signatureValidationData.setInfo(getInfo());
-
-        return signatureValidationData;
-    }
-
-    private String getSignatureForm() {
-        //TODO: What to use when isBatchSignature() returns false?
-        return verifier.getAsic().getSignature().isBatchSignature() ? XROAD_SIGNATURE_FORM : null;
-    }
-
-    private String getClaimedSigningTime() {
-        //TODO: figure out if we should get it from DOM?
-        return "";
-    }
-
-    private List<SignatureScope> getSignatureScopes() {
-        //TODO: What should the actual scope be for XROAD signature?
-        SignatureScope scope = new SignatureScope();
-        scope.setContent("");
-        scope.setName("");
-        scope.setScope("");
-        return Collections.singletonList(scope);
-    }
-
-    private List<Warning> getWarnings() {
-        return Collections.emptyList();
-    }
-
-    private List<Error> getErrors() {
-        return Collections.emptyList();
-    }
-
-    private String parseCNFromX500Principal(X500Principal x500Principal)  {
-        String distinguishedName = x500Principal.getName();
-        try {
-            return readCommonNameFromDistinguishedName(distinguishedName);
-        } catch (InvalidNameException e) {
-            LOGGER.warn("Unable to parse CN from certificate, using distinguished name", e);
-            return removeQuotes(distinguishedName);
+    private String getSignatureForm(AsicContainer asicContainer) {
+        if (asicContainer != null && asicContainer.getSignature() != null) {
+            return asicContainer.getSignature().isBatchSignature() ? XROAD_SIGNATURE_FORM : ASICE_SIGNATURE_FORM;
         }
-    }
-
-    private String readCommonNameFromDistinguishedName(String distinguishedName) throws InvalidNameException {
-        return new LdapName(distinguishedName)
-                .getRdns()
-                .stream()
-                .filter(rdn -> StringUtils.equals("CN", rdn.getType()))
-                .map(rdn -> rdn.getValue().toString())
-                .findFirst()
-                .orElse(removeQuotes(distinguishedName));
-    }
-
-    private SimpleDateFormat getDateFormatterWithGMTZone() {
-        SimpleDateFormat sdf = new SimpleDateFormat(DEFAULT_DATE_TIME_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone(GREENWICH_MEAN_TIME));
-        return sdf;
-    }
-
-    private String removeQuotes(String subjectName) {
-        return subjectName.replaceAll("^\"|\"$", "");
-    }
-
-    private String getSignatureLevel() {
-        return "random-level"; //TODO: Can't leave it to random level
-    }
-
-    private SignatureValidationData.Indication getIndication() {
-        return SignatureValidationData.Indication.TOTAL_PASSED;
-    }
-
-    private String getSubIndication() {
-        //TODO: can't get subindication from API is there another way to determine it?
-        return "";
-    }
-
-    private Info getInfo() {
-        Info info = new Info();
-        Date trustedTime = verifier.getTimestampDate();
-        info.setBestSignatureTime(emptyWhenNull(getDateFormatterWithGMTZone().format(trustedTime)));
-        return info;
+        return valueNotPresent();
     }
 }

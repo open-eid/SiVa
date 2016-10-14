@@ -1,7 +1,23 @@
+/*
+ * Copyright 2016 Riigi Infosüsteemide Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
+
 package ee.openeid.validation.service.bdoc.signature.policy;
 
-import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
-import ee.openeid.validation.service.bdoc.configuration.BDOCSignaturePolicyProperties;
+import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
+import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Rule;
@@ -16,8 +32,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
@@ -30,20 +44,16 @@ public class BDOCSignaturePolicyServiceTest {
     private BDOCSignaturePolicyService bdocSignaturePolicyService;
 
     @Mock
-    private SignaturePolicyService signaturePolicyService;
+    private ConstraintLoadingSignaturePolicyService signaturePolicyService;
+
+    @Mock
+    private ConstraintDefinedPolicy policy;
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
-    private BDOCSignaturePolicyProperties properties = new BDOCSignaturePolicyProperties();
-
     @Before
     public void setUp() throws Exception {
-        Map<String, String> invalidPolicyMap = new HashMap<>();
-        invalidPolicyMap.put("random", "invalid-policy.xml");
-        properties.setAbstractDefaultPolicy("EE");
-        properties.setAbstractPolicies(invalidPolicyMap);
-
         bdocSignaturePolicyService = new BDOCSignaturePolicyService();
         bdocSignaturePolicyService.setSignaturePolicyService(signaturePolicyService);
     }
@@ -52,11 +62,10 @@ public class BDOCSignaturePolicyServiceTest {
     @PrepareForTest(value = {IOUtils.class})
     public void givenInvalidPolicyWillThrowException() throws Exception {
         expectedException.expect(BdocPolicyFileCreationException.class);
-
         mockStatic(IOUtils.class);
         given(IOUtils.copy(any(InputStream.class), any(OutputStream.class))).willThrow(new IOException("Copy error"));
-        given(signaturePolicyService.getPolicyDataStreamFromPolicy(anyString())).willReturn(new ByteArrayInputStream("hello".getBytes()));
-
+        given(policy.getConstraintDataStream()).willReturn(new ByteArrayInputStream("hello".getBytes()));
+        given(signaturePolicyService.getPolicy(anyString())).willReturn(policy);
         bdocSignaturePolicyService.getAbsolutePath("random");
     }
 }

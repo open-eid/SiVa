@@ -1,11 +1,26 @@
-<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2016 Riigi Infosüsteemide Amet
+  ~
+  ~ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+  ~ the European Commission - subsequent versions of the EUPL (the "Licence");
+  ~ You may not use this work except in compliance with the Licence.
+  ~ You may obtain a copy of the Licence at:
+  ~
+  ~ https://joinup.ec.europa.eu/software/page/eupl
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+  ~ distributed on an "AS IS" basis,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the Licence for the specific language governing permissions and limitations under the Licence.
+  -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.github.openeid.siva</groupId>
+    <groupId>ee.openid.siva</groupId>
     <artifactId>siva</artifactId>
     <version>2.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -19,8 +34,8 @@
 
     <licenses>
         <license>
-            <name>GNU Lesser General Public License, Version 2.1</name>
-            <url>http://www.gnu.org/licenses/lgpl-2.1.html</url>
+            <name>European Union Public License 1.1</name>
+            <url>https://joinup.ec.europa.eu/software/page/eupl</url>
         </license>
     </licenses>
     <developers>
@@ -43,6 +58,20 @@
             <name>Allan Juhanson</name>
             <roles>
                 <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>priitr</id>
+            <name>Priit Reiser</name>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>naare</id>
+            <name>Aare Nurm</name>
+            <roles>
+                <role>quality assurance</role>
             </roles>
         </developer>
     </developers>
@@ -132,6 +161,8 @@
                         <exclude>**/extra-jars/**</exclude>
                         <exclude>**/ext-lib/**</exclude>
                         <exclude>**/xroad-jars/**</exclude>
+                        <exclude>**/ee/openeid/siva/webapp/soap/*.class</exclude>
+                        <exclude>**/eu/x_road/xsd/**</exclude>
                     </excludes>
                 </configuration>
                 <executions>

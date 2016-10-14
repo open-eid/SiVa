@@ -1,0 +1,17 @@
+Required environments and tools:
+SoapUI (v5.2.1) for executing the tests
+X-Road v6 Security Server
+SiVa web service
+X-Road validation web service
+
+Configuration:
+- X-Road v6 Security Server must be set up and configured. SiVa web service must be added to provided service list also sccess rights to use the service must be added. For details how to set up and configure X-Road v6 Security server check https://www.ria.ee/ee/x-tee-juhendid.html#v6
+
+- SiVa web service (and X-Road validation web service) must be set up and configured in a way that they are accessible for X-Road Security Server. Details how to deploy SiVa web service can be found http://open-eid.github.io/SiVa/siva/v2/deployment/
+
+- SoapUI test machine must be able to access X-Road Security Server. Correct endpoint (for X-Road Security Server) together with required identificators for X-Road must be set in Project level custom properties in SoapUI (sample values are currently filled in).
+
+Test execution:
+1. Load the project file
+2. Configure the correct endpoint and identificators for X-Road
+3. Execute the tests by test suites

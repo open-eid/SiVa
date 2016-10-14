@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016 Riigi Infosüsteemide Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
+
 package ee.openeid.siva.sample.siva;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,6 +32,7 @@ public final class ValidationReportUtils {
     private static final String INVALID_CONTAINER = "INVALID";
     private static final String VALID_CONTAINER = "VALID";
     private static final String ERROR_VALIDATION = "ERROR";
+    private static final int GENERIC_ERROR = 101;
 
     public static String getValidateFilename(final String reportJSON) {
         if (isJSONNull(reportJSON)) {
@@ -53,7 +70,7 @@ public final class ValidationReportUtils {
     }
 
     public static String handleMissingJSON() throws JsonProcessingException {
-        return new ObjectMapper().writer().writeValueAsString(new ServiceError(101, "No JSON found in SiVa API response"));
+        return new ObjectMapper().writer().writeValueAsString(new ServiceError(GENERIC_ERROR, "No JSON found in SiVa API response"));
     }
 
     public static boolean isJSONNull(String json) {

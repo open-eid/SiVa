@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016 Riigi Infosüsteemide Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
+
 package ee.openeid.validation.service.pdf;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
@@ -5,8 +21,9 @@ import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.ValidationService;
+import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
-import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
+import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.validation.service.pdf.validator.EstonianPDFDocumentValidator;
 import ee.openeid.validation.service.pdf.validator.report.PDFQualifiedReportBuilder;
 import eu.europa.esig.dss.DSSDocument;
@@ -15,7 +32,6 @@ import eu.europa.esig.dss.InMemoryDocument;
 import eu.europa.esig.dss.MimeType;
 import eu.europa.esig.dss.validation.CertificateVerifier;
 import eu.europa.esig.dss.validation.DocumentValidator;
-import eu.europa.esig.dss.validation.executor.ValidationLevel;
 import eu.europa.esig.dss.validation.reports.Reports;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +48,7 @@ public class PDFValidationService implements ValidationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(PDFValidationService.class);
 
     private CertificateVerifier certificateVerifier;
-    private SignaturePolicyService signaturePolicyService;
+    private ConstraintLoadingSignaturePolicyService signaturePolicyService;
     private final Object lock = new Object();
 
     @Override
@@ -52,15 +68,13 @@ public class PDFValidationService implements ValidationService {
             }
 
             final DocumentValidator validator = new EstonianPDFDocumentValidator(dssDocument);
+            LOGGER.info("PDF certificate pool size: {}", getCertificatePoolSize());
             validator.setCertificateVerifier(certificateVerifier);
 
-            // Validation level was added since DSS version 4.7.1.RC1
-            // Implicitly set to ARCHIVAL_DATA, in which case the the revoked signing certificate check gets discarded somehow
-            validator.setValidationLevel(ValidationLevel.LONG_TERM_DATA);
-
             final Reports reports;
+            final ConstraintDefinedPolicy policy = signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy());
             synchronized (lock) {
-                reports = validator.validateDocument(signaturePolicyService.getPolicyDataStreamFromPolicy(validationDocument.getSignaturePolicy()));
+                reports = validator.validateDocument(policy.getConstraintDataStream());
             }
 
             final ZonedDateTime validationTimeInGMT = ZonedDateTime.now(ZoneId.of("GMT"));
@@ -77,7 +91,8 @@ public class PDFValidationService implements ValidationService {
             final PDFQualifiedReportBuilder reportBuilder = new PDFQualifiedReportBuilder(
                     reports,
                     validationTimeInGMT,
-                    validationDocument.getName()
+                    validationDocument.getName(),
+                    policy
             );
             return reportBuilder.build();
         } catch (MalformedDocumentException | InvalidPolicyException e) {
@@ -87,6 +102,10 @@ public class PDFValidationService implements ValidationService {
             endExceptionally(e);
             throw new ValidationServiceException(getClass().getSimpleName(), e);
         }
+    }
+
+    private int getCertificatePoolSize() {
+        return certificateVerifier.getTrustedCertSource().getCertificatePool().getNumberOfCertificates();
     }
 
     private DSSDocument createDssDocument(final ValidationDocument ValidationDocument) {
@@ -112,7 +131,7 @@ public class PDFValidationService implements ValidationService {
 
     @Autowired
     @Qualifier(value = "PDFPolicyService")
-    public void setSignaturePolicyService(SignaturePolicyService signaturePolicyService) {
+    public void setSignaturePolicyService(ConstraintLoadingSignaturePolicyService signaturePolicyService) {
         this.signaturePolicyService = signaturePolicyService;
     }
 }

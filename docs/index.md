@@ -1,5 +1,9 @@
 <!--# Introduction-->
 
+<div class="eu-logo">
+    <img src="img/siva/eu_logo.svg" />
+</div>
+
 SiVa is digital signature validation web service that provides SOAP and JSON
 API to validate following file types:
 
@@ -17,28 +21,16 @@ when deploying it to production environment.
 Below list will give You an overview of what each section of the
 SiVa architecture document will cover:
 
+* [**Definitions**](siva/definitions) - defines and explines most common concepts used in SiVa documentation
 * [**Overview**](siva/overview) - gives overview what SiVa is and
   it's main features.
-* [**Regulatory environment**](siva/regulatory_environment) - legal analysis
-  and standards that are used when building SiVa application
-* [**Component diagram**](siva/component_diagram) - gives overview of
+* [**Structure and activities**](siva/v2/structure_and_activities) - gives overview of
   main SiVa subsystems and and and base validation Java libraries
   used for different validation services
-* [**Deployment view**](siva/deployment_view) - gives general overview of
+* [**Interfaces**](siva/v2/interfaces) - Description of SiVa
+   SOAP and JSON API request and response
+* [**Deployment**](siva/v2/deployment) - gives general overview of
   servers required when deploying SiVa validation web service
   into production
-* [**Interfaces**](siva/interface_description) - Description of SiVa
-  SOAP and JSON API request and response
-* [**Use cases**](siva/use_cases) - describes main processes in SiVa
-  validation web service
-* [**Deploying**](siva/deployment) - how to build, deploy and configure
-  SiVa web service
-* [**Logging**](siva/logging) - how to configure and setup SiVa validation
-  service logging support
-* [**QA Strategy**](siva/qa_strategy) - overview of quality assurance strategy
-* [**Test Plan**](siva/test_plan) - overview of test planning
-
-## Download documentation
-
-* [**Download SiVa documentation as PDF**](http://open-eid.github.io/SiVa/pdf-files/siva.pdf)
+* [**Quality Assurance**](siva/qa_strategy) - overview of quality assurance strategy and testing
 

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016 Riigi Infosüsteemide Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
+
 package ee.openeid.tsl;
 
 import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
@@ -20,6 +36,7 @@ public class TSLLoader {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TSLLoader.class);
 
+    private TSLValidationJobFactory tslValidationJobFactory;
     private TSLValidationJob tslValidationJob;
     private TSLLoaderConfigurationProperties configurationProperties;
     private TrustedListsCertificateSource trustedListSource;
@@ -34,7 +51,7 @@ public class TSLLoader {
     }
 
     private void initTslValidatonJob() {
-        tslValidationJob = new TSLValidationJob();
+        tslValidationJob = tslValidationJobFactory.createValidationJob();
         tslValidationJob.setDataLoader(new CommonsDataLoader());
         TSLRepository tslRepository = new TSLRepository();
         tslRepository.setTrustedListsCertificateSource(trustedListSource);
@@ -47,7 +64,7 @@ public class TSLLoader {
         tslValidationJob.setCheckTSLSignatures(true);
     }
 
-    public void loadTSL() {
+    void loadTSL() {
         if (configurationProperties.isLoadFromCache()) {
             LOGGER.info("Loading TSL from cache");
             tslValidationJob.initRepository();
@@ -55,8 +72,13 @@ public class TSLLoader {
         } else {
             LOGGER.info("Loading TSL over the network");
             tslValidationJob.refresh();
-            LOGGER.info("Finished loading TSL from cache");
+            LOGGER.info("Finished loading TSL over the network");
         }
+    }
+
+    @Autowired
+    public void setTslValidationJobFactory(TSLValidationJobFactory tslValidationJobFactory) {
+        this.tslValidationJobFactory = tslValidationJobFactory;
     }
 
     @Autowired

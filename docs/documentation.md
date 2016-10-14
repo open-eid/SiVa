@@ -22,7 +22,7 @@ Both Ubuntu and Mac OS X come `python` version 2 already installed You only need
 
 1.  Install `pip` on Ubuntu 15.04 `sudo apt-get install python-pip` on Mac OS X `sudo easy_install pip`
 1.  Next up install `mkdocs` using [pip](https://pip.pypa.io/en/stable/): `pip install mkdocs`
-1.  Last step is to install **Cinder** theme for MkDocs `pip install mkdocs-cinder`
+1.  Last step is to install **Cinder** theme for MkDocs `pip install mkdocs-material`
 
 ### Windows
 
@@ -42,7 +42,7 @@ Installing Pip:
 Installing Mkdocs:
 
 Install `mkdocs` using [pip](https://pip.pypa.io/en/stable/): `pip install mkdocs`
-and also the theme used by MkDocs `pip install mkdocs-cinder`
+and also the theme used by MkDocs `pip install mkdocs-material`
 
 Now You're done and can start editing the PDF Validator documentation. 
 

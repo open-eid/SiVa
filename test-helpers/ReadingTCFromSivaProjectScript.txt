@@ -1,0 +1,5 @@
+This script reads Test Case comments from SiVa project Java code and converts them into markdown file that can be used to update the Appendix 3 - Test Case Descriptions page in http://open-eid.github.io/SiVa/. The content of generated file can be copied to the test_cases.md file, but be aware of not to overwrite manually inserted data at the end of the file.
+
+Requirements:
+- Python v3.5.1 was used to create the script. Working with other versions is not quaranteed
+- Paths for the source directory and output file must be defined in the script

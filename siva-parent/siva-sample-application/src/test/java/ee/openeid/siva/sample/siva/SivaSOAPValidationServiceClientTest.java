@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016 Riigi Infosüsteemide Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
+
 package ee.openeid.siva.sample.siva;
 
 import ch.qos.logback.classic.Level;
@@ -87,7 +103,7 @@ public class SivaSOAPValidationServiceClientTest {
         serverMockResponse(response);
         UploadedFile uploadedFile = TestFileUtils.generateUploadFile(testingFolder, "hello.bdoc", "Valid document");
 
-        Observable<String> validatedDocument = validationService.validateDocument(uploadedFile);
+        Observable<String> validatedDocument = validationService.validateDocument("", uploadedFile);
         assertThat(validatedDocument.toBlocking().first()).isEqualTo(response);
 
         verify(restTemplate).postForObject(anyString(), validationRequestCaptor.capture(), any());
@@ -99,7 +115,7 @@ public class SivaSOAPValidationServiceClientTest {
     public void givenValidRequestReturnsInvalidXMLReturnsEmptyString() throws Exception {
         serverMockResponse(StringUtils.EMPTY);
         UploadedFile uploadedFile = TestFileUtils.generateUploadFile(testingFolder, "hello.bdoc", "Valid document");
-        Observable<String> validatedDocument = validationService.validateDocument(uploadedFile);
+        Observable<String> validatedDocument = validationService.validateDocument("", uploadedFile);
 
         assertThat(validatedDocument.toBlocking().first()).isEqualTo(StringUtils.EMPTY);
         verify(mockAppender).doAppend(captorLoggingEvent.capture());
@@ -113,7 +129,7 @@ public class SivaSOAPValidationServiceClientTest {
     public void givenNullUploadFileWillThrowException() throws Exception {
         expectedException.expect(IOException.class);
         expectedException.expectMessage("File not found");
-        validationService.validateDocument(null);
+        validationService.validateDocument(null, null);
     }
 
     private void serverMockResponse(String response) {

@@ -1,5 +1,7 @@
 <!--# SiVa overview-->
 
+## What is SiVa?
+
 SiVa (Signature Validation) web service
 is continued development of PDF Validation web service. Service provides
 a JSON and SOAP based API web interface which purpose is to validate signatures
@@ -69,6 +71,7 @@ to validate X-Road signature files.
 - Service handles DDOC files starting from version 1.0 or later
 - Service supports BDOC files starting from version 2.1 or later
 - Service supports X-Road 6 security server ASiCE containers
+- Service supports up to 10MB file size upload
 - SiVa uses European Commission’s TSL (Trusted Service
   Status List) for certificate chain validation for PDF and BDOC files.
 	- European Commission’s TSL contains references to TSLs of

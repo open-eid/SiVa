@@ -1,23 +1,10 @@
 <!--# SiVa Test Plan-->
 
-!!! development
-    ** Unclear items that are not yet present in the plan **
-
-    * Testing of logs
-    * Testing of user statistics
-    * Configuration/administration of the service
-    * SOAP API testing
-    * System Testing of X-Road service
-
-This is living document and will be constantly updated as the project evolves. The aim of the document is to describe what is tested during SiVa Web Apllication development.
-
 ## Integration Test introduction
 
-Overview of the SiVa (Signature Validation) web service can be found in the [Overview](/siva/overview/) section of the document.
+This section of the document gives overview of Integration Testing carried out on SiVa web service and SiVa Sample application.
 
-This section of the document gives overview of Integration Testing carried out on SiVa web service.
-
-Integration testing is using RestAssured library v2.5.0 to implement automatic checks for REST/SOAP based tests.
+SiVa web service Integration Testing is using RestAssured library v2.5.0 to implement automatic checks for REST/SOAP based tests.
 
 The testing of the SiVa web service is divided into sections based on the software architecture and functionalities provided to the users. The sections are:
 
@@ -28,7 +15,9 @@ The testing of the SiVa web service is divided into sections based on the softwa
   * PDF signature validation
   * X-Road ASICE signature validation
 
-The goal is to focus testing on functionalities implemented in SiVa application. Functionalities provided by [Validation libraries](/siva/overview/#validation-libraries) are not explicitly tested.
+The goal is to focus testing on functionalities implemented in SiVa web service application. Functionalities provided by [Validation libraries](/siva/overview/#validation-libraries) are not explicitly tested.
+
+In addition SiVa Sample Application is tested. These tests are carried out manually.
 
 ## Testing of REST API
 
@@ -45,41 +34,71 @@ Following areas are tested on input:
   * Inconsistencies on stated parameters and actual data (wrong document type)
   * Case insensitivity on parameter names
   * Empty request
-  * Simultaneous validation requests
 
 
 In all of the negative cases correctness of returned error message is checked.
 
 Specific test cases and input files can be found in:
 
-  * [Appendix 5 - ValidationRequestTests.java](/siva/appendix/test_cases/#validationrequesttestsjava)
-  * [Appendix 5 - DocumentFormatTests.java](/siva/appendix/test_cases/#documentformattestsjava)
+  * [ValidationRequestIT.java](/siva/appendix/test_cases/#validationrequestitjava)
+  * [DocumentFormatIT.java](/siva/appendix/test_cases/#documentformatitjava)
 
 
 
 ### Validation Report tests
 
-SiVa web service returns uniform Validation Report on all the supported document types. This also includes correct document types without actual signature (for example PDF document without signature).
+SiVa web service returns uniform Validation Report on all the supported document types. This also includes correct document types without actual signature (for example PDF document without signature). However not all values may be present for all the document types.
 
 Following areas are tested on output (Validation Report):
 
-  * JSON structure on DDOC, BDOC, PDF and ASICE document types
-  * Presence of the mandatory elements on DDOC, BDOC, PDF and ASICE document types
-  * Presence of optional elements on DDOC, BDOC, PDF and ASICE document types
+  * JSON structure on DDOC, BDOC, PDF, ASIC-E and ASICE-E X-Road document types
+  * Presence of the mandatory elements on DDOC, BDOC, PDF, ASIC-E and ASICE-E X-Road document types
+  * Presence of optional elements on DDOC, BDOC, PDF, ASIC-E and ASICE-E X-Road document types
+  * Verification of expected values
   * JSON structure on containers without signatures
-
-**What is not tested:**
-
-  * Correctness of the values in the report is not in scope on these tests
 
 Specific test cases and input files can be found in:
 
-  * [Appendix 5 - ValidationReportJsonStructureVerification.java](/siva/appendix/test_cases/#validationreportjsonstructureverificationjava)
+  * [ValidationReportValueVerificationIT.java](/siva/appendix/test_cases/#validationReportValueVerificationitjava)
 
 ## Testing of SOAP API
 
-!!! development
-    Will be covered when SOAP API is implemented
+The goal of the SOAP API testing is to check that the API is accepting the requests based on the specification and the output result (Validation Report) is in correct format and has all the required elements. In general the tests follow the same principles as with REST API.
+Compatibility with X-Road security server is out of scope for these tests and will be covered in X-Road System Test plan.
+
+### Validation SOAP API tests
+
+Following areas are tested on input:
+
+  * Wrong (not accepted) values in input parameters
+  * Empty values in input paramters
+  * Too many parameters
+  * Too few parameters
+  * Inconsistencies on stated parameters and actual data (wrong document type)
+  * Case insensitivity on parameter names
+  * Empty request
+
+
+In all of the negative cases correctness of returned error message is checked.
+
+Specific test cases and input files can be found in:
+
+  * [SoapValidationRequestIT.java](/siva/appendix/test_cases/#soapvalidationrequestitjava)
+
+
+### Validation Report tests
+
+SiVa web service returns uniform Validation Report on all the supported document types. This also includes correct document types without actual signature (for example PDF document without signature). However not all values may be present for all the document types.
+
+Following areas are tested on output (Validation Report):
+
+  * Presence of the mandatory elements on DDOC, BDOC, PDF, ASIC-E and ASICE-E X-Road document types
+  * Presence of optional elements on DDOC, BDOC, PDF, ASIC-E and ASICE-E X-Road document types
+  * Verification of expected values
+
+Specific test cases and input files can be found in:
+
+  * [SoapValidationReportValueIT.java](/siva/appendix/test_cases/#soapvalidationreportvalueitjava)
 
 
 ## Testing of DDOC signature validation
@@ -95,16 +114,13 @@ The testing of DDOC signatures consists of following main cases:
 
 Specific test cases and input files can be found in:
 
-  * [Appendix 5 - DdocValidationFail.java](/siva/appendix/test_cases/#ddocvalidationfailjava)
-  * [Appendix 5 - DdocValidationPass.java](/siva/appendix/test_cases/#ddocvalidationpassjava)
-  * [Appendix 5 - LargeFileTests.java](/siva/appendix/test_cases/#largefiletestsjava)
+  * [DdocValidationFailIT.java](/siva/appendix/test_cases/#ddocvalidationfailitjava)
+  * [DdocValidationPassIT.java](/siva/appendix/test_cases/#ddocvalidationpassitjava)
+  * [LargeFileIT.java](/siva/appendix/test_cases/#largefileitjava)
 
 **What is not tested:**
 
   * Verification of different causes in container for invalid result is out of scope.
-
-!!! development
-    Insert links to JDOC repos where these were tested.
 
 
 ## Testing of BDOC signature validation
@@ -113,22 +129,20 @@ The goal of the BDOC signature validation testing is to check that the validatio
 
 The testing of BDOC signatures consists of following main cases:
 
-  * Containers with valid signature(s) are validated (how many signatures are acceptable?)
+  * Containers with valid signature(s) are validated
   * Containers with invalid signature(s) or no signature are validated
   * Containers sizes near maximum are validated
 
 Specific test cases and input files can be found in:
 
-  * [Appendix 5 - BdocValidationFail.java](/siva/appendix/test_cases/#bdocvalidationfailjava)
-  * [Appendix 5 - BdocValidationPass.java](/siva/appendix/test_cases/#bdocvalidationpassjava)
-  * [Appendix 5 - LargeFileTests.java](/siva/appendix/test_cases/#largefiletestsjava)
+  * [BdocValidationFailIT.java](/siva/appendix/test_cases/#bdocvalidationfailitjava)
+  * [BdocValidationPassIT.java](/siva/appendix/test_cases/#bdocvalidationpassitjava)
+  * [LargeFileIT.java](/siva/appendix/test_cases/#largefileitjava)
 
 **What is not tested:**
 
   * Verification of different causes in container for invalid result is out of scope.
 
-!!! development
-    Insert links where Digidoc4J repos where these were tested.
 
 ## Testing of PDF signature validation
 
@@ -146,75 +160,140 @@ The testing of PDF signatures consists of following main cases:
 
 Specific test cases and input files can be found in:
 
-  * [Appendix 5 - PdfBaselineProfileTests.java](/siva/appendix/test_cases/#pdfbaselineprofiletestsjava)
-  * [Appendix 5 - PdfSignatureCryptographicAlgorithmTests.java](/siva/appendix/test_cases/#pdfsignaturecryptographicalgorithmtestsjava)
-  * [Appendix 5 - PdfValidationFail.java](/siva/appendix/test_cases/#pdfvalidationfailjava)
-  * [Appendix 5 - PdfValidationPass.java](/siva/appendix/test_cases/#pdfvalidationpassjava)
-  * [Appendix 5 - SignatureRevocationValueTests.java](/siva/appendix/test_cases/#signaturerevocationvaluetestsjava)
-  * [Appendix 5 - LargeFileTests.java](/siva/appendix/test_cases/#largefiletestsjava)
+  * [PdfBaselineProfileIT.java](/siva/appendix/test_cases/#pdfbaselineprofileitjava)
+  * [PdfSignatureCryptographicAlgorithmIT.java](/siva/appendix/test_cases/#pdfsignaturecryptographicalgorithmitjava)
+  * [PdfValidationFailIT.java](/siva/appendix/test_cases/#pdfvalidationfailitjava)
+  * [PdfValidationPassIT.java](/siva/appendix/test_cases/#pdfvalidationpassitjava)
+  * [LargeFileIT.java](/siva/appendix/test_cases/#largefileitjava)
 
 ## Testing of X-Road ASICE signature validation
 
 The goal of the ASICE signature validation testing is to check that the validation results given by X-Road signature validation utility are properly presented in validation report.
 
-It is possible to validate ASICE containers both via SOAP and REST interface. The same test cases are used for both interfaces.
-
 The testing of ASICE signatures consists of following main cases:
 
   * Containers with valid signature(s) are validated
-  * Containers with invalid signature(s) and no signature are validated
-  * Containers sizes near maximum are validated
+  * Containers with invalid signature(s) are validated
 
-Specific test cases and input files can be found in [Appendix 5 - Test Case Descriptions](/siva/appendix/test_cases/)
+Specific test cases and input files can be found in:
+
+  * [XroadValidationPassIT.java](/siva/appendix/test_cases/#xroadvalidationpassitjava)
+  * [XroadValidationFailIT.java](/siva/appendix/test_cases/#xroadvalidationfailitjava)
 
 **What is not tested:**
 
   * Verification of different causes in container for invalid result is out of scope.
 
+## Testing of user statistics
 
+Testing of user statistics is carried out in combination of automatic data preparation and generation by integration tests and manual verification of the results.
+SiVa supports two parallel ways of gathering user statistics:
+
+  * Validation results are printed to system log and can be gathered by any suitable means
+  * Validation results are sent to Google Analytics using Google Measurement Protocol API
+
+!!! Note
+
+	Testing of Google Analytics requires creation and configuration of Google Analytics account and configuring SiVa service to send statistics to this account. Configuration of SiVa service is explained in [SiVa system deployment.](/siva/v2/deployment/#siva-system-deployment)
+
+As both systems use the same data the testing follows the same principles for both. Following areas are covered:
+
+  * Statistics values are checked in log and Google Analytics for all container types (this also includes parameters not present in validation report)
+  * Valid and invalid signatures are validated
+  * Error situations on signature validation (instead of validation report, error message is returned)
+  
+Specific test cases and input files can be found in:
+
+  * [StatisticsToGAManualIT.java](/siva/appendix/test_cases/#statisticstogamanualitjava)
+  * [StatisticsToLogsManualIT.java](/siva/appendix/test_cases/#statisticstologsmanualitjava)
+  
+  **What is not tested:**
+
+  * Configuring Google Analytics reports is out of scope. Only verification of data presence is done.
+  
+## SiVa Sample Application tests
+
+Testing of SiVa Sample Application is done manually. The main cases are:
+
+  * Cross browser usage (IE, Edge, Chrome, Firefox and Safari)
+  * File upload (different sizes, suported and unsupported file types)
+  * Displayment of Validation Report both for REST and SOAP
+  * Layout of the page
+  * Error representation 
+  
 ## System Test introduction
 
-!!! development
-    Will be covered before System Test start
-
-While Integration Tests were carried out automatically then System Testing will be done manually.
+While Integration Tests were mostly carried out automatically then System Testing is mostly depending on manual testing.
 
 System testing is carried out using two access points:
 
   * Testing through SiVa Sample Application
-  * Testing through X-Road Security Server
+  * Testing through X-Road security server using SoapUI
 
-The goal is to test the whole validation process.
+!!! Note
+ 
+	Testing through X-Road security server requires presence and configuration of X-Road security server to use SiVa service.  Tests are run using SoapUI that simulates request to X-Road security server.
 
-## Additional features
+## Testing through X-Road security server
 
-  * "Offline" mode of SiVa web apllication
-  * Configuration of validation policy
+Following areas are covered:
 
-## SiVa Sample Application tests
+  * Validation of valid signature
+  * Validation of invalid signatur
+  * Validation that returns Soap error
 
-In addition to testing the service as such, SiVa Sample Application itself is tested. The main cases are:
+All of the above test cases are run with BDOC, DDOC, PDF and X-Road ASiC-E containers. Tests along with test case descriptions are available for rerun in [github](https://github.com/open-eid/SiVa/tree/develop/test-helpers/XRoadSoapUITests).
 
-  * Cross browser usage (IE, Edge, Chrome, Firefox and Safari)
-  * File upload (different sizes, suported and unsupported file types)
-  * Displayment of Validation Report
+Specific test cases and input files can be found in:
+
+  * [X-Road Soap System Test](/siva/appendix/test_cases/#x-road-soap-system-test)
+
+## Configuration/administration testing
+
+Following areas are covered:
+
+  * SiVa Web Application configuration
+  * X-Road validation service configuration
+  * Sample application configuration
+
+Specific test cases can be found in:
+
+  * [Configuration System Test](/siva/appendix/test_cases/#configuration-system-test)  
+
+## Load Test introduction
+
+The goals of the load test was to:
+
+  * Determine the throughput capabilities of a single Siva node and how it handles requests under increasing load.
+  * Test whether the SiVa service throughput is horizontally scalable up to 50 requests per second.
+
+Each container type was load-tested separately since the business logic and underlying mechanics for validating specific container types are vastly different.
+
+Load tests were run in three stages – firstly a single Siva service node was tested to determine the baseline performance metrics. Second and third stage involved adding additional service node to previous setup and testing the horizontal scalability performance.
+All three target Siva service nodes had identical virtual machine set-up. Virtual machines were installed on separate physical hardware.
+Siva web service nodes on a target Linux virtual machine were packaged inside a Docker container (along with Java with 4 GB allocated for Heap). The test runner (JMeter plugin used by Maven) resided on a separate machine on local area network. Simple reverse proxy was used as a load balancer to distribute the load between nodes (using round robin algorithm).
+
+Load testing is carried out on following environments:
+
+  * System under test enviroment (processor: Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz memory: 10GB (4GB allocated for Java heap))
+  * Load balancer enviroment (processor: Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz memory: 13GB)
+  * Jmeter executer enviroment (processor: Intel(R) Xeon(R) CPU E5-2620 v2 @ 2.10GHz memory: 6GB)
+
+Following test data is used in load test:
+
+  * BDOC-TS file with two valid signatures (~100KB and 5MB)
+  * BDOC-TM file with two valid signatures (~100KB and 5MB)
+  * PDF file with two valid signatures (~200KB and 5MB)
+  * DDOC file with two valid signatures (~300KB and 5MB)
+  * ASIC-E X-Road container with one valid signature (~10KB)
+
+Each of the files are validated through REST interface. SOAP interface is used with small files for a comparison. It is evaluated that the interface (REST or SOAP) do not play noticeable effect on overall results.
+
+Each of the tested files follow the same test plan:
+
+  * Five concurrent requests are made per second
+  * This load is held for period of time
+  * Concurrent requests are increased by five until 50 concurrent requests per second is achieved
+  * Latency and throughput is measured on each concurrent request steps
 
 
-## Performance Test introduction
-
-Performance testing will be carried out on following environments:
-
-  * Nortal Load Test (processor: memory: )
-
-Jmeter v2.13 is used to carry out the testing.
-
-The goal is to measure throughput-latency of the service with different file types and sizes. The performance testing is carried out on REST interface. SOAP interface is used only for one testrun for comparison between SOAP and REST interface. It is assessed that the interface itself does not have considerable impact on throughput or latency compared to the validation process.
-
-Following cases will be covered on all supported file types (BDOC, DDOC, ASICE, PDF):
-
-  * The service is loaded under 1MB containers with two valid signatures
-  * The service is loaded around 5MB containers with two valid signatures
-  * The service is loaded near 10MB containers with two valid signatures
-  * The service is loaded under 1MB containers with ten valid signatures
-
-The thread count will be increased from 5 to 60 with step of 5. The results are presented as throughput-latency graphs for each run.

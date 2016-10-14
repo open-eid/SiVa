@@ -1,6 +1,23 @@
+/*
+ * Copyright 2016 Riigi Infosüsteemide Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
+
 package ee.openeid.validation.service.bdoc.signature.policy;
 
-import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
+import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
+import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -13,20 +30,17 @@ import java.io.*;
 @Service
 public class BDOCSignaturePolicyService {
     private static final Logger LOGGER = LoggerFactory.getLogger(BDOCSignaturePolicyService.class);
-    private SignaturePolicyService signaturePolicyService;
+    private ConstraintLoadingSignaturePolicyService signaturePolicyService;
 
-    public String getAbsolutePath(String policy) {
-        LOGGER.debug("creating policy file from path {}", policy);
-        InputStream inputStream = StringUtils.isEmpty(policy) ?
-                new ByteArrayInputStream(signaturePolicyService.getDefaultPolicy()) :
-                signaturePolicyService.getPolicyDataStreamFromPolicy(policy);
-
+    public String getAbsolutePath(String policyName) {
+        LOGGER.debug("creating policy file from path {}", policyName);
+        InputStream inputStream = signaturePolicyService.getPolicy(policyName).getConstraintDataStream();
         try {
-            File file = File.createTempFile(setTempPolicyName(policy), ".xml");
+            File file = File.createTempFile(getTempPolicyName(policyName), ".xml");
             file.deleteOnExit();
             OutputStream outputStream = new FileOutputStream(file);
 
-            LOGGER.info("BDOC policy constrains file added: {}", file.getAbsolutePath());
+            LOGGER.info("BDOC policy constraints file added: {}", file.getAbsolutePath());
             IOUtils.copy(inputStream, outputStream);
 
             outputStream.close();
@@ -37,13 +51,17 @@ public class BDOCSignaturePolicyService {
         }
     }
 
-    private String setTempPolicyName(String policyName) {
+    public ConstraintDefinedPolicy getPolicy(String policyName) {
+        return signaturePolicyService.getPolicy(policyName);
+    }
+
+    private String getTempPolicyName(String policyName) {
         String validPolicyName = StringUtils.isEmpty(policyName) ? "default" : policyName;
         return "siva-bdoc-" + validPolicyName + "-constraint-";
     }
 
     @Autowired
-    public void setSignaturePolicyService(SignaturePolicyService signaturePolicyService) {
+    public void setSignaturePolicyService(ConstraintLoadingSignaturePolicyService signaturePolicyService) {
         this.signaturePolicyService = signaturePolicyService;
     }
 }

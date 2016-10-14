@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016 Riigi Infosüsteemide Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
+
 package ee.openeid.siva.validation.document.report;
 
 import lombok.Data;
@@ -7,29 +23,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
 @Data
-@XmlAccessorType(XmlAccessType.FIELD)
 public class Policy {
 
-    public static final Policy SIVA_DEFAULT = sivaDefaultPolicy();
-
-    @XmlElement(name = "PolicyDescription", required = true)
     private String policyDescription;
 
-    @XmlElement(name = "PolicyName", required = true)
     private String policyName;
 
-    @XmlElement(name = "PolicyUrl", required = true)
     private String policyUrl;
-
-    @XmlElement(name = "PolicyVersion", required = true)
-    private String policyVersion;
-
-    private static Policy sivaDefaultPolicy() {
-        Policy policy = new Policy();
-        policy.policyDescription = "SiVa validation policy";
-        policy.policyName = "SiVa validation policy";
-        policy.policyUrl = "http://open-eid.github.io/SiVa/siva/appendix/validation_policy/";
-        policy.policyVersion = "1.0";
-        return policy;
-    }
 }

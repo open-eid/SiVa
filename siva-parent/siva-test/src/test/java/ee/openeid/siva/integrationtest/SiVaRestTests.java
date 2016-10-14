@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016 Riigi Infosüsteemide Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
+
 package ee.openeid.siva.integrationtest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,11 +31,11 @@ import static com.jayway.restassured.config.EncoderConfig.encoderConfig;
 
 public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
 
-    protected static final String DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE = "document malformed or not matching documentType";
-    protected static final String INVALID_DOCUMENT_TYPE = "invalid document type";
-    protected static final String INVALID_FILENAME = "invalid filename";
+    protected static final String DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE = "Document malformed or not matching documentType";
+    protected static final String INVALID_DOCUMENT_TYPE = "Invalid document type";
+    protected static final String INVALID_FILENAME = "Invalid filename";
     protected static final String MAY_NOT_BE_EMPTY = "may not be empty";
-    protected static final String INVALID_BASE_64 = "not valid base64 encoded string";
+    protected static final String INVALID_BASE_64 = "Document is not encoded in a valid base64 string";
     protected static final String DOCUMENT_TYPE = "documentType";
     protected static final String FILENAME = "filename";
     protected static final String DOCUMENT = "document";
@@ -31,6 +47,16 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
     protected Response post(String request) {
         return given()
                 .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+                .body(request)
+                .contentType(ContentType.JSON)
+                .when()
+                .post(VALIDATION_ENDPOINT);
+    }
+
+    protected Response postWithXAuthUsrHeader(String request, String xAuthUser) {
+        return given()
+                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+                .header("x-authenticated-user", xAuthUser)
                 .body(request)
                 .contentType(ContentType.JSON)
                 .when()
@@ -52,9 +78,8 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         return mapToReport(post(validationRequestFor(file, signaturePolicy)).andReturn().body().asString());
     }
 
-    @Override
     protected QualifiedReport postForReport(String file) {
-        return postForReport(file, null);
+        return postForReport(file, VALID_SIGNATURE_POLICY_2);
     }
 
     protected QualifiedReport postForReportAndPrintResponse(String file, String signaturePolicy) {
@@ -68,6 +93,9 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         jsonObject.put("documentType", parseFileExtension(file));
         if (signaturePolicy != null) {
             jsonObject.put("signaturePolicy", signaturePolicy);
+        }
+        else {
+            jsonObject.put("signaturePolicy", VALID_SIGNATURE_POLICY_2);
         }
         String output = jsonObject.toString();
         return output;

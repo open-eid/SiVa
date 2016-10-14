@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016 Riigi Infosüsteemide Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
+
 package ee.openeid.siva.sample.controller;
 
 import ch.qos.logback.classic.Level;
@@ -52,10 +68,10 @@ public class ValidationTaskRunnerTest {
         final Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
         logger.addAppender(mockAppender);
 
-        given(validationServiceJson.validateDocument(any(UploadedFile.class)))
+        given(validationServiceJson.validateDocument(any(String.class), any(UploadedFile.class)))
                 .willReturn(Observable.just("{}"));
 
-        given(validationServiceSoap.validateDocument(any(UploadedFile.class)))
+        given(validationServiceSoap.validateDocument(any(String.class), any(UploadedFile.class)))
                 .willReturn(Observable.just("<soap></soap>"));
     }
 
@@ -67,7 +83,7 @@ public class ValidationTaskRunnerTest {
 
     @Test
     public void givenValidUploadFileReturnsValidationResultOfAllServices() throws Exception {
-        validationTaskRunner.run(new UploadedFile());
+        validationTaskRunner.run("", new UploadedFile());
 
         assertThat(validationTaskRunner.getValidationResult(ValidationResultType.JSON)).isEqualTo("{}");
         assertThat(validationTaskRunner.getValidationResult(ValidationResultType.SOAP)).isEqualTo("<soap></soap>");
@@ -75,7 +91,7 @@ public class ValidationTaskRunnerTest {
 
     @Test
     public void givenClearCommandReturnsEmptyMapValueAsNull() throws Exception {
-        validationTaskRunner.run(new UploadedFile());
+        validationTaskRunner.run("", new UploadedFile());
         validationTaskRunner.clearValidationResults();
 
         assertThat(validationTaskRunner.getValidationResult(ValidationResultType.JSON)).isNull();
@@ -83,8 +99,8 @@ public class ValidationTaskRunnerTest {
 
     @Test
     public void validationServiceThrowsExceptionLogMessageIsWritten() throws Exception {
-        given(validationServiceJson.validateDocument(any(UploadedFile.class))).willThrow(new IOException());
-        validationTaskRunner.run(new UploadedFile());
+        given(validationServiceJson.validateDocument(any(String.class), any(UploadedFile.class))).willThrow(new IOException());
+        validationTaskRunner.run("", new UploadedFile());
 
         verify(mockAppender).doAppend(captorLoggingEvent.capture());
 

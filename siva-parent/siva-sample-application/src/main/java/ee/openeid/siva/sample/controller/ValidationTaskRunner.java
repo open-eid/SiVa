@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016 Riigi Infosüsteemide Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
+
 package ee.openeid.siva.sample.controller;
 
 import ee.openeid.siva.sample.cache.UploadedFile;
@@ -10,7 +26,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.AbstractMap;
+import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -19,7 +35,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static ee.openeid.siva.sample.controller.ValidationResultType.*;
+import static ee.openeid.siva.sample.controller.ValidationResultType.JSON;
+import static ee.openeid.siva.sample.controller.ValidationResultType.SOAP;
 
 @Service
 class ValidationTaskRunner {
@@ -28,14 +45,14 @@ class ValidationTaskRunner {
     private ValidationService jsonValidationService;
     private ValidationService soapValidationService;
 
-    private Map<ValidationResultType, String> validationResults = new ConcurrentHashMap<>();
+    private final Map<ValidationResultType, String> validationResults = new ConcurrentHashMap<>();
 
-    void run(UploadedFile uploadedFile) throws InterruptedException {
+    void run(String policy, UploadedFile uploadedFile) throws InterruptedException {
         Map<ValidationResultType, ValidationService> serviceMap = getValidationServiceMap();
 
         ExecutorService executorService = Executors.newFixedThreadPool(serviceMap.size());
         serviceMap.entrySet().forEach(entry -> {
-            executorService.submit(() -> validateFile(entry.getValue(), entry.getKey(), uploadedFile));
+            executorService.submit(() -> validateFile(entry.getValue(), entry.getKey(), uploadedFile, policy));
         });
 
         executorService.shutdown();
@@ -47,20 +64,21 @@ class ValidationTaskRunner {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    private AbstractMap.SimpleImmutableEntry<ValidationResultType, ValidationService> addEntry(
+    private static SimpleImmutableEntry<ValidationResultType, ValidationService> addEntry(
             ValidationResultType json,
             ValidationService jsonValidationService
     ) {
-        return new AbstractMap.SimpleImmutableEntry<>(json, jsonValidationService);
+        return new SimpleImmutableEntry<>(json, jsonValidationService);
     }
 
     private void validateFile(
             ValidationService validationService,
             ValidationResultType resultType,
-            UploadedFile uploadedFile
+            UploadedFile uploadedFile,
+            String policy
     ) {
         try {
-            String validationResult = validationService.validateDocument(uploadedFile)
+            String validationResult = validationService.validateDocument(policy, uploadedFile)
                     .toBlocking()
                     .first();
 

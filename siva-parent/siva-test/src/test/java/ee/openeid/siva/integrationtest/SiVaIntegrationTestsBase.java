@@ -1,14 +1,27 @@
+/*
+ * Copyright 2016 Riigi Infosüsteemide Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
+
 package ee.openeid.siva.integrationtest;
 
 import com.jayway.restassured.RestAssured;
 import ee.openeid.siva.SivaWebApplication;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.proxy.document.DocumentType;
-import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
-import ee.openeid.siva.validation.document.report.Warning;
-import org.apache.bcel.classfile.Signature;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -25,10 +38,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -39,6 +49,27 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 public abstract class SiVaIntegrationTestsBase {
 
     private static final String PROJECT_SUBMODULE_NAME =  "siva-test";
+
+    protected static final String VALID_SIGNATURE_POLICY_1 = "POLv1";
+    protected static final String VALID_SIGNATURE_POLICY_2 = "POLv2";
+
+    protected static final String INVALID_SIGNATURE_POLICY = "RUS";
+
+    protected static final String SMALL_CASE_VALID_SIGNATURE_POLICY_1 = "polv1";
+    protected static final String SMALL_CASE_VALID_SIGNATURE_POLICY_2 = "polv2";
+
+    protected static final String POLICY_1_DESCRIPTION = "Policy for validating Electronic Signatures and Electronic " +
+            "Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), " +
+            "i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature " +
+            "(AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) " +
+            "does not change the total validation result of the signature.";
+    protected static final String POLICY_2_DESCRIPTION = "Policy for validating Qualified Electronic Signatures and " +
+            "Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been " +
+            "recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate " +
+            "(AdES/QC) do not produce a positive validation result.";
+
+    protected static final String POLICY_1_URL = "http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv1";
+    protected static final String POLICY_2_URL = "http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv2";
 
     @Value("${local.server.port}")
     protected int serverPort;
@@ -54,8 +85,6 @@ public abstract class SiVaIntegrationTestsBase {
     }
 
     protected abstract String getTestFilesDirectory();
-
-    protected abstract QualifiedReport postForReport(String filename);
 
     protected byte[] readFileFromTestResources(String fileName) {
         String testFilesBase = getProjectBaseDirectory() + "src/test/resources/";

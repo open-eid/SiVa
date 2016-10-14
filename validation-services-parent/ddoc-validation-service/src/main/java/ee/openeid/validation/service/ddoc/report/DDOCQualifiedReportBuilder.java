@@ -1,39 +1,67 @@
+/*
+ * Copyright 2016 Riigi Infosüsteemide Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
+
 package ee.openeid.validation.service.ddoc.report;
 
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
+import ee.openeid.siva.validation.util.CertUtil;
 import ee.sk.digidoc.DataFile;
 import ee.sk.digidoc.DigiDocException;
 import ee.sk.digidoc.Signature;
 import ee.sk.digidoc.SignedDoc;
 import org.apache.commons.lang.StringUtils;
-import org.cryptacular.util.CertUtil;
+import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
 
 public class DDOCQualifiedReportBuilder {
 
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(DDOCQualifiedReportBuilder.class);
+
     private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final String FULL_DOCUMENT = "Full document";
     private static final String DDOC_SIGNATURE_FORM_PREFIX = "DIGIDOC_XML_";
+    private static final String DDOC_HASHCODE_SIGNATURE_FORM_SUFFIX = "_hashcode";
+    private static final String HASHCODE_CONTENT_TYPE = "HASHCODE";
+    private static final String FULL_SIGNATURE_SCOPE = "FullSignatureScope";
+    private static final int ERR_DF_INV_HASH_GOOD_ALT_HASH = 173;
+    private static final int ERR_ISSUER_XMLNS = 176;
 
     private SignedDoc signedDoc;
     private String documentName;
     private Date validationTime;
+    private ValidationPolicy validationPolicy;
 
-    public DDOCQualifiedReportBuilder(SignedDoc signedDoc, String documentName, Date validationTime) {
+    public DDOCQualifiedReportBuilder(SignedDoc signedDoc, String documentName, Date validationTime, ValidationPolicy validationPolicy) {
         this.signedDoc = signedDoc;
         this.documentName = documentName;
         this.validationTime = validationTime;
+        this.validationPolicy = validationPolicy;
     }
 
     public QualifiedReport build() {
         QualifiedReport qualifiedReport = new QualifiedReport();
-        qualifiedReport.setPolicy(Policy.SIVA_DEFAULT);
+        qualifiedReport.setPolicy(createReportPolicy(validationPolicy));
         qualifiedReport.setValidationTime(getDateFormatterWithGMTZone().format(validationTime));
         qualifiedReport.setDocumentName(documentName);
         qualifiedReport.setSignatureForm(getSignatureForm());
@@ -73,24 +101,40 @@ public class DDOCQualifiedReportBuilder {
         SignatureValidationData signatureValidationData = new SignatureValidationData();
         signatureValidationData.setId(signature.getId());
         signatureValidationData.setSignatureFormat(getSignatureFormat());
-        signatureValidationData.setSignedBy(CertUtil.subjectCN(signature.getKeyInfo().getSignersCertificate()));
-        signatureValidationData.setErrors(getErrors(signature));
+        signatureValidationData.setSignedBy(org.cryptacular.util.CertUtil.subjectCN(signature.getKeyInfo().getSignersCertificate()));
+
+        ErrorsAndWarningsWrapper wrapper = getErrorsAndWarnings(signature);
+        signatureValidationData.setErrors(wrapper.errors);
+        signatureValidationData.setWarnings(wrapper.warnings);
+
         signatureValidationData.setSignatureScopes(getSignatureScopes());
         signatureValidationData.setClaimedSigningTime(getDateFormatterWithGMTZone().format(signature.getSignedProperties().getSigningTime()));
         signatureValidationData.setIndication(getIndication(signature));
 
         //report fields that are not applicable for ddoc
-        signatureValidationData.setWarnings(Collections.emptyList());
         signatureValidationData.setSignatureLevel("");
         signatureValidationData.setInfo(createEmptySignatureInfo());
         signatureValidationData.setSubIndication("");
+        signatureValidationData.setCountryCode(CertUtil.getCountryCode(signature.getKeyInfo().getSignersCertificate()));
 
         return signatureValidationData;
-
     }
 
     private String getSignatureForm() {
-        return DDOC_SIGNATURE_FORM_PREFIX + signedDoc.getVersion();
+        return DDOC_SIGNATURE_FORM_PREFIX + signedDoc.getVersion() + getSignatureFormSuffix();
+    }
+
+    private String getSignatureFormSuffix() {
+        return isHashcodeForm() ? DDOC_HASHCODE_SIGNATURE_FORM_SUFFIX : StringUtils.EMPTY;
+    }
+
+    @SuppressWarnings("unchecked")
+    private boolean isHashcodeForm() {
+        List<DataFile> dataFiles = signedDoc.getDataFiles();
+        return dataFiles != null && !dataFiles.isEmpty() && dataFiles
+                .stream()
+                .filter(df -> StringUtils.equalsIgnoreCase(HASHCODE_CONTENT_TYPE, df.getContentType()))
+                .count() > 0;
     }
 
     private Info createEmptySignatureInfo() {
@@ -104,24 +148,34 @@ public class DDOCQualifiedReportBuilder {
     }
 
     @SuppressWarnings("unchecked")
-    private List<Error> getErrors(Signature signature) {
-        List<DigiDocException> signatureValidationErrors = signature.validate();
-        List<DigiDocException> signatureVerificationErrors = signature.verify(signedDoc, true, true);
-
-        List<Error> errors = signatureValidationErrors
-                .stream()
-                .map(this::mapDigiDocException)
-                .collect(Collectors.toList());
-
-        errors.addAll(signatureVerificationErrors
-                .stream()
-                .map(this::mapDigiDocException)
-                .collect(Collectors.toList()));
-
-        return errors;
+    private ErrorsAndWarningsWrapper getErrorsAndWarnings(Signature signature) {
+        List<DigiDocException> digidocErrors = signature.validate();
+        digidocErrors.addAll(signature.verify(signedDoc, true, true));
+        ErrorsAndWarningsWrapper wrapper = new ErrorsAndWarningsWrapper();
+        wrapper.errors = digidocErrors
+                        .stream()
+                        .filter(dde -> !isWarning(dde))
+                        .map(this::mapDigiDocExceptionToError)
+                        .collect(Collectors.toList());
+        wrapper.warnings = digidocErrors
+                        .stream()
+                        .filter(this::isWarning)
+                        .map(this::mapDigiDocExceptionToWarning)
+                        .collect(Collectors.toList());
+        return wrapper;
     }
 
-    private Error mapDigiDocException(DigiDocException dde) {
+    private Warning mapDigiDocExceptionToWarning(DigiDocException dde) {
+        Warning warning = new Warning();
+        warning.setDescription(emptyWhenNull(dde.getMessage()));
+        return warning;
+    }
+
+    private boolean isWarning(DigiDocException dde) {
+        return Arrays.asList(ERR_DF_INV_HASH_GOOD_ALT_HASH, ERR_ISSUER_XMLNS).contains(dde.getCode());
+    }
+
+    private Error mapDigiDocExceptionToError(DigiDocException dde) {
         Error error = new Error();
         error.setContent(emptyWhenNull(dde.getMessage()));
         return error;
@@ -143,18 +197,29 @@ public class DDOCQualifiedReportBuilder {
         SignatureScope signatureScope = new SignatureScope();
         signatureScope.setName(dataFile.getFileName());
         signatureScope.setContent(FULL_DOCUMENT);
-        signatureScope.setScope("");
+        signatureScope.setScope(FULL_SIGNATURE_SCOPE);
         return signatureScope;
     }
 
+    @SuppressWarnings("unchecked")
     private SignatureValidationData.Indication getIndication(Signature signature) {
-        if (!signature.validate().isEmpty()) {
+        if (containsErrors(signature.validate())) {
             // TODO: Should we always return 'INDETERMINATE' in this case or are there cases when we should give here 'TOTAL_FAILED'?
             return SignatureValidationData.Indication.INDETERMINATE;
-        } else if (!signature.verify(signedDoc, true, true).isEmpty()) {
+        } else if (containsErrors(signature.verify(signedDoc, true, true))) {
             return SignatureValidationData.Indication.TOTAL_FAILED;
         }
 
         return SignatureValidationData.Indication.TOTAL_PASSED;
     }
+
+    private boolean containsErrors(List<DigiDocException> exceptions) {
+        return !exceptions.isEmpty() && exceptions.stream().filter(e -> !isWarning(e)).count() != 0;
+    }
+
+    private class ErrorsAndWarningsWrapper {
+        private List<Error> errors;
+        private List<Warning> warnings;
+    }
+
 }

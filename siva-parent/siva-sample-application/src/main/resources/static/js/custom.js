@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016 Riigi Infosüsteemide Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
+
 (function ($) {
     hljs.initHighlightingOnLoad();
     Dropzone.autoDiscover = false;
@@ -5,6 +21,7 @@
     Dropzone.options.sivaDropzone = {
         maxFiles: 1,
         maxFilesize: 11,
+        previewTemplate : '<progress class="progress progress-info progress-striped" id="file-progress" value="0" max="100"></progress>',
         dictDefaultMessage: 'Drop files here or click to browse for upload file'
     };
 
@@ -13,8 +30,18 @@
         sivaDropzone.removeAllFiles();
     });
 
-    sivaDropzone.on('sending', function () {
+    sivaDropzone.on('sending', function (file, xhr, formData) {
         $('#result-area, #validation-summery').addClass("hide");
+        var policy = $('select#policy-select').val();
+        console.log('Validation policy: ' + policy);
+        formData.append("policy", policy);
+        formData.append("encodedFilename", encodeURI(file.name));
+    });
+
+    sivaDropzone.on('uploadprogress', function (file, progress) {
+        for (var i = 0; i <= 100; i++) {
+            $('#file-progress').attr('value', i);
+        }
     });
 
     sivaDropzone.on('success', function (file, response) {
@@ -40,5 +67,14 @@
                 .addClass(response.overAllValidationResult.toLowerCase())
                 .text(response.overAllValidationResult);
         }
+    });
+
+    if (Cookies.get('notification') === undefined) {
+        $('#notification').show();
+    }
+
+    $('#notification').find('button.close').click(function(e) {
+        e.preventDefault();
+        Cookies.set('notification', 'closed', {path: '/'});
     });
 })(jQuery);

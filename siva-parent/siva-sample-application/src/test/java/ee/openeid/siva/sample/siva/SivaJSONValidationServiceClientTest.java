@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016 Riigi Infosüsteemide Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
+
 package ee.openeid.siva.sample.siva;
 
 import ee.openeid.siva.sample.cache.UploadedFile;
@@ -55,7 +71,7 @@ public class SivaJSONValidationServiceClientTest {
         final String fileName = "testing.bdoc";
         final UploadedFile inputFile = TestFileUtils.generateUploadFile(testingFolder, fileName, fileContents);
 
-        final Observable<String> result = validationService.validateDocument(inputFile);
+        final Observable<String> result = validationService.validateDocument("", inputFile);
         assertEquals(mockResponse, result.toBlocking().first());
 
         verify(restTemplate).postForObject(anyString(), validationRequestCaptor.capture(), any());
@@ -69,7 +85,7 @@ public class SivaJSONValidationServiceClientTest {
         mockServiceResponse();
 
         final UploadedFile file = TestFileUtils.generateUploadFile(testingFolder, "testing.exe", "error in file");
-        validationService.validateDocument(file);
+        validationService.validateDocument("", file);
 
         verify(restTemplate).postForObject(anyString(), validationRequestCaptor.capture(), any());
         assertEquals(null, validationRequestCaptor.getValue().getDocumentType());
@@ -80,7 +96,7 @@ public class SivaJSONValidationServiceClientTest {
         exception.expect(IOException.class);
         exception.expectMessage("Invalid file object given");
 
-        validationService.validateDocument(null);
+        validationService.validateDocument(null, null);
     }
 
     @Test
@@ -89,7 +105,7 @@ public class SivaJSONValidationServiceClientTest {
         given(restTemplate.postForObject(anyString(), any(ValidationRequest.class), any()))
                 .willThrow(new ResourceAccessException("Failed to connect to SiVa REST"));
 
-        Observable<String> result = validationService.validateDocument(file);
+        Observable<String> result = validationService.validateDocument("", file);
         verify(restTemplate).postForObject(anyString(), validationRequestCaptor.capture(), any());
 
         assertThat(result.toBlocking().first()).contains("errorCode");

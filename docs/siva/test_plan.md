@@ -219,7 +219,11 @@ Testing of SiVa Sample Application is done manually. The main cases are:
   * File upload (different sizes, suported and unsupported file types)
   * Displayment of Validation Report both for REST and SOAP
   * Layout of the page
-  * Error representation 
+  * Error representation
+
+Sample test cases with input files can be found in:
+
+  * [Sample Application Integration Test](/siva/appendix/test_cases/#sample-application-integration-test) 
   
 ## System Test introduction
 

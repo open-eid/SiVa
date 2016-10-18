@@ -24,7 +24,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import static ee.openeid.siva.xroad.validation.XROADTestUtils.*;
-import static ee.openeid.siva.xroad.validation.XROADTestUtils.buildValidationDocument;
 
 public class XROADValidationServiceTest {
 

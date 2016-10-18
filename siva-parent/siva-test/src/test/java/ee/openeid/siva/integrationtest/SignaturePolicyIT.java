@@ -19,7 +19,6 @@ package ee.openeid.siva.integrationtest;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class SignaturePolicyIT extends SiVaRestTests {

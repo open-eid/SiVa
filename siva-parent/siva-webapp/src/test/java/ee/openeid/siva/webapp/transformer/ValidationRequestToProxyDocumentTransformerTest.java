@@ -20,7 +20,6 @@ import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.testutils.MockValidationRequestBuilder;
 import org.apache.commons.codec.binary.Base64;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -76,7 +75,7 @@ public class ValidationRequestToProxyDocumentTransformerTest {
     @Test
     public void contentIsCorrectlyTransformedToBytes() {
         ProxyDocument proxyDocument = transformer.transform(validationRequest);
-        Assert.assertEquals(validationRequest.getDocument(), Base64.encodeBase64String(proxyDocument.getBytes()));
+        assertEquals(validationRequest.getDocument(), Base64.encodeBase64String(proxyDocument.getBytes()));
     }
 
     @Test
@@ -90,7 +89,7 @@ public class ValidationRequestToProxyDocumentTransformerTest {
     @Test
     public void signaturePolicyRemainsUnchanged() {
         ProxyDocument proxyDocument = transformer.transform(validationRequest);
-        Assert.assertEquals(validationRequest.getSignaturePolicy(), proxyDocument.getSignaturePolicy());
+        assertEquals(validationRequest.getSignaturePolicy(), proxyDocument.getSignaturePolicy());
     }
 
     private void setValidPdfValidationRequest() throws Exception {

@@ -23,8 +23,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     
-    <link rel="shortcut icon" type="image/x-icon" href="../../../assets/images/favicon-e565ddfa3b.ico">
-    <link rel="icon" type="image/x-icon" href="../../../assets/images/favicon-e565ddfa3b.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="../../../None">
+    <link rel="icon" type="image/x-icon" href="../../../None">
     <style>
       @font-face {
       	font-family: 'Icon';
@@ -41,7 +41,7 @@
       	font-style: normal;
       }
     </style>
-    <link rel="stylesheet" href="../../../assets/stylesheets/application-a422ff04cc.css">
+    <link rel="stylesheet" href="../../../assets/stylesheets/application-0dac3e5884.css">
     
       <link rel="stylesheet" href="../../../assets/stylesheets/palettes-05ab2406df.css">
     
@@ -49,7 +49,7 @@
       
       
       
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
       <style>
         body, input {
           font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
@@ -444,6 +444,12 @@
             <li class="anchor">
               <a title="SoapXRoadRequestHeaderIT.java" href="#soapxroadrequestheaderitjava">
                 SoapXRoadRequestHeaderIT.java
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Sample Application Integration Test" href="#sample-application-integration-test">
+                Sample Application Integration Test
               </a>
             </li>
           
@@ -2754,7 +2760,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <p><strong>TestCaseID: XroadSoap-RequestVerification-1</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface">http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface</a></li>
+<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface">http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface</a></li>
 <li>Title: Soap headers are returned in response</li>
 <li>Expected Result: Same headers are in response as in request</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
@@ -2762,7 +2768,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <p><strong>TestCaseID: XroadSoap-RequestVerification-2</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface">http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface</a></li>
+<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface">http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface</a></li>
 <li>Title: Soap headers are returned in correct order</li>
 <li>Expected Result: Same headers are in response as in request</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
@@ -2770,15 +2776,80 @@ Check all the fields presence and correctness even though tests prepare data for
 <p><strong>TestCaseID: XroadSoap-RequestVerification-3</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface">http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface</a></li>
+<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface">http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface</a></li>
 <li>Title: Soap headers are returned in error response</li>
 <li>Expected Result: Same headers are in response as in request</li>
 <li>File:</li>
 </ul>
+<h2 id="sample-application-integration-test">Sample Application Integration Test</h2>
+<p><strong>TestCaseID: Sample-Application-Elements-1</strong></p>
+<ul>
+<li>TestType: Manual</li>
+<li>Requirement:</li>
+<li>Title: Upload of correct file type</li>
+<li>Expected Result: Its possible to upload the file by dropping in download area or by browsing a file</li>
+<li>File: Šužlikud sõid ühe õuna ära.bdoc</li>
+</ul>
+<p><strong>TestCaseID: Sample-Application-Elements-2</strong></p>
+<ul>
+<li>TestType: Manual</li>
+<li>Requirement:</li>
+<li>Title: Upload of invalid file type</li>
+<li>Expected Result: File is not validated, corresponding errors are returned</li>
+<li>File: XML.xml</li>
+</ul>
+<p><strong>TestCaseID: Sample-Application-Elements-3</strong></p>
+<ul>
+<li>TestType: Manual</li>
+<li>Requirement:</li>
+<li>Title: Upload file larger than 10MB</li>
+<li>Expected Result: File is not validated</li>
+<li>File: hellopades-lta-no-ocsp.pdf</li>
+</ul>
+<p><strong>TestCaseID: Sample-Application-Elements-4</strong></p>
+<ul>
+<li>TestType: Manual</li>
+<li>Requirement:</li>
+<li>Title: Page layout</li>
+<li>Expected Result: All elements are properly displayed and can be used with different window sizes</li>
+<li>File:</li>
+</ul>
+<p><strong>TestCaseID: Sample-Application-Validation-1</strong></p>
+<ul>
+<li>TestType: Manual</li>
+<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface">http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface</a></li>
+<li>Title: Validate container with valid signatures</li>
+<li>Expected Result: Validation report is displayed correctly both for JSON and SOAP</li>
+<li>File: Šužlikud sõid ühe õuna ära.bdoc</li>
+</ul>
+<p><strong>TestCaseID: Sample-Application-Validation-1</strong></p>
+<ul>
+<li>TestType: Manual</li>
+<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface">http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface</a></li>
+<li>Title: Validate container with valid signatures</li>
+<li>Expected Result: Validation report is displayed correctly both for JSON and SOAP</li>
+<li>File: Šužlikud sõid ühe õuna ära.bdoc</li>
+</ul>
+<p><strong>TestCaseID: Sample-Application-Validation-2</strong></p>
+<ul>
+<li>TestType: Manual</li>
+<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface">http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface</a></li>
+<li>Title: Validate container with invalid signatures</li>
+<li>Expected Result: Validation report is displayed correctly both for JSON and SOAP</li>
+<li>File: IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc</li>
+</ul>
+<p><strong>TestCaseID: Sample-Application-Validation-3</strong></p>
+<ul>
+<li>TestType: Manual</li>
+<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface">http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface</a></li>
+<li>Title: Validate container with not passing policy (POLv2)</li>
+<li>Expected Result: Validation report is displayed correctly (correct policy is returned) both for JSON and SOAP</li>
+<li>File: soft-cert-signature.pdf</li>
+</ul>
 <h2 id="x-road-soap-system-test">X-Road Soap System Test</h2>
 <p><strong>TestCaseID: Xroad-Validate-Ddoc-1</strong></p>
 <ul>
-<li>TestType: Automated</li>
+<li>TestType: Automated SoapUI</li>
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/">http://open-eid.github.io/SiVa/siva/v2/interfaces/</a></li>
 <li>Title: Validate valid Ddoc</li>
 <li>Expected Result: The document should return validation report with one valid signature</li>
@@ -2786,7 +2857,7 @@ Check all the fields presence and correctness even though tests prepare data for
 </ul>
 <p><strong>TestCaseID: Xroad-Validate-Ddoc-2</strong></p>
 <ul>
-<li>TestType: Automated</li>
+<li>TestType: Automated SoapUI</li>
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/">http://open-eid.github.io/SiVa/siva/v2/interfaces/</a></li>
 <li>Title: Validate invalid Ddoc</li>
 <li>Expected Result: The document should return validation report with no valid signature</li>
@@ -2794,7 +2865,7 @@ Check all the fields presence and correctness even though tests prepare data for
 </ul>
 <p><strong>TestCaseID: Xroad-Validate-Ddoc-3</strong></p>
 <ul>
-<li>TestType: Automated</li>
+<li>TestType: Automated SoapUI</li>
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/">http://open-eid.github.io/SiVa/siva/v2/interfaces/</a></li>
 <li>Title: Invalid Request</li>
 <li>Expected Result: Soap error should be returned</li>
@@ -2802,7 +2873,7 @@ Check all the fields presence and correctness even though tests prepare data for
 </ul>
 <p><strong>TestCaseID: Xroad-Validate-Bdoc-1</strong></p>
 <ul>
-<li>TestType: Automated</li>
+<li>TestType: Automated SoapUI</li>
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/">http://open-eid.github.io/SiVa/siva/v2/interfaces/</a></li>
 <li>Title: Validate valid Bdoc</li>
 <li>Expected Result: The document should return validation report with one valid signature</li>
@@ -2810,7 +2881,7 @@ Check all the fields presence and correctness even though tests prepare data for
 </ul>
 <p><strong>TestCaseID: Xroad-Validate-Bdoc-2</strong></p>
 <ul>
-<li>TestType: Automated</li>
+<li>TestType: Automated SoapUI</li>
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/">http://open-eid.github.io/SiVa/siva/v2/interfaces/</a></li>
 <li>Title: Validate invalid Bdoc</li>
 <li>Expected Result: The document should return validation report with no valid signature</li>
@@ -2818,7 +2889,7 @@ Check all the fields presence and correctness even though tests prepare data for
 </ul>
 <p><strong>TestCaseID: Xroad-Validate-Bdoc-3</strong></p>
 <ul>
-<li>TestType: Automated</li>
+<li>TestType: Automated SoapUI</li>
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/">http://open-eid.github.io/SiVa/siva/v2/interfaces/</a></li>
 <li>Title: Invalid Request</li>
 <li>Expected Result: Soap error should be returned</li>
@@ -2826,7 +2897,7 @@ Check all the fields presence and correctness even though tests prepare data for
 </ul>
 <p><strong>TestCaseID: Xroad-Validate-Pdf-1</strong></p>
 <ul>
-<li>TestType: Automated</li>
+<li>TestType: Automated SoapUI </li>
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/">http://open-eid.github.io/SiVa/siva/v2/interfaces/</a></li>
 <li>Title: Validate valid Pdf</li>
 <li>Expected Result: The document should return validation report with one valid signature</li>
@@ -2834,7 +2905,7 @@ Check all the fields presence and correctness even though tests prepare data for
 </ul>
 <p><strong>TestCaseID: Xroad-Validate-Pdf-2</strong></p>
 <ul>
-<li>TestType: Automated</li>
+<li>TestType: Automated SoapUI</li>
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/">http://open-eid.github.io/SiVa/siva/v2/interfaces/</a></li>
 <li>Title: Validate invalid Pdf</li>
 <li>Expected Result: The document should return validation report with no valid signature</li>
@@ -2842,7 +2913,7 @@ Check all the fields presence and correctness even though tests prepare data for
 </ul>
 <p><strong>TestCaseID: Xroad-Validate-Pdf-3</strong></p>
 <ul>
-<li>TestType: Automated</li>
+<li>TestType: Automated SoapUI</li>
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/">http://open-eid.github.io/SiVa/siva/v2/interfaces/</a></li>
 <li>Title: Invalid Request</li>
 <li>Expected Result: Soap error should be returned</li>
@@ -2850,7 +2921,7 @@ Check all the fields presence and correctness even though tests prepare data for
 </ul>
 <p><strong>TestCaseID: Xroad-Validate-Xroad-1</strong></p>
 <ul>
-<li>TestType: Automated</li>
+<li>TestType: Automated SoapUI</li>
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/">http://open-eid.github.io/SiVa/siva/v2/interfaces/</a></li>
 <li>Title: Validate valid Xroad</li>
 <li>Expected Result: The document should return validation report with one valid signature</li>
@@ -2858,7 +2929,7 @@ Check all the fields presence and correctness even though tests prepare data for
 </ul>
 <p><strong>TestCaseID: Xroad-Validate-Xroad-2</strong></p>
 <ul>
-<li>TestType: Automated</li>
+<li>TestType: Automated SoapUI</li>
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/">http://open-eid.github.io/SiVa/siva/v2/interfaces/</a></li>
 <li>Title: Validate invalid Xroad</li>
 <li>Expected Result: The document should return validation report with no valid signature</li>
@@ -2866,7 +2937,7 @@ Check all the fields presence and correctness even though tests prepare data for
 </ul>
 <p><strong>TestCaseID: Xroad-Validate-Xroad-3</strong></p>
 <ul>
-<li>TestType: Automated</li>
+<li>TestType: Automated SoapUI</li>
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/">http://open-eid.github.io/SiVa/siva/v2/interfaces/</a></li>
 <li>Title: Invalid Request</li>
 <li>Expected Result: Soap error should be returned</li>

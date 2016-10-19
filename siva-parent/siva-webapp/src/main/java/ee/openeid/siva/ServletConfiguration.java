@@ -16,22 +16,31 @@
 
 package ee.openeid.siva;
 
+import ee.openeid.siva.monitoring.configuration.MonitoringConfiguration;
+import ee.openeid.siva.monitoring.indicator.UrlHealthIndicator;
+import ee.openeid.siva.proxy.configuration.ProxyConfigurationProperties;
 import ee.openeid.siva.webapp.soap.ValidationWebService;
 import ee.openeid.siva.webapp.soap.impl.ValidationWebServiceImpl;
 import org.apache.cxf.Bus;
 import org.apache.cxf.bus.spring.SpringBus;
 import org.apache.cxf.jaxws.EndpointImpl;
 import org.apache.cxf.transport.servlet.CXFServlet;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.xml.ws.Endpoint;
+import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootConfiguration
-public class ServletConfiguration {
+@EnableConfigurationProperties({ProxyConfigurationProperties.class})
+public class ServletConfiguration extends MonitoringConfiguration {
+    private ProxyConfigurationProperties proxyProperties;
 
     private static final String ENDPOINT = "/validationWebService";
     private static final String URL_MAPPING = "/soap/*";
@@ -66,4 +75,14 @@ public class ServletConfiguration {
         return endpoint;
     }
 
+    @Autowired
+    public void setProxyProperties(ProxyConfigurationProperties proxyProperties) {
+        this.proxyProperties = proxyProperties;
+    }
+
+    public List<UrlHealthIndicator.ExternalLink> getDefaultExternalLinks() {
+        return new ArrayList<UrlHealthIndicator.ExternalLink>() {{
+            add(new UrlHealthIndicator.ExternalLink("xRoadService", proxyProperties.getXroadUrl() + DEFAULT_MONITORING_ENDPOINT, DEFAULT_TIMEOUT));
+        }};
+    }
 }

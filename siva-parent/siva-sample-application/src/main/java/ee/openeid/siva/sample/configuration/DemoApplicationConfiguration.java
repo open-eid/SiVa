@@ -16,6 +16,8 @@
 
 package ee.openeid.siva.sample.configuration;
 
+import ee.openeid.siva.monitoring.configuration.MonitoringConfiguration;
+import ee.openeid.siva.monitoring.indicator.UrlHealthIndicator;
 import ee.openeid.siva.sample.ci.info.BuildInfo;
 import ee.openeid.siva.sample.ci.info.FilesystemBuildInfoFileLoader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,8 @@ import rx.Observable;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 @EnableConfigurationProperties({
@@ -35,8 +39,15 @@ import java.nio.charset.Charset;
     BuildInfoProperties.class,
     GoogleAnalyticsProperties.class
 })
-public class DemoApplicationConfiguration {
+public class DemoApplicationConfiguration extends MonitoringConfiguration {
     private BuildInfoProperties properties;
+    private SivaRESTWebServiceConfigurationProperties proxyProperties;
+
+    public List<UrlHealthIndicator.ExternalLink> getDefaultExternalLinks() {
+        return new ArrayList<UrlHealthIndicator.ExternalLink>() {{
+            add(new UrlHealthIndicator.ExternalLink("sivaService", proxyProperties.getServiceHost() + DEFAULT_MONITORING_ENDPOINT, DEFAULT_TIMEOUT * 2));
+        }};
+    }
 
     @Bean
     public RestTemplate restTemplate() {
@@ -57,5 +68,10 @@ public class DemoApplicationConfiguration {
     @Autowired
     public void setProperties(final BuildInfoProperties properties) {
         this.properties = properties;
+    }
+
+    @Autowired
+    public void setProxyProperties(final SivaRESTWebServiceConfigurationProperties proxyProperties) {
+        this.proxyProperties = proxyProperties;
     }
 }

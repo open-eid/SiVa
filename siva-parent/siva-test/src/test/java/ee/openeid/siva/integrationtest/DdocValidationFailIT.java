@@ -326,7 +326,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: 
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/
      *
      * Title: Ddoc with XML Entity expansion attack
      *
@@ -348,7 +348,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: 
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/
      *
      * Title: Ddoc with XML server side request forgery attack
      *

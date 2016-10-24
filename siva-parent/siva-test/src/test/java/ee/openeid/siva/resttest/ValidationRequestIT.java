@@ -69,7 +69,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Errors are returned stating the missing values
      *
-     * File: Valid_IDCard_MobID_signatures.bdoc
+     * File: not relevant
      *
      */
     @Test
@@ -206,7 +206,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is given
      *
-     * File: None
+     * File: not relevant
      *
      */
     @Test
@@ -464,7 +464,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is returned stating problem in document
      *
-     * File: Valid_IDCard_MobID_signatures.bdoc
+     * File: not relevant
      *
      */
     @Test
@@ -940,7 +940,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is returned stating problem in document
      *
-     * File:
+     * File: not relevant
      *
      */
     @Test
@@ -1142,7 +1142,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is returned stating problem in document
      *
-     * File:
+     * File: not relevant
      *
      */
     @Test

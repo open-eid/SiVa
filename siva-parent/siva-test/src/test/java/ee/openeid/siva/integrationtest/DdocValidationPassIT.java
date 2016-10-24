@@ -314,7 +314,7 @@ public class DdocValidationPassIT extends SiVaRestTests{
      * File: SK-XML1.0_hashcode.ddoc
      *
      */
-    @Test @Ignore //TODO: this test fails in Travis. https://github.com/open-eid/SiVa/issues/11
+    @Test @Ignore //TODO: https://github.com/open-eid/SiVa/issues/11
     public void ddocV1_0HashcodeShouldPass() {
         post(validationRequestFor("SK-XML1_0_hashcode.ddoc"))
                 .then()
@@ -352,7 +352,7 @@ public class DdocValidationPassIT extends SiVaRestTests{
      * File: DIGIDOC-XML1.1_hashcode.ddoc
      *
      */
-    @Test @Ignore //TODO: these tests fail in Travis
+    @Test @Ignore //TODO: This tests fails in Travis. Has been executed locally
     public void ddocV1_1HashcodeShouldPass() {
         post(validationRequestFor("DIGIDOC-XML1.1_hashcode.ddoc"))
                 .then()
@@ -390,7 +390,7 @@ public class DdocValidationPassIT extends SiVaRestTests{
      * File: DIGIDOC-XML1.2_hashcode.ddoc
      *
      */
-    @Test @Ignore //TODO: these tests fail in Travis
+    @Test @Ignore //TODO: This tests fails in Travis. Has been executed locally
     public void ddocV1_2HashcodeShouldPass() {
         post(validationRequestFor("DIGIDOC-XML1.2_hashcode.ddoc"))
                 .then()
@@ -428,7 +428,7 @@ public class DdocValidationPassIT extends SiVaRestTests{
      * File: DIGIDOC-XML1.3_hashcode.ddoc
      *
      */
-    @Test @Ignore //TODO: these tests fail in Travis
+    @Test @Ignore //TODO: This tests fails in Travis. Has been executed locally
     public void ddocV1_3HashcodeShouldPass() {
         post(validationRequestFor("DIGIDOC-XML1.3_hashcode.ddoc"))
                 .then()

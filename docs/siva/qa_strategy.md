@@ -122,7 +122,7 @@ Test cases are developed and maintained together with test automation code by th
 Following elements will be present in test cases:
 
   * TestCaseID: unique ID that makes possible to identify specific test case
-  * TestType: Automated or Manual
+  * TestType: Automated, Automated SoapUI or Manual
   * Requirement: Reference to the requirement that is tested
   * Title: Description of the test
   * Expected Result: expected outcome of the test (pass criteria for the test)

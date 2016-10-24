@@ -179,8 +179,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      * File: 23200_weakdigest-wrong-nonce.asice
      *
      */
-    @Ignore //TODO: https://github.com/open-eid/SiVa/issues/24 See DSS-915 on why SSCD is not read from TSL. New Adesqc file may be needed.
-    @Test
+    @Test @Ignore //TODO: https://github.com/open-eid/SiVa/issues/24
     public void bdocCorrectValuesArePresentInvalidLtSignatureAdesqc() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("23200_weakdigest-wrong-nonce.asice"))
@@ -365,7 +364,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * Expected Result: All required elements are present according to SimpleReportSchema.json
      *
-     * File:
+     * File: pades_lt_two_valid_sig.pdf
      *
      */
     @Test
@@ -878,7 +877,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].errors", Matchers.hasSize(0))
-                .body("signatures[0].signatureScopes[0].name", Matchers.is("")) //TODO: VAL-315 These conditions need to be updated
+                .body("signatures[0].signatureScopes[0].name", Matchers.is(""))
                 .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
                 .body("signatures[0].signatureScopes[0].content", Matchers.is(""))
                 .body("signatures[0].claimedSigningTime", Matchers.is(""))
@@ -919,7 +918,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].errors", Matchers.hasSize(0))
-                .body("signatures[0].signatureScopes[0].name", Matchers.is("")) //TODO: VAL-315 These conditions need to be updated
+                .body("signatures[0].signatureScopes[0].name", Matchers.is(""))
                 .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
                 .body("signatures[0].signatureScopes[0].content", Matchers.is(""))
                 .body("signatures[0].claimedSigningTime", Matchers.is(""))
@@ -960,7 +959,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].errors", Matchers.hasSize(0))
-                .body("signatures[0].signatureScopes[0].name", Matchers.is("")) //TODO: VAL-315 These conditions need to be updated
+                .body("signatures[0].signatureScopes[0].name", Matchers.is(""))
                 .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
                 .body("signatures[0].signatureScopes[0].content", Matchers.is(""))
                 .body("signatures[0].claimedSigningTime", Matchers.is(""))

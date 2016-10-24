@@ -52,7 +52,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * Expected Result: Error is returned stating mismatch with required elements
      *
-     * File:
+     * File: not relevant
      *
      */
     @Test
@@ -76,7 +76,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * Expected Result: Error is returned stating encoding problem
      *
-     * File: Valid_IDCard_MobID_signatures.bdoc
+     * File: not relevant
      *
      */
     @Test
@@ -259,7 +259,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * Expected Result: Error is given
      *
-     * File: None
+     * File: not relevant
      *
      */
     @Test
@@ -508,7 +508,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * Expected Result: Error is returned
      *
-     * File: Valid_IDCard_MobID_signatures.bdoc
+     * File: not relevant
      *
      */
     @Test
@@ -582,7 +582,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * Expected Result: Error is returned stating problem in document
      *
-     * File: Valid_IDCard_MobID_signatures.bdoc
+     * File: not relevant
      *
      */
     @Test
@@ -905,7 +905,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * Expected Result: Error is returned stating problem in document
      *
-     * File: Valid_IDCard_MobID_signatures.bdoc
+     * File: not relevant
      *
      */
     @Test

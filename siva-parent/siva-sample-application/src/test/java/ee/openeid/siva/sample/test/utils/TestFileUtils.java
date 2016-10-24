@@ -23,7 +23,6 @@ import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.invoke.MethodHandles;
 
 public final class TestFileUtils {
     private static final long TIMESTAMP = System.currentTimeMillis() / 1000L;
@@ -44,7 +43,7 @@ public final class TestFileUtils {
     }
 
     public static File loadTestFile(String filePath) {
-        final String infoFilePath = MethodHandles.lookup().lookupClass().getResource(filePath).getFile();
+        final String infoFilePath = java.lang.invoke.MethodHandles.lookup().lookupClass().getResource(filePath).getFile();
         return new File(infoFilePath);
     }
 }

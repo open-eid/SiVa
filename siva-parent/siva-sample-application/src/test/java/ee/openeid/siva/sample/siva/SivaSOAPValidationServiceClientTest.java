@@ -61,9 +61,6 @@ public class SivaSOAPValidationServiceClientTest {
     private ValidationService validationService;
 
     @MockBean
-    private SivaRESTWebServiceConfigurationProperties properties;
-
-    @MockBean
     private RestTemplate restTemplate;
 
     @Rule
@@ -74,9 +71,6 @@ public class SivaSOAPValidationServiceClientTest {
 
     @Captor
     private ArgumentCaptor<String> validationRequestCaptor;
-
-    @Mock
-    private ClientHttpResponse httpResponse;
 
     @Mock
     private Appender<ILoggingEvent> mockAppender;
@@ -98,7 +92,7 @@ public class SivaSOAPValidationServiceClientTest {
 
     @Test
     public void givenValidRequestWillReturnSOAPValidationReport() throws Exception {
-        String response = FileUtils.readFileToString(TestFileUtils.loadTestFile("/soap_response.xml"));
+        String response = FileUtils.readFileToString(TestFileUtils.loadTestFile("/soap_response.xml")).replaceAll("\\n", System.lineSeparator());
 
         serverMockResponse(response);
         UploadedFile uploadedFile = TestFileUtils.generateUploadFile(testingFolder, "hello.bdoc", "Valid document");

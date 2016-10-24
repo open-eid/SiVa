@@ -1,2 +1,12 @@
 server:
   port: 8081
+
+management:
+  context-path: /monitoring
+  health:
+      diskspace:
+        enabled: false
+
+endpoints:
+  enabled: false
+  sensitive: true

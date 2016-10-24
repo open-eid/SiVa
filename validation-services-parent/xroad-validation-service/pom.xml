@@ -35,6 +35,12 @@
         </dependency>
 
         <dependency>
+            <groupId>ee.openid.siva</groupId>
+            <artifactId>siva-monitoring</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.santuario</groupId>
             <artifactId>xmlsec</artifactId>
             <version>1.5.8</version>
@@ -226,6 +232,13 @@
                         <artifactId>maven-war-plugin</artifactId>
                         <version>2.6</version>
                         <configuration>
+                            <archive>
+                                <manifestEntries>
+                                    <SiVa-Webapp-Name>${project.artifactId}</SiVa-Webapp-Name>
+                                    <SiVa-Webapp-Version>${project.version}</SiVa-Webapp-Version>
+                                    <SiVa-Webapp-Build-Time>${maven.build.timestamp}</SiVa-Webapp-Build-Time>
+                                </manifestEntries>
+                            </archive>
                             <failOnMissingWebXml>false</failOnMissingWebXml>
                         </configuration>
                     </plugin>
@@ -250,6 +263,19 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <SiVa-Webapp-Name>${project.artifactId}</SiVa-Webapp-Name>
+                            <SiVa-Webapp-Version>${project.version}</SiVa-Webapp-Version>
+                            <SiVa-Webapp-Build-Time>${maven.build.timestamp}</SiVa-Webapp-Build-Time>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>com.spotify</groupId>

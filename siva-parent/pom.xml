@@ -34,6 +34,7 @@
         <module>siva-test</module>
         <module>siva-distribution</module>
         <module>siva-statistics</module>
+        <module>siva-monitoring</module>
     </modules>
 
     <properties>
@@ -133,6 +134,11 @@
             <dependency>
                 <groupId>ee.openid.siva</groupId>
                 <artifactId>siva-statistics</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ee.openid.siva</groupId>
+                <artifactId>siva-monitoring</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

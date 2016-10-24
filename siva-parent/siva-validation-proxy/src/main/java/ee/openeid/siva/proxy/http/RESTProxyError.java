@@ -18,7 +18,6 @@ package ee.openeid.siva.proxy.http;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import org.springframework.http.HttpStatus;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)

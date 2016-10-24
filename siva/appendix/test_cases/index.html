@@ -328,6 +328,12 @@
         <ul>
           
             <li class="anchor">
+              <a title="Introduction" href="#introduction">
+                Introduction
+              </a>
+            </li>
+          
+            <li class="anchor">
               <a title="BdocValidationFailIT.java" href="#bdocvalidationfailitjava">
                 BdocValidationFailIT.java
               </a>
@@ -503,7 +509,11 @@
       <article class="article">
         <div class="wrapper">
           
-          <h1 id="list-of-test-cases">List of Test Cases</h1>
+          <h1 id="test-case-descriptions">Test Case Descriptions</h1>
+<h2 id="introduction">Introduction</h2>
+<p>This document gives overview of the test cases. This page is partially generated using a script, more info about the script can be found in <a href="https://github.com/open-eid/SiVa/tree/master/test-helpers">SiVa GitHub</a>.</p>
+<p>The structure and elements of test case is described in <a href="http://open-eid.github.io/SiVa/siva/qa_strategy/#testing">QA Strategy</a> document.
+All the files used in the tests can be found in <a href="https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/resources">SiVa GitHub</a>.</p>
 <h2 id="bdocvalidationfailitjava">BdocValidationFailIT.java</h2>
 <p><strong>TestCaseID: Bdoc-ValidationFail-1</strong></p>
 <ul>
@@ -583,7 +593,7 @@
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2">http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2</a></li>
 <li>Title: Bdoc OCSP certificate is not trusted</li>
 <li>Expected Result: The document should fail the validation</li>
-<li>File:  TM-01_bdoc21-unknown-resp.bdoc</li>
+<li>File: TM-01_bdoc21-unknown-resp.bdoc</li>
 </ul>
 <p><strong>TestCaseID: Bdoc-ValidationFail-11</strong></p>
 <ul>
@@ -617,7 +627,7 @@
 <li>Expected Result: The document should fail the validation</li>
 <li>File: EE_SER-AEX-B-LT-V-34.asice</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
+<p>**Attention! This test is disabled:  https://github.com/open-eid/SiVa/issues/18</p>
 <p><strong>TestCaseID: Bdoc-ValidationFail-15</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -626,7 +636,7 @@
 <li>Expected Result: The document should fail the validation</li>
 <li>File: 23613_TM_wrong-manifest-mimetype.bdoc</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
+<p>**Attention! This test is disabled:  https://github.com/open-eid/SiVa/issues/18</p>
 <p><strong>TestCaseID: Bdoc-ValidationFail-16</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -675,7 +685,7 @@
 <li>Expected Result: The document should fail the validation</li>
 <li>File: TM-16_unknown.4.asice</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
+<p>**Attention! This test is disabled:  https://github.com/open-eid/SiVa/issues/23</p>
 <p><strong>TestCaseID: Bdoc-ValidationFail-22</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -765,7 +775,7 @@
 <li>Expected Result: The document should pass the validation but warning should be returned</li>
 <li>File: bdoc_weak_warning_sha1.bdoc</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
+<p>**Attention! This test is disabled:  https://github.com/open-eid/SiVa/issues/20</p>
 <p><strong>TestCaseID: Bdoc-ValidationPass-4</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -986,7 +996,7 @@
 <p><strong>TestCaseID: Ddoc-ValidationFail-13</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>Requirement: <a href=""></a></li>
+<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/">http://open-eid.github.io/SiVa/siva/v2/interfaces/</a></li>
 <li>Title: Ddoc with XML Entity expansion attack</li>
 <li>Expected Result: The document should fail the validation with error</li>
 <li>File: xml_expansion.ddoc</li>
@@ -994,7 +1004,7 @@
 <p><strong>TestCaseID: Ddoc-ValidationFail-14</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>Requirement: <a href=""></a></li>
+<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/">http://open-eid.github.io/SiVa/siva/v2/interfaces/</a></li>
 <li>Title: Ddoc with XML server side request forgery attack</li>
 <li>Expected Result: The document should fail the validation with error</li>
 <li>File: xml_entity.ddoc</li>
@@ -1024,7 +1034,7 @@
 <li>Expected Result: The document should pass the validation</li>
 <li>File: SK-XML1.0.ddoc</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
+<p>**Attention! This test is disabled:   https://github.com/open-eid/SiVa/issues/11</p>
 <p><strong>TestCaseID: Ddoc-ValidationPass-3</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -1137,7 +1147,7 @@
 <li>Expected Result: Document passes the validation</li>
 <li>File: SK-XML1.0_hashcode.ddoc</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
+<p>**Attention! This test is disabled:  https://github.com/open-eid/SiVa/issues/11</p>
 <p><strong>TestCaseID: DdocHashcode-ValidationPass-2</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -1146,7 +1156,7 @@
 <li>Expected Result: Document passes the validation</li>
 <li>File: DIGIDOC-XML1.1_hashcode.ddoc</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
+<p>**Attention! This test is disabled:  This tests fails in Travis. Has been executed locally</p>
 <p><strong>TestCaseID: DdocHashcode-ValidationPass-3</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -1155,7 +1165,7 @@
 <li>Expected Result: Document passes the validation</li>
 <li>File: DIGIDOC-XML1.2_hashcode.ddoc</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
+<p>**Attention! This test is disabled:  This tests fails in Travis. Has been executed locally</p>
 <p><strong>TestCaseID: DdocHashcode-ValidationPass-4</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -1164,12 +1174,12 @@
 <li>Expected Result: Document passes the validation</li>
 <li>File: DIGIDOC-XML1.3_hashcode.ddoc</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
+<p>**Attention! This test is disabled:  This tests fails in Travis. Has been executed locally</p>
 <h2 id="documentformatitjava">DocumentFormatIT.java</h2>
 <p><strong>TestCaseID: DocumentFormat-1</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2">http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2</a></li>
+<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2"> http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2</a></li>
 <li>Title: Validation of pdf document acceptance</li>
 <li>Expected Result: Pdf is accepted and correct signature validation is given</li>
 <li>File: hellopades-pades-lt-sha256-sign.pdf</li>
@@ -1177,7 +1187,7 @@
 <p><strong>TestCaseID: DocumentFormat-2</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2">http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2</a></li>
+<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2"> http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2</a></li>
 <li>Title: Validation of bdoc document acceptance</li>
 <li>Expected Result: Bdoc is accepted and correct signature validation is given</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
@@ -1185,7 +1195,7 @@
 <p><strong>TestCaseID: DocumentFormat-3</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2">http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2</a></li>
+<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2"> http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2</a></li>
 <li>Title: Validation of txt document rejection</li>
 <li>Expected Result: Txt document is rejected and proper error message is given</li>
 <li>File: hellopades-pades-lt-sha256-sign.txt</li>
@@ -1193,7 +1203,7 @@
 <p><strong>TestCaseID: DocumentFormat-4</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2">http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2</a></li>
+<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2"> http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2</a></li>
 <li>Title: Validation of p7s document rejection</li>
 <li>Expected Result: P7s document is rejected and proper error message is given</li>
 <li>File: hellocades.p7s</li>
@@ -1201,7 +1211,7 @@
 <p><strong>TestCaseID: DocumentFormat-5</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2">http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2</a></li>
+<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2"> http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2</a></li>
 <li>Title: Validation of zip document rejection</li>
 <li>Expected Result: Zip document is rejected and proper error message is given</li>
 <li>File: 42.zip</li>
@@ -1209,7 +1219,7 @@
 <p><strong>TestCaseID: DocumentFormat-6</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2">http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2</a></li>
+<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2"> http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2</a></li>
 <li>Title: Validation of doc document rejection</li>
 <li>Expected Result: Doc document is rejected and proper error message is given</li>
 <li>File: hellopades-pades-lt-sha256-sign.doc</li>
@@ -1217,7 +1227,7 @@
 <p><strong>TestCaseID: DocumentFormat-7</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2">http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2</a></li>
+<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2"> http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2</a></li>
 <li>Title: Validation of XML document rejection</li>
 <li>Expected Result: XML document is rejected and proper error message is given</li>
 <li>File: XML.xml</li>
@@ -1225,7 +1235,7 @@
 <p><strong>TestCaseID: DocumentFormat-8</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2">http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2</a></li>
+<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2"> http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2</a></li>
 <li>Title: Validation of png document rejection</li>
 <li>Expected Result: Png document is rejected and proper error message is given</li>
 <li>File: Picture.png</li>
@@ -1434,7 +1444,7 @@
 <li>Expected Result: Document signed with certificate that is revoked should fail.</li>
 <li>File: pades_lt_revoked.pdf</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
+<p>**Attention! This test is disabled:  https://github.com/open-eid/SiVa/issues/23</p>
 <p><strong>TestCaseID: PDF-ValidationFail-4</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -1820,7 +1830,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Expected Result: All required elements are present and meet the expected values.</li>
 <li>File: 23200_weakdigest-wrong-nonce.asice</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
+<p>**Attention! This test is disabled:  https://github.com/open-eid/SiVa/issues/24</p>
 <p><strong>TestCaseID: Bdoc-ValidationReportVerification-6</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -1859,7 +1869,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface">http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface</a></li>
 <li>Title: JSON structure has all elements (Pdf valid Multiple signatures)</li>
 <li>Expected Result: All required elements are present according to SimpleReportSchema.json</li>
-<li>File:</li>
+<li>File: pades_lt_two_valid_sig.pdf</li>
 </ul>
 <p><strong>TestCaseID: Pdf-ValidationReportVerification-3</strong></p>
 <ul>
@@ -1909,7 +1919,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Expected Result: All required elements are present according to SimpleReportSchema.json</li>
 <li>File: test1-ddoc-unknown.ddoc</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
+<p>**Attention! This test is disabled:  https://github.com/open-eid/SiVa/issues/15</p>
 <p><strong>TestCaseID: Ddoc-ValidationReportVerification-4</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -1934,7 +1944,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Expected Result: All required elements are present and meet the expected values and other values are empty as expected.</li>
 <li>File: SK-XML1.0.ddoc</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
+<p>**Attention! This test is disabled:  https://github.com/open-eid/SiVa/issues/11</p>
 <p><strong>TestCaseID: Ddoc-ValidationReportVerification-7</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -1998,7 +2008,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface">http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface</a></li>
 <li>Title: Input empty values</li>
 <li>Expected Result: Errors are returned stating the missing values</li>
-<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
+<li>File: not relevant</li>
 </ul>
 <p><strong>TestCaseID: ValidationRequest-2</strong></p>
 <ul>
@@ -2038,7 +2048,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface">http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface</a></li>
 <li>Title: Totally empty request body is sent</li>
 <li>Expected Result: Error is given</li>
-<li>File: None</li>
+<li>File: not relevant</li>
 </ul>
 <p><strong>TestCaseID: ValidationRequest-7</strong></p>
 <ul>
@@ -2118,7 +2128,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface">http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface</a></li>
 <li>Title: Input random base64 string as document with bdoc document type</li>
 <li>Expected Result: Error is returned stating problem in document</li>
-<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
+<li>File: not relevant</li>
 </ul>
 <p><strong>TestCaseID: Bdoc-ValidationRequest-8</strong></p>
 <ul>
@@ -2270,7 +2280,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface">http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface</a></li>
 <li>Title: Input random base64 string as document with ddoc document type</li>
 <li>Expected Result: Error is returned stating problem in document</li>
-<li>File:</li>
+<li>File: not relevant</li>
 </ul>
 <p><strong>TestCaseID: Ddoc-ValidationRequest-6</strong></p>
 <ul>
@@ -2334,7 +2344,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface">http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface</a></li>
 <li>Title: Input random base64 string as document with xroad document type</li>
 <li>Expected Result: Error is returned stating problem in document</li>
-<li>File:</li>
+<li>File: not relevant</li>
 </ul>
 <p><strong>TestCaseID: Xroad-ValidationRequest-6</strong></p>
 <ul>
@@ -2393,7 +2403,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Expected Result: All required elements are present and meet the expected values and other values are empty as expected.</li>
 <li>File: SK-XML1.0.ddoc</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
+<p>**Attention! This test is disabled:  https://github.com/open-eid/SiVa/issues/11</p>
 <p><strong>TestCaseID: Ddoc-SoapValidationReportValue-2</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -2442,7 +2452,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Expected Result: All required elements are present and meet the expected values and other values are empty as expected.</li>
 <li>File: xroad-simple.asice</li>
 </ul>
-<p><strong>Attention! This test is disabled, check <a href="https://github.com/open-eid/SiVa/tree/develop/siva-parent/siva-test/src/test/java/ee/openeid/siva">GitHub</a> for specifics</strong> </p>
+<p>**Attention! This test is disabled:  https://github.com/open-eid/SiVa/issues/25</p>
 <p><strong>TestCaseID: Xroad-SoapValidationReportValue-2</strong></p>
 <ul>
 <li>TestType: Automated</li>
@@ -2458,7 +2468,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface">http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface</a></li>
 <li>Title: Empty request body</li>
 <li>Expected Result: Error is returned stating mismatch with required elements</li>
-<li>File:</li>
+<li>File: not relevant</li>
 </ul>
 <p><strong>TestCaseID: Soap-ValidationRequest-2</strong></p>
 <ul>
@@ -2466,7 +2476,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface">http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface</a></li>
 <li>Title: Request with not base64 string as document</li>
 <li>Expected Result: Error is returned stating encoding problem</li>
-<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
+<li>File: not relevant</li>
 </ul>
 <p><strong>TestCaseID: Soap-ValidationRequest-3</strong></p>
 <ul>
@@ -2506,7 +2516,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface">http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface</a></li>
 <li>Title: Totally empty request body is sent</li>
 <li>Expected Result: Error is given</li>
-<li>File: None</li>
+<li>File: not relevant</li>
 </ul>
 <p><strong>TestCaseID: Soap-ValidationRequest-8</strong></p>
 <ul>
@@ -2562,7 +2572,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface">http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface</a></li>
 <li>Title: Request with empty document</li>
 <li>Expected Result: Error is returned</li>
-<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
+<li>File: not relevant</li>
 </ul>
 <p><strong>TestCaseID: Soap-ValidationRequest-15</strong></p>
 <ul>
@@ -2586,7 +2596,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface">http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface</a></li>
 <li>Title: Input random base64 string as document with bdoc document type</li>
 <li>Expected Result: Error is returned stating problem in document</li>
-<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
+<li>File: not relevant</li>
 </ul>
 <p><strong>TestCaseID: Soap-BdocValidationRequest-2</strong></p>
 <ul>
@@ -2690,7 +2700,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface">http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface</a></li>
 <li>Title: Input random base64 string as document with pdf document type</li>
 <li>Expected Result: Error is returned stating problem in document</li>
-<li>File: Valid_IDCard_MobID_signatures.bdoc</li>
+<li>File: not relevant</li>
 </ul>
 <p><strong>TestCaseID: Soap-PdfValidationRequest-2</strong></p>
 <ul>
@@ -2760,7 +2770,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <p><strong>TestCaseID: XroadSoap-RequestVerification-1</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface">http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface</a></li>
+<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface">http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface</a></li>
 <li>Title: Soap headers are returned in response</li>
 <li>Expected Result: Same headers are in response as in request</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
@@ -2768,7 +2778,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <p><strong>TestCaseID: XroadSoap-RequestVerification-2</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface">http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface</a></li>
+<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface">http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface</a></li>
 <li>Title: Soap headers are returned in correct order</li>
 <li>Expected Result: Same headers are in response as in request</li>
 <li>File: Valid_IDCard_MobID_signatures.bdoc</li>
@@ -2776,10 +2786,10 @@ Check all the fields presence and correctness even though tests prepare data for
 <p><strong>TestCaseID: XroadSoap-RequestVerification-3</strong></p>
 <ul>
 <li>TestType: Automated</li>
-<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface">http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface</a></li>
+<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface">http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface</a></li>
 <li>Title: Soap headers are returned in error response</li>
 <li>Expected Result: Same headers are in response as in request</li>
-<li>File:</li>
+<li>File: not relevant</li>
 </ul>
 <h2 id="sample-application-integration-test">Sample Application Integration Test</h2>
 <p><strong>TestCaseID: Sample-Application-Elements-1</strong></p>
@@ -2812,7 +2822,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Requirement:</li>
 <li>Title: Page layout</li>
 <li>Expected Result: All elements are properly displayed and can be used with different window sizes</li>
-<li>File:</li>
+<li>File: not relevant</li>
 </ul>
 <p><strong>TestCaseID: Sample-Application-Validation-1</strong></p>
 <ul>
@@ -2869,7 +2879,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/">http://open-eid.github.io/SiVa/siva/v2/interfaces/</a></li>
 <li>Title: Invalid Request</li>
 <li>Expected Result: Soap error should be returned</li>
-<li>File:</li>
+<li>File: not relevant</li>
 </ul>
 <p><strong>TestCaseID: Xroad-Validate-Bdoc-1</strong></p>
 <ul>
@@ -2893,7 +2903,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/">http://open-eid.github.io/SiVa/siva/v2/interfaces/</a></li>
 <li>Title: Invalid Request</li>
 <li>Expected Result: Soap error should be returned</li>
-<li>File:</li>
+<li>File: not relevant</li>
 </ul>
 <p><strong>TestCaseID: Xroad-Validate-Pdf-1</strong></p>
 <ul>
@@ -2917,7 +2927,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/">http://open-eid.github.io/SiVa/siva/v2/interfaces/</a></li>
 <li>Title: Invalid Request</li>
 <li>Expected Result: Soap error should be returned</li>
-<li>File:</li>
+<li>File: not relevant</li>
 </ul>
 <p><strong>TestCaseID: Xroad-Validate-Xroad-1</strong></p>
 <ul>
@@ -2941,7 +2951,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/">http://open-eid.github.io/SiVa/siva/v2/interfaces/</a></li>
 <li>Title: Invalid Request</li>
 <li>Expected Result: Soap error should be returned</li>
-<li>File:</li>
+<li>File: not relevant</li>
 </ul>
 <h2 id="configuration-system-test">Configuration System Test</h2>
 <p><strong>TestCaseID: Configuration-webapp-TSL-1</strong></p>
@@ -2950,7 +2960,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/">http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/</a></li>
 <li>Title: TSL update over network</li>
 <li>Expected Result: TSL is updated from configured path</li>
-<li>File: -</li>
+<li>File: not relevant</li>
 </ul>
 <p><strong>TestCaseID: Configuration-webapp-TSL-3</strong></p>
 <ul>
@@ -2958,7 +2968,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/">http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/</a></li>
 <li>Title: TSL update disabled</li>
 <li>Expected Result: Local cashe is used</li>
-<li>File: -</li>
+<li>File: not relevant</li>
 </ul>
 <p><strong>TestCaseID: Configuration-webapp-keystore-1</strong></p>
 <ul>
@@ -2966,7 +2976,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/">http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/</a></li>
 <li>Title: Keystore change</li>
 <li>Expected Result: configured keystore is used</li>
-<li>File: -</li>
+<li>File: not relevant</li>
 </ul>
 <p><strong>TestCaseID: Configuration-webapp-scheduler-1</strong></p>
 <ul>
@@ -2974,7 +2984,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/">http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/</a></li>
 <li>Title: Update time is configured</li>
 <li>Expected Result: configured time is used</li>
-<li>File: -</li>
+<li>File: not relevant</li>
 </ul>
 <p><strong>TestCaseID: Configuration-webapp-xroad-1</strong></p>
 <ul>
@@ -2982,7 +2992,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/">http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/</a></li>
 <li>Title: X-Road validator service address is changed</li>
 <li>Expected Result: correct address is used</li>
-<li>File: -</li>
+<li>File: not relevant</li>
 </ul>
 <p><strong>TestCaseID: Configuration-webapp-GA-1</strong></p>
 <ul>
@@ -2990,7 +3000,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/">http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/</a></li>
 <li>Title: Google Analytics is configured</li>
 <li>Expected Result: Data is transfered to GA</li>
-<li>File: -</li>
+<li>File: not relevant</li>
 </ul>
 <p><strong>TestCaseID: Configuration-webapp-policy-1</strong></p>
 <ul>
@@ -2998,7 +3008,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/">http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/</a></li>
 <li>Title: Configure policy for bdoc</li>
 <li>Expected Result: Configuration is used</li>
-<li>File: -</li>
+<li>File: not relevant</li>
 </ul>
 <p><strong>TestCaseID: Configuration-webapp-policy-2</strong></p>
 <ul>
@@ -3006,7 +3016,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/">http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/</a></li>
 <li>Title: Configure policy for pdf</li>
 <li>Expected Result: Configuration is used</li>
-<li>File: -</li>
+<li>File: not relevant</li>
 </ul>
 <p><strong>TestCaseID: Configuration-sample-application-1</strong></p>
 <ul>
@@ -3014,7 +3024,7 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/">http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/</a></li>
 <li>Title: Configuration of SiVa Web Service access</li>
 <li>Expected Result: Correct web service is used</li>
-<li>File: -</li>
+<li>File: not relevant</li>
 </ul>
           <aside class="copyright" role="note">
             

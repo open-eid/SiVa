@@ -440,17 +440,25 @@ library is described in each of the validation service section.</p>
 <td><strong>Validation commons</strong></td>
 <td>Common interfaces and utilities for all validation services (ie utilities for default and additional policies and constraints)</td>
 </tr>
+<tr>
+<td><strong>Monitoring service</strong></td>
+<td>Service that provides generic information about the webapp - it's name, version, uptime and link status. (The service is disabled by default)</td>
+</tr>
 </tbody>
 </table>
 <h3 id="siva-webapp-interfaces">Siva webapp interfaces</h3>
 <p>Provided:</p>
 <ul>
-<li>REST interface - interface for handling validation queries.<ul>
+<li>Validation service REST interface - interface for handling validation queries.<ul>
 <li>JSON formatted POST requests</li>
 </ul>
 </li>
-<li>SOAP interface - interface for handling validation queries<ul>
+<li>Validation service SOAP interface - interface for handling validation queries<ul>
 <li>X-Road compliant and non-compliant SOAP requests (without the X-Road required headers)</li>
+</ul>
+</li>
+<li>Monitoring service REST interface - interface for retrieving the webapp's health information<ul>
+<li>HTTP GET that returns JSON formatted respónses</li>
 </ul>
 </li>
 </ul>
@@ -493,13 +501,21 @@ library is described in each of the validation service section.</p>
 <td><strong>Validation commons</strong></td>
 <td>Common interfaces and utilities for all validation services (ie utilities for default and additional policies and constraints)</td>
 </tr>
+<tr>
+<td><strong>Monitoring service</strong></td>
+<td>Service that provides generic information about the webapp - it's name, version, uptime and link status. (The service is disabled by default)</td>
+</tr>
 </tbody>
 </table>
 <h3 id="x-road-validation-webapp-interfaces">X-road validation webapp interfaces</h3>
 <p>Provided:</p>
 <ul>
-<li>REST interface - interface for handling X-Road signed requests.<ul>
+<li>Validation service REST interface - interface for handling X-Road signed requests.<ul>
 <li>JSON formatted POST queries</li>
+</ul>
+</li>
+<li>Monitoring service REST interface - interface for retrieving the webapp's health information<ul>
+<li>HTTP GET that returns JSON formatted respónses</li>
 </ul>
 </li>
 </ul>
@@ -578,6 +594,10 @@ library is described in each of the validation service section.</p>
 <tr>
 <td><strong>Google Analytics</strong></td>
 <td>(Optional) A subsystem that can be used for business analysis based on the SiVa statistics (sent over Google Management Protocol v1). The webapp can be configured to send statistical data about validation reports to Google Analytics. See <a href="../../../pdf-files/SiVa_statistics.pdf">SiVa_statistics.pdf</a> for further details. <ul><li>NB! Note that the exact same dataset is logged by the <strong>Logger</strong> component if one needs to handle generic statistical data locally (for example using Logstash and Kibana)</li></ul></td>
+</tr>
+<tr>
+<td><strong>Monitoring</strong></td>
+<td>(Optional) A subsystem that tracks the health and uptime of SiVa webapps</li></ul></td>
 </tr>
 </tbody>
 </table>

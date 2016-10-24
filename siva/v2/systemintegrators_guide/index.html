@@ -293,6 +293,12 @@
             </li>
           
             <li class="anchor">
+              <a title="Monitoring" href="#monitoring">
+                Monitoring
+              </a>
+            </li>
+          
+            <li class="anchor">
               <a title="Configuration parameters" href="#configuration-parameters">
                 Configuration parameters
               </a>
@@ -436,7 +442,7 @@ sudo apt-get install default-jdk -y
 
 <p>Final step is building the SiVa project using Maven Wrapper</p>
 <div class="codehilite"><pre><span></span><span class="nb">cd</span> SiVa
-./mvnw install
+./mvnw clean install
 </pre></div>
 
 
@@ -701,6 +707,87 @@ the command below.</p>
 </li>
 </ol>
 <p>The format and events are described in more detail in <a href="../../../pdf-files/SiVa_statistics.pdf">SiVa_statistics.pdf</a></p>
+<h2 id="monitoring">Monitoring</h2>
+<p>SiVa webapps provide an interface for external monitoring tools (to periodically check the generic service health status).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Monitoring support in SiVa webapps is disabled by default. To enable monitoring run the webapp with the following parameter <code>endpoints.health.enabled=true</code>. See Configuration section for more details on how to specify and override configuration parameters.</p>
+</div>
+<p>The monitoring endpoint is accessible via HTTP GET at <strong>/monitoring/health</strong> or <strong>/monitoring/health.json</strong> url. As a response, a JSON object is returned with the following information:</p>
+<table>
+<thead>
+<tr>
+<th><strong>Field</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>status</strong></td>
+<td>Status of the webapp. Possible values UP, DOWN (if some of it's dependencies are down).</td>
+</tr>
+<tr>
+<td>&nbsp;&nbsp;&nbsp;<strong>health</strong></td>
+<td>Health details of the webapp itself</td>
+</tr>
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>status</strong></td>
+<td>Status of the webapp - constant value UP</td>
+</tr>
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>webappName</strong></td>
+<td>The artifact name of the webapp (from jar/war file)</td>
+</tr>
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>version</strong></td>
+<td>The release version fo the webapp</td>
+</tr>
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>buildTime</strong></td>
+<td>Build date and time (format yyyy-MM-dd'T'HH:mm:ss'Z')</td>
+</tr>
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>startTime</strong></td>
+<td>Webapp startup date and time (format yyyy-MM-dd'T'HH:mm:ss'Z')</td>
+</tr>
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>currentTime</strong></td>
+<td>Current server date and time (format yyyy-MM-dd'T'HH:mm:ss'Z')</td>
+</tr>
+<tr>
+<td>&nbsp;&nbsp;&nbsp;<strong>link</strong>{number}</td>
+<td>(OPTIONAL) A link to a required external system. Depending on configuration, the webapp can also connect to dependent webapp's /monitoring/info and include it's status. Note that webapp status is dependent on the link status - if any of the links are <strong>DOWN</strong>, the webapp status will also be set as <strong>DOWN</strong></td>
+</tr>
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>status</strong></td>
+<td>Link status</td>
+</tr>
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>name</strong></td>
+<td>Descriptive name for the link</td>
+</tr>
+</tbody>
+</table>
+<p>For example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="s2">&quot;UP&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;health&quot;</span><span class="p">:{</span>
+      <span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="s2">&quot;UP&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;webappName&quot;</span><span class="p">:</span><span class="s2">&quot;siva-sample-application&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="s2">&quot;2.0.2-SNAPSHOT&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;buildTime&quot;</span><span class="p">:</span><span class="s2">&quot;2016-10-21T15:56:21Z&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;startTime&quot;</span><span class="p">:</span><span class="s2">&quot;2016-10-21T15:57:48Z&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;currentTime&quot;</span><span class="p">:</span><span class="s2">&quot;2016-10-21T15:58:39Z&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;link1&quot;</span><span class="p">:{</span>
+      <span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="s2">&quot;UP&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;sivaService&quot;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>You can add custom links and override the health endpoint port when needed. See Configuration parameters section for details.</p>
 <hr />
 <h2 id="configuration-parameters">Configuration parameters</h2>
 <p>All SiVa webapps have been designed to run with predetermined defaults after building and without additional configuration.
@@ -718,6 +805,54 @@ Default configuration parameters can be overridden by providing custom applicati
 
 
 <p>See the reference list of all common <a href="http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html">application properties</a> provided by Spring boot</p>
+<h3 id="monitoring-all-siva-webapps">Monitoring (all SiVa webapps)</h3>
+<p>All SiVa webapps have a builtin health endpoint that uses Spring boot management server and which provides details about their status and dependent web services. By default, these endpoints are disabled.</p>
+<p>The url for accessing health information is <code>/monitoring/health</code> or <code>/monitoring/health.json</code>. Use HTTP GET to fetch the JSON response.</p>
+<p>To enable the endpoint, use the following configuration parameter:</p>
+<div class="codehilite"><pre><span></span>endpoints.health.enabled<span class="o">=</span><span class="nb">true</span>
+</pre></div>
+
+
+<p>When enabled, all endpoints have been preconfigured to work on the same port as the webapp (can be overridden).</p>
+<ul>
+<li>Link health - customizing related system health indicators</li>
+</ul>
+<p>Demo webapp and Siva webapp also include information about the health of their dependent services.
+These links to dependent web services have been preconfigured. For example, the Demo webapp is preset to check whether the Siva webapp is accessible from the following url (parameter <code>siva.proxy.xroadUrl</code> value)/monitoring/health and the Siva webapp verifies that the X-road validation service webapp is accessible by checking the (parameter <code>siva.service.serviceHost</code> value)/monitoring/health url.</p>
+<p>However, these links can be overridden by using the following parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>endpoints.health.links[<code>index</code>].name</strong></td>
+<td>A short link name <ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>endpoints.health.links[<code>index</code>].url</strong></td>
+<td>URL to another compatible monitoring webapp (it is expected thath the webapp provides, a JSON object response to HTTP GET. The <ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>endpoints.health.links[<code>index</code>].timeout</strong></td>
+<td>Connection timeout for link<ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+</tbody>
+</table>
+<p>For example:</p>
+<div class="codehilite"><pre><span></span>endpoints.health.links<span class="o">[</span>0<span class="o">]</span>.name<span class="o">=</span>linkToXroad
+endpoints.health.links<span class="o">[</span>0<span class="o">]</span>.url<span class="o">=</span>http://localhost:7777/monitoring/health
+endpoints.health.links<span class="o">[</span>0<span class="o">]</span>.timeout<span class="o">=</span>1000
+</pre></div>
+
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The external link configuration must be explicitly set when the monitoring service on the target machine is configured to run on a different port as the target service itself(ie using the  <code>management.port</code> option in configuration) .</p>
+</div>
 <h3 id="siva-webapp-parameters">Siva webapp parameters</h3>
 <ul>
 <li>Updating TSL</li>

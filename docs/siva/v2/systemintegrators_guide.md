@@ -309,6 +309,8 @@ SiVa webapps provide an interface for external monitoring tools (to periodically
 !!! note
     Monitoring support in SiVa webapps is disabled by default. To enable monitoring run the webapp with the following parameter `endpoints.health.enabled=true`. See Configuration section for more details on how to specify and override configuration parameters.
 
+The endpoint is a customized Spring boot [health endpoint](http://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html#production-ready-health).
+
 The monitoring endpoint is accessible via HTTP GET at **/monitoring/health** or **/monitoring/health.json** url. As a response, a JSON object is returned with the following information:
 
 | **Field**| **Description** |
@@ -321,8 +323,8 @@ The monitoring endpoint is accessible via HTTP GET at **/monitoring/health** or 
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**buildTime** | Build date and time (format yyyy-MM-dd'T'HH:mm:ss'Z') |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**startTime** | Webapp startup date and time (format yyyy-MM-dd'T'HH:mm:ss'Z')|
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**currentTime** | Current server date and time (format yyyy-MM-dd'T'HH:mm:ss'Z') |
-| &nbsp;&nbsp;&nbsp;**link**{number} | (OPTIONAL) A link to a required external system. Depending on configuration, the webapp can also connect to dependent webapp's /monitoring/info and include it's status. Note that webapp status is dependent on the link status - if any of the links are **DOWN**, the webapp status will also be set as **DOWN** |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**status** | Link status |
+| &nbsp;&nbsp;&nbsp;**link**{number} | (OPTIONAL) Represents a link to external system that the webapp depends on. |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**status** | Link status. <ul><li>**DOWN** if the webapp does not respond (within a specified timeout limit - default 10 seconds) or the response is in invalid format (default Spring boot actuator /health endpoint format is expected).</li><li>**UP** if the service responds with http 200 and returns a valid JSON object with status "UP"</li></ul> |) |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**name** | Descriptive name for the link |
 
 For example:
@@ -375,25 +377,26 @@ See the reference list of all common [application properties](http://docs.spring
 
 All SiVa webapps have a builtin health endpoint that uses Spring boot management server and which provides details about their status and dependent web services. By default, these endpoints are disabled.
 
-The url for accessing health information is `/monitoring/health` or `/monitoring/health.json`. Use HTTP GET to fetch the JSON response.
+The url for accessing JSON formatted health information with HTTP GET is `/monitoring/health` or `/monitoring/health.json`.
 
-To enable the endpoint, use the following configuration parameter:
+* **Enabling and disabling the monitoring endpoint**
+
+By default, the health endpoint is disabled. To enable the endpoint, use the following configuration parameter:
 ```bash
 endpoints.health.enabled=true
 ```
-When enabled, all endpoints have been preconfigured to work on the same port as the webapp (can be overridden).
 
-* Link health - customizing related system health indicators
+* **Customizing external service health indicators**
 
-Demo webapp and Siva webapp also include information about the health of their dependent services.
-These links to dependent web services have been preconfigured. For example, the Demo webapp is preset to check whether the Siva webapp is accessible from the following url (parameter `siva.proxy.xroadUrl` value)/monitoring/health and the Siva webapp verifies that the X-road validation service webapp is accessible by checking the (parameter `siva.service.serviceHost` value)/monitoring/health url.
+Demo webapp and Siva webapp also include additional information about the health of their dependent services.
+These links to dependent web services have been preconfigured. For example, the Demo webapp is preset to check whether the Siva webapp is accessible from the following url (parameter `siva.service.serviceHost` value)/monitoring/health and the Siva webapp verifies that the X-road validation service webapp is accessible by checking the default url (configured by parameter `siva.proxy.xroadUrl` value)/monitoring/health url.
 
-However, these links can be overridden by using the following parameters:
+However, using the following parameters, these links can be overridden:
 
 | Property | Description |
 | -------- | ----------- |
 |**endpoints.health.links[`index`].name**| A short link name <ul><li>Default: **N/A**</li></ul>|
-|**endpoints.health.links[`index`].url**| URL to another compatible monitoring webapp (it is expected thath the webapp provides, a JSON object response to HTTP GET. The <ul><li>Default: **N/A**</li></ul>|
+|**endpoints.health.links[`index`].url**| URL to another monitoring endpoint that produces Spring boot [health endpoint](http://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html#production-ready-health) compatible JSON object as a response to HTTP GET. <ul><li>Default: **N/A**</li></ul>|
 |**endpoints.health.links[`index`].timeout**| Connection timeout for link<ul><li>Default: **N/A**</li></ul>|
 
 For example:

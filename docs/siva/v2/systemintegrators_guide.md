@@ -332,7 +332,7 @@ However, using the following parameters, these links can be overridden:
 | -------- | ----------- |
 |**endpoints.health.links[`index`].name**| A short link name <ul><li>Default: **N/A**</li></ul>|
 |**endpoints.health.links[`index`].url**| URL to another monitoring endpoint that produces Spring boot [health endpoint](http://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html#production-ready-health) compatible JSON object as a response to HTTP GET. <ul><li>Default: **N/A**</li></ul>|
-|**endpoints.health.links[`index`].timeout**| Connection timeout for link<ul><li>Default: **N/A**</li></ul>|
+|**endpoints.health.links[`index`].timeout**| Connection timeout (in milliseconds)<ul><li>Default: **N/A**</li></ul>|
 
 For example:
 ```bash

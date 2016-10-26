@@ -42,6 +42,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
     protected static final String SIGNATURE_POLICY = "signaturePolicy";
 
     private static final String VALIDATION_ENDPOINT = "/validate";
+    private static final String MONITORING_ENDPOINT = "/monitoring/health";
     private static final boolean PRINT_RESPONSE = false;
 
     protected Response post(String request) {
@@ -61,6 +62,13 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
                 .contentType(ContentType.JSON)
                 .when()
                 .post(VALIDATION_ENDPOINT);
+    }
+
+    protected Response getMonitoring() {
+        return given()
+                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+                .when()
+                .get(MONITORING_ENDPOINT);
     }
 
     /**

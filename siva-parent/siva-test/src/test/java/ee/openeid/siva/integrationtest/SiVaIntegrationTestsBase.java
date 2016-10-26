@@ -30,6 +30,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.File;
@@ -46,6 +47,8 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = SivaWebApplication.class, webEnvironment=RANDOM_PORT)
 @ActiveProfiles("test")
+@TestPropertySource(locations="classpath:application-test.yml")
+
 public abstract class SiVaIntegrationTestsBase {
 
     private static final String PROJECT_SUBMODULE_NAME =  "siva-test";

@@ -254,7 +254,7 @@ public class BdocValidationFailIT extends SiVaRestTests{
      *
      * Expected Result: The document should fail the validation
      *
-     * File:  TM-01_bdoc21-unknown-resp.bdoc
+     * File: TM-01_bdoc21-unknown-resp.bdoc
      */
     @Test
     public void bdocNotTrustedOcspCert() {

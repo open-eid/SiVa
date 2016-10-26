@@ -36,8 +36,6 @@ import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUt
 
 public class DDOCQualifiedReportBuilder {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(DDOCQualifiedReportBuilder.class);
-
     private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final String FULL_DOCUMENT = "Full document";
     private static final String DDOC_SIGNATURE_FORM_PREFIX = "DIGIDOC_XML_";

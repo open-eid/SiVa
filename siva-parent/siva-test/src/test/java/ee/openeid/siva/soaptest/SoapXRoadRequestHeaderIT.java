@@ -193,7 +193,7 @@ public class SoapXRoadRequestHeaderIT extends SiVaSoapTests {
      *
      * Expected Result: Same headers are in response as in request
      *
-     * File:
+     * File: not relevant
      *
      */
     @Test

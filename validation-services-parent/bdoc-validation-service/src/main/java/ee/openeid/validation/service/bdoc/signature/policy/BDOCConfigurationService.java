@@ -42,7 +42,7 @@ public class BDOCConfigurationService {
     private TrustedListsCertificateSource trustedListSource;
 
     @PostConstruct
-    private void loadAllBDOCConfigurations() {
+    protected void loadAllBDOCConfigurations() {
         properties.getAbstractPolicies().forEach(policy -> {
             Configuration tempConfiguration = policyConfiguration.getConfiguration().copy();
             tempConfiguration.setValidationPolicy(policyService.getAbsolutePath(policy.getName()));

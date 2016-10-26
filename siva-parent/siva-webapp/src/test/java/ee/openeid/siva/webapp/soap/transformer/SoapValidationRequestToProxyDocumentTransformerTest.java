@@ -19,7 +19,6 @@ package ee.openeid.siva.webapp.soap.transformer;
 import ee.openeid.siva.webapp.soap.DocumentType;
 import ee.openeid.siva.webapp.soap.SoapValidationRequest;
 import org.apache.commons.codec.binary.Base64;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -32,7 +31,7 @@ public class SoapValidationRequestToProxyDocumentTransformerTest {
     public void contentIsCorrectlyTransformedToBytes() {
         String documentContent = "ZmlsZWNvbnRlbnQ=";
         SoapValidationRequest validationRequest = createSoapValidationRequest(documentContent, DocumentType.BDOC, "file.bdoc", "some policy");
-        Assert.assertEquals(validationRequest.getDocument(), Base64.encodeBase64String(transformer.transform(validationRequest).getBytes()));
+        assertEquals(validationRequest.getDocument(), Base64.encodeBase64String(transformer.transform(validationRequest).getBytes()));
     }
 
     @Test

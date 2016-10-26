@@ -108,7 +108,7 @@ public class BDOCValidationServiceIntegrationTest {
 
     @Test
     public void validatingAnXRoadBatchSignatureAsicContainerWithBdocValidatorThrowsMalformedDocumentException() throws Exception {
-        ValidationDocument validationDocument = buildValidationDocument(BDOCTestUtils.XROAD_BATCHSIGNATURE_CONTAINER);
+        ValidationDocument validationDocument = buildValidationDocument(XROAD_BATCHSIGNATURE_CONTAINER);
         expectedException.expect(MalformedDocumentException.class);
         expectedException.expectMessage(DOCUMENT_MALFORMED_MESSAGE);
         bdocValidationService.validateDocument(validationDocument);
@@ -116,7 +116,7 @@ public class BDOCValidationServiceIntegrationTest {
 
     @Test
     public void validatingAnXRoadSimpleAsicContainerWithBdocValidatorThrowsMalformedDocumentException() throws Exception {
-        ValidationDocument validationDocument = buildValidationDocument(BDOCTestUtils.XROAD_SIMPLE_CONTAINER);
+        ValidationDocument validationDocument = buildValidationDocument(XROAD_SIMPLE_CONTAINER);
         expectedException.expect(MalformedDocumentException.class);
         expectedException.expectMessage(DOCUMENT_MALFORMED_MESSAGE);
         bdocValidationService.validateDocument(validationDocument);
@@ -354,6 +354,6 @@ public class BDOCValidationServiceIntegrationTest {
     }
 
     private ValidationDocument bdocValidIdCardAndMobIdSignatures() throws Exception {
-        return buildValidationDocument(BDOCTestUtils.VALID_ID_CARD_MOB_ID);
+        return buildValidationDocument(VALID_ID_CARD_MOB_ID);
     }
 }

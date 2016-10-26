@@ -8,7 +8,6 @@ env:
 services:
   - docker
 addons:
-  ssh_known_hosts: demoapps.eu
   apt:
     sources:
       - deadsnakes
@@ -18,8 +17,6 @@ addons:
       - python3-setuptools
       - unzip
 before_install:
-- openssl aes-256-cbc -K $encrypted_befc5bd7f29f_key -iv $encrypted_befc5bd7f29f_iv
-  -in ci-deploy-key.enc -out ci-deploy-key -d
 - export TZ=Estonia/Tallinn
 - python3 --version
 - easy_install3 --user future
@@ -35,9 +32,6 @@ script: ./mvnw clean install -q
 after_success:
 - "./mvnw jacoco:report coveralls:report -q -Dcoveralls.repo.token=$COVERALLS_REPO_TOKEN"
 - "./mvnw -pl siva-parent/siva-webapp -pl validation-services-parent/xroad-validation-service -pl siva-parent/siva-sample-application package docker:build docker:push -DskipTests -Dsettings.security=settings-security.xml -s settings.xml"
-- "chmod 600 ${TRAVIS_BUILD_DIR}/ci-deploy-key"
-- "scp -i ci-deploy-key ci-build-info.yml ci-deploy@demoapps.eu:/home/ci-deploy"
-- "${TRAVIS_BUILD_DIR}/build-helpers/deploy.sh"
 notifications:
   email:
     recipients:

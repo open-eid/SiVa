@@ -13,5 +13,5 @@ Configuration:
 
 Test execution:
 1. Load the project file
-2. Configure the correct endpoint and identificators for X-Road
-3. Execute the tests by test suites
+2. Configure the correct endpoint and identificators for X-Road as instructed above
+3. Execute the tests by test suites with clicking "Runs the selected TestCases" button

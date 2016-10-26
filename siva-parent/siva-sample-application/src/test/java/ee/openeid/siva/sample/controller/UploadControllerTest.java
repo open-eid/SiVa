@@ -74,9 +74,6 @@ public class UploadControllerTest {
     private ValidationTaskRunner taskRunner;
 
     @MockBean
-    private Observable<BuildInfo> buildInfo;
-
-    @MockBean
     private UploadFileCacheService hazelcastUploadFileCacheService;
 
     @MockBean
@@ -87,8 +84,6 @@ public class UploadControllerTest {
 
     @Captor
     private ArgumentCaptor<LoggingEvent> captorLoggingEvent;
-
-    private String encodedFilename = "random.bdoc";
 
     @Before
     public void setUp() throws Exception {

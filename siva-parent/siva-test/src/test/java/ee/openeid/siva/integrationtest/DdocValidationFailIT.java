@@ -20,7 +20,6 @@ import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
@@ -326,7 +325,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: 
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/
      *
      * Title: Ddoc with XML Entity expansion attack
      *
@@ -348,7 +347,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: 
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/
      *
      * Title: Ddoc with XML server side request forgery attack
      *

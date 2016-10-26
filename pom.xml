@@ -88,6 +88,7 @@
         <project.root>${basedir}</project.root>
         <project.encoding>UTF-8</project.encoding>
         <language.level>1.8</language.level>
+        <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss'Z'</maven.build.timestamp.format>
     </properties>
 
     <reporting>

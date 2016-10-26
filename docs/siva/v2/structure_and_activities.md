@@ -23,15 +23,18 @@ library is described in each of the validation service section.
 | **Logger** | Logging functionality is handled by the **SLF4J** logging facade and on top of the **Logback** framework. As a result, logging can be configured via the standard Logback configuration file. By default, logging works on the `INFO` level and logs are directed to the system console. Additional logging appenders can be added (consult logback documentation for more [details](http://logback.qos.ch/documentation.html))  |
 | **Configuration** | Configuration is a global component used throughout the webapp. Responsible for reading and handling the application configuration management |
 | **Validation commons** | Common interfaces and utilities for all validation services (ie utilities for default and additional policies and constraints) |
+| **Monitoring service** | Service that provides generic information about the webapp - it's name, version, uptime and link status. (The service is disabled by default) |
 
 ### Siva webapp interfaces
 
 Provided:
 
-* REST interface - interface for handling validation queries.
+* Validation service REST interface - interface for handling validation queries.
     * JSON formatted POST requests
-* SOAP interface - interface for handling validation queries
+* Validation service SOAP interface - interface for handling validation queries
     * X-Road compliant and non-compliant SOAP requests (without the X-Road required headers)
+* Monitoring service REST interface - interface for retrieving the webapp's health information
+    * HTTP GET that returns JSON formatted respónses
 
 Required:
 
@@ -53,13 +56,16 @@ Required:
 | **Logger** | Logger is a global component used throughout the webapp by every other components. Logging functionality is handled by the **SLF4J** logging facade and on top of it the **Logback** framework is used. As a result, logging can be configured via the standard Logback configuration file. By default, logging works on the `INFO` level and logs are directed to the system console. Additional logging appenders can be added (consult logback documentation for more [details](http://logback.qos.ch/documentation.html))  |
 | **Configuration** | Configuration is a global component used throughout the webapp. Responsible for reading and handling the application configuration management |
 | **Validation commons** | Common interfaces and utilities for all validation services (ie utilities for default and additional policies and constraints) |
+| **Monitoring service** | Service that provides generic information about the webapp - it's name, version, uptime and link status. (The service is disabled by default) |
 
 ### X-road validation webapp interfaces
 
 Provided:
 
-* REST interface - interface for handling X-Road signed requests.
+* Validation service REST interface - interface for handling X-Road signed requests.
     * JSON formatted POST queries
+* Monitoring service REST interface - interface for retrieving the webapp's health information
+    * HTTP GET that returns JSON formatted respónses
 
 Required:
 
@@ -88,7 +94,7 @@ Required:
 
 | Component | Description |
 |------------------------------|--------------------------------------------------------|
-| **Policies and constraints** | (Optional) By default, two policies are supported and integrated into SiVa - see [SiVa Validation Policy](/siva/appendix/validation_policy). However, it is possible to customize the validation policies and their constraints. Configuration is validation service specific. See the [overriding configuration](/siva/v2/deployment/#custom-configuration) section for details. |
+| **Policies and constraints** | (Optional) By default, two policies are supported and integrated into SiVa - see [SiVa Validation Policy](/siva/appendix/validation_policy). However, it is possible to customize the validation policies and their constraints. Configuration is validation service specific. See the [overriding configuration](/siva/v2/systemintegrators_guide/#configuration-parameters) section for details. |
 | **Externalized configuration** | Application specific configuration (property files, command line variables, etc) that allow overriding the default values set within the webapp. |
 
 ## External subsystems
@@ -99,4 +105,5 @@ Required:
 | **XROAD security server** | A client subsystem that, once connected, allows SiVa to be integrated into the [X-Road data exchange layer](https://www.ria.ee/en/x-road.html) |
 | **EU TSL provider** | A subsystem that provides SiVa with a current TSL. An HTTPS endpoint, that provides an XML formatted file that lists all trusted service providers along with their certificates. |
 | **Google Analytics** | (Optional) A subsystem that can be used for business analysis based on the SiVa statistics (sent over Google Management Protocol v1). The webapp can be configured to send statistical data about validation reports to Google Analytics. See [SiVa_statistics.pdf](/pdf-files/SiVa_statistics.pdf) for further details. <ul><li>NB! Note that the exact same dataset is logged by the **Logger** component if one needs to handle generic statistical data locally (for example using Logstash and Kibana)</li></ul> |
+| **Monitoring** | (Optional) A subsystem that tracks the health and uptime of SiVa webapps</li></ul> |
 

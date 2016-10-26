@@ -7,8 +7,6 @@ This document gives overview of the test cases. This page is partially generated
 The structure and elements of test case is described in [QA Strategy](http://open-eid.github.io/SiVa/siva/qa_strategy/#testing) document.
 All the files used in the tests can be found in [SiVa GitHub](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/resources).
 
-
-
 ## BdocValidationFailIT.java
 
 
@@ -880,6 +878,18 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Title: 9MB DDOC
   * Expected Result: Validation report is returned
   * File: 9MB_DDOC.ddoc
+
+
+## MonitoringIT.java
+
+
+**TestCaseID: WebApp-Monitoring-1**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#service-health-monitoring](http://open-eid.github.io/SiVa/siva/v2/interfaces/#service-health-monitoring)
+  * Title: Health monitor response structure
+  * Expected Result: response matches the expected structure of JSON
+  * File: not relevant
 
 
 ## PdfBaselineProfileIT.java
@@ -2789,7 +2799,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 ## Configuration System Test
 
-**TestCaseID: Configuration-webapp-TSL-1**
+**TestCaseID: Configuration-Webapp-TSL-1**
 
   * TestType: Manual
   * Requirement: [http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/](http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/)
@@ -2797,7 +2807,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Expected Result: TSL is updated from configured path
   * File: not relevant
 
-**TestCaseID: Configuration-webapp-TSL-3**
+**TestCaseID: Configuration-Webapp-TSL-3**
 
   * TestType: Manual
   * Requirement: [http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/](http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/)
@@ -2805,7 +2815,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Expected Result: Local cashe is used
   * File: not relevant
   
-**TestCaseID: Configuration-webapp-keystore-1**
+**TestCaseID: Configuration-Webapp-Keystore-1**
 
   * TestType: Manual
   * Requirement: [http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/](http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/)
@@ -2813,7 +2823,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Expected Result: configured keystore is used
   * File: not relevant
   
-**TestCaseID: Configuration-webapp-scheduler-1**
+**TestCaseID: Configuration-Webapp-Scheduler-1**
 
   * TestType: Manual
   * Requirement: [http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/](http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/)
@@ -2821,7 +2831,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Expected Result: configured time is used
   * File: not relevant
   
-**TestCaseID: Configuration-webapp-xroad-1**
+**TestCaseID: Configuration-Webapp-Xroad-1**
 
   * TestType: Manual
   * Requirement: [http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/](http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/)
@@ -2829,7 +2839,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Expected Result: correct address is used
   * File: not relevant
   
-**TestCaseID: Configuration-webapp-GA-1**
+**TestCaseID: Configuration-Webapp-GA-1**
 
   * TestType: Manual
   * Requirement: [http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/](http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/)
@@ -2837,7 +2847,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Expected Result: Data is transfered to GA
   * File: not relevant
   
-**TestCaseID: Configuration-webapp-policy-1**
+**TestCaseID: Configuration-Webapp-Policy-1**
 
   * TestType: Manual
   * Requirement: [http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/](http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/)
@@ -2845,7 +2855,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Expected Result: Configuration is used
   * File: not relevant
 
-**TestCaseID: Configuration-webapp-policy-2**
+**TestCaseID: Configuration-Webapp-Policy-2**
 
   * TestType: Manual
   * Requirement: [http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/](http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/)
@@ -2853,10 +2863,50 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Expected Result: Configuration is used
   * File: not relevant
   
-**TestCaseID: Configuration-sample-application-1**
+**TestCaseID: Configuration-Webapp-Monitoring-1**
+
+  * TestType: Manual
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/](http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/)
+  * Title: Monitoring is enabled for webapp only
+  * Expected Result: Its possible to get "heartbeat" status with correct info
+  * File: not relevant
+
+**TestCaseID: Configuration-Webapp-Monitoring-2**
+
+  * TestType: Manual
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/](http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/)
+  * Title: Monitoring is enabled for webapp and Xroad Service
+  * Expected Result: Its possible to get "heartbeat" status with correct info
+  * File: not relevant
+
+**TestCaseID: Configuration-Webapp-Monitoring-3**
+
+  * TestType: Manual
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/](http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/)
+  * Title: Monitoring is enabled and custom links are configured
+  * Expected Result: Its possible to get "heartbeat" status with correct info
+  * File: not relevant    
+
+**TestCaseID: Configuration-XroadService-Monitoring-1**
+
+  * TestType: Manual
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/](http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/)
+  * Title: Monitoring is enabled
+  * Expected Result: Its possible to get "heartbeat" status with correct info for Xroad Service
+  * File: not relevant
+  
+**TestCaseID: Configuration-SampleApplication-1**
 
   * TestType: Manual
   * Requirement: [http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/](http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/)
   * Title: Configuration of SiVa Web Service access
   * Expected Result: Correct web service is used
+  * File: not relevant
+  
+**TestCaseID: Configuration-SampleApplication-Monitoring-1**
+
+  * TestType: Manual
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/](http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/)
+  * Title: Monitoring is enabled
+  * Expected Result: Its possible to get "heartbeat" status with correct info using basic authentication
   * File: not relevant

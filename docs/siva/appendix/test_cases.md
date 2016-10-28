@@ -8,6 +8,7 @@ The structure and elements of test case is described in [QA Strategy](http://ope
 All the files used in the tests can be found in [SiVa GitHub](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/resources).
 
 ## BdocValidationFailIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/BdocValidationFailIT.java)
 
 
 **TestCaseID: Bdoc-ValidationFail-1**
@@ -278,6 +279,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## BdocValidationPassIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/BdocValidationPassIT.java)
 
 
 **TestCaseID: Bdoc-ValidationPass-1**
@@ -436,6 +438,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## DdocValidationFailIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/DdocValidationFailIT.java)
 
 
 **TestCaseID: Ddoc-ValidationFail-1**
@@ -592,6 +595,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## DdocValidationPassIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/DdocValidationPassIT.java)
 
 
 **TestCaseID: Ddoc-ValidationPass-2**
@@ -767,6 +771,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## DocumentFormatIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/DocumentFormatIT.java)
 
 
 **TestCaseID: DocumentFormat-1**
@@ -842,6 +847,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## LargeFileIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/LargeFileIT.java)
 
 
 **TestCaseID: PDF-LargeFiles-1**
@@ -881,6 +887,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## MonitoringIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/MonitoringIT.java)
 
 
 **TestCaseID: WebApp-Monitoring-1**
@@ -893,6 +900,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## PdfBaselineProfileIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/PdfBaselineProfileIT.java)
 
 
 **TestCaseID: PDF-BaselineProfile-1**
@@ -995,6 +1003,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## PdfSignatureCryptographicAlgorithmIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/PdfSignatureCryptographicAlgorithmIT.java)
 
 
 **TestCaseID: PDF-SigCryptoAlg-1**
@@ -1070,6 +1079,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## PdfValidationFailIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/PdfValidationFailIT.java)
 
 
 **TestCaseID: PDF-ValidationFail-1**
@@ -1129,6 +1139,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## PdfValidationPassIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/PdfValidationPassIT.java)
 
 
 **TestCaseID: PDF-ValidationPass-1**
@@ -1159,6 +1170,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## SignaturePolicyIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/SignaturePolicyIT.java)
 
 
 **TestCaseID: Pdf-Signature-Policy-1**
@@ -1234,6 +1246,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## XRoadValidationFailIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/XRoadValidationFailIT.java)
 
 
 **TestCaseID: Xroad-ValidationFail-1**
@@ -1246,6 +1259,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## XRoadValidationPassIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/XRoadValidationPassIT.java)
 
 
 **TestCaseID: Xroad-ValidationPass-1**
@@ -1497,6 +1511,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## ValidationReportValueVerificationIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/resttest/ValidationReportValueVerificationIT.java)
 
 
 **TestCaseID: Bdoc-ValidationReportVerification-1**
@@ -1731,6 +1746,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## ValidationRequestIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/resttest/ValidationRequestIT.java)
 
 
 **TestCaseID: ValidationRequest-1**
@@ -2130,6 +2146,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## SoapValidationReportValueIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/soaptest/SoapValidationReportValueIT.java)
 
 
 **TestCaseID: Bdoc-SoapValidationReportValue-1**
@@ -2254,6 +2271,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## SoapValidationRequestIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/soaptest/SoapValidationRequestIT.java)
 
 
 **TestCaseID: Soap-ValidationRequest-1**
@@ -2599,6 +2617,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## SoapXRoadRequestHeaderIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/soaptest/SoapXRoadRequestHeaderIT.java)
 
 
 **TestCaseID: XroadSoap-RequestVerification-1**
@@ -2626,6 +2645,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Title: Soap headers are returned in error response
   * Expected Result: Same headers are in response as in request
   * File: not relevant
+
 
 
 [//]: # (Manually generated test cases start here. Do NOT overwrite with autogenerated test cases!)

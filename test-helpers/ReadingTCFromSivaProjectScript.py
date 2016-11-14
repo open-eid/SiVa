@@ -28,7 +28,9 @@ for root, dirs, filenames in os.walk(source_in_dir):
             
             if '* TestCaseID:' in a_line:
                 if (new_file):
-                    Test_cases.write("\n## "+f+"\n\n")   
+                    Test_cases.write("\n## "+f+"\n")
+                    correct_folder = os.path.relpath(root,os.path.dirname(root))
+                    Test_cases.write("[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/"+correct_folder+"/"+f+")\n\n")
                     new_file = 0
                 Test_cases.write("\n**"+a_line.lstrip("* ").rstrip()+"**\n\n")
             elif '* TestType:' in a_line:

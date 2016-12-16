@@ -81,60 +81,6 @@ Now point Your browser to URL: <http://localhost:9000>
 
 ![Sample of validation result](https://raw.githubusercontent.com/open-eid/SiVa/develop/docs/img/siva-responsive.png)
 
-## Quick start using Docker
-
-There are unofficial Docker images You can use to test out SiVa. These images are created only for testing and demo
-purposes.
-
-> **NOTE** We use these images in SiVa project to run our performance tests
-
-There two ways to run SiVa docker images. First option is use `docker-compose` and SiVa project provided
-`docker-compose.yml` file:
-
-```yaml
-version: "2"
-services:
-  siva-xroad-validation:
-    image: mihkels/xroad-validation-service
-    ports:
-      - "8081:8081"
-  siva-webapp:
-    image: mihkels/siva-webapp
-    links:
-      - siva-xroad-validation
-    ports:
-      - "8080:8080"
-    environment:
-      SIVA_PROXY_XROAD_URL: http://siva-xroad-validation:8081
-  siva-sample-application:
-    image: mihkels/siva-sample-application
-    links:
-      - siva-webapp
-    ports:
-      - "9000:9000"
-    environment:
-      SIVA_SERVICE_SERVICE_HOST: http://siva-webapp:8080
-```
-
-Issue below command in same directory where You saved `docker-compose.yml` file:
-
-```bash
-docker-compose rm -f && docker-compose pull && docker-compose up
-```
-
-> NOTE: You can use `-d` flag start in daemon mode instead of interactive when doing `docker-compose up`
-
-Second option is to run containers directly using [Docker](https://www.docker.com/products/docker). Running directly
-is good option when You want test out each service on its own.
-
-Below is example of starting SiVa REST/SOAP web service:
-
-```bash
-docker run -it -p 8080:8080 mihkels/siva-webapp
-```
-
-> NOTE: You can stop the service by pressing `Ctrl+C`
-
 ## WAR and Tomcat setup for legacy systems
 
 > **NOTE 1**: We do not recommend using WAR deployment option because lack of testing done on different servlet

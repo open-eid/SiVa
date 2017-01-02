@@ -19,6 +19,7 @@ package ee.openeid.siva.integrationtest;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class SignaturePolicyIT extends SiVaRestTests {
@@ -80,7 +81,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File: soft-cert-signature.pdf
      */
-    @Test
+    @Test @Ignore //TODO: New test file is needed
     public void pdfDocumentAdesNonSscdCompliantShouldFailWithGivenPolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("soft-cert-signature.pdf"));
         post(validationRequestWithValidKeys(encodedString, "soft-cert-signature.pdf", "pdf", VALID_SIGNATURE_POLICY_2))

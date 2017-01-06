@@ -1,4 +1,4 @@
-![EU Regional Development Fund](doc/images/siva/EL_Regionaalarengu_Fond_horisontaalne-vaike.jpg)
+![EU Regional Development Fund](docs/img/siva/EL_Regionaalarengu_Fond_horisontaalne-vaike.jpg)
 
 # Signature Verification Service
 

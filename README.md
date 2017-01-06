@@ -1,3 +1,5 @@
+![EU Regional Development Fund](doc/images/siva/EL_Regionaalarengu_Fond_horisontaalne-vaike.jpg)
+
 # Signature Verification Service
 
 [![Build Status](https://travis-ci.org/open-eid/SiVa.svg?branch=develop)](https://travis-ci.org/open-eid/SiVa)

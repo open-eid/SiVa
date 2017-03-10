@@ -93,6 +93,7 @@ public class SivaSOAPValidationServiceClientTest {
     @Test
     public void givenValidRequestWillReturnSOAPValidationReport() throws Exception {
         String response = FileUtils.readFileToString(TestFileUtils.loadTestFile("/soap_response.xml")).replaceAll("\\n", System.lineSeparator());
+        response = response.replaceAll("\\r\\r\\n", System.lineSeparator());
 
         serverMockResponse(response);
         UploadedFile uploadedFile = TestFileUtils.generateUploadFile(testingFolder, "hello.bdoc", "Valid document");

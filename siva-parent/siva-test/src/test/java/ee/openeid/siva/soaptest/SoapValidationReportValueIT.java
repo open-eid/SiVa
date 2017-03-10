@@ -17,6 +17,8 @@
 package ee.openeid.siva.soaptest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+import ee.openeid.siva.webapp.soap.QualifiedReport;
+import ee.openeid.siva.webapp.soap.SignatureValidationData;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -122,15 +124,16 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     public void SoapBdocCorrectValuesArePresentValidLtSignatureAdes() {
         setTestFilesDirectory("bdoc/test/timemark/");
         Document report = extractReportDom(post(validationRequestForDocument("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc")).andReturn().body().asString());
-        assertEquals("validSignaturesCount should equal with signaturesCount", getQualifiedReportFromDom(report).getValidSignaturesCount(),getQualifiedReportFromDom(report).getSignaturesCount());
-        assertEquals("SignatureFormat should match expected", "XAdES_BASELINE_LT_TM", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSignatureFormat());
-        assertEquals("Indication should match expected", "TOTAL-PASSED", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getIndication().value());
-        assertTrue("There should be no subIndication", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSubIndication().isEmpty());
-        assertEquals("SignatureLevel should match expected", "AdES", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSignatureLevel());
-        assertEquals("SignatureScopes should match expected", "FullSignatureScope", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
-        assertTrue("Errors should be empty", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getErrors().getError().isEmpty());
-//        assertEquals("Warnings should match expected", "The certificate is not supported by SSCD!", getQualifiedReportFromDom(report).getSignatures().get(0).getWarnings().get(0).getDescription());
-        assertEquals("SignatureForm should match expected", "ASiC_E", getQualifiedReportFromDom(report).getSignatureForm());
+        QualifiedReport qualifiedReport = getQualifiedReportFromDom(report);
+        SignatureValidationData signatureValidationData = qualifiedReport.getSignatures().getSignature().get(0);
+        assertEquals("validSignaturesCount should equal with signaturesCount", qualifiedReport.getValidSignaturesCount(), qualifiedReport.getSignaturesCount());
+        assertEquals("SignatureFormat should match expected", "XAdES_BASELINE_LT_TM", signatureValidationData.getSignatureFormat());
+        assertEquals("Indication should match expected", "TOTAL-PASSED", signatureValidationData.getIndication().value());
+        assertTrue("There should be no subIndication", signatureValidationData.getSubIndication().isEmpty());
+        assertEquals("SignatureLevel should match expected", "QES", signatureValidationData.getSignatureLevel());
+        assertEquals("SignatureScopes should match expected", "FullSignatureScope", signatureValidationData.getSignatureScopes().getSignatureScope().get(0).getScope());
+        assertTrue("Errors should be empty", signatureValidationData.getErrors().getError().isEmpty());
+        assertEquals("SignatureForm should match expected", "ASiC_E", qualifiedReport.getSignatureForm());
     }
 
     /**
@@ -152,14 +155,16 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     public void SoapBdocCorrectValuesArePresentValidLtSignatureAdesqc() {
         setTestFilesDirectory("bdoc/test/timemark/");
         Document report = extractReportDom(post(validationRequestForDocument("23200_weakdigest-wrong-nonce.asice")).andReturn().body().asString());
-        assertTrue("validSignaturesCount should be zero", getQualifiedReportFromDom(report).getValidSignaturesCount()== 0);
-        assertEquals("SignatureFormat should match expected", "XAdES_BASELINE_LT_TM", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSignatureFormat());
-        assertEquals("Indication should match expected", "TOTAL-FAILED", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getIndication().value());
-        assertEquals("SubIndication should match expected", "", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSubIndication());
-        assertEquals("SignatureLevel should match expected", "AdESqc", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSignatureLevel());
-        assertEquals("SignatureScopes should match expected", "FullSignatureScope", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
-        assertTrue("Warnings should be empty", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getWarnings().getWarning().isEmpty());
-        assertEquals("SignatureForm should match expected", "ASiC_E", getQualifiedReportFromDom(report).getSignatureForm());
+        QualifiedReport qualifiedReport = getQualifiedReportFromDom(report);
+        SignatureValidationData signatureValidationData = qualifiedReport.getSignatures().getSignature().get(0);
+        assertTrue("validSignaturesCount should be zero", qualifiedReport.getValidSignaturesCount()== 0);
+        assertEquals("SignatureFormat should match expected", "XAdES_BASELINE_LT_TM", signatureValidationData.getSignatureFormat());
+        assertEquals("Indication should match expected", "TOTAL-FAILED", signatureValidationData.getIndication().value());
+        assertEquals("SubIndication should match expected", "", signatureValidationData.getSubIndication());
+        assertEquals("SignatureLevel should match expected", "QES", signatureValidationData.getSignatureLevel());
+        assertEquals("SignatureScopes should match expected", "FullSignatureScope", signatureValidationData.getSignatureScopes().getSignatureScope().get(0).getScope());
+        assertTrue("Warnings should be empty", signatureValidationData.getWarnings().getWarning().isEmpty());
+        assertEquals("SignatureForm should match expected", "ASiC_E", qualifiedReport.getSignatureForm());
     }
 
     /**

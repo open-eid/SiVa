@@ -45,7 +45,7 @@ public class CustomCertificatesLoaderTest {
     @Test
     public void allTestCertificatesShouldBeAddedToTSL() {
         List<CertificateToken> certTokens = getCertificateTokens();
-        assertEquals(7, certTokens.size());
+        assertEquals(9, certTokens.size());
     }
 
     @Test
@@ -69,7 +69,7 @@ public class CustomCertificatesLoaderTest {
     }
 
     private boolean isManagementServiceInfo(ServiceInfo serviceInfo) {
-        return StringUtils.contains(serviceInfo.getServiceName(), "Management");
+        return StringUtils.contains(serviceInfo.getServiceName(), "Management") || StringUtils.contains(serviceInfo.getServiceName(), "Nortal");
     }
 
     private boolean isNonManagementCA(ServiceInfo serviceInfo) {

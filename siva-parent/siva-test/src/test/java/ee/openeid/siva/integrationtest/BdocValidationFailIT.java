@@ -311,9 +311,9 @@ public class BdocValidationFailIT extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-R-25.asice"))
                 .then()
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors.content", Matchers.hasItems("The certificate is revoked!"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatures[0].subIndication", Matchers.is("NO_POE"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The past signature validation is not conclusive!"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -507,9 +507,9 @@ public class BdocValidationFailIT extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("TM-15_revoked.4.asice"))
                 .then()
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors.content", Matchers.hasItems("The certificate is revoked!"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatures[0].subIndication", Matchers.is("NO_POE"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The past signature validation is not conclusive!"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 

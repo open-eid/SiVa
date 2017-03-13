@@ -113,6 +113,40 @@ public class CustomCertificatesLoader {
 
         tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "TEST of ESTEID-SK 2011"));
 
+        // Nortal NQSK16 Test Cert Signing
+        certToken = DSSUtils.loadCertificateFromBase64EncodedString(
+                "MIIFWjCCA0KgAwIBAgIQWU++Mz4tewZXz+854YWLgzANBgkqhkiG9w0BAQUFADBD\n" +
+                        "MRIwEAYDVQQKDAlTYWZlbGF5ZXIxGDAWBgNVBAsMD0tleU9uZSBUcmFpbmluZzET\n" +
+                        "MBEGA1UEAwwKTXkgUm9vdCBDQTAeFw0xNjA5MDcxMDQzMDVaFw0yNTAxMDExMTQy\n" +
+                        "MzRaMCoxKDAmBgNVBAMMH05vcnRhbCBOUVNLMTYgVGVzdCBDZXJ0IFNpZ25pbmcw\n" +
+                        "ggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDXG5PMuMLq6q9fwjBGJmX8\n" +
+                        "VtsYkgqkwLK/9Yy2Dr4k92K8AHeLG22h8BCHujV3ssHQp0rKrAitUKQahCAxGbZh\n" +
+                        "KVZXTT6yzpcYycL+csaLlD58K2JGLUwkb8OJw6Qp/wy2VYMWI/KmT0/LTsTBTMhj\n" +
+                        "MRm3U5YPrV308gbeyyFtmczEst/dm+hKhztu8x56DC++uIK/d4KFNE5Xiv1PIEbT\n" +
+                        "GwXhXTNSozkUiTeg6usMShpYfr2CJuRwJW/wvlKOYYOFgB8KIq6RPtzsSeVzeyYF\n" +
+                        "KKyqEP7vV3XcwDsyNglLiv5SdPUz4BhgvXLwMFJVGBWM209EZR3su8PVVSqEjuEP\n" +
+                        "vsu80PCqaaPbddB8HDkirSH6z5jMAS0nW+ER+OPiS/fUOtBjL9IVW9x5ed3hxH45\n" +
+                        "S4qsc9YroNt2AJ4ePaOHSVIp/N3NuN7FOlPoWyzzVzayOc9mXrOq+pGNfqhc2Sqw\n" +
+                        "nYB3Y2WHqKoajnRjn4NAK/sRCG/nqFP6JA7Awi1J8kAIkUFEjD8+VTp/+cX0L3Qg\n" +
+                        "CM9hyo0ZNO18W9ibZFvWANUNhp6rOm7ApiKz1uXUgGG8N/gMTBvlHd8yZuPZzwhE\n" +
+                        "NsWKZT4R+ER5n/BebH7B/yMCyboy2YIKDK4h0zD6AkajsUugSS/iqMVStbor3wfl\n" +
+                        "3Pmz5bqwBhK3lKHGLV9yNQIDAQABo2MwYTAPBgNVHRMBAf8EBTADAQH/MA4GA1Ud\n" +
+                        "DwEB/wQEAwICBDAdBgNVHQ4EFgQU7EWOweBYUfzFSGWcIR8l9RlZYb0wHwYDVR0j\n" +
+                        "BBgwFoAUX2PMACLCN34rf3QzgqYHVblJleswDQYJKoZIhvcNAQEFBQADggIBADFf\n" +
+                        "97bqDOXpfeAZ/wlXF1idaG19lGehjEKJibDbNfQ58gOrk2vxAz5PO8AYpW9L3CGn\n" +
+                        "r7nEzKXuam1WpdhQo8UvL1RDa0FiKhltvanmj/bh8xeLaQIBUaBZcCSz7dGCeH50\n" +
+                        "FaQU4gbSajRlURdCfajWhyGF1sc6g+nGRPf9dvZiGdYh8xSxf77nWbsiYcYuYoiy\n" +
+                        "daOEvoxqvsOUoiw99POG3SVnBpiJaETM3xpjUpdnyNBjIa0vgrLb8ChDOptunkcS\n" +
+                        "QicjK06FUai9tNZpJz13dJEq/E4R3mOnIevEvX+GdKZFOZCPsu+mLp2KU31m7Tsw\n" +
+                        "XrZAgBeOAQO8Rg1gOupLH+7ZYnAHJG0jJ4mJ/EFzXD/bNvQLEiLXl96GglabJYiY\n" +
+                        "efHzacf1kGWWOl5UbYFBORBa9daI2sEK3zA10ah4ku0yBMvG6vIJhVOov4n7eiRs\n" +
+                        "PFWVhduaYxDVPlc1e/AIWSuCyvGJHxDp1PQj4Z7BTN6AwRZV3DAnftxWuHj9FTpu\n" +
+                        "5PRkpGqi3BSbw6adlFgPZnTTeTkbiE4+XMygrJGRbEa587KWSbwiINpGoeBE1AbZ\n" +
+                        "26x1lOcCk0KRBr/mBk9gaC0TxmYhuum99V5+fM5sJ6WwFRS1ruLyt1piQiATIRVe\n" +
+                        "pcPZlmxrjmZcfQ+dp1jWj3cS7pJ9mCZsr5H74U3K");
+
+        tlCertSource.addCertificate(certToken, getCAServiceInfoNoQcConditions(certToken, "Nortal NQSK16 Test Cert Signing"));
+
         // TEST of KLASS3-SK 2010
         certToken = DSSUtils.loadCertificateFromBase64EncodedString(
                 "MIIExzCCA6+gAwIBAgIQIrzOHDuBOQRPabRVIaWqEzANBgkqhkiG9w0BAQUFADB9" +
@@ -214,6 +248,33 @@ public class CustomCertificatesLoader {
 
         tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "QuoVadis Time-Stamp Authority 1"));
 
+        // DEMO of SK TSA 2014
+        certToken = DSSUtils.loadCertificateFromBase64EncodedString(
+                "MIIEFTCCAv2gAwIBAgIQTqz7bCP8W45UBZa7tztTTDANBgkqhkiG9w0BAQsFADB9\n" +
+                        "MQswCQYDVQQGEwJFRTEiMCAGA1UECgwZQVMgU2VydGlmaXRzZWVyaW1pc2tlc2t1\n" +
+                        "czEwMC4GA1UEAwwnVEVTVCBvZiBFRSBDZXJ0aWZpY2F0aW9uIENlbnRyZSBSb290\n" +
+                        "IENBMRgwFgYJKoZIhvcNAQkBFglwa2lAc2suZWUwHhcNMTQwOTAyMTAwNjUxWhcN\n" +
+                        "MjQwOTAyMTAwNjUxWjBdMQswCQYDVQQGEwJFRTEiMCAGA1UECgwZQVMgU2VydGlm\n" +
+                        "aXRzZWVyaW1pc2tlc2t1czEMMAoGA1UECwwDVFNBMRwwGgYDVQQDDBNERU1PIG9m\n" +
+                        "IFNLIFRTQSAyMDE0MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAysgr\n" +
+                        "VnVPxH8jNgCsJw0y+7fmmBDTM/tNB+xielnP9KcuQ+nyTgNu1JMpnry7Rh4ndr54\n" +
+                        "rPLXNGVdb/vsgsi8B558DisPVUn3Rur3/8XQ+BCkhTQIg1cSmyCsWxJgeaQKJi6W\n" +
+                        "GVaQWB2he35aVhL5F6ae/gzXT3sGGwnWujZkY9o5RapGV15+/b7Uv+7jWYFAxcD6\n" +
+                        "ba5jI00RY/gmsWwKb226Rnz/pXKDBfuN3ox7y5/lZf5+MyIcVe1qJe7VAJGpJFjN\n" +
+                        "q+BEEdvfqvJ1PiGQEDJAPhRqahVjBSzqZhJQoL3HI42NRCFwarvdnZYoCPxjeYpA\n" +
+                        "ynTHgNR7kKGX1iQ8OQIDAQABo4GwMIGtMA4GA1UdDwEB/wQEAwIGwDAWBgNVHSUB\n" +
+                        "Af8EDDAKBggrBgEFBQcDCDAdBgNVHQ4EFgQUJwScZQxzlzySVqZXviXpKZDV5Nww\n" +
+                        "HwYDVR0jBBgwFoAUtTQKnaUvEMXnIQ6+xLFlRxsDdv4wQwYDVR0fBDwwOjA4oDag\n" +
+                        "NIYyaHR0cHM6Ly93d3cuc2suZWUvcmVwb3NpdG9yeS9jcmxzL3Rlc3RfZWVjY3Jj\n" +
+                        "YS5jcmwwDQYJKoZIhvcNAQELBQADggEBAIq02SVKwP1UolKjqAQe7SVY/Kgi++G2\n" +
+                        "kqAd40UmMqa94GTu91LFZR5TvdoyZjjnQ2ioXh5CV2lflUy/lUrZMDpqEe7IbjZW\n" +
+                        "5+b9n5aBvXYJgDua9SYjMOrcy3siytqq8UbNgh79ubYgWhHhJSnLWK5YJ+5vQjTp\n" +
+                        "OMdRsLp/D+FhTUa6mP0UDY+U82/tFufkd9HW4zbalUWhQgnNYI3oo0CsZ0HExuyn\n" +
+                        "OOZmM1Bf8PzD6etlLSKkYB+mB77Omqgflzz+Jjyh45o+305MRzHDFeJZx7WxC+XT\n" +
+                        "NWQ0ZFTFfc0ozxxzUWUlfNfpWyQh3+4LbeSQRWrNkbNRfCpYotyM6AY=");
+
+        tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "DEMO of SK TSA 2014"));
+
         // QuoVadis Time-Stamp Authority 2
         certToken = DSSUtils.loadCertificateFromBase64EncodedString(
                 "MIIGOjCCBSKgAwIBAgIUZ0A6K0buOdtz0tj6CNRea1UKIF0wDQYJKoZIhvcNAQEL" +
@@ -284,6 +345,11 @@ public class CustomCertificatesLoader {
         serviceInfo.setStatus(getServiceInfoStatuses(certToken));
         serviceInfo.setType(CA_QC);
         serviceInfo.setServiceName(serviceName);
+        return serviceInfo;
+    }
+
+    private ServiceInfo getCAServiceInfoNoQcConditions(CertificateToken certToken, String serviceName) {
+        ServiceInfo serviceInfo = getCAServiceInfo(certToken, serviceName);
         return serviceInfo;
     }
 

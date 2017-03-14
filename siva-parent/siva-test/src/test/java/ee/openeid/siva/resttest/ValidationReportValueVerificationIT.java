@@ -131,7 +131,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
      *
      * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
      *
-     * Title: Verification of values in Validation Report XAdES_BASELINE_LT, AdES, FullSignatureScope
+     * Title: Verification of values in Validation Report XAdES_BASELINE_LT, QES, FullSignatureScope
      *
      * Expected Result: All required elements are present and meet the expected values.
      *
@@ -147,7 +147,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
                 .body("signatures[0].id", Matchers.is("S0"))
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("signatures[0].signatureLevel", Matchers.is("AdES"))
+                .body("signatures[0].signatureLevel", Matchers.is("QES"))
                 .body("signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
@@ -455,11 +455,11 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
                 .body("signatures[0].id", Matchers.is("id-cbcdd80dbccaf1f0d536ada0e425d7bb780e552845d04b66868301a5cf0ed8ba"))
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
-                .body("signatures[0].signatureLevel", Matchers.is("AdES"))
+                .body("signatures[0].signatureLevel", Matchers.is("QES"))
                 .body("signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("signatures[0].subIndication", Matchers.is("NO_POE"))
-                .body("signatures[0].errors.content", Matchers.hasItem("The past signature validation is not conclusive!"))
+                .body("signatures[0].subIndication", Matchers.is("TRY_LATER"))
+                .body("signatures[0].errors.content", Matchers.hasItem("No revocation data for the certificate"))
                 .body("signatures[0].signatureScopes[0].name", Matchers.is("PDF previous version #1"))
                 .body("signatures[0].signatureScopes[0].scope", Matchers.is("PdfByteRangeSignatureScope"))
                 .body("signatures[0].signatureScopes[0].content", Matchers.is("The document byte range: [0, 14153, 52047, 491]"))

@@ -526,14 +526,14 @@ public class BdocValidationFailIT extends SiVaRestTests{
      *
      * File: TM-16_unknown.4.asice
      */
-    @Test @Ignore //TODO: https://github.com/open-eid/SiVa/issues/23
+    @Test
     public void bdocTmOcspStatusUnknown() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("TM-16_unknown.4.asice"))
                 .then()
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors.content", Matchers.hasItems(""))
+                .body("signatures[0].subIndication", Matchers.is("NO_POE"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The past signature validation is not conclusive!"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 

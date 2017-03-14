@@ -176,7 +176,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File: allkiri_ades.asice
      */
-    @Test @Ignore //TODO: remove redundant checks
+    @Test
     public void bdocDocumentAdesNonSscdCompliantShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("allkiri_ades.asice"));
@@ -186,12 +186,10 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_1))
                 .body("policy.policyUrl", Matchers.is(POLICY_1_URL))
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                //TODO: fix this
                 .body("signatures[0].signatureLevel", Matchers.is("AdES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].errors.content", Matchers.hasSize(0))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -209,7 +207,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File: allkiri_ades.asice
      */
-    @Test @Ignore //TODO: remove redundant checks
+    @Test
     public void bdocDocumentAdesNonSscdCompliantShouldFailWithGivenPolicy() {
         setTestFilesDirectory("bdoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("allkiri_ades.asice"));
@@ -219,12 +217,10 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_2))
                 .body("policy.policyUrl", Matchers.is(POLICY_2_URL))
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                //TODO: fix this
                 .body("signatures[0].signatureLevel", Matchers.is("AdES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is("CHAIN_CONSTRAINTS_FAILURE"))
-                .body("signatures[0].errors[0].content", Matchers.is("The certificate is not supported by SSCD!"))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("signatures[0].errors[0].content", Matchers.is("The certificate is not qualified!"))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1));
     }

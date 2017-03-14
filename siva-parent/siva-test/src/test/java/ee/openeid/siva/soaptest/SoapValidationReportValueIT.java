@@ -385,7 +385,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      * File: xroad-simple.asice
      *
      */
-    @Test @Ignore //TODO: https://github.com/open-eid/SiVa/issues/25
+    @Test
     public void SoapXroadCorrectValuesArePresentValidSimpleSignature() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
@@ -395,9 +395,9 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         assertEquals("Indication should match expected", "TOTAL-PASSED", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getIndication().value());
         assertTrue("There should be no subIndication", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSubIndication().isEmpty());
         assertEquals("SignatureLevel should match expected", "", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSignatureLevel());
-        assertEquals("SignatureScopes should match expected", "FullSignatureScope", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
+        assertEquals("SignatureScopes should match expected", "", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
         assertTrue("Warnings should be empty", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getWarnings().getWarning().isEmpty());
-        assertEquals("SignatureForm should match expected", "ASIC_E", getQualifiedReportFromDom(report).getSignatureForm());
+        assertEquals("SignatureForm should match expected", "ASiC_E", getQualifiedReportFromDom(report).getSignatureForm());
     }
 
     /**

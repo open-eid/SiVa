@@ -48,10 +48,10 @@ public class PdfValidationFailIT extends SiVaRestTests{
         post(validationRequestWithValidKeys(encodedString, "hellopades-lt-rsa1024-sha1-expired.pdf", "pdf", ""))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
-                .body("signatures[0].signatureLevel", Matchers.is("AdES"))
+                .body("signatures[0].signatureLevel", Matchers.is("QES"))
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("signatures[0].subIndication", Matchers.is("NO_POE"))
-                .body("signatures[0].errors.content", Matchers.hasItem("The past signature validation is not conclusive!"))
+                .body("signatures[0].subIndication", Matchers.is("TRY_LATER"))
+                .body("signatures[0].errors.content", Matchers.hasItem("The certificate validation is not concluant!"))
                 .body("signatures[0].warnings", Matchers.hasSize(0))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1));
@@ -70,7 +70,7 @@ public class PdfValidationFailIT extends SiVaRestTests{
      *
      * File: pades_lt_revoked.pdf
      */
-    @Test @Ignore //TODO: https://github.com/open-eid/SiVa/issues/23
+    @Test
     public void documentSignedWithRevokedCertificateShouldFail() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades_lt_revoked.pdf"));
         post(validationRequestWithValidKeys(encodedString, "pades_lt_revoked.pdf", "pdf", VALID_SIGNATURE_POLICY_1))
@@ -79,8 +79,8 @@ public class PdfValidationFailIT extends SiVaRestTests{
                 .body("signatures[0].signatureLevel", Matchers.is("QES"))
                 .body("signatures[0].signedBy", Matchers.is("NURM,AARE,38211015222"))
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("signatures[0].subIndication", Matchers.is("REVOKED_NO_POE"))
-                .body("signatures[0].errors[0].content", Matchers.is("The revocation time is not posterior to best-signature-time!"))
+                .body("signatures[0].subIndication", Matchers.is("NO_POE"))
+                .body("signatures[0].errors[0].content", Matchers.is("The past signature validation is not conclusive!"))
                 .body("signatures[0].claimedSigningTime", Matchers.is("2016-06-29T08:38:31Z"))
                 .body("signatures[0].warnings", Matchers.hasSize(0))
                 .body("validSignaturesCount", Matchers.is(0))
@@ -120,7 +120,7 @@ public class PdfValidationFailIT extends SiVaRestTests{
      *
      * File: hellopades-lt-sha256-rsa2048-expired.pdf
      */
-    @Test
+    @Test @Ignore //TODO https://jira.nortal.com/browse/SIVARIA-17
     public void documentSignedWithExpiredRsa2048CertificateShouldFail() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-sha256-rsa2048-expired.pdf"));
         post(validationRequestWithValidKeys(encodedString, "hellopades-lt-sha256-rsa2048-expired.pdf", "pdf", ""))
@@ -149,7 +149,7 @@ public class PdfValidationFailIT extends SiVaRestTests{
      *
      * File: hellopades-lt-sha256-rsa1024-expired2.pdf
      */
-    @Test
+    @Test @Ignore //TODO https://jira.nortal.com/browse/SIVARIA-17
     public void documentSignedWithExpiredSha256CertificateShouldFail() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-sha256-rsa1024-expired2.pdf"));
         post(validationRequestWithValidKeys(encodedString, "hellopades-lt-sha256-rsa1024-expired2.pdf", "pdf", ""))
@@ -173,7 +173,7 @@ public class PdfValidationFailIT extends SiVaRestTests{
      *
      * File: hellopades-lt-sha1-rsa1024-expired2.pdf
      */
-    @Test
+    @Test @Ignore //TODO https://jira.nortal.com/browse/SIVARIA-17
     public void documentSignedWithExpiredSha1CertificateShouldFail() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-sha1-rsa1024-expired2.pdf"));
         post(validationRequestWithValidKeys(encodedString, "hellopades-lt-sha1-rsa1024-expired2.pdf", "pdf", ""))

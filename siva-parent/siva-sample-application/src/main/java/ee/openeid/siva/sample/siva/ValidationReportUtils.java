@@ -26,6 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -51,7 +52,12 @@ public final class ValidationReportUtils {
     }
 
     public static List<String> getValidationWarnings(final String jsonValidationResult) {
-        return JsonPath.read(jsonValidationResult, "$.validationWarnings[*].content");
+        try {
+            return JsonPath.read(jsonValidationResult, "$.validationWarnings[*].content");
+        } catch (PathNotFoundException e) {
+            LOGGER.warn("Validation warnings not present in JSON: ", e);
+            return Collections.emptyList();
+        }
     }
 
     public static String getOverallValidationResult(final String reportJSON) {

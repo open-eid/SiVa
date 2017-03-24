@@ -50,7 +50,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File: soft-cert-signature.pdf
      */
-    @Test @Ignore //TODO: new pdf with ades signature non sscd compliant
+    @Test
     public void pdfDocumentAdesNonSscdCompliantShouldPassWithGivenPolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("soft-cert-signature.pdf"));
         post(validationRequestWithValidKeys(encodedString, "soft-cert-signature.pdf", "pdf", VALID_SIGNATURE_POLICY_1))

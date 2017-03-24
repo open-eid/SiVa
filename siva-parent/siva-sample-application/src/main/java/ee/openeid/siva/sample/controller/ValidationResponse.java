@@ -18,10 +18,13 @@ package ee.openeid.siva.sample.controller;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class ValidationResponse {
     private String filename;
     private String jsonValidationResult;
     private String soapValidationResult;
     private String overAllValidationResult;
+    private List<String> validationWarnings;
 }

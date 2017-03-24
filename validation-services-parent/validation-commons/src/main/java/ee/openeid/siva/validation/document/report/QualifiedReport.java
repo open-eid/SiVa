@@ -32,6 +32,8 @@ public class QualifiedReport {
 
     private String signatureForm;
 
+    private List<ValidationWarning> validationWarnings;
+
     private List<SignatureValidationData> signatures;
 
     private Integer validSignaturesCount;

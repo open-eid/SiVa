@@ -35,7 +35,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
-import static ee.openeid.siva.sample.siva.ValidationReportUtils.*;
+import static ee.openeid.siva.sample.siva.ValidationReportUtils.getOverallValidationResult;
+import static ee.openeid.siva.sample.siva.ValidationReportUtils.getValidateFilename;
+import static ee.openeid.siva.sample.siva.ValidationReportUtils.getValidationWarnings;
+import static ee.openeid.siva.sample.siva.ValidationReportUtils.handleMissingJSON;
+import static ee.openeid.siva.sample.siva.ValidationReportUtils.isJSONNull;
 
 @Controller
 class UploadController {
@@ -105,7 +109,7 @@ class UploadController {
         final ValidationResponse response = new ValidationResponse();
         response.setFilename(getValidateFilename(jsonValidationResult));
         response.setOverAllValidationResult(getOverallValidationResult(jsonValidationResult));
-
+        response.setValidationWarnings(getValidationWarnings(jsonValidationResult));
         final String output = isJSONNull(jsonValidationResult) ? handleMissingJSON() : jsonValidationResult;
         response.setJsonValidationResult(new JSONObject(output).toString(4));
         response.setSoapValidationResult(soapValidationResult);

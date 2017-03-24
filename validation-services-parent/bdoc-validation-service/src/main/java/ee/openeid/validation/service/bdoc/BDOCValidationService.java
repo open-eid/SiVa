@@ -28,6 +28,7 @@ import org.apache.commons.lang.StringUtils;
 import org.digidoc4j.Configuration;
 import org.digidoc4j.Container;
 import org.digidoc4j.ContainerBuilder;
+import org.digidoc4j.ValidationResult;
 import org.digidoc4j.exceptions.DigiDoc4JException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,9 +59,9 @@ public class BDOCValidationService implements ValidationService {
         }
         verifyContainerTypeNotDDOC(container.getType());
         try {
-            container.validate();
+            ValidationResult validate = container.validate();
             Date validationTime = new Date();
-            return new BDOCQualifiedReportBuilder(container, validationDocument.getName(), validationTime, policyConfiguration.getPolicy()).build();
+            return new BDOCQualifiedReportBuilder(container, validationDocument.getName(), validationTime, policyConfiguration.getPolicy(), validate.getContainerErrors()).build();
         } catch (Exception e) {
             if (isXRoadContainer(container)) {
                 LOGGER.error("XROAD container passed to BDOC validator", e);

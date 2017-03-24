@@ -26,6 +26,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ValidationReportUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(ValidationReportUtils.class);
@@ -46,6 +48,10 @@ public final class ValidationReportUtils {
             LOGGER.warn("documentName not present in JSON: ", ex);
             return StringUtils.EMPTY;
         }
+    }
+
+    public static List<String> getValidationWarnings(final String jsonValidationResult) {
+        return JsonPath.read(jsonValidationResult, "$.validationWarnings[*].content");
     }
 
     public static String getOverallValidationResult(final String reportJSON) {

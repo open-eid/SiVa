@@ -31,7 +31,8 @@
     });
 
     sivaDropzone.on('sending', function (file, xhr, formData) {
-        $('#result-area, #validation-summery').addClass("hide");
+        $('#result-area, #validation-summery, #validation-warnings').addClass("hide");
+        $('#validation-warning-rows').empty();
         var policy = $('select#policy-select').val();
         console.log('Validation policy: ' + policy);
         formData.append("policy", policy);
@@ -66,6 +67,13 @@
                 .removeClass('valid')
                 .addClass(response.overAllValidationResult.toLowerCase())
                 .text(response.overAllValidationResult);
+
+            if (!jQuery.isEmptyObject(response.validationWarnings)) {
+                $('#validation-warnings').removeClass('hide');
+                $.each(response.validationWarnings, function(i, value) {
+                    $('#validation-warning-rows').append('<li>' + value + '</li>');
+                });
+            }
         }
     });
 

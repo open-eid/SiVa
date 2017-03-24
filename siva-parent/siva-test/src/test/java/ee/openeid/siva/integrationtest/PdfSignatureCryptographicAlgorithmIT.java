@@ -154,7 +154,7 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      *
      * File: hellopades-lt-sha256-rsa1023.pdf
      */
-    @Test @Ignore //TODO https://jira.nortal.com/browse/SIVARIA-17
+    @Test @Ignore //TODO Bug fixed in DSS version 5.1. https://ec.europa.eu/cefdigital/tracker/browse/DSS-1145
     public void documentSignedWithRsa1023AlgoShouldPass() {
         assertAllSignaturesAreInvalid(postForReport("hellopades-lt-sha256-rsa1023.pdf"));
     }

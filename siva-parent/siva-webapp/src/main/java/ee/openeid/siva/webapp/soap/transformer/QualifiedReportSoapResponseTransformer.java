@@ -17,7 +17,14 @@
 package ee.openeid.siva.webapp.soap.transformer;
 
 import ee.openeid.siva.webapp.soap.Error;
-import ee.openeid.siva.webapp.soap.*;
+import ee.openeid.siva.webapp.soap.Indication;
+import ee.openeid.siva.webapp.soap.Info;
+import ee.openeid.siva.webapp.soap.Policy;
+import ee.openeid.siva.webapp.soap.QualifiedReport;
+import ee.openeid.siva.webapp.soap.SignatureScope;
+import ee.openeid.siva.webapp.soap.SignatureValidationData;
+import ee.openeid.siva.webapp.soap.ValidationWarning;
+import ee.openeid.siva.webapp.soap.Warning;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -32,9 +39,20 @@ public class QualifiedReportSoapResponseTransformer {
         responseReport.setPolicy(toSoapResponsePolicy(report.getPolicy()));
         responseReport.setSignaturesCount(report.getSignaturesCount());
         responseReport.setSignatures(toSoapResponseSignatures(report.getSignatures()));
+        responseReport.setValidationWarnings(toSoapResponseValidationWarnings(report.getValidationWarnings()));
         responseReport.setValidSignaturesCount(report.getValidSignaturesCount());
         responseReport.setValidationTime(report.getValidationTime());
         return responseReport;
+    }
+
+    private QualifiedReport.ValidationWarnings toSoapResponseValidationWarnings(List<ee.openeid.siva.validation.document.report.ValidationWarning> validationWarnings) {
+        QualifiedReport.ValidationWarnings responseValidationWarnings = new QualifiedReport.ValidationWarnings();
+        for (ee.openeid.siva.validation.document.report.ValidationWarning validationWarning : validationWarnings) {
+            ValidationWarning responseValidationWarning = new ValidationWarning();
+            responseValidationWarning.setContent(validationWarning.getContent());
+            responseValidationWarnings.getValidationWarning().add(responseValidationWarning);
+        }
+        return responseValidationWarnings;
     }
 
     private static Policy toSoapResponsePolicy(ee.openeid.siva.validation.document.report.Policy policy) {

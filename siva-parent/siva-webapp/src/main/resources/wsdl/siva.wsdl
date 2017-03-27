@@ -28,6 +28,13 @@
         <xs:sequence>
           <xs:element name="Policy" type="tns:policy"/>
           <xs:element name="ValidationTime" type="xs:string"/>
+          <xs:element name="ValidationWarnings">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element maxOccurs="unbounded" minOccurs="0" name="ValidationWarning" type="tns:validationWarning"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
           <xs:element name="DocumentName" type="xs:string"/>
           <xs:element name="SignatureForm" type="xs:string"/>
           <xs:element name="Signatures">
@@ -82,6 +89,11 @@
         </xs:sequence>
       </xs:complexType>
       <xs:complexType name="error">
+        <xs:sequence>
+          <xs:element name="Content" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="validationWarning">
         <xs:sequence>
           <xs:element name="Content" type="xs:string"/>
         </xs:sequence>

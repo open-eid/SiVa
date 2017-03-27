@@ -120,6 +120,11 @@ public class BdocValidationFailIT extends SiVaRestTests{
     public void bdocNoSignatures() {
         setTestFilesDirectory("document_format_test_files/");
         assertAllSignaturesAreInvalid(postForReport("BdocContainerNoSignature.bdoc"));
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("BdocContainerNoSignature.bdoc"));
+        post(validationRequestWithValidKeys(encodedString, "BdocContainerNoSignature.bdoc", "bdoc", ""))
+                .then()
+                .body("validationWarnings", Matchers.is(Matchers.empty()));
+
     }
 
     /**
@@ -364,6 +369,7 @@ public class BdocValidationFailIT extends SiVaRestTests{
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].errors.content", Matchers.hasItems(""))
                 .body("validSignaturesCount", Matchers.is(0));
+
     }
 
     /**

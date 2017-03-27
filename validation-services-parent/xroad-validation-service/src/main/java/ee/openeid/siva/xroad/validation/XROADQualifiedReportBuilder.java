@@ -30,7 +30,9 @@ import java.util.Date;
 import java.util.stream.Collectors;
 
 import static ee.openeid.siva.validation.document.report.SignatureValidationData.Indication.TOTAL_PASSED;
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.*;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.getDateFormatterWithGMTZone;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.valueNotPresent;
 
 public class XROADQualifiedReportBuilder {
 
@@ -63,6 +65,7 @@ public class XROADQualifiedReportBuilder {
         qualifiedReport.setDocumentName(documentName);
         qualifiedReport.setSignatureForm(getSignatureForm(verifier.getAsic()));
         qualifiedReport.setSignaturesCount(getTotalSignatureCount(verifier.getSignature()));
+        qualifiedReport.setValidationWarnings(Collections.emptyList());
         qualifiedReport.setSignatures(Collections.singletonList(signatureValidationDataBuilder.build()));
         qualifiedReport.setValidSignaturesCount(
                 qualifiedReport.getSignatures()

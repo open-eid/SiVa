@@ -17,7 +17,11 @@
 package ee.openeid.validation.service.ddoc.report;
 
 import ee.openeid.siva.validation.document.report.Error;
-import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.validation.document.report.Info;
+import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.document.report.SignatureScope;
+import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.Warning;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.siva.validation.util.CertUtil;
 import ee.sk.digidoc.DataFile;
@@ -25,10 +29,14 @@ import ee.sk.digidoc.DigiDocException;
 import ee.sk.digidoc.Signature;
 import ee.sk.digidoc.SignedDoc;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
@@ -61,6 +69,7 @@ public class DDOCQualifiedReportBuilder {
         QualifiedReport qualifiedReport = new QualifiedReport();
         qualifiedReport.setPolicy(createReportPolicy(validationPolicy));
         qualifiedReport.setValidationTime(getDateFormatterWithGMTZone().format(validationTime));
+        qualifiedReport.setValidationWarnings(Collections.emptyList());
         qualifiedReport.setDocumentName(documentName);
         qualifiedReport.setSignatureForm(getSignatureForm());
         qualifiedReport.setSignaturesCount(getSignatures(signedDoc).size());

@@ -94,7 +94,7 @@ public class BDOCQualifiedReportBuilder {
 
     private List<ValidationWarning> getValidationWarnings() {
         List<ValidationWarning> validationWarnings = containerErrors.stream().map(e -> createValidationWarning(emptyWhenNull(e.getMessage()))).collect(Collectors.toList());
-        List<ValidationWarning> unsignedWarnings = getUnsignedValidationWarnings(container);
+        List<ValidationWarning> unsignedWarnings = getUnsignedValidationWarnings();
         validationWarnings.addAll(unsignedWarnings);
         return validationWarnings;
     }
@@ -105,7 +105,7 @@ public class BDOCQualifiedReportBuilder {
         return validationWarning;
     }
 
-    private List<ValidationWarning> getUnsignedValidationWarnings(Container container) {
+    private List<ValidationWarning> getUnsignedValidationWarnings() {
         List<String> dataFileNames = container.getDataFiles().stream().map(DataFile::getName).collect(Collectors.toList());
         List<ValidationWarning> validationWarnings = new ArrayList<>();
         for (Signature signature : container.getSignatures()) {
@@ -127,7 +127,7 @@ public class BDOCQualifiedReportBuilder {
                 .collect(Collectors.toList());
         return dataFileNames.stream()
                 .filter(df -> !uris.contains(df))
-                .collect(Collectors.joining(","));
+                .collect(Collectors.joining(", "));
     }
 
     private List<SignatureValidationData> createSignaturesForReport(Container container) {

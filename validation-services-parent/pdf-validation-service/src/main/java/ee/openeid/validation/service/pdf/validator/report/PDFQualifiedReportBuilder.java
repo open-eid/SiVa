@@ -29,6 +29,7 @@ import org.apache.commons.lang.StringUtils;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -60,6 +61,7 @@ public class PDFQualifiedReportBuilder {
         report.setValidationTime(parseValidationTimeToString());
         report.setDocumentName(documentName);
         report.setSignatureForm(PDF_SIGNATURE_FORM);
+        report.setValidationWarnings(Collections.emptyList());
         report.setSignatures(buildSignatureValidationDataList());
         report.setSignaturesCount(report.getSignatures().size());
         report.setValidSignaturesCount(report.getSignatures()

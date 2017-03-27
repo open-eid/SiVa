@@ -175,8 +175,8 @@ public class DocumentValidationIT extends SiVaRestTests{
                 //.body("validationWarnings.content", Matchers.hasItems("Container contains a file named document_3.xml which is not found in the signature file")) // TODO disabled because of DigiDoc4j bug
                 .body("validationWarnings.content", Matchers.hasItems("Container contains a file named document_2.docx which is not found in the signature file"))
                 .body("validationWarnings.content", Matchers.hasItems("Container contains a file named unsigned.txt which is not found in the signature file"))
-                .body("validationWarnings.content", Matchers.hasItems("Signature PUDOV,VADIM,39101013724 has unsigned files: document_2.docx,unsigned.txt"))
-                .body("validationWarnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml,unsigned.txt"));
+                .body("validationWarnings.content", Matchers.hasItems("Signature PUDOV,VADIM,39101013724 has unsigned files: document_2.docx, unsigned.txt"))
+                .body("validationWarnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml, unsigned.txt"));
 
     }
 
@@ -215,8 +215,8 @@ public class DocumentValidationIT extends SiVaRestTests{
                 .body("validationWarnings.content", Matchers.hasItems("Container contains a file named unsigned.txt which is not found in the signature file"))
                 .body("validationWarnings.content", Matchers.hasItems("Container contains a file named unsigned2.txt which is not found in the signature file"))
                 .body("validationWarnings.content", Matchers.hasItems("Container contains a file named unsigned3.txt which is not found in the signature file"))
-                .body("validationWarnings.content", Matchers.hasItems("Signature PUDOV,VADIM,39101013724 has unsigned files: unsigned.txt,unsigned2.txt,unsigned3.txt"))
-                .body("validationWarnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: unsigned.txt,unsigned2.txt,unsigned3.txt"));
+                .body("validationWarnings.content", Matchers.hasItems("Signature PUDOV,VADIM,39101013724 has unsigned files: unsigned.txt, unsigned2.txt, unsigned3.txt"))
+                .body("validationWarnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: unsigned.txt, unsigned2.txt, unsigned3.txt"));
 
     }
 

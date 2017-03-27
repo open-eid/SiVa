@@ -22,7 +22,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class QualifiedReportSoapResponseTransformerTest {
 
@@ -36,6 +36,7 @@ public class QualifiedReportSoapResponseTransformerTest {
         assertEquals(qualifiedReport.getDocumentName(), responseReport.getDocumentName());
         assertEquals(qualifiedReport.getSignatureForm(), responseReport.getSignatureForm());
         assertEquals(qualifiedReport.getValidationTime(), responseReport.getValidationTime());
+        assertEquals(qualifiedReport.getValidationWarnings().get(0).getContent(), responseReport.getValidationWarnings().getValidationWarning().get(0).getContent());
         assertEquals(qualifiedReport.getSignaturesCount().longValue(), responseReport.getSignaturesCount());
         assertEquals(qualifiedReport.getValidSignaturesCount().longValue(), responseReport.getValidSignaturesCount());
 
@@ -61,6 +62,7 @@ public class QualifiedReportSoapResponseTransformerTest {
     private ee.openeid.siva.validation.document.report.QualifiedReport createMockedQualifedReport() {
         ee.openeid.siva.validation.document.report.QualifiedReport report = new ee.openeid.siva.validation.document.report.QualifiedReport();
         report.setValidationTime("2016-09-21T15:00:00Z");
+        report.setValidationWarnings(createMockedValidationWarnings());
         report.setDocumentName("document.pdf");
         report.setSignatureForm("PAdES");
         report.setPolicy(createMockedSignaturePolicy());
@@ -68,6 +70,14 @@ public class QualifiedReportSoapResponseTransformerTest {
         report.setValidSignaturesCount(1);
         report.setSignatures(createMockedSignatures());
         return report;
+    }
+
+    private List<ee.openeid.siva.validation.document.report.ValidationWarning> createMockedValidationWarnings() {
+        List<ee.openeid.siva.validation.document.report.ValidationWarning> validationWarnings = new ArrayList<>();
+        ee.openeid.siva.validation.document.report.ValidationWarning validationWarning = new ee.openeid.siva.validation.document.report.ValidationWarning();
+        validationWarning.setContent("some validation warning");
+        validationWarnings.add(validationWarning);
+        return validationWarnings;
     }
 
     private ee.openeid.siva.validation.document.report.Policy createMockedSignaturePolicy() {

@@ -221,6 +221,12 @@ public class BDOCValidationServiceIntegrationTest {
     }
 
     @Test
+    public void bdocWithCRLRevocationDataOnlyShouldFail() throws Exception {
+        QualifiedReport report = bdocValidationService.validateDocument(bdocCRLRevocationOnly());
+        assertTrue(report.getValidSignaturesCount() == 0);
+    }
+
+    @Test
     public void validationReportShouldContainDefaultPolicyWhenPolicyIsNotExplicitlyGiven() throws Exception {
         Policy policy = validateWithPolicy("").getPolicy();
         assertEquals(NO_TYPE_POLICY.getName(), policy.getPolicyName());
@@ -355,5 +361,9 @@ public class BDOCValidationServiceIntegrationTest {
 
     private ValidationDocument bdocValidIdCardAndMobIdSignatures() throws Exception {
         return buildValidationDocument(VALID_ID_CARD_MOB_ID);
+    }
+
+    private ValidationDocument bdocCRLRevocationOnly() throws Exception {
+        return buildValidationDocument(ASICE_CRL_ONLY);
     }
 }

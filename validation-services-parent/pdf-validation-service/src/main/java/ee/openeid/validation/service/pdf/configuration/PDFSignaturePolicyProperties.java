@@ -75,6 +75,7 @@ public class PDFSignaturePolicyProperties extends SignaturePolicyProperties<Cons
     private ConstraintDefinedPolicy createConstraintDefinedPolicy(ValidationPolicy validationPolicy, String constraintPath) {
         ConstraintDefinedPolicy constraintDefinedPolicy = new ConstraintDefinedPolicy(validationPolicy);
         constraintDefinedPolicy.setConstraintPath(constraintPath);
+        constraintDefinedPolicy.setAllowCrlRevocationSource(false);
         return constraintDefinedPolicy;
     }
 }

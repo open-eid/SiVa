@@ -50,16 +50,16 @@ public class PDFValidationServiceTest {
 
     PDFValidationService validationService;
 
-    private ConstraintLoadingSignaturePolicyService signaturePolicyService;
+    ConstraintLoadingSignaturePolicyService signaturePolicyService;
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
     @Autowired
-    private CertificateVerifier certificateVerifier;
+    CertificateVerifier certificateVerifier;
 
     @Autowired
-    private PDFSignaturePolicyProperties policySettings;
+    PDFSignaturePolicyProperties policySettings;
 
     @Before
     public void setUp() {

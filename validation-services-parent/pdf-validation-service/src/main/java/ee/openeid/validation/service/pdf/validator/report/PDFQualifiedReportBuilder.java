@@ -19,7 +19,7 @@ package ee.openeid.validation.service.pdf.validator.report;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
-import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
+import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import eu.europa.esig.dss.jaxb.diagnostic.XmlSignatureScopeType;
 import eu.europa.esig.dss.validation.policy.rules.Indication;
 import eu.europa.esig.dss.validation.policy.rules.SubIndication;
@@ -46,9 +46,9 @@ public class PDFQualifiedReportBuilder {
     private Reports dssReports;
     private ZonedDateTime validationTime;
     private String documentName;
-    private ValidationPolicy validationPolicy;
+    private ConstraintDefinedPolicy validationPolicy;
 
-    public PDFQualifiedReportBuilder(Reports dssReports, ZonedDateTime validationTime, String documentName, ValidationPolicy policy) {
+    public PDFQualifiedReportBuilder(Reports dssReports, ZonedDateTime validationTime, String documentName, ConstraintDefinedPolicy policy) {
         this.dssReports = dssReports;
         this.validationTime = validationTime;
         this.documentName = documentName;
@@ -86,14 +86,14 @@ public class PDFQualifiedReportBuilder {
         signatureValidationData.setSignatureFormat(dssReports.getSimpleReport().getSignatureFormat(signatureId));
         signatureValidationData.setSignatureLevel(dssReports.getSimpleReport().getSignatureLevel(signatureId).name());
         signatureValidationData.setSignedBy(parseSignedBy(signatureId));
-        signatureValidationData.setIndication(parseIndication(signatureId));
-        signatureValidationData.setSubIndication(parseSubIndication(signatureId));
         signatureValidationData.setClaimedSigningTime(parseClaimedSigningTime(signatureId));
         signatureValidationData.setSignatureScopes(parseSignatureScopes(signatureId));
         signatureValidationData.setErrors(parseSignatureErrors(signatureId));
         signatureValidationData.setWarnings(parseSignatureWarnings(signatureId));
         signatureValidationData.setInfo(parseSignatureInfo(signatureId));
         signatureValidationData.setCountryCode(getCountryCode());
+        signatureValidationData.setIndication(parseIndication(signatureId, signatureValidationData.getErrors()));
+        signatureValidationData.setSubIndication(parseSubIndication(signatureId, signatureValidationData.getErrors()));
 
         return signatureValidationData;
     }
@@ -107,10 +107,20 @@ public class PDFQualifiedReportBuilder {
     }
 
     private List<Error> parseSignatureErrors(String signatureId) {
-        return dssReports.getSimpleReport().getErrors(signatureId)
+        List<Error> errorList = dssReports.getSimpleReport().getErrors(signatureId)
                 .stream()
                 .map(this::mapDssError)
                 .collect(Collectors.toList());
+        if (!validationPolicy.isAllowCrlRevocationSource() && isCrlRevocationSource(signatureId)) {
+            errorList.add(mapDssError("Signing certificate revocation source is not trusted"));
+        }
+        return errorList;
+    }
+
+    private boolean isCrlRevocationSource(String signatureId) {
+        String signingCertificateId = dssReports.getDiagnosticData().getSigningCertificateId(signatureId);
+        String revocationSource = dssReports.getDiagnosticData().getCertificateRevocationSource(signingCertificateId);
+        return StringUtils.equalsIgnoreCase("CRLToken", revocationSource);
     }
 
     private Error mapDssError(String dssError) {
@@ -151,19 +161,19 @@ public class PDFQualifiedReportBuilder {
         return emptyWhenNull(ReportBuilderUtils.getDateFormatterWithGMTZone().format(dssReports.getSimpleReport().getSigningTime(signatureId)));
     }
 
-    private SignatureValidationData.Indication parseIndication(String signatureId) {
-        Indication indication = dssReports.getSimpleReport().getIndication(signatureId);
-        if (StringUtils.equalsIgnoreCase(indication.name(), Indication.TOTAL_PASSED.name())) {
+    private SignatureValidationData.Indication parseIndication(String signatureId, List<Error> errors) {
+        Indication dssIndication = dssReports.getSimpleReport().getIndication(signatureId);
+        if (errors.isEmpty() && StringUtils.equalsIgnoreCase(dssIndication.name(), Indication.TOTAL_PASSED.name())) {
             return SignatureValidationData.Indication.TOTAL_PASSED;
-        } else if (StringUtils.equalsIgnoreCase(indication.name(), Indication.TOTAL_FAILED.name())) {
-            return SignatureValidationData.Indication.TOTAL_FAILED;
-        } else {
+        } else if (StringUtils.equalsIgnoreCase(dssIndication.name(), Indication.INDETERMINATE.name())) {
             return SignatureValidationData.Indication.INDETERMINATE;
+        } else {
+            return SignatureValidationData.Indication.TOTAL_FAILED;
         }
     }
 
-    private String parseSubIndication(String signatureId) {
-        if (parseIndication(signatureId) == SignatureValidationData.Indication.TOTAL_PASSED) {
+    private String parseSubIndication(String signatureId, List<Error> errors) {
+        if (parseIndication(signatureId, errors) == SignatureValidationData.Indication.TOTAL_PASSED) {
             return "";
         }
         SubIndication subindication = dssReports.getSimpleReport().getSubIndication(signatureId);

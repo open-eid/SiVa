@@ -29,6 +29,7 @@ import java.io.InputStream;
 @ToString(exclude = "constraintData")
 public class ConstraintDefinedPolicy extends ValidationPolicy {
     private String constraintPath;
+    private boolean allowCrlRevocationSource;
     private byte[] constraintData;
 
     public ConstraintDefinedPolicy(ValidationPolicy validationPolicy) {

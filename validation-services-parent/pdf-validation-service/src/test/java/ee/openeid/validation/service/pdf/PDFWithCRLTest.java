@@ -13,7 +13,7 @@ public class PDFWithCRLTest extends PDFValidationServiceTest {
 
     @Test
     public void pdfWithCRLRevocationDataOnlyShouldPassWhenCrlRevocationIsAllowedInPolicy() throws Exception {
-        setPolicyToAllowCrlRevocation();
+        setPolicyCrlRevocationAllowed(true);
         QualifiedReport report = validationService.validateDocument(
                 buildValidationDocument(PDF_WITH_CRL_REV_ONLY));
         assertEquals(new Long(1), new Long(report.getValidSignaturesCount()));
@@ -21,6 +21,7 @@ public class PDFWithCRLTest extends PDFValidationServiceTest {
 
     @Test
     public void pdfWithCRLRevocationDataOnlyShouldFailIfNotSpecificallyAllowedInPolicy() throws Exception {
+        setPolicyCrlRevocationAllowed(false);
         QualifiedReport report = validationService.validateDocument(
                 buildValidationDocument(PDF_WITH_CRL_REV_ONLY));
         assertEquals(new Long(0), new Long(report.getValidSignaturesCount()));
@@ -34,11 +35,11 @@ public class PDFWithCRLTest extends PDFValidationServiceTest {
                 .getContent());
     }
 
-    private void setPolicyToAllowCrlRevocation() {
+    private void setPolicyCrlRevocationAllowed(boolean allowCrlRevocation) {
         PDFSignaturePolicyProperties policySettings = new PDFSignaturePolicyProperties();
         policySettings.initPolicySettings();
         signaturePolicyService = new ConstraintLoadingSignaturePolicyService(policySettings);
-        signaturePolicyService.getPolicy("").setAllowCrlRevocationSource(true);
+        signaturePolicyService.getPolicy("").setAllowCrlRevocationSource(allowCrlRevocation);
         validationService.setSignaturePolicyService(signaturePolicyService);
     }
 }

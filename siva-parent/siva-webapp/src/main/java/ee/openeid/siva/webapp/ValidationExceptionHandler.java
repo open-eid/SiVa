@@ -26,6 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -34,6 +36,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ValidationExceptionHandler {
 
     private MessageSource messageSource;
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public RequestValidationError invalidRequest(MethodArgumentNotValidException exception) {
+        RequestValidationError requestValidationError = new RequestValidationError();
+        BindingResult bindingResult = exception.getBindingResult();
+        bindingResult.getFieldErrors().forEach(br -> requestValidationError.addFieldError(br.getField(), br.getDefaultMessage()));
+        return requestValidationError;
+    }
 
     @ExceptionHandler(MalformedDocumentException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)

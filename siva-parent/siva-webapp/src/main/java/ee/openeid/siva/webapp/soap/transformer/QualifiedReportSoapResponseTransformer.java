@@ -47,12 +47,16 @@ public class QualifiedReportSoapResponseTransformer {
 
     private QualifiedReport.ValidationWarnings toSoapResponseValidationWarnings(List<ee.openeid.siva.validation.document.report.ValidationWarning> validationWarnings) {
         QualifiedReport.ValidationWarnings responseValidationWarnings = new QualifiedReport.ValidationWarnings();
-        for (ee.openeid.siva.validation.document.report.ValidationWarning validationWarning : validationWarnings) {
-            ValidationWarning responseValidationWarning = new ValidationWarning();
-            responseValidationWarning.setContent(validationWarning.getContent());
-            responseValidationWarnings.getValidationWarning().add(responseValidationWarning);
-        }
+        validationWarnings.stream()
+                .map(this::mapValidationWarning)
+                .forEach(validationWarning -> responseValidationWarnings.getValidationWarning().add(validationWarning));
         return responseValidationWarnings;
+    }
+
+    private ValidationWarning mapValidationWarning(ee.openeid.siva.validation.document.report.ValidationWarning validationWarning) {
+        ValidationWarning responseValidationWarning = new ValidationWarning();
+        responseValidationWarning.setContent(validationWarning.getContent());
+        return responseValidationWarning;
     }
 
     private static Policy toSoapResponsePolicy(ee.openeid.siva.validation.document.report.Policy policy) {

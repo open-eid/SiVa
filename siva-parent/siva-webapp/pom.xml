@@ -163,6 +163,7 @@
                         <configuration>
                             <wsdlUrls>
                                 <wsdlUrl>src/main/resources/wsdl/siva.wsdl</wsdlUrl>
+                                <wsdlUrl>src/main/resources/wsdl/siva-datafiles.wsdl</wsdlUrl>
                             </wsdlUrls>
                             <sourceDestDir>target/generated-sources/wsdlimport/siva</sourceDestDir>
                             <vmArgs>

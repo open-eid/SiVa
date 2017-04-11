@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Riigi Infosüsteemide Amet
+ * Copyright 2017 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -16,14 +16,10 @@
 
 package ee.openeid.siva.sample.siva;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.Data;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class SivaServiceType {
-    public static final String JSON_SERVICE = "sivaJSON";
-    public static final String SOAP_SERVICE = "sivaSOAP";
-
-    public static final String JSON_DATAFILES_SERVICE = "sivaDataFilesJSON";
-    public static final String SOAP_DATAFILES_SERVICE = "sivaDataFilesSOAP";
+@Data
+public class DataFilesRequest {
+    private FileType documentType;
+    private String document;
 }

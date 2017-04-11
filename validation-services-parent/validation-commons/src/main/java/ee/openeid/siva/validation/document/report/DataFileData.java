@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Riigi Infosüsteemide Amet
+ * Copyright 2017 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -14,8 +14,14 @@
  * See the Licence for the specific language governing permissions and limitations under the Licence.
  */
 
-package ee.openeid.siva.sample.controller;
+package ee.openeid.siva.validation.document.report;
 
-public enum ValidationResultType {
-    JSON, SOAP
+import lombok.Data;
+
+@Data
+public class DataFileData {
+    private String base64;
+    private String fileName;
+    private String mimeType;
+    private long size;
 }

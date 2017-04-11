@@ -24,6 +24,12 @@ block content
                     option(value="") default
                     option(value="POLv1") POLv1
                     option(value="POLv2") POLv2
+        .col-md-3
+            .input-group
+                span.input-group-addon Return Data Files:
+                span.input-group-addon
+                    input#return-data-files(type="checkbox")
+
     .row.top-buffer
         .col-md-12
             form#siva-dropzone.dropzone(action="upload", style="width: 100%", method="POST", enctype="multipart/form-data")
@@ -49,6 +55,10 @@ block content
                     a.nav-link.active(href="#json", aria-controls="json", role="tab", data-toggle="tab") JSON
                 li.nav-item(role="presentation")
                     a.nav-link(href="#soap", aria-controls="soap", role="tab", data-toggle="tab") SOAP
+                li.nav-item(role="presentation")#json-data-files-link
+                    a.nav-link(href="#json-data-files", aria-controls="json-data-files", role="tab", data-toggle="tab") JSON Data Files
+                li.nav-item(role="presentation")#soap-data-files-link
+                    a.nav-link(href="#soap-data-files", aria-controls="soap-data-files", role="tab", data-toggle="tab") SOAP Data Files
             .tab-content
                 #json.tab-pane.active(role="tabpanel")
                     pre
@@ -56,5 +66,11 @@ block content
                 #soap.tab-pane(role="tabpanel")
                     pre
                         code.xml#soap-validation-report
+                #json-data-files.tab-pane(role="tabpanel")
+                    pre
+                        code.json#json-data-files-report
+                #soap-data-files.tab-pane(role="tabpanel")
+                    pre
+                        code.xml#soap-data-files-report
     +footerBuildInfo
 

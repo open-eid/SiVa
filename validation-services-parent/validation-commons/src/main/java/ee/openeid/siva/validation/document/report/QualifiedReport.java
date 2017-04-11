@@ -18,7 +18,6 @@ package ee.openeid.siva.validation.document.report;
 
 import lombok.Data;
 
-import javax.xml.bind.annotation.*;
 import java.util.List;
 
 @Data

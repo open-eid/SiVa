@@ -48,6 +48,7 @@ class UploadController {
     private static final long SECOND_IN_MILLISECONDS = 1000L;
 
     private ValidationTaskRunner validationTaskRunner;
+    private DataFilesTaskRunner dataFilesTaskRunner;
     private UploadFileCacheService fileUploadService;
     private GoogleAnalyticsProperties googleAnalyticsProperties;
 
@@ -63,6 +64,7 @@ class UploadController {
             @RequestParam(value = "file") MultipartFile file,
             @RequestParam String policy,
             @RequestParam String encodedFilename,
+            @RequestParam boolean returnDataFiles,
             Model model
     ) {
         if (file.isEmpty()) {
@@ -73,6 +75,9 @@ class UploadController {
         long timestamp = System.currentTimeMillis() / SECOND_IN_MILLISECONDS;
         try {
             final UploadedFile uploadedFile = fileUploadService.addUploadedFile(timestamp, file, encodedFilename);
+            if (returnDataFiles) {
+                dataFilesTaskRunner.run(uploadedFile);
+            }
             validationTaskRunner.run(policy, uploadedFile);
 
             setModelFlashAttributes(model);
@@ -91,11 +96,19 @@ class UploadController {
     }
 
     private String getJsonValidationResult() {
-        return validationTaskRunner.getValidationResult(ValidationResultType.JSON);
+        return validationTaskRunner.getValidationResult(ResultType.JSON);
     }
 
     private String getSoapValidationResult() {
-        return validationTaskRunner.getValidationResult(ValidationResultType.SOAP);
+        return validationTaskRunner.getValidationResult(ResultType.SOAP);
+    }
+
+    private String getJsonDataFilesResult() {
+        return dataFilesTaskRunner.getDataFilesResult(ResultType.JSON);
+    }
+
+    private String getSoapDataFilesResult() {
+        return dataFilesTaskRunner.getDataFilesResult(ResultType.SOAP);
     }
 
     private static ValidationResponse validationResponse(Model model) {
@@ -114,12 +127,23 @@ class UploadController {
         response.setJsonValidationResult(new JSONObject(output).toString(4));
         response.setSoapValidationResult(soapValidationResult);
 
+        String jsonDataFilesResult = getJsonDataFilesResult();
+        String soapDataFilesResult = getSoapDataFilesResult();
+
+        response.setJsonDataFilesResult(jsonDataFilesResult != null ? new JSONObject(jsonDataFilesResult).toString(4) : null);
+        response.setSoapDataFilesResult(soapDataFilesResult);
+
         model.addAttribute(response);
     }
 
     @Autowired
     public void setValidationTaskRunner(ValidationTaskRunner validationTaskRunner) {
         this.validationTaskRunner = validationTaskRunner;
+    }
+
+    @Autowired
+    public void setDataFilesTaskRunner(DataFilesTaskRunner dataFilesTaskRunner) {
+        this.dataFilesTaskRunner = dataFilesTaskRunner;
     }
 
     @Autowired

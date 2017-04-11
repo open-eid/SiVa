@@ -25,7 +25,6 @@ import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyServic
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.validation.service.ddoc.configuration.DDOCValidationServiceProperties;
 import ee.openeid.validation.service.ddoc.report.DDOCQualifiedReportBuilder;
-import ee.openeid.validation.service.ddoc.security.SecureSAXParsers;
 import ee.sk.digidoc.DigiDocException;
 import ee.sk.digidoc.SignedDoc;
 import ee.sk.digidoc.factory.DigiDocFactory;
@@ -37,15 +36,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
 
 import javax.annotation.PostConstruct;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.Security;
@@ -54,7 +55,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class DDOCValidationService implements ValidationService {
+public class DDOCValidationService extends DDOCService implements ValidationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DDOCValidationService.class);
     private final Object lock = new Object();
 
@@ -115,16 +116,6 @@ public class DDOCValidationService implements ValidationService {
                     signedDoc.cleanupDfCache();
                 }
             }
-        }
-    }
-
-    protected void validateAgainstXMLEntityAttacks(byte[] xmlContent) {
-        try {
-            SAXParser saxParser = SecureSAXParsers.createParser();
-            saxParser.getXMLReader().parse(new InputSource(new ByteArrayInputStream(xmlContent)));
-        } catch (ParserConfigurationException | SAXException | IOException e) {
-            LOGGER.error("Exception when validation document against XML entity attacks: " + e.getMessage(), e);
-            throw new MalformedDocumentException(e);
         }
     }
 

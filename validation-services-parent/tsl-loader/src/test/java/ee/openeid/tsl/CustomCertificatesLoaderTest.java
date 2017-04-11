@@ -51,7 +51,7 @@ public class CustomCertificatesLoaderTest {
     @Test
     public void softCertCAShouldNotBeLoadedWithQCServiceInfoQualifiers() {
         getServiceInfoStream()
-                .filter(this::isManagementServiceInfo)
+                .filter(this::isManagementOrNortalServiceInfo)
                 .forEach(this::assertNoQualifiers);
     }
 
@@ -68,13 +68,13 @@ public class CustomCertificatesLoaderTest {
                 .map(this::getServiceInfo);
     }
 
-    private boolean isManagementServiceInfo(ServiceInfo serviceInfo) {
+    private boolean isManagementOrNortalServiceInfo(ServiceInfo serviceInfo) {
         return StringUtils.contains(serviceInfo.getServiceName(), "Management") || StringUtils.contains(serviceInfo.getServiceName(), "Nortal");
     }
 
     private boolean isNonManagementCA(ServiceInfo serviceInfo) {
         return StringUtils.equals("http://uri.etsi.org/TrstSvc/Svctype/CA/QC", serviceInfo.getType()) &&
-                !isManagementServiceInfo(serviceInfo);
+                !isManagementOrNortalServiceInfo(serviceInfo);
     }
 
     private List<CertificateToken> getCertificateTokens() {

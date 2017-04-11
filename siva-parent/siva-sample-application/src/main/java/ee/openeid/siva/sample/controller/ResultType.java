@@ -14,16 +14,8 @@
  * See the Licence for the specific language governing permissions and limitations under the Licence.
  */
 
-package ee.openeid.siva.sample.siva;
+package ee.openeid.siva.sample.controller;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class SivaServiceType {
-    public static final String JSON_SERVICE = "sivaJSON";
-    public static final String SOAP_SERVICE = "sivaSOAP";
-
-    public static final String JSON_DATAFILES_SERVICE = "sivaDataFilesJSON";
-    public static final String SOAP_DATAFILES_SERVICE = "sivaDataFilesSOAP";
+public enum ResultType {
+    JSON, SOAP
 }

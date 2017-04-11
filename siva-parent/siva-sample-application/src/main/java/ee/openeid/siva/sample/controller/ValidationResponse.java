@@ -27,4 +27,6 @@ public class ValidationResponse {
     private String soapValidationResult;
     private String overAllValidationResult;
     private List<String> validationWarnings;
+    private String jsonDataFilesResult;
+    private String soapDataFilesResult;
 }

@@ -32,6 +32,8 @@ final class BDOCTestUtils {
     static final String XROAD_BATCHSIGNATURE_CONTAINER = "xroad-batchsignature.asice";
     static final String XROAD_SIMPLE_CONTAINER = "xroad-simple.asice";
     static final String BDOC_TEST_OF_KLASS3_CHAIN = "etoken_CPP.bdoc";
+    static final String BDOC_TEST_FILE_UNSIGNED = "3f_2s_1f_unsigned.bdoc";
+    static final String BDOC_TEST_FILE_ALL_SIGNED = "2f_all_signed.bdoc";
 
     static ValidationDocument buildValidationDocument(String testFile) throws Exception {
         return DummyValidationDocumentBuilder

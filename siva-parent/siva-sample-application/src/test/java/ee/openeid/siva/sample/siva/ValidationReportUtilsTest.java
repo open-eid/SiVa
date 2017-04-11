@@ -20,6 +20,9 @@ import org.junit.Test;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -33,6 +36,21 @@ public class ValidationReportUtilsTest {
         assertTrue(Modifier.isPrivate(constructor.getModifiers()));
         constructor.setAccessible(true);
         constructor.newInstance();
+    }
+
+    @Test
+    public void documentValidationWarningNotEmpty() throws Exception {
+        List<String> expected = new ArrayList<>();
+        expected.add("Some validation warning");
+
+        final String json = "{\"validationWarnings\":[{\"content\":\"Some validation warning\"}]}";
+        assertEquals(expected, ValidationReportUtils.getValidationWarnings(json));
+    }
+
+    @Test
+    public void documentValidationWarningEmpty() throws Exception {
+        final String json = "{\"validationWarnings\":[]}";
+        assertEquals(Collections.emptyList(), ValidationReportUtils.getValidationWarnings(json));
     }
 
     @Test

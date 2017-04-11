@@ -145,7 +145,7 @@ public class CustomCertificatesLoader {
                         "26x1lOcCk0KRBr/mBk9gaC0TxmYhuum99V5+fM5sJ6WwFRS1ruLyt1piQiATIRVe\n" +
                         "pcPZlmxrjmZcfQ+dp1jWj3cS7pJ9mCZsr5H74U3K");
 
-        tlCertSource.addCertificate(certToken, getCAServiceInfoNoQcConditions(certToken, "Nortal NQSK16 Test Cert Signing"));
+        tlCertSource.addCertificate(certToken, getCAServiceInfo(certToken, "Nortal NQSK16 Test Cert Signing"));
 
         // TEST of KLASS3-SK 2010
         certToken = DSSUtils.loadCertificateFromBase64EncodedString(
@@ -345,11 +345,6 @@ public class CustomCertificatesLoader {
         serviceInfo.setStatus(getServiceInfoStatuses(certToken));
         serviceInfo.setType(CA_QC);
         serviceInfo.setServiceName(serviceName);
-        return serviceInfo;
-    }
-
-    private ServiceInfo getCAServiceInfoNoQcConditions(CertificateToken certToken, String serviceName) {
-        ServiceInfo serviceInfo = getCAServiceInfo(certToken, serviceName);
         return serviceInfo;
     }
 

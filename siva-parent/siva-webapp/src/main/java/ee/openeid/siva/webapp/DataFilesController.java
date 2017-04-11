@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Riigi Infosüsteemide Amet
+ * Copyright 2017 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -16,10 +16,10 @@
 
 package ee.openeid.siva.webapp;
 
-import ee.openeid.siva.proxy.ValidationProxy;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
-import ee.openeid.siva.webapp.request.JSONValidationRequest;
-import ee.openeid.siva.webapp.transformer.ValidationRequestToProxyDocumentTransformer;
+import ee.openeid.siva.proxy.DataFilesProxy;
+import ee.openeid.siva.validation.document.report.DataFilesReport;
+import ee.openeid.siva.webapp.request.JSONDataFilesRequest;
+import ee.openeid.siva.webapp.transformer.DataFilesRequestToProxyDocumentTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,24 +30,23 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-public class ValidationController {
+public class DataFilesController {
 
-    private ValidationProxy validationProxy;
-    private ValidationRequestToProxyDocumentTransformer transformer;
+    private DataFilesProxy dataFilesProxy;
+    private DataFilesRequestToProxyDocumentTransformer transformer;
 
-    @RequestMapping(value = "/validate", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-    public QualifiedReport validate(@Valid @RequestBody JSONValidationRequest validationRequest) {
-        return validationProxy.validate(transformer.transform(validationRequest));
+    @RequestMapping(value = "/getDataFiles", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    public DataFilesReport validate(@Valid @RequestBody JSONDataFilesRequest dataFilesRequest) {
+        return dataFilesProxy.getDataFiles(transformer.transform(dataFilesRequest));
     }
 
     @Autowired
-    public void setValidationProxy(ValidationProxy validationProxy) {
-        this.validationProxy = validationProxy;
+    public void setDataFilesProxy(DataFilesProxy dataFilesProxy) {
+        this.dataFilesProxy = dataFilesProxy;
     }
 
     @Autowired
-    public void setTransformer(ValidationRequestToProxyDocumentTransformer transformer) {
+    public void setDataFilesTransformer(DataFilesRequestToProxyDocumentTransformer transformer) {
         this.transformer = transformer;
     }
-
 }

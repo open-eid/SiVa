@@ -35,8 +35,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static ee.openeid.siva.sample.controller.ValidationResultType.JSON;
-import static ee.openeid.siva.sample.controller.ValidationResultType.SOAP;
+import static ee.openeid.siva.sample.controller.ResultType.JSON;
+import static ee.openeid.siva.sample.controller.ResultType.SOAP;
 
 @Service
 class ValidationTaskRunner {
@@ -45,35 +45,33 @@ class ValidationTaskRunner {
     private ValidationService jsonValidationService;
     private ValidationService soapValidationService;
 
-    private final Map<ValidationResultType, String> validationResults = new ConcurrentHashMap<>();
+    private final Map<ResultType, String> validationResults = new ConcurrentHashMap<>();
 
     void run(String policy, UploadedFile uploadedFile) throws InterruptedException {
-        Map<ValidationResultType, ValidationService> serviceMap = getValidationServiceMap();
+        Map<ResultType, ValidationService> serviceMap = getValidationServiceMap();
 
         ExecutorService executorService = Executors.newFixedThreadPool(serviceMap.size());
-        serviceMap.entrySet().forEach(entry -> {
-            executorService.submit(() -> validateFile(entry.getValue(), entry.getKey(), uploadedFile, policy));
-        });
+        serviceMap.entrySet().forEach(entry -> executorService.submit(() -> validateFile(entry.getValue(), entry.getKey(), uploadedFile, policy)));
 
         executorService.shutdown();
         executorService.awaitTermination(2, TimeUnit.MINUTES);
     }
 
-    private Map<ValidationResultType, ValidationService> getValidationServiceMap() {
+    private Map<ResultType, ValidationService> getValidationServiceMap() {
         return Stream.of(addEntry(JSON, jsonValidationService), addEntry(SOAP, soapValidationService))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    private static SimpleImmutableEntry<ValidationResultType, ValidationService> addEntry(
-            ValidationResultType json,
-            ValidationService jsonValidationService
+    private static SimpleImmutableEntry<ResultType, ValidationService> addEntry(
+            ResultType resultType,
+            ValidationService validationService
     ) {
-        return new SimpleImmutableEntry<>(json, jsonValidationService);
+        return new SimpleImmutableEntry<>(resultType, validationService);
     }
 
     private void validateFile(
             ValidationService validationService,
-            ValidationResultType resultType,
+            ResultType resultType,
             UploadedFile uploadedFile,
             String policy
     ) {
@@ -88,7 +86,7 @@ class ValidationTaskRunner {
         }
     }
 
-    String getValidationResult(ValidationResultType resultType) {
+    String getValidationResult(ResultType resultType) {
         return validationResults.get(resultType);
     }
 

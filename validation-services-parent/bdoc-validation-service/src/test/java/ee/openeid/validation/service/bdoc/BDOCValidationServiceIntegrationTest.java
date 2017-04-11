@@ -21,6 +21,7 @@ import ee.openeid.siva.validation.document.report.Policy;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.document.report.SignatureScope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.ValidationWarning;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
@@ -52,8 +53,24 @@ import java.util.Set;
 
 import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.NO_TYPE_POLICY;
 import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.QES_POLICY;
-import static ee.openeid.validation.service.bdoc.BDOCTestUtils.*;
-import static org.junit.Assert.*;
+import static ee.openeid.validation.service.bdoc.BDOCTestUtils.ASICE_CRL_ONLY;
+import static ee.openeid.validation.service.bdoc.BDOCTestUtils.BDOC_TEST_FILE_ALL_SIGNED;
+import static ee.openeid.validation.service.bdoc.BDOCTestUtils.BDOC_TEST_FILE_UNSIGNED;
+import static ee.openeid.validation.service.bdoc.BDOCTestUtils.BDOC_TEST_OF_KLASS3_CHAIN;
+import static ee.openeid.validation.service.bdoc.BDOCTestUtils.VALID_BALTIC_EST_LT;
+import static ee.openeid.validation.service.bdoc.BDOCTestUtils.VALID_BDOC_TM_2_SIGNATURES;
+import static ee.openeid.validation.service.bdoc.BDOCTestUtils.VALID_ID_CARD_MOB_ID;
+import static ee.openeid.validation.service.bdoc.BDOCTestUtils.XROAD_BATCHSIGNATURE_CONTAINER;
+import static ee.openeid.validation.service.bdoc.BDOCTestUtils.XROAD_SIMPLE_CONTAINER;
+import static ee.openeid.validation.service.bdoc.BDOCTestUtils.buildValidationDocument;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
@@ -86,6 +103,27 @@ public class BDOCValidationServiceIntegrationTest {
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
+
+    @Test
+    public void qualifiedReportShouldHaveValidationWarnings() throws Exception {
+        QualifiedReport validationResult = bdocValidationService.validateDocument(buildValidationDocument(BDOC_TEST_FILE_UNSIGNED));
+        List<ValidationWarning> validationWarnings = validationResult.getValidationWarnings();
+        assertThat(validationWarnings, hasSize(5));
+        assertThat(validationWarnings, containsInAnyOrder(
+                hasProperty("content", is("Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml")),
+                hasProperty("content", is("Manifest file has an entry for file document_3.xml with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file")),
+                hasProperty("content", is("Manifest file has an entry for file document_3.xml with mimetype application/octet-stream but the signature file for signature S1 does not have an entry for this file")),
+                hasProperty("content", is("Container contains a file named document_3.xml which is not found in the signature file")),
+                hasProperty("content", is("Signature PUDOV,VADIM,39101013724 has unsigned files: document_3.xml"))
+        ));
+    }
+
+    @Test
+    public void qualifiedReportShouldNotHaveValidationWarnings() throws Exception {
+        QualifiedReport validationResult = bdocValidationService.validateDocument(buildValidationDocument(BDOC_TEST_FILE_ALL_SIGNED));
+        List<ValidationWarning> validationWarnings = validationResult.getValidationWarnings();
+        assertThat(validationWarnings, hasSize(0));
+    }
 
     @Test
     public void verifyCorrectPolicyIsLoadedToD4JConfiguration() throws Exception {

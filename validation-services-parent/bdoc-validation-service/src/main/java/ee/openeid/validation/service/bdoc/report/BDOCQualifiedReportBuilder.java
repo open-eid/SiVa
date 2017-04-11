@@ -26,6 +26,7 @@ import ee.openeid.siva.validation.document.report.Warning;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import eu.europa.esig.dss.validation.policy.rules.SubIndication;
+import eu.europa.esig.dss.validation.reports.Reports;
 import eu.europa.esig.dss.validation.reports.SignatureType;
 import eu.europa.esig.dss.validation.reports.SimpleReport;
 import org.apache.commons.lang.StringUtils;
@@ -41,9 +42,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
@@ -81,7 +82,7 @@ public class BDOCQualifiedReportBuilder {
         qualifiedReport.setDocumentName(documentName);
         qualifiedReport.setSignatureForm(BDOC_SIGNATURE_FORM);
         qualifiedReport.setSignaturesCount(container.getSignatures().size());
-        qualifiedReport.setValidationWarnings(getValidationWarnings());
+        qualifiedReport.setValidationWarnings(containerValidationWarnings());
         qualifiedReport.setSignatures(createSignaturesForReport(container));
         qualifiedReport.setValidSignaturesCount(
                 qualifiedReport.getSignatures()
@@ -92,34 +93,38 @@ public class BDOCQualifiedReportBuilder {
         return qualifiedReport;
     }
 
-    private List<ValidationWarning> getValidationWarnings() {
-        List<ValidationWarning> validationWarnings = containerErrors.stream().map(e -> createValidationWarning(emptyWhenNull(e.getMessage()))).collect(Collectors.toList());
-        List<ValidationWarning> unsignedWarnings = getUnsignedValidationWarnings();
-        validationWarnings.addAll(unsignedWarnings);
+    private List<ValidationWarning> containerValidationWarnings() {
+        List<ValidationWarning> validationWarnings = containerErrors.stream().map(e -> createValidationWarning(e.getMessage())).collect(Collectors.toList());
+        validationWarnings.addAll(getValidationWarningsForUnsignedDataFiles());
         return validationWarnings;
     }
 
     private static ValidationWarning createValidationWarning(String content) {
         ValidationWarning validationWarning = new ValidationWarning();
-        validationWarning.setContent(content);
+        validationWarning.setContent(emptyWhenNull(content));
         return validationWarning;
     }
 
-    private List<ValidationWarning> getUnsignedValidationWarnings() {
+    private List<ValidationWarning> getValidationWarningsForUnsignedDataFiles() {
         List<String> dataFileNames = container.getDataFiles().stream().map(DataFile::getName).collect(Collectors.toList());
-        List<ValidationWarning> validationWarnings = new ArrayList<>();
-        for (Signature signature : container.getSignatures()) {
-            String unsignedFiles = getUnsignedFiles((BDocSignature) signature, dataFileNames);
-            if (!StringUtils.isEmpty(unsignedFiles)) {
-                String signedBy = removeQuotes(signature.getSigningCertificate().getSubjectName(CN));
-                String content = String.format("Signature %s has unsigned files: %s", signedBy, unsignedFiles);
-                validationWarnings.add(createValidationWarning(content));
-            }
-        }
-        return validationWarnings;
+        return container.getSignatures()
+                .stream()
+                .map(signature -> createValidationWarning(signature, getUnsignedFiles((BDocSignature) signature, dataFileNames)))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
-    private String getUnsignedFiles(BDocSignature bDocSignature, List<String> dataFileNames) {
+    private ValidationWarning createValidationWarning(Signature signature, List<String> unsignedFiles) {
+        if (unsignedFiles.isEmpty()) {
+            return null;
+        }
+        String signedBy = removeQuotes(signature.getSigningCertificate().getSubjectName(CN));
+        String commaSeparated = unsignedFiles.stream().collect(Collectors.joining(", "));
+        String content = String.format("Signature %s has unsigned files: %s", signedBy, commaSeparated);
+        return createValidationWarning(content);
+    }
+
+    private List<String> getUnsignedFiles(BDocSignature bDocSignature, List<String> dataFileNames) {
         List<String> uris = bDocSignature.getOrigin().getReferences()
                 .stream()
                 .map(reference -> decodeUriIfPossible(reference.getURI()))
@@ -127,7 +132,7 @@ public class BDOCQualifiedReportBuilder {
                 .collect(Collectors.toList());
         return dataFileNames.stream()
                 .filter(df -> !uris.contains(df))
-                .collect(Collectors.joining(", "));
+                .collect(Collectors.toList());
     }
 
     private List<SignatureValidationData> createSignaturesForReport(Container container) {

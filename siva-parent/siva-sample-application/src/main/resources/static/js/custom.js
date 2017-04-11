@@ -34,9 +34,11 @@
         $('#result-area, #validation-summery, #validation-warnings').addClass("hide");
         $('#validation-warning-rows').empty();
         var policy = $('select#policy-select').val();
+        var returnDataFiles = $('#return-data-files').prop('checked');
         console.log('Validation policy: ' + policy);
         formData.append("policy", policy);
         formData.append("encodedFilename", encodeURI(file.name));
+        formData.append("returnDataFiles", returnDataFiles);
     });
 
     sivaDropzone.on('uploadprogress', function (file, progress) {
@@ -57,6 +59,26 @@
         $('#soap-validation-report').each(function (i, block) {
             hljs.highlightBlock(block);
         });
+
+        if (!jQuery.isEmptyObject(response.jsonDataFilesResult)) {
+            $('#json-data-files-link').removeClass("hide");
+            $('#json-data-files-report').text(response.jsonDataFilesResult);
+            $('#json-data-files-report').each(function (i, block) {
+                hljs.highlightBlock(block);
+            });
+        } else {
+            $('#json-data-files-link').addClass("hide");
+         }
+
+        if (!jQuery.isEmptyObject(response.soapDataFilesResult)) {
+            $('#soap-data-files-link').removeClass("hide");
+            $('#soap-data-files-report').text(response.soapDataFilesResult);
+            $('#soap-data-files-report').each(function (i, block) {
+                hljs.highlightBlock(block);
+            });
+        } else {
+            $('#soap-data-files-link').addClass("hide");
+        }
 
         console.log(response);
         if (response.filename !== '') {

@@ -27,7 +27,6 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import ee.openeid.siva.sample.cache.UploadFileCacheService;
 import ee.openeid.siva.sample.cache.UploadedFile;
-import ee.openeid.siva.sample.ci.info.BuildInfo;
 import ee.openeid.siva.sample.configuration.GoogleAnalyticsProperties;
 import org.junit.After;
 import org.junit.Before;
@@ -46,7 +45,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.multipart.MultipartFile;
-import rx.Observable;
 
 import java.io.IOException;
 
@@ -54,7 +52,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -72,6 +73,9 @@ public class UploadControllerTest {
 
     @MockBean
     private ValidationTaskRunner taskRunner;
+
+    @MockBean
+    private DataFilesTaskRunner dataFilesTaskRunner;
 
     @MockBean
     private UploadFileCacheService hazelcastUploadFileCacheService;
@@ -97,6 +101,7 @@ public class UploadControllerTest {
         final Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
         logger.detachAppender(mockAppender);
         reset(taskRunner);
+        reset(dataFilesTaskRunner);
         Thread.interrupted();
     }
 
@@ -108,7 +113,7 @@ public class UploadControllerTest {
 
     @Test
     public void uploadPageWithFileReturnsValidationResult() throws Exception {
-        given(taskRunner.getValidationResult(any(ValidationResultType.class)))
+        given(taskRunner.getValidationResult(any(ResultType.class)))
                 .willReturn("{\"documentName\": \"random.bdoc\", \"validSignaturesCount\": 1, \"signaturesCount\": 1}");
 
         UploadedFile uploadedFile = new UploadedFile();
@@ -125,7 +130,8 @@ public class UploadControllerTest {
 
         mockMvc.perform(fileUpload("/upload").file(uploadFile)
                 .param("policy", "")
-                .param("encodedFilename", "ranodom.bdoc"))
+                .param("encodedFilename", "ranodom.bdoc")
+                .param("returnDataFiles", "false"))
                 .andExpect(status().is(200))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
     }
@@ -144,7 +150,8 @@ public class UploadControllerTest {
 
         mockMvc.perform(fileUpload("/upload").file(uploadFile)
                 .param("policy", "")
-                .param("encodedFilename", "ranodom.bdoc"))
+                .param("encodedFilename", "ranodom.bdoc")
+                .param("returnDataFiles", "false"))
                 .andExpect(status().is(200));
     }
 
@@ -159,7 +166,8 @@ public class UploadControllerTest {
 
         mockMvc.perform(fileUpload("/upload").file(uploadFile)
                 .param("policy", "")
-                .param("encodedFilename", "ranodom.bdoc"))
+                .param("encodedFilename", "ranodom.bdoc")
+                .param("returnDataFiles", "false"))
                 .andExpect(status().is(200));
     }
 
@@ -175,7 +183,8 @@ public class UploadControllerTest {
 
         mockMvc.perform(fileUpload("/upload").file(uploadFile)
                 .param("policy", "")
-                .param("encodedFilename", "ranodom.bdoc"))
+                .param("encodedFilename", "ranodom.bdoc")
+                .param("returnDataFiles", "false"))
                 .andExpect(status().is(200));
 
         verify(mockAppender).doAppend(captorLoggingEvent.capture());

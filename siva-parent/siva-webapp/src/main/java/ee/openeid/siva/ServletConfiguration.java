@@ -19,7 +19,9 @@ package ee.openeid.siva;
 import ee.openeid.siva.monitoring.configuration.MonitoringConfiguration;
 import ee.openeid.siva.monitoring.indicator.UrlHealthIndicator;
 import ee.openeid.siva.proxy.configuration.ProxyConfigurationProperties;
+import ee.openeid.siva.webapp.soap.DataFilesWebService;
 import ee.openeid.siva.webapp.soap.ValidationWebService;
+import ee.openeid.siva.webapp.soap.impl.DataFilesWebServiceImpl;
 import ee.openeid.siva.webapp.soap.impl.ValidationWebServiceImpl;
 import org.apache.cxf.Bus;
 import org.apache.cxf.bus.spring.SpringBus;
@@ -43,6 +45,7 @@ public class ServletConfiguration extends MonitoringConfiguration {
     private ProxyConfigurationProperties proxyProperties;
 
     private static final String ENDPOINT = "/validationWebService";
+    private static final String DATAFILES_ENDPOINT = "/dataFilesWebService";
     private static final String URL_MAPPING = "/soap/*";
 
     @Bean(name = Bus.DEFAULT_BUS_ID)
@@ -72,6 +75,19 @@ public class ServletConfiguration extends MonitoringConfiguration {
         EndpointImpl endpoint = new EndpointImpl(springBus, validationWebService);
         endpoint.setWsdlLocation("wsdl/siva.wsdl");
         endpoint.publish(ENDPOINT);
+        return endpoint;
+    }
+
+    @Bean
+    public DataFilesWebService dataFilesWebService() {
+        return new DataFilesWebServiceImpl();
+    }
+
+    @Bean
+    public Endpoint dataFilesEndpoint(SpringBus springBus, DataFilesWebService dataFilesWebService) {
+        EndpointImpl endpoint = new EndpointImpl(springBus, dataFilesWebService);
+        endpoint.setWsdlLocation("wsdl/siva-datafiles.wsdl");
+        endpoint.publish(DATAFILES_ENDPOINT);
         return endpoint;
     }
 

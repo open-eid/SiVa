@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Riigi Infosüsteemide Amet
+ * Copyright 2017 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -18,52 +18,41 @@ package ee.openeid.siva.sample.siva;
 
 import ee.openeid.siva.sample.cache.UploadedFile;
 import ee.openeid.siva.sample.configuration.SivaRESTWebServiceConfigurationProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import rx.Observable;
 
-import javax.xml.transform.*;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
 
-@Service(value = SivaServiceType.SOAP_SERVICE)
-public class SivaSOAPValidationServiceClient implements ValidationService {
+@Service(value = SivaServiceType.SOAP_DATAFILES_SERVICE)
+public class SivaSOAPDataFilesServiceClient implements DataFilesService {
+
     private static final String LINE_SEPARATOR = System.lineSeparator();
 
     private SivaRESTWebServiceConfigurationProperties properties;
     private RestTemplate restTemplate;
 
     @Override
-    public Observable<String> validateDocument(String policy, UploadedFile file) throws IOException {
+    public Observable<String> getDataFiles(UploadedFile file) throws IOException {
         if (file == null) {
             throw new IOException("File not found");
         }
-
-        FileType serviceType = ValidationRequestUtils.getValidationServiceType(file);
-        String requestBody = createXMLValidationRequest(file.getEncodedFile(), serviceType.name(), file.getFilename(), policy);
-
-        String fullUrl = properties.getServiceHost() + properties.getSoapServicePath();
-        return Observable.just(XMLTransformer.formatXML(restTemplate.postForObject(fullUrl, requestBody, String.class)));
+        FileType fileType = ValidationRequestUtils.getValidationServiceType(file);
+        String requestBody = createXMLDataFilesRequest(file.getEncodedFile(), fileType.name());
+        return Observable.just(XMLTransformer.formatXML(restTemplate.postForObject(properties.getSoapDataFilesServicePath(), requestBody, String.class)));
     }
 
-    private static String createXMLValidationRequest(String base64Document, String documentType, String filename, String policy) {
+    private static String createXMLDataFilesRequest(String base64Document, String documentType) {
         return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">" + LINE_SEPARATOR +
                 "   <soapenv:Header/>" + LINE_SEPARATOR +
                 "   <soapenv:Body>" + LINE_SEPARATOR +
-                "      <soap:ValidateDocument>" + LINE_SEPARATOR +
-                "         <soap:ValidationRequest>" + LINE_SEPARATOR +
+                "      <soap:GetDocumentDataFiles>" + LINE_SEPARATOR +
+                "         <soap:DataFilesRequest>" + LINE_SEPARATOR +
                 "            <Document>" + base64Document + "</Document>" + LINE_SEPARATOR +
-                "            <Filename>" + filename + "</Filename>" + LINE_SEPARATOR +
                 "            <DocumentType>" + documentType + "</DocumentType>" + LINE_SEPARATOR +
-                "            <SignaturePolicy>" + policy + "</SignaturePolicy>" + LINE_SEPARATOR +
-                "         </soap:ValidationRequest>" + LINE_SEPARATOR +
-                "      </soap:ValidateDocument>" + LINE_SEPARATOR +
+                "         </soap:DataFilesRequest>" + LINE_SEPARATOR +
+                "      </soap:GetDocumentDataFiles>" + LINE_SEPARATOR +
                 "   </soapenv:Body>" + LINE_SEPARATOR +
                 "</soapenv:Envelope>";
     }
@@ -77,4 +66,5 @@ public class SivaSOAPValidationServiceClient implements ValidationService {
     public void setRestTemplate(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
+
 }

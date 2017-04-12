@@ -14,7 +14,7 @@
  * See the Licence for the specific language governing permissions and limitations under the Licence.
  */
 
-package ee.openeid.siva.webapp.soap.transformer.datafiles;
+package ee.openeid.siva.webapp.soap.transformer;
 
 import ee.openeid.siva.validation.document.report.DataFileData;
 import ee.openeid.siva.webapp.soap.DataFile;

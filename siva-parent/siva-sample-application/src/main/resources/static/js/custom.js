@@ -31,8 +31,10 @@
     });
 
     sivaDropzone.on('sending', function (file, xhr, formData) {
-        $('#result-area, #validation-summery, #validation-warnings').addClass("hide");
+        $('#result-area, #validation-summery, #validation-warnings, #json-data-files-link, #soap-data-files-link').addClass("hide");
         $('#validation-warning-rows').empty();
+        $('#json-data-files-report').empty();
+        $('#soap-data-files-report').empty();
         var policy = $('select#policy-select').val();
         var returnDataFiles = $('#return-data-files').prop('checked');
         console.log('Validation policy: ' + policy);
@@ -49,6 +51,7 @@
 
     sivaDropzone.on('success', function (file, response) {
         $('#result-area').removeClass('hide');
+        $('.nav-tabs a[href="#json"]').tab('show');
 
         $('#validation-report').text(response.jsonValidationResult);
         $('#validation-report').each(function (i, block) {
@@ -66,9 +69,7 @@
             $('#json-data-files-report').each(function (i, block) {
                 hljs.highlightBlock(block);
             });
-        } else {
-            $('#json-data-files-link').addClass("hide");
-         }
+        }
 
         if (!jQuery.isEmptyObject(response.soapDataFilesResult)) {
             $('#soap-data-files-link').removeClass("hide");
@@ -76,8 +77,6 @@
             $('#soap-data-files-report').each(function (i, block) {
                 hljs.highlightBlock(block);
             });
-        } else {
-            $('#soap-data-files-link').addClass("hide");
         }
 
         console.log(response);

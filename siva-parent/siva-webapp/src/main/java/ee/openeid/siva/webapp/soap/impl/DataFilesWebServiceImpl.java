@@ -20,15 +20,15 @@ import ee.openeid.siva.proxy.DataFilesProxy;
 import ee.openeid.siva.webapp.soap.DataFilesReport;
 import ee.openeid.siva.webapp.soap.DataFilesWebService;
 import ee.openeid.siva.webapp.soap.SoapDataFilesRequest;
-import ee.openeid.siva.webapp.soap.transformer.datafiles.DataFilesReportSoapResponseTransformer;
-import ee.openeid.siva.webapp.soap.transformer.datafiles.SoapDataFilesRequestToProxyDocumentTransformer;
+import ee.openeid.siva.webapp.soap.transformer.DataFilesReportSoapResponseTransformer;
+import ee.openeid.siva.webapp.soap.transformer.SoapDataFilesRequestToProxyDocumentTransformer;
 import org.apache.cxf.annotations.SchemaValidation;
 import org.apache.cxf.interceptor.InInterceptors;
 import org.apache.cxf.interceptor.OutFaultInterceptors;
 import org.apache.cxf.interceptor.OutInterceptors;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@InInterceptors(interceptors = {"ee.openeid.siva.webapp.soap.interceptor.datafiles.SoapRequestDataFilesInterceptor"})
+@InInterceptors(interceptors = {"ee.openeid.siva.webapp.soap.interceptor.SoapRequestDataFilesInterceptor"})
 @OutInterceptors(interceptors = {"ee.openeid.siva.webapp.soap.interceptor.SoapResponseHeaderInterceptor"})
 @OutFaultInterceptors(interceptors = {"ee.openeid.siva.webapp.soap.interceptor.SoapFaultResponseInterceptor", "ee.openeid.siva.webapp.soap.interceptor.SoapResponseHeaderInterceptor"})
 @SchemaValidation(type = SchemaValidation.SchemaValidationType.IN)

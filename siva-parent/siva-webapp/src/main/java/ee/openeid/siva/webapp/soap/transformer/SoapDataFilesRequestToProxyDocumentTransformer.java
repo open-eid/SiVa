@@ -14,7 +14,7 @@
  * See the Licence for the specific language governing permissions and limitations under the Licence.
  */
 
-package ee.openeid.siva.webapp.soap.transformer.datafiles;
+package ee.openeid.siva.webapp.soap.transformer;
 
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.document.typeresolver.DocumentTypeResolver;

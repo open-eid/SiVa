@@ -17,8 +17,11 @@
 package ee.openeid.validation.service.ddoc;
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+import ee.openeid.siva.validation.document.DataFilesDocument;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
+import ee.openeid.siva.validation.document.report.DataFileData;
+import ee.openeid.siva.validation.document.report.DataFilesReport;
 import ee.openeid.siva.validation.document.report.Policy;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.document.report.SignatureScope;
@@ -42,8 +45,16 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 
 import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.NO_TYPE_POLICY;
 import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.QES_POLICY;
@@ -54,7 +65,7 @@ import static org.powermock.api.mockito.PowerMockito.*;
 
 @RunWith(PowerMockRunner.class)
 @PowerMockIgnore("javax.security.*")
-public class DDOCValidationServiceTest {
+public class DDOCServiceTest {
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
@@ -65,7 +76,9 @@ public class DDOCValidationServiceTest {
     private static final String DDOC_1_3_HASHCODE = "DigiDoc 1.3 hashcode.ddoc";
     private static final String DDOC_1_0_HASHCODE = "DigiDoc 1.0 hashcode.ddoc";
     private static final String DDOC_1_2_HASHCODE = "DigiDoc 1.2 hashcode.ddoc";
+    private static final String VALID_DDOC = "ddoc_valid_2_signatures.ddoc";
 
+    private static DDOCDataFilesService dataFilesService = new DDOCDataFilesService();
     private static DDOCValidationService validationService = new DDOCValidationService();
     private static DDOCSignaturePolicyProperties policyProperties = new DDOCSignaturePolicyProperties();
     private static SignaturePolicyService<ValidationPolicy>  signaturePolicyService;
@@ -82,6 +95,58 @@ public class DDOCValidationServiceTest {
         validationService.setProperties(properties);
         validationService.setSignaturePolicyService(signaturePolicyService);
         validationService.initConfig();
+    }
+
+    @Test
+    public void getDataFilesDDOCWithMalformedBytesResultsInMalformedDocumentException() throws Exception {
+        DataFilesDocument dataFilesDocument = buildDataFilesDocument();
+        dataFilesDocument.setBytes(Base64.decode("ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA=="));
+        expectedException.expect(MalformedDocumentException.class);
+        dataFilesService.getDataFiles(dataFilesDocument);
+    }
+
+    @Test
+    public void ddocGetDataFilesResultShouldIncludeDataFilesReportPOJO() throws Exception {
+        DataFilesReport dataFilesReport = dataFilesService.getDataFiles(buildDataFilesDocument());
+        assertNotNull(dataFilesReport);
+    }
+
+    @Test
+    public void ddocGetDataFilesShouldReturnDataFilesReportWithDataFileIncluded() throws Exception {
+        DataFilesReport report = dataFilesService.getDataFiles(buildDataFilesDocument());
+
+        List<DataFileData> dataFiles = report.getDataFiles();
+
+        assertFalse(dataFiles.isEmpty());
+
+        DataFileData dataFileData = dataFiles.get(0);
+
+        assertEquals("VGVzdDENClRlc3QyDQpUZfB0Mw0KS2H+bWFhciAuLi4uDQo=\n", dataFileData.getBase64());
+        assertEquals("Šužlikud sõid ühe õuna ära.txt", dataFileData.getFileName());
+        assertEquals("text/plain", dataFileData.getMimeType());
+        assertEquals(35, dataFileData.getSize());
+    }
+
+    @Test
+    @PrepareForTest(ConfigManager.class)
+    public void getDataFilesFailsWithExceptionWillThrowValidationServiceException() throws Exception {
+        DataFilesDocument dataFilesDocument = new DataFilesDocument();
+        dataFilesDocument.setBytes("".getBytes());
+
+        mockStatic(ConfigManager.class);
+        ConfigManager configManager = mock(ConfigManager.class);
+        DigiDocFactory digiDocFactory = mock(DigiDocFactory.class);
+
+        given(configManager.getDigiDocFactory()).willReturn(digiDocFactory);
+        given(ConfigManager.instance()).willReturn(configManager);
+        when(digiDocFactory.readSignedDocFromStreamOfType(any(ByteArrayInputStream.class), anyBoolean(), anyList())).thenThrow(new DigiDocException(101, "Testing error", new Exception()));
+
+        DDOCDataFilesService dataFilesServiceSpy = spy(new DDOCDataFilesService());
+        doNothing().when(dataFilesServiceSpy).validateAgainstXMLEntityAttacks(any(byte[].class));
+
+        expectedException.expect(ValidationServiceException.class);
+        dataFilesServiceSpy.getDataFiles(dataFilesDocument);
+
     }
 
     @Test
@@ -263,5 +328,43 @@ public class DDOCValidationServiceTest {
         ValidationDocument validationDocument = buildValidationDocument(VALID_DDOC_2_SIGNATURES);
         validationDocument.setSignaturePolicy(policyName);
         return validationService.validateDocument(validationDocument);
+    }
+
+    private static DataFilesDocument buildDataFilesDocument() throws Exception {
+        return DummyDataFilesDocumentBuilder
+                .aDataFilesDocument()
+                .withDocument(TEST_FILES_LOCATION + VALID_DDOC)
+                .build();
+    }
+
+    static class DummyDataFilesDocumentBuilder {
+        private static final Logger LOGGER = LoggerFactory.getLogger(DummyDataFilesDocumentBuilder.class);
+
+        private DataFilesDocument dataFilesDocument;
+
+        private DummyDataFilesDocumentBuilder() {
+            dataFilesDocument = new DataFilesDocument();
+        }
+
+        static DummyDataFilesDocumentBuilder aDataFilesDocument() {
+            return new DummyDataFilesDocumentBuilder();
+        }
+
+        DummyDataFilesDocumentBuilder withDocument(String filePath) {
+            try {
+                Path documentPath = Paths.get(getClass().getClassLoader().getResource(filePath).toURI());
+                dataFilesDocument.setBytes(Files.readAllBytes(documentPath));
+            } catch (IOException e) {
+                LOGGER.warn("FAiled to load dummy data files document with error: {}", e.getMessage(), e);
+            } catch (URISyntaxException e) {
+                LOGGER.warn("Dummy document URL is invalid and ended with error: {}", e.getMessage(), e);
+            }
+
+            return this;
+        }
+
+        public DataFilesDocument build() {
+            return dataFilesDocument;
+        }
     }
 }

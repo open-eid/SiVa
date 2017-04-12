@@ -90,6 +90,7 @@ class UploadController {
         } finally {
             fileUploadService.deleteUploadedFile(timestamp);
             validationTaskRunner.clearValidationResults();
+            dataFilesTaskRunner.clearDataFilesResults();
         }
 
         return validationResponse(model);

@@ -83,6 +83,10 @@ public class DataFilesTaskRunner {
         }
     }
 
+    public void clearDataFilesResults() {
+        dataFilesResults.clear();
+    }
+
     public String getDataFilesResult(ResultType resultType) {
         return dataFilesResults.get(resultType);
     }

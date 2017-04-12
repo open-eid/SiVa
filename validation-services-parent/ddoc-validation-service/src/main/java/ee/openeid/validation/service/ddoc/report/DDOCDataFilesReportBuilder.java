@@ -21,7 +21,6 @@ import ee.openeid.siva.validation.document.report.DataFilesReport;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.sk.digidoc.DataFile;
 import ee.sk.digidoc.DigiDocException;
-import ee.sk.digidoc.SignedDoc;
 import org.apache.commons.codec.binary.Base64;
 
 import java.util.Collections;

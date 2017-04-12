@@ -14,7 +14,7 @@
  * See the Licence for the specific language governing permissions and limitations under the Licence.
  */
 
-package ee.openeid.siva.webapp.soap.interceptor.datafiles;
+package ee.openeid.siva.webapp.soap.interceptor;
 
 import ee.openeid.siva.webapp.soap.DocumentType;
 import org.apache.commons.codec.binary.Base64;

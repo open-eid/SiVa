@@ -118,12 +118,18 @@ public class ValidationReportUtilsTest {
     }
 
     @Test
-    public void givenNullJSONStringReturnsTrue() throws Exception {
-        assertThat(ValidationReportUtils.isJSONNull(null)).isTrue();
+    public void givenNullJSONStringReturnsFalse() throws Exception {
+        assertThat(ValidationReportUtils.isJSONValid(null)).isFalse();
+    }
+
+    @Test
+    public void givenValidJSONStringReturnsTrue() throws Exception {
+        final String json = "{\"validSignaturesCount\": null, \"signaturesCount\": null}";
+        assertThat(ValidationReportUtils.isJSONValid(json)).isTrue();
     }
 
     @Test
     public void givenStringToIsJSONNullReturnsFalse() throws Exception {
-        assertThat(ValidationReportUtils.isJSONNull("random string")).isFalse();
+        assertThat(ValidationReportUtils.isJSONValid("random string")).isFalse();
     }
 }

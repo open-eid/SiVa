@@ -39,7 +39,7 @@ import static ee.openeid.siva.sample.siva.ValidationReportUtils.getOverallValida
 import static ee.openeid.siva.sample.siva.ValidationReportUtils.getValidateFilename;
 import static ee.openeid.siva.sample.siva.ValidationReportUtils.getValidationWarnings;
 import static ee.openeid.siva.sample.siva.ValidationReportUtils.handleMissingJSON;
-import static ee.openeid.siva.sample.siva.ValidationReportUtils.isJSONNull;
+import static ee.openeid.siva.sample.siva.ValidationReportUtils.isJSONValid;
 
 @Controller
 class UploadController {
@@ -124,7 +124,7 @@ class UploadController {
         response.setFilename(getValidateFilename(jsonValidationResult));
         response.setOverAllValidationResult(getOverallValidationResult(jsonValidationResult));
         response.setValidationWarnings(getValidationWarnings(jsonValidationResult));
-        final String output = isJSONNull(jsonValidationResult) ? handleMissingJSON() : jsonValidationResult;
+        final String output = isJSONValid(jsonValidationResult) ? jsonValidationResult : handleMissingJSON();
         response.setJsonValidationResult(new JSONObject(output).toString(4));
         response.setSoapValidationResult(soapValidationResult);
 

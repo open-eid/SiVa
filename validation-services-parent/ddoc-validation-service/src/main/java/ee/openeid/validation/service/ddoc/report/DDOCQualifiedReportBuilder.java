@@ -26,6 +26,7 @@ import ee.openeid.siva.validation.service.signature.policy.properties.Validation
 import ee.openeid.siva.validation.util.CertUtil;
 import ee.sk.digidoc.DataFile;
 import ee.sk.digidoc.DigiDocException;
+import ee.sk.digidoc.KeyInfo;
 import ee.sk.digidoc.Signature;
 import ee.sk.digidoc.SignedDoc;
 import org.apache.commons.lang.StringUtils;
@@ -108,7 +109,7 @@ public class DDOCQualifiedReportBuilder {
         SignatureValidationData signatureValidationData = new SignatureValidationData();
         signatureValidationData.setId(signature.getId());
         signatureValidationData.setSignatureFormat(getSignatureFormat());
-        signatureValidationData.setSignedBy(org.cryptacular.util.CertUtil.subjectCN(signature.getKeyInfo().getSignersCertificate()));
+        signatureValidationData.setSignedBy(getCertificateCN(signature.getKeyInfo()));
 
         ErrorsAndWarningsWrapper wrapper = getErrorsAndWarnings(signature);
         signatureValidationData.setErrors(wrapper.errors);
@@ -125,6 +126,10 @@ public class DDOCQualifiedReportBuilder {
         signatureValidationData.setCountryCode(CertUtil.getCountryCode(signature.getKeyInfo().getSignersCertificate()));
 
         return signatureValidationData;
+    }
+
+    private String getCertificateCN(KeyInfo keyInfo) {
+        return keyInfo != null ? org.cryptacular.util.CertUtil.subjectCN(keyInfo.getSignersCertificate()) : null;
     }
 
     private String getSignatureForm() {

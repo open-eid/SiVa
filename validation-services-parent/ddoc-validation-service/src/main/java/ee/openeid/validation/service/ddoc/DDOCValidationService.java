@@ -108,7 +108,7 @@ public class DDOCValidationService extends DDOCService implements ValidationServ
                 Date validationTime = new Date();
                 DDOCQualifiedReportBuilder reportBuilder = new DDOCQualifiedReportBuilder(signedDoc, validationDocument.getName(), validationTime, policy);
                 return reportBuilder.build();
-            } catch (DigiDocException e) {
+            } catch (Exception e) {
                 LOGGER.warn("Unexpected exception when validating DDOC document: " + e.getMessage(), e);
                 throw new ValidationServiceException(getClass().getSimpleName(), e);
             } finally {

@@ -23,6 +23,8 @@ import com.jayway.jsonpath.PathNotFoundException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +40,7 @@ public final class ValidationReportUtils {
     private static final int GENERIC_ERROR = 101;
 
     public static String getValidateFilename(final String reportJSON) {
-        if (isJSONNull(reportJSON)) {
+        if (!isJSONValid(reportJSON)) {
             return StringUtils.EMPTY;
         }
 
@@ -61,8 +63,8 @@ public final class ValidationReportUtils {
     }
 
     public static String getOverallValidationResult(final String reportJSON) {
-        if (isJSONNull(reportJSON)) {
-            LOGGER.warn("Report JSON is: null");
+        if (!isJSONValid(reportJSON)) {
+            LOGGER.warn("Report JSON is: invalid");
             return ERROR_VALIDATION;
         }
 
@@ -85,7 +87,15 @@ public final class ValidationReportUtils {
         return new ObjectMapper().writer().writeValueAsString(new ServiceError(GENERIC_ERROR, "No JSON found in SiVa API response"));
     }
 
-    public static boolean isJSONNull(String json) {
-        return json == null;
+    public static boolean isJSONValid(String json) {
+        if (json == null) {
+            return false;
+        }
+        try {
+            new JSONObject(json);
+        } catch (JSONException e) {
+            return false;
+        }
+        return true;
     }
 }

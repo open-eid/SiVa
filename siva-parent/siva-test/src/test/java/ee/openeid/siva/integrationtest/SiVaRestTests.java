@@ -33,6 +33,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
 
     protected static final String DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE = "Document malformed or not matching documentType";
     protected static final String INVALID_DOCUMENT_TYPE = "Invalid document type";
+    protected static final String INVALID_DOCUMENT_TYPE_DDOC = "Invalid document type. Can only return data files for DDOC type containers.";
     protected static final String INVALID_FILENAME = "Invalid filename";
     protected static final String MAY_NOT_BE_EMPTY = "may not be empty";
     protected static final String INVALID_BASE_64 = "Document is not encoded in a valid base64 string";
@@ -42,6 +43,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
     protected static final String SIGNATURE_POLICY = "signaturePolicy";
 
     private static final String VALIDATION_ENDPOINT = "/validate";
+    private static final String DATA_FILES_ENDPOINT = "/getDataFiles";
     private static final String MONITORING_ENDPOINT = "/monitoring/health";
     private static final boolean PRINT_RESPONSE = false;
 
@@ -63,7 +65,14 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
                 .when()
                 .post(VALIDATION_ENDPOINT);
     }
-
+    protected Response postForDataFiles (String request){
+        return given()
+                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+                .body(request)
+                .contentType(ContentType.JSON)
+                .when()
+                .post(DATA_FILES_ENDPOINT);
+    }
     protected Response getMonitoring() {
         return given()
                 .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
@@ -111,6 +120,27 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
 
     protected String validationRequestFor(String file) {
         return validationRequestFor(file, null);
+    }
+
+    protected String dataFilesRequest(String file) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("document", Base64.encodeBase64String(readFileFromTestResources(file)));
+        jsonObject.put("documentType", parseFileExtension(file));
+        return jsonObject.toString();
+    }
+
+    protected String dataFilesRequestInvalidValues(String document, String documentType) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("document", document);
+        jsonObject.put("documentType", documentType);
+        return jsonObject.toString();
+    }
+
+    protected String dataFilesRequestExtended(String file, String documentType, String document) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(documentType, Base64.encodeBase64String(readFileFromTestResources(file)));
+        jsonObject.put(document, parseFileExtension(file));
+        return jsonObject.toString();
     }
 
     protected String validationRequestForExtended(String documentKey, String encodedDocument,

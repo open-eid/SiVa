@@ -170,6 +170,8 @@ public class BDOCQualifiedReportBuilder {
     }
 
     private SimpleReport getDssSimpleReport(BDocSignature bDocSignature) {
+        Reports report=bDocSignature.getDssValidationReport().getReport();
+        report.print();
         return bDocSignature.getDssValidationReport().getReport().getSimpleReport();
     }
 

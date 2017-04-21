@@ -85,12 +85,12 @@ public class ValidationRequestIT extends SiVaRestTests {
         assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(json, DOCUMENT, INVALID_BASE_64)==1);
     }
 
-    private int getRequestErrorsCount(String json, String field, String message) {
+    static int getRequestErrorsCount(String json, String field, String message) {
         List<Map> errors = from(json).get("requestErrors.findAll { requestError -> requestError.key == '"+field+"' && requestError.message=='"+message+"' }");
         return errors.size();
     }
 
-    private String getFailMessageForKey(String key) {
+    public static String getFailMessageForKey(String key) {
         return key + " error or corresponding message was not in the response";
     }
 

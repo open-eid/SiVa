@@ -87,6 +87,7 @@ The signature validation report (i.e. the validation response) for JSON and SOAP
 | `signaturesCount` | `SignaturesCount` | Number of signatures found inside digitally signed file | Number |
 | `validSignaturesCount` | `ValidSignaturesCount` | Signatures count that have validated to `TOTAL-PASSED`. See also `Signature.Indication` field. | Number |
 | `validationTime` | `ValidationTime` | Time of validating the signature by the service | Date |
+| `validationWarnings` | `ValidationWarnings` | Block of SiVa validation warnings that do not affect the overall validation result and applicable only to BDOC/ASiC-E type containers. Known warning situations: container includes unsigned files, manifest validation warnings. | Array |
 | `documentName` | `DocumentName` | Digitally signed document's file name | String |
 | `signatureForm` | `SignatureForm` | Format (and optionally version) of the digitally signed document container. <br> In case of documents in [DIGIDOC-XML](http://id.ee/public/DigiDoc_format_1.3.pdf) (DDOC) format, the "hashcode" suffix is used to denote that the container was validated in [hashcode mode](http://sertkeskus.github.io/dds-documentation/api/api_docs/#ddoc-format-and-hashcode), i.e. without original data files. <br> **Possible values:**  <br> * DIGIDOC_XML_1.0 <br> * DIGIDOC_XML_1.0_hashcode <br> * DIGIDOC_XML_1.1 <br> * DIGIDOC_XML_1.1_hashcode <br> * DIGIDOC_XML_1.2 <br> * DIGIDOC_XML_1.2_hashcode <br> * DIGIDOC_XML_1.3 <br> * DIGIDOC_XML_1.3_hashcode <br> * PAdES - used in case of signed PDF document <br> * ASiC_E - used in case of all [BDOC](http://id.ee/public/bdoc-spec212-eng.pdf) documents and X-Road simple containers that don't use batch time-stamping (see [specification document](https://cyber.ee/uploads/2013/05/T-4-23-Profile-for-High-Performance-Digital-Signatures1.pdf))<br> * ASiC_E_batchsignature - used in case of X-Road containers with batch signature (see [specification document](https://cyber.ee/uploads/2013/05/T-4-23-Profile-for-High-Performance-Digital-Signatures1.pdf))| String |
 | `signatures` | `Signatures` | Collection of signatures found in digitally signed document | Array |
@@ -122,6 +123,10 @@ The signature validation report (i.e. the validation response) for JSON and SOAP
     "validSignaturesCount": 1,
     "validationTime": "2016-07-28T14:41:45Z",
     "documentName": "sample.bdoc",
+    "validationWarnings": [
+        {"content": "Manifest file has an entry for file document_3.xml with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file"},
+        {"content": "Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml"}
+    ],
     "signatures": [
         {
             "claimedSigningTime": "2016-05-11T10:17:57Z",
@@ -156,6 +161,14 @@ The signature validation report (i.e. the validation response) for JSON and SOAP
           <PolicyUrl>http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv1</PolicyUrl>
         </Policy>
         <ValidationTime>2016-09-27T06:42:33Z</ValidationTime>
+        <ValidationWarnings>
+          <ValidationWarning>
+            <Content>Manifest file has an entry for file document_3.xml with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file</Content>
+          </ValidationWarning>
+          <ValidationWarning>
+            <Content>Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml</Content>
+          </ValidationWarning>
+        </ValidationWarnings>
         <DocumentName>Valid_ID_sig.bdoc</DocumentName>
         <SignatureForm>ASiC_E</SignatureForm>
         <Signatures>

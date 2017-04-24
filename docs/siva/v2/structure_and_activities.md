@@ -33,6 +33,10 @@ Provided:
     * JSON formatted POST requests
 * Validation service SOAP interface - interface for handling validation queries
     * X-Road compliant and non-compliant SOAP requests (without the X-Road required headers)
+* Data file service REST interface - interface for handling data file extraction queries.
+    * JSON formatted POST requests
+* Data file service SOAP interface - interface for handling data file extraction queries
+    * X-Road compliant and non-compliant SOAP requests (without the X-Road required headers)
 * Monitoring service REST interface - interface for retrieving the webapp's health information
     * HTTP GET that returns JSON formatted respónses
 

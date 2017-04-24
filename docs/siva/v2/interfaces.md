@@ -225,6 +225,132 @@ The signature validation report (i.e. the validation response) for JSON and SOAP
 </soap:Envelope>
 ```
 
+## Data files request interface
+
+
+** REST JSON Endpoint **
+
+```
+POST https://<server url>/getDataFiles
+```
+
+** SOAP Endpoint **
+```
+POST https://<server url>/soap/dataFilesWebService/getDocumentDataFiles
+```
+
+** SOAP WSDL **
+```
+POST https://<server url>/soap/dataFilesWebService/getDocumentDataFiles?wsdl
+```
+
+### Data files request parameters
+
+Data files request parameters for JSON and SOAP interfaces are described in the table below. Data types of SOAP parameters are defined in the [SiVa WSDL document](/siva/appendix/wsdl).
+
+| JSON parameter | SOAP parameter | Mandatory | Description | JSON data type |
+|-----------------|-----------------|-----------|-------------|-------------|
+| document | Document | + | Base64 encoded string of digitally signed document to be validated | String |
+| documentType | DocumentType | + | Format of the digitally signed document. <br> **Possible values:** <br> * DDOC - for documents in [DIGIDOC-XML](http://id.ee/public/DigiDoc_format_1.3.pdf) format, supported versions are DIGIDOC-XML 1.0 (also known as SK-XML 1.0) to DIGIDOC-XML 1.3. Currently only DDOC file format is supported for this operation| String |
+
+### Sample JSON request
+
+```json
+{
+  "documentType":"DDOC",
+  "document":"PD94bWwgdmVyc2lvbj0iMS4...."
+}
+```
+
+
+### Sample SOAP request
+
+```xml
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap="http://soap.webapp.siva.openeid.ee/">
+  <soapenv:Header/>
+  <soapenv:Body>
+    <soap:GetDocumentDataFiles>
+      <soap:DataFilesRequest>
+        <Document>PD94bWwgdmVyc2lvbj0iMS4wI...</Document>
+        <DocumentType>DDOC</DocumentType>
+      </soap:DataFilesRequest>
+    </soap:GetDocumentDataFiles>
+  </soapenv:Body>
+</soapenv:Envelope>
+```
+
+
+## Data files response interface
+
+### Data files response parameters (successful scenario)
+
+The signature validation report (i.e. the validation response) for JSON and SOAP interfaces is described in the table below. Data types of SOAP parameters are defined in the [SiVa WSDL document](/siva/appendix/wsdl).
+
+| JSON parameter | SOAP parameter | Description | JSON data type |
+|--------------------------------|--------------------------------|-----------------------------------------------------------------------------------------|-----------------------|
+| `dataFiles` | `DataFiles` | Collection of data files found in digitally signed document | Array |
+| `dataFiles[0]` | `DataFile` | extracted data file object | Object |
+| `dataFiles[0].fileName` | `DataFile.FileName` | File name of the extracted data file | String |
+| `dataFiles[0].size` | `DataFile.Size` | Extracted data file size in bytes | long |
+| `dataFiles[0].base64` | `DataFile.Base64` | Base64 encoded string of extracted data file | String |
+| `dataFiles[0].mimeType` | `DataFile.MimeType` | MIME type of the extracted data file  | String |
+
+### Sample JSON response (successful scenario)
+
+```json
+{
+"dataFiles": [{
+ "fileName": "Glitter-rock-4_gallery.jpg",
+ "size": 41114,
+ "base64": "/9j/4AAQSkZJ...",
+ "mimeType": "application/octet-stream" }]
+}
+```
+
+### Sample SOAP response (successful scenario)
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <ns2:GetDocumentDataFilesResponse xmlns:ns2="http://soap.webapp.siva.openeid.ee/" xmlns:ns3="http://x-road.eu/xsd/identifiers" xmlns:ns4="http://x-road.eu/xsd/xroad.xsd">
+      <ns2:DataFilesReport>
+       <DataFiles>
+         <DataFile>
+           <Base64>UCgUCgUCgUCgUCgUCgUCgUCgUCgUCgUCgUH...</Base64>
+           <FileName>Glitter-rock-4_gallery.jpg</FileName>
+           <MimeType>application/octet-stream</MimeType>
+           <Size>41114</Size>
+         </DataFile>
+       </DataFiles>
+     </ns2:DataFilesReport>
+   </ns2:GetDocumentDataFilesResponse>
+  </soap:Body>
+</soap:Envelope>
+```
+
+### Sample JSON response (error situation)
+
+```json
+{"requestErrors": [{
+    "message": "Invalid document type. Can only return data files for DDOC type containers.",
+    "key": "documentType"
+}]}
+```
+
+### Sample SOAP response (error situation)
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <soap:Fault>
+      <faultcode>soap:Client</faultcode>
+      <faultstring>Invalid document type. Can only return data files for DDOC type containers.</faultstring>
+    </soap:Fault>
+  </soap:Body>
+</soap:Envelope>
+```
 
 
 

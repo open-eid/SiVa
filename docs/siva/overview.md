@@ -89,6 +89,7 @@ to validate X-Road signature files.
   list certificates.
 - Signatures with PadES-LT and PadES-LTA profile are supported.
 - BDOC signatures with type BDOC-TM and BDOC-TS are supported
+- SiVa extracts data files from DDOC containers.
 
 At the time of creating the current documentation, it is expected that
 SiVa will be used by the following applications:

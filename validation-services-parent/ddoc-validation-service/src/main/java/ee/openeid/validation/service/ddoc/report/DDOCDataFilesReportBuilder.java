@@ -47,12 +47,12 @@ public class DDOCDataFilesReportBuilder {
             return Collections.emptyList();
         }
         return docDataFiles.stream()
-                .map(this::createDatFileData)
+                .map(this::createDataFileData)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
-    private DataFileData createDatFileData(DataFile dataFile) {
+    private DataFileData createDataFileData(DataFile dataFile) {
         if (dataFile == null) {
             return null;
         }

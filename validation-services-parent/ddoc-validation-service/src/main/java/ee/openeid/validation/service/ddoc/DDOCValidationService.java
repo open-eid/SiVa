@@ -55,7 +55,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class DDOCValidationService extends DDOCService implements ValidationService {
+public class DDOCValidationService extends XMLEntityAttackValidator implements ValidationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DDOCValidationService.class);
     private final Object lock = new Object();
 

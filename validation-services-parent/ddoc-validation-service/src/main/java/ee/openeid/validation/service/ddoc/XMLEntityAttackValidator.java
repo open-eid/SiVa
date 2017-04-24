@@ -28,9 +28,9 @@ import javax.xml.parsers.SAXParser;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-public abstract class DDOCService {
+public abstract class XMLEntityAttackValidator {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DDOCService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(XMLEntityAttackValidator.class);
 
     protected void validateAgainstXMLEntityAttacks(byte[] xmlContent) {
         try {

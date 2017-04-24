@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class DDOCDataFilesService extends DDOCService implements DataFilesService {
+public class DDOCDataFilesService extends XMLEntityAttackValidator implements DataFilesService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DDOCDataFilesService.class);
     private final Object lock = new Object();
 

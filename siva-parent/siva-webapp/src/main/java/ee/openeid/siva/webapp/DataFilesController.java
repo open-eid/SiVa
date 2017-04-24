@@ -36,7 +36,7 @@ public class DataFilesController {
     private DataFilesRequestToProxyDocumentTransformer transformer;
 
     @RequestMapping(value = "/getDataFiles", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-    public DataFilesReport validate(@Valid @RequestBody JSONDataFilesRequest dataFilesRequest) {
+    public DataFilesReport getDataFiles(@Valid @RequestBody JSONDataFilesRequest dataFilesRequest) {
         return dataFilesProxy.getDataFiles(transformer.transform(dataFilesRequest));
     }
 

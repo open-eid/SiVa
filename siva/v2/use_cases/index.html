@@ -250,6 +250,12 @@
               </a>
             </li>
           
+            <li class="anchor">
+              <a title="DDOC data file extraction process" href="#ddoc-data-file-extraction-process">
+                DDOC data file extraction process
+              </a>
+            </li>
+          
         </ul>
       
     
@@ -433,6 +439,16 @@ Validation report output id described in <a href="../../../siva/v2/interfaces">I
 </ul>
 <p>Loading process is required action when ASiCE (BDOC) or</p>
 <p><img alt="TSL loading process" src="../../../img/siva/siva_tsl_loading_process.png" /></p>
+<h2 id="ddoc-data-file-extraction-process">DDOC data file extraction process</h2>
+<p>DDOC data file extraction process shows how SiVa extracts data file(s)
+from container and possible output of data file extraction.</p>
+<p><img alt="DDOC data file extraction process" src="../../../img/siva/siva_ddoc_datafile_extraction.png" /></p>
+<p>User of SiVa system provides digitally signed DDOC file in form of
+Base64 encoded string. The extraction of data files is handled by
+underlying JDigiDoc library.</p>
+<p>We will log following failure cases:
+When file upload fails (request started but was not completed successfully)
+When request validation (JSON or SOAP) fails.</p>
           <aside class="copyright" role="note">
             
             Documentation built with

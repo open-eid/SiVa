@@ -2,7 +2,7 @@
     "docs": [
         {
             "location": "/siva/version_info/",
-            "text": "Version number\n\n\n\n\n\n\nChange date\n\n\n\n\n\n\nAuthor\n\n\n\n\n\n\nDescription\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n0.1\n\n\n\n\n\n\n\n06.05.2016\n\n\n\n\n\n\n\nMihkel Selgal\n\n\n\n\n\n\n\nInitial SiVa architecture\ndocument\n\n\n\n\n\n\n\n\n\n\n1.0\n\n\n\n\n\n\n\n26.10.2016\n\n\n\n\n\n\n\nPriit Reiser\nAare Nurm\n\n\n\n\n\n\nDocumentation updates\n\n\n\n\n\n\n\n\n\n\n\n1.1\n\n\n\n\n\n\n\n24.04.2017\n\n\n\n\n\n\n\nVadim Pudov\nAllan Juhanson\n\n\n\n\n\n\nDocumentation updates",
+            "text": "Version number\n\n\nChange date\n\n\nAuthor\n\n\nDescription\n\n\n\n\n\n\n\n\n\n\n0.1\n\n\n06.05.2016\n\n\nMihkel Selgal\n\n\nInitial SiVa architecture\n\n\n\n\n\n\n1.0\n\n\n26.10.2016\n\n\nPriit Reiser, Aare Nurm\n\n\nDocumentation updates\n\n\n\n\n\n\n1.1\n\n\n24.04.2017\n\n\nVadim Pudov, Allan Juhanson\n\n\nDocumentation updates",
             "title": "VERSION HISTORY"
         },
         {

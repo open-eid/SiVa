@@ -58,3 +58,17 @@ Loading process is required action when ASiCE (BDOC) or
 
 ![TSL loading process](../../img/siva/siva_tsl_loading_process.png)
 
+## DDOC data file extraction process
+
+DDOC data file extraction process shows how SiVa extracts data file(s)
+from container and possible output of data file extraction.
+
+![DDOC data file extraction process](../../img/siva/siva_ddoc_datafile_extraction.png)
+
+User of SiVa system provides digitally signed DDOC file in form of
+Base64 encoded string. The extraction of data files is handled by
+underlying JDigiDoc library.
+
+We will log following failure cases:
+When file upload fails (request started but was not completed successfully)
+When request validation (JSON or SOAP) fails.

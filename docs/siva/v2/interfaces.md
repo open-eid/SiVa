@@ -250,7 +250,7 @@ Data files request parameters for JSON and SOAP interfaces are described in the 
 
 | JSON parameter | SOAP parameter | Mandatory | Description | JSON data type |
 |-----------------|-----------------|-----------|-------------|-------------|
-| document | Document | + | Base64 encoded string of digitally signed document to be validated | String |
+| document | Document | + | Base64 encoded string of digitally signed DDOC document | String |
 | documentType | DocumentType | + | Format of the digitally signed document. <br> **Possible values:** <br> * DDOC - for documents in [DIGIDOC-XML](http://id.ee/public/DigiDoc_format_1.3.pdf) format, supported versions are DIGIDOC-XML 1.0 (also known as SK-XML 1.0) to DIGIDOC-XML 1.3. Currently only DDOC file format is supported for this operation| String |
 
 ### Sample JSON request
@@ -284,7 +284,8 @@ Data files request parameters for JSON and SOAP interfaces are described in the 
 
 ### Data files response parameters (successful scenario)
 
-The signature validation report (i.e. the validation response) for JSON and SOAP interfaces is described in the table below. Data types of SOAP parameters are defined in the [SiVa WSDL document](/siva/appendix/wsdl).
+The data file extraction report (i.e. the data files response) for JSON and SOAP interfaces is described in the table below. Data types of SOAP parameters are defined in the [SiVa WSDL document](/siva/appendix/wsdl).
+SiVa returns all data files as they are extracted by JDigiDoc library in an as is form. No extra operations or validations are done.
 
 | JSON parameter | SOAP parameter | Description | JSON data type |
 |--------------------------------|--------------------------------|-----------------------------------------------------------------------------------------|-----------------------|

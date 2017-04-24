@@ -89,7 +89,7 @@ public class DocumentValidationIT extends SiVaRestTests{
      * File:3f_2s_1partly_signed.bdoc
      */
     @Test
-    public void bdocWithOnePartlyUnsignedDocumentShouldFail() {
+    public void bdocWithDocumentWithOneSignatureShouldFail() {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("3f_2s_1partly_signed.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "3f_2s_1partly_signed.bdoc", "bdoc", ""))
@@ -101,7 +101,6 @@ public class DocumentValidationIT extends SiVaRestTests{
                 .body("signatures[0].errors.content", Matchers.hasItems("The reference data object(s) is not intact!"))
                 .body("signatures[1].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file document_3.xml with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file"))
-                //.body("validationWarnings.content", Matchers.hasItems("Container contains a file named document_3.xml which is not found in the signature file")) //TODO disabled because of DigiDoc4j bug
                 .body("validationWarnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml"));
 
     }
@@ -121,7 +120,7 @@ public class DocumentValidationIT extends SiVaRestTests{
      */
 
     @Test
-    public void bdocWithTwoPartlyUnsignedDocumentShouldFail() {
+    public void bdocWithNonOverlapingSignaturesShouldFail() {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("3f_2s_2partly_signed.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "3f_2s_2partly_signed.bdoc", "bdoc", ""))
@@ -135,7 +134,6 @@ public class DocumentValidationIT extends SiVaRestTests{
                 .body("signatures[0].errors.content", Matchers.hasItems("The reference data object(s) is not intact!"))
                 .body("validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file document_3.xml with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file"))
                 .body("validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file document_2.docx with mimetype application/octet-stream but the signature file for signature S1 does not have an entry for this file"))
-                //.body("validationWarnings.content", Matchers.hasItems("Container contains a file named document_3.xml which is not found in the signature file")) // TODO disabled because of DigiDoc4j bug
                 .body("validationWarnings.content", Matchers.hasItems("Container contains a file named document_2.docx which is not found in the signature file"))
                 .body("validationWarnings.content", Matchers.hasItems("Signature PUDOV,VADIM,39101013724 has unsigned files: document_2.docx"))
                 .body("validationWarnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml"));
@@ -156,7 +154,7 @@ public class DocumentValidationIT extends SiVaRestTests{
      */
 
     @Test
-    public void bdocWithTwoPartlyUnsignedDocumentAndOneUnsignedShouldFail() {
+    public void bdocWithNonOverlapingSignaturesAndOneUnsignedDocumentShouldFail() {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("4f_2s_all_combinations.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "4f_2s_all_combinations.bdoc", "bdoc", ""))
@@ -172,7 +170,6 @@ public class DocumentValidationIT extends SiVaRestTests{
                 .body("validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file document_3.xml with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file"))
                 .body("validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file document_2.docx with mimetype application/octet-stream but the signature file for signature S1 does not have an entry for this file"))
                 .body("validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file unsigned.txt with mimetype application/octet-stream but the signature file for signature S1 does not have an entry for this file"))
-                //.body("validationWarnings.content", Matchers.hasItems("Container contains a file named document_3.xml which is not found in the signature file")) // TODO disabled because of DigiDoc4j bug
                 .body("validationWarnings.content", Matchers.hasItems("Container contains a file named document_2.docx which is not found in the signature file"))
                 .body("validationWarnings.content", Matchers.hasItems("Container contains a file named unsigned.txt which is not found in the signature file"))
                 .body("validationWarnings.content", Matchers.hasItems("Signature PUDOV,VADIM,39101013724 has unsigned files: document_2.docx, unsigned.txt"))
@@ -194,7 +191,7 @@ public class DocumentValidationIT extends SiVaRestTests{
      * File:6f_2s_3unsigned.bdoc
      */
 
-    @Test  //TODO Should it fail when https://github.com/open-eid/SiVa/issues/18 is fixed?
+    @Test  //TODO Should be re-evaluated when https://github.com/open-eid/SiVa/issues/18 is fixed
     public void bdocWithThreeUnsignedDocumentShouldPass() {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("6f_2s_3unsigned.bdoc"));
@@ -262,7 +259,7 @@ public class DocumentValidationIT extends SiVaRestTests{
      * File:2f_2signed_1f_totally_removed.bdoc
      */
     @Test
-    public void bdocWithTotallyRemovedDocumentShouldFail() {
+    public void bdocWithRemovedDocumentDeletedFromManifestShouldFail() {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("2f_2signed_1f_totally_removed.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "2f_2signed_1f_totally_removed.bdoc", "bdoc", ""))
@@ -291,7 +288,7 @@ public class DocumentValidationIT extends SiVaRestTests{
      * File:3f_2signed_1unsigned_all_in_manifest.bdoc
      */
 
-    @Test  // TODO Should it fail when https://github.com/open-eid/SiVa/issues/18 is fixed?
+    @Test  // TODO Should be re-evaluated when https://github.com/open-eid/SiVa/issues/18 is fixed
     public void bdocWithOneUnsignedDocumentNamedInManifestShouldPass() {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("3f_2signed_1unsigned_all_in_manifest.bdoc"));
@@ -320,7 +317,7 @@ public class DocumentValidationIT extends SiVaRestTests{
      * File:3f_2signed_1unsigned_2in_manifest.bdoc
      */
 
-    @Test // TODO  Should it fail when https://github.com/open-eid/SiVa/issues/18 is fixed?
+    @Test // TODO  Should be re-evaluated when https://github.com/open-eid/SiVa/issues/18 is fixed
     public void bdocWithOneUnsignedDocumentNotNamedInManifestShouldPass() {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("3f_2signed_1unsigned_2in_manifest.bdoc"));
@@ -348,7 +345,7 @@ public class DocumentValidationIT extends SiVaRestTests{
      * File:2f_all_signed.bdoc
      */
     @Test
-    public void bdocWithAllSignedDocumentsShouldFail() {
+    public void bdocWithAllSignedDocumentsShouldPass() {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("2f_all_signed.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "2f_all_signed.bdoc", "bdoc", ""))

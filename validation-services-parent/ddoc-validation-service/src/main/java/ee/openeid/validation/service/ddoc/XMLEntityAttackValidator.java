@@ -28,7 +28,7 @@ import javax.xml.parsers.SAXParser;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-public abstract class XMLEntityAttackValidator {
+public class XMLEntityAttackValidator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(XMLEntityAttackValidator.class);
 

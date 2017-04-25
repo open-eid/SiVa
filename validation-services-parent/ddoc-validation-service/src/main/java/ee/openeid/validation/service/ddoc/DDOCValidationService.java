@@ -55,12 +55,13 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class DDOCValidationService extends XMLEntityAttackValidator implements ValidationService {
+public class DDOCValidationService implements ValidationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DDOCValidationService.class);
     private final Object lock = new Object();
 
     private DDOCValidationServiceProperties properties;
     private SignaturePolicyService<ValidationPolicy> signaturePolicyService;
+    private XMLEntityAttackValidator xmlEntityAttackValidator;
 
     @PostConstruct
     protected void initConfig() throws DigiDocException, IOException, SAXNotSupportedException, SAXNotRecognizedException, ParserConfigurationException {
@@ -92,7 +93,7 @@ public class DDOCValidationService extends XMLEntityAttackValidator implements V
             Security.addProvider(new BouncyCastleProvider());
         }
 
-        validateAgainstXMLEntityAttacks(validationDocument.getBytes());
+        xmlEntityAttackValidator.validateAgainstXMLEntityAttacks(validationDocument.getBytes());
 
         synchronized (lock) {
             SignedDoc signedDoc = null;
@@ -128,5 +129,10 @@ public class DDOCValidationService extends XMLEntityAttackValidator implements V
     @Qualifier(value = "DDOCPolicyService")
     public void setSignaturePolicyService(SignaturePolicyService<ValidationPolicy> signaturePolicyService) {
         this.signaturePolicyService = signaturePolicyService;
+    }
+
+    @Autowired
+    public void setXMLEntityAttackValidator(XMLEntityAttackValidator xmlEntityAttackValidator) {
+        this.xmlEntityAttackValidator = xmlEntityAttackValidator;
     }
 }

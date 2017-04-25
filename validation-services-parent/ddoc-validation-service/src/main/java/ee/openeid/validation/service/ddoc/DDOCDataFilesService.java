@@ -29,6 +29,7 @@ import ee.sk.utils.ConfigManager;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
@@ -37,9 +38,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class DDOCDataFilesService extends XMLEntityAttackValidator implements DataFilesService {
+public class DDOCDataFilesService implements DataFilesService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DDOCDataFilesService.class);
     private final Object lock = new Object();
+
+    private XMLEntityAttackValidator xmlEntityAttackValidator;
 
     @Override
     public DataFilesReport getDataFiles(DataFilesDocument dataFilesDocument) {
@@ -47,7 +50,7 @@ public class DDOCDataFilesService extends XMLEntityAttackValidator implements Da
             Security.addProvider(new BouncyCastleProvider());
         }
 
-        validateAgainstXMLEntityAttacks(dataFilesDocument.getBytes());
+        xmlEntityAttackValidator.validateAgainstXMLEntityAttacks(dataFilesDocument.getBytes());
 
         synchronized (lock) {
             SignedDoc signedDoc = null;
@@ -70,6 +73,11 @@ public class DDOCDataFilesService extends XMLEntityAttackValidator implements Da
                 }
             }
         }
+    }
+
+    @Autowired
+    public void setXMLEntityAttackValidator(XMLEntityAttackValidator xmlEntityAttackValidator) {
+        this.xmlEntityAttackValidator = xmlEntityAttackValidator;
     }
 
 }

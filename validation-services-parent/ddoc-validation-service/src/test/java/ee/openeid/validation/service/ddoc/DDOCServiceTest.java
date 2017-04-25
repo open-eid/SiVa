@@ -82,6 +82,7 @@ public class DDOCServiceTest {
     private static DDOCValidationService validationService = new DDOCValidationService();
     private static DDOCSignaturePolicyProperties policyProperties = new DDOCSignaturePolicyProperties();
     private static SignaturePolicyService<ValidationPolicy>  signaturePolicyService;
+    private static XMLEntityAttackValidator xmlEntityAttackValidator;
     private static QualifiedReport validationResult2Signatures;
 
     @BeforeClass
@@ -91,10 +92,14 @@ public class DDOCServiceTest {
 
         policyProperties.initPolicySettings();
         signaturePolicyService = new SignaturePolicyService<>(policyProperties);
+        xmlEntityAttackValidator = new XMLEntityAttackValidator();
 
         validationService.setProperties(properties);
+        validationService.setXMLEntityAttackValidator(xmlEntityAttackValidator);
         validationService.setSignaturePolicyService(signaturePolicyService);
         validationService.initConfig();
+
+        dataFilesService.setXMLEntityAttackValidator(xmlEntityAttackValidator);
     }
 
     @Test
@@ -142,7 +147,10 @@ public class DDOCServiceTest {
         when(digiDocFactory.readSignedDocFromStreamOfType(any(ByteArrayInputStream.class), anyBoolean(), anyList())).thenThrow(new DigiDocException(101, "Testing error", new Exception()));
 
         DDOCDataFilesService dataFilesServiceSpy = spy(new DDOCDataFilesService());
-        doNothing().when(dataFilesServiceSpy).validateAgainstXMLEntityAttacks(any(byte[].class));
+
+        XMLEntityAttackValidator xmlEntityAttackValidator = spy(new XMLEntityAttackValidator());
+        dataFilesServiceSpy.setXMLEntityAttackValidator(xmlEntityAttackValidator);
+        doNothing().when(xmlEntityAttackValidator).validateAgainstXMLEntityAttacks(any(byte[].class));
 
         expectedException.expect(ValidationServiceException.class);
         dataFilesServiceSpy.getDataFiles(dataFilesDocument);
@@ -294,22 +302,24 @@ public class DDOCServiceTest {
         ValidationDocument validationDocument = new ValidationDocument();
         validationDocument.setBytes("".getBytes());
 
-            mockStatic(ConfigManager.class);
-            ConfigManager configManager = mock(ConfigManager.class);
-            DigiDocFactory digiDocFactory = mock(DigiDocFactory.class);
+        mockStatic(ConfigManager.class);
+        ConfigManager configManager = mock(ConfigManager.class);
+        DigiDocFactory digiDocFactory = mock(DigiDocFactory.class);
 
 
-            given(configManager.getDigiDocFactory()).willReturn(digiDocFactory);
-            given(ConfigManager.instance()).willReturn(configManager);
-            when(digiDocFactory.readSignedDocFromStreamOfType(any(ByteArrayInputStream.class), anyBoolean(), anyList())).thenThrow(new DigiDocException(101, "Testing error", new Exception()));
+        given(configManager.getDigiDocFactory()).willReturn(digiDocFactory);
+        given(ConfigManager.instance()).willReturn(configManager);
+        when(digiDocFactory.readSignedDocFromStreamOfType(any(ByteArrayInputStream.class), anyBoolean(), anyList())).thenThrow(new DigiDocException(101, "Testing error", new Exception()));
 
-            DDOCValidationService validationServiceSpy = spy(new DDOCValidationService());
-            validationServiceSpy.setSignaturePolicyService(signaturePolicyService);
-            doNothing().when(validationServiceSpy).validateAgainstXMLEntityAttacks(any(byte[].class));
+        DDOCValidationService validationServiceSpy = spy(new DDOCValidationService());
+        validationServiceSpy.setSignaturePolicyService(signaturePolicyService);
 
-            expectedException.expect(ValidationServiceException.class);
-            validationServiceSpy.validateDocument(validationDocument);
+        XMLEntityAttackValidator xmlEntityAttackValidator = spy(new XMLEntityAttackValidator());
+        validationServiceSpy.setXMLEntityAttackValidator(xmlEntityAttackValidator);
+        doNothing().when(xmlEntityAttackValidator).validateAgainstXMLEntityAttacks(any(byte[].class));
 
+        expectedException.expect(ValidationServiceException.class);
+        validationServiceSpy.validateDocument(validationDocument);
     }
 
     private static ValidationDocument ddocValid2Signatures() throws Exception {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Riigi Infosüsteemide Amet
+ * Copyright 2017 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -16,19 +16,11 @@
 
 package ee.openeid.validation.service.ddoc.configuration;
 
-import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
-import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.validation.service.ddoc.XMLEntityAttackValidator;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableConfigurationProperties({DDOCValidationServiceProperties.class, DDOCSignaturePolicyProperties.class, XMLEntityAttackValidator.class})
-public class DDOCValidationServiceConfiguration {
-
-    @Bean(name = "DDOCPolicyService")
-    public SignaturePolicyService<ValidationPolicy> signaturePolicyService(DDOCSignaturePolicyProperties properties) {
-        return new SignaturePolicyService<>(properties);
-    }
+@EnableConfigurationProperties({XMLEntityAttackValidator.class})
+public class DDOCDataFilesServiceConfiguration {
 }

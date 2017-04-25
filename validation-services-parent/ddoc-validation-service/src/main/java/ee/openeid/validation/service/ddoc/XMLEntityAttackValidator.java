@@ -20,6 +20,7 @@ import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.validation.service.ddoc.security.SecureSAXParsers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -28,6 +29,7 @@ import javax.xml.parsers.SAXParser;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+@ConfigurationProperties(prefix = "siva.ddoc.xmlEntityAttack")
 public class XMLEntityAttackValidator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(XMLEntityAttackValidator.class);

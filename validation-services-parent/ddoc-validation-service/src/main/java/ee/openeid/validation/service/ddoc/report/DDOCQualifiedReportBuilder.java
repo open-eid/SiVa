@@ -21,6 +21,7 @@ import ee.openeid.siva.validation.document.report.Info;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.document.report.SignatureScope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.ValidationWarning;
 import ee.openeid.siva.validation.document.report.Warning;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.siva.validation.util.CertUtil;
@@ -70,7 +71,7 @@ public class DDOCQualifiedReportBuilder {
         QualifiedReport qualifiedReport = new QualifiedReport();
         qualifiedReport.setPolicy(createReportPolicy(validationPolicy));
         qualifiedReport.setValidationTime(getDateFormatterWithGMTZone().format(validationTime));
-        qualifiedReport.setValidationWarnings(Collections.emptyList());
+        qualifiedReport.setValidationWarnings(ddocValidationWarnings());
         qualifiedReport.setDocumentName(documentName);
         qualifiedReport.setSignatureForm(getSignatureForm());
         qualifiedReport.setSignaturesCount(getSignatures(signedDoc).size());
@@ -83,6 +84,12 @@ public class DDOCQualifiedReportBuilder {
                         .size());
 
         return qualifiedReport;
+    }
+
+    private List<ValidationWarning> ddocValidationWarnings() {
+        ValidationWarning validationWarning = new ValidationWarning();
+        validationWarning.setContent("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa");
+        return Collections.singletonList(validationWarning);
     }
 
     private SimpleDateFormat getDateFormatterWithGMTZone() {

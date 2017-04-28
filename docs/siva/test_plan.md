@@ -95,7 +95,7 @@ In all of the negative cases correctness of returned error message is checked.
 
 Specific test cases and input files can be found in:
 
-  * [GetDataFileRequestIT.java](/siva/appendix/test_cases/#getdatafilerequestit.java)
+  * [GetDataFileRequestIT.java](/siva/appendix/test_cases/#getdatafilerequestitjava)
 
 ### Validation report tests
 
@@ -153,7 +153,7 @@ In all of the negative cases correctness of returned error message is checked.
 
 Specific test cases and input files can be found in:
 
-  * [SoapGetDataFileRequestIT.java](/siva/appendix/test_cases/#soapgetdatafilerequestit.java)
+  * [SoapGetDataFileRequestIT.java](/siva/appendix/test_cases/#soapgetdatafilerequestitjava)
 
 ### Validation report tests
 
@@ -181,7 +181,7 @@ Following areas are tested on output:
 
 Specific test cases and input files can be found in:
 
-  * [SoapGetDataFileReportIT.java](/siva/appendix/test_cases/#soapgetdatafilereportit.java)
+  * [SoapGetDataFileReportIT.java](/siva/appendix/test_cases/#soapgetdatafilereportitjava)
 
 ## Testing of DDOC signature validation
 
@@ -281,7 +281,7 @@ The testing of Data Files Extraction consists of following main cases:
 Specific test cases and input files can be found in:
 
   * [DdocGetDataFilesIT.java](/siva/appendix/test_cases/#ddocgetdatafilesitjava)
-  
+
 ## Testing of user statistics
 
 Testing of user statistics is carried out in combination of automatic data preparation and generation by integration tests and manual verification of the results.

@@ -17,6 +17,7 @@ package ee.openeid.siva.integrationtest;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -188,7 +189,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
      *
      * File: igasugust1.3.ddoc
      * */
-    @Test
+    @Test @Ignore // Run this test manually as it fails in Travis because of big response data
     public void testGetMultipileDataFilesFromDdoc(){
         setTestFilesDirectory("ddoc/live/timemark/");
         postForDataFiles(dataFilesRequest("igasugust1.3.ddoc"))

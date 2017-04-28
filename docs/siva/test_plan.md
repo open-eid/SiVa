@@ -79,7 +79,23 @@ Specific test cases and input files can be found in:
   * [ValidationRequestIT.java](/siva/appendix/test_cases/#validationrequestitjava)
   * [DocumentFormatIT.java](/siva/appendix/test_cases/#documentformatitjava)
 
+### Get Data Files request tests
 
+Following areas are tested on input:
+
+  * Empty request
+  * Empty values in input parameters
+  * Too many parameters
+  * Too few parameters
+  * Changed order of parameters
+  * Case insensitivity on parameter names
+  * Inconsistencies on stated parameters and actual data
+
+In all of the negative cases correctness of returned error message is checked.
+
+Specific test cases and input files can be found in:
+
+  * [GetDataFileRequestIT.java](/siva/appendix/test_cases/#getdatafilerequestit.java)
 
 ### Validation report tests
 
@@ -121,6 +137,23 @@ Specific test cases and input files can be found in:
 
   * [SoapValidationRequestIT.java](/siva/appendix/test_cases/#soapvalidationrequestitjava)
 
+### Get Data Files request tests
+
+Following areas are tested on input:
+
+  * Empty request
+  * Empty values in input parameters
+  * Too many parameters
+  * Too few parameters
+  * Changed order of parameters
+  * Case insensitivity on parameter names
+  * Inconsistencies on stated parameters and actual data
+
+In all of the negative cases correctness of returned error message is checked.
+
+Specific test cases and input files can be found in:
+
+  * [SoapGetDataFileRequestIT.java](/siva/appendix/test_cases/#soapgetdatafilerequestit.java)
 
 ### Validation report tests
 
@@ -136,6 +169,19 @@ Specific test cases and input files can be found in:
 
   * [SoapValidationReportValueIT.java](/siva/appendix/test_cases/#soapvalidationreportvalueitjava)
 
+### Get Data Files report tests
+
+SiVa web service returns when extracting data files uniform  Report only on DDOC document type.
+
+Following areas are tested on output:
+
+  * Presence of the mandatory elements
+  * Verification of expected values
+  * Extraction of all data files
+
+Specific test cases and input files can be found in:
+
+  * [SoapGetDataFileReportIT.java](/siva/appendix/test_cases/#soapgetdatafilereportit.java)
 
 ## Testing of DDOC signature validation
 
@@ -220,6 +266,22 @@ Specific test cases and input files can be found in:
 
   * Verification of different causes in container for invalid result is out of scope.
 
+## Testing of Data Files Extraction
+
+The goal of the Data Files Extraction testing  is to check if right data files returned for DDOC container and error messages for other types of containers.
+
+The testing of Data Files Extraction consists of following main cases:
+
+  * Extracting the data files from valid DDOC container
+  * Extracting the data files from Hashcoded DDOC  returns null for Base64 encoded String
+  * Extracting the data files from DDOC container  with 12 different   types  of files
+  * Extracting the data files from not DDOC container
+  * Extracting the data files from DDOC container with wrong Document Type
+
+Specific test cases and input files can be found in:
+
+  * [DdocGetDataFilesIT.java](/siva/appendix/test_cases/#ddocgetdatafilesitjava)
+  
 ## Testing of user statistics
 
 Testing of user statistics is carried out in combination of automatic data preparation and generation by integration tests and manual verification of the results.

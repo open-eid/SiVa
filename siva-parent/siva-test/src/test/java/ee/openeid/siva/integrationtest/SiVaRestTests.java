@@ -136,10 +136,10 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         return jsonObject.toString();
     }
 
-    protected String dataFilesRequestExtended(String file, String documentType, String document) {
+    protected String dataFilesRequestExtended(String file, String documentType) {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put(documentType, Base64.encodeBase64String(readFileFromTestResources(file)));
-        jsonObject.put(document, parseFileExtension(file));
+        jsonObject.put("document", Base64.encodeBase64String(readFileFromTestResources(file)));
+        jsonObject.put("documentType",documentType );
         return jsonObject.toString();
     }
 

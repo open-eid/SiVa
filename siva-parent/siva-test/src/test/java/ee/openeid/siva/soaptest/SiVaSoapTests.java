@@ -18,6 +18,7 @@ package ee.openeid.siva.soaptest;
 
 import com.jayway.restassured.response.Response;
 import ee.openeid.siva.integrationtest.SiVaIntegrationTestsBase;
+import ee.openeid.siva.webapp.soap.DataFilesReport;
 import ee.openeid.siva.webapp.soap.QualifiedReport;
 import org.apache.commons.codec.binary.Base64;
 import org.w3c.dom.Document;
@@ -86,12 +87,12 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
         return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
                 "   <soapenv:Header/>\n" +
                 "   <soapenv:Body>\n" +
-                "      <soap:ValidateDocument>\n" +
-                "         <soap:ValidationRequest>\n" +
+                "      <soap:GetDocumentDataFiles>\n" +
+                "         <soap:DataFilesRequest>\n" +
                 "            <Document>" + base64Document + "</Document>\n" +
                 "            <DocumentType>" + documentType + "</DocumentType>\n" +
-                "            </soap:ValidationRequest>\n" +
-                "      </soap:ValidateDocument>\n" +
+                "            </soap:DataFilesRequest>\n" +
+                "      </soap:GetDocumentDataFiles>\n" +
                 "   </soapenv:Body>\n" +
                 "</soapenv:Envelope>";
     }
@@ -130,12 +131,30 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
         return XMLUtils.documentFromNode(element);
     }
 
+    protected Document extractDataFilesReportDom(String httpBody) {
+        Document document = XMLUtils.parseXml(httpBody);
+        Element element = XMLUtils.findElementByXPath(document, "//d:GetDocumentDataFilesResponse/d:DataFilesReport", Collections.singletonMap("d", "http://soap.webapp.siva.openeid.ee/"));
+        return XMLUtils.documentFromNode(element);
+    }
+
     protected QualifiedReport getQualifiedReportFromDom(Document reportDom) {
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(QualifiedReport.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             Node xmlNode = reportDom.getDocumentElement();
             JAXBElement<QualifiedReport> jaxbElement = unmarshaller.unmarshal(xmlNode, QualifiedReport.class);
+            return jaxbElement.getValue();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected DataFilesReport getDataFilesReportFromDom(Document reportDom) {
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(DataFilesReport.class);
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            Node xmlNode = reportDom.getDocumentElement();
+            JAXBElement<DataFilesReport> jaxbElement = unmarshaller.unmarshal(xmlNode, DataFilesReport.class);
             return jaxbElement.getValue();
         } catch (Exception e) {
             throw new RuntimeException(e);

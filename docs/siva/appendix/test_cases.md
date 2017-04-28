@@ -203,8 +203,6 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Expected Result: The document should fail the validation
   * File: TM-16_unknown.4.asice
 
-  **Attention! This test is disabled:  https://github.com/open-eid/SiVa/issues/23
-
 
 **TestCaseID: Bdoc-ValidationFail-22**
 
@@ -435,6 +433,91 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Title: Bdoc-TS with special characters in data file
   * Expected Result: The document should pass the validation with correct signature scope
   * File: Nonconventionalcharacters.asice
+
+
+## DdocGetDataFilesIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/DdocGetDataFilesIT.java)
+
+
+**TestCaseID:  Ddoc-Get-Data-Files-1**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/use_cases/#ddoc-data-file-extraction-process](http://open-eid.github.io/SiVa/siva/v2/use_cases/#ddoc-data-file-extraction-process)
+  * Title: Valid DDOC with data file used
+  * Expected Result: The data file should be returned
+  * File: 18912.ddoc
+
+
+**TestCaseID:  Ddoc-Get-Data-Files-2**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/use_cases/#ddoc-data-file-extraction-process](http://open-eid.github.io/SiVa/siva/v2/use_cases/#ddoc-data-file-extraction-process)
+  * Title: Invalid DDOC with data file used
+  * Expected Result: The data file should be returned
+  * File: OCSP nonce vale.ddoc
+
+
+**TestCaseID:  Ddoc-Get-Data-Files-3**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/use_cases/#ddoc-data-file-extraction-process](http://open-eid.github.io/SiVa/siva/v2/use_cases/#ddoc-data-file-extraction-process)
+  * Title:DDOC with xml v1.1 is  used
+  * Expected Result: The data file is returned
+  * File: DIGIDOC-XML1.1.ddoc
+
+
+**TestCaseID:  Ddoc-Get-Data-Files-4**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/use_cases/#ddoc-data-file-extraction-process](http://open-eid.github.io/SiVa/siva/v2/use_cases/#ddoc-data-file-extraction-process)
+  * Title: DDOC with xml v1.2 is  used
+  * Expected Result: The data file is returned
+  * File: DIGIDOC-XML1.2.ddoc
+
+
+**TestCaseID:  Ddoc-Get-Data-Files-5**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/use_cases/#ddoc-data-file-extraction-process](http://open-eid.github.io/SiVa/siva/v2/use_cases/#ddoc-data-file-extraction-process)
+  * Title: DDOC with xml v1.3 is  used
+  * Expected Result: The data file is returned
+  * File: DIGIDOC-XML1.3.ddoc
+
+
+**TestCaseID:  Ddoc-Get-Data-Files-6**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/use_cases/#ddoc-data-file-extraction-process](http://open-eid.github.io/SiVa/siva/v2/use_cases/#ddoc-data-file-extraction-process)
+  * Title: Hashcoded DDOC  is  used
+  * Expected Result: Null is returned
+  * File: DIGIDOC-XML1.3_hashcode.ddoc
+
+
+**TestCaseID:  Ddoc-Get-Data-Files-7**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/use_cases/#ddoc-data-file-extraction-process](http://open-eid.github.io/SiVa/siva/v2/use_cases/#ddoc-data-file-extraction-process)
+  * Title: DDOC  with 12 different  files of different types  is  used
+  * Expected Result: Data file returned for each file correctly
+  * File: igasugust1.3.ddoc
+
+
+**TestCaseID:  Ddoc-Get-Data-Files-8**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/use_cases/#ddoc-data-file-extraction-process](http://open-eid.github.io/SiVa/siva/v2/use_cases/#ddoc-data-file-extraction-process)
+  * Title: BDOC with data file used
+  * Expected Result: The error message  should be returned
+  * File: BDOC-TS.bdoc
+
+
+**TestCaseID:  Ddoc-Get-Data-Files-9**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/use_cases/#ddoc-data-file-extraction-process](http://open-eid.github.io/SiVa/siva/v2/use_cases/#ddoc-data-file-extraction-process)
+  * Title: PDF file used
+  * Expected Result: The error message  should be returned
+  * File: hellopades-lt-b.pdf
 
 
 ## DdocValidationFailIT.java
@@ -846,6 +929,100 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * File: Picture.png
 
 
+## DocumentValidationIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/DocumentValidationIT.java)
+
+
+**TestCaseID: Document-Validation-1**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
+  * Title:Bdoc with two signatures and one unsigned document.
+  * Expected Result: The document should fail the validation and warnings should be displayed.
+  * File:3f_2s_1f_unsigned.bdoc
+
+
+**TestCaseID: Document-Validation-2**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
+  * Title: Bdoc with two signatures and one document signed by only one signature.
+  * Expected Result: The document should fail the validation and warnings should be displayed.
+  * File:3f_2s_1partly_signed.bdoc
+
+
+**TestCaseID: Document-Validation-3**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
+  * Title: Bdoc with two signatures and two documents signed by only one signature.
+  * Expected Result: The document should fail the validation and warnings should be displayed.
+  * File:3f_2s_2partly_signed.bdoc
+
+
+**TestCaseID: Document-Validation-4**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
+  * Title: Bdoc with two signatures, one unsigned and two partly signed documents.
+  * Expected Result: The document should fail the validation and warnings should be displayed.
+  * File:4f_2s_all_combinations.bdoc
+
+
+**TestCaseID: Document-Validation-5**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
+  * Title: Bdoc with three unsigned documents.
+  * Expected Result: The document should pass the validation and warnings should be displayed.
+  * File:6f_2s_3unsigned.bdoc
+
+
+**TestCaseID: Document-Validation-6**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
+  * Title: Bdoc with deleted document, named in manifest.
+  * Expected Result: The document should fail the validation and warning should be displayed.
+  * File:2f_2signed_1f_deleted.bdoc
+
+
+**TestCaseID: Document-Validation-7**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
+  * Title: Bdoc with deleted document, also removed from manifest.
+  * Expected Result: The document should fail the validation without warning.
+  * File:2f_2signed_1f_totally_removed.bdoc
+
+
+**TestCaseID: Document-Validation-8**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
+  * Title: Bdoc with one unsigned document, named in manifest.
+  * Expected Result: The document should fail the validation and warnings should be displayed.
+  * File:3f_2signed_1unsigned_all_in_manifest.bdoc
+
+
+**TestCaseID: Document-Validation-9**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
+  * Title: Bdoc with one unsigned document, NOT named in manifest.
+  * Expected Result: The document should fail the validation and warnings should be displayed.
+  * File:3f_2signed_1unsigned_2in_manifest.bdoc
+
+
+**TestCaseID: Document-Validation-10**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2)
+  * Title: Bdoc with signed documents.
+  * Expected Result: The document should pass the validation without warning.
+  * File:2f_all_signed.bdoc
+
+
 ## LargeFileIT.java
 [Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/LargeFileIT.java)
 
@@ -1059,6 +1236,8 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Expected Result: Document signed with RSA1023 algorithm should fail
   * File: hellopades-lt-sha256-rsa1023.pdf
 
+  **Attention! This test is disabled: Bug fixed in DSS version 5.1. https://ec.europa.eu/cefdigital/tracker/browse/DSS-1145
+
 
 **TestCaseID: PDF-SigCryptoAlg-8**
 
@@ -1099,8 +1278,6 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Expected Result: Document signed with certificate that is revoked should fail.
   * File: pades_lt_revoked.pdf
 
-  **Attention! This test is disabled:  https://github.com/open-eid/SiVa/issues/23
-
 
 **TestCaseID: PDF-ValidationFail-4**
 
@@ -1119,6 +1296,8 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Expected Result: Document signed with expired certificate should fail
   * File: hellopades-lt-sha256-rsa2048-expired.pdf
 
+  **Attention! This test is disabled: https://jira.nortal.com/browse/SIVARIA-17
+
 
 **TestCaseID: PDF-ValidationFail-6**
 
@@ -1128,6 +1307,8 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Expected Result: Document signed with expired certificate should fail
   * File: hellopades-lt-sha256-rsa1024-expired2.pdf
 
+  **Attention! This test is disabled: https://jira.nortal.com/browse/SIVARIA-17
+
 
 **TestCaseID: PDF-ValidationFail-7**
 
@@ -1136,6 +1317,8 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Title: hellopadess been signed with an expired certificate, where signing time is within the original validity
   * Expected Result: Document signed with expired certificate should fail
   * File: hellopades-lt-sha1-rsa1024-expired2.pdf
+
+  **Attention! This test is disabled: https://jira.nortal.com/browse/SIVARIA-17
 
 
 ## PdfValidationPassIT.java
@@ -1190,6 +1373,8 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Expected Result: Signatures are not valid according to policy
   * File: soft-cert-signature.pdf
 
+  **Attention! This test is disabled:  New test file is needed
+
 
 **TestCaseID: Pdf-Signature-Policy-3**
 
@@ -1215,7 +1400,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1)
   * Title: The bdoc is not QES level and misses SSCD/QSCD compliance
   * Expected Result: Signatures are valid according to policy
-  * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
+  * File: allkiri_ades.asice
 
 
 **TestCaseID: Bdoc-Signature-Policy-2**
@@ -1224,7 +1409,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Requirement: [http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1](http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1)
   * Title: The bdoc is not QES level and misses SSCD/QSCD compliance
   * Expected Result: Signatures are not valid according to policy
-  * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
+  * File: allkiri_ades.asice
 
 
 **TestCaseID: Bdoc-Signature-Policy-3**
@@ -1510,6 +1695,145 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * File: BDOC-TS.bdoc
 
 
+## GetDataFileRequestIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/resttest/GetDataFileRequestIT.java)
+
+
+**TestCaseID: Get-Data-Files-Request-1**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title: Input empty values
+  * Expected Result: Errors are returned stating the missing values
+  * File: not relevant
+
+
+**TestCaseID: Get-Data-Files-Request-2**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title: Totally empty request body is sent
+  * Expected Result: Errors are given
+  * File: not relevant
+
+
+**TestCaseID: Get-Data-Files-Request-3**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title: Order of elements is changed in request
+  * Expected Result: Order of  elements is ignored, no error messages in response
+  * File: susisevad1_3.ddoc
+
+
+**TestCaseID: Get-Data-Files-Request-4**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title: Additional elements are added
+  * Expected Result: Added elements ignored, no error messages and  additional elements in response
+  * File: susisevad1_3.ddoc
+
+
+**TestCaseID: Get-Data-Files-Request-5**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title: Mandatory element 'documentType' is duplicated, duplicated element with bdoc value
+  * Expected Result: Error message is returned
+  * File: susisevad1_3.ddoc
+
+
+**TestCaseID: Get-Data-Files-Request-6**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title: Mandatory element 'document' is deleted
+  * Expected Result: Errors returned stating the missing element
+  * File: susisevad1_3.ddoc
+
+
+**TestCaseID: Get-Data-Files-Request-7**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title: Mandatory element 'documentType' is deleted
+  * Expected Result: Errors returned stating the missing element
+  * File: susisevad1_3.ddoc
+
+
+**TestCaseID: Get-Data-Files-Request-8**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title: Low case for document type is used
+  * Expected Result: Data file is returned, no error messages
+  * File: susisevad1_3.ddoc
+
+
+**TestCaseID: Get-Data-Files-Request-9**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title: Document Type is changed in request to BDOC, actual is DDOC
+  * Expected Result: Error is returned
+  * File: susisevad1_3.ddoc
+
+
+**TestCaseID: Get-Data-Files-Request-10**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title: Document Type is changed in request to PDF, actual is DDOC
+  * Expected Result: Error is returned
+  * File: susisevad1_3.ddoc
+
+
+**TestCaseID: Get-Data-Files-Request-11**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title: Document Type is changed in request to unsupported format (JPG), actual is DDOC
+  * Expected Result: Error is returned
+  * File: susisevad1_3.ddoc
+
+
+**TestCaseID: Get-Data-Files-Request-12**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title: Document Type is changed in request to XROAD format, actual is DDOC
+  * Expected Result: Error is returned
+  * File: susisevad1_3.ddoc
+
+
+**TestCaseID: Get-Data-Files-Request-13**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title: Document Type is changed in request to DDOC format, actual is BDOC
+  * Expected Result: Error is returned
+  * File: BDOC-TS.bdoc
+
+
+**TestCaseID: Get-Data-Files-Request-14**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title: Document Type is changed in request to DDOC format, actual is PDF
+  * Expected Result: Error is returned
+  * File: PdfValidSingleSignature.pdf
+
+
+**TestCaseID: Get-Data-Files-Request-15**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title: For Unsupported format Document Type is changed in request to DDOC format, actual is PNG
+  * Expected Result: Error is returned
+  * File: Picture.png
+
+
 ## ValidationReportValueVerificationIT.java
 [Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/resttest/ValidationReportValueVerificationIT.java)
 
@@ -1536,7 +1860,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
   * TestType: Automated
   * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface)
-  * Title: Verification of values in Validation Report XAdES_BASELINE_LT, AdES, FullSignatureScope
+  * Title: Verification of values in Validation Report XAdES_BASELINE_LT, QES, FullSignatureScope
   * Expected Result: All required elements are present and meet the expected values.
   * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
 
@@ -2145,6 +2469,176 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * File: xroad-simple.asice
 
 
+## SoapGetDataFileReportIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/soaptest/SoapGetDataFileReportIT.java)
+
+
+**TestCaseID: SoapGetDataFile-Report-1**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-response-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-response-interface)
+  * Title: Verification of values in Validation Report, checks for  File name, Base64, Mimetype and Size
+  * Expected Result: All required elements are present and meet the expected values
+  * File: ddoc_1_3.xml.ddoc
+
+
+**TestCaseID: SoapGetDataFile-Report-2**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-response-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-response-interface)
+  * Title: Verification of values in Validation Report xml v1.1, checks for  File name, Base64, Mimetype and Size
+  * Expected Result: All required elements are present and meet the expected values
+  * File: DIGIDOC-XML1.1.ddoc
+
+
+**TestCaseID: SoapGetDataFile-Report-3**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-response-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-response-interface)
+  * Title: Verification of values in Validation Report xml v1.2, checks for  File name, Base64, Mimetype and Size
+  * Expected Result: All required elements are present and meet the expected values
+  * File: DIGIDOC-XML1.2.ddoc
+
+
+**TestCaseID: SoapGetDataFile-Report-4**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-response-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-response-interface)
+  * Title: Verification of values in Validation Report for container with a number of files, checks for  File name, Base64, Mimetype and Size for each file
+  * Expected Result: All required elements are present and meet the expected values
+  * File: igasugust1.3.ddoc
+
+
+## SoapGetDataFileRequestIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/soaptest/SoapGetDataFileRequestIT.java)
+
+
+**TestCaseID: Soap-Validation-Request-For-Data-Files-1**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title: Input empty values
+  * Expected Result: Error is returned
+  * File: not relevant
+
+
+**TestCaseID: Soap-Validation-Request-For-Data-Files-2**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title: Input empty body
+  * Expected Result: Error is returned
+  * File: not relevant
+
+
+**TestCaseID: Soap-Validation-Request-For-Data-Files-3**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title: Element DocumentType is removed from the body
+  * Expected Result: Error is returned
+  * File: ddoc_1_3.xml.ddoc
+
+
+**TestCaseID: Soap-Validation-Request-For-Data-Files-4**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title: Element Document is removed from the body
+  * Expected Result: Error is returned
+  * File: ddoc_1_3.xml.ddoc
+
+
+**TestCaseID: Soap-Validation-Request-For-Data-Files-5**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title: Element DocumentType is duplicated in the body with different value
+  * Expected Result: Error is returned
+  * File: ddoc_1_3.xml.ddoc
+
+
+**TestCaseID: Soap-Validation-Request-For-Data-Files-6**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title: Additional element FileName is added to  the body
+  * Expected Result: Error is returned
+  * File: ddoc_1_3.xml.ddoc
+
+
+**TestCaseID: Soap-Validation-Request-For-Data-Files-7**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title: Value for element Document was changed
+  * Expected Result: Error is returned
+  * File: ddoc_1_3.xml.ddoc
+
+
+**TestCaseID: Soap-Validation-Request-For-Data-Files-8**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title: Low case for Document Type was used
+  * Expected Result: Error is returned
+  * File: 18912.ddoc
+
+
+**TestCaseID: Soap-Validation-Request-For-Data-Files-9**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title:  DocumentType was changed to BDOC when actual is DDOC
+  * Expected Result: Error is returned
+  * File: 18912.ddoc
+
+
+**TestCaseID: Soap-Validation-Request-For-Data-Files-10**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title:  DocumentType was changed to PDF when actual is DDOC
+  * Expected Result: Error is returned
+  * File: 18912.ddoc
+
+
+**TestCaseID: Soap-Validation-Request-For-Data-Files-11**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title:  DocumentType was changed to XROAD when actual is DDOC
+  * Expected Result: Error is returned
+  * File: 18912.ddoc
+
+
+**TestCaseID: Soap-Validation-Request-For-Data-Files-12**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title:  DocumentType was changed to unsupported format JPG when actual is DDOC
+  * Expected Result: Error is returned
+  * File: 18912.ddoc
+
+
+**TestCaseID: Soap-Validation-Request-For-Data-Files-13**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title:  DocumentType was changed to DDOC when actual is PDF
+  * Expected Result: Error is returned
+  * File: PdfValidSingleSignature.pdf
+
+
+**TestCaseID: Soap-Validation-Request-For-Data-Files-14**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title:  DocumentType was changed to DDOC when actual is BDOC
+  * Expected Result: Error is returned
+  * File: Valid_IDCard_MobID_signatures.bdoc
+
+
 ## SoapValidationReportValueIT.java
 [Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/soaptest/SoapValidationReportValueIT.java)
 
@@ -2257,8 +2751,6 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Title: Verification of values in Validation Report, xroad-simple container
   * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
   * File: xroad-simple.asice
-
-  **Attention! This test is disabled:  https://github.com/open-eid/SiVa/issues/25
 
 
 **TestCaseID: Xroad-SoapValidationReportValue-2**
@@ -2643,6 +3135,33 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * TestType: Automated
   * Requirement: [http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface](http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface)
   * Title: Soap headers are returned in error response
+  * Expected Result: Same headers are in response as in request
+  * File: not relevant
+
+
+**TestCaseID: XroadSoap-GetDataFiles-RequestVerification-1**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title: Soap headers are returned in response for Get Data Files
+  * Expected Result: Same headers are in response as in request
+  * File: susisevad1_3.ddoc
+
+
+**TestCaseID: XroadSoap-GetDataFiles-RequestVerification-2**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title: Soap headers are returned in correct order for Get Data Files
+  * Expected Result: Same headers are in response as in request
+  * File: susisevad1_3.ddoc
+
+
+**TestCaseID: XroadSoap-GetDataFiles-RequestVerification-3**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface)
+  * Title: Soap headers are returned in error response for Get Data Files
   * Expected Result: Same headers are in response as in request
   * File: not relevant
 

@@ -338,6 +338,12 @@
             </li>
           
             <li class="anchor">
+              <a title="Testing of Data Files Extraction" href="#testing-of-data-files-extraction">
+                Testing of Data Files Extraction
+              </a>
+            </li>
+          
+            <li class="anchor">
               <a title="Testing of user statistics" href="#testing-of-user-statistics">
                 Testing of user statistics
               </a>
@@ -510,6 +516,22 @@
 <li><a href="../../siva/appendix/test_cases/#validationrequestitjava">ValidationRequestIT.java</a></li>
 <li><a href="../../siva/appendix/test_cases/#documentformatitjava">DocumentFormatIT.java</a></li>
 </ul>
+<h3 id="get-data-files-request-tests">Get Data Files request tests</h3>
+<p>Following areas are tested on input:</p>
+<ul>
+<li>Empty request</li>
+<li>Empty values in input parameters</li>
+<li>Too many parameters</li>
+<li>Too few parameters</li>
+<li>Changed order of parameters</li>
+<li>Case insensitivity on parameter names</li>
+<li>Inconsistencies on stated parameters and actual data</li>
+</ul>
+<p>In all of the negative cases correctness of returned error message is checked.</p>
+<p>Specific test cases and input files can be found in:</p>
+<ul>
+<li><a href="../../siva/appendix/test_cases/#getdatafilerequestit.java">GetDataFileRequestIT.java</a></li>
+</ul>
 <h3 id="validation-report-tests">Validation report tests</h3>
 <p>SiVa web service returns uniform Validation Report on all the supported document types. This also includes correct document types without actual signature (for example PDF document without signature). However not all values may be present for all the document types.</p>
 <p>Following areas are tested on output (Validation Report):</p>
@@ -543,6 +565,22 @@ Compatibility with X-Road security server is out of scope for these tests and wi
 <ul>
 <li><a href="../../siva/appendix/test_cases/#soapvalidationrequestitjava">SoapValidationRequestIT.java</a></li>
 </ul>
+<h3 id="get-data-files-request-tests_1">Get Data Files request tests</h3>
+<p>Following areas are tested on input:</p>
+<ul>
+<li>Empty request</li>
+<li>Empty values in input parameters</li>
+<li>Too many parameters</li>
+<li>Too few parameters</li>
+<li>Changed order of parameters</li>
+<li>Case insensitivity on parameter names</li>
+<li>Inconsistencies on stated parameters and actual data</li>
+</ul>
+<p>In all of the negative cases correctness of returned error message is checked.</p>
+<p>Specific test cases and input files can be found in:</p>
+<ul>
+<li><a href="../../siva/appendix/test_cases/#soapgetdatafilerequestit.java">SoapGetDataFileRequestIT.java</a></li>
+</ul>
 <h3 id="validation-report-tests_1">Validation report tests</h3>
 <p>SiVa web service returns uniform Validation Report on all the supported document types. This also includes correct document types without actual signature (for example PDF document without signature). However not all values may be present for all the document types.</p>
 <p>Following areas are tested on output (Validation Report):</p>
@@ -554,6 +592,18 @@ Compatibility with X-Road security server is out of scope for these tests and wi
 <p>Specific test cases and input files can be found in:</p>
 <ul>
 <li><a href="../../siva/appendix/test_cases/#soapvalidationreportvalueitjava">SoapValidationReportValueIT.java</a></li>
+</ul>
+<h3 id="get-data-files-report-tests">Get Data Files report tests</h3>
+<p>SiVa web service returns when extracting data files uniform  Report only on DDOC document type.</p>
+<p>Following areas are tested on output:</p>
+<ul>
+<li>Presence of the mandatory elements</li>
+<li>Verification of expected values</li>
+<li>Extraction of all data files</li>
+</ul>
+<p>Specific test cases and input files can be found in:</p>
+<ul>
+<li><a href="../../siva/appendix/test_cases/#soapgetdatafilereportit.java">SoapGetDataFileReportIT.java</a></li>
 </ul>
 <h2 id="testing-of-ddoc-signature-validation">Testing of DDOC signature validation</h2>
 <p>The goal of the DDOC signature validation testing is to check that the validation results given by JDigiDoc library are properly presented in validation report.</p>
@@ -627,6 +677,20 @@ Compatibility with X-Road security server is out of scope for these tests and wi
 <p><strong>What is not tested:</strong></p>
 <ul>
 <li>Verification of different causes in container for invalid result is out of scope.</li>
+</ul>
+<h2 id="testing-of-data-files-extraction">Testing of Data Files Extraction</h2>
+<p>The goal of the Data Files Extraction testing  is to check if right data files returned for DDOC container and error messages for other types of containers.</p>
+<p>The testing of Data Files Extraction consists of following main cases:</p>
+<ul>
+<li>Extracting the data files from valid DDOC container</li>
+<li>Extracting the data files from Hashcoded DDOC  returns null for Base64 encoded String</li>
+<li>Extracting the data files from DDOC container  with 12 different   types  of files</li>
+<li>Extracting the data files from not DDOC container</li>
+<li>Extracting the data files from DDOC container with wrong Document Type</li>
+</ul>
+<p>Specific test cases and input files can be found in:</p>
+<ul>
+<li><a href="../../siva/appendix/test_cases/#ddocgetdatafilesitjava">DdocGetDataFilesIT.java</a></li>
 </ul>
 <h2 id="testing-of-user-statistics">Testing of user statistics</h2>
 <p>Testing of user statistics is carried out in combination of automatic data preparation and generation by integration tests and manual verification of the results.

@@ -37,5 +37,8 @@ notifications:
     - andres.voll@nortal.com
     - allan.juhanson@nortal.com
     - priit.reiser@nortal.com
+    - vadim.pudov@nortal.com
+    - aare.nurm@nortal.com
+    - julia.solovei@nortal.com
     on_success: change
     on_failure: always

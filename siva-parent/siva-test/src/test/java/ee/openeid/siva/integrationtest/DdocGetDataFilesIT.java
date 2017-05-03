@@ -61,6 +61,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
                 .body("dataFiles[0].base64", Matchers.startsWith("RGlnaURvYyBpcyBhIGdlbmVyaWMgbGlicmFyeSBp"))
                 .body("dataFiles[0].size", Matchers.is(491));
     }
+
     /**
      * TestCaseID:  Ddoc-Get-Data-Files-2
      *
@@ -84,6 +85,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
                 .body("dataFiles[0].base64", Matchers.is("T2xlbiB0ZXN0IGZhaWwu\n"))
                 .body("dataFiles[0].size", Matchers.is(15));
     }
+
     /**
      * TestCaseID:  Ddoc-Get-Data-Files-3
      *
@@ -108,6 +110,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
                 .body("dataFiles[0].base64", Matchers.startsWith("0M8R4KGxGuEAAAAAAAAAAAAAAAAAAAAAPgADAP7/CQAGAAAAAAAAAAAAAAAJAAAA"))
                 .body("dataFiles[0].size", Matchers.is(549376));
     }
+
     /**
      * TestCaseID:  Ddoc-Get-Data-Files-4
      *
@@ -132,6 +135,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
                 .body("dataFiles[0].base64", Matchers.startsWith("JVBERi0xLjMKJeLjz9MKMSAwIG9iajw8L1Byb2R1Y2VyKGh0bWxkb2MgMS44LjIzIENvcHlyaWdodCAxOTk3LTIwMDI"))
                 .body("dataFiles[0].size", Matchers.is(5252));
     }
+
     /**
      * TestCaseID:  Ddoc-Get-Data-Files-5
      *
@@ -155,6 +159,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
                 .body("dataFiles[0].base64", Matchers.startsWith("/9j/4AAQSkZJRgABAQAAAQABAAD/4RXeRXhpZgAASUkqAAgAAAACADEBAgAHAAAA"))
                 .body("dataFiles[0].size", Matchers.is(41114));
     }
+
     /**
      * TestCaseID:  Ddoc-Get-Data-Files-6
      *
@@ -179,6 +184,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
                 .body("dataFiles[0].base64", Matchers.nullValue())
                 .body("dataFiles[0].size", Matchers.is(41114));
     }
+
     /**
      * TestCaseID:  Ddoc-Get-Data-Files-7
      *
@@ -200,11 +206,11 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
                 .log().ifError()
                 .body("dataFiles[0].fileName", Matchers.is("DigiDocService_spec_1_110_est.pdf"))
                 .body("dataFiles[0].mimeType", Matchers.is("application/pdf"))
-                .body("dataFiles[0].base64", Matchers.startsWith("JVBERi0xLjMKJcfsj6IKOCAwIG9iago8PC9MZW5ndGggOSAwIFIvRmlsdGVyIC9GbGF0ZURlY29kZT4+CnN0cmVhbQp4nLVWTXMTMQy97"))
+                .body("dataFiles[0].base64", Matchers.startsWith("JVBERi0xLjMKJcfsj6IKOCAwIG9iago8PC9MZW5ndGggOSAwIFIvRmlsdGVyIC9G"))
                 .body("dataFiles[0].size", Matchers.is(435164))
                 .body("dataFiles[1].fileName", Matchers.is("Testilood20070320.doc"))
                 .body("dataFiles[1].mimeType", Matchers.is("application/msword"))
-                .body("dataFiles[1].base64", Matchers.startsWith("0M8R4KGxGuEAAAAAAAAAAAAAAAAAAAAAPgADAP7/CQAGAAAAAAAAAAAAAAAEAAAArgEAAAAAA"))
+                .body("dataFiles[1].base64", Matchers.startsWith("0M8R4KGxGuEAAAAAAAAAAAAAAAAAAAAAPgADAP7/CQAGAAAAAAAAAAAAAAAEAAAA"))
                 .body("dataFiles[1].size", Matchers.is(222720))
                 .body("dataFiles[2].fileName", Matchers.is("fail.rtf"))
                 .body("dataFiles[2].mimeType", Matchers.is("application/msword"))
@@ -212,7 +218,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
                 .body("dataFiles[2].size", Matchers.is(2145))
                 .body("dataFiles[3].fileName", Matchers.is("fail.odt"))
                 .body("dataFiles[3].mimeType", Matchers.is("application/unknown"))
-                .body("dataFiles[3].base64", Matchers.startsWith("UEsDBBQAAAAAAJhRwTpexjIMJwAAACcAAAAIAAAAbWltZXR5cGVhcHBsaWNhdGlvbi92bmQub2FzaXMub3BlbmRvY3VtZW50LnRleH"))
+                .body("dataFiles[3].base64", Matchers.startsWith("UEsDBBQAAAAAAJhRwTpexjIMJwAAACcAAAAIAAAAbWltZXR5cGVhcHBsaWNhdGlv"))
                 .body("dataFiles[3].size", Matchers.is(7427))
                 .body("dataFiles[4].fileName", Matchers.is("4.txt"))
                 .body("dataFiles[4].mimeType", Matchers.is("text/plain"))
@@ -220,15 +226,15 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
                 .body("dataFiles[4].size", Matchers.is(7))
                 .body("dataFiles[5].fileName", Matchers.is("kolm.doc"))
                 .body("dataFiles[5].mimeType", Matchers.is("application/msword"))
-                .body("dataFiles[5].base64", Matchers.startsWith("0M8R4KGxGuEAAAAAAAAAAAAAAAAAAAAAPgADAP7/CQAGAAAAAAAAAAAAAAABAAAAKgAAAAAAAAAAEAAALAAAAAEA"))
+                .body("dataFiles[5].base64", Matchers.startsWith("0M8R4KGxGuEAAAAAAAAAAAAAAAAAAAAAPgADAP7/CQAGAAAAAAAAAAAAAAABAAAA"))
                 .body("dataFiles[5].size", Matchers.is(24064))
                 .body("dataFiles[6].fileName", Matchers.is("5.xls"))
                 .body("dataFiles[6].mimeType", Matchers.is("application/vnd.ms-excel"))
-                .body("dataFiles[6].base64", Matchers.startsWith("0M8R4KGxGuEAAAAAAAAAAAAAAAAAAAAAPgADAP7/CQAGAAAAAAAAAAAAAAABAAAAGwAAAAAAAAAAEAAA/v///wAAAAD+"))
+                .body("dataFiles[6].base64", Matchers.startsWith("0M8R4KGxGuEAAAAAAAAAAAAAAAAAAAAAPgADAP7/CQAGAAAAAAAAAAAAAAABAAAA"))
                 .body("dataFiles[6].size", Matchers.is(14848))
                 .body("dataFiles[7].fileName", Matchers.is("kaks.doc"))
                 .body("dataFiles[7].mimeType", Matchers.is("application/msword"))
-                .body("dataFiles[7].base64", Matchers.startsWith("0M8R4KGxGuEAAAAAAAAAAAAAAAAAAAAAPgADAP7/CQAGAAAAAAAAAAAAAAABAAAAKgAAAAAAAAAAEAAALAAAAAEAAAD+////AAAAACkAAAD"))
+                .body("dataFiles[7].base64", Matchers.startsWith("0M8R4KGxGuEAAAAAAAAAAAAAAAAAAAAAPgADAP7/CQAGAAAAAAAAAAAAAAABAAAA"))
                 .body("dataFiles[7].size", Matchers.is(24064))
                 .body("dataFiles[8].fileName", Matchers.is("kõõs.txt"))
                 .body("dataFiles[8].mimeType", Matchers.is("text/plain"))
@@ -236,7 +242,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
                 .body("dataFiles[8].size", Matchers.is(6))
                 .body("dataFiles[9].fileName", Matchers.is("yks.doc"))
                 .body("dataFiles[9].mimeType", Matchers.is("application/msword"))
-                .body("dataFiles[9].base64", Matchers.startsWith("0M8R4KGxGuEAAAAAAAAAAAAAAAAAAAAAPgADAP7/CQAGAAAAAAAAAAAAAAABAAAAKgAAAAAAAAAAEAAALAAAAAEAAAD+////AAAAACkAAAD////////////////////////////////////////////////////////////////////////////////////////////////////"))
+                .body("dataFiles[9].base64", Matchers.startsWith("0M8R4KGxGuEAAAAAAAAAAAAAAAAAAAAAPgADAP7/CQAGAAAAAAAAAAAAAAABAAAA"))
                 .body("dataFiles[9].size", Matchers.is(24064))
                 .body("dataFiles[10].fileName", Matchers.is("testid.txt"))
                 .body("dataFiles[10].mimeType", Matchers.is("text/plain"))
@@ -247,6 +253,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
                 .body("dataFiles[11].base64", Matchers.startsWith("JVBERi0xLjMKJeTjz9IKNSAwIG9iago8PC9MZW5ndGggNiAwIFIKL0ZpbHRlci9G\nbGF0ZURlY29"))
                 .body("dataFiles[11].size", Matchers.is(2783));
     }
+
     /**
      * TestCaseID:  Ddoc-Get-Data-Files-8
      *
@@ -269,6 +276,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
                 .body("requestErrors[0].message", Matchers.is(INVALID_DOCUMENT_TYPE_DDOC))
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT_TYPE));
     }
+
     /**
      * TestCaseID:  Ddoc-Get-Data-Files-9
      *
@@ -291,6 +299,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
                 .body("requestErrors[0].message", Matchers.is(INVALID_DOCUMENT_TYPE_DDOC))
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT_TYPE));
     }
+    
     @Override
     protected String getTestFilesDirectory() {
         return testFilesDirectory;

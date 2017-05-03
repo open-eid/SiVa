@@ -150,7 +150,6 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         postForDataFiles(dataFilesRequest("DIGIDOC-XML1.3.ddoc"))
                 .then()
-                .log().ifError()
                 .body("dataFiles[0].fileName", Matchers.is("Glitter-rock-4_gallery.jpg"))
                 .body("dataFiles[0].mimeType", Matchers.is("application/octet-stream"))
                 .body("dataFiles[0].base64", Matchers.startsWith("/9j/4AAQSkZJRgABAQAAAQABAAD/4RXeRXhpZgAASUkqAAgAAAACADEBAgAHAAAA"))

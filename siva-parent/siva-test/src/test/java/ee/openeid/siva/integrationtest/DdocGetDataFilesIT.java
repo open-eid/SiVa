@@ -153,7 +153,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
                 .log().ifError()
                 .body("dataFiles[0].fileName", Matchers.is("Glitter-rock-4_gallery.jpg"))
                 .body("dataFiles[0].mimeType", Matchers.is("application/octet-stream"))
-                .body("dataFiles[0].base64", Matchers.startsWith("/9j/4AAQSkZJRgABAQAAAQABAAD/4RXeRXhpZgAASUkqAAgAAAACADEBAgAHAAAAJgAAAGmHBAABAAAALgAAAFgAAABQaWNh"))
+                .body("dataFiles[0].base64", Matchers.startsWith("/9j/4AAQSkZJRgABAQAAAQABAAD/4RXeRXhpZgAASUkqAAgAAAACADEBAgAHAAAA"))
                 .body("dataFiles[0].size", Matchers.is(41114));
     }
     /**

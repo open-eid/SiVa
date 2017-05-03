@@ -67,6 +67,9 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
     }
     protected Response postForDataFiles (String request){
         return given()
+                .log().headers()
+                .log().method()
+                .log().path()
                 .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
                 .body(request)
                 .contentType(ContentType.JSON)

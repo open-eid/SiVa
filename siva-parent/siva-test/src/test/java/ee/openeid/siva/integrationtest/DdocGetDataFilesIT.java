@@ -102,6 +102,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         postForDataFiles(dataFilesRequest("DIGIDOC-XML1.1.ddoc"))
                 .then()
+                .log().ifError()
                 .body("dataFiles[0].fileName",Matchers.is("puhkus_urmo_062006.doc"))
                 .body("dataFiles[0].mimeType",Matchers.is("application/msword"))
                 .body("dataFiles[0].base64",Matchers.startsWith("0M8R4KGxGuEAAAAAAAAAAAAAAAAAAAAAPgADAP7/CQAGAAAAAAAAAAAAAAAJAAAALAQAAAAAAAAAEAAALgQAAA"))

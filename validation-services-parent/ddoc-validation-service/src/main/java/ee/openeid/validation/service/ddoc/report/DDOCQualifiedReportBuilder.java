@@ -43,6 +43,7 @@ import java.util.stream.Collectors;
 
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
+import static org.cryptacular.util.CertUtil.subjectCN;
 
 public class DDOCQualifiedReportBuilder {
 
@@ -136,7 +137,7 @@ public class DDOCQualifiedReportBuilder {
     }
 
     private String getCertificateCN(KeyInfo keyInfo) {
-        return keyInfo != null ? org.cryptacular.util.CertUtil.subjectCN(keyInfo.getSignersCertificate()) : null;
+        return keyInfo != null ? subjectCN(keyInfo.getSignersCertificate()) : null;
     }
 
     private String getSignatureForm() {

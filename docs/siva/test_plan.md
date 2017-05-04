@@ -336,13 +336,21 @@ System testing is carried out using two access points:
 
 ## Testing through X-Road security server
 
-Following areas are covered:
+Following areas are covered for document validation:
 
   * Validation of valid signature
   * Validation of invalid signatur
   * Validation that returns Soap error
 
-All of the above test cases are run with BDOC, DDOC, PDF and X-Road ASiC-E containers. Tests along with test case descriptions are available for rerun in [github](https://github.com/open-eid/SiVa/tree/develop/test-helpers/XRoadSoapUITests).
+All of the above test cases are run with BDOC, DDOC, PDF and X-Road ASiC-E containers. 
+
+Following areas are covered for file extraction:
+
+  * Extraction of data files from valid ddoc
+  * Extraction of data files from invalid ddoc
+  * Error response from data file extraction  
+
+Tests along with test case descriptions are available for rerun in [github](https://github.com/open-eid/SiVa/tree/develop/test-helpers/XRoadSoapUITests).
 
 Specific test cases and input files can be found in:
 

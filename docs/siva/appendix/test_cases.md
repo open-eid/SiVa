@@ -3335,6 +3335,30 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Title: Invalid Request
   * Expected Result: Soap error should be returned
   * File: not relevant
+  
+**TestCaseID: Xroad-GetDataFiles-DDOC-1**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/](http://open-eid.github.io/SiVa/siva/v2/interfaces/)
+  * Title: Get data files from valid DDOC
+  * Expected Result: Data files should be returned
+  * File: DIGIDOC-XML1.3.ddoc
+  
+**TestCaseID: Xroad-GetDataFiles-DDOC-2**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/](http://open-eid.github.io/SiVa/siva/v2/interfaces/)
+  * Title: Get data files from invalid DDOC
+  * Expected Result: Data files should be returned even if the signatures are not valid
+  * File: test-non-repu1.ddoc
+  
+**TestCaseID: Xroad-GetDataFiles-DDOC-3**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva/v2/interfaces/](http://open-eid.github.io/SiVa/siva/v2/interfaces/)
+  * Title: Invalid request
+  * Expected Result: Error is returned as the document type is not supported
+  * File: test-non-repu1.ddoc  
 
 ## Configuration System Test
 

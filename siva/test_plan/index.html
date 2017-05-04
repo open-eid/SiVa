@@ -742,13 +742,20 @@ SiVa supports two parallel ways of gathering user statistics:</p>
 <p>Testing through X-Road security server requires presence and configuration of X-Road security server to use SiVa service.  Tests are run using SoapUI that simulates request to X-Road security server.</p>
 </div>
 <h2 id="testing-through-x-road-security-server">Testing through X-Road security server</h2>
-<p>Following areas are covered:</p>
+<p>Following areas are covered for document validation:</p>
 <ul>
 <li>Validation of valid signature</li>
 <li>Validation of invalid signatur</li>
 <li>Validation that returns Soap error</li>
 </ul>
-<p>All of the above test cases are run with BDOC, DDOC, PDF and X-Road ASiC-E containers. Tests along with test case descriptions are available for rerun in <a href="https://github.com/open-eid/SiVa/tree/develop/test-helpers/XRoadSoapUITests">github</a>.</p>
+<p>All of the above test cases are run with BDOC, DDOC, PDF and X-Road ASiC-E containers. </p>
+<p>Following areas are covered for file extraction:</p>
+<ul>
+<li>Extraction of data files from valid ddoc</li>
+<li>Extraction of data files from invalid ddoc</li>
+<li>Error response from data file extraction  </li>
+</ul>
+<p>Tests along with test case descriptions are available for rerun in <a href="https://github.com/open-eid/SiVa/tree/develop/test-helpers/XRoadSoapUITests">github</a>.</p>
 <p>Specific test cases and input files can be found in:</p>
 <ul>
 <li><a href="../../siva/appendix/test_cases/#x-road-soap-system-test">X-Road Soap System Test</a></li>

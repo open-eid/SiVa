@@ -3469,6 +3469,30 @@ Check all the fields presence and correctness even though tests prepare data for
 <li>Expected Result: Soap error should be returned</li>
 <li>File: not relevant</li>
 </ul>
+<p><strong>TestCaseID: Xroad-GetDataFiles-DDOC-1</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/">http://open-eid.github.io/SiVa/siva/v2/interfaces/</a></li>
+<li>Title: Get data files from valid DDOC</li>
+<li>Expected Result: Data files should be returned</li>
+<li>File: DIGIDOC-XML1.3.ddoc</li>
+</ul>
+<p><strong>TestCaseID: Xroad-GetDataFiles-DDOC-2</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/">http://open-eid.github.io/SiVa/siva/v2/interfaces/</a></li>
+<li>Title: Get data files from invalid DDOC</li>
+<li>Expected Result: Data files should be returned even if the signatures are not valid</li>
+<li>File: test-non-repu1.ddoc</li>
+</ul>
+<p><strong>TestCaseID: Xroad-GetDataFiles-DDOC-3</strong></p>
+<ul>
+<li>TestType: Automated</li>
+<li>Requirement: <a href="http://open-eid.github.io/SiVa/siva/v2/interfaces/">http://open-eid.github.io/SiVa/siva/v2/interfaces/</a></li>
+<li>Title: Invalid request</li>
+<li>Expected Result: Error is returned as the document type is not supported</li>
+<li>File: test-non-repu1.ddoc  </li>
+</ul>
 <h2 id="configuration-system-test">Configuration System Test</h2>
 <p><strong>TestCaseID: Configuration-Webapp-TSL-1</strong></p>
 <ul>

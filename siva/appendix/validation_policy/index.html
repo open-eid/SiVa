@@ -620,8 +620,8 @@
 </ol>
 <h3 id="revocation-data-constraints">Revocation data constraints</h3>
 <ol>
-<li>The signature must contain signer certificate's revocation data. </li>
-<li>The signer certificate’s revocation data must be in the form of an <a href="https://tools.ietf.org/html/rfc6960">OCSP confirmation</a>.</li>
+<li>The signature must contain evidence record to confirm that certificate's was valid at the time of signing. </li>
+<li>The evidence record of signer certificate must be in the form of an <a href="https://tools.ietf.org/html/rfc6960">OCSP confirmation</a>.</li>
 <li>No additional revocation data other than the data that was originally incorporated in the signature shall be requested during validation time.</li>
 <li>Checking revocation of certificates regarded as Trust Anchors:<ul>
 <li>In case of DIGIDOC-XML 1.0...1.3 and X-Road formats: revocation of Trust Anchor certificates is not checked.</li>

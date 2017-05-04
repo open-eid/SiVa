@@ -57,7 +57,7 @@ In addition SiVa Sample Application is tested. These tests are carried out manua
 
 ## Testing of REST API
 
-The goal of the REST API testing is to check that the API is accepting the requests based on the specification and the output result (Validation Report) is in correct format and has all the required elements.
+The goal of the REST API testing is to check that the API is accepting the requests based on the specification and the output result is in correct format and has all the required elements.
 
 ### Validation request tests
 
@@ -170,8 +170,6 @@ Specific test cases and input files can be found in:
   * [SoapValidationReportValueIT.java](/siva/appendix/test_cases/#soapvalidationreportvalueitjava)
 
 ### Get Data Files report tests
-
-SiVa web service returns when extracting data files uniform  Report only on DDOC document type.
 
 Following areas are tested on output:
 

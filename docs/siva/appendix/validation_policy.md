@@ -149,8 +149,8 @@ Legend:
 
 
 ### Revocation data constraints
-1. The signature must contain signer certificate's revocation data. 
-* The signer certificate’s revocation data must be in the form of an [OCSP confirmation](https://tools.ietf.org/html/rfc6960).
+1. The signature must contain evidence record to confirm that certificate's was valid at the time of signing. 
+*  The evidence record of signer certificate must be in the form of an [OCSP confirmation](https://tools.ietf.org/html/rfc6960).
 * No additional revocation data other than the data that was originally incorporated in the signature shall be requested during validation time.
 * Checking revocation of certificates regarded as Trust Anchors:
 	* In case of DIGIDOC-XML 1.0...1.3 and X-Road formats: revocation of Trust Anchor certificates is not checked.

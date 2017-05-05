@@ -103,7 +103,7 @@ WantedBy=multi-user.target
 ```
 
 Save and close the `siva-webapp.service` file.
-Next we need to move `siva-webapp-2.0.2-SNAPSHOT.jar` into newly created `/var/apps` directory and rename to
+Next we need to move `siva-webapp-2.0.3-SNAPSHOT.jar` into newly created `/var/apps` directory and rename to
 JAR file to `siva-webapp.jar`. match
 
 !!! note
@@ -111,7 +111,7 @@ JAR file to `siva-webapp.jar`. match
 
 ```bash
 sudo mkdir /var/apps
-sudo cp siva-parent/siva-webapp/target/executable/siva-webapp-2.0.2-SNAPSHOT.jar /var/apps/siva-webapp.jar
+sudo cp siva-parent/siva-webapp/target/executable/siva-webapp-2.0.3-SNAPSHOT.jar /var/apps/siva-webapp.jar
 ```
 
 Next we need to copy the `siva-webapp.service` file into `/lib/systemd/system` directory.

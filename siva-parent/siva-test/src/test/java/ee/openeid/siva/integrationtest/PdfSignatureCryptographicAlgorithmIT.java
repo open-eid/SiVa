@@ -72,7 +72,7 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      *
      * File: hellopades-lt-sha1.pdf
      */
-    @Test //@Ignore //TODO: remove ignore after pull request merged (https://github.com/open-eid/sd-dss/pull/3) and digidoc4j maven repository updated
+    @Test @Ignore //TODO: remove ignore after pull request merged (https://github.com/open-eid/sd-dss/pull/3) and digidoc4j maven repository updated
     public void documentSignedWithSha1CertificateShouldFail() {
         assertAllSignaturesAreInvalid(postForReport("hellopades-lt-sha1.pdf"));
     }

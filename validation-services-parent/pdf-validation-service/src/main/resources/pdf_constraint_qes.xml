@@ -102,7 +102,6 @@
                     <Algo Size="192">ECDSA</Algo>
                 </MiniPublicKeySize>
                 <AcceptableDigestAlgo>
-                    <Algo>SHA1</Algo>
                     <Algo>SHA224</Algo>
                     <Algo>SHA256</Algo>
                     <Algo>SHA384</Algo>

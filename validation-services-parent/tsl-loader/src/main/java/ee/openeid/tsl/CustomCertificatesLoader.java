@@ -16,8 +16,10 @@
 
 package ee.openeid.tsl;
 
+
 import eu.europa.esig.dss.DSSUtils;
 import eu.europa.esig.dss.tsl.*;
+import eu.europa.esig.dss.util.TimeDependentValues;
 import eu.europa.esig.dss.x509.CertificateToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +28,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @Profile("test")
@@ -40,7 +44,7 @@ public class CustomCertificatesLoader {
     private static final String CA_QC = "http://uri.etsi.org/TrstSvc/Svctype/CA/QC";
     private static final String OCSP_QC = "http://uri.etsi.org/TrstSvc/Svctype/Certstatus/OCSP/QC";
     private static final String UNDER_SUPERVISION = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/undersupervision";
-
+    private static final String GRANTED = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/granted";
     private static final Logger LOGGER = LoggerFactory.getLogger(TSLLoader.class);
 
     private TrustedListsCertificateSource trustedListSource;
@@ -145,7 +149,8 @@ public class CustomCertificatesLoader {
                         "26x1lOcCk0KRBr/mBk9gaC0TxmYhuum99V5+fM5sJ6WwFRS1ruLyt1piQiATIRVe\n" +
                         "pcPZlmxrjmZcfQ+dp1jWj3cS7pJ9mCZsr5H74U3K");
 
-        tlCertSource.addCertificate(certToken, getCAServiceInfo(certToken, "Nortal NQSK16 Test Cert Signing"));
+        tlCertSource.addCertificate(certToken, getCAServiceInfo(GRANTED, certToken, "Nortal NQSK16 Test Cert Signing"));
+        tlCertSource.addCertificate(certToken, getCAServiceInfo(UNDER_SUPERVISION, certToken, "Nortal NQSK16 Test Cert Signing"));
 
         // TEST of KLASS3-SK 2010
         certToken = DSSUtils.loadCertificateFromBase64EncodedString(
@@ -316,7 +321,7 @@ public class CustomCertificatesLoader {
 
         //Management CA for soft cert
         certToken = DSSUtils.loadCertificateFromBase64EncodedString(
-                        "MIIDWzCCAkOgAwIBAgIIM8q/reh6L2QwDQYJKoZIhvcNAQELBQAwOzEVMBMGA1UE" +
+                "MIIDWzCCAkOgAwIBAgIIM8q/reh6L2QwDQYJKoZIhvcNAQELBQAwOzEVMBMGA1UE" +
                         "AwwMTWFuYWdlbWVudENBMRUwEwYDVQQKDAxFSkJDQSBTYW1wbGUxCzAJBgNVBAYT" +
                         "AlNFMB4XDTE0MTAyMDIxMzYwNFoXDTI0MTAxNzIxMzYwNFowOzEVMBMGA1UEAwwM" +
                         "TWFuYWdlbWVudENBMRUwEwYDVQQKDAxFSkJDQSBTYW1wbGUxCzAJBgNVBAYTAlNF" +
@@ -335,25 +340,29 @@ public class CustomCertificatesLoader {
                         "B7TYeIrgMTT01SNXY0cC+cWAqHot6NWZQtKOGwu8TlqTjkZd7E0sq3a6QWBb5/22" +
                         "0xDd5B09RzzLbIhKS/PKsdVR/UQNdYOhQ/H3kBRCJeMENNRi2iuUtw2SAyRBwHY=");
 
-        tlCertSource.addCertificate(certToken, getCAServiceInfo(certToken, "Management CA"));
+        tlCertSource.addCertificate(certToken, getCAServiceInfo(UNDER_SUPERVISION, certToken, "Management CA"));
 
         LOGGER.info("Finished Loading Estonian Test Certificates");
     }
 
-    private ServiceInfo getCAServiceInfo(CertificateToken certToken, String serviceName) {
+    private ServiceInfo getCAServiceInfo(String status , CertificateToken certToken, String serviceName) {
         ServiceInfo serviceInfo = new ServiceInfo();
-        serviceInfo.setStatus(getServiceInfoStatuses(certToken));
-        serviceInfo.setType(CA_QC);
+        Map<String, List<Condition>> qualifiersAndConditions = new HashMap<>();
+        serviceInfo.setStatus(getServiceInfoStatuses(status, certToken, CA_QC, qualifiersAndConditions));
+
         serviceInfo.setServiceName(serviceName);
         return serviceInfo;
     }
 
     private ServiceInfo getCAServiceInfoWithQcConditions(CertificateToken certToken, String serviceName) {
-        ServiceInfo serviceInfo = getCAServiceInfo(certToken, serviceName);
-        serviceInfo.addQualifierAndCondition(QC_WITH_QSCD, createDigitalSignatureOrNonRepudiationListCondition());
-        serviceInfo.addQualifierAndCondition(QC_STATEMENT, createNonRepudiationCriteriaListCondition());
-        serviceInfo.addQualifierAndCondition(QC_FOR_ESIG, createNonRepudiationCriteriaListCondition());
-        serviceInfo.setTlWellSigned(true);
+        ServiceInfo serviceInfo = new ServiceInfo();
+        serviceInfo.setServiceName(serviceName);
+        Map<String, List<Condition>> qualifiersAndConditions = new HashMap<>();
+        qualifiersAndConditions.put(QC_WITH_QSCD, Collections.singletonList(createDigitalSignatureOrNonRepudiationListCondition()));
+        qualifiersAndConditions.put(QC_STATEMENT, Collections.singletonList(createNonRepudiationCriteriaListCondition()));
+        qualifiersAndConditions.put(QC_FOR_ESIG, Collections.singletonList(createNonRepudiationCriteriaListCondition()));
+        serviceInfo.setStatus(getServiceInfoStatuses(UNDER_SUPERVISION, certToken, CA_QC, qualifiersAndConditions));
+
         return serviceInfo;
     }
 
@@ -373,19 +382,18 @@ public class CustomCertificatesLoader {
 
     private ServiceInfo getOCSPServiceInfo(CertificateToken certToken) {
         ServiceInfo serviceInfo = new ServiceInfo();
-        serviceInfo.setStatus(getServiceInfoStatuses(certToken));
-        serviceInfo.setType(OCSP_QC);
+        Map<String, List<Condition>> qualifiersAndConditions = new HashMap<>();
+        serviceInfo.setStatus(getServiceInfoStatuses(UNDER_SUPERVISION, certToken, OCSP_QC, qualifiersAndConditions));
+
         return serviceInfo;
     }
 
-    private List<ServiceInfoStatus> getServiceInfoStatuses(CertificateToken certToken) {
-        List<ServiceInfoStatus> serviceInfoStatuses = new ArrayList<>();
-        serviceInfoStatuses.add(createUnderSupervisionStatus(certToken));
-        return serviceInfoStatuses;
+    private TimeDependentValues<ServiceInfoStatus> getServiceInfoStatuses(String status, CertificateToken certToken, String type, Map<String, List<Condition>> qualifiersAndConditions) {
+        return new TimeDependentValues(Collections.singletonList(createUnderSupervisionStatus(status, certToken, type, qualifiersAndConditions)));
     }
 
-    private ServiceInfoStatus createUnderSupervisionStatus(CertificateToken certToken) {
-        return new ServiceInfoStatus(UNDER_SUPERVISION, certToken.getCertificate().getNotBefore(), null);
+    private ServiceInfoStatus createUnderSupervisionStatus(String status, CertificateToken certToken, String type, Map<String, List<Condition>> qualifiersAndConditions) {
+        return new ServiceInfoStatus(type, status, qualifiersAndConditions, null, null, certToken.getCertificate().getNotBefore(), null);
     }
 
     @Autowired

@@ -8,9 +8,9 @@
     <PolicyAvailable Level="FAIL"/>
     <PolicyHashMatch Level="INFORM"/>
     <AcceptableFormats Level="FAIL">
-      <Id>XAdES_BASELINE_LT</Id>
-      <Id>XAdES_BASELINE_LT_TM</Id>
-      <Id>XAdES_BASELINE_LTA</Id>
+      <Id>XAdES-BASELINE-LT</Id>
+      <Id>XAdES-BASELINE-LT-TM</Id>
+      <Id>XAdES-BASELINE-LTA</Id>
     </AcceptableFormats>
     <BasicSignatureConstraints>
       <ReferenceDataExistence Level="FAIL"/>
@@ -39,7 +39,7 @@
         <NotRevoked Level="FAIL"/>
         <NotOnHold Level="FAIL"/>
         <Qualification Level="INFORM"/>
-        <SupportedBySSCD Level="INFORM"/>
+        <SupportedByQSCD Level="INFORM"/>
         <IssuedToLegalPerson Level="INFORM"/>
         <Cryptographic Level="FAIL">
           <AcceptableEncryptionAlgo>
@@ -359,4 +359,11 @@
       <Algo Date="2035-02-24">ECDSA256</Algo>
     </AlgoExpirationDate>
   </Cryptographic>
+  <eIDAS>
+    <TLFreshness Level="WARN" Unit="HOURS" Value="6" />
+    <TLNotExpired Level="FAIL" />
+    <TLWellSigned Level="WARN" />
+    <TLVersion Level="FAIL" value="5" />
+    <TLConsistency Level="FAIL" />
+  </eIDAS>
 </ConstraintsParameters>

@@ -19,7 +19,7 @@ package ee.openeid.tsl.keystore;
 import eu.europa.esig.dss.DSSException;
 import eu.europa.esig.dss.x509.KeyStoreCertificateSource;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.AbstractFactoryBean;

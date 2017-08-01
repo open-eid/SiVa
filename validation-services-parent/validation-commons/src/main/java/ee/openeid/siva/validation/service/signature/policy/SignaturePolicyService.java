@@ -20,7 +20,7 @@ import ee.openeid.siva.validation.service.signature.policy.properties.SignatureP
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

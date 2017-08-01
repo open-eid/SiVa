@@ -8,8 +8,8 @@
         <PolicyAvailable Level="FAIL"/>
         <PolicyHashMatch Level="INFORM"/>
         <AcceptableFormats Level="FAIL">
-            <Id>PAdES_BASELINE_LT</Id>
-            <Id>PAdES_BASELINE_LTA</Id>
+            <Id>PAdES-BASELINE-LT</Id>
+            <Id>PAdES-BASELINE-LTA</Id>
         </AcceptableFormats>
         <BasicSignatureConstraints>
             <ReferenceDataExistence Level="FAIL"/>
@@ -38,7 +38,7 @@
                 <NotRevoked Level="FAIL"/>
                 <NotOnHold Level="FAIL"/>
                 <Qualification Level="FAIL"/>
-                <SupportedBySSCD Level="FAIL"/>
+                <SupportedByQSCD Level="FAIL"/>
                 <IssuedToLegalPerson Level="INFORM"/>
                 <Cryptographic Level="FAIL">
                     <AcceptableEncryptionAlgo>
@@ -357,4 +357,11 @@
             <Algo Date="2035-02-24">ECDSA256</Algo>
         </AlgoExpirationDate>
     </Cryptographic>
+    <eIDAS>
+        <TLFreshness Level="WARN" Unit="HOURS" Value="6" />
+        <TLNotExpired Level="FAIL" />
+        <TLWellSigned Level="WARN" />
+        <TLVersion Level="FAIL" value="5" />
+        <TLConsistency Level="FAIL" />
+    </eIDAS>
 </ConstraintsParameters>

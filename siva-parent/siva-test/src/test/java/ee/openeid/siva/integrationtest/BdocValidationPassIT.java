@@ -190,7 +190,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("ValidLiveSignature.asice"))
                 .then()
-                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validSignaturesCount", Matchers.is(1));
@@ -263,7 +263,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
         post(validationRequestFor("IB-4270_TS_ESTEID-SK 2015  SK OCSP RESPONDER 2011.asice"))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validSignaturesCount", Matchers.is(1));
@@ -289,7 +289,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
         post(validationRequestWithValidKeys(encodedString, "EE_SER-AEX-B-LT-V-28.asice", "BDOC", VALID_SIGNATURE_POLICY_1))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("signatures[0].signatureLevel", Matchers.is("AdESqc")) //TODO: This should be QES but https://github.com/open-eid/SiVa/issues/24
+                .body("signatures[0].signatureLevel", Matchers.is("QES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validSignaturesCount", Matchers.is(1));
@@ -314,7 +314,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
         post(validationRequestFor("BDOC2.1.bdoc"))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validSignaturesCount", Matchers.is(1));
@@ -358,7 +358,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
         post(validationRequestFor("Šužlikud sõid ühe õuna ära.bdoc"))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validSignaturesCount", Matchers.is(1))
@@ -385,7 +385,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
         post(validationRequestWithValidKeys(encodedString, "BDOC2.1_content_as_sce.sce", "BDOC", ""))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validSignaturesCount", Matchers.is(1))
@@ -412,7 +412,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
         post(validationRequestWithValidKeys(encodedString, "ASICE_TS_LTA_content_as_sce.sce", "BDOC", ""))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LTA"))
-                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validSignaturesCount", Matchers.is(1))
@@ -439,7 +439,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
         post(validationRequestWithValidKeys(encodedString, "Nonconventionalcharacters.asice", "BDOC", ""))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].signatureScopes[0].name", Matchers.is("!~#¤%%&()=+-_.txt"))

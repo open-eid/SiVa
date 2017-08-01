@@ -20,7 +20,7 @@ import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyExceptio
 import ee.openeid.validation.service.bdoc.configuration.BDOCSignaturePolicyProperties;
 import ee.openeid.validation.service.bdoc.configuration.TSLUtils;
 import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

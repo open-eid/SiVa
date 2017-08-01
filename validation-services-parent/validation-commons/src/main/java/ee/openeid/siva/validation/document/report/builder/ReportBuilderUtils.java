@@ -19,7 +19,7 @@ package ee.openeid.siva.validation.document.report.builder;
 import ee.openeid.siva.validation.document.report.Policy;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;

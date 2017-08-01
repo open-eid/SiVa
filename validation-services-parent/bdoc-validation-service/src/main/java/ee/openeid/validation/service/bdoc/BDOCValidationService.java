@@ -24,7 +24,7 @@ import ee.openeid.validation.service.bdoc.report.BDOCQualifiedReportBuilder;
 import ee.openeid.validation.service.bdoc.signature.policy.BDOCConfigurationService;
 import ee.openeid.validation.service.bdoc.signature.policy.PolicyConfigurationWrapper;
 import eu.europa.esig.dss.DSSException;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.Configuration;
 import org.digidoc4j.Container;
 import org.digidoc4j.ContainerBuilder;

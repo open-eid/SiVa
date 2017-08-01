@@ -57,7 +57,7 @@ Appendix 5 - Sample Validation Policy Configuration
 			<TSLStatus Level="WARN"/>
 			<TSLStatusAndValidity Level="FAIL"/>
 			<Qualification Level="WARN"/>
-			<SupportedBySSCD Level="WARN"/>
+			<SupportedByQSCD Level="WARN"/>
 			<IssuedToLegalPerson Level="INFORM"/>
 			<Cryptographic Level="FAIL">
 				<AcceptableEncryptionAlgo>

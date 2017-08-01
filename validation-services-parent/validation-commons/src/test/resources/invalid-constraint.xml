@@ -39,7 +39,7 @@
                 <NotRevoked Level="FAIL"/>
                 <NotOnHold Level="FAIL"/>
                 <Qualification Level="WARN"/>
-                <SupportedBySSCD Level="WARN"/>
+                <SupportedByQSCD Level="WARN"/>
                 <IssuedToLegalPerson Level="INFORM"/>
                 <Cryptographic Level="FAIL">
                     <AcceptableEncryptionAlgo>
@@ -359,4 +359,11 @@
             <Algo Date="2035-02-24">ECDSA256</Algo>
         </AlgoExpirationDate>
     </Cryptographic>
+    <eIDAS>
+        <TLFreshness Level="WARN" Unit="HOURS" Value="6" />
+        <TLNotExpired Level="FAIL" />
+        <TLWellSigned Level="WARN" />
+        <TLVersion Level="FAIL" value="5" />
+        <TLConsistency Level="FAIL" />
+    </eIDAS>
 </ConstraintsParameters>

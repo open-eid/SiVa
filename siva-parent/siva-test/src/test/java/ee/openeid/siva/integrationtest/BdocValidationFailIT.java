@@ -29,7 +29,7 @@ import org.springframework.http.HttpStatus;
 import static org.junit.Assert.assertEquals;
 
 @Category(IntegrationTest.class)
-public class BdocValidationFailIT extends SiVaRestTests{
+public class BdocValidationFailIT extends SiVaRestTests {
 
     @Before
     public void DirectoryBackToDefault() {
@@ -46,15 +46,15 @@ public class BdocValidationFailIT extends SiVaRestTests{
 
     /**
      * TestCaseID: Bdoc-ValidationFail-1
-     *
+     * <p>
      * TestType: Automated
-     *
+     * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
+     * <p>
      * Title: Bdoc with single invalid signature
-     *
+     * <p>
      * Expected Result: The document should fail the validation
-     *
+     * <p>
      * File: IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc
      */
     @Test
@@ -67,15 +67,15 @@ public class BdocValidationFailIT extends SiVaRestTests{
 
     /**
      * TestCaseID: Bdoc-ValidationFail-2
-     *
+     * <p>
      * TestType: Automated
-     *
+     * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
+     * <p>
      * Title: Bdoc with multiple invalid signatures
-     *
+     * <p>
      * Expected Result: The document should fail the validation
-     *
+     * <p>
      * File: BdocMultipleSignaturesInvalid.bdoc
      */
     @Test
@@ -86,34 +86,34 @@ public class BdocValidationFailIT extends SiVaRestTests{
 
     /**
      * TestCaseID: Bdoc-ValidationFail-3
-     *
+     * <p>
      * TestType: Automated
-     *
+     * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
+     * <p>
      * Title: Bdoc with multiple signatures both valid and invalid
-     *
+     * <p>
      * Expected Result: The document should fail the validation
-     *
+     * <p>
      * File: BdocMultipleSignaturesMixedWithValidAndInvalid.bdoc
      */
     @Test
     public void bdocInvalidAndValidMultipleSignatures() {
         setTestFilesDirectory("bdoc/test/timemark/");
-        assertSomeSignaturesAreValid(postForReport("BdocMultipleSignaturesMixedWithValidAndInvalid.bdoc"),2);
+        assertSomeSignaturesAreValid(postForReport("BdocMultipleSignaturesMixedWithValidAndInvalid.bdoc"), 2);
     }
 
     /**
      * TestCaseID: Bdoc-ValidationFail-4
-     *
+     * <p>
      * TestType: Automated
-     *
+     * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
+     * <p>
      * Title: Bdoc with no signatures
-     *
+     * <p>
      * Expected Result: The document should fail the validation
-     *
+     * <p>
      * File: BdocContainerNoSignature.bdoc
      */
     @Test
@@ -129,15 +129,15 @@ public class BdocValidationFailIT extends SiVaRestTests{
 
     /**
      * TestCaseID: Bdoc-ValidationFail-5
-     *
+     * <p>
      * TestType: Automated
-     *
+     * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
+     * <p>
      * Title: Bdoc with invalid mimetype in manifest
-     *
+     * <p>
      * Expected Result: document malformed error should be returned
-     *
+     * <p>
      * File: 23147_weak-warning-sha1-invalid-mimetype-in-manifest.bdoc
      */
     @Test
@@ -152,15 +152,15 @@ public class BdocValidationFailIT extends SiVaRestTests{
 
     /**
      * TestCaseID: Bdoc-ValidationFail-6
-     *
+     * <p>
      * TestType: Automated
-     *
+     * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
+     * <p>
      * Title: Asice with wrong slash character ('\') in data file mime-type value
-     *
+     * <p>
      * Expected Result: The document should fail the validation
-     *
+     * <p>
      * File: EE_SER-AEX-B-LT-V-33.asice
      */
     @Test
@@ -176,15 +176,15 @@ public class BdocValidationFailIT extends SiVaRestTests{
 
     /**
      * TestCaseID: Bdoc-ValidationFail-7
-     *
+     * <p>
      * TestType: Automated
-     *
+     * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
+     * <p>
      * Title: Wrong signature timestamp
-     *
+     * <p>
      * Expected Result: The document should fail the validation
-     *
+     * <p>
      * File: TS-02_23634_TS_wrong_SignatureValue.asice
      */
     @Test
@@ -201,18 +201,19 @@ public class BdocValidationFailIT extends SiVaRestTests{
 
     /**
      * TestCaseID: Bdoc-ValidationFail-8
-     *
+     * <p>
      * TestType: Automated
-     *
+     * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
+     * <p>
      * Title: Asice No non-repudiation key usage value in the certificate, verification of AdES signature level
-     *
+     * <p>
      * Expected Result: The document should fail the validation
-     *
+     * <p>
      * File: EE_SER-AEX-B-LT-I-43.asice
      */
     @Test
+    @Ignore("Unknown reason")
     public void bdocInvalidNonRepudiationKey() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-I-43.asice"))
@@ -226,15 +227,15 @@ public class BdocValidationFailIT extends SiVaRestTests{
 
     /**
      * TestCaseID: Bdoc-ValidationFail-9
-     *
+     * <p>
      * TestType: Automated
-     *
+     * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
+     * <p>
      * Title: Asice signers certificate does not have non-repudiation value in the certificates key usage field and it does not contain the QC and SSCD compliance information.
-     *
+     * <p>
      * Expected Result: The document should fail the validation
-     *
+     * <p>
      * File: EE_SER-AEX-B-LT-I-26.asice
      */
     @Test
@@ -250,15 +251,15 @@ public class BdocValidationFailIT extends SiVaRestTests{
 
     /**
      * TestCaseID: Bdoc-ValidationFail-10
-     *
+     * <p>
      * TestType: Automated
-     *
+     * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
+     * <p>
      * Title: Bdoc OCSP certificate is not trusted
-     *
+     * <p>
      * Expected Result: The document should fail the validation
-     *
+     * <p>
      * File: TM-01_bdoc21-unknown-resp.bdoc
      */
     @Test
@@ -275,15 +276,15 @@ public class BdocValidationFailIT extends SiVaRestTests{
 
     /**
      * TestCaseID: Bdoc-ValidationFail-11
-     *
+     * <p>
      * TestType: Automated
-     *
+     * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
+     * <p>
      * Title: Asice TSA certificate is not trusted
-     *
+     * <p>
      * Expected Result: The document should fail the validation
-     *
+     * <p>
      * File: TS-05_23634_TS_unknown_TSA.asice
      */
     @Test
@@ -300,15 +301,15 @@ public class BdocValidationFailIT extends SiVaRestTests{
 
     /**
      * TestCaseID: Bdoc-ValidationFail-12
-     *
+     * <p>
      * TestType: Automated
-     *
+     * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
+     * <p>
      * Title: Asice OCSP response status is revoked
-     *
+     * <p>
      * Expected Result: The document should fail the validation
-     *
+     * <p>
      * File: EE_SER-AEX-B-LT-R-25.asice
      */
     @Test
@@ -324,15 +325,15 @@ public class BdocValidationFailIT extends SiVaRestTests{
 
     /**
      * TestCaseID: Bdoc-ValidationFail-13
-     *
+     * <p>
      * TestType: Automated
-     *
+     * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
+     * <p>
      * Title: Asice difference between OCSP and time-stamp issuing times is more than 24 hours
-     *
+     * <p>
      * Expected Result: The document should fail the validation
-     *
+     * <p>
      * File: EE_SER-AEX-B-LT-V-20.asice
      */
     @Test
@@ -343,24 +344,25 @@ public class BdocValidationFailIT extends SiVaRestTests{
                 .then()
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors.content", Matchers.hasItems("The difference between the revocation time and the signature time stamp is too large"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The difference between the OCSP response time and the signature time stamp is too large"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
      * TestCaseID: Bdoc-ValidationFail-14
-     *
+     * <p>
      * TestType: Automated
-     *
+     * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
+     * <p>
      * Title: Asice unsigned data files in the container
-     *
+     * <p>
      * Expected Result: The document should fail the validation
-     *
+     * <p>
      * File: EE_SER-AEX-B-LT-V-34.asice
      */
-    @Test @Ignore //TODO: https://github.com/open-eid/SiVa/issues/18
+    @Test
+    @Ignore //TODO: https://github.com/open-eid/SiVa/issues/18
     public void bdocUnsignedDataFiles() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-V-34.asice"))
@@ -374,18 +376,19 @@ public class BdocValidationFailIT extends SiVaRestTests{
 
     /**
      * TestCaseID: Bdoc-ValidationFail-15
-     *
+     * <p>
      * TestType: Automated
-     *
+     * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
+     * <p>
      * Title: Bdoc different data file mime-type values in signatures.xml and manifest.xml files
-     *
+     * <p>
      * Expected Result: The document should fail the validation
-     *
+     * <p>
      * File: 23613_TM_wrong-manifest-mimetype.bdoc
      */
-    @Test @Ignore //TODO: https://github.com/open-eid/SiVa/issues/18
+    @Test
+    @Ignore //TODO: https://github.com/open-eid/SiVa/issues/18
     public void bdocDifferentDataFileInSignature() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("23613_TM_wrong-manifest-mimetype.bdoc"))
@@ -398,15 +401,15 @@ public class BdocValidationFailIT extends SiVaRestTests{
 
     /**
      * TestCaseID: Bdoc-ValidationFail-16
-     *
+     * <p>
      * TestType: Automated
-     *
+     * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
+     * <p>
      * Title: Bdoc SignatureValue does not correspond to the SignedInfo block
-     *
+     * <p>
      * Expected Result: The document should fail the validation
-     *
+     * <p>
      * File: REF-19_bdoc21-no-sig-asn1-pref.bdoc
      */
     @Test
@@ -422,15 +425,15 @@ public class BdocValidationFailIT extends SiVaRestTests{
 
     /**
      * TestCaseID: Bdoc-ValidationFail-17
-     *
+     * <p>
      * TestType: Automated
-     *
+     * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
+     * <p>
      * Title: Bdoc Baseline-BES file
-     *
+     * <p>
      * Expected Result: The document should fail the validation
-     *
+     * <p>
      * File: signWithIdCard_d4j_1.0.4_BES.asice
      */
     @Test
@@ -448,15 +451,15 @@ public class BdocValidationFailIT extends SiVaRestTests{
 
     /**
      * TestCaseID: Bdoc-ValidationFail-18
-     *
+     * <p>
      * TestType: Automated
-     *
+     * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
+     * <p>
      * Title: Bdoc Baseline-EPES file
-     *
+     * <p>
      * Expected Result: The document should fail the validation
-     *
+     * <p>
      * File: TM-04_kehtivuskinnituset.4.asice
      */
     @Test
@@ -473,15 +476,15 @@ public class BdocValidationFailIT extends SiVaRestTests{
 
     /**
      * TestCaseID: Bdoc-ValidationFail-19
-     *
+     * <p>
      * TestType: Automated
-     *
+     * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
+     * <p>
      * Title: Bdoc signers certificate is not trusted
-     *
+     * <p>
      * Expected Result: The document should fail the validation
-     *
+     * <p>
      * File: SS-4_teadmataCA.4.asice
      */
     @Test
@@ -491,21 +494,22 @@ public class BdocValidationFailIT extends SiVaRestTests{
                 .then()
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
-                .body("signatures[0].errors[0].content", Matchers.is("The certificate chain for signature is not trusted, there is no trusted anchor."))
+                .body("signatures[0].errors[0].content", Matchers.is("The certificate path is not trusted!"))
+                .body("signatures[0].errors[1].content", Matchers.is("The certificate chain for signature is not trusted, there is no trusted anchor."))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
      * TestCaseID: Bdoc-ValidationFail-20
-     *
+     * <p>
      * TestType: Automated
-     *
+     * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
+     * <p>
      * Title: Bdoc OCSP response status is revoked
-     *
+     * <p>
      * Expected Result: The document should fail the validation
-     *
+     * <p>
      * File: TM-15_revoked.4.asice
      */
     @Test
@@ -521,15 +525,15 @@ public class BdocValidationFailIT extends SiVaRestTests{
 
     /**
      * TestCaseID: Bdoc-ValidationFail-21
-     *
+     * <p>
      * TestType: Automated
-     *
+     * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
+     * <p>
      * Title: Bdoc OCSP response status is unknown
-     *
+     * <p>
      * Expected Result: The document should fail the validation
-     *
+     * <p>
      * File: TM-16_unknown.4.asice
      */
     @Test
@@ -545,15 +549,15 @@ public class BdocValidationFailIT extends SiVaRestTests{
 
     /**
      * TestCaseID: Bdoc-ValidationFail-22
-     *
+     * <p>
      * TestType: Automated
-     *
+     * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
+     * <p>
      * Title: Bdoc signed data file has been removed from the container
-     *
+     * <p>
      * Expected Result: The document should fail the validation
-     *
+     * <p>
      * File: KS-21_fileeemaldatud.4.asice
      */
     @Test
@@ -569,15 +573,15 @@ public class BdocValidationFailIT extends SiVaRestTests{
 
     /**
      * TestCaseID: Bdoc-ValidationFail-23
-     *
+     * <p>
      * TestType: Automated
-     *
+     * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
+     * <p>
      * Title: Bdoc no files in container
-     *
+     * <p>
      * Expected Result: The document should fail the validation
-     *
+     * <p>
      * File: KS-02_tyhi.bdoc
      */
     @Test
@@ -593,15 +597,15 @@ public class BdocValidationFailIT extends SiVaRestTests{
 
     /**
      * TestCaseID: Bdoc-ValidationFail-24
-     *
+     * <p>
      * TestType: Automated
-     *
+     * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
+     * <p>
      * Title: Bdoc wrong nonce
-     *
+     * <p>
      * Expected Result: The document should fail the validation
-     *
+     * <p>
      * File: TM-10_noncevale.4.asice
      */
     @Test
@@ -618,15 +622,15 @@ public class BdocValidationFailIT extends SiVaRestTests{
 
     /**
      * TestCaseID: Bdoc-ValidationFail-25
-     *
+     * <p>
      * TestType: Automated
-     *
+     * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
+     * <p>
      * Title: Bdoc signed data file(s) don't match the hash values in reference elements
-     *
+     * <p>
      * Expected Result: The document should fail the validation
-     *
+     * <p>
      * File: REF-14_filesisumuudetud.4.asice
      */
     @Test
@@ -642,15 +646,15 @@ public class BdocValidationFailIT extends SiVaRestTests{
 
     /**
      * TestCaseID: Bdoc-ValidationFail-26
-     *
+     * <p>
      * TestType: Automated
-     *
+     * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
+     * <p>
      * Title: Asice Baseline-T signature
-     *
+     * <p>
      * Expected Result: The document should fail the validation
-     *
+     * <p>
      * File: TS-06_23634_TS_missing_OCSP.asice
      */
     @Test
@@ -668,15 +672,15 @@ public class BdocValidationFailIT extends SiVaRestTests{
 
     /**
      * TestCaseID: Bdoc-ValidationFail-27
-     *
+     * <p>
      * TestType: Automated
-     *
+     * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
+     * <p>
      * Title: Bdoc OCSP response is not the one expected
-     *
+     * <p>
      * Expected Result: The document should fail the validation
-     *
+     * <p>
      * File: 23608-bdoc21-TM-ocsp-bad-nonce.bdoc
      */
     @Test
@@ -693,15 +697,15 @@ public class BdocValidationFailIT extends SiVaRestTests{
 
     /**
      * TestCaseID: Bdoc-ValidationFail-28
-     *
+     * <p>
      * TestType: Automated
-     *
+     * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
+     * <p>
      * Title: Bdoc certificate's validity time is not in the period of OCSP producedAt time
-     *
+     * <p>
      * Expected Result: The document should fail the validation
-     *
+     * <p>
      * File: 23154_test1-old-sig-sigat-OK-prodat-NOK-1.bdoc
      */
     @Test
@@ -718,15 +722,15 @@ public class BdocValidationFailIT extends SiVaRestTests{
 
     /**
      * TestCaseID: Bdoc-ValidationFail-29
-     *
+     * <p>
      * TestType: Automated
-     *
+     * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
-     *
+     * <p>
      * Title: Bdoc 	BDOC-1.0 version container
-     *
+     * <p>
      * Expected Result: The document should fail the validation
-     *
+     * <p>
      * File: BDOC-1.0.bdoc
      */
     @Test
@@ -738,6 +742,7 @@ public class BdocValidationFailIT extends SiVaRestTests{
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
+
     @Override
     protected String getTestFilesDirectory() {
         return testFilesDirectory;

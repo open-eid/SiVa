@@ -17,25 +17,14 @@
 package ee.openeid.validation.service.bdoc.report;
 
 import ee.openeid.siva.validation.document.report.Error;
-import ee.openeid.siva.validation.document.report.Info;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
-import ee.openeid.siva.validation.document.report.SignatureScope;
-import ee.openeid.siva.validation.document.report.SignatureValidationData;
-import ee.openeid.siva.validation.document.report.ValidationWarning;
-import ee.openeid.siva.validation.document.report.Warning;
+import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
+import eu.europa.esig.dss.validation.SignatureQualification;
 import eu.europa.esig.dss.validation.policy.rules.SubIndication;
-import eu.europa.esig.dss.validation.reports.Reports;
-import eu.europa.esig.dss.validation.reports.SignatureType;
 import eu.europa.esig.dss.validation.reports.SimpleReport;
-import org.apache.commons.lang.StringUtils;
-import org.digidoc4j.Container;
-import org.digidoc4j.DataFile;
-import org.digidoc4j.Signature;
-import org.digidoc4j.SignatureProfile;
-import org.digidoc4j.SignatureValidationResult;
-import org.digidoc4j.X509Cert;
+import org.apache.commons.lang3.StringUtils;
+import org.digidoc4j.*;
 import org.digidoc4j.exceptions.DigiDoc4JException;
 import org.digidoc4j.impl.bdoc.BDocSignature;
 import org.slf4j.LoggerFactory;
@@ -144,6 +133,7 @@ public class BDOCQualifiedReportBuilder {
         SignatureValidationData signatureValidationData = new SignatureValidationData();
         BDocSignature bDocSignature = (BDocSignature) signature;
 
+
         signatureValidationData.setId(bDocSignature.getId());
         signatureValidationData.setSignatureFormat(getSignatureFormat(bDocSignature.getProfile()));
         signatureValidationData.setSignatureLevel(getSignatureLevel(bDocSignature));
@@ -165,7 +155,7 @@ public class BDOCQualifiedReportBuilder {
     }
 
     private String getSignatureLevel(BDocSignature bDocSignature) {
-        SignatureType signatureLevel = getDssSimpleReport(bDocSignature).getSignatureLevel(bDocSignature.getId());
+        SignatureQualification signatureLevel = getDssSimpleReport(bDocSignature).getSignatureQualification(bDocSignature.getId());
         return signatureLevel != null ? signatureLevel.name() : "";
     }
 

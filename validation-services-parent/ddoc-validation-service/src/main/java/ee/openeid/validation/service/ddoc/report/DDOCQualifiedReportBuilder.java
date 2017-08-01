@@ -30,7 +30,7 @@ import ee.sk.digidoc.DigiDocException;
 import ee.sk.digidoc.KeyInfo;
 import ee.sk.digidoc.Signature;
 import ee.sk.digidoc.SignedDoc;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

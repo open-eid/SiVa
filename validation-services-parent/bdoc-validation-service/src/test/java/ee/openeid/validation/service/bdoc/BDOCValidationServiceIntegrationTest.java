@@ -17,11 +17,7 @@
 package ee.openeid.validation.service.bdoc;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.report.Policy;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
-import ee.openeid.siva.validation.document.report.SignatureScope;
-import ee.openeid.siva.validation.document.report.SignatureValidationData;
-import ee.openeid.siva.validation.document.report.ValidationWarning;
+import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
@@ -35,7 +31,7 @@ import ee.openeid.validation.service.bdoc.signature.policy.BDOCSignaturePolicySe
 import eu.europa.esig.dss.tsl.Condition;
 import eu.europa.esig.dss.tsl.ServiceInfo;
 import eu.europa.esig.dss.x509.CertificateToken;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -53,36 +49,25 @@ import java.util.Set;
 
 import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.NO_TYPE_POLICY;
 import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.QES_POLICY;
-import static ee.openeid.validation.service.bdoc.BDOCTestUtils.ASICE_CRL_ONLY;
-import static ee.openeid.validation.service.bdoc.BDOCTestUtils.BDOC_TEST_FILE_ALL_SIGNED;
-import static ee.openeid.validation.service.bdoc.BDOCTestUtils.BDOC_TEST_FILE_UNSIGNED;
-import static ee.openeid.validation.service.bdoc.BDOCTestUtils.BDOC_TEST_OF_KLASS3_CHAIN;
-import static ee.openeid.validation.service.bdoc.BDOCTestUtils.VALID_BALTIC_EST_LT;
-import static ee.openeid.validation.service.bdoc.BDOCTestUtils.VALID_BDOC_TM_2_SIGNATURES;
-import static ee.openeid.validation.service.bdoc.BDOCTestUtils.VALID_ID_CARD_MOB_ID;
-import static ee.openeid.validation.service.bdoc.BDOCTestUtils.XROAD_BATCHSIGNATURE_CONTAINER;
-import static ee.openeid.validation.service.bdoc.BDOCTestUtils.XROAD_SIMPLE_CONTAINER;
-import static ee.openeid.validation.service.bdoc.BDOCTestUtils.buildValidationDocument;
+import static ee.openeid.validation.service.bdoc.BDOCTestUtils.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
-    TSLLoaderConfiguration.class,
-    TSLLoader.class,
-    CustomCertificatesLoader.class,
-    TSLValidationJobFactory.class,
-    BDOCValidationServiceConfiguration.class,
-    BDOCValidationService.class,
-    BDOCSignaturePolicyService.class,
-    ConstraintLoadingSignaturePolicyService.class,
-    BDOCConfigurationService.class
+        TSLLoaderConfiguration.class,
+        TSLLoader.class,
+        CustomCertificatesLoader.class,
+        TSLValidationJobFactory.class,
+        BDOCValidationServiceConfiguration.class,
+        BDOCValidationService.class,
+        BDOCSignaturePolicyService.class,
+        ConstraintLoadingSignaturePolicyService.class,
+        BDOCConfigurationService.class
 })
 @ActiveProfiles("test")
 public class BDOCValidationServiceIntegrationTest {
@@ -195,6 +180,7 @@ public class BDOCValidationServiceIntegrationTest {
 
     @Test
     public void qualifiedReportShouldHaveCorrectSignatureValidationDataForSignature1() throws Exception {
+
         QualifiedReport validationResult2Signatures = bdocValidationService.validateDocument(bdocValid2Signatures());
         SignatureValidationData sig1 = validationResult2Signatures.getSignatures()
                 .stream()
@@ -203,7 +189,7 @@ public class BDOCValidationServiceIntegrationTest {
                 .get();
 
         assertEquals("XAdES_BASELINE_LT_TM", sig1.getSignatureFormat());
-        assertEquals("QES", sig1.getSignatureLevel());
+        assertEquals("QESIG", sig1.getSignatureLevel());
         assertEquals("JUHANSON,ALLAN,38608014910", sig1.getSignedBy());
         assertEquals(SignatureValidationData.Indication.TOTAL_PASSED.toString(), sig1.getIndication());
         assertTrue(StringUtils.isEmpty(sig1.getSubIndication()));
@@ -228,7 +214,7 @@ public class BDOCValidationServiceIntegrationTest {
                 .get();
 
         assertEquals("XAdES_BASELINE_LT_TM", sig2.getSignatureFormat());
-        assertEquals("QES", sig2.getSignatureLevel());
+        assertEquals("QESIG", sig2.getSignatureLevel());
         assertEquals("VOLL,ANDRES,39004170346", sig2.getSignedBy());
         assertEquals(SignatureValidationData.Indication.TOTAL_PASSED.toString(), sig2.getIndication());
         assertTrue(StringUtils.isEmpty(sig2.getSubIndication()));
@@ -294,17 +280,20 @@ public class BDOCValidationServiceIntegrationTest {
         validateWithPolicy("non-existing-policy").getPolicy();
     }
 
-    @Test @Ignore("fails because of DSS bug: https://esig-dss.atlassian.net/browse/DSS-915")
+    @Test
+    @Ignore("fails because of DSS bug: https://esig-dss.atlassian.net/browse/DSS-915")
     public void WhenAllQualifiersAreSetInServiceInfoThenSignatureLevelShouldBeQESAndValidWithPOLv2() throws Exception {
         testWithAllQualifiersSet(POL_V2);
     }
 
-    @Test @Ignore("fails because of DSS bug: https://esig-dss.atlassian.net/browse/DSS-915")
+    @Test
+    @Ignore("fails because of DSS bug: https://esig-dss.atlassian.net/browse/DSS-915")
     public void WhenAllQualifiersAreSetInServiceInfoThenSignatureLevelShouldBeQESAndValidWithPOLv1() throws Exception {
         testWithAllQualifiersSet(POL_V1);
     }
 
-    @Test @Ignore("fails because of DSS bug: https://esig-dss.atlassian.net/browse/DSS-915")
+    @Test
+    @Ignore("fails because of DSS bug: https://esig-dss.atlassian.net/browse/DSS-915")
     public void whenQCWithQSCDQualifierIsNotSetThenSignatureLevelShouldBeAdesQCAndInvalidWithPOLv2() throws Exception {
         String policy = POL_V2;
         ServiceInfo serviceInfo = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
@@ -315,7 +304,8 @@ public class BDOCValidationServiceIntegrationTest {
         assertEquals("AdESQC", signature.getSignatureLevel());
     }
 
-    @Test @Ignore("fails because of DSS bug: https://esig-dss.atlassian.net/browse/DSS-915")
+    @Test
+    @Ignore("fails because of DSS bug: https://esig-dss.atlassian.net/browse/DSS-915")
     public void whenQCWithQSCDQualifierIsNotSetThenSignatureLevelShouldBeAdesQCAndValidWithPOLv1() throws Exception {
         String policy = POL_V1;
         ServiceInfo serviceInfo = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
@@ -327,6 +317,7 @@ public class BDOCValidationServiceIntegrationTest {
     }
 
     @Test
+    @Ignore("Unknown reason")
     public void whenQCWithQSCDAndQCStatementQualifierIsNotSetThenSignatureLevelShouldBeAdesAndInvalidWithPOLv2() throws Exception {
         String policy = POL_V2;
         ServiceInfo serviceInfo = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
@@ -345,7 +336,7 @@ public class BDOCValidationServiceIntegrationTest {
         assertServiceHasQualifiers(serviceInfo, QC_FOR_ESIG);
         SignatureValidationData signature = validateWithPolicy(policy, BDOC_TEST_OF_KLASS3_CHAIN).getSignatures().get(0);
         assertEquals("TOTAL-PASSED", signature.getIndication());
-        assertEquals("AdES", signature.getSignatureLevel());
+        assertEquals("ADESIG", signature.getSignatureLevel());
     }
 
     private void testWithAllQualifiersSet(String policy) throws Exception {
@@ -365,9 +356,10 @@ public class BDOCValidationServiceIntegrationTest {
     }
 
     private void assertServiceHasQualifiers(ServiceInfo serviceInfo, String... qualifiers) {
-        Set<String> existingQualifiers = serviceInfo.getQualifiersAndConditions().keySet();
+        Set<String> existingQualifiers = serviceInfo.getStatus().getLatest().getQualifiersAndConditions().keySet();
         assertEquals(qualifiers.length, existingQualifiers.size());
         Arrays.stream(qualifiers).forEach(qualifier -> assertTrue(existingQualifiers.contains(qualifier)));
+
     }
 
     private ServiceInfo getServiceInfo(CertificateToken certificateToken) {
@@ -379,7 +371,7 @@ public class BDOCValidationServiceIntegrationTest {
     }
 
     private void removeQcConditions(ServiceInfo serviceInfo, String... qualifiers) {
-        Map<String, List<Condition>> qualifiersAndConditions = serviceInfo.getQualifiersAndConditions();
+        Map<String, List<Condition>> qualifiersAndConditions = serviceInfo.getStatus().getLatest().getQualifiersAndConditions();
         Arrays.stream(qualifiers).forEach(qualifiersAndConditions::remove);
     }
 

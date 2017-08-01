@@ -17,7 +17,7 @@
 package ee.openeid.siva.webapp.request.validation.validators;
 
 import ee.openeid.siva.webapp.request.validation.annotations.AcceptValues;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

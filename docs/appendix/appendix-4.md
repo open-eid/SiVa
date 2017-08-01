@@ -40,7 +40,7 @@ Appendix 4 - Validation Constraint Configuration
                 * `TSLStatus Level="WARN"`
                 * `TSLStatusAndValidity Level="FAIL"`
                 * `Qualification Level="WARN"`
-                * `SupportedBySSCD Level="WARN"`
+                * `SupportedByQSCD Level="WARN"`
                 * `IssuedToLegalPerson Level="INFORM"`
                 * `Cryptographic Level="FAIL"`- Set of cryptographic constraints applied to certain type of Certificate (Signing, CA etc)
                     * `AcceptableEncryptionAlgo` - List of acceptable cryptographic algorithms for Main Signature

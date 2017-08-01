@@ -18,7 +18,7 @@ package ee.openeid.siva.webapp.soap.interceptor;
 
 import ee.openeid.siva.webapp.soap.DocumentType;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.binding.soap.interceptor.AbstractSoapInterceptor;
 import org.apache.cxf.binding.soap.interceptor.SoapInterceptor;

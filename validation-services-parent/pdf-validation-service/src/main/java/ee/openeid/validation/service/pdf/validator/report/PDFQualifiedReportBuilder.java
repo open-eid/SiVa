@@ -20,12 +20,12 @@ import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
-import eu.europa.esig.dss.jaxb.diagnostic.XmlSignatureScopeType;
+import eu.europa.esig.dss.jaxb.diagnostic.XmlSignatureScope;
 import eu.europa.esig.dss.validation.policy.rules.Indication;
 import eu.europa.esig.dss.validation.policy.rules.SubIndication;
 import eu.europa.esig.dss.validation.reports.Reports;
 import eu.europa.esig.dss.validation.reports.wrapper.TimestampWrapper;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -84,7 +84,7 @@ public class PDFQualifiedReportBuilder {
         SignatureValidationData signatureValidationData = new SignatureValidationData();
         signatureValidationData.setId(signatureId);
         signatureValidationData.setSignatureFormat(dssReports.getSimpleReport().getSignatureFormat(signatureId));
-        signatureValidationData.setSignatureLevel(dssReports.getSimpleReport().getSignatureLevel(signatureId).name());
+        signatureValidationData.setSignatureLevel(dssReports.getSimpleReport().getSignatureQualification(signatureId).name());
         signatureValidationData.setSignedBy(parseSignedBy(signatureId));
         signatureValidationData.setClaimedSigningTime(parseClaimedSigningTime(signatureId));
         signatureValidationData.setSignatureScopes(parseSignatureScopes(signatureId));
@@ -143,13 +143,13 @@ public class PDFQualifiedReportBuilder {
     }
 
     private List<SignatureScope> parseSignatureScopes(String signatureId) {
-        return dssReports.getDiagnosticData().getSignatureById(signatureId).getSignatureScopes().getSignatureScope()
+        return dssReports.getDiagnosticData().getSignatureById(signatureId).getSignatureScopes()
                 .stream()
                 .map(this::parseSignatureScope)
                 .collect(Collectors.toList());
     }
 
-    private SignatureScope parseSignatureScope(XmlSignatureScopeType dssSignatureScope) {
+    private SignatureScope parseSignatureScope(XmlSignatureScope dssSignatureScope) {
         SignatureScope signatureScope = new SignatureScope();
         signatureScope.setContent(emptyWhenNull(dssSignatureScope.getValue()));
         signatureScope.setName(emptyWhenNull(dssSignatureScope.getName()));
@@ -196,8 +196,8 @@ public class PDFQualifiedReportBuilder {
     private String getCountryCode() {
         String signingCertId = dssReports.getDiagnosticData().getSigningCertificateId();
         Optional<String> countryCode = dssReports.getDiagnosticData().getUsedCertificates().stream()
-                .filter( cert -> cert.getId().equals(signingCertId) )
-                .map( cert -> cert.getCountryName() )
+                .filter(cert -> cert.getId().equals(signingCertId))
+                .map(cert -> cert.getCountryName())
                 .findFirst();
         return countryCode.isPresent() ? countryCode.get() : null;
     }

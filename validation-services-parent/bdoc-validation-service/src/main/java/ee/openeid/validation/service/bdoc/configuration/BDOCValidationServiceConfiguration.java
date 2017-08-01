@@ -21,7 +21,7 @@ import ee.openeid.siva.validation.service.signature.policy.properties.Constraint
 import ee.openeid.validation.service.bdoc.signature.policy.BDOCSignaturePolicyService;
 import ee.openeid.validation.service.bdoc.signature.policy.PolicyConfigurationWrapper;
 import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.Configuration;
 import org.digidoc4j.TSLCertificateSource;
 import org.springframework.boot.SpringBootConfiguration;

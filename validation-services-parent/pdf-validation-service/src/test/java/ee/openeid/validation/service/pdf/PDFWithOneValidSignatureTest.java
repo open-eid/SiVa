@@ -77,8 +77,8 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
         QualifiedReport report = validationService.validateDocument(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE));
         SignatureValidationData signature = report.getSignatures().get(0);
-        assertEquals("QES", signature.getSignatureLevel());
-        assertEquals("PAdES_BASELINE_LT", signature.getSignatureFormat());
+        assertEquals("QESIG", signature.getSignatureLevel());
+        assertEquals("PAdES-BASELINE-LT", signature.getSignatureFormat());
     }
 
     @Test
@@ -106,7 +106,8 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
         assertEquals("PAdES", report.getSignatureForm());
     }
 
-    @Test @Ignore //TODO: Warnings are not returned when validationLevel is set to ARCHIVAL_DATA (default level)
+    @Test
+    @Ignore //TODO: Warnings are not returned when validationLevel is set to ARCHIVAL_DATA (default level)
     public void validatingPdfSignedWithUnqualifiedCertificateReturnsReportWithoutErrorsButWithWarning() throws Exception {
         QualifiedReport report = validationService.validateDocument(
                 buildValidationDocument(PDF_SIGNED_WITH_UNQUALIFIED_CERTIFICATE));

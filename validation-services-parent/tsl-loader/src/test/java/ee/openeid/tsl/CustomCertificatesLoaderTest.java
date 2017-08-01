@@ -19,7 +19,7 @@ package ee.openeid.tsl;
 import eu.europa.esig.dss.tsl.ServiceInfo;
 import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.x509.CertificateToken;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -55,6 +55,7 @@ public class CustomCertificatesLoaderTest {
                 .forEach(this::assertNoQualifiers);
     }
 
+
     @Test
     public void testSKCAsShouldBeLoadedWithQCServiceInfoQualifiers() {
         getServiceInfoStream()
@@ -73,7 +74,8 @@ public class CustomCertificatesLoaderTest {
     }
 
     private boolean isNonManagementCA(ServiceInfo serviceInfo) {
-        return StringUtils.equals("http://uri.etsi.org/TrstSvc/Svctype/CA/QC", serviceInfo.getType()) &&
+        return
+                StringUtils.equals("http://uri.etsi.org/TrstSvc/Svctype/CA/QC", serviceInfo.getStatus().getLatest().getType()) &&
                 !isManagementOrNortalServiceInfo(serviceInfo);
     }
 
@@ -84,14 +86,17 @@ public class CustomCertificatesLoaderTest {
     }
 
     private void assertNoQualifiers(ServiceInfo serviceInfo) {
-        assertTrue(serviceInfo.getQualifiersAndConditions().keySet().isEmpty());
+        serviceInfo.getStatus().iterator().forEachRemaining(s->s.getQualifiersAndConditions().isEmpty());
+        assertTrue(serviceInfo.getStatus().getLatest().getQualifiersAndConditions().keySet().isEmpty());
+
     }
 
     private void assertQcQualifiers(ServiceInfo serviceInfo) {
-        Set<String> qualifiers = serviceInfo.getQualifiersAndConditions().keySet();
+        Set<String> qualifiers = serviceInfo.getStatus().getLatest().getQualifiersAndConditions().keySet();
         assertTrue(qualifiers.contains("http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/QCForESig"));
         assertTrue(qualifiers.contains("http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/QCWithQSCD"));
         assertTrue(qualifiers.contains("http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/QCStatement"));
+
     }
 
     private ServiceInfo getServiceInfo(CertificateToken certificateToken) {

@@ -38,7 +38,7 @@ public class TSLLoaderTest {
     private static final String TSL_URL = "url";
     private static final String TSL_CODE = "CO";
 
-    private static final List<String> DEFAULT_TRUESTED_TERRITORIES = Arrays.asList("AT", "BE", "BG", "CY", "CZ",/*"DE",*/"DK", "EE", "ES", "FI", "FR", "GR", "HU",/*"HR",*/"IE", "IS", "IT", "LT", "LU", "LV", "LI", "MT",/*"NO",*/"NL", "PL", "PT", "RO", "SE", "SI", "SK", "UK");
+    private static final List<String> DEFAULT_TRUESTED_TERRITORIES = Arrays.asList(/*AT*/ "BE", "BG", "CY", "CZ",/*"DE",*/"DK", "EE", "ES", "FI", "FR", "GR", "HU",/*"HR",*/"IE", "IS", "IT", "LT", "LU", "LV", "LI", "MT",/*"NO",*/"NL", "PL", "PT", "RO", "SE", "SI", "SK", "UK");
 
     @Mock
     private TSLValidationJobFactory tslValidationJobFactory;

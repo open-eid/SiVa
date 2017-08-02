@@ -42,7 +42,7 @@ public class TSLLoader {
     private TrustedListsCertificateSource trustedListSource;
     private KeyStoreCertificateSource keyStoreCertificateSource;
 
-    private static final List<String> DEFAULT_TRUESTED_TERRITORIES = Arrays.asList("AT", "BE", "BG", "CY", "CZ",/*"DE",*/"DK", "EE", "ES", "FI", "FR", "GR", "HU",/*"HR",*/"IE", "IS", "IT", "LT", "LU", "LV", "LI", "MT",/*"NO",*/"NL", "PL", "PT", "RO", "SE", "SI", "SK", "UK");
+    private static final List<String> DEFAULT_TRUESTED_TERRITORIES = Arrays.asList(/*AT*/ "BE", "BG", "CY", "CZ",/*"DE",*/"DK", "EE", "ES", "FI", "FR", "GR", "HU",/*"HR",*/"IE", "IS", "IT", "LT", "LU", "LV", "LI", "MT",/*"NO",*/"NL", "PL", "PT", "RO", "SE", "SI", "SK", "UK");
 
     @PostConstruct
     public void init() {

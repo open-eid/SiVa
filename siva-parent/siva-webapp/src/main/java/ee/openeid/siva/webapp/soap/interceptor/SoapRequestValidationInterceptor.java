@@ -38,7 +38,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SoapRequestValidationInterceptor extends AbstractSoapInterceptor {
-
+    private static final String EMPTY_STRING = "";
     private ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
 
     SoapInterceptor saajIn = new SAAJInInterceptor();
@@ -49,7 +49,7 @@ public class SoapRequestValidationInterceptor extends AbstractSoapInterceptor {
     }
 
     @Override
-    public void handleMessage(SoapMessage message){
+    public void handleMessage(SoapMessage message) {
         saajIn.handleMessage(message);
         SOAPMessage soapMessage = message.getContent(SOAPMessage.class);
         try {
@@ -107,6 +107,9 @@ public class SoapRequestValidationInterceptor extends AbstractSoapInterceptor {
     }
 
     private boolean isValidDocumentType(String inputDocumentType) {
+        if (EMPTY_STRING.equals(inputDocumentType)) {
+            return true;
+        }
         for (DocumentType dt : DocumentType.values()) {
             if (dt.name().equals(inputDocumentType)) {
                 return true;

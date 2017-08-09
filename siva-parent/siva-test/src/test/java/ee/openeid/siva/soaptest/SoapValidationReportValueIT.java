@@ -152,6 +152,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      */
     @Test
+    @Ignore("DD4J to DSS ")
     public void SoapBdocCorrectValuesArePresentValidLtSignatureAdesqc() {
         setTestFilesDirectory("bdoc/test/timemark/");
         Document report = extractReportDom(post(validationRequestForDocument("23200_weakdigest-wrong-nonce.asice")).andReturn().body().asString());

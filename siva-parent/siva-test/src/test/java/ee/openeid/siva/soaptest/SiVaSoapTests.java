@@ -40,13 +40,14 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
     protected static final String CLIENT_FAULT = "soap:Client";
 
     protected static final String DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE = "Document malformed or not matching documentType";
+    protected static final String DOCUMENT_FORMAT_NOT_RECOGNIZED = "Document format not recognized/handled";
     protected static final String DOCUMENT_NOT_BASE64 = "Document is not encoded in a valid base64 string";
     protected static final String INVALID_FILENAME = "Invalid filename";
     protected static final String INVALID_SIGNATURE_POLICY = "Invalid signature policy";
     protected static final String INVALID_DOCUMENT_TYPE = "Invalid document type";
     protected static final String INVALID_DOCUMENT_TYPE_DDOC = "Invalid document type. Can only return data files for DDOC type containers.";
 
-    protected static String createXMLValidationRequest(String base64Document, String documentType, String filename) {
+    protected static String createXMLValidationRequest(String base64Document, String filename) {
         return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
                 "   <soapenv:Header/>\n" +
                 "   <soapenv:Body>\n" +
@@ -54,7 +55,6 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
                 "         <soap:ValidationRequest>\n" +
                 "            <Document>" + base64Document + "</Document>\n" +
                 "            <Filename>" + filename + "</Filename>\n" +
-                "            <DocumentType>" + documentType + "</DocumentType>\n" +
                 "         </soap:ValidationRequest>\n" +
                 "      </soap:ValidateDocument>\n" +
                 "   </soapenv:Body>\n" +
@@ -64,11 +64,11 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
     protected String validationRequestForDocument(String filename) {
         return createXMLValidationRequest(
                 Base64.encodeBase64String(readFileFromTestResources(filename)),
-                parseFileExtension(filename),
                 filename);
     }
 
     protected static String createXMLValidationRequestExtended(String base64Document, String filename, String documentType, String signaturePolicy) {
+
         return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
                 "   <soapenv:Header/>\n" +
                 "   <soapenv:Body>\n" +
@@ -83,6 +83,22 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
                 "   </soapenv:Body>\n" +
                 "</soapenv:Envelope>";
     }
+    protected static String createXMLValidationRequestWithoutDocumentType(String base64Document, String filename, String signaturePolicy) {
+
+        return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
+                "   <soapenv:Header/>\n" +
+                "   <soapenv:Body>\n" +
+                "      <soap:ValidateDocument>\n" +
+                "         <soap:ValidationRequest>\n" +
+                "            <Document>" + base64Document + "</Document>\n" +
+                "            <Filename>" + filename + "</Filename>\n" +
+                "            <SignaturePolicy>" + signaturePolicy + "</SignaturePolicy>\n" +
+                "         </soap:ValidationRequest>\n" +
+                "      </soap:ValidateDocument>\n" +
+                "   </soapenv:Body>\n" +
+                "</soapenv:Envelope>";
+    }
+
     protected static String createXMLValidationRequestForDataFiles(String base64Document, String documentType) {
         return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
                 "   <soapenv:Header/>\n" +
@@ -96,14 +112,19 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
                 "   </soapenv:Body>\n" +
                 "</soapenv:Envelope>";
     }
+
     protected String validationRequestForDocumentExtended(String document, String filename, String documentType, String signaturePolicy) {
+        if(documentType==null){
+            return createXMLValidationRequestWithoutDocumentType(document, filename, signaturePolicy);
+        }
         return createXMLValidationRequestExtended(
                 document,
                 filename,
                 documentType,
                 signaturePolicy);
     }
-    protected String validationRequestForDocumentDataFilesExtended(String document,  String documentType) {
+
+    protected String validationRequestForDocumentDataFilesExtended(String document, String documentType) {
         return createXMLValidationRequestForDataFiles(
                 document,
                 documentType);
@@ -117,7 +138,7 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
                 post(SOAP_ENDPOINT);
     }
 
-    protected Response postDataFiles (String request) {
+    protected Response postDataFiles(String request) {
         return given().
                 contentType("text/xml;charset=UTF-8").
                 body(request).

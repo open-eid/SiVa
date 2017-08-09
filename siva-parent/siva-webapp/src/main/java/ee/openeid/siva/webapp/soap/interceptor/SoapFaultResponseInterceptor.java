@@ -19,6 +19,7 @@ package ee.openeid.siva.webapp.soap.interceptor;
 import ee.openeid.siva.proxy.http.RESTValidationProxyRequestException;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
+import eu.europa.esig.dss.DSSException;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.binding.soap.interceptor.AbstractSoapInterceptor;
 import org.apache.cxf.interceptor.Fault;
@@ -29,6 +30,8 @@ import javax.xml.bind.UnmarshalException;
 import javax.xml.namespace.QName;
 
 public class SoapFaultResponseInterceptor extends AbstractSoapInterceptor {
+
+    private static final String DOCUMENT_FORMAT_NOT_RECOGNIZED = "Document format not recognized/handled";
 
     public SoapFaultResponseInterceptor() {
         super(Phase.SETUP);
@@ -58,6 +61,8 @@ public class SoapFaultResponseInterceptor extends AbstractSoapInterceptor {
         } else if (t instanceof RESTValidationProxyRequestException) {
             RESTValidationProxyRequestException restProxyException = (RESTValidationProxyRequestException) t;
             return restProxyException.getHttpStatus() == HttpStatus.BAD_REQUEST;
+        } else if (t instanceof DSSException) {
+            return DOCUMENT_FORMAT_NOT_RECOGNIZED.equals(t.getMessage());
         }
         return false;
     }

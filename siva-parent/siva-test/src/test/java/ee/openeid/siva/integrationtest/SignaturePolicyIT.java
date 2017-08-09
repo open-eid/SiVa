@@ -186,7 +186,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("policy.policyDescription", Matchers.is(POLICY_1_DESCRIPTION))
                 .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_1))
                 .body("policy.policyUrl", Matchers.is(POLICY_1_URL))
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("ADES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))

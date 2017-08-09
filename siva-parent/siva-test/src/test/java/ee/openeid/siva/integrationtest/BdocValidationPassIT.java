@@ -17,7 +17,9 @@
 package ee.openeid.siva.integrationtest;
 
 import com.jayway.restassured.RestAssured;
+
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -27,26 +29,19 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 @Category(IntegrationTest.class)
-public class BdocValidationPassIT extends SiVaRestTests{
-    @Before
-    public void DirectoryBackToDefault() {
-        setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
-    }
+public class BdocValidationPassIT extends SiVaRestTests {
+    private static final String DEFAULT_TEST_FILES_DIRECTORY = "bdoc/live/timemark/";
+    private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
 
     @BeforeClass
     public static void oneTimeSetUp() {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
     }
 
-
-    private static final String DEFAULT_TEST_FILES_DIRECTORY = "bdoc/live/timemark/";
-
-    private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
-
-    public void setTestFilesDirectory(String testFilesDirectory) {
-        this.testFilesDirectory = testFilesDirectory;
+    @Before
+    public void DirectoryBackToDefault() {
+        setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
     }
-
 
     /**
      * TestCaseID: Bdoc-ValidationPass-1
@@ -97,7 +92,8 @@ public class BdocValidationPassIT extends SiVaRestTests{
      *
      * File: bdoc_weak_warning_sha1.bdoc
      */
-    @Test @Ignore //TODO: https://github.com/open-eid/SiVa/issues/20
+    @Test
+    @Ignore //TODO: https://github.com/open-eid/SiVa/issues/20
     public void validSignatureWithWarning() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("bdoc_weak_warning_sha1.bdoc"))
@@ -166,7 +162,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-V-49.asice"))
                 .then()
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-LT"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validSignaturesCount", Matchers.is(1));
@@ -214,7 +210,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LTA-V-24.asice"))
                 .then()
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LTA"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-LTA"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validSignaturesCount", Matchers.is(1));
@@ -238,7 +234,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-V-2.asice"))
                 .then()
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-LT"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validSignaturesCount", Matchers.is(1));
@@ -262,7 +258,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("IB-4270_TS_ESTEID-SK 2015  SK OCSP RESPONDER 2011.asice"))
                 .then()
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
@@ -288,7 +284,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("EE_SER-AEX-B-LT-V-28.asice"));
         post(validationRequestWithValidKeys(encodedString, "EE_SER-AEX-B-LT-V-28.asice", "BDOC", VALID_SIGNATURE_POLICY_1))
                 .then()
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("QES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
@@ -353,6 +349,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
      * File: Šužlikud sõid ühe õuna ära.bdoc
      */
     @Test
+
     public void bdocWithSpecialCharactersInDataFileShouldPass() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("Šužlikud sõid ühe õuna ära.bdoc"))
@@ -380,9 +377,10 @@ public class BdocValidationPassIT extends SiVaRestTests{
      */
     @Test
     public void bdocWithSceFileExtensionShouldPass() {
+
         setTestFilesDirectory("bdoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("BDOC2.1_content_as_sce.sce"));
-        post(validationRequestWithValidKeys(encodedString, "BDOC2.1_content_as_sce.sce", "BDOC", ""))
+        post(validationRequestWithValidKeys(encodedString, "BDOC2.1_content_as_sce.bdoc", null, ""))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
@@ -411,7 +409,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("ASICE_TS_LTA_content_as_sce.sce"));
         post(validationRequestWithValidKeys(encodedString, "ASICE_TS_LTA_content_as_sce.sce", "BDOC", ""))
                 .then()
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LTA"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-LTA"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
@@ -438,7 +436,7 @@ public class BdocValidationPassIT extends SiVaRestTests{
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Nonconventionalcharacters.asice"));
         post(validationRequestWithValidKeys(encodedString, "Nonconventionalcharacters.asice", "BDOC", ""))
                 .then()
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
@@ -452,5 +450,9 @@ public class BdocValidationPassIT extends SiVaRestTests{
     @Override
     protected String getTestFilesDirectory() {
         return testFilesDirectory;
+    }
+
+    public void setTestFilesDirectory(String testFilesDirectory) {
+        this.testFilesDirectory = testFilesDirectory;
     }
 }

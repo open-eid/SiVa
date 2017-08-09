@@ -17,6 +17,7 @@
 package ee.openeid.tsl.configuration;
 
 import ee.openeid.tsl.keystore.DSSKeyStoreFactoryBean;
+import eu.europa.esig.dss.client.crl.OnlineCRLSource;
 import eu.europa.esig.dss.client.http.commons.CommonsDataLoader;
 import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
@@ -32,8 +33,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Configuration
 @EnableScheduling
 @EnableConfigurationProperties({
-    TSLLoaderConfigurationProperties.class,
-    TSLValidationKeystoreProperties.class
+        TSLLoaderConfigurationProperties.class,
+        TSLValidationKeystoreProperties.class
 })
 public class TSLLoaderConfiguration {
     private TSLValidationKeystoreProperties keystoreProperties;
@@ -49,12 +50,12 @@ public class TSLLoaderConfiguration {
 
     @Bean
     public CRLSource crlSource() {
-        return new AlwaysFailingCRLSource();
+        return new OnlineCRLSource();
     }
 
     @Bean
     public OCSPSource ocspSource() {
-        return new AlwaysFailingOCSPSource();
+        return new CustomOCSPSource();
     }
 
 

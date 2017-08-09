@@ -15,7 +15,7 @@
         <xs:sequence>
           <xs:element name="Document" type="xs:string"/>
           <xs:element name="Filename" type="xs:string"/>
-          <xs:element name="DocumentType" type="tns:documentType"/>
+          <xs:element minOccurs="0" maxOccurs="1"  name="DocumentType" type="tns:documentType" />
           <xs:element minOccurs="0" name="SignaturePolicy" type="xs:string"/>
         </xs:sequence>
       </xs:complexType>
@@ -117,10 +117,7 @@
       </xs:complexType>
       <xs:simpleType name="documentType">
         <xs:restriction base="xs:string">
-          <xs:enumeration value="PDF"/>
           <xs:enumeration value="XROAD"/>
-          <xs:enumeration value="BDOC"/>
-          <xs:enumeration value="DDOC"/>
         </xs:restriction>
       </xs:simpleType>
       <xs:simpleType name="indication">

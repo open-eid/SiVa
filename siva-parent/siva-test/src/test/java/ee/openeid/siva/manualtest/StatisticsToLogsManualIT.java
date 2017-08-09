@@ -130,7 +130,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     public void bdocWithErrorResponse() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", "bdoc", ""))
+        post(validationRequestWithValidKeys(encodedString, "xroad-simple.bdoc", null, ""))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -265,7 +265,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     public void ddocWithErrorResponse() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", "ddoc", ""))
+        post(validationRequestWithValidKeys(encodedString, "xroad-simple.ddoc", null, ""))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -383,29 +383,6 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
 }        */
     }
 
-    /**
-     * TestCaseID: Pdf-Statistics-Log-3
-     *
-     * TestType: Manual
-     *
-     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf
-     *
-     * Title: Pdf not supported file is inserted
-     *
-     * Expected Result: No message in statistics as the container is not validated
-     *
-     * File: xroad-simple.asice
-     */
-    @Test
-    public void pdfWithErrorResponse() {
-        setTestFilesDirectory("xroad/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", "pdf", ""))
-                .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
-                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
-    }
 
     /**
      * TestCaseID: Pdf-Statistics-Log-4

@@ -65,17 +65,18 @@ public class PDFSignaturePolicyProperties extends SignaturePolicyProperties<Cons
     }
 
     private ConstraintDefinedPolicy getQesPolicy() {
-        return createConstraintDefinedPolicy(QES_POLICY, QES_CONSTRAINT);
+        return createConstraintDefinedPolicy(false, QES_POLICY, QES_CONSTRAINT);
     }
 
     private ConstraintDefinedPolicy getNoTypePolicy() {
-        return createConstraintDefinedPolicy(NO_TYPE_POLICY, NO_TYPE_CONSTRAINT);
+        return createConstraintDefinedPolicy(true, NO_TYPE_POLICY, NO_TYPE_CONSTRAINT);
     }
 
-    private ConstraintDefinedPolicy createConstraintDefinedPolicy(ValidationPolicy validationPolicy, String constraintPath) {
+    private ConstraintDefinedPolicy createConstraintDefinedPolicy(boolean allowCrlRevocationSource, ValidationPolicy validationPolicy, String constraintPath) {
         ConstraintDefinedPolicy constraintDefinedPolicy = new ConstraintDefinedPolicy(validationPolicy);
         constraintDefinedPolicy.setConstraintPath(constraintPath);
-        constraintDefinedPolicy.setAllowCrlRevocationSource(false);
+        constraintDefinedPolicy.setAllowCrlRevocationSource(allowCrlRevocationSource);
+
         return constraintDefinedPolicy;
     }
 }

@@ -76,13 +76,11 @@ public class ValidationRequestIT extends SiVaRestTests {
     public void validationRequestEmptyInputs() {
         String json = post(validationRequestWithValidKeys("", "", "", "")).asString();
 
-        assertTrue(getFailMessageForKey(DOCUMENT_TYPE), getRequestErrorsCount(json, DOCUMENT_TYPE, MAY_NOT_BE_EMPTY)==1);
-        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(json, FILENAME, MAY_NOT_BE_EMPTY)==1);
-        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(json, DOCUMENT, MAY_NOT_BE_EMPTY)==1);
+        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(json, FILENAME, MAY_NOT_BE_EMPTY) == 1);
+        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(json, DOCUMENT, MAY_NOT_BE_EMPTY) == 1);
 
-        assertTrue(getFailMessageForKey(DOCUMENT_TYPE), getRequestErrorsCount(json, DOCUMENT_TYPE, INVALID_DOCUMENT_TYPE)==1);
-        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(json, FILENAME, INVALID_FILENAME)==1);
-        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(json, DOCUMENT, INVALID_BASE_64)==1);
+        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(json, FILENAME, INVALID_FILENAME) == 1);
+        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(json, DOCUMENT, INVALID_BASE_64) == 1);
     }
 
     static int getRequestErrorsCount(String json, String field, String message) {
@@ -213,13 +211,11 @@ public class ValidationRequestIT extends SiVaRestTests {
     public void validationRequestEmptyBody() {
         String response = post(new JSONObject().toString()).thenReturn().body().asString();
 
-        assertTrue(getFailMessageForKey(DOCUMENT_TYPE), getRequestErrorsCount(response, DOCUMENT_TYPE, MAY_NOT_BE_EMPTY)==1);
-        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, MAY_NOT_BE_EMPTY)==1);
-        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, MAY_NOT_BE_EMPTY)==1);
+        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, MAY_NOT_BE_EMPTY) == 1);
+        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, MAY_NOT_BE_EMPTY) == 1);
 
-        assertTrue(getFailMessageForKey(DOCUMENT_TYPE), getRequestErrorsCount(response, DOCUMENT_TYPE, INVALID_DOCUMENT_TYPE)==1);
-        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, INVALID_FILENAME)==1);
-        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, INVALID_BASE_64)==1);
+        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, INVALID_FILENAME) == 1);
+        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, INVALID_BASE_64) == 1);
     }
 
      /**
@@ -318,7 +314,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     @Test
     public void bdocValidationRequestNotMatchingDocumentTypeAndActualFilePdf() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "PdfValidSingleSignature.pdf", "bdoc", ""))
+        post(validationRequestWithValidKeys(encodedString, "PdfValidSingleSignature.bdoc", null, ""))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -343,7 +339,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     @Test
     public void bdocValidationRequestNotMatchingDocumentTypeAndActualFileDdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
-        post(validationRequestWithValidKeys(encodedString, "igasugust1.3.ddoc", "bdoc", ""))
+        post(validationRequestWithValidKeys(encodedString, "igasugust1.3.bdoc", null, ""))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -369,7 +365,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     public void bdocValidationRequestNotMatchingDocumentTypeAndActualFileXroad() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", "bdoc", ""))
+        post(validationRequestWithValidKeys(encodedString, "xroad-simple.bdoc", null, ""))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -592,7 +588,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     public void bdocValidationRequestNotMatchingDocumentTypeAndActualFileXroadBatch() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-batchsignature.asice"));
-        post(validationRequestWithValidKeys(encodedString, "xroad-batchsignature.asice", "bdoc", ""))
+        post(validationRequestWithValidKeys(encodedString, "xroad-batchsignature.bdoc", null, ""))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -618,91 +614,15 @@ public class ValidationRequestIT extends SiVaRestTests {
     public void bdocValidationRequestNotMatchingDocumentTypeAndActualFileXroadAttach() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-attachment.asice"));
-        post(validationRequestWithValidKeys(encodedString, "xroad-attachment.asice", "bdoc", ""))
+        post(validationRequestWithValidKeys(encodedString, "xroad-attachment.bdoc", null, ""))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-     /**
-     *
-     * TestCaseID: Pdf-ValidationRequest-1
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
-     *
-     * Title: Mismatch in documentType and actual document (pdf and ddoc)
-     *
-     * Expected Result: Error is returned
-     *
-     * File: igasugust1.3.ddoc
-     *
-     */
-    @Test
-    public void pdfValidationRequestNotMatchingDocumentTypeAndActualFileDdoc() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
-        post(validationRequestWithValidKeys(encodedString, "igasugust1.3.ddoc", "pdf", ""))
-                .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
-                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
-    }
 
-     /**
-     *
-     * TestCaseID: Pdf-ValidationRequest-2
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
-     *
-     * Title: Mismatch in documentType and actual document (pdf and bdoc)
-     *
-     * Expected Result: Error is returned
-     *
-     * File: Valid_IDCard_MobID_signatures.bdoc
-     *
-     */
-    @Test
-    public void pdfValidationRequestNotMatchingDocumentTypeAndActualFileBdoc() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "pdf", ""))
-                .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
-                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
-    }
-
-     /**
-     *
-     * TestCaseID: Pdf-ValidationRequest-3
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
-     *
-     * Title: Mismatch in documentType and actual document (pdf and xroad)
-     *
-     * Expected Result: Error is returned
-     *
-     * File: xroad-simple.asice
-     *
-     */
-    @Test
-    public void pdfValidationRequestNotMatchingDocumentTypeAndActualFileXroad() {
-        setTestFilesDirectory("xroad/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", "pdf", ""))
-                .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
-                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
-    }
-
-     /**
-     *
+    /**
      * TestCaseID: Pdf-ValidationRequest-4
      *
      * TestType: Automated
@@ -723,7 +643,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(SIGNATURE_POLICY))
-                .body("requestErrors[0].message", Matchers.containsString("Invalid signature policy: "+INVALID_SIGNATURE_POLICY+"; Available abstractPolicies: ["+VALID_SIGNATURE_POLICY_1+", "+VALID_SIGNATURE_POLICY_2+"]"));
+                .body("requestErrors[0].message", Matchers.containsString("Invalid signature policy: " + INVALID_SIGNATURE_POLICY + "; Available abstractPolicies: [" + VALID_SIGNATURE_POLICY_1 + ", " + VALID_SIGNATURE_POLICY_2 + "]"));
     }
 
      /**
@@ -744,11 +664,10 @@ public class ValidationRequestIT extends SiVaRestTests {
     @Test
     public void validationRequestRandomInputAsPdfDocument() {
         String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
-        post(validationRequestWithValidKeys(encodedString, "some_pdf.pdf", "pdf", ""))
+        post(validationRequestWithValidKeys(encodedString, "some_pdf.pdf", null, ""))
                 .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
-                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
+                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .body("message", Matchers.containsString("Document format not recognized/handled"));
     }
 
     /**
@@ -769,66 +688,14 @@ public class ValidationRequestIT extends SiVaRestTests {
     @Test
     public void pdfValidationRequestWrongFilename() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "TotallyRandomFilename.exe", "pDf",""))
+        post(validationRequestWithValidKeys(encodedString, "TotallyRandomFilename.exe", "pDf", ""))
                 .then()
-                .body("documentName",equalTo("TotallyRandomFilename.exe"))
-                .body("validSignaturesCount",Matchers.is(1));
+                .body("documentName", equalTo("TotallyRandomFilename.exe"))
+                .body("validSignaturesCount", Matchers.is(1));
     }
+
 
     /**
-     *
-     * TestCaseID: Pdf-ValidationRequest-7
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
-     *
-     * Title: Mismatch in documentType and actual document (pdf and xroad)
-     *
-     * Expected Result: Error is returned
-     *
-     * File: xroad-batchsignature.asice
-     *
-     */
-    @Test
-    public void pdfValidationRequestNotMatchingDocumentTypeAndActualFileXroadBatch() {
-        setTestFilesDirectory("xroad/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-batchsignature.asice"));
-        post(validationRequestWithValidKeys(encodedString, "xroad-batchsignature.asice", "pdf", ""))
-                .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
-                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
-    }
-
-    /**
-     *
-     * TestCaseID: Pdf-ValidationRequest-8
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
-     *
-     * Title: Mismatch in documentType and actual document (pdf and xroad)
-     *
-     * Expected Result: Error is returned
-     *
-     * File: xroad-attachment.asice
-     *
-     */
-    @Test
-    public void pdfValidationRequestNotMatchingDocumentTypeAndActualFileXroadAttach() {
-        setTestFilesDirectory("xroad/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-attachment.asice"));
-        post(validationRequestWithValidKeys(encodedString, "xroad-attachment.asice", "pdf", ""))
-                .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
-                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
-    }
-
-     /**
-     *
      * TestCaseID: Ddoc-ValidationRequest-1
      *
      * TestType: Automated
@@ -845,7 +712,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     @Test
     public void ddocValidationRequestNotMatchingDocumentTypeAndActualFileBdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "ddoc", ""))
+        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.ddoc", null, ""))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -870,7 +737,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     @Test
     public void ddocValidationRequestNotMatchingDocumentTypeAndActualFilePdf() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "PdfValidSingleSignature.pdf", "ddoc", ""))
+        post(validationRequestWithValidKeys(encodedString, "PdfValidSingleSignature.ddoc", null, ""))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -896,7 +763,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     public void ddocValidationRequestNotMatchingDocumentTypeAndActualFileXroad() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", "ddoc", ""))
+        post(validationRequestWithValidKeys(encodedString, "xroad-simple.ddoc", null, ""))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -925,7 +792,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is("signaturePolicy"))
-                .body("requestErrors[0].message", Matchers.is("Invalid signature policy: "+INVALID_SIGNATURE_POLICY+"; Available abstractPolicies: ["+VALID_SIGNATURE_POLICY_1+", "+VALID_SIGNATURE_POLICY_2+"]"));
+                .body("requestErrors[0].message", Matchers.is("Invalid signature policy: " + INVALID_SIGNATURE_POLICY + "; Available abstractPolicies: [" + VALID_SIGNATURE_POLICY_1 + ", " + VALID_SIGNATURE_POLICY_2 + "]"));
     }
 
      /**
@@ -953,29 +820,6 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-    /**
-     *
-     * TestCaseID: Ddoc-ValidationRequest-6
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
-     *
-     * Title: Verification of filename value (filename do not match the actual file)
-     *
-     * Expected Result: The same filename is returned as sent in the request
-     *
-     * File: igasugust1.3.ddoc
-     *
-     */
-    @Test
-    public void ddocValidationRequestWrongFilename() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
-        post(validationRequestWithValidKeys(encodedString, "TotallyRandomFilename.exe", "DDoC",""))
-                .then()
-                .body("documentName",equalTo("TotallyRandomFilename.exe"))
-                .body("validSignaturesCount",Matchers.is(3));
-    }
 
     /**
      *
@@ -996,7 +840,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     public void ddocValidationRequestNotMatchingDocumentTypeAndActualFileXroadBatch() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-batchsignature.asice"));
-        post(validationRequestWithValidKeys(encodedString, "xroad-batchsignature.asice", "ddoc", ""))
+        post(validationRequestWithValidKeys(encodedString, "xroad-batchsignature.ddoc", null, ""))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -1022,7 +866,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     public void ddocValidationRequestNotMatchingDocumentTypeAndActualFileXroadAttach() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-attachment.asice"));
-        post(validationRequestWithValidKeys(encodedString, "xroad-attachment.asice", "ddoc", ""))
+        post(validationRequestWithValidKeys(encodedString, "xroad-attachment.ddoc", null, ""))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -1127,7 +971,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is("signaturePolicy"))
-                .body("requestErrors[0].message", Matchers.is("Invalid signature policy: "+INVALID_SIGNATURE_POLICY+"; Available abstractPolicies: ["+VALID_SIGNATURE_POLICY_1+"]"));
+                .body("requestErrors[0].message", Matchers.is("Invalid signature policy: " + INVALID_SIGNATURE_POLICY + "; Available abstractPolicies: [" + VALID_SIGNATURE_POLICY_1 + "]"));
     }
 
      /**

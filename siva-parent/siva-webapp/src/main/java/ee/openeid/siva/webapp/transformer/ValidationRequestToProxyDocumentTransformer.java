@@ -28,7 +28,8 @@ public class ValidationRequestToProxyDocumentTransformer {
     public ProxyDocument transform(ValidationRequest validationRequest) {
         ProxyDocument proxyDocument = new ProxyDocument();
         proxyDocument.setName(validationRequest.getFilename());
-        proxyDocument.setDocumentType(DocumentTypeResolver.documentTypeFromString(validationRequest.getDocumentType()));
+        if (validationRequest.getDocumentType() != null)
+            proxyDocument.setDocumentType(DocumentTypeResolver.documentTypeFromString(validationRequest.getDocumentType()));
         proxyDocument.setBytes(Base64.decodeBase64(validationRequest.getDocument()));
         proxyDocument.setSignaturePolicy(validationRequest.getSignaturePolicy());
         return proxyDocument;

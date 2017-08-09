@@ -28,7 +28,8 @@ public class SoapValidationRequestToProxyDocumentTransformer {
     public ProxyDocument transform(SoapValidationRequest validationRequest) {
         ProxyDocument proxyDocument = new ProxyDocument();
         proxyDocument.setName(validationRequest.getFilename());
-        proxyDocument.setDocumentType(DocumentTypeResolver.documentTypeFromString(validationRequest.getDocumentType().name()));
+        if (validationRequest.getDocumentType() != null)
+            proxyDocument.setDocumentType(DocumentTypeResolver.documentTypeFromString(validationRequest.getDocumentType().name()));
         proxyDocument.setBytes(Base64.decodeBase64(validationRequest.getDocument()));
         proxyDocument.setSignaturePolicy(validationRequest.getSignaturePolicy());
         return proxyDocument;

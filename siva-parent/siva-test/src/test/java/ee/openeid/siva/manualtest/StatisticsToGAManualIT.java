@@ -202,7 +202,7 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
     public void ddocWithErrorResponse() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", "ddoc", ""), "IsNotShownTest")
+        postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "xroad-simple.ddoc", null, ""), "IsNotShownTest")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))

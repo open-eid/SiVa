@@ -36,6 +36,6 @@ public class AcceptValuesConstraintValidator implements ConstraintValidator<Acce
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-        return acceptedValues.contains(StringUtils.lowerCase(value));
+        return value == null || acceptedValues.contains(StringUtils.lowerCase(value));
     }
 }

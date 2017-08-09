@@ -17,7 +17,6 @@
 package ee.openeid.siva.webapp.request.validation.annotations;
 
 import ee.openeid.siva.webapp.request.validation.AcceptedValue;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -28,7 +27,7 @@ import java.lang.annotation.Target;
 
 import static ee.openeid.siva.webapp.request.validation.annotations.ValidDocumentType.MESSAGE;
 
-@NotBlank
+
 @AcceptValues(value = AcceptedValue.DOCUMENT, message = MESSAGE)
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

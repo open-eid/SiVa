@@ -50,7 +50,7 @@ import static org.mockito.Mockito.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ValidationProxyTest {
-
+    private static final String DEFAULT_DOCUMENT_NAME = "document.";
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
@@ -137,6 +137,7 @@ public class ValidationProxyTest {
     private ProxyDocument mockProxyDocumentWithDocument(DocumentType documentType) {
         ProxyDocument proxyDocument = new ProxyDocument();
         proxyDocument.setDocumentType(documentType);
+        proxyDocument.setName(DEFAULT_DOCUMENT_NAME+documentType.name());
         return proxyDocument;
     }
 

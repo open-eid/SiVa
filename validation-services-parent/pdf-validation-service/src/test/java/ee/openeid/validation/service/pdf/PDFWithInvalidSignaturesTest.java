@@ -30,6 +30,7 @@ public class PDFWithInvalidSignaturesTest extends PDFValidationServiceTest {
     private static final String PDF_WITH_ONE_BASELINE_PROFILE_B_SIGNATURE = "hellopades-pades-b-sha256-auth.pdf";
 
     @Test
+    @Ignore("java.lang.OutOfMemoryError: Java heap space may occur")
     public void validatingPdfWithOneBaselineProfileBSignatureReturnsReportWithNoValidSignatures() throws Exception {
         QualifiedReport report = validationService.validateDocument(
                 buildValidationDocument(PDF_WITH_ONE_BASELINE_PROFILE_B_SIGNATURE));

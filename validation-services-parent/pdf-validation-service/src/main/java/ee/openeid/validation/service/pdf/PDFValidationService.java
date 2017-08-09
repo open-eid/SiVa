@@ -24,14 +24,13 @@ import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
-import ee.openeid.validation.service.pdf.validator.EstonianPDFDocumentValidator;
 import ee.openeid.validation.service.pdf.validator.report.PDFQualifiedReportBuilder;
 import eu.europa.esig.dss.DSSDocument;
 import eu.europa.esig.dss.DSSException;
 import eu.europa.esig.dss.InMemoryDocument;
 import eu.europa.esig.dss.MimeType;
 import eu.europa.esig.dss.validation.CertificateVerifier;
-import eu.europa.esig.dss.validation.DocumentValidator;
+import eu.europa.esig.dss.validation.SignedDocumentValidator;
 import eu.europa.esig.dss.validation.reports.Reports;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,16 +62,13 @@ public class PDFValidationService implements ValidationService {
             }
 
             final DSSDocument dssDocument = createDssDocument(validationDocument);
-            if (!new EstonianPDFDocumentValidator().isSupported(dssDocument)) {
-                throw new MalformedDocumentException();
-            }
-
-            final DocumentValidator validator = new EstonianPDFDocumentValidator(dssDocument);
-            LOGGER.info("PDF certificate pool size: {}", getCertificatePoolSize());
-            validator.setCertificateVerifier(certificateVerifier);
-
-            final Reports reports;
             final ConstraintDefinedPolicy policy = signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy());
+            SignedDocumentValidator validator = SignedDocumentValidator.fromDocument(dssDocument);
+            LOGGER.info("Certificate pool size: {}", getCertificatePoolSize());
+
+
+            validator.setCertificateVerifier(certificateVerifier);
+            final Reports reports;
             synchronized (lock) {
                 reports = validator.validateDocument(policy.getConstraintDataStream());
             }
@@ -95,7 +91,7 @@ public class PDFValidationService implements ValidationService {
                     policy
             );
             return reportBuilder.build();
-        } catch (MalformedDocumentException | InvalidPolicyException e) {
+        } catch (MalformedDocumentException | InvalidPolicyException | DSSException e) {
             endExceptionally(e);
             throw e;
         } catch (Exception e) {
@@ -114,7 +110,7 @@ public class PDFValidationService implements ValidationService {
         }
         final InMemoryDocument dssDocument = new InMemoryDocument(ValidationDocument.getBytes());
         dssDocument.setName(ValidationDocument.getName());
-        dssDocument.setMimeType(MimeType.PDF);
+        dssDocument.setMimeType(MimeType.fromFileName(ValidationDocument.getName()));
 
         return dssDocument;
     }

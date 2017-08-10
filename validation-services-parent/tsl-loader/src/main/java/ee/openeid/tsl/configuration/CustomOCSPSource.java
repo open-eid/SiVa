@@ -5,6 +5,7 @@ import eu.europa.esig.dss.DSSException;
 import eu.europa.esig.dss.DSSRevocationUtils;
 import eu.europa.esig.dss.client.http.DataLoader;
 import eu.europa.esig.dss.client.http.commons.OCSPDataLoader;
+import eu.europa.esig.dss.client.ocsp.OnlineOCSPSource;
 import eu.europa.esig.dss.utils.Utils;
 import eu.europa.esig.dss.x509.CertificateToken;
 import eu.europa.esig.dss.x509.RevocationToken;
@@ -26,6 +27,10 @@ import java.security.Security;
 public class CustomOCSPSource implements OCSPSource {
     private static final Logger logger = LoggerFactory.getLogger(CustomOCSPSource.class);
 
+    static {
+        Security.addProvider(new BouncyCastleProvider());
+    }
+
     private DataLoader dataLoader = new OCSPDataLoader();
 
     public CustomOCSPSource() {
@@ -34,7 +39,6 @@ public class CustomOCSPSource implements OCSPSource {
     public void setDataLoader(DataLoader dataLoader) {
         this.dataLoader = dataLoader;
     }
-
 
     public OCSPToken getOCSPToken(CertificateToken certificateToken, CertificateToken issuerCertificateToken) {
         if (this.dataLoader == null) {
@@ -48,12 +52,17 @@ public class CustomOCSPSource implements OCSPSource {
 
                 RevocationToken revocationToken = certificateToken.getRevocationTokens().stream().findFirst().orElse(null);
                 if (revocationToken == null)
-                    return null;
+                    return new OnlineOCSPSource().getOCSPToken(certificateToken, issuerCertificateToken);
                 byte[] ocspRespBytes = revocationToken.getEncoded();
                 if (Utils.isArrayEmpty(ocspRespBytes)) {
-                    return null;
+                    return new OnlineOCSPSource().getOCSPToken(certificateToken, issuerCertificateToken);
                 } else {
-                    OCSPResp ocspResp = new OCSPResp(ocspRespBytes);
+                    OCSPResp ocspResp;
+                    try {
+                        ocspResp = new OCSPResp(ocspRespBytes);
+                    } catch (IOException e) {
+                        return new OnlineOCSPSource().getOCSPToken(certificateToken, issuerCertificateToken);
+                    }
                     OCSPRespStatus status = OCSPRespStatus.fromInt(ocspResp.getStatus());
                     if (OCSPRespStatus.SUCCESSFUL.equals(status)) {
                         OCSPToken ocspToken = new OCSPToken();
@@ -71,13 +80,9 @@ public class CustomOCSPSource implements OCSPSource {
                     }
                 }
 
-            } catch (OCSPException | IOException ex) {
+            } catch (OCSPException ex) {
                 throw new DSSException(ex);
             }
         }
-    }
-
-    static {
-        Security.addProvider(new BouncyCastleProvider());
     }
 }

@@ -1,3 +1,5 @@
 endpoints:
   health:
     enabled: true
+plugtest:
+  location: url

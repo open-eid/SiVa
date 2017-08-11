@@ -16,12 +16,14 @@
 
 package ee.openeid.siva.sample.siva;
 
+import rx.Observable;
+
 import ee.openeid.siva.sample.cache.UploadedFile;
 import ee.openeid.siva.sample.configuration.SivaRESTWebServiceConfigurationProperties;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import rx.Observable;
 
 import java.io.IOException;
 
@@ -38,7 +40,7 @@ public class SivaSOAPDataFilesServiceClient implements DataFilesService {
         if (file == null) {
             throw new IOException("File not found");
         }
-        FileType fileType = ValidationRequestUtils.getValidationServiceType(file);
+        FileType fileType = ValidationRequestUtils.getDataFilesFileServiceType(file);
         String requestBody = createXMLDataFilesRequest(file.getEncodedFile(), fileType.name());
         return Observable.just(XMLTransformer.formatXML(restTemplate.postForObject(properties.getSoapDataFilesServicePath(), requestBody, String.class)));
     }

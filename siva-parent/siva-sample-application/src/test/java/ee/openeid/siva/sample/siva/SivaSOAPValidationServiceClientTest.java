@@ -103,7 +103,7 @@ public class SivaSOAPValidationServiceClientTest {
 
         verify(restTemplate).postForObject(anyString(), validationRequestCaptor.capture(), any());
         assertThat(validationRequestCaptor.getValue()).contains("<Filename>hello.bdoc</Filename>");
-        assertThat(validationRequestCaptor.getValue()).contains("<DocumentType>BDOC</DocumentType>");
+
     }
 
     @Test

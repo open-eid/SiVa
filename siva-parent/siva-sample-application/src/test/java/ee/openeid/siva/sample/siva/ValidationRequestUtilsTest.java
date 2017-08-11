@@ -16,8 +16,11 @@
 
 package ee.openeid.siva.sample.siva;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import ee.openeid.siva.sample.cache.UploadedFile;
 import ee.openeid.siva.sample.test.utils.TestFileUtils;
+
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Test;
 
@@ -27,8 +30,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class ValidationRequestUtilsTest {
 
@@ -51,13 +52,13 @@ public class ValidationRequestUtilsTest {
     }
 
     @Test
-    public void givenAsiceValidationRequestWillReturnFileTypeBDOC() throws Exception {
+    public void givenAsiceValidationRequestWillReturnNull() throws Exception {
         UploadedFile request = createXroadValidationRequest(
                 Base64.encodeBase64String("random text".getBytes()),
                 "random.asice"
         );
 
-        assertThat(ValidationRequestUtils.getValidationServiceType(request)).isEqualTo(FileType.BDOC);
+        assertThat(ValidationRequestUtils.getValidationServiceType(request)).isEqualTo(null);
     }
 
     @Test

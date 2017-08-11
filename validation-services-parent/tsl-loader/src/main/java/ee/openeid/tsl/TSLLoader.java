@@ -42,15 +42,15 @@ public class TSLLoader {
     private TrustedListsCertificateSource trustedListSource;
     private KeyStoreCertificateSource keyStoreCertificateSource;
 
-    private static final List<String> DEFAULT_TRUESTED_TERRITORIES = Arrays.asList(/*AT*/ "BE", "BG", "CY", "CZ",/*"DE",*/"DK", "EE", "ES", "FI", "FR", "GR", "HU",/*"HR",*/"IE", "IS", "IT", "LT", "LU", "LV", "LI", "MT",/*"NO",*/"NL", "PL", "PT", "RO", "SE", "SI", "SK", "UK");
+    private static final List<String> DEFAULT_TRUSTED_TERRITORIES = Arrays.asList(/*AT*/ "BE", "BG", "CY", "CZ","DE","DK", "EE", "ES", "FI", "FR", "GR", "HU","HR","IE", "IS", "IT", "LT", "LU", "LV", "LI", "MT","NO","NL", "PL", "PT", "RO", "SE", "SI", "SK", "UK");
 
     @PostConstruct
     public void init() {
-        initTslValidatonJob();
+        initTslValidationJob();
         loadTSL();
     }
 
-    private void initTslValidatonJob() {
+    private void initTslValidationJob() {
         tslValidationJob = tslValidationJobFactory.createValidationJob();
         tslValidationJob.setDataLoader(new CommonsDataLoader());
         TSLRepository tslRepository = new TSLRepository();
@@ -59,7 +59,7 @@ public class TSLLoader {
         tslValidationJob.setLotlUrl(configurationProperties.getUrl());
         tslValidationJob.setLotlCode(configurationProperties.getCode());
         tslValidationJob.setDssKeyStore(keyStoreCertificateSource);
-        tslValidationJob.setFilterTerritories(DEFAULT_TRUESTED_TERRITORIES);
+        tslValidationJob.setFilterTerritories(DEFAULT_TRUSTED_TERRITORIES);
         tslValidationJob.setCheckLOTLSignature(true);
         tslValidationJob.setCheckTSLSignatures(true);
     }

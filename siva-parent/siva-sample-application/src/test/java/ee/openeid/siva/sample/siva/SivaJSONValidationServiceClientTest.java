@@ -48,16 +48,13 @@ import static org.mockito.Mockito.verify;
 @SpringBootTest
 public class SivaJSONValidationServiceClientTest {
 
+    @Rule
+    public TemporaryFolder testingFolder = new TemporaryFolder();
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
     @Autowired
     @Qualifier(value = "sivaJSON")
     private ValidationService validationService;
-
-    @Rule
-    public TemporaryFolder testingFolder = new TemporaryFolder();
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
     @Captor
     private ArgumentCaptor<ValidationRequest> validationRequestCaptor;
 
@@ -75,7 +72,7 @@ public class SivaJSONValidationServiceClientTest {
         assertEquals(mockResponse, result.toBlocking().first());
 
         verify(restTemplate).postForObject(anyString(), validationRequestCaptor.capture(), any());
-        assertEquals(FileType.BDOC, validationRequestCaptor.getValue().getDocumentType());
+
         assertEquals(fileName, validationRequestCaptor.getValue().getFilename());
         assertEquals(Base64Utils.encodeToString(fileContents.getBytes()), validationRequestCaptor.getValue().getDocument());
     }

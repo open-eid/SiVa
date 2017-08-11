@@ -46,8 +46,7 @@ public class SivaJSONDataFilesServiceClient implements DataFilesService {
 
         final DataFilesRequest dataFilesRequest = new DataFilesRequest();
         dataFilesRequest.setDocument(base64EncodedFile);
-        dataFilesRequest.setDocumentType(ValidationRequestUtils.getValidationServiceType(file));
-
+        dataFilesRequest.setDocumentType(ValidationRequestUtils.getDataFilesFileServiceType(file));
         try {
             restTemplate.setErrorHandler(errorHandler);
             return Observable.just(restTemplate.postForObject(properties.getJsonDataFilesServicePath(), dataFilesRequest, String.class));

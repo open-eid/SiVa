@@ -60,7 +60,7 @@ public class SivaJSONValidationServiceClient implements ValidationService {
         }
     }
 
-    private static void setValidationDocumentType(ValidationRequest validationRequest, UploadedFile uploadedFile) throws IOException {
+    private void setValidationDocumentType(ValidationRequest validationRequest, UploadedFile uploadedFile) throws IOException {
         final FileType uploadedFileExtension = ValidationRequestUtils.getValidationServiceType(uploadedFile);
         validationRequest.setDocumentType(uploadedFileExtension);
     }

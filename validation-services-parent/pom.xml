@@ -27,7 +27,7 @@
 
     <modules>
         <module>validation-commons</module>
-        <module>pdf-validation-service</module>
+        <module>generic-validation-service</module>
         <module>bdoc-validation-service</module>
         <module>ddoc-validation-service</module>
         <module>xroad-validation-service</module>

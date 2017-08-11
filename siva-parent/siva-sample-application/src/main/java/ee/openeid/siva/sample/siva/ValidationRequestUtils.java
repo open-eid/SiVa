@@ -34,6 +34,13 @@ final class ValidationRequestUtils {
     private static final String UNIQUE_XROAD_ASICE_FILE = "message.xml";
 
     static FileType getValidationServiceType(UploadedFile validationRequest) throws IOException {
+        if (isXroadAsiceContainer(validationRequest)) {
+            return FileType.XROAD;
+        }
+        return null;
+    }
+
+    static FileType getDataFilesFileServiceType(UploadedFile validationRequest) throws IOException {
         final String filename = validationRequest.getFilename();
         FileType parsedFileType = parseFileExtension(filename.substring(filename.lastIndexOf(FILENAME_EXTENSION_SEPARATOR) + 1));
 

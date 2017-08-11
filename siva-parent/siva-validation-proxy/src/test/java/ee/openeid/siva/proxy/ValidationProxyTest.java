@@ -16,6 +16,13 @@
 
 package ee.openeid.siva.proxy;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
+
 import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.exception.ValidatonServiceNotFoundException;
@@ -27,7 +34,7 @@ import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.validation.service.bdoc.BDOCValidationService;
 import ee.openeid.validation.service.ddoc.DDOCValidationService;
-import ee.openeid.validation.service.pdf.PDFValidationService;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -40,13 +47,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ValidationProxyTest {
@@ -100,7 +100,7 @@ public class ValidationProxyTest {
         given(applicationContext.getBean(anyString())).willThrow(new NoSuchBeanDefinitionException("Bean not loaded"));
 
         exception.expect(ValidatonServiceNotFoundException.class);
-        exception.expectMessage("PDFValidationService not found");
+        exception.expectMessage("genericValidationService not found");
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.PDF);
         validationProxy.validate(proxyDocument);
 
@@ -118,7 +118,7 @@ public class ValidationProxyTest {
 
     @Test
     public void ProxyDocumentWithPDFDocumentTypeShouldReturnQualifiedReport() throws Exception {
-        when(applicationContext.getBean(PDFValidationService.class.getSimpleName())).thenReturn(validationServiceSpy);
+        when(applicationContext.getBean("genericValidationService")).thenReturn(validationServiceSpy);
 
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.PDF);
         QualifiedReport report = validationProxy.validate(proxyDocument);

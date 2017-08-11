@@ -65,7 +65,7 @@
         </dependency>
         <dependency>
             <groupId>ee.openid.siva</groupId>
-            <artifactId>pdf-validation-service</artifactId>
+            <artifactId>generic-validation-service</artifactId>
         </dependency>
         <dependency>
             <groupId>ee.openid.siva</groupId>

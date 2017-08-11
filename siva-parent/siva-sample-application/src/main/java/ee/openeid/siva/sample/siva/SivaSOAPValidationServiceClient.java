@@ -18,19 +18,12 @@ package ee.openeid.siva.sample.siva;
 
 import ee.openeid.siva.sample.cache.UploadedFile;
 import ee.openeid.siva.sample.configuration.SivaRESTWebServiceConfigurationProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import rx.Observable;
 
-import javax.xml.transform.*;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
 
 @Service(value = SivaServiceType.SOAP_SERVICE)
 public class SivaSOAPValidationServiceClient implements ValidationService {
@@ -46,13 +39,16 @@ public class SivaSOAPValidationServiceClient implements ValidationService {
         }
 
         FileType serviceType = ValidationRequestUtils.getValidationServiceType(file);
-        String requestBody = createXMLValidationRequest(file.getEncodedFile(), serviceType.name(), file.getFilename(), policy);
+        String requestBody = createXMLValidationRequest(file.getEncodedFile(), serviceType, file.getFilename(), policy);
 
         String fullUrl = properties.getServiceHost() + properties.getSoapServicePath();
         return Observable.just(XMLTransformer.formatXML(restTemplate.postForObject(fullUrl, requestBody, String.class)));
     }
 
-    private static String createXMLValidationRequest(String base64Document, String documentType, String filename, String policy) {
+    private static String createXMLValidationRequest(String base64Document, FileType fileType, String filename, String policy) {
+        String documentType = "";
+        if (fileType != null)
+            documentType = "<DocumentType>" + documentType + "</DocumentType>" + LINE_SEPARATOR;
         return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">" + LINE_SEPARATOR +
                 "   <soapenv:Header/>" + LINE_SEPARATOR +
                 "   <soapenv:Body>" + LINE_SEPARATOR +
@@ -60,7 +56,7 @@ public class SivaSOAPValidationServiceClient implements ValidationService {
                 "         <soap:ValidationRequest>" + LINE_SEPARATOR +
                 "            <Document>" + base64Document + "</Document>" + LINE_SEPARATOR +
                 "            <Filename>" + filename + "</Filename>" + LINE_SEPARATOR +
-                "            <DocumentType>" + documentType + "</DocumentType>" + LINE_SEPARATOR +
+                documentType +
                 "            <SignaturePolicy>" + policy + "</SignaturePolicy>" + LINE_SEPARATOR +
                 "         </soap:ValidationRequest>" + LINE_SEPARATOR +
                 "      </soap:ValidateDocument>" + LINE_SEPARATOR +

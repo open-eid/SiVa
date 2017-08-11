@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+
 @Ignore
 public class EuPlugIT extends SiVaRestTests {
 
@@ -94,7 +95,7 @@ public class EuPlugIT extends SiVaRestTests {
     }
 
     @Test
-    @Ignore("No TLS")
+
     public void C_DE_SCI_1Valid() throws IOException {
         post(validationRequestForEu("Signature-C-DE_SCI-1.p7m"))
                 .then()
@@ -151,7 +152,6 @@ public class EuPlugIT extends SiVaRestTests {
     }
 
     @Test
-    @Ignore("No TLS")
     public void P_DE_SCI_2Valid() throws IOException {
         post(validationRequestForEu("Signature-P-DE_SCI-2.pdf"))
                 .then()

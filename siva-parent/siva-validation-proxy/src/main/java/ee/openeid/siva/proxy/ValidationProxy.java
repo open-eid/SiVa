@@ -37,7 +37,7 @@ import org.springframework.stereotype.Service;
 public class ValidationProxy {
     private static final Logger LOGGER = LoggerFactory.getLogger(ValidationProxy.class);
     private static final String SERVICE_BEAN_NAME_POSTFIX = "ValidationService";
-
+    private static final String GENERIC_SERVICE = "generic";
     private RESTProxyService restProxyService;
     private StatisticsService statisticsService;
     private ApplicationContext applicationContext;
@@ -72,7 +72,7 @@ public class ValidationProxy {
         if (DocumentType.DDOC.name().equals(extension) || DocumentType.BDOC.name().equals(extension)) {
             return extension + SERVICE_BEAN_NAME_POSTFIX;
         }
-        return "PDF" + SERVICE_BEAN_NAME_POSTFIX; //TODO must be changed to EU or something generic
+        return GENERIC_SERVICE + SERVICE_BEAN_NAME_POSTFIX;
     }
 
 

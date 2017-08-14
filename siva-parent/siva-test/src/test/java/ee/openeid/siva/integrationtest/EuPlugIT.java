@@ -103,6 +103,7 @@ public class EuPlugIT extends SiVaRestTests {
     }
 
     @Test
+    @Ignore
     public void C_ES_MIN_1Valid() throws IOException {
         post(validationRequestForEu("Signature-C-ES_MIN-1.p7m"))
                 .then()
@@ -110,6 +111,7 @@ public class EuPlugIT extends SiVaRestTests {
     }
 
     @Test
+    @Ignore
     public void C_ES_MIN_2Valid() throws IOException {
         post(validationRequestForEu("Signature-C-ES_MIN-2.p7m"))
                 .then()

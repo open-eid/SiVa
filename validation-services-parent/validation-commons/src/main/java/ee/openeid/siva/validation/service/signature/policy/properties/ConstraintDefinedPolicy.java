@@ -24,12 +24,12 @@ import lombok.ToString;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @ToString(exclude = "constraintData")
 public class ConstraintDefinedPolicy extends ValidationPolicy {
     private String constraintPath;
-    private boolean allowCrlRevocationSource;
     private byte[] constraintData;
 
     public ConstraintDefinedPolicy(ValidationPolicy validationPolicy) {

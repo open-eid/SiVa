@@ -16,15 +16,19 @@
 
 package ee.openeid.validation.service.generic.validator.report;
 
-import ee.openeid.siva.validation.document.report.Error;
-import ee.openeid.siva.validation.document.report.*;
-import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
-import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
 import eu.europa.esig.dss.jaxb.diagnostic.XmlSignatureScope;
 import eu.europa.esig.dss.validation.policy.rules.Indication;
 import eu.europa.esig.dss.validation.policy.rules.SubIndication;
 import eu.europa.esig.dss.validation.reports.Reports;
 import eu.europa.esig.dss.validation.reports.wrapper.TimestampWrapper;
+
+import ee.openeid.siva.validation.document.report.Error;
+import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
+import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.ZonedDateTime;
@@ -34,9 +38,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
 
 public class GenericQualifiedReportBuilder {
 
@@ -107,20 +108,10 @@ public class GenericQualifiedReportBuilder {
     }
 
     private List<Error> parseSignatureErrors(String signatureId) {
-        List<Error> errorList = dssReports.getSimpleReport().getErrors(signatureId)
+        return dssReports.getSimpleReport().getErrors(signatureId)
                 .stream()
-                .map(this::mapDssError)
+                .map(this ::mapDssError)
                 .collect(Collectors.toList());
-        if (!validationPolicy.isAllowCrlRevocationSource() && isCrlRevocationSource(signatureId)) {
-            errorList.add(mapDssError("Signing certificate revocation source is not trusted"));
-        }
-        return errorList;
-    }
-
-    private boolean isCrlRevocationSource(String signatureId) {
-        String signingCertificateId = dssReports.getDiagnosticData().getSigningCertificateId(signatureId);
-        String revocationSource = dssReports.getDiagnosticData().getCertificateRevocationSource(signingCertificateId);
-        return StringUtils.equalsIgnoreCase("CRLToken", revocationSource);
     }
 
     private Error mapDssError(String dssError) {

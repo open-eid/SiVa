@@ -20,7 +20,10 @@ import eu.europa.esig.dss.DSSDocument;
 import eu.europa.esig.dss.DSSException;
 import eu.europa.esig.dss.InMemoryDocument;
 import eu.europa.esig.dss.MimeType;
-import eu.europa.esig.dss.validation.CertificateVerifier;
+import eu.europa.esig.dss.client.crl.OnlineCRLSource;
+import eu.europa.esig.dss.client.http.commons.CommonsDataLoader;
+import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
+import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
 import eu.europa.esig.dss.validation.reports.Reports;
 
@@ -32,12 +35,14 @@ import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
+import ee.openeid.tsl.configuration.CustomOCSPSource;
 import ee.openeid.validation.service.generic.validator.report.GenericQualifiedReportBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.time.ZoneId;
@@ -47,10 +52,12 @@ import java.time.ZonedDateTime;
 public class GenericValidationService implements ValidationService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GenericValidationService.class);
-
-    private CertificateVerifier certificateVerifier;
-    private ConstraintLoadingSignaturePolicyService signaturePolicyService;
     private final Object lock = new Object();
+
+    private TrustedListsCertificateSource trustedListsCertificateSource;
+    @Autowired
+    private ApplicationContext applicationContext;
+    private ConstraintLoadingSignaturePolicyService signaturePolicyService;
 
     @Override
     public QualifiedReport validateDocument(ValidationDocument validationDocument) throws DSSException {
@@ -66,9 +73,10 @@ public class GenericValidationService implements ValidationService {
             final DSSDocument dssDocument = createDssDocument(validationDocument);
             final ConstraintDefinedPolicy policy = signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy());
             SignedDocumentValidator validator = SignedDocumentValidator.fromDocument(dssDocument);
-            LOGGER.info("Certificate pool size: {}", getCertificatePoolSize());
 
-
+            CommonCertificateVerifier certificateVerifier = new CommonCertificateVerifier(trustedListsCertificateSource,
+                    new OnlineCRLSource(), new CustomOCSPSource(), new CommonsDataLoader());
+            LOGGER.info("Certificate pool size: {}", getCertificatePoolSize(certificateVerifier));
             validator.setCertificateVerifier(certificateVerifier);
             final Reports reports;
             synchronized (lock) {
@@ -102,7 +110,7 @@ public class GenericValidationService implements ValidationService {
         }
     }
 
-    private int getCertificatePoolSize() {
+    private int getCertificatePoolSize(CommonCertificateVerifier certificateVerifier) {
         return certificateVerifier.getTrustedCertSource().getCertificatePool().getNumberOfCertificates();
     }
 
@@ -123,13 +131,13 @@ public class GenericValidationService implements ValidationService {
     }
 
     @Autowired
-    public void setCertificateVerifier(CertificateVerifier certificateVerifier) {
-        this.certificateVerifier = certificateVerifier;
-    }
-
-    @Autowired
     @Qualifier(value = "PDFPolicyService")
     public void setSignaturePolicyService(ConstraintLoadingSignaturePolicyService signaturePolicyService) {
         this.signaturePolicyService = signaturePolicyService;
+    }
+
+    @Autowired
+    public void setTrustedListsCertificateSource(TrustedListsCertificateSource trustedListsCertificateSource) {
+        this.trustedListsCertificateSource = trustedListsCertificateSource;
     }
 }

@@ -25,7 +25,7 @@ import java.security.Security;
 
 
 public class CustomOCSPSource implements OCSPSource {
-    private static final Logger logger = LoggerFactory.getLogger(CustomOCSPSource.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomOCSPSource.class);
 
     static {
         Security.addProvider(new BouncyCastleProvider());
@@ -46,7 +46,7 @@ public class CustomOCSPSource implements OCSPSource {
         } else {
             try {
                 String dssIdAsString = certificateToken.getDSSIdAsString();
-                logger.trace("--> OnlineOCSPSource queried for " + dssIdAsString);
+                LOGGER.trace("--> OnlineOCSPSource queried for " + dssIdAsString);
 
                 CertificateID certId = DSSRevocationUtils.getOCSPCertificateID(certificateToken, issuerCertificateToken);
 

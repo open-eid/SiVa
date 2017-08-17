@@ -16,6 +16,9 @@
 
 package ee.openeid.validation.service.generic;
 
+import static org.junit.Assert.*;
+import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
+
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
@@ -27,8 +30,7 @@ import ee.openeid.tsl.TSLValidationJobFactory;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
 import ee.openeid.validation.service.generic.configuration.GenericSignaturePolicyProperties;
 import ee.openeid.validation.service.generic.configuration.GenericValidationServiceConfiguration;
-import eu.europa.esig.dss.validation.CertificateVerifier;
-import eu.europa.esig.dss.validation.CommonCertificateVerifier;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -40,31 +42,28 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.Assert.*;
-
 @SpringBootTest(classes = {PDFValidationServiceTest.TestConfiguration.class})
 @RunWith(SpringRunner.class)
 public class PDFValidationServiceTest {
 
     private static final String TEST_FILES_LOCATION = "test-files/";
 
-    GenericValidationService validationService;
-
-    ConstraintLoadingSignaturePolicyService signaturePolicyService;
-
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
+    GenericValidationService validationService;
 
+    private ConstraintLoadingSignaturePolicyService signaturePolicyService;
     @Autowired
-    CertificateVerifier certificateVerifier;
-
+    private
+    TrustedListsCertificateSource trustedListsCertificateSource;
     @Autowired
+    private
     GenericSignaturePolicyProperties policySettings;
 
     @Before
     public void setUp() {
         validationService = new GenericValidationService();
-        validationService.setCertificateVerifier(certificateVerifier);
+        validationService.setTrustedListsCertificateSource(trustedListsCertificateSource);
 
         signaturePolicyService = new ConstraintLoadingSignaturePolicyService(policySettings);
         validationService.setSignaturePolicyService(signaturePolicyService);
@@ -72,8 +71,7 @@ public class PDFValidationServiceTest {
 
     @Test
     public void testConfiguration() {
-        assertNotNull(certificateVerifier);
-        assertTrue(certificateVerifier instanceof CommonCertificateVerifier);
+        assertNotNull(trustedListsCertificateSource);
         assertEquals(2, signaturePolicyService.getSignaturePolicies().size());
         assertNotNull(signaturePolicyService.getPolicy(null));
     }
@@ -89,11 +87,11 @@ public class PDFValidationServiceTest {
         assertNoWarnings(signatureValidationData);
     }
 
-    void assertNoErrors(SignatureValidationData signatureValidationData) {
+    private void assertNoErrors(SignatureValidationData signatureValidationData) {
         assertTrue(signatureValidationData.getErrors().size() == 0);
     }
 
-    void assertNoWarnings(SignatureValidationData signatureValidationData) {
+    private void assertNoWarnings(SignatureValidationData signatureValidationData) {
         assertTrue(signatureValidationData.getWarnings().size() == 0);
     }
 
@@ -106,8 +104,8 @@ public class PDFValidationServiceTest {
     }
 
     @Import({
-        TSLLoaderConfiguration.class,
-        GenericValidationServiceConfiguration.class
+            TSLLoaderConfiguration.class,
+            GenericValidationServiceConfiguration.class
     })
     public static class TestConfiguration {
         @Bean
@@ -125,6 +123,5 @@ public class PDFValidationServiceTest {
             return new TSLValidationJobFactory();
         }
     }
-
 
 }

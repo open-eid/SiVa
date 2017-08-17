@@ -16,12 +16,14 @@
 
 package ee.openeid.siva.sample.siva;
 
+import rx.Observable;
+
 import ee.openeid.siva.sample.cache.UploadedFile;
 import ee.openeid.siva.sample.configuration.SivaRESTWebServiceConfigurationProperties;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import rx.Observable;
 
 import java.io.IOException;
 
@@ -47,8 +49,8 @@ public class SivaSOAPValidationServiceClient implements ValidationService {
 
     private static String createXMLValidationRequest(String base64Document, FileType fileType, String filename, String policy) {
         String documentType = "";
-        if (fileType != null)
-            documentType = "<DocumentType>" + documentType + "</DocumentType>" + LINE_SEPARATOR;
+        if (fileType == FileType.XROAD)
+            documentType = "<DocumentType>" + fileType.name() + "</DocumentType>" + LINE_SEPARATOR;
         return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">" + LINE_SEPARATOR +
                 "   <soapenv:Header/>" + LINE_SEPARATOR +
                 "   <soapenv:Body>" + LINE_SEPARATOR +

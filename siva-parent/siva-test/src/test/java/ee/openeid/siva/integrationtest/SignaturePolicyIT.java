@@ -51,7 +51,6 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: soft-cert-signature.pdf
      */
     @Test
-    @Ignore("Unknown reason")
     public void pdfDocumentAdesNonSscdCompliantShouldPassWithGivenPolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("soft-cert-signature.pdf"));
         post(validationRequestWithValidKeys(encodedString, "soft-cert-signature.pdf", "pdf", VALID_SIGNATURE_POLICY_1))
@@ -64,7 +63,8 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].errors.content", Matchers.hasSize(0))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("signatures[0].warnings[0].description", Matchers.is("The certificate is not qualified at issuance time!"))
+                .body("signatures[0].warnings[1].description", Matchers.is("The signature/seal is not created by a QSCD!"))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -82,7 +82,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File: soft-cert-signature.pdf
      */
-    @Test @Ignore //TODO: New test file is needed
+    @Test
     public void pdfDocumentAdesNonSscdCompliantShouldFailWithGivenPolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("soft-cert-signature.pdf"));
         post(validationRequestWithValidKeys(encodedString, "soft-cert-signature.pdf", "pdf", VALID_SIGNATURE_POLICY_2))
@@ -90,12 +90,13 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("policy.policyDescription", Matchers.is(POLICY_2_DESCRIPTION))
                 .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_2))
                 .body("policy.policyUrl", Matchers.is(POLICY_2_URL))
-                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
-                .body("signatures[0].signatureLevel", Matchers.is("AdES"))
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is("CHAIN_CONSTRAINTS_FAILURE"))
                 .body("signatures[0].errors[0].content", Matchers.containsString("The certificate is not qualified!"))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("signatures[0].warnings[0].description", Matchers.is("The certificate is not qualified at issuance time!"))
+                .body("signatures[0].warnings[1].description", Matchers.is("The signature/seal is not created by a QSCD!"))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1));
     }

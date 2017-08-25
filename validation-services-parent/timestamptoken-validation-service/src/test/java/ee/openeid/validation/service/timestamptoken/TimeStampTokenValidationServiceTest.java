@@ -37,7 +37,7 @@ public class TimeStampTokenValidationServiceTest {
 
     @Test
     public void validTimeStampToken() throws Exception {
-        QualifiedReport qualifiedReport = validationService.validateDocument(buildValidationDocument("timsteamptoken-ddoc.asics"));
+        QualifiedReport qualifiedReport = validationService.validateDocument(buildValidationDocument("timestamptoken-ddoc.asics"));
         TimeStampTokenValidationData validationData = qualifiedReport.getTimeStampTokens().get(0);
         Assert.assertEquals(TimeStampTokenValidationData.Indication.TOTAL_PASSED, validationData.getIndication());
         Assert.assertEquals("SK TIMESTAMPING AUTHORITY", validationData.getSignedBy());
@@ -48,15 +48,16 @@ public class TimeStampTokenValidationServiceTest {
     @Test
     public void multipleDataFile() throws Exception {
         expectedException.expect(DocumentRequirementsException.class);
-        validationService.validateDocument(buildValidationDocument("timsteamptoken-two-data-files.asics"));
+        validationService.validateDocument(buildValidationDocument("timestamptoken-two-data-files.asics"));
 
     }
 
     @Test
-    public void dataFiledChanged() throws Exception{
+    public void dataFiledChanged() throws Exception {
         QualifiedReport qualifiedReport = validationService.validateDocument(buildValidationDocument("timestamptoken-datafile-changed.asics"));
         Assert.assertEquals("Signature not intact", qualifiedReport.getTimeStampTokens().get(0).getError().get(0).getContent());
     }
+
 
     private ValidationDocument buildValidationDocument(String testFile) throws Exception {
         return DummyValidationDocumentBuilder

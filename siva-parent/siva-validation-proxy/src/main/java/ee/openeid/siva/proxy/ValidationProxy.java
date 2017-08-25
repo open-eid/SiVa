@@ -26,6 +26,7 @@ import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.validation.service.timestamptoken.TimeStampTokenValidationService;
+import eu.europa.esig.dss.DSSException;
 import eu.europa.esig.dss.InMemoryDocument;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -47,13 +48,14 @@ public class ValidationProxy {
     private static final String SERVICE_BEAN_NAME_POSTFIX = "ValidationService";
     private static final String GENERIC_SERVICE = "generic";
     private static final String ASICS_EXTENSION = "ASICS";
-    private static final String SCS_EXTENSION = ".SCS";
-    private static final String ZIP_EXTENSION = ".ZIP";
+    private static final String SCS_FILE_TYPE = "SCS";
+    private static final String ZIP_FILE_TYPE = "ZIP";
     private static final String TIMESTAMP_EXTENSION = ".TST";
     private static final String TIMESTAMP_TOKEN_SERVICE = "timeStampToken";
     private static final String MIME_TYPE_FILE_NAME = "mimetype";
     private static final String ASICS_MIME_TYPE = "application/vnd.etsi.asic-s+zip";
     private static final String META_INF_FOLDER = "META-INF/";
+    private static final String DOCUMENT_FORMAT_NOT_RECOGNIZED = "Document format not recognized/handled";
     private RESTProxyService restProxyService;
     private StatisticsService statisticsService;
     private ApplicationContext applicationContext;
@@ -70,7 +72,14 @@ public class ValidationProxy {
             if (validationService instanceof TimeStampTokenValidationService && TimeStampTokenValidationData.Indication.TOTAL_PASSED == report.getTimeStampTokens().get(0).getIndication()) {
                 ProxyDocument dataFileProxyDocument = generateDataFileProxyDocument(proxyDocument);
                 ValidationService dataFileValidationService = getServiceForType(dataFileProxyDocument);
-                QualifiedReport dataFileReport = dataFileValidationService.validateDocument(createValidationDocument(dataFileProxyDocument));
+                QualifiedReport dataFileReport = null;
+                try {
+                    dataFileReport = dataFileValidationService.validateDocument(createValidationDocument(dataFileProxyDocument));
+                } catch (DSSException e) {
+                    if (!DOCUMENT_FORMAT_NOT_RECOGNIZED.equalsIgnoreCase(e.getMessage())) {
+                        throw e;
+                    }
+                }
                 report = mergeReports(report, dataFileReport);
             }
         }
@@ -79,8 +88,11 @@ public class ValidationProxy {
     }
 
     private QualifiedReport mergeReports(QualifiedReport timeStampTokenReport, QualifiedReport dataFileReport) {
-        dataFileReport.setTimeStampTokens(timeStampTokenReport.getTimeStampTokens());
-        return dataFileReport;
+        if (dataFileReport != null) {
+            dataFileReport.setTimeStampTokens(timeStampTokenReport.getTimeStampTokens());
+            return dataFileReport;
+        }
+        return timeStampTokenReport;
     }
 
     private ProxyDocument generateDataFileProxyDocument(ProxyDocument proxyDocument) {
@@ -114,7 +126,7 @@ public class ValidationProxy {
         }
         if (DocumentType.DDOC.name().equals(extension) || DocumentType.BDOC.name().equals(extension)) {
             return extension + SERVICE_BEAN_NAME_POSTFIX;
-        } else if (extension.equals(ASICS_EXTENSION) || extension.equals(SCS_EXTENSION) || extension.equals(ZIP_EXTENSION)) {
+        } else if (extension.equals(ASICS_EXTENSION) || extension.equals(SCS_FILE_TYPE) || extension.equals(ZIP_FILE_TYPE)) {
             return decideAsicsValidatorService(proxyDocument.getBytes(), extension);
         }
         return GENERIC_SERVICE + SERVICE_BEAN_NAME_POSTFIX;
@@ -133,7 +145,7 @@ public class ValidationProxy {
                 }
             }
 
-            if (extension.equals(ZIP_EXTENSION)) {
+            if (extension.equals(ZIP_FILE_TYPE)) {
                 if (isAsicsMimeType && isTimeStampExtension) {
                     return TIMESTAMP_TOKEN_SERVICE + SERVICE_BEAN_NAME_POSTFIX;
                 }

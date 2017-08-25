@@ -69,6 +69,10 @@
         </dependency>
         <dependency>
             <groupId>ee.openid.siva</groupId>
+            <artifactId>timestamptoken-validation-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ee.openid.siva</groupId>
             <artifactId>bdoc-validation-service</artifactId>
         </dependency>
         <dependency>

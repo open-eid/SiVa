@@ -16,6 +16,7 @@
 
 package ee.openeid.siva.validation.document.report;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.util.List;
@@ -30,13 +31,15 @@ public class QualifiedReport {
     private String documentName;
 
     private String signatureForm;
-
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<ValidationWarning> validationWarnings;
-
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<SignatureValidationData> signatures;
-
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer validSignaturesCount;
-
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer signaturesCount;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private List<TimeStampTokenValidationData> timeStampTokens;
 
 }

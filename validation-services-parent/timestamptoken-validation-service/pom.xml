@@ -24,9 +24,9 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>generic-validation-service</artifactId>
-    <name>Generic Validation Service</name>
-    <description>Validates digitally signed generic files</description>
+    <artifactId>timestamptoken-validation-service</artifactId>
+    <name>TimeStampToken Validation Service</name>
+    <description>Validates digitally signed TST files</description>
 
     <properties>
         <cxf.version>3.0.6</cxf.version>
@@ -43,23 +43,6 @@
             <artifactId>tsl-loader</artifactId>
             <groupId>ee.openid.siva</groupId>
             <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.digidoc4j.dss</groupId>
-            <artifactId>dss-document</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.digidoc4j.dss</groupId>
-            <artifactId>dss-pades</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.digidoc4j.dss</groupId>
-            <artifactId>dss-service</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.digidoc4j.dss</groupId>
-            <artifactId>dss-spi</artifactId>
         </dependency>
 
         <!-- Spring Boot -->
@@ -94,6 +77,17 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcpkix-jdk15on</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+        </dependency>
+
+
     </dependencies>
 
 </project>

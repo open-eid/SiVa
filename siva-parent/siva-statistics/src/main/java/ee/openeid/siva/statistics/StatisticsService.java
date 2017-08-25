@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,11 +66,13 @@ public class StatisticsService {
         simpleValidationReport.setSimpleSignatureReports(createSimpleSignatureReports(report));
         simpleValidationReport.setContainerType(transformToContainerTypeOrEmpty(report.getSignatureForm()));
         simpleValidationReport.setUserIdentifier(getUserIdentifier());
-        return  simpleValidationReport;
+        return simpleValidationReport;
     }
 
     private List<SimpleSignatureReport> createSimpleSignatureReports(QualifiedReport report) {
-        return report.getSignatures().stream().map(sig -> createSimpleSignatureReport(sig)).collect(Collectors.toList());
+        if (report.getSignatures() != null)
+            return report.getSignatures().stream().map(this::createSimpleSignatureReport).collect(Collectors.toList());
+        return Collections.emptyList();
     }
 
     private SimpleSignatureReport createSimpleSignatureReport(SignatureValidationData signatureValidationData) {

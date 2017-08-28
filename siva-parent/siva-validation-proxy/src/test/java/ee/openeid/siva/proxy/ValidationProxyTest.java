@@ -205,8 +205,17 @@ public class ValidationProxyTest {
         when(applicationContext.getBean("timeStampTokenValidationService")).thenReturn(getTimeStampValidationService());
         ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
         proxyDocument.setBytes(buildValidationDocument("TwoDataFilesAsics.asics"));
-        QualifiedReport report = validationProxy.validate(proxyDocument);
+        validationProxy.validate(proxyDocument);
+    }
 
+    @Test
+    public void proxyDocumentAsicsWithDifferentMimeType() throws Exception {
+        when(applicationContext.getBean("timeStampTokenValidationService")).thenReturn(getTimeStampValidationService());
+        when(applicationContext.getBean("genericValidationService")).thenReturn(validationServiceSpy);
+        ProxyDocument proxyDocument = mockProxyDocumentWithExtension("zip");
+        proxyDocument.setBytes(buildValidationDocument("timestamptoken-different-mimetype.zip"));
+        QualifiedReport report = validationProxy.validate(proxyDocument);
+        assertQualifiedReport(report);
     }
 
     private GenericValidationService getGenericValidationService() {

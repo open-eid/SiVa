@@ -56,6 +56,7 @@ public class ValidationProxy {
     private static final String ASICS_MIME_TYPE = "application/vnd.etsi.asic-s+zip";
     private static final String META_INF_FOLDER = "META-INF/";
     private static final String DOCUMENT_FORMAT_NOT_RECOGNIZED = "Document format not recognized/handled";
+
     private RESTProxyService restProxyService;
     private StatisticsService statisticsService;
     private ApplicationContext applicationContext;

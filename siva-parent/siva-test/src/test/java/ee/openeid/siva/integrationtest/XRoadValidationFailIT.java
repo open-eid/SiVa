@@ -35,7 +35,7 @@ public class XRoadValidationFailIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      *
      * Title: Simple xroad document with container fault
      *
@@ -46,7 +46,7 @@ public class XRoadValidationFailIT extends SiVaRestTests {
     @Test
     public void validatingInvalidSimpleXroadDocumentShouldReturnAReport() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("invalid-digest.asice"));
-        post(validationRequestWithValidKeys(encodedString, "invalid-digest.asice", "xroad", VALID_SIGNATURE_POLICY_1))
+        post(validationRequestWithValidKeys(encodedString, "invalid-digest.asice", "xroad", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))

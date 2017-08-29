@@ -47,7 +47,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.NO_TYPE_POLICY;
+import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.ADES_POLICY;
+import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.ADES_QS_POLICY;
 import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.QES_POLICY;
 import static ee.openeid.validation.service.bdoc.BDOCTestUtils.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -76,8 +77,10 @@ public class BDOCValidationServiceIntegrationTest {
     private static final String QC_STATEMENT = "http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/QCStatement";
     private static final String QC_FOR_ESIG = "http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/QCForESig";
     private static final String TEST_OF_KLASS3_SK_2010 = "TEST of KLASS3-SK 2010";
-    private static String POL_V1 = "POLv1";
-    private static String POL_V2 = "POLv2";
+    private static String POL_V3 = "POLv3";
+    private static String POL_V4 = "POLv4";
+    private static String POL_V5 = "POLv5";
+
     private static String DOCUMENT_MALFORMED_MESSAGE = "Document malformed or not matching documentType";
 
     @Autowired
@@ -113,11 +116,13 @@ public class BDOCValidationServiceIntegrationTest {
     @Test
     public void verifyCorrectPolicyIsLoadedToD4JConfiguration() throws Exception {
         System.out.println(configurationService.loadPolicyConfiguration(null).getConfiguration().getValidationPolicy());
-        System.out.println(configurationService.loadPolicyConfiguration(POL_V2).getConfiguration().getValidationPolicy());
-        System.out.println(configurationService.loadPolicyConfiguration(POL_V1).getConfiguration().getValidationPolicy());
-        assertTrue(configurationService.loadPolicyConfiguration(null).getConfiguration().getValidationPolicy().contains("siva-bdoc-POLv1-constraint"));
-        assertTrue(configurationService.loadPolicyConfiguration(POL_V2).getConfiguration().getValidationPolicy().contains("siva-bdoc-POLv2-constraint"));
-        assertTrue(configurationService.loadPolicyConfiguration(POL_V1).getConfiguration().getValidationPolicy().contains("siva-bdoc-POLv1-constraint"));
+        System.out.println(configurationService.loadPolicyConfiguration(POL_V5).getConfiguration().getValidationPolicy());
+        System.out.println(configurationService.loadPolicyConfiguration(POL_V4).getConfiguration().getValidationPolicy());
+        System.out.println(configurationService.loadPolicyConfiguration(POL_V3).getConfiguration().getValidationPolicy());
+        assertTrue(configurationService.loadPolicyConfiguration(null).getConfiguration().getValidationPolicy().contains("siva-bdoc-POLv3-constraint"));
+        assertTrue(configurationService.loadPolicyConfiguration(POL_V5).getConfiguration().getValidationPolicy().contains("siva-bdoc-POLv5-constraint"));
+        assertTrue(configurationService.loadPolicyConfiguration(POL_V4).getConfiguration().getValidationPolicy().contains("siva-bdoc-POLv4-constraint"));
+        assertTrue(configurationService.loadPolicyConfiguration(POL_V3).getConfiguration().getValidationPolicy().contains("siva-bdoc-POLv3-constraint"));
     }
 
     @Test
@@ -253,22 +258,30 @@ public class BDOCValidationServiceIntegrationTest {
     @Test
     public void validationReportShouldContainDefaultPolicyWhenPolicyIsNotExplicitlyGiven() throws Exception {
         Policy policy = validateWithPolicy("").getPolicy();
-        assertEquals(NO_TYPE_POLICY.getName(), policy.getPolicyName());
-        assertEquals(NO_TYPE_POLICY.getDescription(), policy.getPolicyDescription());
-        assertEquals(NO_TYPE_POLICY.getUrl(), policy.getPolicyUrl());
+        assertEquals(ADES_POLICY.getName(), policy.getPolicyName());
+        assertEquals(ADES_POLICY.getDescription(), policy.getPolicyDescription());
+        assertEquals(ADES_POLICY.getUrl(), policy.getPolicyUrl());
     }
 
     @Test
-    public void validationReportShouldContainNoTypePolicyWhenNoTypePolicyIsGivenToValidator() throws Exception {
-        Policy policy = validateWithPolicy(POL_V1).getPolicy();
-        assertEquals(NO_TYPE_POLICY.getName(), policy.getPolicyName());
-        assertEquals(NO_TYPE_POLICY.getDescription(), policy.getPolicyDescription());
-        assertEquals(NO_TYPE_POLICY.getUrl(), policy.getPolicyUrl());
+    public void validationReportShouldContainAdesPolicyWhenAdesPolicyIsGivenToValidator() throws Exception {
+        Policy policy = validateWithPolicy(POL_V3).getPolicy();
+        assertEquals(ADES_POLICY.getName(), policy.getPolicyName());
+        assertEquals(ADES_POLICY.getDescription(), policy.getPolicyDescription());
+        assertEquals(ADES_POLICY.getUrl(), policy.getPolicyUrl());
+    }
+
+    @Test
+    public void validationReportShouldContainAdesQsPolicyWhenAdesQsPolicyIsGivenToValidator() throws Exception {
+        Policy policy = validateWithPolicy(POL_V4).getPolicy();
+        assertEquals(ADES_QS_POLICY.getName(), policy.getPolicyName());
+        assertEquals(ADES_QS_POLICY.getDescription(), policy.getPolicyDescription());
+        assertEquals(ADES_QS_POLICY.getUrl(), policy.getPolicyUrl());
     }
 
     @Test
     public void validationReportShouldContainQESPolicyWhenQESPolicyIsGivenToValidator() throws Exception {
-        Policy policy = validateWithPolicy(POL_V2).getPolicy();
+        Policy policy = validateWithPolicy(POL_V5).getPolicy();
         assertEquals(QES_POLICY.getName(), policy.getPolicyName());
         assertEquals(QES_POLICY.getDescription(), policy.getPolicyDescription());
         assertEquals(QES_POLICY.getUrl(), policy.getPolicyUrl());
@@ -282,20 +295,20 @@ public class BDOCValidationServiceIntegrationTest {
 
     @Test
     @Ignore("fails because of DSS bug: https://esig-dss.atlassian.net/browse/DSS-915")
-    public void WhenAllQualifiersAreSetInServiceInfoThenSignatureLevelShouldBeQESAndValidWithPOLv2() throws Exception {
-        testWithAllQualifiersSet(POL_V2);
+    public void WhenAllQualifiersAreSetInServiceInfoThenSignatureLevelShouldBeQESAndValidWithPOLv5() throws Exception {
+        testWithAllQualifiersSet(POL_V5);
     }
 
     @Test
     @Ignore("fails because of DSS bug: https://esig-dss.atlassian.net/browse/DSS-915")
-    public void WhenAllQualifiersAreSetInServiceInfoThenSignatureLevelShouldBeQESAndValidWithPOLv1() throws Exception {
-        testWithAllQualifiersSet(POL_V1);
+    public void WhenAllQualifiersAreSetInServiceInfoThenSignatureLevelShouldBeQESAndValidWithPOLv3() throws Exception {
+        testWithAllQualifiersSet(POL_V3);
     }
 
     @Test
     @Ignore("fails because of DSS bug: https://esig-dss.atlassian.net/browse/DSS-915")
-    public void whenQCWithQSCDQualifierIsNotSetThenSignatureLevelShouldBeAdesQCAndInvalidWithPOLv2() throws Exception {
-        String policy = POL_V2;
+    public void whenQCWithQSCDQualifierIsNotSetThenSignatureLevelShouldBeAdesQCAndInvalidWithPOLv5() throws Exception {
+        String policy = POL_V5;
         ServiceInfo serviceInfo = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
         removeQcConditions(serviceInfo, QC_WITH_QSCD);
         assertServiceHasQualifiers(serviceInfo, QC_STATEMENT, QC_FOR_ESIG);
@@ -306,8 +319,8 @@ public class BDOCValidationServiceIntegrationTest {
 
     @Test
     @Ignore("fails because of DSS bug: https://esig-dss.atlassian.net/browse/DSS-915")
-    public void whenQCWithQSCDQualifierIsNotSetThenSignatureLevelShouldBeAdesQCAndValidWithPOLv1() throws Exception {
-        String policy = POL_V1;
+    public void whenQCWithQSCDQualifierIsNotSetThenSignatureLevelShouldBeAdesQCAndValidWithPOLv3() throws Exception {
+        String policy = POL_V3;
         ServiceInfo serviceInfo = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
         removeQcConditions(serviceInfo, QC_WITH_QSCD);
         assertServiceHasQualifiers(serviceInfo, QC_STATEMENT, QC_FOR_ESIG);
@@ -318,8 +331,8 @@ public class BDOCValidationServiceIntegrationTest {
 
     @Test
     @Ignore("Unknown reason")
-    public void whenQCWithQSCDAndQCStatementQualifierIsNotSetThenSignatureLevelShouldBeAdesAndInvalidWithPOLv2() throws Exception {
-        String policy = POL_V2;
+    public void whenQCWithQSCDAndQCStatementQualifierIsNotSetThenSignatureLevelShouldBeAdesAndInvalidWithPOLv5() throws Exception {
+        String policy = POL_V5;
         ServiceInfo serviceInfo = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
         removeQcConditions(serviceInfo, QC_WITH_QSCD, QC_STATEMENT);
         assertServiceHasQualifiers(serviceInfo, QC_FOR_ESIG);
@@ -329,8 +342,8 @@ public class BDOCValidationServiceIntegrationTest {
     }
 
     @Test
-    public void whenQCWithQSCDAndQCStatementQualifierIsNotSetThenSignatureLevelShouldBeAdesAndValidWithPOLv1() throws Exception {
-        String policy = POL_V1;
+    public void whenQCWithQSCDAndQCStatementQualifierIsNotSetThenSignatureLevelShouldBeAdesAndValidWithPOLv3() throws Exception {
+        String policy = POL_V3;
         ServiceInfo serviceInfo = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
         removeQcConditions(serviceInfo, QC_WITH_QSCD, QC_STATEMENT);
         assertServiceHasQualifiers(serviceInfo, QC_FOR_ESIG);

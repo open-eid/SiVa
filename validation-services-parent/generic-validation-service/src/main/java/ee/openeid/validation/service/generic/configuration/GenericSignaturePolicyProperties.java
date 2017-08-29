@@ -16,32 +16,30 @@
 
 package ee.openeid.validation.service.generic.configuration;
 
-import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.NO_TYPE_POLICY;
-import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.QES_POLICY;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.siva.validation.service.signature.policy.properties.SignaturePolicyProperties;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
-
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import javax.annotation.PostConstruct;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.*;
+
 @Data
 @EqualsAndHashCode(callSuper = true)
-@ConfigurationProperties(prefix = "siva.pdf.signaturePolicy")
+@ConfigurationProperties(prefix = "siva.europe.signaturePolicy")
 public class GenericSignaturePolicyProperties extends SignaturePolicyProperties<ConstraintDefinedPolicy> {
 
-    private static final String NO_TYPE_CONSTRAINT = "pdf_constraint_no_type.xml";
-    private static final String QES_CONSTRAINT = "pdf_constraint_qes.xml";
+    private static final String ADES_CONSTRAINT = "generic_constraint_ades.xml";
+    private static final String ADES_QS_CONSTRAINT = "generic_constraint_ades_qs.xml";
+    private static final String QES_CONSTRAINT = "generic_constraint_qes.xml";
 
     private String defaultPolicy;
     private List<ConstraintDefinedPolicy> policies = new ArrayList<>();
@@ -58,11 +56,11 @@ public class GenericSignaturePolicyProperties extends SignaturePolicyProperties<
     }
 
     private List<ConstraintDefinedPolicy> getDefaultPdfPolicies() {
-        return Collections.unmodifiableList(Stream.of(getNoTypePolicy(), getQesPolicy()).collect(Collectors.toList()));
+        return Collections.unmodifiableList(Stream.of(getAdesPolicy(), getAdesQsPolicy(), getQesPolicy()).collect(Collectors.toList()));
     }
 
     private void setPolicyValue() {
-        final String policyName = defaultPolicy == null ? NO_TYPE_POLICY.getName() : defaultPolicy;
+        final String policyName = defaultPolicy == null ? ADES_POLICY.getName() : defaultPolicy;
         setAbstractDefaultPolicy(policyName);
     }
 
@@ -70,8 +68,12 @@ public class GenericSignaturePolicyProperties extends SignaturePolicyProperties<
         return createConstraintDefinedPolicy(QES_POLICY, QES_CONSTRAINT);
     }
 
-    private ConstraintDefinedPolicy getNoTypePolicy() {
-        return createConstraintDefinedPolicy(NO_TYPE_POLICY, NO_TYPE_CONSTRAINT);
+    private ConstraintDefinedPolicy getAdesPolicy() {
+        return createConstraintDefinedPolicy(ADES_POLICY, ADES_CONSTRAINT);
+    }
+
+    private ConstraintDefinedPolicy getAdesQsPolicy() {
+        return createConstraintDefinedPolicy(ADES_QS_POLICY, ADES_QS_CONSTRAINT);
     }
 
     private ConstraintDefinedPolicy createConstraintDefinedPolicy(ValidationPolicy validationPolicy, String constraintPath) {

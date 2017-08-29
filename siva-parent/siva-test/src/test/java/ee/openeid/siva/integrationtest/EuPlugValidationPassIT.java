@@ -845,7 +845,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
     }
 
     private String validationRequestForEu(String file){
-        return validationRequestForEuWithPolicy(file, VALID_SIGNATURE_POLICY_1);
+        return validationRequestForEuWithPolicy(file, VALID_SIGNATURE_POLICY_3);
     }
 
     private String validationRequestForEuWithPolicy(String file, String policy){

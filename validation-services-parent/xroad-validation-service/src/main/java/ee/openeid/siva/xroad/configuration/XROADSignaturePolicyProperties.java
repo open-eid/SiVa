@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.NO_TYPE_POLICY;
+import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.ADES_POLICY;
 
 @Getter
 @Setter
@@ -51,11 +51,11 @@ public class XROADSignaturePolicyProperties extends SignaturePolicyProperties<Va
     }
 
     private List<ValidationPolicy> getDefaultDdocPolicies() {
-        return Collections.singletonList(NO_TYPE_POLICY);
+        return Collections.singletonList(ADES_POLICY);
     }
 
     private void setPolicyValue() {
-        final String policyName = defaultPolicy == null ? NO_TYPE_POLICY.getName() : defaultPolicy;
+        final String policyName = defaultPolicy == null ? ADES_POLICY.getName() : defaultPolicy;
         setAbstractDefaultPolicy(policyName);
     }
 

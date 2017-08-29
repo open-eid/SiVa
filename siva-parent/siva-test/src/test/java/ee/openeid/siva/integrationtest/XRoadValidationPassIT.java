@@ -35,7 +35,7 @@ public class XRoadValidationPassIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      *
      * Title: Simple xroad document
      *
@@ -46,7 +46,7 @@ public class XRoadValidationPassIT extends SiVaRestTests {
     @Test
     public void validatingSimpleXroadDocumentShouldReturnAReport() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", "xroad", VALID_SIGNATURE_POLICY_1))
+        post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", "xroad", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -61,7 +61,7 @@ public class XRoadValidationPassIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      *
      * Title: Batchsignature xroad document
      *
@@ -72,7 +72,7 @@ public class XRoadValidationPassIT extends SiVaRestTests {
     @Test
     public void validatingBatchXroadDocumentShouldReturnAReport() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-batchsignature.asice"));
-        post(validationRequestWithValidKeys(encodedString, "xroad-batchsignature.asice", "xroad", VALID_SIGNATURE_POLICY_1))
+        post(validationRequestWithValidKeys(encodedString, "xroad-batchsignature.asice", "xroad", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -87,7 +87,7 @@ public class XRoadValidationPassIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      *
      * Title: Attachment xroad document
      *
@@ -98,7 +98,7 @@ public class XRoadValidationPassIT extends SiVaRestTests {
     @Test
     public void validatingAttachXroadDocumentShouldReturnAReport() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-attachment.asice"));
-        post(validationRequestWithValidKeys(encodedString, "xroad-attachment.asice", "xroad", VALID_SIGNATURE_POLICY_1))
+        post(validationRequestWithValidKeys(encodedString, "xroad-attachment.asice", "xroad", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))

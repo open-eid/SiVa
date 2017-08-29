@@ -16,9 +16,6 @@
 
 package ee.openeid.validation.service.generic;
 
-import static org.junit.Assert.*;
-import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
-
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
@@ -30,7 +27,7 @@ import ee.openeid.tsl.TSLValidationJobFactory;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
 import ee.openeid.validation.service.generic.configuration.GenericSignaturePolicyProperties;
 import ee.openeid.validation.service.generic.configuration.GenericValidationServiceConfiguration;
-
+import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -41,6 +38,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import static org.junit.Assert.*;
 
 @SpringBootTest(classes = {PDFValidationServiceTest.TestConfiguration.class})
 @RunWith(SpringRunner.class)
@@ -72,7 +71,7 @@ public class PDFValidationServiceTest {
     @Test
     public void testConfiguration() {
         assertNotNull(trustedListsCertificateSource);
-        assertEquals(2, signaturePolicyService.getSignaturePolicies().size());
+        assertEquals(3, signaturePolicyService.getSignaturePolicies().size());
         assertNotNull(signaturePolicyService.getPolicy(null));
     }
 

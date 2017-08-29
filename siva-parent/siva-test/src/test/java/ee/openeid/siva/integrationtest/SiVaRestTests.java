@@ -99,7 +99,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
     }
 
     protected QualifiedReport postForReport(String file) {
-        return postForReport(file, VALID_SIGNATURE_POLICY_2);
+        return postForReport(file, VALID_SIGNATURE_POLICY_5);
     }
 
     protected QualifiedReport postForReportAndPrintResponse(String file, String signaturePolicy) {
@@ -115,7 +115,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
             jsonObject.put("signaturePolicy", signaturePolicy);
         }
         else {
-            jsonObject.put("signaturePolicy", VALID_SIGNATURE_POLICY_2);
+            jsonObject.put("signaturePolicy", VALID_SIGNATURE_POLICY_5);
         }
         String output = jsonObject.toString();
         return output;

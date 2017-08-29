@@ -17,16 +17,12 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.springframework.http.HttpStatus;
-
-import static org.junit.Assert.assertEquals;
 
 @Category(IntegrationTest.class)
 public class AsicsValidationPassIT extends SiVaRestTests {
@@ -62,7 +58,7 @@ public class AsicsValidationPassIT extends SiVaRestTests {
     @Test
     public void validDdocInsideValidAsics() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("ValidDDOCinsideAsics.asics"));
-        post(validationRequestWithValidKeys(encodedString, "ValidDDOCinsideAsics.asics", null, VALID_SIGNATURE_POLICY_2))
+        post(validationRequestWithValidKeys(encodedString, "ValidDDOCinsideAsics.asics", null, VALID_SIGNATURE_POLICY_5))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -92,7 +88,7 @@ public class AsicsValidationPassIT extends SiVaRestTests {
     @Test
     public void validDdocInsideValidAsicsScsExtension() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("ValidDDOCinsideAsics.scs"));
-        post(validationRequestWithValidKeys(encodedString, "ValidDDOCinsideAsics.scs", null, VALID_SIGNATURE_POLICY_2))
+        post(validationRequestWithValidKeys(encodedString, "ValidDDOCinsideAsics.scs", null, VALID_SIGNATURE_POLICY_5))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -122,7 +118,7 @@ public class AsicsValidationPassIT extends SiVaRestTests {
     @Test
     public void validBdocInsideValidAsics() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("ValidBDOCinsideAsics.asics"));
-        post(validationRequestWithValidKeys(encodedString, "ValidBDOCinsideAsics.asics", null, VALID_SIGNATURE_POLICY_2))
+        post(validationRequestWithValidKeys(encodedString, "ValidBDOCinsideAsics.asics", null, VALID_SIGNATURE_POLICY_5))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -156,7 +152,7 @@ public class AsicsValidationPassIT extends SiVaRestTests {
     @Test //TODO: We should return 0 as signatureCount?
     public void textInsideValidAsics() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("TXTinsideAsics.asics"));
-        post(validationRequestWithValidKeys(encodedString, "TXTinsideAsics.asics", null, VALID_SIGNATURE_POLICY_2))
+        post(validationRequestWithValidKeys(encodedString, "TXTinsideAsics.asics", null, VALID_SIGNATURE_POLICY_5))
                 .then()
                 .body("timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
@@ -180,7 +176,7 @@ public class AsicsValidationPassIT extends SiVaRestTests {
     @Test //TODO: We should return 0 as signatureCount?
     public void asicsInsideValidAsics() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("ValidASICSinsideAsics.asics"));
-        post(validationRequestWithValidKeys(encodedString, "ValidASICSinsideAsics.asics", null, VALID_SIGNATURE_POLICY_2))
+        post(validationRequestWithValidKeys(encodedString, "ValidASICSinsideAsics.asics", null, VALID_SIGNATURE_POLICY_5))
                 .then()
                 .body("timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
@@ -205,7 +201,7 @@ public class AsicsValidationPassIT extends SiVaRestTests {
     @Ignore //TODO: needs investigation
     public void ValidDdocInsideValidAsicsZipExtension() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("ValidDDOCinsideAsics.zip"));
-        post(validationRequestWithValidKeys(encodedString, "ValidDDOCinsideAsics.zip", null, VALID_SIGNATURE_POLICY_2))
+        post(validationRequestWithValidKeys(encodedString, "ValidDDOCinsideAsics.zip", null, VALID_SIGNATURE_POLICY_5))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -235,7 +231,7 @@ public class AsicsValidationPassIT extends SiVaRestTests {
     @Test
     public void ValidDdocInsideValidAsicsWrongMimeType() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("ValidDDOCinsideAsicsWrongMime.asics"));
-        post(validationRequestWithValidKeys(encodedString, "ValidDDOCinsideAsicsWrongMime.asics", null, VALID_SIGNATURE_POLICY_2))
+        post(validationRequestWithValidKeys(encodedString, "ValidDDOCinsideAsicsWrongMime.asics", null, VALID_SIGNATURE_POLICY_5))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))

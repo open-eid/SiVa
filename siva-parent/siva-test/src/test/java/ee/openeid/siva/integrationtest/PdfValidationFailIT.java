@@ -25,7 +25,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 @Category(IntegrationTest.class)
-public class PdfValidationFailIT extends SiVaRestTests{
+public class PdfValidationFailIT extends SiVaRestTests {
 
     private static final String TEST_FILES_DIRECTORY = "pdf/signing_certifacte_test_files/";
 
@@ -34,7 +34,7 @@ public class PdfValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      *
      * Title: The PDF-file has been signed with expired certificate (PAdES Baseline LT)
      *
@@ -63,7 +63,7 @@ public class PdfValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      *
      * Title: The PDF-file has been signed with revoked certificate (PAdES Baseline LT)
      *
@@ -75,7 +75,7 @@ public class PdfValidationFailIT extends SiVaRestTests{
     @Ignore("Unknown reason")
     public void documentSignedWithRevokedCertificateShouldFail() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades_lt_revoked.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "pades_lt_revoked.pdf", "pdf", VALID_SIGNATURE_POLICY_1))
+        post(validationRequestWithValidKeys(encodedString, "pades_lt_revoked.pdf", "pdf", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("INDETERMINATE_QESIG"))
@@ -94,7 +94,7 @@ public class PdfValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      *
      * Title: The PDF-file has been signed with certificate which has no non repudiation key usage attribute (PAdES Baseline LT)
      *
@@ -113,16 +113,17 @@ public class PdfValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      *
      * Title: hellopadess been signed with an expired certificate, where signing time is within the original validity
-     *                  period of the certificate, but OCSP confirmation and Time Stamp are current date (PAdES Baseline LT).
+     * period of the certificate, but OCSP confirmation and Time Stamp are current date (PAdES Baseline LT).
      *
      * Expected Result: Document signed with expired certificate should fail
      *
      * File: hellopades-lt-sha256-rsa2048-expired.pdf
      */
-    @Test @Ignore //TODO https://jira.nortal.com/browse/SIVARIA-17
+    @Test
+    @Ignore //TODO https://jira.nortal.com/browse/SIVARIA-17
     public void documentSignedWithExpiredRsa2048CertificateShouldFail() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-sha256-rsa2048-expired.pdf"));
         post(validationRequestWithValidKeys(encodedString, "hellopades-lt-sha256-rsa2048-expired.pdf", "pdf", ""))
@@ -142,16 +143,17 @@ public class PdfValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      *
      * Title: hellopadess been signed with an expired certificate, where signing time is within the original validity
-     *                  period of the certificate, but OCSP confirmation and Time Stamp are current date (PAdES Baseline LT).
+     * period of the certificate, but OCSP confirmation and Time Stamp are current date (PAdES Baseline LT).
      *
      * Expected Result: Document signed with expired certificate should fail
      *
      * File: hellopades-lt-sha256-rsa1024-expired2.pdf
      */
-    @Test @Ignore //TODO https://jira.nortal.com/browse/SIVARIA-17
+    @Test
+    @Ignore //TODO https://jira.nortal.com/browse/SIVARIA-17
     public void documentSignedWithExpiredSha256CertificateShouldFail() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-sha256-rsa1024-expired2.pdf"));
         post(validationRequestWithValidKeys(encodedString, "hellopades-lt-sha256-rsa1024-expired2.pdf", "pdf", ""))

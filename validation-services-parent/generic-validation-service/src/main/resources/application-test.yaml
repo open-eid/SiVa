@@ -1,17 +1,23 @@
 siva:
-  pdf:
+  europe:
     signaturePolicy:
       policies:
         -
-          name: POLv1
+          name: POLv3
           description: Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.
-          url: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv1
-          constraintPath: pdf_constraint_no_type.xml
+          url: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv3
+          constraintPath: generic_constraint_ades.xml
           allowCrlRevocationSource: false
         -
-          name: POLv2
-          description: Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result.
-          url: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv2
-          constraintPath: pdf_constraint_qes.xml
+          name: POLv4
+          description: Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) do not produce a positive validation result.
+          url: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv4
+          constraintPath: generic_constraint_ades.xml
           allowCrlRevocationSource: false
-      defaultPolicy: POLv1
+        -
+          name: POLv5
+          description: Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result.
+          url: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv5
+          constraintPath: generic_constraint_qes.xml
+          allowCrlRevocationSource: false
+      defaultPolicy: POLv3

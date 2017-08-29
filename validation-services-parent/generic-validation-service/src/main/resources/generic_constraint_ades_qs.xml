@@ -1,5 +1,11 @@
-<ConstraintsParameters Name="QES AdESQC TL based" xmlns="http://dss.esig.europa.eu/validation/policy">
-    <Description>RIA customized validation policy</Description>
+<ConstraintsParameters Name="SiVA Signature Validation Policy - Version 1"
+                       xmlns="http://dss.esig.europa.eu/validation/policy">
+    <Description>Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the
+        signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or
+        electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate
+        (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the
+        signature.
+    </Description>
     <SignatureConstraints>
         <AcceptablePolicies Level="FAIL">
             <Id>ANY_POLICY</Id>
@@ -8,8 +14,17 @@
         <PolicyAvailable Level="FAIL"/>
         <PolicyHashMatch Level="INFORM"/>
         <AcceptableFormats Level="FAIL">
+            <Id>PAdES-BASELINE-B</Id>
+            <Id>PAdES-BASELINE-T</Id>
+            <Id>PAdES-BASELINE-LT</Id>
+            <Id>PAdES-BASELINE-LTA</Id>
+            <Id>CAdES-BASELINE-B</Id>
+            <Id>CAdES-BASELINE-T</Id>
+            <Id>CAdES-BASELINE-LT</Id>
+            <Id>CAdES-BASELINE-LTA</Id>
+            <Id>XAdES-BASELINE-B</Id>
+            <Id>XAdES-BASELINE-T</Id>
             <Id>XAdES-BASELINE-LT</Id>
-            <Id>XAdES-BASELINE-LT-TM</Id>
             <Id>XAdES-BASELINE-LTA</Id>
         </AcceptableFormats>
         <BasicSignatureConstraints>
@@ -38,8 +53,8 @@
                 </KeyUsage>
                 <NotRevoked Level="FAIL"/>
                 <NotOnHold Level="FAIL"/>
-                <Qualification Level="FAIL"/>
-                <SupportedByQSCD Level="FAIL"/>
+                <Qualification Level="INFORM"/>
+                <SupportedByQSCD Level="INFORM"/>
                 <IssuedToLegalPerson Level="INFORM"/>
                 <Cryptographic Level="FAIL">
                     <AcceptableEncryptionAlgo>

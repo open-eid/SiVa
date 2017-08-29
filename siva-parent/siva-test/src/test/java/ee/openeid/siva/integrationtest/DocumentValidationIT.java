@@ -46,7 +46,7 @@ public class DocumentValidationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      *
      * Title:Bdoc with two signatures and one unsigned document.
      *
@@ -80,7 +80,7 @@ public class DocumentValidationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      *
      * Title: Bdoc with two signatures and one document signed by only one signature.
      *
@@ -110,7 +110,7 @@ public class DocumentValidationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      *
      * Title: Bdoc with two signatures and two documents signed by only one signature.
      *
@@ -144,7 +144,7 @@ public class DocumentValidationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      *
      * Title: Bdoc with two signatures, one unsigned and two partly signed documents.
      *
@@ -182,7 +182,7 @@ public class DocumentValidationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      *
      * Title: Bdoc with three unsigned documents.
      *
@@ -222,7 +222,7 @@ public class DocumentValidationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      *
      * Title: Bdoc with deleted document, named in manifest.
      *
@@ -250,7 +250,7 @@ public class DocumentValidationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      *
      * Title: Bdoc with deleted document, also removed from manifest.
      *
@@ -279,7 +279,7 @@ public class DocumentValidationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      *
      * Title: Bdoc with one unsigned document, named in manifest.
      *
@@ -308,7 +308,7 @@ public class DocumentValidationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      *
      * Title: Bdoc with one unsigned document, NOT named in manifest.
      *
@@ -336,7 +336,7 @@ public class DocumentValidationIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      *
      * Title: Bdoc with signed documents.
      *

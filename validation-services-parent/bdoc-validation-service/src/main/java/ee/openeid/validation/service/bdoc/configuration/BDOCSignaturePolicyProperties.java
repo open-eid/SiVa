@@ -30,15 +30,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.NO_TYPE_POLICY;
-import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.QES_POLICY;
+import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.*;
 
-@Getter @Setter
+@Getter
+@Setter
 @ConfigurationProperties(prefix = "siva.bdoc.signaturePolicy")
 public class BDOCSignaturePolicyProperties extends SignaturePolicyProperties<ConstraintDefinedPolicy> {
 
     private static final String QES_BDOC_CONSTRAINT = "bdoc_constraint_qes.xml";
-    private static final String NO_TYPE_BDOC_CONSTRAINT = "bdoc_constraint_no_type.xml";
+    private static final String ADES_BDOC_CONSTRAINT = "bdoc_constraint_ades.xml";
+    private static final String ADES_QS_BDOC_CONSTRAINT = "bdoc_constraint_ades_qs.xml";
 
     private String defaultPolicy;
     private List<ConstraintDefinedPolicy> policies = new ArrayList<>();
@@ -46,7 +47,7 @@ public class BDOCSignaturePolicyProperties extends SignaturePolicyProperties<Con
     @PostConstruct
     public void init() {
         if (defaultPolicy == null) {
-            setDefaultPolicy(NO_TYPE_POLICY.getName());
+            setDefaultPolicy(ADES_POLICY.getName());
         }
         if (policies.isEmpty()) {
             setPolicies(getDefaultBdocPolicies());
@@ -56,15 +57,19 @@ public class BDOCSignaturePolicyProperties extends SignaturePolicyProperties<Con
     }
 
     private List<ConstraintDefinedPolicy> getDefaultBdocPolicies() {
-        return Collections.unmodifiableList(Stream.of(getNoTypePolicy(), getQesPolicy()).collect(Collectors.toList()));
+        return Collections.unmodifiableList(Stream.of(getAdesPolicy(), getAdesQsPolicy(), getQesPolicy()).collect(Collectors.toList()));
     }
 
     private ConstraintDefinedPolicy getQesPolicy() {
         return createConstraintDefinedPolicy(QES_POLICY, QES_BDOC_CONSTRAINT);
     }
 
-    private ConstraintDefinedPolicy getNoTypePolicy() {
-        return createConstraintDefinedPolicy(NO_TYPE_POLICY, NO_TYPE_BDOC_CONSTRAINT);
+    private ConstraintDefinedPolicy getAdesQsPolicy() {
+        return createConstraintDefinedPolicy(ADES_QS_POLICY, ADES_QS_BDOC_CONSTRAINT);
+    }
+
+    private ConstraintDefinedPolicy getAdesPolicy() {
+        return createConstraintDefinedPolicy(ADES_POLICY, ADES_BDOC_CONSTRAINT);
     }
 
     private ConstraintDefinedPolicy createConstraintDefinedPolicy(ValidationPolicy validationPolicy, String constraintPath) {

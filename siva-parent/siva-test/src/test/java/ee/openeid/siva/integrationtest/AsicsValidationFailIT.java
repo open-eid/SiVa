@@ -20,7 +20,6 @@ import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -56,7 +55,7 @@ public class AsicsValidationFailIT extends SiVaRestTests {
     @Test
     public void ValidDdocInsideValidAsicsZipExtension() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("TwoDataFilesAsics.asics"));
-        post(validationRequestWithValidKeys(encodedString, "TwoDataFilesAsics.asics", null, VALID_SIGNATURE_POLICY_2))
+        post(validationRequestWithValidKeys(encodedString, "TwoDataFilesAsics.asics", null, VALID_SIGNATURE_POLICY_5))
                 .then()
                 .body("requestErrors[0].key", Matchers.is("document"))
                 .body("requestErrors[0].message", Matchers.is("Document does not meet the requirements"));

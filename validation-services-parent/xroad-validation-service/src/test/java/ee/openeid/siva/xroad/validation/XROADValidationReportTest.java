@@ -25,7 +25,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.NO_TYPE_POLICY;
+import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.ADES_POLICY;
 import static ee.openeid.siva.xroad.validation.XROADTestUtils.*;
 import static org.junit.Assert.assertEquals;
 
@@ -85,23 +85,23 @@ public class XROADValidationReportTest {
     @Test
     public void validationReportShouldContainDefaultPolicyWhenPolicyIsNotExplicitlyGiven() throws Exception {
         Policy policy = validateWithPolicy("").getPolicy();
-        assertEquals(NO_TYPE_POLICY.getName(), policy.getPolicyName());
-        assertEquals(NO_TYPE_POLICY.getDescription(), policy.getPolicyDescription());
-        assertEquals(NO_TYPE_POLICY.getUrl(), policy.getPolicyUrl());
+        assertEquals(ADES_POLICY.getName(), policy.getPolicyName());
+        assertEquals(ADES_POLICY.getDescription(), policy.getPolicyDescription());
+        assertEquals(ADES_POLICY.getUrl(), policy.getPolicyUrl());
     }
 
     @Test
     public void validationReportShouldContainNoTypePolicyWhenNoTypePolicyIsGivenToValidator() throws Exception {
-        Policy policy = validateWithPolicy("POLv1").getPolicy();
-        assertEquals(NO_TYPE_POLICY.getName(), policy.getPolicyName());
-        assertEquals(NO_TYPE_POLICY.getDescription(), policy.getPolicyDescription());
-        assertEquals(NO_TYPE_POLICY.getUrl(), policy.getPolicyUrl());
+        Policy policy = validateWithPolicy("POLv3").getPolicy();
+        assertEquals(ADES_POLICY.getName(), policy.getPolicyName());
+        assertEquals(ADES_POLICY.getDescription(), policy.getPolicyDescription());
+        assertEquals(ADES_POLICY.getUrl(), policy.getPolicyUrl());
     }
 
     @Test
     public void validatorShouldThrowExceptionWhenGivenQESPolicy() throws Exception {
         expectedException.expect(InvalidPolicyException.class);
-        validateWithPolicy("POLv2").getPolicy();
+        validateWithPolicy("polv5").getPolicy();
     }
 
     @Test

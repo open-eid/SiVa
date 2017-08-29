@@ -49,7 +49,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      * <p>
      * Title: Bdoc with single invalid signature
      * <p>
@@ -70,7 +70,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      * <p>
      * Title: Bdoc with multiple invalid signatures
      * <p>
@@ -89,7 +89,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      * <p>
      * Title: Bdoc with multiple signatures both valid and invalid
      * <p>
@@ -108,7 +108,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      * <p>
      * Title: Bdoc with no signatures
      * <p>
@@ -132,7 +132,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      * <p>
      * Title: Bdoc with invalid mimetype in manifest
      * <p>
@@ -155,7 +155,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      * <p>
      * Title: Asice with wrong slash character ('\') in data file mime-type value
      * <p>
@@ -180,7 +180,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      * <p>
      * Title: Wrong signature timestamp
      * <p>
@@ -206,7 +206,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      * <p>
      * Title: Asice No non-repudiation key usage value in the certificate, verification of AdES signature level
      * <p>
@@ -232,7 +232,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      * <p>
      * Title: Asice signers certificate does not have non-repudiation value in the certificates key usage field and it does not contain the QC and SSCD compliance information.
      * <p>
@@ -256,7 +256,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      * <p>
      * Title: Bdoc OCSP certificate is not trusted
      * <p>
@@ -268,7 +268,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocNotTrustedOcspCert() {
         setTestFilesDirectory("bdoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("TM-01_bdoc21-unknown-resp.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "TM-01_bdoc21-unknown-resp.bdoc", "bdoc", VALID_SIGNATURE_POLICY_1))
+        post(validationRequestWithValidKeys(encodedString, "TM-01_bdoc21-unknown-resp.bdoc", "bdoc", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
@@ -281,7 +281,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      * <p>
      * Title: Asice TSA certificate is not trusted
      * <p>
@@ -294,7 +294,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocNotTrustedTsaCert() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("TS-05_23634_TS_unknown_TSA.asice"));
-        post(validationRequestWithValidKeys(encodedString, "TS-05_23634_TS_unknown_TSA.asice", "bdoc", VALID_SIGNATURE_POLICY_1))
+        post(validationRequestWithValidKeys(encodedString, "TS-05_23634_TS_unknown_TSA.asice", "bdoc", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
@@ -307,7 +307,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      * <p>
      * Title: Asice OCSP response status is revoked
      * <p>
@@ -331,7 +331,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      * <p>
      * Title: Asice difference between OCSP and time-stamp issuing times is more than 24 hours
      * <p>
@@ -344,7 +344,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocOcspAndTsDifferenceOver24H() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("EE_SER-AEX-B-LT-V-20.asice"));
-        post(validationRequestWithValidKeys(encodedString, "EE_SER-AEX-B-LT-V-20.asice", "bdoc", VALID_SIGNATURE_POLICY_1))
+        post(validationRequestWithValidKeys(encodedString, "EE_SER-AEX-B-LT-V-20.asice", "bdoc", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
@@ -357,7 +357,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      * <p>
      * Title: Asice unsigned data files in the container
      * <p>
@@ -383,7 +383,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      * <p>
      * Title: Bdoc different data file mime-type values in signatures.xml and manifest.xml files
      * <p>
@@ -408,7 +408,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      * <p>
      * Title: Bdoc SignatureValue does not correspond to the SignedInfo block
      * <p>
@@ -432,7 +432,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      * <p>
      * Title: Bdoc Baseline-BES file
      * <p>
@@ -459,7 +459,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      * <p>
      * Title: Bdoc Baseline-EPES file
      * <p>
@@ -485,7 +485,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      * <p>
      * Title: Bdoc signers certificate is not trusted
      * <p>
@@ -510,7 +510,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      * <p>
      * Title: Bdoc OCSP response status is revoked
      * <p>
@@ -534,7 +534,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      * <p>
      * Title: Bdoc OCSP response status is unknown
      * <p>
@@ -559,7 +559,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      * <p>
      * Title: Bdoc signed data file has been removed from the container
      * <p>
@@ -583,7 +583,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      * <p>
      * Title: Bdoc no files in container
      * <p>
@@ -607,7 +607,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      * <p>
      * Title: Bdoc wrong nonce
      * <p>
@@ -620,7 +620,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocWrongOcspNonce() {
         setTestFilesDirectory("bdoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("TM-10_noncevale.4.asice"));
-        post(validationRequestWithValidKeys(encodedString, "TM-10_noncevale.4.asice", null, VALID_SIGNATURE_POLICY_1))
+        post(validationRequestWithValidKeys(encodedString, "TM-10_noncevale.4.asice", null, VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
@@ -633,7 +633,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      * <p>
      * Title: Bdoc signed data file(s) don't match the hash values in reference elements
      * <p>
@@ -657,7 +657,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      * <p>
      * Title: Asice Baseline-T signature
      * <p>
@@ -670,7 +670,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocBaselineTSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("TS-06_23634_TS_missing_OCSP.asice"));
-        post(validationRequestWithValidKeys(encodedString, "TS-06_23634_TS_missing_OCSP.asice", null, VALID_SIGNATURE_POLICY_1))
+        post(validationRequestWithValidKeys(encodedString, "TS-06_23634_TS_missing_OCSP.asice", null, VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT")) //TODO: Shouldnt it return XAdES_BASELINE_T instead?
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
@@ -684,7 +684,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      * <p>
      * Title: Bdoc OCSP response is not the one expected
      * <p>
@@ -696,7 +696,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocWrongSignersCertInOcspResponse() {
         setTestFilesDirectory("bdoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("23608-bdoc21-TM-ocsp-bad-nonce.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "23608-bdoc21-TM-ocsp-bad-nonce.bdoc", "bdoc", VALID_SIGNATURE_POLICY_1))
+        post(validationRequestWithValidKeys(encodedString, "23608-bdoc21-TM-ocsp-bad-nonce.bdoc", "bdoc", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
@@ -709,7 +709,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      * <p>
      * Title: Bdoc certificate's validity time is not in the period of OCSP producedAt time
      * <p>
@@ -721,7 +721,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocCertificateValidityOutOfOcspRange() {
         setTestFilesDirectory("bdoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("23154_test1-old-sig-sigat-OK-prodat-NOK-1.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "23154_test1-old-sig-sigat-OK-prodat-NOK-1.bdoc", "bdoc", VALID_SIGNATURE_POLICY_1))
+        post(validationRequestWithValidKeys(encodedString, "23154_test1-old-sig-sigat-OK-prodat-NOK-1.bdoc", "bdoc", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
@@ -734,7 +734,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
      * <p>
      * Title: Bdoc 	BDOC-1.0 version container
      * <p>

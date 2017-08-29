@@ -25,30 +25,25 @@ import org.junit.experimental.categories.Category;
 @Category(IntegrationTest.class)
 public class PdfValidationPassIT extends SiVaRestTests {
 
+    private static final String DEFAULT_TEST_FILES_DIRECTORY = "pdf/signing_certifacte_test_files/";
+    private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
+
     @Before
     public void DirectoryBackToDefault() {
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
     }
 
-    private static final String DEFAULT_TEST_FILES_DIRECTORY = "pdf/signing_certifacte_test_files/";
-
-    private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
-
-    public void setTestFilesDirectory(String testFilesDirectory) {
-        this.testFilesDirectory = testFilesDirectory;
-    }
-
     /**
      * TestCaseID: PDF-ValidationPass-1
-     * <p>
+     *
      * TestType: Automated
-     * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2
-     * <p>
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv5
+     *
      * Title: The PDF-file has been signed with certificate that is expired after signing (PAdES Baseline LT)
-     * <p>
+     *
      * Expected Result: Document signed with certificate that expired after signing should pass.
-     * <p>
+     *
      * File: hellopades-lt-sha256-rsa1024-not-expired.pdf
      */
     @Test
@@ -59,15 +54,15 @@ public class PdfValidationPassIT extends SiVaRestTests {
 
     /**
      * TestCaseID: PDF-ValidationPass-2
-     * <p>
+     *
      * TestType: Automated
-     * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2
-     * <p>
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv5
+     *
      * Title: The PDF-file has been signed with certificate that will expire in 7 days after signing (PAdES Baseline LT)
-     * <p>
+     *
      * Expected Result: Document signed with certificate that expired after signing should pass.
-     * <p>
+     *
      * File: hellopades-lt-sha256-rsa2048-7d.pdf
      */
     @Test
@@ -78,15 +73,15 @@ public class PdfValidationPassIT extends SiVaRestTests {
 
     /**
      * TestCaseID: PDF-ValidationPass-4
-     * <p>
+     *
      * TestType: Automated
-     * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv2
-     * <p>
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv5
+     *
      * Title: Pdf with single valid signature
-     * <p>
+     *
      * Expected Result: Document should pass.
-     * <p>
+     *
      * File: PdfValidSingleSignature.pdf
      */
     @Test
@@ -98,5 +93,9 @@ public class PdfValidationPassIT extends SiVaRestTests {
     @Override
     protected String getTestFilesDirectory() {
         return testFilesDirectory;
+    }
+
+    public void setTestFilesDirectory(String testFilesDirectory) {
+        this.testFilesDirectory = testFilesDirectory;
     }
 }

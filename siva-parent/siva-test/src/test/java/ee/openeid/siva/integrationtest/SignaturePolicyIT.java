@@ -42,7 +42,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv3
      *
      * Title: The PDF-file is not QES level and misses SSCD/QSCD compliance
      *
@@ -53,11 +53,11 @@ public class SignaturePolicyIT extends SiVaRestTests {
     @Test
     public void pdfDocumentAdesNonSscdCompliantShouldPassWithGivenPolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("soft-cert-signature.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "soft-cert-signature.pdf", "pdf", VALID_SIGNATURE_POLICY_1))
+        post(validationRequestWithValidKeys(encodedString, "soft-cert-signature.pdf", "pdf", VALID_SIGNATURE_POLICY_3))
                 .then()
-                .body("policy.policyDescription", Matchers.is(POLICY_1_DESCRIPTION))
-                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_1))
-                .body("policy.policyUrl", Matchers.is(POLICY_1_URL))
+                .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
+                .body("policy.policyUrl", Matchers.is(POLICY_3_URL))
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("ADES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -74,7 +74,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv3
      *
      * Title: The PDF-file is not QES level and misses SSCD/QSCD compliance
      *
@@ -85,11 +85,11 @@ public class SignaturePolicyIT extends SiVaRestTests {
     @Test
     public void pdfDocumentAdesNonSscdCompliantShouldFailWithGivenPolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("soft-cert-signature.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "soft-cert-signature.pdf", "pdf", VALID_SIGNATURE_POLICY_2))
+        post(validationRequestWithValidKeys(encodedString, "soft-cert-signature.pdf", "pdf", VALID_SIGNATURE_POLICY_5))
                 .then()
-                .body("policy.policyDescription", Matchers.is(POLICY_2_DESCRIPTION))
-                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_2))
-                .body("policy.policyUrl", Matchers.is(POLICY_2_URL))
+                .body("policy.policyDescription", Matchers.is(POLICY_5_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))
+                .body("policy.policyUrl", Matchers.is(POLICY_5_URL))
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
@@ -106,7 +106,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv3
      *
      * Title: The PDF-file is QES level and has SSCD/QSCD compliance
      *
@@ -118,11 +118,11 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void pdfDocumentQesSscdCompliantShouldPassWithAnyPolicy() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades_lt_two_valid_sig.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "pades_lt_two_valid_sig.pdf", "pdf", VALID_SIGNATURE_POLICY_1))
+        post(validationRequestWithValidKeys(encodedString, "pades_lt_two_valid_sig.pdf", "pdf", VALID_SIGNATURE_POLICY_3))
                 .then()
-                .body("policy.policyDescription", Matchers.is(POLICY_1_DESCRIPTION))
-                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_1))
-                .body("policy.policyUrl", Matchers.is(POLICY_1_URL))
+                .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
+                .body("policy.policyUrl", Matchers.is(POLICY_3_URL))
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -138,7 +138,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv3
      *
      * Title: The PDF-file is QES level and has SSCD/QSCD compliance
      *
@@ -150,11 +150,11 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void pdfDocumentQesSscdCompliantShouldPassWithStrictPolicy() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades_lt_two_valid_sig.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "pades_lt_two_valid_sig.pdf", "pdf", VALID_SIGNATURE_POLICY_2))
+        post(validationRequestWithValidKeys(encodedString, "pades_lt_two_valid_sig.pdf", "pdf", VALID_SIGNATURE_POLICY_5))
                 .then()
-                .body("policy.policyDescription", Matchers.is(POLICY_2_DESCRIPTION))
-                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_2))
-                .body("policy.policyUrl", Matchers.is(POLICY_2_URL))
+                .body("policy.policyDescription", Matchers.is(POLICY_5_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))
+                .body("policy.policyUrl", Matchers.is(POLICY_5_URL))
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -170,7 +170,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv3
      *
      * Title: The bdoc is not QES level and misses SSCD/QSCD compliance
      *
@@ -182,11 +182,11 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void bdocDocumentAdesNonSscdCompliantShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("allkiri_ades.asice"));
-        post(validationRequestWithValidKeys(encodedString, "allkiri_ades.asice", "bdoc", VALID_SIGNATURE_POLICY_1))
+        post(validationRequestWithValidKeys(encodedString, "allkiri_ades.asice", "bdoc", VALID_SIGNATURE_POLICY_3))
                 .then()
-                .body("policy.policyDescription", Matchers.is(POLICY_1_DESCRIPTION))
-                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_1))
-                .body("policy.policyUrl", Matchers.is(POLICY_1_URL))
+                .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
+                .body("policy.policyUrl", Matchers.is(POLICY_3_URL))
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("ADES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -201,7 +201,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv3
      *
      * Title: The bdoc is not QES level and misses SSCD/QSCD compliance
      *
@@ -214,11 +214,11 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void bdocDocumentAdesNonSscdCompliantShouldFailWithGivenPolicy() {
         setTestFilesDirectory("bdoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("allkiri_ades.asice"));
-        post(validationRequestWithValidKeys(encodedString, "allkiri_ades.asice", "bdoc", VALID_SIGNATURE_POLICY_2))
+        post(validationRequestWithValidKeys(encodedString, "allkiri_ades.asice", "bdoc", VALID_SIGNATURE_POLICY_5))
                 .then()
-                .body("policy.policyDescription", Matchers.is(POLICY_2_DESCRIPTION))
-                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_2))
-                .body("policy.policyUrl", Matchers.is(POLICY_2_URL))
+                .body("policy.policyDescription", Matchers.is(POLICY_5_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))
+                .body("policy.policyUrl", Matchers.is(POLICY_5_URL))
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("AdES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
@@ -233,7 +233,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv3
      *
      * Title: The bdoc is QES level and has SSCD/QSCD compliance
      *
@@ -245,11 +245,11 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void bdocDocumentQesSscdCompliantShouldPassWithAnyPolicy() {
         setTestFilesDirectory("bdoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_ID_sig.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "Valid_ID_sig.bdoc", "bdoc", VALID_SIGNATURE_POLICY_1))
+        post(validationRequestWithValidKeys(encodedString, "Valid_ID_sig.bdoc", "bdoc", VALID_SIGNATURE_POLICY_3))
                 .then()
-                .body("policy.policyDescription", Matchers.is(POLICY_1_DESCRIPTION))
-                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_1))
-                .body("policy.policyUrl", Matchers.is(POLICY_1_URL))
+                .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
+                .body("policy.policyUrl", Matchers.is(POLICY_3_URL))
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -265,7 +265,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv1
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv3
      *
      * Title: The bdoc is QES level and has SSCD/QSCD compliance
      *
@@ -277,11 +277,11 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void bdocDocumentQesSscdCompliantShouldPassWithStrictPolicy() {
         setTestFilesDirectory("bdoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_ID_sig.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "Valid_ID_sig.bdoc", "bdoc", VALID_SIGNATURE_POLICY_2))
+        post(validationRequestWithValidKeys(encodedString, "Valid_ID_sig.bdoc", "bdoc", VALID_SIGNATURE_POLICY_5))
                 .then()
-                .body("policy.policyDescription", Matchers.is(POLICY_2_DESCRIPTION))
-                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_2))
-                .body("policy.policyUrl", Matchers.is(POLICY_2_URL))
+                .body("policy.policyDescription", Matchers.is(POLICY_5_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))
+                .body("policy.policyUrl", Matchers.is(POLICY_5_URL))
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))

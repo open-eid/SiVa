@@ -24,7 +24,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.ADES_POLICY;
-import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.ADES_QS_POLICY;
+import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.ADES_QC_POLICY;
 import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.QES_POLICY;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -63,11 +63,11 @@ public class PDFSignaturePolicyTest extends PDFValidationServiceTest {
     }
 
     @Test
-    public void validationReportShouldContainAdesQsPolicyWhenAdesQsPolicyIsGivenToValidator() throws Exception {
+    public void validationReportShouldContainAdesQcPolicyWhenAdesQcPolicyIsGivenToValidator() throws Exception {
         Policy policy = validateWithPolicy("POLv4").getPolicy();
-        assertEquals(ADES_QS_POLICY.getName(), policy.getPolicyName());
-        assertEquals(ADES_QS_POLICY.getDescription(), policy.getPolicyDescription());
-        assertEquals(ADES_QS_POLICY.getUrl(), policy.getPolicyUrl());
+        assertEquals(ADES_QC_POLICY.getName(), policy.getPolicyName());
+        assertEquals(ADES_QC_POLICY.getDescription(), policy.getPolicyDescription());
+        assertEquals(ADES_QC_POLICY.getUrl(), policy.getPolicyUrl());
     }
 
     @Test

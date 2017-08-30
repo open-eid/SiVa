@@ -31,9 +31,9 @@ public class PredefinedValidationPolicySourceTest {
             + "(AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) "
             + "does not change the total validation result of the signature.";
 
-    private static final String EXPECTED_ADES_QS_POLICY_NAME = "POLv4";
-    private static final String EXPECTED_ADES_QS_POLICY_URL = "http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv4";
-    private static final String EXPECTED_ADES_QS_POLICY_DESCRIPTION = "Policy for validating Qualified Electronic Signatures and " +
+    private static final String EXPECTED_ADES_QC_POLICY_NAME = "POLv4";
+    private static final String EXPECTED_ADES_QC_POLICY_URL = "http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv4";
+    private static final String EXPECTED_ADES_QC_POLICY_DESCRIPTION = "Policy for validating Qualified Electronic Signatures and " +
             "Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as" +
             " Advanced electronic Signatures (AdES) do not produce a positive validation result.";
 
@@ -61,10 +61,10 @@ public class PredefinedValidationPolicySourceTest {
     }
 
     @Test
-    public void adesQsValidationPolicyShouldMatchSpecification() {
-        ValidationPolicy noTypePol = PredefinedValidationPolicySource.ADES_QS_POLICY;
-        assertEquals(EXPECTED_ADES_QS_POLICY_NAME, noTypePol.getName());
-        assertEquals(EXPECTED_ADES_QS_POLICY_URL, noTypePol.getUrl());
-        assertEquals(EXPECTED_ADES_QS_POLICY_DESCRIPTION, noTypePol.getDescription());
+    public void adesQcValidationPolicyShouldMatchSpecification() {
+        ValidationPolicy noTypePol = PredefinedValidationPolicySource.ADES_QC_POLICY;
+        assertEquals(EXPECTED_ADES_QC_POLICY_NAME, noTypePol.getName());
+        assertEquals(EXPECTED_ADES_QC_POLICY_URL, noTypePol.getUrl());
+        assertEquals(EXPECTED_ADES_QC_POLICY_DESCRIPTION, noTypePol.getDescription());
     }
 }

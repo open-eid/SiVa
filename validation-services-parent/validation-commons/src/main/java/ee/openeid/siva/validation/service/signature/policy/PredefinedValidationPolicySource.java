@@ -24,7 +24,7 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor(access = PRIVATE)
 public class PredefinedValidationPolicySource {
     public static final ValidationPolicy QES_POLICY = createValidationPolicyPolV5();
-    public static final ValidationPolicy ADES_QS_POLICY = createValidationPolicyPolV4();
+    public static final ValidationPolicy ADES_QC_POLICY = createValidationPolicyPolV4();
     public static final ValidationPolicy ADES_POLICY = createValidationPolicyPolV3();
 
     private static final String POL_V3_NAME = "POLv3";

@@ -48,7 +48,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.ADES_POLICY;
-import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.ADES_QS_POLICY;
+import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.ADES_QC_POLICY;
 import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.QES_POLICY;
 import static ee.openeid.validation.service.bdoc.BDOCTestUtils.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -272,11 +272,11 @@ public class BDOCValidationServiceIntegrationTest {
     }
 
     @Test
-    public void validationReportShouldContainAdesQsPolicyWhenAdesQsPolicyIsGivenToValidator() throws Exception {
+    public void validationReportShouldContainAdesQcPolicyWhenAdesQcPolicyIsGivenToValidator() throws Exception {
         Policy policy = validateWithPolicy(POL_V4).getPolicy();
-        assertEquals(ADES_QS_POLICY.getName(), policy.getPolicyName());
-        assertEquals(ADES_QS_POLICY.getDescription(), policy.getPolicyDescription());
-        assertEquals(ADES_QS_POLICY.getUrl(), policy.getPolicyUrl());
+        assertEquals(ADES_QC_POLICY.getName(), policy.getPolicyName());
+        assertEquals(ADES_QC_POLICY.getDescription(), policy.getPolicyDescription());
+        assertEquals(ADES_QC_POLICY.getUrl(), policy.getPolicyUrl());
     }
 
     @Test

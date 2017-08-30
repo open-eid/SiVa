@@ -158,32 +158,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-sha256-rsa1024-expired2.pdf"));
         post(validationRequestWithValidKeys(encodedString, "hellopades-lt-sha256-rsa1024-expired2.pdf", "pdf", ""))
                 .then()
-                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
-                .body("validSignaturesCount", Matchers.is(0))
-                .body("signaturesCount", Matchers.is(1));
-    }
-
-    /**
-     * TestCaseID: PDF-ValidationFail-7
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
-     *
-     * Title: hellopadess been signed with an expired certificate, where signing time is within the original validity
-     * period of the certificate, but OCSP confirmation and Time Stamp are current date (PAdES Baseline LT).
-     *
-     * Expected Result: Document signed with expired certificate should fail
-     *
-     * File: hellopades-lt-sha1-rsa1024-expired2.pdf
-     */
-    @Test
-    @Ignore //TODO https://jira.nortal.com/browse/SIVARIA-17
-    public void documentSignedWithExpiredSha1CertificateShouldFail() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-sha1-rsa1024-expired2.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "hellopades-lt-sha1-rsa1024-expired2.pdf", "pdf", ""))
-                .then()
-                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1));
     }

@@ -24,13 +24,13 @@ import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
-import ee.openeid.tsl.configuration.CustomOCSPSource;
+import ee.openeid.tsl.configuration.AlwaysFailingCRLSource;
+import ee.openeid.tsl.configuration.AlwaysFailingOCSPSource;
 import ee.openeid.validation.service.generic.validator.report.GenericQualifiedReportBuilder;
 import eu.europa.esig.dss.DSSDocument;
 import eu.europa.esig.dss.DSSException;
 import eu.europa.esig.dss.InMemoryDocument;
 import eu.europa.esig.dss.MimeType;
-import eu.europa.esig.dss.client.crl.OnlineCRLSource;
 import eu.europa.esig.dss.client.http.commons.CommonsDataLoader;
 import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
@@ -70,7 +70,7 @@ public class GenericValidationService implements ValidationService {
             SignedDocumentValidator validator = SignedDocumentValidator.fromDocument(dssDocument);
 
             CommonCertificateVerifier certificateVerifier = new CommonCertificateVerifier(trustedListsCertificateSource,
-                    new OnlineCRLSource(), new CustomOCSPSource(), new CommonsDataLoader());
+                    new AlwaysFailingCRLSource(), new AlwaysFailingOCSPSource(), new CommonsDataLoader());
             LOGGER.info("Certificate pool size: {}", getCertificatePoolSize(certificateVerifier));
             validator.setCertificateVerifier(certificateVerifier);
             final Reports reports;

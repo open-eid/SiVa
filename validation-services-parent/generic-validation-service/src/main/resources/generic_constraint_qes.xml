@@ -8,16 +8,10 @@
         <PolicyAvailable Level="FAIL"/>
         <PolicyHashMatch Level="INFORM"/>
         <AcceptableFormats Level="FAIL">
-            <Id>PAdES-BASELINE-B</Id>
-            <Id>PAdES-BASELINE-T</Id>
             <Id>PAdES-BASELINE-LT</Id>
             <Id>PAdES-BASELINE-LTA</Id>
-            <Id>CAdES-BASELINE-B</Id>
-            <Id>CAdES-BASELINE-T</Id>
             <Id>CAdES-BASELINE-LT</Id>
             <Id>CAdES-BASELINE-LTA</Id>
-            <Id>XAdES-BASELINE-B</Id>
-            <Id>XAdES-BASELINE-T</Id>
             <Id>XAdES-BASELINE-LT</Id>
             <Id>XAdES-BASELINE-LTA</Id>
         </AcceptableFormats>

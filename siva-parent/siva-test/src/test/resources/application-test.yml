@@ -2,4 +2,4 @@ endpoints:
   health:
     enabled: true
 plugtest:
-  location: C:\Users\aaren\Documents\RIA\SIVA2\plugtest\test-signatures\for_internal_use_only\plugtest_eu\valid-containers\
+  location: url

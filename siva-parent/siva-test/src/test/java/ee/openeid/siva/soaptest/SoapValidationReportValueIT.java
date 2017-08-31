@@ -422,7 +422,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("invalid-digest.asice"));
         Document report = extractReportDom(post(validationRequestForDocumentExtended(encodedString, "invalid-digest.asice", "XROAD","")).andReturn().body().asString());
-        assertEquals("validSignaturesCount is zero", 0, getQualifiedReportFromDom(report).getValidSignaturesCount());
+        assertEquals("validSignaturesCount is zero", new Integer(0), getQualifiedReportFromDom(report).getValidSignaturesCount());
         assertEquals("SignatureFormat should match expected", "XAdES_BASELINE_LT", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSignatureFormat());
         assertEquals("Indication should match expected", "TOTAL-FAILED", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getIndication().value());
         assertTrue("There should be no subIndication", getQualifiedReportFromDom(report).getSignatures().getSignature().get(0).getSubIndication().isEmpty());

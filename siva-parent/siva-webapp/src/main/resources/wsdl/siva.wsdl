@@ -28,7 +28,7 @@
         <xs:sequence>
           <xs:element name="Policy" type="tns:policy"/>
           <xs:element name="ValidationTime" type="xs:string"/>
-          <xs:element name="ValidationWarnings">
+          <xs:element name="ValidationWarnings" minOccurs="0">
             <xs:complexType>
               <xs:sequence>
                 <xs:element maxOccurs="unbounded" minOccurs="0" name="ValidationWarning" type="tns:validationWarning"/>
@@ -37,15 +37,22 @@
           </xs:element>
           <xs:element name="DocumentName" type="xs:string"/>
           <xs:element name="SignatureForm" type="xs:string"/>
-          <xs:element name="Signatures">
+          <xs:element name="Signatures" minOccurs="0">
             <xs:complexType>
               <xs:sequence>
                 <xs:element maxOccurs="unbounded" minOccurs="0" name="Signature" type="tns:signatureValidationData"/>
               </xs:sequence>
             </xs:complexType>
           </xs:element>
-          <xs:element name="ValidSignaturesCount" type="xs:int"/>
-          <xs:element name="SignaturesCount" type="xs:int"/>
+          <xs:element name="TimeStampTokens" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded"  name="TimeStampToken" type="tns:timeStampTokenData"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="ValidSignaturesCount" minOccurs="0" type="xs:int"/>
+          <xs:element name="SignaturesCount"  minOccurs="0" type="xs:int"/>
         </xs:sequence>
       </xs:complexType>
       <xs:complexType name="policy">
@@ -54,6 +61,20 @@
           <xs:element name="PolicyName" type="xs:string"/>
           <xs:element name="PolicyUrl" type="xs:string"/>
         </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="timeStampTokenData">
+        <xs:sequence>
+            <xs:element name="Indication" type="tns:indication"/>
+            <xs:element name="SignedBy" type="xs:string"/>
+            <xs:element name="signedTime" type="xs:string"/>
+            <xs:element name="Errors">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="Error" type="tns:error"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+          </xs:sequence>
       </xs:complexType>
       <xs:complexType name="signatureValidationData">
         <xs:sequence>

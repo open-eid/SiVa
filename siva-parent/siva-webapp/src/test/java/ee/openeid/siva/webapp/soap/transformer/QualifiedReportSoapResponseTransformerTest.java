@@ -37,8 +37,8 @@ public class QualifiedReportSoapResponseTransformerTest {
         assertEquals(qualifiedReport.getSignatureForm(), responseReport.getSignatureForm());
         assertEquals(qualifiedReport.getValidationTime(), responseReport.getValidationTime());
         assertEquals(qualifiedReport.getValidationWarnings().get(0).getContent(), responseReport.getValidationWarnings().getValidationWarning().get(0).getContent());
-        assertEquals(qualifiedReport.getSignaturesCount().longValue(), responseReport.getSignaturesCount());
-        assertEquals(qualifiedReport.getValidSignaturesCount().longValue(), responseReport.getValidSignaturesCount());
+        assertEquals(qualifiedReport.getSignaturesCount(), responseReport.getSignaturesCount());
+        assertEquals(qualifiedReport.getValidSignaturesCount(), responseReport.getValidSignaturesCount());
 
         assertEquals(qualifiedReport.getPolicy().getPolicyDescription(), responseReport.getPolicy().getPolicyDescription());
         assertEquals(qualifiedReport.getPolicy().getPolicyName(), responseReport.getPolicy().getPolicyName());

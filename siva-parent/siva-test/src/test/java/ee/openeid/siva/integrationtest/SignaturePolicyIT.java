@@ -166,6 +166,134 @@ public class SignaturePolicyIT extends SiVaRestTests {
     }
 
     /**
+     * TestCaseID: Pdf-Signature-Policy-5
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv3
+     *
+     * Title: The PDF-file is missing an OCSP or CRL
+     *
+     * Expected Result: Signatures are invalid according to policy
+     *
+     * File: PadesProfileT.pdf
+     */
+    @Test
+    public void pdfDocumentWithoutRevocationInfoShouldFail() {
+        setTestFilesDirectory("signature_policy_test_files/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("PadesProfileT.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "PadesProfileT.pdf", "pdf", VALID_SIGNATURE_POLICY_5))
+                .then()
+                .body("policy.policyDescription", Matchers.is(POLICY_5_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))
+                .body("policy.policyUrl", Matchers.is(POLICY_5_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-T"))
+                .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors[0].content", Matchers.is("The expected format is not found!"))
+//                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1));
+    }
+
+    /**
+     * TestCaseID: Pdf-Signature-Policy-6
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv3
+     *
+     * Title: The PDF-file with included CRL
+     *
+     * Expected Result: Signatures are valid according to policy
+     *
+     * File: PadesProfileLtWithCrl.pdf
+     */
+    @Test
+    public void pdfDocumentWithCrlAsRevocationInfoShouldPass() {
+        setTestFilesDirectory("signature_policy_test_files/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("PadesProfileLtWithCrl.asice"));
+        post(validationRequestWithValidKeys(encodedString, "PadesProfileLtWithCrl.asice", "pdf", VALID_SIGNATURE_POLICY_5))
+                .then()
+                .body("policy.policyDescription", Matchers.is(POLICY_5_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))
+                .body("policy.policyUrl", Matchers.is(POLICY_5_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-T"))
+                .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors[0].content", Matchers.is("The expected format is not found!"))
+//                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1));
+    }
+
+    /**
+     * TestCaseID: Pdf-Signature-Policy-7
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv4
+     *
+     * Title: The PDF-file with AdesQC signature level with corresponding policy
+     *
+     * Expected Result: Signatures are valid according to policy
+     *
+     * File: PadesTestAdesQC.pdf
+     */
+    @Test
+    public void pdfDocumentWithAdesQcSignatureShouldPass() {
+        setTestFilesDirectory("signature_policy_test_files/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("PadesTestAdesQC.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "PadesTestAdesQC.pdf", "pdf", VALID_SIGNATURE_POLICY_4))
+                .then()
+                .body("policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
+                .body("policy.policyUrl", Matchers.is(POLICY_4_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("ADESIG_QC"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subIndication", Matchers.is(""))
+                .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].warnings[0].description", Matchers.is("The signature/seal is not created by a QSCD!"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
+    }
+
+    /**
+     * TestCaseID: Pdf-Signature-Policy-8
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv4
+     *
+     * Title: The PDF-file with AdesQC signature level with stricter policy
+     *
+     * Expected Result: Signatures are invalid according to policy
+     *
+     * File: PadesTestAdesQC.pdf
+     */
+    @Test
+    public void pdfDocumentWithAdesQcSignatureShouldFail() {
+        setTestFilesDirectory("signature_policy_test_files/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("PadesTestAdesQC.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "PadesTestAdesQC.pdf", "pdf", VALID_SIGNATURE_POLICY_5))
+                .then()
+                .body("policy.policyDescription", Matchers.is(POLICY_5_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))
+                .body("policy.policyUrl", Matchers.is(POLICY_5_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is("CHAIN_CONSTRAINTS_FAILURE"))
+                .body("signatures[0].errors[0].content", Matchers.is("The certificate is not supported by QSCD!"))
+                .body("signatures[0].warnings", Matchers.hasSize(2))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1));
+    }
+
+    /**
      * TestCaseID: Bdoc-Signature-Policy-1
      *
      * TestType: Automated

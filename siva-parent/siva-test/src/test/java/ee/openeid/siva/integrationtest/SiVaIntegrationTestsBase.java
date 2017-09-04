@@ -67,12 +67,16 @@ public abstract class SiVaIntegrationTestsBase {
             "i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature " +
             "(AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) " +
             "does not change the total validation result of the signature.";
+    protected static final String POLICY_4_DESCRIPTION = "Policy for validating Qualified Electronic Signatures and " +
+            "Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been " +
+            "recognized as Advanced electronic Signatures (AdES) do not produce a positive validation result.";
     protected static final String POLICY_5_DESCRIPTION = "Policy for validating Qualified Electronic Signatures and " +
             "Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been " +
             "recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate " +
             "(AdES/QC) do not produce a positive validation result.";
 
     protected static final String POLICY_3_URL = "http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv3";
+    protected static final String POLICY_4_URL = "http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv4";
     protected static final String POLICY_5_URL = "http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv5";
 
     @Value("${local.server.port}")

@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
+import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
@@ -65,7 +66,8 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
                 .when()
                 .post(VALIDATION_ENDPOINT);
     }
-    protected Response postForDataFiles (String request){
+
+    protected Response postForDataFiles(String request) {
         return given()
                 .log().headers()
                 .log().method()
@@ -76,6 +78,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
                 .when()
                 .post(DATA_FILES_ENDPOINT);
     }
+
     protected Response getMonitoring() {
         return given()
                 .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
@@ -85,6 +88,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
 
     /**
      * Override to enable/disable printing the response per class
+     *
      * @return
      */
     protected boolean shouldPrintResponse() {
@@ -110,11 +114,12 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("document", Base64.encodeBase64String(readFileFromTestResources(file)));
         jsonObject.put("filename", file);
-        jsonObject.put("documentType", parseFileExtension(file));
+        String documentType = parseFileExtension(file);
+        if (DocumentType.XROAD.name().equalsIgnoreCase(documentType))
+            jsonObject.put("documentType", documentType);
         if (signaturePolicy != null) {
             jsonObject.put("signaturePolicy", signaturePolicy);
-        }
-        else {
+        } else {
             jsonObject.put("signaturePolicy", VALID_SIGNATURE_POLICY_5);
         }
         String output = jsonObject.toString();
@@ -142,7 +147,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
     protected String dataFilesRequestExtended(String file, String documentType) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("document", Base64.encodeBase64String(readFileFromTestResources(file)));
-        jsonObject.put("documentType",documentType );
+        jsonObject.put("documentType", documentType);
         return jsonObject.toString();
     }
 
@@ -153,17 +158,18 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(documentKey, encodedDocument);
         jsonObject.put(filenameKey, file);
-        jsonObject.put(documentTypeKey, documentType);
+        if (DocumentType.XROAD.name().equalsIgnoreCase(documentType))
+            jsonObject.put(documentTypeKey, documentType);
         jsonObject.put(signaturePolicyKey, signaturePolicy);
         return jsonObject.toString();
     }
 
     protected String validationRequestWithValidKeys(String encodedString, String filename, String documentType, String signaturePolicy) {
         return validationRequestForExtended(
-            DOCUMENT, encodedString,
-            FILENAME, filename,
-            DOCUMENT_TYPE, documentType,
-            SIGNATURE_POLICY, signaturePolicy);
+                DOCUMENT, encodedString,
+                FILENAME, filename,
+                DOCUMENT_TYPE, documentType,
+                SIGNATURE_POLICY, signaturePolicy);
     }
 
     protected QualifiedReport mapToReport(String json) {

@@ -42,9 +42,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -58,23 +56,16 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 @SpringBootTest(classes = MessageSourceAutoConfiguration.class)
 public class ValidationExceptionHandlerTest {
 
-    private ValidationController validationController;
-
-    private DataFilesController dataFilesController;
-
-    private ValidationProxy validationProxy;
-
-    private DataFilesProxy dataFilesProxy;
-
-    private MockMvc mockMvc;
-
-    private MockMvc mockMvcDataFiles;
-
-    @Autowired
-    private MessageSource messageSource;
-
     private static final String VALIDATE_URL_TEMPLATE = "/validate";
     private static final String GET_DATA_FILES_URL_TEMPLATE = "/getDataFiles";
+    private ValidationController validationController;
+    private DataFilesController dataFilesController;
+    private ValidationProxy validationProxy;
+    private DataFilesProxy dataFilesProxy;
+    private MockMvc mockMvc;
+    private MockMvc mockMvcDataFiles;
+    @Autowired
+    private MessageSource messageSource;
 
     @Before
     public void SetUp() {
@@ -103,6 +94,19 @@ public class ValidationExceptionHandlerTest {
                 .andExpect(jsonPath("$.requestErrors", hasSize(1)))
                 .andExpect(jsonPath("$.requestErrors[0].key", is("documentType")))
                 .andExpect(jsonPath("$.requestErrors[0].message", containsString("Invalid document type")))
+                .andReturn();
+    }
+
+    @Test
+    public void testMethodArgumentNotValidExceptionOnReportTypeExceptionHandler() throws Exception{
+        mockMvc.perform(post(VALIDATE_URL_TEMPLATE)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestWithInvalidReportType().toString().getBytes()))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.requestErrors", hasSize(1)))
+                .andExpect(jsonPath("$.requestErrors[0].key", is("reportType")))
+                .andExpect(jsonPath("$.requestErrors[0].message", containsString("Invalid report type")))
                 .andReturn();
     }
 
@@ -138,7 +142,7 @@ public class ValidationExceptionHandlerTest {
         when(dataFilesProxy.getDataFiles(any(ProxyDocument.class))).thenThrow(MalformedDocumentException.class);
         MvcResult result = mockMvcDataFiles.perform(post(GET_DATA_FILES_URL_TEMPLATE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(request().toString().getBytes()))
+                .content(dataFileRequest().toString().getBytes()))
                 .andExpect(status().isBadRequest())
                 .andReturn();
 
@@ -166,7 +170,7 @@ public class ValidationExceptionHandlerTest {
                 .thenThrow(new RESTValidationProxyRequestException("some key", "some message", HttpStatus.BAD_REQUEST));
         MvcResult result = mockMvcDataFiles.perform(post(GET_DATA_FILES_URL_TEMPLATE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(request().toString().getBytes()))
+                .content(dataFileRequest().toString().getBytes()))
                 .andExpect(status().isBadRequest())
                 .andReturn();
 
@@ -194,7 +198,7 @@ public class ValidationExceptionHandlerTest {
                 .thenThrow(new RESTValidationProxyException("some message", HttpStatus.INTERNAL_SERVER_ERROR));
         MvcResult result = mockMvcDataFiles.perform(post(GET_DATA_FILES_URL_TEMPLATE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(request().toString().getBytes()))
+                .content(dataFileRequest().toString().getBytes()))
                 .andExpect(status().isInternalServerError())
                 .andReturn();
 
@@ -236,7 +240,7 @@ public class ValidationExceptionHandlerTest {
         when(dataFilesProxy.getDataFiles(any(ProxyDocument.class))).thenThrow(ValidationServiceException.class);
         MvcResult result = mockMvcDataFiles.perform(post(GET_DATA_FILES_URL_TEMPLATE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(request().toString().getBytes()))
+                .content(dataFileRequest().toString().getBytes()))
                 .andExpect(status().isInternalServerError())
                 .andReturn();
 
@@ -248,13 +252,23 @@ public class ValidationExceptionHandlerTest {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("document", "dGVzdA0K");
         jsonObject.put("filename", "file.bdoc");
+        return jsonObject;
+    }
+    private JSONObject dataFileRequest() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("document", "dGVzdA0K");
+        jsonObject.put("filename", "file.bdoc");
         jsonObject.put("documentType", "DDOC");
         return jsonObject;
     }
-
     private JSONObject requestWithInvalidDocumentType() {
         JSONObject jsonObject = request();
         jsonObject.put("documentType", "asd");
+        return jsonObject;
+    }
+    private JSONObject requestWithInvalidReportType() {
+        JSONObject jsonObject = request();
+        jsonObject.put("reportType", "asd");
         return jsonObject;
     }
 

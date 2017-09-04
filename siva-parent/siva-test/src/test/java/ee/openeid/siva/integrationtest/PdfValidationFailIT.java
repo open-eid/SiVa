@@ -46,7 +46,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
     @Ignore("Unknown reason")
     public void signaturesMadeWithExpiredSigningCertificatesAreInvalid() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-rsa1024-sha1-expired.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "hellopades-lt-rsa1024-sha1-expired.pdf", "pdf", ""))
+        post(validationRequestWithValidKeys(encodedString, "hellopades-lt-rsa1024-sha1-expired.pdf", null, ""))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("INDETERMINATE_QES"))
@@ -75,7 +75,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
     @Ignore("Unknown reason")
     public void documentSignedWithRevokedCertificateShouldFail() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades_lt_revoked.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "pades_lt_revoked.pdf", "pdf", VALID_SIGNATURE_POLICY_3))
+        post(validationRequestWithValidKeys(encodedString, "pades_lt_revoked.pdf", null, VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("INDETERMINATE_QESIG"))
@@ -126,7 +126,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
     @Ignore //TODO https://jira.nortal.com/browse/SIVARIA-17
     public void documentSignedWithExpiredRsa2048CertificateShouldFail() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-sha256-rsa2048-expired.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "hellopades-lt-sha256-rsa2048-expired.pdf", "pdf", ""))
+        post(validationRequestWithValidKeys(encodedString, "hellopades-lt-sha256-rsa2048-expired.pdf", null, ""))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("AdES"))
@@ -156,7 +156,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
     @Ignore //TODO https://jira.nortal.com/browse/SIVARIA-17
     public void documentSignedWithExpiredSha256CertificateShouldFail() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-sha256-rsa1024-expired2.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "hellopades-lt-sha256-rsa1024-expired2.pdf", "pdf", ""))
+        post(validationRequestWithValidKeys(encodedString, "hellopades-lt-sha256-rsa1024-expired2.pdf", null, ""))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
                 .body("validSignaturesCount", Matchers.is(0))

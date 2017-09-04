@@ -17,6 +17,7 @@
 package ee.openeid.siva.webapp.request.validation;
 
 import ee.openeid.siva.proxy.document.DocumentType;
+import ee.openeid.siva.proxy.document.ReportType;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,12 +28,17 @@ public enum AcceptedValue {
     DOCUMENT {
         @Override
         public List<String> getAcceptedValues() {
-            return Arrays.asList(DocumentType.values()).stream().map(Enum::name).collect(Collectors.toList());
+            return Collections.singletonList(DocumentType.XROAD.name());
         }
     }, DATAFILES_REQUEST_DOCUMENT_TYPE {
         @Override
         public List<String> getAcceptedValues() {
             return Collections.singletonList(DocumentType.DDOC.name());
+        }
+    }, REPORT_TYPE {
+        @Override
+        public List<String> getAcceptedValues() {
+            return Arrays.stream(ReportType.values()).map(Enum::name).collect(Collectors.toList());
         }
     };
 

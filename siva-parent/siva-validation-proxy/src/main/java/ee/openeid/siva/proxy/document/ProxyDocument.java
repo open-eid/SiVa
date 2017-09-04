@@ -29,4 +29,5 @@ public class ProxyDocument {
 
     private String signaturePolicy;
 
+    private ReportType reportType;
 }

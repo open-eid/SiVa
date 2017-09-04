@@ -143,7 +143,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
     public void bdocCorrectValuesArePresentValidLtSignatureAdesWarning() {
         setTestFilesDirectory("bdoc/test/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc", "bdoc", VALID_SIGNATURE_POLICY_3))
+        post(validationRequestWithValidKeys(encodedString, "23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc", null, VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
                 .body("signatures[0].id", Matchers.is("S0"))
@@ -223,7 +223,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
     @Test
     public void bdocAllElementsArePresentValidMultipleSignatures() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Baltic MoU digital signing_EST_LT_LV.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "Baltic MoU digital signing_EST_LT_LV.bdoc", "bdoc", VALID_SIGNATURE_POLICY_3))
+        post(validationRequestWithValidKeys(encodedString, "Baltic MoU digital signing_EST_LT_LV.bdoc", null, VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
                 .body("signatures[0].id", Matchers.is("S0"))
@@ -264,7 +264,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
     @Ignore("Unknown reason")
     public void bdocAllElementsArePresentIndeterminateSignature() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("SS-4_teadmataCA.4.asice"));
-        post(validationRequestWithValidKeys(encodedString, "SS-4_teadmataCA.4.asice", "bdoc", VALID_SIGNATURE_POLICY_3))
+        post(validationRequestWithValidKeys(encodedString, "SS-4_teadmataCA.4.asice", null, VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
                 .body("signatures[0].id", Matchers.is("S0"))

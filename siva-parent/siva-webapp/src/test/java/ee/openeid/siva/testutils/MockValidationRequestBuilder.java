@@ -29,7 +29,7 @@ public class MockValidationRequestBuilder {
     public static final String DEFAULT_TYPE = "pdf";
     public static final String DEFAULT_DOCUMENT = "ABC";
     public static final String DEFAULT_SIGNATURE_POLICY = null;
-
+    public static final String DEFAULT_REPORT_TYPE = "Simple";
     private MockValidationRequest validationRequest;
 
     public static MockValidationRequestBuilder aValidationRequest() {
@@ -40,6 +40,11 @@ public class MockValidationRequestBuilder {
 
     public MockValidationRequestBuilder withFilename(String filename) {
         this.validationRequest.filename = filename;
+        return this;
+    }
+
+    public MockValidationRequestBuilder withReportType(String reportType) {
+        this.validationRequest.reportType = reportType;
         return this;
     }
 
@@ -73,6 +78,7 @@ public class MockValidationRequestBuilder {
         private String filename = DEFAULT_FILENAME;
         private String type = DEFAULT_TYPE;
         private String signaturePolicy = DEFAULT_SIGNATURE_POLICY;
+        private String reportType = DEFAULT_REPORT_TYPE;
 
         @Override
         public String getDocument() {
@@ -94,12 +100,9 @@ public class MockValidationRequestBuilder {
             return signaturePolicy;
         }
 
-        public void setDocument(String document) {
-            this.document = document;
-        }
-
-        public void setFilename(String filename) {
-            this.filename = filename;
+        @Override
+        public String getReportType() {
+            return reportType;
         }
 
         public void setType(String type) {

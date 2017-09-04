@@ -57,7 +57,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
     @Ignore("Unknown reason")
     public void baselineProfileBDocumentShouldFailpolv3() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-pades-b-sha256-auth.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "hellopades-pades-b-sha256-auth.pdf", "pdf", VALID_SIGNATURE_POLICY_3))
+        post(validationRequestWithValidKeys(encodedString, "hellopades-pades-b-sha256-auth.pdf", null, VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-B"))
                 .body("signatures[0].signatureLevel", Matchers.is("QES"))
@@ -86,7 +86,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
     @Ignore("Unknown reason")
     public void baselineProfileBDocumentShouldFailpolv5() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-pades-b-sha256-auth.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "hellopades-pades-b-sha256-auth.pdf", "pdf", VALID_SIGNATURE_POLICY_5))
+        post(validationRequestWithValidKeys(encodedString, "hellopades-pades-b-sha256-auth.pdf", null, VALID_SIGNATURE_POLICY_5))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-B"))
                 .body("signatures[0].signatureLevel", Matchers.is("QES"))
@@ -115,7 +115,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
     @Ignore("Unknown reason")
     public void baselineProfileTDocumentShouldFailpolv3() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades-baseline-t-live-aj.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "pades-baseline-t-live-aj.pdf", "pdf", VALID_SIGNATURE_POLICY_3))
+        post(validationRequestWithValidKeys(encodedString, "pades-baseline-t-live-aj.pdf", null, VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-T"))
                 .body("signatures[0].signatureLevel", Matchers.is("QES"))
@@ -144,7 +144,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
     @Ignore("Unknown reason")
     public void baselineProfileTDocumentShouldFailpolv5() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades-baseline-t-live-aj.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "pades-baseline-t-live-aj.pdf", "pdf", VALID_SIGNATURE_POLICY_5))
+        post(validationRequestWithValidKeys(encodedString, "pades-baseline-t-live-aj.pdf", null, VALID_SIGNATURE_POLICY_5))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-T"))
                 .body("signatures[0].signatureLevel", Matchers.is("QES"))
@@ -172,7 +172,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
     @Test
     public void baselineProfileLTDocumentShouldPasspolv3() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-pades-lt-sha256-sign.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "hellopades-pades-lt-sha256-sign.pdf", "pdf", VALID_SIGNATURE_POLICY_3))
+        post(validationRequestWithValidKeys(encodedString, "hellopades-pades-lt-sha256-sign.pdf", null, VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
@@ -200,7 +200,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
     @Test
     public void baselineProfileLTDocumentShouldPasspolv5() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-pades-lt-sha256-sign.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "hellopades-pades-lt-sha256-sign.pdf", "pdf", VALID_SIGNATURE_POLICY_5))
+        post(validationRequestWithValidKeys(encodedString, "hellopades-pades-lt-sha256-sign.pdf", null, VALID_SIGNATURE_POLICY_5))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
@@ -228,7 +228,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
     @Test
     public void baselineProfileLTADocumentShouldPasspolv3() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades-baseline-lta-live-aj.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "pades-baseline-lta-live-aj.pdf", "pdf", VALID_SIGNATURE_POLICY_3))
+        post(validationRequestWithValidKeys(encodedString, "pades-baseline-lta-live-aj.pdf", null, VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LTA"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
@@ -256,7 +256,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
     @Test
     public void baselineProfileLTADocumentShouldPasspolv5() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades-baseline-lta-live-aj.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "pades-baseline-lta-live-aj.pdf", "pdf", VALID_SIGNATURE_POLICY_5))
+        post(validationRequestWithValidKeys(encodedString, "pades-baseline-lta-live-aj.pdf", null, VALID_SIGNATURE_POLICY_5))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LTA"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
@@ -285,7 +285,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
     @Ignore("Unknown reason")
     public void documentWithBaselineProfilesBAndLTSignaturesShouldFail() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-b.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "hellopades-lt-b.pdf", "pdf", ""))
+        post(validationRequestWithValidKeys(encodedString, "hellopades-lt-b.pdf", null, ""))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("QES"))
@@ -320,7 +320,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
     @Ignore("Unknown reason")
     public void documentMessageDigestAttributeValueDoesNotMatchCalculatedValue() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt1-lt2-wrongDigestValue.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "hellopades-lt1-lt2-wrongDigestValue.pdf", "pdf", ""))
+        post(validationRequestWithValidKeys(encodedString, "hellopades-lt1-lt2-wrongDigestValue.pdf", null, ""))
                 .then()
                 .body("signatures[1].signatureFormat", Matchers.is("PAdES-BASELINE-LTA"))
                 .body("signatures[1].signatureLevel", Matchers.is("QES"))
@@ -348,7 +348,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
     @Test
     public void documentSignedWithMultipleSignersSerialSignature() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt1-lt2-Serial.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "hellopades-lt1-lt2-Serial.pdf", "pdf", ""))
+        post(validationRequestWithValidKeys(encodedString, "hellopades-lt1-lt2-Serial.pdf", null, ""))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LTA"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))

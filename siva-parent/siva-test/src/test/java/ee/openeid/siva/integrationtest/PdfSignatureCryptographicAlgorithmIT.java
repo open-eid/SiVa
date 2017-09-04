@@ -129,7 +129,7 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
     @Test
     public void documentSignedWithSha256Rsa1024AlgoShouldPass() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-sha256-rsa1024.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "hellopades-lt-sha256-rsa1024.pdf", "pdf", ""))
+        post(validationRequestWithValidKeys(encodedString, "hellopades-lt-sha256-rsa1024.pdf", null, ""))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))

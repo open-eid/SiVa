@@ -282,7 +282,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
     public void bdocKlass3Sk2010CertificateChainValidSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("EE_SER-AEX-B-LT-V-28.asice"));
-        post(validationRequestWithValidKeys(encodedString, "EE_SER-AEX-B-LT-V-28.asice", "BDOC", VALID_SIGNATURE_POLICY_3))
+        post(validationRequestWithValidKeys(encodedString, "EE_SER-AEX-B-LT-V-28.asice", null, VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("QES"))
@@ -407,7 +407,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
     public void asiceWithSceFileExtensionShouldPass() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("ASICE_TS_LTA_content_as_sce.sce"));
-        post(validationRequestWithValidKeys(encodedString, "ASICE_TS_LTA_content_as_sce.sce", "BDOC", ""))
+        post(validationRequestWithValidKeys(encodedString, "ASICE_TS_LTA_content_as_sce.sce", null, ""))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-LTA"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
@@ -434,7 +434,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
     public void asiceWithSpecialCharactersInDataFileShouldPass() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Nonconventionalcharacters.asice"));
-        post(validationRequestWithValidKeys(encodedString, "Nonconventionalcharacters.asice", "BDOC", ""))
+        post(validationRequestWithValidKeys(encodedString, "Nonconventionalcharacters.asice", null, ""))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))

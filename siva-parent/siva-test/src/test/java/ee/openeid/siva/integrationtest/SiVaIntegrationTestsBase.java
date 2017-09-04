@@ -112,7 +112,7 @@ public abstract class SiVaIntegrationTestsBase {
     protected void assertAllSignaturesAreValid(QualifiedReport report) {
         assertTrue(report.getSignaturesCount().equals(report.getValidSignaturesCount()));
     }
-
+    
     protected void assertSomeSignaturesAreValid(QualifiedReport report, int expectedValidSignatures) {
         assertTrue(expectedValidSignatures == report.getValidSignaturesCount());
     }

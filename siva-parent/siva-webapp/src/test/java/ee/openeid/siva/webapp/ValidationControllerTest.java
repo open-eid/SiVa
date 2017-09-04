@@ -55,7 +55,6 @@ public class ValidationControllerTest {
         );
         assertEquals("filename.asd", transformerSpy.validationRequest.getFilename());
         assertEquals("QVNE", transformerSpy.validationRequest.getDocument());
-        assertEquals("PDF" , transformerSpy.validationRequest.getDocumentType());
     }
 
     @Test
@@ -189,7 +188,6 @@ public class ValidationControllerTest {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("document", "QVNE");
         jsonObject.put("filename", "filename.asd");
-        jsonObject.put("documentType", "PDF");
         return jsonObject;
     }
 

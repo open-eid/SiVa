@@ -54,46 +54,16 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      * File: hellopades-pades-b-sha256-auth.pdf
      */
     @Test
-    @Ignore("Unknown reason")
     public void baselineProfileBDocumentShouldFailpolv3() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-pades-b-sha256-auth.pdf"));
         post(validationRequestWithValidKeys(encodedString, "hellopades-pades-b-sha256-auth.pdf", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-B"))
-                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].errors.content", Matchers.hasItems("The expected format is not found!"))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
-                .body("validSignaturesCount", Matchers.is(0))
-                .body("signaturesCount", Matchers.is(1));
-    }
-
-    /**
-     * TestCaseID: PDF-BaselineProfile-2
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
-     *
-     * Title: The PDF has PAdES-B profile signature polv5
-     *
-     * Expected Result: Document validation should fail as the profile is supported with any policy
-     *
-     * File: hellopades-pades-b-sha256-auth.pdf
-     */
-    @Test
-    @Ignore("Unknown reason")
-    public void baselineProfileBDocumentShouldFailpolv5() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-pades-b-sha256-auth.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "hellopades-pades-b-sha256-auth.pdf", VALID_SIGNATURE_POLICY_5))
-                .then()
-                .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-B"))
-                .body("signatures[0].signatureLevel", Matchers.is("QES"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors.content", Matchers.hasItems("The expected format is not found!"))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("signatures[0].warnings", Matchers.hasSize(1))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -112,46 +82,16 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      * File: pades-baseline-t-live-aj.pdf
      */
     @Test
-    @Ignore("Unknown reason")
     public void baselineProfileTDocumentShouldFailpolv3() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades-baseline-t-live-aj.pdf"));
         post(validationRequestWithValidKeys(encodedString, "pades-baseline-t-live-aj.pdf", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-T"))
-                .body("signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].errors.content", Matchers.hasItems("The expected format is not found!"))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
-                .body("validSignaturesCount", Matchers.is(0))
-                .body("signaturesCount", Matchers.is(1));
-    }
-
-    /**
-     * TestCaseID: PDF-BaselineProfile-4
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
-     *
-     * Title: The PDF has PAdES-T profile signature polv5
-     *
-     * Expected Result: Document validation should fail with any policy
-     *
-     * File: pades-baseline-t-live-aj.pdf
-     */
-    @Test
-    @Ignore("Unknown reason")
-    public void baselineProfileTDocumentShouldFailpolv5() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades-baseline-t-live-aj.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "pades-baseline-t-live-aj.pdf", VALID_SIGNATURE_POLICY_5))
-                .then()
-                .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-T"))
-                .body("signatures[0].signatureLevel", Matchers.is("QES"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors.content", Matchers.hasItems("The expected format is not found!"))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("signatures[0].warnings", Matchers.hasSize(1))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1));
     }

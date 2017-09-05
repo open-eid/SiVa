@@ -527,6 +527,29 @@ public class ValidationRequestIT extends SiVaRestTests {
     }
 
     /**
+     * TestCaseID: Bdoc-ValidationRequest-4
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
+     *
+     * Title: Not used, previously valid signaturePolicy
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_IDCard_MobID_signatures.bdoc
+     */
+    @Test
+    public void bdocValidationRequestOldNotValidSignaturePolicy() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
+        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "POLv2"))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(SIGNATURE_POLICY))
+                .body("requestErrors[0].message", Matchers.containsString("Invalid signature policy: " + "POLv2" + "; Available abstractPolicies: [" + VALID_SIGNATURE_POLICY_3 + ", " + VALID_SIGNATURE_POLICY_4 + ", " + VALID_SIGNATURE_POLICY_5 + "]"));
+    }
+
+    /**
      * TestCaseID: Pdf-ValidationRequest-4
      *
      * TestType: Automated

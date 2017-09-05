@@ -266,7 +266,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv5
      *
      * Title: The PDF-file with AdesQC signature level with stricter policy
      *
@@ -289,6 +289,38 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].subIndication", Matchers.is("CHAIN_CONSTRAINTS_FAILURE"))
                 .body("signatures[0].errors[0].content", Matchers.is("The certificate is not supported by QSCD!"))
                 .body("signatures[0].warnings", Matchers.hasSize(2))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1));
+    }
+
+    /**
+     * TestCaseID: Pdf-Signature-Policy-9
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-1-polv4
+     *
+     * Title: The PDF-file is not AdesQC level and misses SSCD/QSCD compliance
+     *
+     * Expected Result: Signatures are not valid according to policy
+     *
+     * File: soft-cert-signature.pdf
+     */
+    @Test
+    public void pdfDocumentAdesNonSscdCompliantShouldFailWithAdesQcPolicy() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("soft-cert-signature.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "soft-cert-signature.pdf", null, VALID_SIGNATURE_POLICY_4))
+                .then()
+                .body("policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
+                .body("policy.policyUrl", Matchers.is(POLICY_4_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is("CHAIN_CONSTRAINTS_FAILURE"))
+                .body("signatures[0].errors[0].content", Matchers.containsString("The certificate is not qualified!"))
+                .body("signatures[0].warnings[0].description", Matchers.is("The certificate is not qualified at issuance time!"))
+                .body("signatures[0].warnings[1].description", Matchers.is("The signature/seal is not created by a QSCD!"))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -338,7 +370,6 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: allkiri_ades.asice
      */
     @Test
-    @Ignore("Unknown reason")
     public void bdocDocumentAdesNonSscdCompliantShouldFailWithGivenPolicy() {
         setTestFilesDirectory("bdoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("allkiri_ades.asice"));
@@ -347,8 +378,8 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("policy.policyDescription", Matchers.is(POLICY_5_DESCRIPTION))
                 .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))
                 .body("policy.policyUrl", Matchers.is(POLICY_5_URL))
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("signatures[0].signatureLevel", Matchers.is("AdES"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is("CHAIN_CONSTRAINTS_FAILURE"))
                 .body("signatures[0].errors[0].content", Matchers.is("The certificate is not qualified!"))

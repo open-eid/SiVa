@@ -59,8 +59,8 @@ public abstract class SiVaIntegrationTestsBase {
 
     protected static final String INVALID_SIGNATURE_POLICY = "RUS";
 
-    protected static final String SMALL_CASE_VALID_SIGNATURE_POLICY_1 = "polv3";
-    protected static final String SMALL_CASE_VALID_SIGNATURE_POLICY_2 = "polv5";
+    protected static final String SMALL_CASE_VALID_SIGNATURE_POLICY_3 = "polv3";
+    protected static final String SMALL_CASE_VALID_SIGNATURE_POLICY_5 = "polv5";
 
     protected static final String POLICY_3_DESCRIPTION = "Policy for validating Electronic Signatures and Electronic " +
             "Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), " +

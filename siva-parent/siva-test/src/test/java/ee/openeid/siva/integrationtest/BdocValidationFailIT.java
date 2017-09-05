@@ -121,7 +121,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
         setTestFilesDirectory("document_format_test_files/");
         assertAllSignaturesAreInvalid(postForReport("BdocContainerNoSignature.bdoc"));
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("BdocContainerNoSignature.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "BdocContainerNoSignature.bdoc", null, ""))
+        post(validationRequestWithValidKeys(encodedString, "BdocContainerNoSignature.bdoc", ""))
                 .then()
                 .body("validationWarnings", Matchers.is(Matchers.empty()));
 
@@ -168,7 +168,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocInvalidMimeTypeChars() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("EE_SER-AEX-B-LT-V-33.asice"));
-        post(validationRequestWithValidKeys(encodedString, "EE_SER-AEX-B-LT-V-33.asice", null, ""))
+        post(validationRequestWithValidKeys(encodedString, "EE_SER-AEX-B-LT-V-33.asice", ""))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -268,7 +268,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocNotTrustedOcspCert() {
         setTestFilesDirectory("bdoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("TM-01_bdoc21-unknown-resp.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "TM-01_bdoc21-unknown-resp.bdoc", null, VALID_SIGNATURE_POLICY_3))
+        post(validationRequestWithValidKeys(encodedString, "TM-01_bdoc21-unknown-resp.bdoc", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
@@ -294,7 +294,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocNotTrustedTsaCert() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("TS-05_23634_TS_unknown_TSA.asice"));
-        post(validationRequestWithValidKeys(encodedString, "TS-05_23634_TS_unknown_TSA.asice", null, VALID_SIGNATURE_POLICY_3))
+        post(validationRequestWithValidKeys(encodedString, "TS-05_23634_TS_unknown_TSA.asice", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
@@ -344,7 +344,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocOcspAndTsDifferenceOver24H() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("EE_SER-AEX-B-LT-V-20.asice"));
-        post(validationRequestWithValidKeys(encodedString, "EE_SER-AEX-B-LT-V-20.asice", null, VALID_SIGNATURE_POLICY_3))
+        post(validationRequestWithValidKeys(encodedString, "EE_SER-AEX-B-LT-V-20.asice", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
@@ -595,7 +595,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocNoFilesInContainer() {
         setTestFilesDirectory("bdoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("KS-02_tyhi.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "KS-02_tyhi.bdoc", null, ""))
+        post(validationRequestWithValidKeys(encodedString, "KS-02_tyhi.bdoc", ""))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors.message", Matchers.hasItem(MAY_NOT_BE_EMPTY))
@@ -620,7 +620,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocWrongOcspNonce() {
         setTestFilesDirectory("bdoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("TM-10_noncevale.4.asice"));
-        post(validationRequestWithValidKeys(encodedString, "TM-10_noncevale.4.asice", null, VALID_SIGNATURE_POLICY_3))
+        post(validationRequestWithValidKeys(encodedString, "TM-10_noncevale.4.asice", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
@@ -670,7 +670,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocBaselineTSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("TS-06_23634_TS_missing_OCSP.asice"));
-        post(validationRequestWithValidKeys(encodedString, "TS-06_23634_TS_missing_OCSP.asice", null, VALID_SIGNATURE_POLICY_3))
+        post(validationRequestWithValidKeys(encodedString, "TS-06_23634_TS_missing_OCSP.asice", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT")) //TODO: Shouldnt it return XAdES_BASELINE_T instead?
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
@@ -696,7 +696,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocWrongSignersCertInOcspResponse() {
         setTestFilesDirectory("bdoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("23608-bdoc21-TM-ocsp-bad-nonce.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "23608-bdoc21-TM-ocsp-bad-nonce.bdoc", null, VALID_SIGNATURE_POLICY_3))
+        post(validationRequestWithValidKeys(encodedString, "23608-bdoc21-TM-ocsp-bad-nonce.bdoc", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
@@ -721,7 +721,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocCertificateValidityOutOfOcspRange() {
         setTestFilesDirectory("bdoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("23154_test1-old-sig-sigat-OK-prodat-NOK-1.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "23154_test1-old-sig-sigat-OK-prodat-NOK-1.bdoc", null, VALID_SIGNATURE_POLICY_3))
+        post(validationRequestWithValidKeys(encodedString, "23154_test1-old-sig-sigat-OK-prodat-NOK-1.bdoc", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is(""))

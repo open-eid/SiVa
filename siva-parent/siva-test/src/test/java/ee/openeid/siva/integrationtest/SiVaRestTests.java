@@ -153,19 +153,35 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
 
     protected String validationRequestForExtended(String documentKey, String encodedDocument,
                                                   String filenameKey, String file,
+                                                  String signaturePolicyKey, String signaturePolicy) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(documentKey, encodedDocument);
+        jsonObject.put(filenameKey, file);
+        jsonObject.put(signaturePolicyKey, signaturePolicy);
+        return jsonObject.toString();
+    }
+
+    protected String validationRequestDocumentTypeExtended(String documentKey, String encodedDocument,
+                                                  String filenameKey, String file,
                                                   String documentTypeKey, String documentType,
                                                   String signaturePolicyKey, String signaturePolicy) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(documentKey, encodedDocument);
         jsonObject.put(filenameKey, file);
-        if (DocumentType.XROAD.name().equalsIgnoreCase(documentType))
-            jsonObject.put(documentTypeKey, documentType);
+        jsonObject.put(documentTypeKey, documentType);
         jsonObject.put(signaturePolicyKey, signaturePolicy);
         return jsonObject.toString();
     }
 
-    protected String validationRequestWithValidKeys(String encodedString, String filename, String documentType, String signaturePolicy) {
+    protected String validationRequestWithValidKeys(String encodedString, String filename, String signaturePolicy) {
         return validationRequestForExtended(
+                DOCUMENT, encodedString,
+                FILENAME, filename,
+                SIGNATURE_POLICY, signaturePolicy);
+    }
+
+    protected String validationRequestWithDocumentTypeValidKeys(String encodedString, String filename, String documentType, String signaturePolicy) {
+        return validationRequestDocumentTypeExtended(
                 DOCUMENT, encodedString,
                 FILENAME, filename,
                 DOCUMENT_TYPE, documentType,

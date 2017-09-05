@@ -53,7 +53,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
     @Test
     public void pdfDocumentAdesNonSscdCompliantShouldPassWithGivenPolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("soft-cert-signature.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "soft-cert-signature.pdf", null, VALID_SIGNATURE_POLICY_3))
+        post(validationRequestWithValidKeys(encodedString, "soft-cert-signature.pdf", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
                 .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
@@ -85,7 +85,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
     @Test
     public void pdfDocumentAdesNonSscdCompliantShouldFailWithGivenPolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("soft-cert-signature.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "soft-cert-signature.pdf", null, VALID_SIGNATURE_POLICY_5))
+        post(validationRequestWithValidKeys(encodedString, "soft-cert-signature.pdf", VALID_SIGNATURE_POLICY_5))
                 .then()
                 .body("policy.policyDescription", Matchers.is(POLICY_5_DESCRIPTION))
                 .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))
@@ -118,7 +118,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void pdfDocumentQesSscdCompliantShouldPassWithAnyPolicy() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades_lt_two_valid_sig.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "pades_lt_two_valid_sig.pdf", null, VALID_SIGNATURE_POLICY_3))
+        post(validationRequestWithValidKeys(encodedString, "pades_lt_two_valid_sig.pdf", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
                 .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
@@ -150,7 +150,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void pdfDocumentQesSscdCompliantShouldPassWithStrictPolicy() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades_lt_two_valid_sig.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "pades_lt_two_valid_sig.pdf", null, VALID_SIGNATURE_POLICY_5))
+        post(validationRequestWithValidKeys(encodedString, "pades_lt_two_valid_sig.pdf", VALID_SIGNATURE_POLICY_5))
                 .then()
                 .body("policy.policyDescription", Matchers.is(POLICY_5_DESCRIPTION))
                 .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))
@@ -182,7 +182,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void pdfDocumentWithoutRevocationInfoShouldFail() {
         setTestFilesDirectory("signature_policy_test_files/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PadesProfileT.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "PadesProfileT.pdf", "pdf", VALID_SIGNATURE_POLICY_5))
+        post(validationRequestWithValidKeys(encodedString, "PadesProfileT.pdf", VALID_SIGNATURE_POLICY_5))
                 .then()
                 .body("policy.policyDescription", Matchers.is(POLICY_5_DESCRIPTION))
                 .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))
@@ -213,19 +213,19 @@ public class SignaturePolicyIT extends SiVaRestTests {
     @Test
     public void pdfDocumentWithCrlAsRevocationInfoShouldPass() {
         setTestFilesDirectory("signature_policy_test_files/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("PadesProfileLtWithCrl.asice"));
-        post(validationRequestWithValidKeys(encodedString, "PadesProfileLtWithCrl.asice", "pdf", VALID_SIGNATURE_POLICY_5))
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("PadesProfileLtWithCrl.pdf"));
+        post(validationRequestWithValidKeys(encodedString, "PadesProfileLtWithCrl.pdf", VALID_SIGNATURE_POLICY_5))
                 .then()
                 .body("policy.policyDescription", Matchers.is(POLICY_5_DESCRIPTION))
                 .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))
                 .body("policy.policyUrl", Matchers.is(POLICY_5_URL))
-                .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-T"))
-                .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors[0].content", Matchers.is("The expected format is not found!"))
+                .body("signatures[0].errors", Matchers.hasSize(0))
 //                .body("signatures[0].warnings", Matchers.hasSize(0))
-                .body("validSignaturesCount", Matchers.is(0))
+                .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
 
@@ -246,7 +246,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void pdfDocumentWithAdesQcSignatureShouldPass() {
         setTestFilesDirectory("signature_policy_test_files/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PadesTestAdesQC.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "PadesTestAdesQC.pdf", "pdf", VALID_SIGNATURE_POLICY_4))
+        post(validationRequestWithValidKeys(encodedString, "PadesTestAdesQC.pdf", VALID_SIGNATURE_POLICY_4))
                 .then()
                 .body("policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
                 .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
@@ -278,7 +278,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void pdfDocumentWithAdesQcSignatureShouldFail() {
         setTestFilesDirectory("signature_policy_test_files/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PadesTestAdesQC.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "PadesTestAdesQC.pdf", "pdf", VALID_SIGNATURE_POLICY_5))
+        post(validationRequestWithValidKeys(encodedString, "PadesTestAdesQC.pdf", VALID_SIGNATURE_POLICY_5))
                 .then()
                 .body("policy.policyDescription", Matchers.is(POLICY_5_DESCRIPTION))
                 .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))
@@ -309,7 +309,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
     @Test
     public void pdfDocumentAdesNonSscdCompliantShouldFailWithAdesQcPolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("soft-cert-signature.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "soft-cert-signature.pdf", null, VALID_SIGNATURE_POLICY_4))
+        post(validationRequestWithValidKeys(encodedString, "soft-cert-signature.pdf", VALID_SIGNATURE_POLICY_4))
                 .then()
                 .body("policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
                 .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
@@ -342,7 +342,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void bdocDocumentAdesNonSscdCompliantShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("allkiri_ades.asice"));
-        post(validationRequestWithValidKeys(encodedString, "allkiri_ades.asice", null, VALID_SIGNATURE_POLICY_3))
+        post(validationRequestWithValidKeys(encodedString, "allkiri_ades.asice", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
                 .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
@@ -373,7 +373,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void bdocDocumentAdesNonSscdCompliantShouldFailWithGivenPolicy() {
         setTestFilesDirectory("bdoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("allkiri_ades.asice"));
-        post(validationRequestWithValidKeys(encodedString, "allkiri_ades.asice", null, VALID_SIGNATURE_POLICY_5))
+        post(validationRequestWithValidKeys(encodedString, "allkiri_ades.asice", VALID_SIGNATURE_POLICY_5))
                 .then()
                 .body("policy.policyDescription", Matchers.is(POLICY_5_DESCRIPTION))
                 .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))
@@ -404,7 +404,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void bdocDocumentQesSscdCompliantShouldPassWithAnyPolicy() {
         setTestFilesDirectory("bdoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_ID_sig.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "Valid_ID_sig.bdoc", null, VALID_SIGNATURE_POLICY_3))
+        post(validationRequestWithValidKeys(encodedString, "Valid_ID_sig.bdoc", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
                 .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
@@ -436,7 +436,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void bdocDocumentQesSscdCompliantShouldPassWithStrictPolicy() {
         setTestFilesDirectory("bdoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_ID_sig.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "Valid_ID_sig.bdoc", null, VALID_SIGNATURE_POLICY_5))
+        post(validationRequestWithValidKeys(encodedString, "Valid_ID_sig.bdoc", VALID_SIGNATURE_POLICY_5))
                 .then()
                 .body("policy.policyDescription", Matchers.is(POLICY_5_DESCRIPTION))
                 .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))

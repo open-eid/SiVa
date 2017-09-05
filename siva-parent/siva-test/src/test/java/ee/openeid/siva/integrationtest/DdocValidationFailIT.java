@@ -381,7 +381,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
     public void ddocNoFilesInContainer() {
         setTestFilesDirectory("ddoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("KS-02_tyhi.ddoc"));
-        post(validationRequestWithValidKeys(encodedString, "KS-02_tyhi.ddoc", null, ""))
+        post(validationRequestWithValidKeys(encodedString, "KS-02_tyhi.ddoc",""))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors.message", Matchers.hasItem(MAY_NOT_BE_EMPTY))
@@ -405,7 +405,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
     public void ddocNamespaceErrorShouldFail() {
         setTestFilesDirectory("ddoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("ns6t3cp7.ddoc"));
-        post(validationRequestWithValidKeys(encodedString, "ns6t3cp7.ddoc", null, ""))
+        post(validationRequestWithValidKeys(encodedString, "ns6t3cp7.ddoc", ""))
                 .then()
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].warnings[0].description", Matchers.is("Bad digest for DataFile: D0 alternate digest matches!"))

@@ -143,7 +143,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
     public void bdocCorrectValuesArePresentValidLtSignatureAdesWarning() {
         setTestFilesDirectory("bdoc/test/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc", null, VALID_SIGNATURE_POLICY_3))
+        post(validationRequestWithValidKeys(encodedString, "23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
                 .body("signatures[0].id", Matchers.is("S0"))
@@ -223,7 +223,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
     @Test
     public void bdocAllElementsArePresentValidMultipleSignatures() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Baltic MoU digital signing_EST_LT_LV.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "Baltic MoU digital signing_EST_LT_LV.bdoc", null, VALID_SIGNATURE_POLICY_3))
+        post(validationRequestWithValidKeys(encodedString, "Baltic MoU digital signing_EST_LT_LV.bdoc",VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
                 .body("signatures[0].id", Matchers.is("S0"))
@@ -264,7 +264,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
     @Ignore("Unknown reason")
     public void bdocAllElementsArePresentIndeterminateSignature() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("SS-4_teadmataCA.4.asice"));
-        post(validationRequestWithValidKeys(encodedString, "SS-4_teadmataCA.4.asice", null, VALID_SIGNATURE_POLICY_3))
+        post(validationRequestWithValidKeys(encodedString, "SS-4_teadmataCA.4.asice", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
                 .body("signatures[0].id", Matchers.is("S0"))
@@ -872,7 +872,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
     public void xroadAllElementsArePresentValidSimpleSignature() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", "xroad", ""))
+        post(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-simple.asice", "xroad", ""))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaXroad.json"))
                 .body("signatures[0].id", Matchers.is("signature"))
@@ -913,7 +913,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
     public void xroadAllElementsArePresentValidBatchSignature() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-batchsignature.asice"));
-        post(validationRequestWithValidKeys(encodedString, "xroad-batchsignature.asice", "xroad", ""))
+        post(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-batchsignature.asice", "xroad", ""))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaXroad.json"))
                 .body("signatures[0].id", Matchers.is("signature"))
@@ -954,7 +954,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
     public void xroadAllElementsArePresentValidAttachmentSignature() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-attachment.asice"));
-        post(validationRequestWithValidKeys(encodedString, "xroad-attachment.asice", "xroad", ""))
+        post(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-attachment.asice", "xroad", ""))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaXroad.json"))
                 .body("signatures[0].id", Matchers.is("signature"))
@@ -995,7 +995,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests{
     public void xroadAllElementsArePresentInvalidSignature() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("invalid-digest.asice"));
-        post(validationRequestWithValidKeys(encodedString, "invalid-digest.asice", "xroad", ""))
+        post(validationRequestWithDocumentTypeValidKeys(encodedString, "invalid-digest.asice", "xroad", ""))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaXroad.json"))
                 .body("signatures[0].id", Matchers.is("signature"))

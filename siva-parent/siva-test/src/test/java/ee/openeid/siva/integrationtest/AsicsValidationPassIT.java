@@ -20,7 +20,6 @@ import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -62,7 +61,6 @@ public class AsicsValidationPassIT extends SiVaRestTests {
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].claimedSigningTime", Matchers.is("2012-10-03T07:46:31Z"))
                 .body("timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
@@ -92,7 +90,6 @@ public class AsicsValidationPassIT extends SiVaRestTests {
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].claimedSigningTime", Matchers.is("2012-10-03T07:46:31Z"))
                 .body("timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
@@ -122,11 +119,9 @@ public class AsicsValidationPassIT extends SiVaRestTests {
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-05-11T10:18:06Z"))
                 .body("signatures[1].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("signatures[1].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[1].subIndication", Matchers.is(""))
                 .body("signatures[1].info.bestSignatureTime", Matchers.is("2016-05-11T10:19:38Z"))
                 .body("timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
@@ -204,7 +199,6 @@ public class AsicsValidationPassIT extends SiVaRestTests {
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].claimedSigningTime", Matchers.is("2012-10-03T07:46:31Z"))
                 .body("timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
@@ -234,7 +228,6 @@ public class AsicsValidationPassIT extends SiVaRestTests {
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].claimedSigningTime", Matchers.is("2012-10-03T07:46:31Z"))
                 .body("timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))

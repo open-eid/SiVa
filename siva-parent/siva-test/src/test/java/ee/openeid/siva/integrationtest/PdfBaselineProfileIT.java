@@ -61,7 +61,6 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-B"))
                 .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].errors.content", Matchers.hasItems("The expected format is not found!"))
                 .body("signatures[0].warnings", Matchers.hasSize(1))
                 .body("validSignaturesCount", Matchers.is(0))
@@ -89,7 +88,6 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-T"))
                 .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].errors.content", Matchers.hasItems("The expected format is not found!"))
                 .body("signatures[0].warnings", Matchers.hasSize(1))
                 .body("validSignaturesCount", Matchers.is(0))
@@ -117,9 +115,8 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors", Matchers.hasSize(0))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -145,9 +142,8 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors", Matchers.hasSize(0))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -173,9 +169,8 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LTA"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors", Matchers.hasSize(0))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -201,9 +196,8 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LTA"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors", Matchers.hasSize(0))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -293,9 +287,8 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LTA"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors", Matchers.hasSize(0))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("validSignaturesCount", Matchers.is(2))
                 .body("signaturesCount", Matchers.is(2));
     }

@@ -122,7 +122,6 @@ public class BdocValidationPassIT extends SiVaRestTests {
         post(validationRequestFor("EE_SER-AEX-B-LT-V-30.asice"))
                 .then()
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validSignaturesCount", Matchers.is(1));
     }
 
@@ -164,7 +163,6 @@ public class BdocValidationPassIT extends SiVaRestTests {
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-LT"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validSignaturesCount", Matchers.is(1));
     }
 
@@ -188,7 +186,6 @@ public class BdocValidationPassIT extends SiVaRestTests {
                 .then()
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validSignaturesCount", Matchers.is(1));
     }
 
@@ -212,7 +209,6 @@ public class BdocValidationPassIT extends SiVaRestTests {
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-LTA"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validSignaturesCount", Matchers.is(1));
     }
 
@@ -236,7 +232,6 @@ public class BdocValidationPassIT extends SiVaRestTests {
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-LT"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validSignaturesCount", Matchers.is(1));
     }
 
@@ -261,7 +256,6 @@ public class BdocValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validSignaturesCount", Matchers.is(1));
     }
 
@@ -287,7 +281,6 @@ public class BdocValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("QES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validSignaturesCount", Matchers.is(1));
     }
 
@@ -312,7 +305,6 @@ public class BdocValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validSignaturesCount", Matchers.is(1));
     }
 
@@ -357,7 +349,6 @@ public class BdocValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -385,7 +376,6 @@ public class BdocValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -412,7 +402,6 @@ public class BdocValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-LTA"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -439,7 +428,6 @@ public class BdocValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].signatureScopes[0].name", Matchers.is("!~#¤%%&()=+-_.txt"))
                 .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
                 .body("signatures[0].signatureScopes[0].content", Matchers.is("Full document"))

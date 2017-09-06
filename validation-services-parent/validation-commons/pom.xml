@@ -59,6 +59,11 @@
             <artifactId>commons-io</artifactId>
             <version>RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>org.digidoc4j.dss</groupId>
+            <artifactId>dss-detailed-report-jaxb</artifactId>
+            <version>5.0.d4j.1</version>
+        </dependency>
     </dependencies>
 
 </project>

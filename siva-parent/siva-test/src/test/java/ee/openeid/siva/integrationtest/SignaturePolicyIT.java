@@ -19,22 +19,16 @@ package ee.openeid.siva.integrationtest;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class SignaturePolicyIT extends SiVaRestTests {
 
+    private static final String DEFAULT_TEST_FILES_DIRECTORY = "pdf/signing_certifacte_test_files/";
+    private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
+
     @Before
     public void DirectoryBackToDefault() {
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
-    }
-
-    private static final String DEFAULT_TEST_FILES_DIRECTORY = "pdf/signing_certifacte_test_files/";
-
-    private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
-
-    public void setTestFilesDirectory(String testFilesDirectory) {
-        this.testFilesDirectory = testFilesDirectory;
     }
 
     /**
@@ -61,8 +55,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("ADES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors.content", Matchers.hasSize(0))
+                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
                 .body("signatures[0].warnings[0].description", Matchers.is("The certificate is not qualified at issuance time!"))
                 .body("signatures[0].warnings[1].description", Matchers.is("The signature/seal is not created by a QSCD!"))
                 .body("validSignaturesCount", Matchers.is(1))
@@ -126,9 +119,8 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors.content", Matchers.hasSize(0))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("validSignaturesCount", Matchers.is(2))
                 .body("signaturesCount", Matchers.is(2));
     }
@@ -158,9 +150,8 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors.content", Matchers.hasSize(0))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("signatures[0].warnings", Matchers.isEmptyOrNullString())
+                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
                 .body("validSignaturesCount", Matchers.is(2))
                 .body("signaturesCount", Matchers.is(2));
     }
@@ -190,9 +181,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-T"))
                 .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].errors[0].content", Matchers.is("The expected format is not found!"))
-//                .body("signatures[0].warnings", Matchers.hasSize(0))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -222,9 +211,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors", Matchers.hasSize(0))
-//                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -254,8 +241,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("ADESIG_QC"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors", Matchers.hasSize(0))
+                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
                 .body("signatures[0].warnings[0].description", Matchers.is("The signature/seal is not created by a QSCD!"))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
@@ -350,8 +336,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("ADES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors.content", Matchers.hasSize(0))
+                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -412,9 +397,8 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors.content", Matchers.hasSize(0))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -444,9 +428,8 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors.content", Matchers.hasSize(0))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -454,6 +437,10 @@ public class SignaturePolicyIT extends SiVaRestTests {
     @Override
     protected String getTestFilesDirectory() {
         return testFilesDirectory;
+    }
+
+    public void setTestFilesDirectory(String testFilesDirectory) {
+        this.testFilesDirectory = testFilesDirectory;
     }
 
 }

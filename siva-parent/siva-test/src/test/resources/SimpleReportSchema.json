@@ -131,7 +131,6 @@
           "signatureScopes",
           "id",
           "indication",
-          "errors",
           "info"
       ]
       }

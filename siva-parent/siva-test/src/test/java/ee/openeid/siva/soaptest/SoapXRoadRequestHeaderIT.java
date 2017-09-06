@@ -86,7 +86,6 @@ public class SoapXRoadRequestHeaderIT extends SiVaSoapTests {
                 "         <soap:ValidationRequest>\n" +
                 "            <Document>" + encodedString + "</Document>\n" +
                 "            <Filename>Valid_IDCard_MobID_signatures.bdoc</Filename>\n" +
-                "            <DocumentType>BDOC</DocumentType>\n" +
                 "         </soap:ValidationRequest>\n" +
                 "      </soap:ValidateDocument>\n" +
                 "   </soapenv:Body>\n" +
@@ -156,7 +155,6 @@ public class SoapXRoadRequestHeaderIT extends SiVaSoapTests {
                 "         <soap:ValidationRequest>\n" +
                 "            <Document>" + encodedString + "</Document>\n" +
                 "            <Filename>Valid_IDCard_MobID_signatures.bdoc</Filename>\n" +
-                "            <DocumentType>BDOC</DocumentType>\n" +
                 "         </soap:ValidationRequest>\n" +
                 "      </soap:ValidateDocument>\n" +
                 "   </soapenv:Body>\n" +
@@ -226,7 +224,6 @@ public class SoapXRoadRequestHeaderIT extends SiVaSoapTests {
                 "         <soap:ValidationRequest>\n" +
                 "            <Document>" + encodedString + "</Document>\n" +
                 "            <Filename>Valid_IDCard_MobID_signatures.bdoc</Filename>\n" +
-                "            <DocumentType>BDOC</DocumentType>\n" +
                 "         </soap:ValidationRequest>\n" +
                 "      </soap:ValidateDocument>\n" +
                 "   </soapenv:Body>\n" +

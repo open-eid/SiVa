@@ -199,9 +199,7 @@ public class DocumentValidationIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(2))
                 .body("validSignaturesCount", Matchers.is(2))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[1].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[1].subIndication", Matchers.is(""))
                 .body("validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file unsigned.txt with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file"))
                 .body("validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file unsigned2.txt with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file"))
                 .body("validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file unsigned3.txt with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file"))
@@ -296,7 +294,6 @@ public class DocumentValidationIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file Test_1703.pdf with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file"))
                 .body("validationWarnings.content", Matchers.hasItems("Container contains a file named Test_1703.pdf which is not found in the signature file"))
                 .body("validationWarnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: Test_1703.pdf"));
@@ -325,7 +322,6 @@ public class DocumentValidationIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validationWarnings.content", Matchers.hasItems("Container contains a file named Test_1703.pdf which is not found in the signature file"))
                 .body("validationWarnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: Test_1703.pdf"));
 
@@ -352,7 +348,6 @@ public class DocumentValidationIT extends SiVaRestTests{
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("validationWarnings", Matchers.is(Matchers.empty()));
 
     }

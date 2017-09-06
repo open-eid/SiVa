@@ -16,6 +16,7 @@
 
 package ee.openeid.siva;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import ee.openeid.siva.monitoring.configuration.MonitoringConfiguration;
 import ee.openeid.siva.monitoring.indicator.UrlHealthIndicator;
 import ee.openeid.siva.proxy.configuration.ProxyConfigurationProperties;
@@ -33,6 +34,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.xml.ws.Endpoint;
@@ -42,11 +44,10 @@ import java.util.List;
 @SpringBootConfiguration
 @EnableConfigurationProperties({ProxyConfigurationProperties.class})
 public class ServletConfiguration extends MonitoringConfiguration {
-    private ProxyConfigurationProperties proxyProperties;
-
     private static final String ENDPOINT = "/validationWebService";
     private static final String DATAFILES_ENDPOINT = "/dataFilesWebService";
     private static final String URL_MAPPING = "/soap/*";
+    private ProxyConfigurationProperties proxyProperties;
 
     @Bean(name = Bus.DEFAULT_BUS_ID)
     public SpringBus springBus() {
@@ -68,6 +69,13 @@ public class ServletConfiguration extends MonitoringConfiguration {
     @Bean
     public ValidationWebService validationWebService() {
         return new ValidationWebServiceImpl();
+    }
+
+    @Bean
+    public Jackson2ObjectMapperBuilder objectMapperBuilder() {
+        Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
+        builder.serializationInclusion(JsonInclude.Include.NON_EMPTY);
+        return builder;
     }
 
     @Bean

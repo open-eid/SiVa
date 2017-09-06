@@ -134,9 +134,8 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors", Matchers.hasSize(0))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
+                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }

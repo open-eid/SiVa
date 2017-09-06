@@ -699,7 +699,6 @@ public class BdocValidationFailIT extends SiVaRestTests {
         post(validationRequestWithValidKeys(encodedString, "23608-bdoc21-TM-ocsp-bad-nonce.bdoc", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].errors.content", Matchers.hasItem("Nonce is invalid"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
@@ -724,7 +723,6 @@ public class BdocValidationFailIT extends SiVaRestTests {
         post(validationRequestWithValidKeys(encodedString, "23154_test1-old-sig-sigat-OK-prodat-NOK-1.bdoc", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
                 .body("signatures[0].errors.content", Matchers.hasItem("Signature has been created with expired certificate"))
                 .body("validSignaturesCount", Matchers.is(0));
     }

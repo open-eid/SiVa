@@ -16,6 +16,7 @@
 
 package ee.openeid.siva.validation.document.report;
 
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
@@ -23,6 +24,8 @@ import java.util.List;
 
 @Data
 public class QualifiedReport {
+
+    eu.europa.esig.dss.jaxb.detailedreport.DetailedReport detailedReport;
 
     private Policy policy;
 

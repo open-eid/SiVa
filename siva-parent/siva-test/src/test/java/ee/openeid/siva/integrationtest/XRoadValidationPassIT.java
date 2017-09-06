@@ -50,8 +50,7 @@ public class XRoadValidationPassIT extends SiVaRestTests {
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors.content", Matchers.hasSize(0))
+                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -76,8 +75,7 @@ public class XRoadValidationPassIT extends SiVaRestTests {
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors.content", Matchers.hasSize(0))
+                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -102,8 +100,7 @@ public class XRoadValidationPassIT extends SiVaRestTests {
                 .then()
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors.content", Matchers.hasSize(0))
+                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }

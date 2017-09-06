@@ -19,8 +19,15 @@ package ee.openeid.siva.webapp.soap.transformer;
 import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
 import ee.openeid.siva.webapp.soap.Error;
 import ee.openeid.siva.webapp.soap.*;
+import eu.europa.esig.dss.validation.detailed_report.DetailedReport;
 import org.springframework.stereotype.Component;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.List;
 
 @Component
@@ -45,6 +52,8 @@ public class QualifiedReportSoapResponseTransformer {
         QualifiedReport responseReport = new QualifiedReport();
         responseReport.setSignatureForm(report.getSignatureForm());
         responseReport.setDocumentName(report.getDocumentName());
+
+        responseReport.setDetailedReport(toSoapDetailedReport(report.getDetailedReport()));
         responseReport.setPolicy(toSoapResponsePolicy(report.getPolicy()));
         if (report.getSignaturesCount() != null)
             responseReport.setSignaturesCount(report.getSignaturesCount());
@@ -58,6 +67,27 @@ public class QualifiedReportSoapResponseTransformer {
         if (report.getTimeStampTokens() != null)
             responseReport.setTimeStampTokens(toSoapResponseResponseTimeStamps(report.getTimeStampTokens()));
         return responseReport;
+    }
+
+    private DetailedReport toSoapDetailedReport(eu.europa.esig.dss.jaxb.detailedreport.DetailedReport detailedReport) {
+        try {
+            if (detailedReport == null)
+                return null;
+            JAXBContext context = JAXBContext.newInstance(eu.europa.esig.dss.jaxb.detailedreport.DetailedReport.class);
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+            StringWriter writer = new StringWriter();
+            marshaller.marshal(detailedReport, writer);
+            String requestString = writer.toString();
+
+            JAXBContext jaxbContext = JAXBContext.newInstance(DetailedReport.class);
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            StringReader reader = new StringReader(requestString);
+            return (DetailedReport) unmarshaller.unmarshal(reader);
+        } catch (JAXBException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private QualifiedReport.ValidationWarnings toSoapResponseValidationWarnings(List<ee.openeid.siva.validation.document.report.ValidationWarning> validationWarnings) {

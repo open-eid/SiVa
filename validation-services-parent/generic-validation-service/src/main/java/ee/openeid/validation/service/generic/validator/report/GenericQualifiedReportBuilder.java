@@ -16,19 +16,15 @@
 
 package ee.openeid.validation.service.generic.validator.report;
 
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
+import ee.openeid.siva.validation.document.report.Error;
+import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
+import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import eu.europa.esig.dss.jaxb.diagnostic.XmlSignatureScope;
 import eu.europa.esig.dss.validation.policy.rules.Indication;
 import eu.europa.esig.dss.validation.policy.rules.SubIndication;
 import eu.europa.esig.dss.validation.reports.Reports;
 import eu.europa.esig.dss.validation.reports.wrapper.TimestampWrapper;
-
-import ee.openeid.siva.validation.document.report.Error;
-import ee.openeid.siva.validation.document.report.*;
-import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
-import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
-
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.ZonedDateTime;
@@ -38,6 +34,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
 
 public class GenericQualifiedReportBuilder {
 
@@ -65,6 +64,7 @@ public class GenericQualifiedReportBuilder {
         report.setValidationWarnings(Collections.emptyList());
         report.setSignatures(buildSignatureValidationDataList());
         report.setSignaturesCount(report.getSignatures().size());
+        report.setDetailedReport(dssReports.getDetailedReportJaxb());
         report.setValidSignaturesCount(report.getSignatures()
                 .stream()
                 .filter(vd -> StringUtils.equals(vd.getIndication(), SignatureValidationData.Indication.TOTAL_PASSED.toString()))
@@ -110,7 +110,7 @@ public class GenericQualifiedReportBuilder {
     private List<Error> parseSignatureErrors(String signatureId) {
         return dssReports.getSimpleReport().getErrors(signatureId)
                 .stream()
-                .map(this ::mapDssError)
+                .map(this::mapDssError)
                 .collect(Collectors.toList());
     }
 

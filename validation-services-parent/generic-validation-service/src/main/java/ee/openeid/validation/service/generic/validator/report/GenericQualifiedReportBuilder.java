@@ -16,8 +16,8 @@
 
 package ee.openeid.validation.service.generic.validator.report;
 
-import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import eu.europa.esig.dss.jaxb.diagnostic.XmlSignatureScope;
@@ -56,22 +56,26 @@ public class GenericQualifiedReportBuilder {
     }
 
     public QualifiedReport build() {
-        QualifiedReport report = new QualifiedReport();
-        report.setPolicy(createReportPolicy(validationPolicy));
-        report.setValidationTime(parseValidationTimeToString());
-        report.setDocumentName(documentName);
-        report.setSignatureForm(PDF_SIGNATURE_FORM);
-        report.setValidationWarnings(Collections.emptyList());
-        report.setSignatures(buildSignatureValidationDataList());
-        report.setSignaturesCount(report.getSignatures().size());
-        report.setDetailedReport(dssReports.getDetailedReportJaxb());
-        report.setValidSignaturesCount(report.getSignatures()
+        ValidationConclusion validationConclusion = getValidationConclusion();
+        return new QualifiedReport(new SimpleReport(validationConclusion), new DetailedReport(validationConclusion, dssReports.getDetailedReportJaxb()));
+    }
+
+    private ValidationConclusion getValidationConclusion() {
+        ValidationConclusion validationConclusion = new ValidationConclusion();
+        validationConclusion.setPolicy(createReportPolicy(validationPolicy));
+        validationConclusion.setValidationTime(parseValidationTimeToString());
+        validationConclusion.setDocumentName(documentName);
+        validationConclusion.setSignatureForm(PDF_SIGNATURE_FORM);
+        validationConclusion.setValidationWarnings(Collections.emptyList());
+        validationConclusion.setSignatures(buildSignatureValidationDataList());
+        validationConclusion.setSignaturesCount(validationConclusion.getSignatures().size());
+
+        validationConclusion.setValidSignaturesCount(validationConclusion.getSignatures()
                 .stream()
                 .filter(vd -> StringUtils.equals(vd.getIndication(), SignatureValidationData.Indication.TOTAL_PASSED.toString()))
                 .collect(Collectors.toList())
                 .size());
-
-        return report;
+        return validationConclusion;
     }
 
     private List<SignatureValidationData> buildSignatureValidationDataList() {

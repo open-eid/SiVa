@@ -16,7 +16,10 @@
 
 package ee.openeid.siva.xroad.validation;
 
+import ee.openeid.siva.validation.document.report.DetailedReport;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.ria.xroad.common.CodedException;
 import ee.ria.xroad.common.asic.AsicContainer;
@@ -30,9 +33,7 @@ import java.util.Date;
 import java.util.stream.Collectors;
 
 import static ee.openeid.siva.validation.document.report.SignatureValidationData.Indication.TOTAL_PASSED;
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.getDateFormatterWithGMTZone;
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.valueNotPresent;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.*;
 
 public class XROADQualifiedReportBuilder {
 
@@ -49,8 +50,7 @@ public class XROADQualifiedReportBuilder {
                                        String documentName,
                                        Date validationTime,
                                        ValidationPolicy validationPolicy,
-                                       CodedException... exceptions)
-    {
+                                       CodedException... exceptions) {
         this.verifier = verifier;
         this.documentName = documentName;
         this.validationTime = validationTime;
@@ -59,21 +59,26 @@ public class XROADQualifiedReportBuilder {
     }
 
     public QualifiedReport build() {
-        QualifiedReport qualifiedReport = new QualifiedReport();
-        qualifiedReport.setPolicy(createReportPolicy(validationPolicy));
-        qualifiedReport.setValidationTime(getDateFormatterWithGMTZone().format(validationTime));
-        qualifiedReport.setDocumentName(documentName);
-        qualifiedReport.setSignatureForm(getSignatureForm(verifier.getAsic()));
-        qualifiedReport.setSignaturesCount(getTotalSignatureCount(verifier.getSignature()));
-        qualifiedReport.setValidationWarnings(Collections.emptyList());
-        qualifiedReport.setSignatures(Collections.singletonList(signatureValidationDataBuilder.build()));
-        qualifiedReport.setValidSignaturesCount(
-                qualifiedReport.getSignatures()
+        ValidationConclusion validationConclusion = getValidationConclusion();
+        return new QualifiedReport(new SimpleReport(validationConclusion), new DetailedReport(validationConclusion, null));
+    }
+
+    private ValidationConclusion getValidationConclusion() {
+        ValidationConclusion validationConclusion = new ValidationConclusion();
+        validationConclusion.setPolicy(createReportPolicy(validationPolicy));
+        validationConclusion.setValidationTime(getDateFormatterWithGMTZone().format(validationTime));
+        validationConclusion.setDocumentName(documentName);
+        validationConclusion.setSignatureForm(getSignatureForm(verifier.getAsic()));
+        validationConclusion.setSignaturesCount(getTotalSignatureCount(verifier.getSignature()));
+        validationConclusion.setValidationWarnings(Collections.emptyList());
+        validationConclusion.setSignatures(Collections.singletonList(signatureValidationDataBuilder.build()));
+        validationConclusion.setValidSignaturesCount(
+                validationConclusion.getSignatures()
                         .stream()
                         .filter(signatures -> StringUtils.equals(signatures.getIndication(), TOTAL_PASSED.toString()))
                         .collect(Collectors.toList())
                         .size());
-        return qualifiedReport;
+        return validationConclusion;
     }
 
     private int getTotalSignatureCount(Signature signature) {

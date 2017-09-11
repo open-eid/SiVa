@@ -48,11 +48,11 @@ public class XRoadValidationFailIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("invalid-digest.asice"));
         post(validationRequestWithDocumentTypeValidKeys(encodedString, "invalid-digest.asice", "xroad", VALID_SIGNATURE_POLICY_3))
                 .then()
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].errors.content", Matchers.hasItem("MissingHeaderField: Required field 'protocolVersion' is missing"))
-                .body("validSignaturesCount", Matchers.is(0))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationConclusion.signatures[0].errors.content", Matchers.hasItem("MissingHeaderField: Required field 'protocolVersion' is missing"))
+                .body("validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationConclusion.signaturesCount", Matchers.is(1));
     }
 
 

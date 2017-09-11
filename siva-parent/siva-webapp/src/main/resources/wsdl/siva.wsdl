@@ -11,8 +11,11 @@
                        schemaLocation="DetailedReport.xsd"/>
             <xs:element name="ValidateDocument" type="tns:validateDocument"/>
             <xs:element name="ValidateDocumentResponse" type="tns:ValidateDocumentResponse"/>
+            <xs:element name="ValidationProcess" substitutionGroup="external:DetailedReport"/>
             <xs:element name="ValidationReport" type="tns:qualifiedReport"/>
             <xs:element name="ValidationRequest" type="tns:soapValidationRequest"/>
+
+
             <xs:complexType name="validateDocument">
                 <xs:sequence>
                     <xs:element ref="tns:ValidationRequest"/>
@@ -29,12 +32,12 @@
             <xs:complexType name="ValidateDocumentResponse">
                 <xs:sequence>
                     <xs:element minOccurs="0" ref="tns:ValidationReport"/>
+                    <xs:element ref="tns:ValidationProcess"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="qualifiedReport">
                 <xs:sequence>
 
-                    <xs:element ref="external:DetailedReport"/>
                     <xs:element name="Policy" type="tns:policy"/>
                     <xs:element name="ValidationTime" type="xs:string"/>
                     <xs:element name="ValidationWarnings" minOccurs="0">

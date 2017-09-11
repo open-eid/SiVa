@@ -18,11 +18,14 @@ package ee.openeid.siva.proxy;
 
 import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.proxy.document.ProxyDocument;
+import ee.openeid.siva.proxy.document.ReportType;
 import ee.openeid.siva.proxy.exception.ValidatonServiceNotFoundException;
 import ee.openeid.siva.proxy.http.RESTProxyService;
 import ee.openeid.siva.statistics.StatisticsService;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.document.report.Report;
+import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.validation.service.timestamptoken.TimeStampTokenValidationService;
@@ -62,20 +65,20 @@ public class ValidationProxy {
     private ApplicationContext applicationContext;
 
 
-    public QualifiedReport validate(ProxyDocument proxyDocument) {
+    public Report validate(ProxyDocument proxyDocument) {
         long validationStartTime = System.nanoTime();
-        QualifiedReport report;
+        Report report;
         if (proxyDocument.getDocumentType() != null && proxyDocument.getDocumentType() == DocumentType.XROAD) {
-            report = restProxyService.validate(createValidationDocument(proxyDocument));
+            report = new SimpleReport(restProxyService.validate(createValidationDocument(proxyDocument)));
         } else {
             ValidationService validationService = getServiceForType(proxyDocument);
-            report = validationService.validateDocument(createValidationDocument(proxyDocument));
-            if (validationService instanceof TimeStampTokenValidationService && TimeStampTokenValidationData.Indication.TOTAL_PASSED == report.getTimeStampTokens().get(0).getIndication()) {
+            report = chooseReport(validationService.validateDocument(createValidationDocument(proxyDocument)), proxyDocument.getReportType());
+            if (validationService instanceof TimeStampTokenValidationService && TimeStampTokenValidationData.Indication.TOTAL_PASSED == report.getValidationConclusion().getTimeStampTokens().get(0).getIndication()) {
                 ProxyDocument dataFileProxyDocument = generateDataFileProxyDocument(proxyDocument);
                 ValidationService dataFileValidationService = getServiceForType(dataFileProxyDocument);
-                QualifiedReport dataFileReport = null;
+                Report dataFileReport = null;
                 try {
-                    dataFileReport = dataFileValidationService.validateDocument(createValidationDocument(dataFileProxyDocument));
+                    dataFileReport = chooseReport(dataFileValidationService.validateDocument(createValidationDocument(dataFileProxyDocument)), proxyDocument.getReportType());
                 } catch (DSSException e) {
                     if (!DOCUMENT_FORMAT_NOT_RECOGNIZED.equalsIgnoreCase(e.getMessage())) {
                         throw e;
@@ -84,13 +87,20 @@ public class ValidationProxy {
                 report = mergeReports(report, dataFileReport);
             }
         }
-        statisticsService.publishValidationStatistic(System.nanoTime() - validationStartTime, report);
+        statisticsService.publishValidationStatistic(System.nanoTime() - validationStartTime, report.getValidationConclusion());
         return report;
     }
 
-    private QualifiedReport mergeReports(QualifiedReport timeStampTokenReport, QualifiedReport dataFileReport) {
+    private Report chooseReport(QualifiedReport qualifiedReport, ReportType reportType) {
+        if (ReportType.DETAILED == reportType) {
+            return qualifiedReport.getDetailedReport();
+        }
+        return qualifiedReport.getSimpleReport();
+    }
+
+    private Report mergeReports(Report timeStampTokenReport, Report dataFileReport) {
         if (dataFileReport != null) {
-            dataFileReport.setTimeStampTokens(timeStampTokenReport.getTimeStampTokens());
+            dataFileReport.getValidationConclusion().setTimeStampTokens(timeStampTokenReport.getValidationConclusion().getTimeStampTokens());
             return dataFileReport;
         }
         return timeStampTokenReport;

@@ -16,8 +16,8 @@
 
 package ee.openeid.validation.service.bdoc.report;
 
-import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import eu.europa.esig.dss.validation.SignatureQualification;
@@ -64,34 +64,59 @@ public class BDOCQualifiedReportBuilder {
         this.containerErrors = containerErrors;
     }
 
+    private static ValidationWarning createValidationWarning(String content) {
+        ValidationWarning validationWarning = new ValidationWarning();
+        validationWarning.setContent(emptyWhenNull(content));
+        return validationWarning;
+    }
+
+    private static Warning mapDigidoc4JWarning(DigiDoc4JException digiDoc4JException) {
+        Warning warning = new Warning();
+        warning.setDescription(emptyWhenNull(digiDoc4JException.getMessage()));
+        return warning;
+    }
+
+    private static SignatureScope createFullSignatureScopeForDataFile(String filename) {
+        SignatureScope signatureScope = new SignatureScope();
+        signatureScope.setName(filename);
+        signatureScope.setScope(FULL_SIGNATURE_SCOPE);
+        signatureScope.setContent(FULL_DOCUMENT);
+        return signatureScope;
+    }
+
+    private static Error mapDigidoc4JException(DigiDoc4JException digiDoc4JException) {
+        Error error = new Error();
+        error.setContent(emptyWhenNull(digiDoc4JException.getMessage()));
+        return error;
+    }
+
     public QualifiedReport build() {
-        QualifiedReport qualifiedReport = new QualifiedReport();
-        qualifiedReport.setPolicy(createReportPolicy(validationPolicy));
-        qualifiedReport.setValidationTime(ReportBuilderUtils.getDateFormatterWithGMTZone().format(validationTime));
-        qualifiedReport.setDocumentName(documentName);
-        qualifiedReport.setSignatureForm(BDOC_SIGNATURE_FORM);
-        qualifiedReport.setSignaturesCount(container.getSignatures().size());
-        qualifiedReport.setValidationWarnings(containerValidationWarnings());
-        qualifiedReport.setSignatures(createSignaturesForReport(container));
-        qualifiedReport.setValidSignaturesCount(
-                qualifiedReport.getSignatures()
+        ValidationConclusion validationConclusion = getValidationConclusion();
+        return new QualifiedReport(new ee.openeid.siva.validation.document.report.SimpleReport(validationConclusion), new DetailedReport(validationConclusion, null));
+    }
+
+    private ValidationConclusion getValidationConclusion() {
+        ValidationConclusion validationConclusion = new ValidationConclusion();
+        validationConclusion.setPolicy(createReportPolicy(validationPolicy));
+        validationConclusion.setValidationTime(ReportBuilderUtils.getDateFormatterWithGMTZone().format(validationTime));
+        validationConclusion.setDocumentName(documentName);
+        validationConclusion.setSignatureForm(BDOC_SIGNATURE_FORM);
+        validationConclusion.setSignaturesCount(container.getSignatures().size());
+        validationConclusion.setValidationWarnings(containerValidationWarnings());
+        validationConclusion.setSignatures(createSignaturesForReport(container));
+        validationConclusion.setValidSignaturesCount(
+                validationConclusion.getSignatures()
                         .stream()
                         .filter(vd -> StringUtils.equals(vd.getIndication(), SignatureValidationData.Indication.TOTAL_PASSED.toString()))
                         .collect(Collectors.toList())
                         .size());
-        return qualifiedReport;
+        return validationConclusion;
     }
 
     private List<ValidationWarning> containerValidationWarnings() {
         List<ValidationWarning> validationWarnings = containerErrors.stream().map(e -> createValidationWarning(e.getMessage())).collect(Collectors.toList());
         validationWarnings.addAll(getValidationWarningsForUnsignedDataFiles());
         return validationWarnings;
-    }
-
-    private static ValidationWarning createValidationWarning(String content) {
-        ValidationWarning validationWarning = new ValidationWarning();
-        validationWarning.setContent(emptyWhenNull(content));
-        return validationWarning;
     }
 
     private List<ValidationWarning> getValidationWarningsForUnsignedDataFiles() {
@@ -201,12 +226,6 @@ public class BDOCQualifiedReportBuilder {
 
     }
 
-    private static Warning mapDigidoc4JWarning(DigiDoc4JException digiDoc4JException) {
-        Warning warning = new Warning();
-        warning.setDescription(emptyWhenNull(digiDoc4JException.getMessage()));
-        return warning;
-    }
-
     private List<SignatureScope> getSignatureScopes(BDocSignature bDocSignature, List<String> dataFileNames) {
         return bDocSignature.getOrigin().getReferences()
                 .stream()
@@ -225,25 +244,11 @@ public class BDOCQualifiedReportBuilder {
         }
     }
 
-    private static SignatureScope createFullSignatureScopeForDataFile(String filename) {
-        SignatureScope signatureScope = new SignatureScope();
-        signatureScope.setName(filename);
-        signatureScope.setScope(FULL_SIGNATURE_SCOPE);
-        signatureScope.setContent(FULL_DOCUMENT);
-        return signatureScope;
-    }
-
     private List<Error> getErrors(BDocSignature bDocSignature) {
         return bDocSignature.validateSignature().getErrors()
                 .stream()
                 .map(BDOCQualifiedReportBuilder::mapDigidoc4JException)
                 .collect(Collectors.toList());
-    }
-
-    private static Error mapDigidoc4JException(DigiDoc4JException digiDoc4JException) {
-        Error error = new Error();
-        error.setContent(emptyWhenNull(digiDoc4JException.getMessage()));
-        return error;
     }
 
     private String getSignatureFormat(SignatureProfile profile) {

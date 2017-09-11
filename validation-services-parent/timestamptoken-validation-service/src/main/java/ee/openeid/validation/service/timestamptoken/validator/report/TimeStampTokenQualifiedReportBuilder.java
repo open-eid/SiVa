@@ -1,7 +1,6 @@
 package ee.openeid.validation.service.timestamptoken.validator.report;
 
-import ee.openeid.siva.validation.document.report.QualifiedReport;
-import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
+import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 
 import java.util.ArrayList;
@@ -28,14 +27,20 @@ public class TimeStampTokenQualifiedReportBuilder {
     }
 
     public QualifiedReport build() {
-        QualifiedReport report = new QualifiedReport();
-        report.setDocumentName(documentName);
-        report.setPolicy(createReportPolicy(validationPolicy));
-        report.setValidationTime(getDateFormatterWithGMTZone().format(validationTime));
-        report.setSignatureForm(ASICS_SIGNATURE_FORMAT);
+        ValidationConclusion validationConclusion = getValidationConclusion();
+        return new QualifiedReport(new SimpleReport(validationConclusion), new DetailedReport(validationConclusion, null));
+    }
+
+    private ValidationConclusion getValidationConclusion() {
+        ValidationConclusion validationConclusion = new ValidationConclusion();
+        validationConclusion.setDocumentName(documentName);
+        validationConclusion.setPolicy(createReportPolicy(validationPolicy));
+        validationConclusion.setValidationTime(getDateFormatterWithGMTZone().format(validationTime));
+        validationConclusion.setSignatureForm(ASICS_SIGNATURE_FORMAT);
         List<TimeStampTokenValidationData> timeStampTokenValidationDataList = new ArrayList<>();
         timeStampTokenValidationDataList.add(timeStampTokenValidationData);
-        report.setTimeStampTokens(timeStampTokenValidationDataList);
-        return report;
+        validationConclusion.setTimeStampTokens(timeStampTokenValidationDataList);
+        return validationConclusion;
     }
+
 }

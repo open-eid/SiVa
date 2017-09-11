@@ -19,6 +19,7 @@ package ee.openeid.siva.webapp.soap.impl;
 import ee.openeid.siva.proxy.ValidationProxy;
 import ee.openeid.siva.webapp.soap.QualifiedReport;
 import ee.openeid.siva.webapp.soap.SoapValidationRequest;
+import ee.openeid.siva.webapp.soap.ValidateDocumentResponse;
 import ee.openeid.siva.webapp.soap.ValidationWebService;
 import ee.openeid.siva.webapp.soap.transformer.QualifiedReportSoapResponseTransformer;
 import ee.openeid.siva.webapp.soap.transformer.SoapValidationRequestToProxyDocumentTransformer;
@@ -27,6 +28,8 @@ import org.apache.cxf.interceptor.InInterceptors;
 import org.apache.cxf.interceptor.OutFaultInterceptors;
 import org.apache.cxf.interceptor.OutInterceptors;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.xml.ws.Holder;
 
 @InInterceptors(interceptors = {"ee.openeid.siva.webapp.soap.interceptor.SoapRequestValidationInterceptor"})
 @OutInterceptors(interceptors = {"ee.openeid.siva.webapp.soap.interceptor.SoapResponseHeaderInterceptor"})
@@ -39,11 +42,12 @@ public class ValidationWebServiceImpl implements ValidationWebService {
     private QualifiedReportSoapResponseTransformer responseTransformer;
 
     @Override
-    public QualifiedReport validateDocument(SoapValidationRequest validationRequest) {
-        ee.openeid.siva.validation.document.report.QualifiedReport qualifiedReport = validationProxy.validate(requestTransformer.transform(validationRequest));
-        return responseTransformer.toSoapResponse(qualifiedReport);
+    public void validateDocument(SoapValidationRequest validationRequest, Holder<QualifiedReport> validationReport, Holder<ee.openeid.siva.webapp.soap.DetailedReport> validationProcess) {
+        ee.openeid.siva.validation.document.report.Report qualifiedReport = validationProxy.validate(requestTransformer.transform(validationRequest));
+        ValidateDocumentResponse validateDocumentResponse = responseTransformer.toSoapResponse(qualifiedReport);
+        validationReport.value = validateDocumentResponse.getValidationReport();
+        validationProcess.value = validateDocumentResponse.getValidationProcess();
     }
-
 
     @Autowired
     public void setValidationProxy(ValidationProxy validationProxy) {
@@ -56,8 +60,9 @@ public class ValidationWebServiceImpl implements ValidationWebService {
     }
 
     @Autowired
-    public void setResponseransformer(QualifiedReportSoapResponseTransformer responseTransformer) {
+    public void setResponseTransformer(QualifiedReportSoapResponseTransformer responseTransformer) {
         this.responseTransformer = responseTransformer;
     }
+
 
 }

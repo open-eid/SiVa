@@ -280,20 +280,20 @@ public class DdocValidationPassIT extends SiVaRestTests{
     public void ddocWithWarningShouldPass() {
         post(validationRequestFor("18912.ddoc"))
                 .then()
-                .body("signatures[0].id", Matchers.is("S0"))
-                .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
-                .body("signatures[0].signatureScopes[0].name", Matchers.is("readme"))
-                .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
-                .body("signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
-                .body("signatures[0].claimedSigningTime", Matchers.is("2012-09-21T11:56:53Z"))
-                .body("signatures[0].warnings[0].description", Matchers.is("Bad digest for DataFile: D0 alternate digest matches!"))
-                .body("signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("documentName", Matchers.is("18912.ddoc"))
-                .body("validSignaturesCount", Matchers.is(1))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validationConclusion.signatures[0].id", Matchers.is("S0"))
+                .body("validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("validationConclusion.signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
+                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("readme"))
+                .body("validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
+                .body("validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
+                .body("validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2012-09-21T11:56:53Z"))
+                .body("validationConclusion.signatures[0].warnings[0].description", Matchers.is("Bad digest for DataFile: D0 alternate digest matches!"))
+                .body("validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("validationConclusion.documentName", Matchers.is("18912.ddoc"))
+                .body("validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**

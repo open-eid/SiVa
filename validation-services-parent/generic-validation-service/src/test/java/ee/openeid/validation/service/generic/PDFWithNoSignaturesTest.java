@@ -17,6 +17,7 @@
 package ee.openeid.validation.service.generic;
 
 import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -30,10 +31,11 @@ public class PDFWithNoSignaturesTest extends PDFValidationServiceTest {
         QualifiedReport report = validationService.validateDocument(
                 buildValidationDocument(PDF_WITH_NO_SIGNATURES));
         assertNotNull(report);
-        assertEquals(PDF_WITH_NO_SIGNATURES, report.getDocumentName());
-        assertTrue(report.getValidSignaturesCount() == 0);
-        assertTrue(report.getSignaturesCount() == 0);
-        assertTrue(report.getSignatures().isEmpty());
-        assertNotNull(report.getValidationTime());
+        ValidationConclusion validationConclusion = report.getSimpleReport().getValidationConclusion();
+        assertEquals(PDF_WITH_NO_SIGNATURES, validationConclusion.getDocumentName());
+        assertTrue(validationConclusion.getValidSignaturesCount() == 0);
+        assertTrue(validationConclusion.getSignaturesCount() == 0);
+        assertTrue(validationConclusion.getSignatures().isEmpty());
+        assertNotNull(validationConclusion.getValidationTime());
     }
 }

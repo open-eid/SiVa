@@ -17,7 +17,7 @@
 package ee.openeid.siva.xroad;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.service.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -39,8 +39,8 @@ public class XROADValidationApplication extends SpringBootServletInitializer {
     }
 
     @RequestMapping(value = "/xroad-validation", method = RequestMethod.POST)
-    public QualifiedReport validateXroad(@RequestBody ValidationDocument validationDocument) {
-        return validationService.validateDocument(validationDocument);
+    public ValidationConclusion validateXroad(@RequestBody ValidationDocument validationDocument) {
+        return validationService.validateDocument(validationDocument).getSimpleReport().getValidationConclusion();
     }
 
     @Override

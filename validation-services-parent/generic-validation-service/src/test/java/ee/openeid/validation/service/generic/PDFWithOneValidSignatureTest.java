@@ -16,10 +16,7 @@
 
 package ee.openeid.validation.service.generic;
 
-import ee.openeid.siva.validation.document.report.QualifiedReport;
-import ee.openeid.siva.validation.document.report.SignatureScope;
-import ee.openeid.siva.validation.document.report.SignatureValidationData;
-import ee.openeid.siva.validation.document.report.Warning;
+import ee.openeid.siva.validation.document.report.*;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -43,23 +40,24 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
     public void validationReportForValidPdfShouldHaveEqualSignatureCountAndValidSignatureCount() throws Exception {
         QualifiedReport report = validationService.validateDocument(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE));
-        assertEquals(PDF_WITH_ONE_VALID_SIGNATURE, report.getDocumentName());
-        assertTrue(report.getValidSignaturesCount() == 1);
-        assertTrue(report.getSignaturesCount() == 1);
+        ValidationConclusion validationConclusion = report.getSimpleReport().getValidationConclusion();
+        assertEquals(PDF_WITH_ONE_VALID_SIGNATURE, validationConclusion.getDocumentName());
+        assertTrue(validationConclusion.getValidSignaturesCount() == 1);
+        assertTrue(validationConclusion.getSignaturesCount() == 1);
     }
 
     @Test
     public void validationReportShouldHaveSameDocumentNameWithValidationRequest() throws Exception {
         QualifiedReport report = validationService.validateDocument(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE));
-        assertEquals(PDF_WITH_ONE_VALID_SIGNATURE, report.getDocumentName());
+        assertEquals(PDF_WITH_ONE_VALID_SIGNATURE, report.getSimpleReport().getValidationConclusion().getDocumentName());
     }
 
     @Test
     public void whenValidatingValidPDFThenDateTimesShouldBeCorrectlyParsed() throws Exception {
         QualifiedReport report = validationService.validateDocument(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE));
-        SignatureValidationData signature = report.getSignatures().get(0);
+        SignatureValidationData signature = report.getSimpleReport().getValidationConclusion().getSignatures().get(0);
         assertEquals("2015-07-09T07:00:48Z", signature.getClaimedSigningTime());
         assertEquals("2015-07-09T07:00:55Z", signature.getInfo().getBestSignatureTime());
     }
@@ -68,7 +66,7 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
     public void validatedSignatureShouldHaveCorrectId() throws Exception {
         QualifiedReport report = validationService.validateDocument(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE));
-        SignatureValidationData signature = report.getSignatures().get(0);
+        SignatureValidationData signature = report.getSimpleReport().getValidationConclusion().getSignatures().get(0);
         assertEquals("id-65dc6b043effc2542519162d271ad4f9780e552845d04b66868301a5cf0ed8ba", signature.getId());
     }
 
@@ -76,7 +74,7 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
     public void validatedSignatureShouldHaveFormatAndLevel() throws Exception {
         QualifiedReport report = validationService.validateDocument(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE));
-        SignatureValidationData signature = report.getSignatures().get(0);
+        SignatureValidationData signature = report.getSimpleReport().getValidationConclusion().getSignatures().get(0);
         assertEquals("QESIG", signature.getSignatureLevel());
         assertEquals("PAdES-BASELINE-LT", signature.getSignatureFormat());
     }
@@ -85,7 +83,7 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
     public void validationResultForValidPDFShouldHaveCorrectSignatureScopeForPDF() throws Exception {
         QualifiedReport report = validationService.validateDocument(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE));
-        SignatureScope scope = report.getSignatures().get(0).getSignatureScopes().get(0);
+        SignatureScope scope = report.getSimpleReport().getValidationConclusion().getSignatures().get(0).getSignatureScopes().get(0);
 
         assertEquals("The document byte range: [0, 14153, 52047, 491]", scope.getContent());
         assertEquals("PdfByteRangeSignatureScope", scope.getScope());
@@ -96,14 +94,14 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
     public void validationResultForValidPDFShouldNotHaveErrorsOrWarnings() throws Exception {
         QualifiedReport report = validationService.validateDocument(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE));
-        report.getSignatures().forEach(this::assertNoErrorsOrWarnings);
+        report.getSimpleReport().getValidationConclusion().getSignatures().forEach(this::assertNoErrorsOrWarnings);
     }
 
     @Test
     public void validationResultForPdfShouldContainCorrectPadesSignatureForm() throws Exception {
         QualifiedReport report = validationService.validateDocument(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE));
-        assertEquals("PAdES", report.getSignatureForm());
+        assertEquals("PAdES", report.getSimpleReport().getValidationConclusion().getSignatureForm());
     }
 
     @Test
@@ -112,8 +110,9 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
         QualifiedReport report = validationService.validateDocument(
                 buildValidationDocument(PDF_SIGNED_WITH_UNQUALIFIED_CERTIFICATE));
         assertNotNull(report);
-        List<Warning> firstSignatureWarnings = report.getSignatures().get(0).getWarnings();
-        List<Warning> secondSignatureWarnings = report.getSignatures().get(1).getWarnings();
+        ValidationConclusion validationConclusion = report.getSimpleReport().getValidationConclusion();
+        List<Warning> firstSignatureWarnings = validationConclusion.getSignatures().get(0).getWarnings();
+        List<Warning> secondSignatureWarnings = validationConclusion.getSignatures().get(1).getWarnings();
 
         assertEquals("The certificate is not supported by SSCD!", firstSignatureWarnings.get(0).getDescription());
         assertEquals("The certificate is not qualified!", firstSignatureWarnings.get(1).getDescription());

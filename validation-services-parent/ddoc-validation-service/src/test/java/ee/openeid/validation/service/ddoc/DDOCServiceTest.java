@@ -20,12 +20,7 @@ import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import ee.openeid.siva.validation.document.DataFilesDocument;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
-import ee.openeid.siva.validation.document.report.DataFileData;
-import ee.openeid.siva.validation.document.report.DataFilesReport;
-import ee.openeid.siva.validation.document.report.Policy;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
-import ee.openeid.siva.validation.document.report.SignatureScope;
-import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
@@ -56,9 +51,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.ADES_POLICY;
-import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.ADES_QC_POLICY;
-import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.QES_POLICY;
+import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.*;
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.*;
@@ -68,9 +61,6 @@ import static org.powermock.api.mockito.PowerMockito.*;
 @PowerMockIgnore("javax.security.*")
 public class DDOCServiceTest {
 
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
-
     private static final String TEST_FILES_LOCATION = "test-files/";
     private static final String VALID_DDOC_2_SIGNATURES = "ddoc_valid_2_signatures.ddoc";
     private static final String DATAFILE_XMLNS_MISSING = "datafile_xmlns_missing.ddoc";
@@ -78,13 +68,14 @@ public class DDOCServiceTest {
     private static final String DDOC_1_0_HASHCODE = "DigiDoc 1.0 hashcode.ddoc";
     private static final String DDOC_1_2_HASHCODE = "DigiDoc 1.2 hashcode.ddoc";
     private static final String VALID_DDOC = "ddoc_valid_2_signatures.ddoc";
-
     private static DDOCDataFilesService dataFilesService = new DDOCDataFilesService();
     private static DDOCValidationService validationService = new DDOCValidationService();
     private static DDOCSignaturePolicyProperties policyProperties = new DDOCSignaturePolicyProperties();
-    private static SignaturePolicyService<ValidationPolicy>  signaturePolicyService;
+    private static SignaturePolicyService<ValidationPolicy> signaturePolicyService;
     private static XMLEntityAttackValidator xmlEntityAttackValidator;
     private static QualifiedReport validationResult2Signatures;
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -101,6 +92,25 @@ public class DDOCServiceTest {
         validationService.initConfig();
 
         dataFilesService.setXMLEntityAttackValidator(xmlEntityAttackValidator);
+    }
+
+    private static ValidationDocument ddocValid2Signatures() throws Exception {
+        return buildValidationDocument(VALID_DDOC_2_SIGNATURES);
+    }
+
+    private static ValidationDocument buildValidationDocument(String testFile) throws Exception {
+        return DummyValidationDocumentBuilder
+                .aValidationDocument()
+                .withDocument(TEST_FILES_LOCATION + testFile)
+                .withName(testFile)
+                .build();
+    }
+
+    private static DataFilesDocument buildDataFilesDocument() throws Exception {
+        return DummyDataFilesDocumentBuilder
+                .aDataFilesDocument()
+                .withDocument(TEST_FILES_LOCATION + VALID_DDOC)
+                .build();
     }
 
     @Test
@@ -175,24 +185,25 @@ public class DDOCServiceTest {
     @Test
     public void qualifiedReportShouldIncludeSignatureFormWithCorrectPrefixAndVersion() throws Exception {
         validationResult2Signatures = validationService.validateDocument(ddocValid2Signatures());
-        assertEquals("DIGIDOC_XML_1.3",validationResult2Signatures.getSignatureForm());
+        assertEquals("DIGIDOC_XML_1.3", validationResult2Signatures.getSimpleReport().getValidationConclusion().getSignatureForm());
     }
 
     @Test
     public void qualifiedReportShouldIncludeRequiredFields() throws Exception {
         validationResult2Signatures = validationService.validateDocument(ddocValid2Signatures());
-        assertNotNull(validationResult2Signatures.getPolicy());
-        assertNotNull(validationResult2Signatures.getValidationTime());
-        assertEquals(VALID_DDOC_2_SIGNATURES, validationResult2Signatures.getDocumentName());
-        assertTrue(validationResult2Signatures.getSignatures().size() == 2);
-        assertTrue(validationResult2Signatures.getValidSignaturesCount() == 2);
-        assertTrue(validationResult2Signatures.getSignaturesCount() == 2);
+        ValidationConclusion validationConclusion = validationResult2Signatures.getSimpleReport().getValidationConclusion();
+        assertNotNull(validationConclusion.getPolicy());
+        assertNotNull(validationConclusion.getValidationTime());
+        assertEquals(VALID_DDOC_2_SIGNATURES, validationConclusion.getDocumentName());
+        assertTrue(validationConclusion.getSignatures().size() == 2);
+        assertTrue(validationConclusion.getValidSignaturesCount() == 2);
+        assertTrue(validationConclusion.getSignaturesCount() == 2);
     }
 
     @Test
     public void qualifiedReportShouldHaveCorrectSignatureValidationDataForSignature1() throws Exception {
         validationResult2Signatures = validationService.validateDocument(ddocValid2Signatures());
-        SignatureValidationData sig1 = validationResult2Signatures.getSignatures()
+        SignatureValidationData sig1 = validationResult2Signatures.getSimpleReport().getValidationConclusion().getSignatures()
                 .stream()
                 .filter(sig -> sig.getId().equals("S0"))
                 .findFirst()
@@ -217,7 +228,7 @@ public class DDOCServiceTest {
     @Test
     public void qualifiedReportShouldHaveCorrectSignatureValidationDataForSignature2() throws Exception {
         validationResult2Signatures = validationService.validateDocument(ddocValid2Signatures());
-        SignatureValidationData sig2 = validationResult2Signatures.getSignatures()
+        SignatureValidationData sig2 = validationResult2Signatures.getSimpleReport().getValidationConclusion().getSignatures()
                 .stream()
                 .filter(sig -> sig.getId().equals("S1"))
                 .findFirst()
@@ -242,8 +253,9 @@ public class DDOCServiceTest {
     @Test
     public void dDocValidationError173ForMissingDataFileXmlnsShouldBeShownAsWarningInReport() throws Exception {
         QualifiedReport report = validationService.validateDocument(buildValidationDocument(DATAFILE_XMLNS_MISSING));
-        assertEquals(report.getSignaturesCount(), report.getValidSignaturesCount());
-        SignatureValidationData signature = report.getSignatures().get(0);
+        ValidationConclusion validationConclusion = report.getSimpleReport().getValidationConclusion();
+        assertEquals(validationConclusion.getSignaturesCount(), validationConclusion.getValidSignaturesCount());
+        SignatureValidationData signature = validationConclusion.getSignatures().get(0);
         assertTrue(signature.getErrors().isEmpty());
         assertTrue(signature.getWarnings().size() == 1);
         assertEquals("Bad digest for DataFile: D0 alternate digest matches!", signature.getWarnings().get(0).getDescription());
@@ -252,24 +264,24 @@ public class DDOCServiceTest {
     @Test
     public void reportShouldHaveHashcodeSingnatureFormSuffixWhenValidatingDdocHashcode13Format() throws Exception {
         QualifiedReport report = validationService.validateDocument(buildValidationDocument(DDOC_1_3_HASHCODE));
-        assertEquals("DIGIDOC_XML_1.3_hashcode", report.getSignatureForm());
+        assertEquals("DIGIDOC_XML_1.3_hashcode", report.getSimpleReport().getValidationConclusion().getSignatureForm());
     }
 
     @Test
     public void reportShouldHaveHashcodeSingnatureFormSuffixWhenValidatingDdocHashcode10Format() throws Exception {
         QualifiedReport report = validationService.validateDocument(buildValidationDocument(DDOC_1_0_HASHCODE));
-        assertEquals("DIGIDOC_XML_1.0_hashcode", report.getSignatureForm());
+        assertEquals("DIGIDOC_XML_1.0_hashcode", report.getSimpleReport().getValidationConclusion().getSignatureForm());
     }
 
     @Test
     public void reportShouldHaveHashcodeSingnatureFormSuffixWhenValidatingDdocHashcode12Format() throws Exception {
         QualifiedReport report = validationService.validateDocument(buildValidationDocument(DDOC_1_2_HASHCODE));
-        assertEquals("DIGIDOC_XML_1.2_hashcode", report.getSignatureForm());
+        assertEquals("DIGIDOC_XML_1.2_hashcode", report.getSimpleReport().getValidationConclusion().getSignatureForm());
     }
 
     @Test
     public void validationReportShouldContainDefaultPolicyWhenPolicyIsNotExplicitlyGiven() throws Exception {
-        Policy policy = validateWithPolicy("").getPolicy();
+        Policy policy = validateWithPolicy("").getSimpleReport().getValidationConclusion().getPolicy();
         assertEquals(ADES_POLICY.getName(), policy.getPolicyName());
         assertEquals(ADES_POLICY.getDescription(), policy.getPolicyDescription());
         assertEquals(ADES_POLICY.getUrl(), policy.getPolicyUrl());
@@ -277,7 +289,7 @@ public class DDOCServiceTest {
 
     @Test
     public void validationReportShouldContainAdesPolicyWhenAdesPolicyIsGivenToValidator() throws Exception {
-        Policy policy = validateWithPolicy("POLv3").getPolicy();
+        Policy policy = validateWithPolicy("POLv3").getSimpleReport().getValidationConclusion().getPolicy();
         assertEquals(ADES_POLICY.getName(), policy.getPolicyName());
         assertEquals(ADES_POLICY.getDescription(), policy.getPolicyDescription());
         assertEquals(ADES_POLICY.getUrl(), policy.getPolicyUrl());
@@ -285,7 +297,7 @@ public class DDOCServiceTest {
 
     @Test
     public void validationReportShouldContainAdesQcPolicyWhenAdesQcPolicyIsGivenToValidator() throws Exception {
-        Policy policy = validateWithPolicy("POLv4").getPolicy();
+        Policy policy = validateWithPolicy("POLv4").getSimpleReport().getValidationConclusion().getPolicy();
         assertEquals(ADES_QC_POLICY.getName(), policy.getPolicyName());
         assertEquals(ADES_QC_POLICY.getDescription(), policy.getPolicyDescription());
         assertEquals(ADES_QC_POLICY.getUrl(), policy.getPolicyUrl());
@@ -293,7 +305,7 @@ public class DDOCServiceTest {
 
     @Test
     public void validationReportShouldContainQESPolicyWhenQESPolicyIsGivenToValidator() throws Exception {
-        Policy policy = validateWithPolicy("POLv5").getPolicy();
+        Policy policy = validateWithPolicy("POLv5").getSimpleReport().getValidationConclusion().getPolicy();
         assertEquals(QES_POLICY.getName(), policy.getPolicyName());
         assertEquals(QES_POLICY.getDescription(), policy.getPolicyDescription());
         assertEquals(QES_POLICY.getUrl(), policy.getPolicyUrl());
@@ -302,7 +314,7 @@ public class DDOCServiceTest {
     @Test
     public void whenNonExistingPolicyIsGivenThenValidatorShouldThrowException() throws Exception {
         expectedException.expect(InvalidPolicyException.class);
-        validateWithPolicy("non-existing-policy").getPolicy();
+        validateWithPolicy("non-existing-policy");
     }
 
     @Test
@@ -331,29 +343,10 @@ public class DDOCServiceTest {
         validationServiceSpy.validateDocument(validationDocument);
     }
 
-    private static ValidationDocument ddocValid2Signatures() throws Exception {
-        return buildValidationDocument(VALID_DDOC_2_SIGNATURES);
-    }
-
-    private static ValidationDocument buildValidationDocument(String testFile) throws Exception {
-        return DummyValidationDocumentBuilder
-                .aValidationDocument()
-                .withDocument(TEST_FILES_LOCATION + testFile)
-                .withName(testFile)
-                .build();
-    }
-
     private QualifiedReport validateWithPolicy(String policyName) throws Exception {
         ValidationDocument validationDocument = buildValidationDocument(VALID_DDOC_2_SIGNATURES);
         validationDocument.setSignaturePolicy(policyName);
         return validationService.validateDocument(validationDocument);
-    }
-
-    private static DataFilesDocument buildDataFilesDocument() throws Exception {
-        return DummyDataFilesDocumentBuilder
-                .aDataFilesDocument()
-                .withDocument(TEST_FILES_LOCATION + VALID_DDOC)
-                .build();
     }
 
     static class DummyDataFilesDocumentBuilder {

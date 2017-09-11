@@ -49,17 +49,17 @@ public class SignaturePolicyIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("soft-cert-signature.pdf"));
         post(validationRequestWithValidKeys(encodedString, "soft-cert-signature.pdf", VALID_SIGNATURE_POLICY_3))
                 .then()
-                .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
-                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
-                .body("policy.policyUrl", Matchers.is(POLICY_3_URL))
-                .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
-                .body("signatures[0].signatureLevel", Matchers.is("ADES"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
-                .body("signatures[0].warnings[0].description", Matchers.is("The certificate is not qualified at issuance time!"))
-                .body("signatures[0].warnings[1].description", Matchers.is("The signature/seal is not created by a QSCD!"))
-                .body("validSignaturesCount", Matchers.is(1))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validationConclusion.policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
+                .body("validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
+                .body("validationConclusion.policy.policyUrl", Matchers.is(POLICY_3_URL))
+                .body("validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
+                .body("validationConclusion.signatures[0].signatureLevel", Matchers.is("ADES"))
+                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("validationConclusion.signatures[0].warnings[0].description", Matchers.is("The certificate is not qualified at issuance time!"))
+                .body("validationConclusion.signatures[0].warnings[1].description", Matchers.is("The signature/seal is not created by a QSCD!"))
+                .body("validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -80,18 +80,18 @@ public class SignaturePolicyIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("soft-cert-signature.pdf"));
         post(validationRequestWithValidKeys(encodedString, "soft-cert-signature.pdf", VALID_SIGNATURE_POLICY_5))
                 .then()
-                .body("policy.policyDescription", Matchers.is(POLICY_5_DESCRIPTION))
-                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))
-                .body("policy.policyUrl", Matchers.is(POLICY_5_URL))
-                .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
-                .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is("CHAIN_CONSTRAINTS_FAILURE"))
-                .body("signatures[0].errors[0].content", Matchers.containsString("The certificate is not qualified!"))
-                .body("signatures[0].warnings[0].description", Matchers.is("The certificate is not qualified at issuance time!"))
-                .body("signatures[0].warnings[1].description", Matchers.is("The signature/seal is not created by a QSCD!"))
-                .body("validSignaturesCount", Matchers.is(0))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validationConclusion.policy.policyDescription", Matchers.is(POLICY_5_DESCRIPTION))
+                .body("validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))
+                .body("validationConclusion.policy.policyUrl", Matchers.is(POLICY_5_URL))
+                .body("validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
+                .body("validationConclusion.signatures[0].signatureLevel", Matchers.is("NOT_ADES"))
+                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationConclusion.signatures[0].subIndication", Matchers.is("CHAIN_CONSTRAINTS_FAILURE"))
+                .body("validationConclusion.signatures[0].errors[0].content", Matchers.containsString("The certificate is not qualified!"))
+                .body("validationConclusion.signatures[0].warnings[0].description", Matchers.is("The certificate is not qualified at issuance time!"))
+                .body("validationConclusion.signatures[0].warnings[1].description", Matchers.is("The signature/seal is not created by a QSCD!"))
+                .body("validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -113,16 +113,16 @@ public class SignaturePolicyIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades_lt_two_valid_sig.pdf"));
         post(validationRequestWithValidKeys(encodedString, "pades_lt_two_valid_sig.pdf", VALID_SIGNATURE_POLICY_3))
                 .then()
-                .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
-                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
-                .body("policy.policyUrl", Matchers.is(POLICY_3_URL))
-                .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
-                .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
-                .body("signatures[0].warnings", Matchers.isEmptyOrNullString())
-                .body("validSignaturesCount", Matchers.is(2))
-                .body("signaturesCount", Matchers.is(2));
+                .body("validationConclusion.policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
+                .body("validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
+                .body("validationConclusion.policy.policyUrl", Matchers.is(POLICY_3_URL))
+                .body("validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
+                .body("validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
+                .body("validationConclusion.validSignaturesCount", Matchers.is(2))
+                .body("validationConclusion.signaturesCount", Matchers.is(2));
     }
 
     /**
@@ -144,16 +144,16 @@ public class SignaturePolicyIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades_lt_two_valid_sig.pdf"));
         post(validationRequestWithValidKeys(encodedString, "pades_lt_two_valid_sig.pdf", VALID_SIGNATURE_POLICY_5))
                 .then()
-                .body("policy.policyDescription", Matchers.is(POLICY_5_DESCRIPTION))
-                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))
-                .body("policy.policyUrl", Matchers.is(POLICY_5_URL))
-                .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
-                .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].warnings", Matchers.isEmptyOrNullString())
-                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
-                .body("validSignaturesCount", Matchers.is(2))
-                .body("signaturesCount", Matchers.is(2));
+                .body("validationConclusion.policy.policyDescription", Matchers.is(POLICY_5_DESCRIPTION))
+                .body("validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))
+                .body("validationConclusion.policy.policyUrl", Matchers.is(POLICY_5_URL))
+                .body("validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
+                .body("validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
+                .body("validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("validationConclusion.validSignaturesCount", Matchers.is(2))
+                .body("validationConclusion.signaturesCount", Matchers.is(2));
     }
 
     /**
@@ -175,15 +175,15 @@ public class SignaturePolicyIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PadesProfileT.pdf"));
         post(validationRequestWithValidKeys(encodedString, "PadesProfileT.pdf", VALID_SIGNATURE_POLICY_5))
                 .then()
-                .body("policy.policyDescription", Matchers.is(POLICY_5_DESCRIPTION))
-                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))
-                .body("policy.policyUrl", Matchers.is(POLICY_5_URL))
-                .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-T"))
-                .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].errors[0].content", Matchers.is("The expected format is not found!"))
-                .body("validSignaturesCount", Matchers.is(0))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validationConclusion.policy.policyDescription", Matchers.is(POLICY_5_DESCRIPTION))
+                .body("validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))
+                .body("validationConclusion.policy.policyUrl", Matchers.is(POLICY_5_URL))
+                .body("validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-T"))
+                .body("validationConclusion.signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
+                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationConclusion.signatures[0].errors[0].content", Matchers.is("The expected format is not found!"))
+                .body("validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -205,15 +205,15 @@ public class SignaturePolicyIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PadesProfileLtWithCrl.pdf"));
         post(validationRequestWithValidKeys(encodedString, "PadesProfileLtWithCrl.pdf", VALID_SIGNATURE_POLICY_5))
                 .then()
-                .body("policy.policyDescription", Matchers.is(POLICY_5_DESCRIPTION))
-                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))
-                .body("policy.policyUrl", Matchers.is(POLICY_5_URL))
-                .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
-                .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
-                .body("validSignaturesCount", Matchers.is(1))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validationConclusion.policy.policyDescription", Matchers.is(POLICY_5_DESCRIPTION))
+                .body("validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))
+                .body("validationConclusion.policy.policyUrl", Matchers.is(POLICY_5_URL))
+                .body("validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
+                .body("validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -235,16 +235,16 @@ public class SignaturePolicyIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PadesTestAdesQC.pdf"));
         post(validationRequestWithValidKeys(encodedString, "PadesTestAdesQC.pdf", VALID_SIGNATURE_POLICY_4))
                 .then()
-                .body("policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
-                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
-                .body("policy.policyUrl", Matchers.is(POLICY_4_URL))
-                .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
-                .body("signatures[0].signatureLevel", Matchers.is("ADESIG_QC"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
-                .body("signatures[0].warnings[0].description", Matchers.is("The signature/seal is not created by a QSCD!"))
-                .body("validSignaturesCount", Matchers.is(1))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validationConclusion.policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
+                .body("validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
+                .body("validationConclusion.policy.policyUrl", Matchers.is(POLICY_4_URL))
+                .body("validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
+                .body("validationConclusion.signatures[0].signatureLevel", Matchers.is("ADESIG_QC"))
+                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("validationConclusion.signatures[0].warnings[0].description", Matchers.is("The signature/seal is not created by a QSCD!"))
+                .body("validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -266,17 +266,17 @@ public class SignaturePolicyIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PadesTestAdesQC.pdf"));
         post(validationRequestWithValidKeys(encodedString, "PadesTestAdesQC.pdf", VALID_SIGNATURE_POLICY_5))
                 .then()
-                .body("policy.policyDescription", Matchers.is(POLICY_5_DESCRIPTION))
-                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))
-                .body("policy.policyUrl", Matchers.is(POLICY_5_URL))
-                .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
-                .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is("CHAIN_CONSTRAINTS_FAILURE"))
-                .body("signatures[0].errors[0].content", Matchers.is("The certificate is not supported by QSCD!"))
-                .body("signatures[0].warnings", Matchers.hasSize(2))
-                .body("validSignaturesCount", Matchers.is(0))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validationConclusion.policy.policyDescription", Matchers.is(POLICY_5_DESCRIPTION))
+                .body("validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))
+                .body("validationConclusion.policy.policyUrl", Matchers.is(POLICY_5_URL))
+                .body("validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
+                .body("validationConclusion.signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC"))
+                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationConclusion.signatures[0].subIndication", Matchers.is("CHAIN_CONSTRAINTS_FAILURE"))
+                .body("validationConclusion.signatures[0].errors[0].content", Matchers.is("The certificate is not supported by QSCD!"))
+                .body("validationConclusion.signatures[0].warnings", Matchers.hasSize(2))
+                .body("validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -297,18 +297,18 @@ public class SignaturePolicyIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("soft-cert-signature.pdf"));
         post(validationRequestWithValidKeys(encodedString, "soft-cert-signature.pdf", VALID_SIGNATURE_POLICY_4))
                 .then()
-                .body("policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
-                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
-                .body("policy.policyUrl", Matchers.is(POLICY_4_URL))
-                .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
-                .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is("CHAIN_CONSTRAINTS_FAILURE"))
-                .body("signatures[0].errors[0].content", Matchers.containsString("The certificate is not qualified!"))
-                .body("signatures[0].warnings[0].description", Matchers.is("The certificate is not qualified at issuance time!"))
-                .body("signatures[0].warnings[1].description", Matchers.is("The signature/seal is not created by a QSCD!"))
-                .body("validSignaturesCount", Matchers.is(0))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validationConclusion.policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
+                .body("validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
+                .body("validationConclusion.policy.policyUrl", Matchers.is(POLICY_4_URL))
+                .body("validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
+                .body("validationConclusion.signatures[0].signatureLevel", Matchers.is("NOT_ADES"))
+                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationConclusion.signatures[0].subIndication", Matchers.is("CHAIN_CONSTRAINTS_FAILURE"))
+                .body("validationConclusion.signatures[0].errors[0].content", Matchers.containsString("The certificate is not qualified!"))
+                .body("validationConclusion.signatures[0].warnings[0].description", Matchers.is("The certificate is not qualified at issuance time!"))
+                .body("validationConclusion.signatures[0].warnings[1].description", Matchers.is("The signature/seal is not created by a QSCD!"))
+                .body("validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -330,15 +330,15 @@ public class SignaturePolicyIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("allkiri_ades.asice"));
         post(validationRequestWithValidKeys(encodedString, "allkiri_ades.asice", VALID_SIGNATURE_POLICY_3))
                 .then()
-                .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
-                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
-                .body("policy.policyUrl", Matchers.is(POLICY_3_URL))
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-LT"))
-                .body("signatures[0].signatureLevel", Matchers.is("ADES"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
-                .body("validSignaturesCount", Matchers.is(1))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validationConclusion.policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
+                .body("validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
+                .body("validationConclusion.policy.policyUrl", Matchers.is(POLICY_3_URL))
+                .body("validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-LT"))
+                .body("validationConclusion.signatures[0].signatureLevel", Matchers.is("ADES"))
+                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -360,16 +360,16 @@ public class SignaturePolicyIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("allkiri_ades.asice"));
         post(validationRequestWithValidKeys(encodedString, "allkiri_ades.asice", VALID_SIGNATURE_POLICY_5))
                 .then()
-                .body("policy.policyDescription", Matchers.is(POLICY_5_DESCRIPTION))
-                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))
-                .body("policy.policyUrl", Matchers.is(POLICY_5_URL))
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-LT"))
-                .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is("CHAIN_CONSTRAINTS_FAILURE"))
-                .body("signatures[0].errors[0].content", Matchers.is("The certificate is not qualified!"))
-                .body("validSignaturesCount", Matchers.is(0))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validationConclusion.policy.policyDescription", Matchers.is(POLICY_5_DESCRIPTION))
+                .body("validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))
+                .body("validationConclusion.policy.policyUrl", Matchers.is(POLICY_5_URL))
+                .body("validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-LT"))
+                .body("validationConclusion.signatures[0].signatureLevel", Matchers.is("NOT_ADES"))
+                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationConclusion.signatures[0].subIndication", Matchers.is("CHAIN_CONSTRAINTS_FAILURE"))
+                .body("validationConclusion.signatures[0].errors[0].content", Matchers.is("The certificate is not qualified!"))
+                .body("validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -391,16 +391,16 @@ public class SignaturePolicyIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_ID_sig.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "Valid_ID_sig.bdoc", VALID_SIGNATURE_POLICY_3))
                 .then()
-                .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
-                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
-                .body("policy.policyUrl", Matchers.is(POLICY_3_URL))
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
-                .body("signatures[0].warnings", Matchers.isEmptyOrNullString())
-                .body("validSignaturesCount", Matchers.is(1))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validationConclusion.policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
+                .body("validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
+                .body("validationConclusion.policy.policyUrl", Matchers.is(POLICY_3_URL))
+                .body("validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
+                .body("validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -422,16 +422,16 @@ public class SignaturePolicyIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_ID_sig.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "Valid_ID_sig.bdoc", VALID_SIGNATURE_POLICY_5))
                 .then()
-                .body("policy.policyDescription", Matchers.is(POLICY_5_DESCRIPTION))
-                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))
-                .body("policy.policyUrl", Matchers.is(POLICY_5_URL))
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
-                .body("signatures[0].warnings", Matchers.isEmptyOrNullString())
-                .body("validSignaturesCount", Matchers.is(1))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validationConclusion.policy.policyDescription", Matchers.is(POLICY_5_DESCRIPTION))
+                .body("validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))
+                .body("validationConclusion.policy.policyUrl", Matchers.is(POLICY_5_URL))
+                .body("validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
+                .body("validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     @Override

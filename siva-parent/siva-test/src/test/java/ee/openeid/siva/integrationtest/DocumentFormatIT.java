@@ -18,7 +18,7 @@ package ee.openeid.siva.integrationtest;
 
 import com.jayway.restassured.RestAssured;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -28,15 +28,14 @@ import static org.junit.Assert.assertEquals;
 @Category(IntegrationTest.class)
 public class DocumentFormatIT extends SiVaRestTests {
 
+    private static final String TEST_FILES_DIRECTORY = "document_format_test_files/";
+
     @BeforeClass
     public static void oneTimeSetUp() {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
     }
 
-    private static final String TEST_FILES_DIRECTORY = "document_format_test_files/";
-
     /**
-     *
      * TestCaseID: DocumentFormat-1
      *
      * TestType: Automated
@@ -48,17 +47,15 @@ public class DocumentFormatIT extends SiVaRestTests {
      * Expected Result: Pdf is accepted and correct signature validation is given
      *
      * File: hellopades-pades-lt-sha256-sign.pdf
-     *
      */
     @Test
     public void PAdESDocumentShouldPass() {
-        QualifiedReport report = postForReport("hellopades-pades-lt-sha256-sign.pdf");
-        assertAllSignaturesAreValid(report);
-        assertEquals("PAdES-BASELINE-LT", report.getSignatures().get(0).getSignatureFormat());
+        ValidationConclusion validationConclusion = postForReport("hellopades-pades-lt-sha256-sign.pdf");
+        assertAllSignaturesAreValid(validationConclusion);
+        assertEquals("PAdES-BASELINE-LT", validationConclusion.getSignatures().get(0).getSignatureFormat());
     }
 
     /**
-     *
      * TestCaseID: DocumentFormat-2
      *
      * TestType: Automated
@@ -70,16 +67,13 @@ public class DocumentFormatIT extends SiVaRestTests {
      * Expected Result: Bdoc is accepted and correct signature validation is given
      *
      * File: Valid_IDCard_MobID_signatures.bdoc
-     *
      */
     @Test
     public void AdESDocumentShouldPass() {
-        QualifiedReport report = postForReport("Valid_IDCard_MobID_signatures.bdoc");
-        assertAllSignaturesAreValid(report);
-        assertEquals("XAdES_BASELINE_LT_TM", report.getSignatures().get(0).getSignatureFormat());
+        ValidationConclusion validationConclusion = postForReport("Valid_IDCard_MobID_signatures.bdoc");
+        assertAllSignaturesAreValid(validationConclusion);
+        assertEquals("XAdES_BASELINE_LT_TM", validationConclusion.getSignatures().get(0).getSignatureFormat());
     }
-
-
 
 
     @Override

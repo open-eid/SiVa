@@ -16,7 +16,9 @@
 
 package ee.openeid.siva.webapp.soap.transformer;
 
+import ee.openeid.siva.validation.document.report.Report;
 import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.webapp.soap.Error;
 import ee.openeid.siva.webapp.soap.*;
 import eu.europa.esig.dss.validation.detailed_report.DetailedReport;
@@ -48,28 +50,37 @@ public class QualifiedReportSoapResponseTransformer {
         return responseSignatureInfo;
     }
 
-    public QualifiedReport toSoapResponse(ee.openeid.siva.validation.document.report.QualifiedReport report) {
-        QualifiedReport responseReport = new QualifiedReport();
-        responseReport.setSignatureForm(report.getSignatureForm());
-        responseReport.setDocumentName(report.getDocumentName());
+    public ValidateDocumentResponse toSoapResponse(Report report) {
+        ValidateDocumentResponse validateDocumentResponse = new ValidateDocumentResponse();
 
-        responseReport.setDetailedReport(toSoapDetailedReport(report.getDetailedReport()));
-        responseReport.setPolicy(toSoapResponsePolicy(report.getPolicy()));
-        if (report.getSignaturesCount() != null)
-            responseReport.setSignaturesCount(report.getSignaturesCount());
-        if (report.getSignatures() != null)
-            responseReport.setSignatures(toSoapResponseSignatures(report.getSignatures()));
-        if (report.getValidationWarnings() != null)
-            responseReport.setValidationWarnings(toSoapResponseValidationWarnings(report.getValidationWarnings()));
-        if (report.getValidSignaturesCount() != null)
-            responseReport.setValidSignaturesCount(report.getValidSignaturesCount());
-        responseReport.setValidationTime(report.getValidationTime());
-        if (report.getTimeStampTokens() != null)
-            responseReport.setTimeStampTokens(toSoapResponseResponseTimeStamps(report.getTimeStampTokens()));
-        return responseReport;
+        QualifiedReport qualifiedReport = new QualifiedReport();
+        ValidationConclusion validationConclusion = report.getValidationConclusion();
+        qualifiedReport.setSignatureForm(validationConclusion.getSignatureForm());
+        qualifiedReport.setDocumentName(validationConclusion.getDocumentName());
+
+        qualifiedReport.setPolicy(toSoapResponsePolicy(validationConclusion.getPolicy()));
+        if (validationConclusion.getSignaturesCount() != null)
+            qualifiedReport.setSignaturesCount(validationConclusion.getSignaturesCount());
+        if (validationConclusion.getSignatures() != null)
+            qualifiedReport.setSignatures(toSoapResponseSignatures(validationConclusion.getSignatures()));
+        if (validationConclusion.getValidationWarnings() != null)
+            qualifiedReport.setValidationWarnings(toSoapResponseValidationWarnings(validationConclusion.getValidationWarnings()));
+        if (validationConclusion.getValidSignaturesCount() != null)
+            qualifiedReport.setValidSignaturesCount(validationConclusion.getValidSignaturesCount());
+        qualifiedReport.setValidationTime(validationConclusion.getValidationTime());
+        if (validationConclusion.getTimeStampTokens() != null)
+            qualifiedReport.setTimeStampTokens(toSoapResponseResponseTimeStamps(validationConclusion.getTimeStampTokens()));
+
+        validateDocumentResponse.setValidationReport(qualifiedReport);
+        if (report instanceof ee.openeid.siva.validation.document.report.DetailedReport) {
+            ee.openeid.siva.webapp.soap.DetailedReport xmlDetailedReport = toSoapDetailedReport(
+                    ((ee.openeid.siva.validation.document.report.DetailedReport) report).getValidationProcess());
+            validateDocumentResponse.setValidationProcess(xmlDetailedReport);
+        }
+        return validateDocumentResponse;
     }
 
-    private DetailedReport toSoapDetailedReport(eu.europa.esig.dss.jaxb.detailedreport.DetailedReport detailedReport) {
+    private ee.openeid.siva.webapp.soap.DetailedReport toSoapDetailedReport(eu.europa.esig.dss.jaxb.detailedreport.DetailedReport detailedReport) {
         try {
             if (detailedReport == null)
                 return null;
@@ -84,7 +95,7 @@ public class QualifiedReportSoapResponseTransformer {
             JAXBContext jaxbContext = JAXBContext.newInstance(DetailedReport.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             StringReader reader = new StringReader(requestString);
-            return (DetailedReport) unmarshaller.unmarshal(reader);
+            return (ee.openeid.siva.webapp.soap.DetailedReport) unmarshaller.unmarshal(reader);
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         }

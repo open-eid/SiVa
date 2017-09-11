@@ -21,7 +21,8 @@ import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import ee.openeid.siva.proxy.document.DocumentType;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
 
@@ -95,19 +96,19 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         return PRINT_RESPONSE;
     }
 
-    protected QualifiedReport postForReport(String file, String signaturePolicy) {
+    protected ValidationConclusion postForReport(String file, String signaturePolicy) {
         if (shouldPrintResponse()) {
             return postForReportAndPrintResponse(file, signaturePolicy);
         }
-        return mapToReport(post(validationRequestFor(file, signaturePolicy)).andReturn().body().asString());
+        return mapToReport(post(validationRequestFor(file, signaturePolicy)).andReturn().body().asString()).getValidationConclusion();
     }
 
-    protected QualifiedReport postForReport(String file) {
+    protected ValidationConclusion postForReport(String file) {
         return postForReport(file, VALID_SIGNATURE_POLICY_5);
     }
 
-    protected QualifiedReport postForReportAndPrintResponse(String file, String signaturePolicy) {
-        return mapToReport(post(validationRequestFor(file, signaturePolicy)).andReturn().body().prettyPrint());
+    protected ValidationConclusion postForReportAndPrintResponse(String file, String signaturePolicy) {
+        return mapToReport(post(validationRequestFor(file, signaturePolicy)).andReturn().body().prettyPrint()).getValidationConclusion();
     }
 
     protected String validationRequestFor(String file, String signaturePolicy) {
@@ -188,9 +189,9 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
                 SIGNATURE_POLICY, signaturePolicy);
     }
 
-    protected QualifiedReport mapToReport(String json) {
+    protected SimpleReport mapToReport(String json) {
         try {
-            return new ObjectMapper().readValue(json, QualifiedReport.class);
+            return new ObjectMapper().readValue(json, SimpleReport.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

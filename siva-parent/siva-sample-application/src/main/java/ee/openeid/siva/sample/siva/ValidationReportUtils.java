@@ -57,7 +57,7 @@ public final class ValidationReportUtils {
         try {
             return JsonPath.read(jsonValidationResult, "$.validationWarnings[*].content");
         } catch (PathNotFoundException e) {
-            LOGGER.warn("Validation warnings not present in JSON: ", e);
+            LOGGER.debug("Validation warnings not present in JSON: ", e);
             return Collections.emptyList();
         }
     }

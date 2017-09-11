@@ -59,15 +59,15 @@ public class AsicsValidationPassIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("ValidDDOCinsideAsics.asics"));
         post(validationRequestWithValidKeys(encodedString, "ValidDDOCinsideAsics.asics", VALID_SIGNATURE_POLICY_5))
                 .then()
-                .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].claimedSigningTime", Matchers.is("2012-10-03T07:46:31Z"))
-                .body("timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
-                .body("timeStampTokens[0].signedTime", Matchers.is("2017-08-10T12:40:40Z"))
-                .body("documentName", Matchers.is("DIGIDOC-XML1.3.ddoc"))
-                .body("signaturesCount", Matchers.is(1))
-                .body("validSignaturesCount", Matchers.is(1));
+                .body("validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2012-10-03T07:46:31Z"))
+                .body("validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationConclusion.timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
+                .body("validationConclusion.timeStampTokens[0].signedTime", Matchers.is("2017-08-10T12:40:40Z"))
+                .body("validationConclusion.documentName", Matchers.is("DIGIDOC-XML1.3.ddoc"))
+                .body("validationConclusion.signaturesCount", Matchers.is(1))
+                .body("validationConclusion.validSignaturesCount", Matchers.is(1));
     }
 
     /**
@@ -88,15 +88,15 @@ public class AsicsValidationPassIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("ValidDDOCinsideAsics.scs"));
         post(validationRequestWithValidKeys(encodedString, "ValidDDOCinsideAsics.scs", VALID_SIGNATURE_POLICY_5))
                 .then()
-                .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].claimedSigningTime", Matchers.is("2012-10-03T07:46:31Z"))
-                .body("timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
-                .body("timeStampTokens[0].signedTime", Matchers.is("2017-08-10T12:40:40Z"))
-                .body("documentName", Matchers.is("DIGIDOC-XML1.3.ddoc"))
-                .body("signaturesCount", Matchers.is(1))
-                .body("validSignaturesCount", Matchers.is(1));
+                .body("validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2012-10-03T07:46:31Z"))
+                .body("validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationConclusion.timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
+                .body("validationConclusion.timeStampTokens[0].signedTime", Matchers.is("2017-08-10T12:40:40Z"))
+                .body("validationConclusion.documentName", Matchers.is("DIGIDOC-XML1.3.ddoc"))
+                .body("validationConclusion.signaturesCount", Matchers.is(1))
+                .body("validationConclusion.validSignaturesCount", Matchers.is(1));
     }
 
     /**
@@ -117,18 +117,18 @@ public class AsicsValidationPassIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("ValidBDOCinsideAsics.asics"));
         post(validationRequestWithValidKeys(encodedString, "ValidBDOCinsideAsics.asics", VALID_SIGNATURE_POLICY_5))
                 .then()
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-05-11T10:18:06Z"))
-                .body("signatures[1].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("signatures[1].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[1].info.bestSignatureTime", Matchers.is("2016-05-11T10:19:38Z"))
-                .body("timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
-                .body("timeStampTokens[0].signedTime", Matchers.is("2017-08-10T12:40:40Z"))
-                .body("documentName", Matchers.is("Valid_IDCard_MobID_signatures.bdoc"))
-                .body("signaturesCount", Matchers.is(2))
-                .body("validSignaturesCount", Matchers.is(2));
+                .body("validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2016-05-11T10:18:06Z"))
+                .body("validationConclusion.signatures[1].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("validationConclusion.signatures[1].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationConclusion.signatures[1].info.bestSignatureTime", Matchers.is("2016-05-11T10:19:38Z"))
+                .body("validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationConclusion.timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
+                .body("validationConclusion.timeStampTokens[0].signedTime", Matchers.is("2017-08-10T12:40:40Z"))
+                .body("validationConclusion.documentName", Matchers.is("Valid_IDCard_MobID_signatures.bdoc"))
+                .body("validationConclusion.signaturesCount", Matchers.is(2))
+                .body("validationConclusion.validSignaturesCount", Matchers.is(2));
     }
 
     /**
@@ -149,10 +149,10 @@ public class AsicsValidationPassIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("TXTinsideAsics.asics"));
         post(validationRequestWithValidKeys(encodedString, "TXTinsideAsics.asics", VALID_SIGNATURE_POLICY_5))
                 .then()
-                .body("timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
-                .body("timeStampTokens[0].signedTime", Matchers.is("2017-08-25T09:56:33Z"))
-                .body("documentName", Matchers.is("TXTinsideAsics.asics"));
+                .body("validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationConclusion.timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
+                .body("validationConclusion.timeStampTokens[0].signedTime", Matchers.is("2017-08-25T09:56:33Z"))
+                .body("validationConclusion.documentName", Matchers.is("TXTinsideAsics.asics"));
     }
 
     /**
@@ -173,10 +173,10 @@ public class AsicsValidationPassIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("ValidASICSinsideAsics.asics"));
         post(validationRequestWithValidKeys(encodedString, "ValidASICSinsideAsics.asics", VALID_SIGNATURE_POLICY_5))
                 .then()
-                .body("timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
-                .body("timeStampTokens[0].signedTime", Matchers.is("2017-08-25T11:24:01Z"))
-                .body("documentName", Matchers.is("DIGIDOC-XML1.3(1).asics"));
+                .body("validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationConclusion.timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
+                .body("validationConclusion.timeStampTokens[0].signedTime", Matchers.is("2017-08-25T11:24:01Z"))
+                .body("validationConclusion.documentName", Matchers.is("DIGIDOC-XML1.3(1).asics"));
     }
 
     /**
@@ -197,15 +197,15 @@ public class AsicsValidationPassIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("ValidDDOCinsideAsics.zip"));
         post(validationRequestWithValidKeys(encodedString, "ValidDDOCinsideAsics.zip", VALID_SIGNATURE_POLICY_5))
                 .then()
-                .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].claimedSigningTime", Matchers.is("2012-10-03T07:46:31Z"))
-                .body("timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
-                .body("timeStampTokens[0].signedTime", Matchers.is("2017-08-10T12:40:40Z"))
-                .body("documentName", Matchers.is("DIGIDOC-XML1.3.ddoc"))
-                .body("signaturesCount", Matchers.is(1))
-                .body("validSignaturesCount", Matchers.is(1));
+                .body("validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2012-10-03T07:46:31Z"))
+                .body("validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationConclusion.timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
+                .body("validationConclusion.timeStampTokens[0].signedTime", Matchers.is("2017-08-10T12:40:40Z"))
+                .body("validationConclusion.documentName", Matchers.is("DIGIDOC-XML1.3.ddoc"))
+                .body("validationConclusion.signaturesCount", Matchers.is(1))
+                .body("validationConclusion.validSignaturesCount", Matchers.is(1));
     }
 
     /**
@@ -226,15 +226,15 @@ public class AsicsValidationPassIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("ValidDDOCinsideAsicsWrongMime.asics"));
         post(validationRequestWithValidKeys(encodedString, "ValidDDOCinsideAsicsWrongMime.asics", VALID_SIGNATURE_POLICY_5))
                 .then()
-                .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].claimedSigningTime", Matchers.is("2012-10-03T07:46:31Z"))
-                .body("timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
-                .body("timeStampTokens[0].signedTime", Matchers.is("2017-08-10T12:40:40Z"))
-                .body("documentName", Matchers.is("DIGIDOC-XML1.3.ddoc"))
-                .body("signaturesCount", Matchers.is(1))
-                .body("validSignaturesCount", Matchers.is(1));
+                .body("validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2012-10-03T07:46:31Z"))
+                .body("validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationConclusion.timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
+                .body("validationConclusion.timeStampTokens[0].signedTime", Matchers.is("2017-08-10T12:40:40Z"))
+                .body("validationConclusion.documentName", Matchers.is("DIGIDOC-XML1.3.ddoc"))
+                .body("validationConclusion.signaturesCount", Matchers.is(1))
+                .body("validationConclusion.validSignaturesCount", Matchers.is(1));
     }
 
 

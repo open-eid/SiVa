@@ -32,10 +32,9 @@ import static org.junit.Assert.assertEquals;
 
 public class XROADValidationReportTest {
 
-    private XROADValidationService validationService;
-
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
+    private XROADValidationService validationService;
 
     @Before
     public void setUp() {
@@ -46,45 +45,45 @@ public class XROADValidationReportTest {
     public void ValidatingXRoadSimpleContainerShouldHaveOnlyTheCNFieldOfTheSingersCerificateAsSignedByFieldInQualifiedReport() throws Exception {
         ValidationDocument validationDocument = buildValidationDocument(XROAD_SIMPLE);
         QualifiedReport report = validationService.validateDocument(validationDocument);
-        assertEquals("Riigi Infosüsteemi Amet", report.getSignatures().get(0).getSignedBy());
+        assertEquals("Riigi Infosüsteemi Amet", report.getSimpleReport().getValidationConclusion().getSignatures().get(0).getSignedBy());
     }
 
     @Test
     public void validationReportForXroadBatchSignatureShouldHaveCorrectSignatureForm() throws Exception {
         ValidationDocument validationDocument = buildValidationDocument(XROAD_BATCHSIGNATURE);
         QualifiedReport report = validationService.validateDocument(validationDocument);
-        assertEquals("ASiC_E_batchsignature", report.getSignatureForm());
+        assertEquals("ASiC_E_batchsignature", report.getSimpleReport().getValidationConclusion().getSignatureForm());
     }
 
     @Test
     public void validationReportForXROADSimpleAndPatchSignatureShouldHaveEmptySignatureLevel() throws Exception {
         QualifiedReport report1 = validationService.validateDocument(buildValidationDocument(XROAD_SIMPLE));
         QualifiedReport report2 = validationService.validateDocument(buildValidationDocument(XROAD_BATCHSIGNATURE));
-        assertEquals("", report1.getSignatures().get(0).getSignatureLevel());
-        assertEquals("", report2.getSignatures().get(0).getSignatureLevel());
+        assertEquals("", report1.getSimpleReport().getValidationConclusion().getSignatures().get(0).getSignatureLevel());
+        assertEquals("", report2.getSimpleReport().getValidationConclusion().getSignatures().get(0).getSignatureLevel());
     }
 
     @Test
     public void signatureFormInReportShouldBeAsicEWhenValidatingXROADSimpleContainer() throws Exception {
         QualifiedReport report = validationService.validateDocument(buildValidationDocument(XROAD_SIMPLE));
-        assertEquals("ASiC_E", report.getSignatureForm());
+        assertEquals("ASiC_E", report.getSimpleReport().getValidationConclusion().getSignatureForm());
     }
 
     @Test
     public void signatureFormatInReportShouldBeXadesBaselineBWhenValidatingXROADBatchSignature() throws Exception {
         QualifiedReport report = validationService.validateDocument(buildValidationDocument(XROAD_BATCHSIGNATURE));
-        assertEquals("XAdES_BASELINE_B_BES", report.getSignatures().get(0).getSignatureFormat());
+        assertEquals("XAdES_BASELINE_B_BES", report.getSimpleReport().getValidationConclusion().getSignatures().get(0).getSignatureFormat());
     }
 
     @Test
     public void signatureFormatInReportShouldBeXadesBaselineLTWhenValidatingXROADSimpleContainer() throws Exception {
         QualifiedReport report = validationService.validateDocument(buildValidationDocument(XROAD_SIMPLE));
-        assertEquals("XAdES_BASELINE_LT", report.getSignatures().get(0).getSignatureFormat());
+        assertEquals("XAdES_BASELINE_LT", report.getSimpleReport().getValidationConclusion().getSignatures().get(0).getSignatureFormat());
     }
 
     @Test
     public void validationReportShouldContainDefaultPolicyWhenPolicyIsNotExplicitlyGiven() throws Exception {
-        Policy policy = validateWithPolicy("").getPolicy();
+        Policy policy = validateWithPolicy("").getSimpleReport().getValidationConclusion().getPolicy();
         assertEquals(ADES_POLICY.getName(), policy.getPolicyName());
         assertEquals(ADES_POLICY.getDescription(), policy.getPolicyDescription());
         assertEquals(ADES_POLICY.getUrl(), policy.getPolicyUrl());
@@ -92,7 +91,7 @@ public class XROADValidationReportTest {
 
     @Test
     public void validationReportShouldContainNoTypePolicyWhenNoTypePolicyIsGivenToValidator() throws Exception {
-        Policy policy = validateWithPolicy("POLv3").getPolicy();
+        Policy policy = validateWithPolicy("POLv3").getSimpleReport().getValidationConclusion().getPolicy();
         assertEquals(ADES_POLICY.getName(), policy.getPolicyName());
         assertEquals(ADES_POLICY.getDescription(), policy.getPolicyDescription());
         assertEquals(ADES_POLICY.getUrl(), policy.getPolicyUrl());
@@ -101,13 +100,13 @@ public class XROADValidationReportTest {
     @Test
     public void validatorShouldThrowExceptionWhenGivenQESPolicy() throws Exception {
         expectedException.expect(InvalidPolicyException.class);
-        validateWithPolicy("polv5").getPolicy();
+        validateWithPolicy("polv5");
     }
 
     @Test
     public void whenNonExistingPolicyIsGivenThenValidatorShouldThrowException() throws Exception {
         expectedException.expect(InvalidPolicyException.class);
-        validateWithPolicy("non-existing-policy").getPolicy();
+        validateWithPolicy("non-existing-policy");
     }
 
     private QualifiedReport validateWithPolicy(String policyName) throws Exception {

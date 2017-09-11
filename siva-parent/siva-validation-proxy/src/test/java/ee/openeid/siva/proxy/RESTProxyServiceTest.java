@@ -18,7 +18,7 @@ package ee.openeid.siva.proxy;
 
 import ee.openeid.siva.proxy.http.RESTProxyService;
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,14 +35,14 @@ import static org.mockito.Mockito.when;
 public class RESTProxyServiceTest {
 
     private RESTProxyService restProxyService;
-    private QualifiedReport mockReport;
+    private ValidationConclusion mockReport;
 
     @Mock
     private RestTemplate restTemplate;
 
     @Before
     public void setUp() {
-        mockReport = new QualifiedReport();
+        mockReport = new ValidationConclusion();
         restProxyService = new RESTProxyService();
         restProxyService.setRestTemplate(restTemplate);
     }

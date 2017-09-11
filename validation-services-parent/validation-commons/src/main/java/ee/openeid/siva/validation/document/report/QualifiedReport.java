@@ -17,32 +17,20 @@
 package ee.openeid.siva.validation.document.report;
 
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 public class QualifiedReport {
 
-    eu.europa.esig.dss.jaxb.detailedreport.DetailedReport detailedReport;
+    private SimpleReport simpleReport;
+    private DetailedReport detailedReport;
 
-    private Policy policy;
+    public QualifiedReport() {
 
-    private String validationTime;
+    }
 
-    private String documentName;
-
-    private String signatureForm;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<ValidationWarning> validationWarnings;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<SignatureValidationData> signatures;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Integer validSignaturesCount;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Integer signaturesCount;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<TimeStampTokenValidationData> timeStampTokens;
-
+    public QualifiedReport(SimpleReport simpleReport, DetailedReport detailedReport) {
+        this.simpleReport = simpleReport;
+        this.detailedReport = detailedReport;
+    }
 }

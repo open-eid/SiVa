@@ -17,28 +17,14 @@
 package ee.openeid.validation.service.ddoc.report;
 
 import ee.openeid.siva.validation.document.report.Error;
-import ee.openeid.siva.validation.document.report.Info;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
-import ee.openeid.siva.validation.document.report.SignatureScope;
-import ee.openeid.siva.validation.document.report.SignatureValidationData;
-import ee.openeid.siva.validation.document.report.ValidationWarning;
-import ee.openeid.siva.validation.document.report.Warning;
+import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.siva.validation.util.CertUtil;
-import ee.sk.digidoc.DataFile;
-import ee.sk.digidoc.DigiDocException;
-import ee.sk.digidoc.KeyInfo;
-import ee.sk.digidoc.Signature;
-import ee.sk.digidoc.SignedDoc;
+import ee.sk.digidoc.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
@@ -69,22 +55,26 @@ public class DDOCQualifiedReportBuilder {
     }
 
     public QualifiedReport build() {
-        QualifiedReport qualifiedReport = new QualifiedReport();
-        qualifiedReport.setPolicy(createReportPolicy(validationPolicy));
-        qualifiedReport.setValidationTime(getDateFormatterWithGMTZone().format(validationTime));
-        qualifiedReport.setValidationWarnings(ddocValidationWarnings());
-        qualifiedReport.setDocumentName(documentName);
-        qualifiedReport.setSignatureForm(getSignatureForm());
-        qualifiedReport.setSignaturesCount(getSignatures(signedDoc).size());
-        qualifiedReport.setSignatures(createSignaturesForReport(signedDoc));
-        qualifiedReport.setValidSignaturesCount(
-                qualifiedReport.getSignatures()
+        ValidationConclusion validationConclusion = getValidationConclusion();
+        return new QualifiedReport(new SimpleReport(validationConclusion), new DetailedReport(validationConclusion, null));
+    }
+
+    private ValidationConclusion getValidationConclusion() {
+        ValidationConclusion validationConclusion = new ValidationConclusion();
+        validationConclusion.setPolicy(createReportPolicy(validationPolicy));
+        validationConclusion.setValidationTime(getDateFormatterWithGMTZone().format(validationTime));
+        validationConclusion.setValidationWarnings(ddocValidationWarnings());
+        validationConclusion.setDocumentName(documentName);
+        validationConclusion.setSignatureForm(getSignatureForm());
+        validationConclusion.setSignaturesCount(getSignatures(signedDoc).size());
+        validationConclusion.setSignatures(createSignaturesForReport(signedDoc));
+        validationConclusion.setValidSignaturesCount(
+                validationConclusion.getSignatures()
                         .stream()
                         .filter(vd -> StringUtils.equals(vd.getIndication(), SignatureValidationData.Indication.TOTAL_PASSED.toString()))
                         .collect(Collectors.toList())
                         .size());
-
-        return qualifiedReport;
+        return validationConclusion;
     }
 
     private List<ValidationWarning> ddocValidationWarnings() {
@@ -173,15 +163,15 @@ public class DDOCQualifiedReportBuilder {
         digidocErrors.addAll(signature.verify(signedDoc, true, true));
         ErrorsAndWarningsWrapper wrapper = new ErrorsAndWarningsWrapper();
         wrapper.errors = digidocErrors
-                        .stream()
-                        .filter(dde -> !isWarning(dde))
-                        .map(this::mapDigiDocExceptionToError)
-                        .collect(Collectors.toList());
+                .stream()
+                .filter(dde -> !isWarning(dde))
+                .map(this::mapDigiDocExceptionToError)
+                .collect(Collectors.toList());
         wrapper.warnings = digidocErrors
-                        .stream()
-                        .filter(this::isWarning)
-                        .map(this::mapDigiDocExceptionToWarning)
-                        .collect(Collectors.toList());
+                .stream()
+                .filter(this::isWarning)
+                .map(this::mapDigiDocExceptionToWarning)
+                .collect(Collectors.toList());
         return wrapper;
     }
 

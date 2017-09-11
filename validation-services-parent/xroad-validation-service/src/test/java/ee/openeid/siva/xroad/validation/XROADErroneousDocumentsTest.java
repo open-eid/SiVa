@@ -46,10 +46,10 @@ public class XROADErroneousDocumentsTest {
     @Test
     public void reportWithErrorsAndIndicationTotalFailedShouldBeReturnedWhenAsicVerificationThrowsException() throws Exception {
         QualifiedReport report = validationService.validateDocument(buildValidationDocument(XROAD_INVALID_DIGEST));
-        assertSignatureIsInvalidAndHasErrors(report.getSignatures().get(0));
+        assertSignatureIsInvalidAndHasErrors(report.getSimpleReport().getValidationConclusion().getSignatures().get(0));
 
         QualifiedReport report2 = validationService.validateDocument(buildValidationDocument(XROAD_VALID_SIGNED_MESSAGE));
-        assertSignatureIsInvalidAndHasErrors(report2.getSignatures().get(0));
+        assertSignatureIsInvalidAndHasErrors(report2.getSimpleReport().getValidationConclusion().getSignatures().get(0));
     }
 
     private void assertSignatureIsInvalidAndHasErrors(SignatureValidationData signature) {

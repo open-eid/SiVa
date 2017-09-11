@@ -22,8 +22,8 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import ee.openeid.siva.statistics.googleanalytics.GoogleAnalyticsMeasurementProtocolClient;
 import ee.openeid.siva.statistics.model.SimpleSignatureReport;
 import ee.openeid.siva.statistics.model.SimpleValidationReport;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,8 +48,8 @@ public class StatisticsService {
     private HttpServletRequest httpRequest;
     private GoogleAnalyticsMeasurementProtocolClient googleAnalyticsMeasurementProtocolClient;
 
-    public void publishValidationStatistic(long validationDurationInNanos, QualifiedReport report) {
-        SimpleValidationReport simpleValidationReport = createValidationResult(validationDurationInNanos, report);
+    public void publishValidationStatistic(long validationDurationInNanos, ValidationConclusion validationConclusion) {
+        SimpleValidationReport simpleValidationReport = createValidationResult(validationDurationInNanos, validationConclusion);
         try {
             LOGGER.info(toJson(simpleValidationReport));
         } catch (JsonProcessingException e) {
@@ -58,7 +58,7 @@ public class StatisticsService {
         googleAnalyticsMeasurementProtocolClient.sendStatisticalData(simpleValidationReport);
     }
 
-    private SimpleValidationReport createValidationResult(long validationDurationInNanos, QualifiedReport report) {
+    private SimpleValidationReport createValidationResult(long validationDurationInNanos, ValidationConclusion report) {
         SimpleValidationReport simpleValidationReport = new SimpleValidationReport();
         simpleValidationReport.setDuration(TimeUnit.NANOSECONDS.toMillis(validationDurationInNanos));
         simpleValidationReport.setSignatureCount(report.getSignaturesCount());
@@ -69,7 +69,7 @@ public class StatisticsService {
         return simpleValidationReport;
     }
 
-    private List<SimpleSignatureReport> createSimpleSignatureReports(QualifiedReport report) {
+    private List<SimpleSignatureReport> createSimpleSignatureReports(ValidationConclusion report) {
         if (report.getSignatures() != null)
             return report.getSignatures().stream().map(this::createSimpleSignatureReport).collect(Collectors.toList());
         return Collections.emptyList();

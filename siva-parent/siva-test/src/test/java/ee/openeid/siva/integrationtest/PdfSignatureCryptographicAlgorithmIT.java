@@ -131,13 +131,13 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-sha256-rsa1024.pdf"));
         post(validationRequestWithDocumentTypeValidKeys(encodedString, "hellopades-lt-sha256-rsa1024.pdf", null, ""))
                 .then()
-                .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
-                .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
-                .body("signatures[0].warnings", Matchers.isEmptyOrNullString())
-                .body("validSignaturesCount", Matchers.is(1))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
+                .body("validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
+                .body("validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**

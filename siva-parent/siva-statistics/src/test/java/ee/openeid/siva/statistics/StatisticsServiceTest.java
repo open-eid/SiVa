@@ -20,6 +20,8 @@ import ee.openeid.siva.statistics.googleanalytics.GoogleAnalyticsMeasurementProt
 import ee.openeid.siva.statistics.model.SimpleValidationReport;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +29,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -39,11 +42,9 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 @PrepareForTest({LoggerFactory.class})
 public class StatisticsServiceTest {
 
-    private static StatisticsService statisticsService;
-
     private static final String LINE_SEPARATOR = System.lineSeparator();
     private static final String X_AUTHENTICATED_USER = "x-authenticated-user";
-
+    private static StatisticsService statisticsService;
     private static Logger loggerMock;
 
     @BeforeClass
@@ -75,26 +76,26 @@ public class StatisticsServiceTest {
         String signatureFormat = "FORMAT";
 
         QualifiedReport report = createDummyQualifiedReport(signatureForm, validSignaturesCount, totalSignatureCount);
-        addSignatureValidationData(report, indication, subindication, countryCode, signatureFormat);
+        addSignatureValidationData(report.getSimpleReport().getValidationConclusion(), indication, subindication, countryCode, signatureFormat);
 
         HttpServletRequest mockedRequest = mock(HttpServletRequest.class);
         statisticsService.setHttpRequest(mockedRequest);
         when(mockedRequest.getHeader(X_AUTHENTICATED_USER)).thenReturn("");
 
-        statisticsService.publishValidationStatistic(TimeUnit.MILLISECONDS.toNanos(validationDurationInMillis), report);
-        verify(loggerMock).info("{" + LINE_SEPARATOR  +
-                "  \"stats\" : {" + LINE_SEPARATOR  +
-                "    \"type\" : \"" + expectedContainerType + "\"," + LINE_SEPARATOR  +
-                "    \"usrId\" : \"" + xAuthenticatedUser + "\"," + LINE_SEPARATOR  +
-                "    \"dur\" : "+ validationDurationInMillis + "," + LINE_SEPARATOR  +
-                "    \"sigCt\" : "+ totalSignatureCount + "," + LINE_SEPARATOR  +
-                "    \"vSigCt\" : "+ validSignaturesCount + "," + LINE_SEPARATOR  +
-                "    \"sigRslt\" : [ {" + LINE_SEPARATOR  +
-                "      \"i\" : \"" + indication + "\"," + LINE_SEPARATOR  +
-                "      \"cc\" : \"" + countryCode + "\"," + LINE_SEPARATOR  +
-                "      \"sf\" : \"" + signatureFormat + "\"" + LINE_SEPARATOR  +
-                "    } ]" + LINE_SEPARATOR  +
-                "  }" + LINE_SEPARATOR  +
+        statisticsService.publishValidationStatistic(TimeUnit.MILLISECONDS.toNanos(validationDurationInMillis), report.getSimpleReport().getValidationConclusion());
+        verify(loggerMock).info("{" + LINE_SEPARATOR +
+                "  \"stats\" : {" + LINE_SEPARATOR +
+                "    \"type\" : \"" + expectedContainerType + "\"," + LINE_SEPARATOR +
+                "    \"usrId\" : \"" + xAuthenticatedUser + "\"," + LINE_SEPARATOR +
+                "    \"dur\" : " + validationDurationInMillis + "," + LINE_SEPARATOR +
+                "    \"sigCt\" : " + totalSignatureCount + "," + LINE_SEPARATOR +
+                "    \"vSigCt\" : " + validSignaturesCount + "," + LINE_SEPARATOR +
+                "    \"sigRslt\" : [ {" + LINE_SEPARATOR +
+                "      \"i\" : \"" + indication + "\"," + LINE_SEPARATOR +
+                "      \"cc\" : \"" + countryCode + "\"," + LINE_SEPARATOR +
+                "      \"sf\" : \"" + signatureFormat + "\"" + LINE_SEPARATOR +
+                "    } ]" + LINE_SEPARATOR +
+                "  }" + LINE_SEPARATOR +
                 "}"
         );
     }
@@ -116,53 +117,53 @@ public class StatisticsServiceTest {
         String xAuthenticatedUser = "some_user";
 
         QualifiedReport report = createDummyQualifiedReport(signatureForm, validSignaturesCount, totalSignatureCount);
-        addSignatureValidationData(report, firstSignatureIndication, firstSignatureSubindication, firstSignatureCountryCode, firstSignatureFormat);
-        addSignatureValidationData(report, secondSignatureIndication, secondSignatureSubindication, secondSignatureCountryCode, secondSignatureFormat);
+        addSignatureValidationData(report.getSimpleReport().getValidationConclusion(), firstSignatureIndication, firstSignatureSubindication, firstSignatureCountryCode, firstSignatureFormat);
+        addSignatureValidationData(report.getSimpleReport().getValidationConclusion(), secondSignatureIndication, secondSignatureSubindication, secondSignatureCountryCode, secondSignatureFormat);
 
         HttpServletRequest mockedRequest = mock(HttpServletRequest.class);
         statisticsService.setHttpRequest(mockedRequest);
         when(mockedRequest.getHeader(X_AUTHENTICATED_USER)).thenReturn(xAuthenticatedUser);
 
-        statisticsService.publishValidationStatistic(TimeUnit.MILLISECONDS.toNanos(validationDurationInMillis), report);
-        verify(loggerMock).info("{" + LINE_SEPARATOR  +
-                "  \"stats\" : {" + LINE_SEPARATOR  +
-                "    \"type\" : \"" + signatureForm + "\"," + LINE_SEPARATOR  +
-                "    \"usrId\" : \"" + xAuthenticatedUser + "\"," + LINE_SEPARATOR  +
-                "    \"dur\" : "+ validationDurationInMillis + "," + LINE_SEPARATOR  +
-                "    \"sigCt\" : "+ totalSignatureCount + "," + LINE_SEPARATOR  +
-                "    \"vSigCt\" : "+ validSignaturesCount + "," + LINE_SEPARATOR  +
-                "    \"sigRslt\" : [ {" + LINE_SEPARATOR  +
-                "      \"i\" : \"" + firstSignatureIndication + "\"," + LINE_SEPARATOR  +
-                "      \"cc\" : \"" + firstSignatureCountryCode + "\"," + LINE_SEPARATOR  +
-                "      \"sf\" : \"" + firstSignatureFormat + "\"" + LINE_SEPARATOR  +
-                "    }, {" + LINE_SEPARATOR  +
-                "      \"i\" : \"" + secondSignatureIndication + "\"," + LINE_SEPARATOR  +
-                "      \"si\" : \"" + secondSignatureSubindication + "\"," + LINE_SEPARATOR  +
-                "      \"cc\" : \"" + secondSignatureCountryCode + "\"" + LINE_SEPARATOR  +
-                "    } ]" + LINE_SEPARATOR  +
-                "  }" + LINE_SEPARATOR  +
+        statisticsService.publishValidationStatistic(TimeUnit.MILLISECONDS.toNanos(validationDurationInMillis), report.getSimpleReport().getValidationConclusion());
+        verify(loggerMock).info("{" + LINE_SEPARATOR +
+                "  \"stats\" : {" + LINE_SEPARATOR +
+                "    \"type\" : \"" + signatureForm + "\"," + LINE_SEPARATOR +
+                "    \"usrId\" : \"" + xAuthenticatedUser + "\"," + LINE_SEPARATOR +
+                "    \"dur\" : " + validationDurationInMillis + "," + LINE_SEPARATOR +
+                "    \"sigCt\" : " + totalSignatureCount + "," + LINE_SEPARATOR +
+                "    \"vSigCt\" : " + validSignaturesCount + "," + LINE_SEPARATOR +
+                "    \"sigRslt\" : [ {" + LINE_SEPARATOR +
+                "      \"i\" : \"" + firstSignatureIndication + "\"," + LINE_SEPARATOR +
+                "      \"cc\" : \"" + firstSignatureCountryCode + "\"," + LINE_SEPARATOR +
+                "      \"sf\" : \"" + firstSignatureFormat + "\"" + LINE_SEPARATOR +
+                "    }, {" + LINE_SEPARATOR +
+                "      \"i\" : \"" + secondSignatureIndication + "\"," + LINE_SEPARATOR +
+                "      \"si\" : \"" + secondSignatureSubindication + "\"," + LINE_SEPARATOR +
+                "      \"cc\" : \"" + secondSignatureCountryCode + "\"" + LINE_SEPARATOR +
+                "    } ]" + LINE_SEPARATOR +
+                "  }" + LINE_SEPARATOR +
                 "}"
         );
     }
 
     private QualifiedReport createDummyQualifiedReport(String signatureForm, int validSignaturesCount, int totalSignaturesCount) {
-        QualifiedReport report = new QualifiedReport();
-        report.setSignaturesCount(totalSignaturesCount);
-        report.setValidSignaturesCount(validSignaturesCount);
-        report.setSignatureForm(signatureForm);
-        return report;
+        ValidationConclusion validationConclusion = new ValidationConclusion();
+        validationConclusion.setSignaturesCount(totalSignaturesCount);
+        validationConclusion.setValidSignaturesCount(validSignaturesCount);
+        validationConclusion.setSignatureForm(signatureForm);
+        return new QualifiedReport(new SimpleReport(validationConclusion), null);
     }
 
-    private void addSignatureValidationData(QualifiedReport report, SignatureValidationData.Indication indication, String subindication, String country, String signatureFormat) {
-        if (report.getSignatures() == null) {
-            report.setSignatures(new ArrayList<>());
+    private void addSignatureValidationData(ValidationConclusion validationConclusion, SignatureValidationData.Indication indication, String subindication, String country, String signatureFormat) {
+        if (validationConclusion.getSignatures() == null) {
+            validationConclusion.setSignatures(new ArrayList<>());
         }
         SignatureValidationData sigData = new SignatureValidationData();
         sigData.setIndication(indication);
         sigData.setSubIndication(subindication);
         sigData.setCountryCode(country);
         sigData.setSignatureFormat(signatureFormat);
-        report.getSignatures().add(sigData);
+        validationConclusion.getSignatures().add(sigData);
     }
 
 }

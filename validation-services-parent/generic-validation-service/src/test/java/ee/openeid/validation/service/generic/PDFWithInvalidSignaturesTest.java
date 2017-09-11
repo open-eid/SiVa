@@ -19,6 +19,7 @@ package ee.openeid.validation.service.generic;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -35,8 +36,9 @@ public class PDFWithInvalidSignaturesTest extends PDFValidationServiceTest {
         QualifiedReport report = validationService.validateDocument(
                 buildValidationDocument(PDF_WITH_ONE_BASELINE_PROFILE_B_SIGNATURE));
         assertNotNull(report);
-        assertTrue(report.getSignaturesCount() == 1);
-        assertTrue(report.getValidSignaturesCount() == 0);
+        ValidationConclusion validationConclusion = report.getSimpleReport().getValidationConclusion();
+        assertTrue(validationConclusion.getSignaturesCount() == 1);
+        assertTrue(validationConclusion.getValidSignaturesCount() == 0);
     }
 
     @Ignore(/*TODO:*/"SignatureFormatConstraint outputs error node in wrong format, so error is not parsed correctly to report (VAL-197)")
@@ -45,7 +47,7 @@ public class PDFWithInvalidSignaturesTest extends PDFValidationServiceTest {
         QualifiedReport report = validationService.validateDocument(
                 buildValidationDocument(PDF_WITH_ONE_BASELINE_PROFILE_B_SIGNATURE));
         System.out.println(report);
-        SignatureValidationData signature = report.getSignatures().get(0);
+        SignatureValidationData signature = report.getSimpleReport().getValidationConclusion().getSignatures().get(0);
         assertEquals("TOTAL-FAILED", signature.getIndication());
         assertTrue(signature.getErrors().size() == 1);
         Error error = signature.getErrors().get(0);

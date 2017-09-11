@@ -16,51 +16,55 @@
 
 package ee.openeid.siva.webapp.soap.transformer;
 
+import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.webapp.soap.QualifiedReport;
+import ee.openeid.siva.webapp.soap.ValidateDocumentResponse;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-
 public class QualifiedReportSoapResponseTransformerTest {
 
-    QualifiedReportSoapResponseTransformer transformer = new QualifiedReportSoapResponseTransformer();
+    private QualifiedReportSoapResponseTransformer transformer = new QualifiedReportSoapResponseTransformer();
 
     @Test
     public void qualifiedReportIsCorrectlyTransformedToSoapResponseReport() {
-        ee.openeid.siva.validation.document.report.QualifiedReport qualifiedReport = createMockedQualifedReport();
-        QualifiedReport responseReport = transformer.toSoapResponse(qualifiedReport);
+        ValidationConclusion validationConclusion = createMockedValidationConclusion();
+        SimpleReport simpleReport = new SimpleReport(validationConclusion);
 
-        assertEquals(qualifiedReport.getDocumentName(), responseReport.getDocumentName());
-        assertEquals(qualifiedReport.getSignatureForm(), responseReport.getSignatureForm());
-        assertEquals(qualifiedReport.getValidationTime(), responseReport.getValidationTime());
-        assertEquals(qualifiedReport.getValidationWarnings().get(0).getContent(), responseReport.getValidationWarnings().getValidationWarning().get(0).getContent());
-        assertEquals(qualifiedReport.getSignaturesCount(), responseReport.getSignaturesCount());
-        assertEquals(qualifiedReport.getValidSignaturesCount(), responseReport.getValidSignaturesCount());
+        ValidateDocumentResponse responseReport = transformer.toSoapResponse(simpleReport);
+        QualifiedReport qualifiedReport = responseReport.getValidationReport();
+        Assert.assertEquals(validationConclusion.getDocumentName(), qualifiedReport.getDocumentName());
+        Assert.assertEquals(validationConclusion.getSignatureForm(), qualifiedReport.getSignatureForm());
+        Assert.assertEquals(validationConclusion.getValidationTime(), qualifiedReport.getValidationTime());
+        Assert.assertEquals(validationConclusion.getValidationWarnings().get(0).getContent(), qualifiedReport.getValidationWarnings().getValidationWarning().get(0).getContent());
+        Assert.assertEquals(validationConclusion.getSignaturesCount(), qualifiedReport.getSignaturesCount());
+        Assert.assertEquals(validationConclusion.getValidSignaturesCount(), qualifiedReport.getValidSignaturesCount());
+        Assert.assertEquals(validationConclusion.getPolicy().getPolicyDescription(), qualifiedReport.getPolicy().getPolicyDescription());
+        Assert.assertEquals(validationConclusion.getPolicy().getPolicyName(), qualifiedReport.getPolicy().getPolicyName());
+        Assert.assertEquals(validationConclusion.getPolicy().getPolicyUrl(), qualifiedReport.getPolicy().getPolicyUrl());
 
-        assertEquals(qualifiedReport.getPolicy().getPolicyDescription(), responseReport.getPolicy().getPolicyDescription());
-        assertEquals(qualifiedReport.getPolicy().getPolicyName(), responseReport.getPolicy().getPolicyName());
-        assertEquals(qualifiedReport.getPolicy().getPolicyUrl(), responseReport.getPolicy().getPolicyUrl());
-
-        assertEquals(qualifiedReport.getSignatures().get(0).getClaimedSigningTime(), responseReport.getSignatures().getSignature().get(0).getClaimedSigningTime());
-        assertEquals(qualifiedReport.getSignatures().get(0).getId(), responseReport.getSignatures().getSignature().get(0).getId());
-        assertEquals(qualifiedReport.getSignatures().get(0).getIndication(), responseReport.getSignatures().getSignature().get(0).getIndication().value());
-        assertEquals(qualifiedReport.getSignatures().get(0).getSignatureFormat(), responseReport.getSignatures().getSignature().get(0).getSignatureFormat());
-        assertEquals(qualifiedReport.getSignatures().get(0).getSignatureLevel(), responseReport.getSignatures().getSignature().get(0).getSignatureLevel());
-        assertEquals(qualifiedReport.getSignatures().get(0).getSignedBy(), responseReport.getSignatures().getSignature().get(0).getSignedBy());
-        assertEquals(qualifiedReport.getSignatures().get(0).getSubIndication(), responseReport.getSignatures().getSignature().get(0).getSubIndication());
-        assertEquals(qualifiedReport.getSignatures().get(0).getInfo().getBestSignatureTime(), responseReport.getSignatures().getSignature().get(0).getInfo().getBestSignatureTime());
-        assertEquals(qualifiedReport.getSignatures().get(0).getErrors().get(0).getContent(), responseReport.getSignatures().getSignature().get(0).getErrors().getError().get(0).getContent());
-        assertEquals(qualifiedReport.getSignatures().get(0).getWarnings().get(0).getDescription(), responseReport.getSignatures().getSignature().get(0).getWarnings().getWarning().get(0).getDescription());
-        assertEquals(qualifiedReport.getSignatures().get(0).getSignatureScopes().get(0).getContent(), responseReport.getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getContent());
-        assertEquals(qualifiedReport.getSignatures().get(0).getSignatureScopes().get(0).getName(), responseReport.getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getName());
-        assertEquals(qualifiedReport.getSignatures().get(0).getSignatureScopes().get(0).getScope(), responseReport.getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
+        Assert.assertEquals(validationConclusion.getSignatures().get(0).getClaimedSigningTime(), qualifiedReport.getSignatures().getSignature().get(0).getClaimedSigningTime());
+        Assert.assertEquals(validationConclusion.getSignatures().get(0).getId(), qualifiedReport.getSignatures().getSignature().get(0).getId());
+        Assert.assertEquals(validationConclusion.getSignatures().get(0).getIndication(), qualifiedReport.getSignatures().getSignature().get(0).getIndication().value());
+        Assert.assertEquals(validationConclusion.getSignatures().get(0).getSignatureFormat(), qualifiedReport.getSignatures().getSignature().get(0).getSignatureFormat());
+        Assert.assertEquals(validationConclusion.getSignatures().get(0).getSignatureLevel(), qualifiedReport.getSignatures().getSignature().get(0).getSignatureLevel());
+        Assert.assertEquals(validationConclusion.getSignatures().get(0).getSignedBy(), qualifiedReport.getSignatures().getSignature().get(0).getSignedBy());
+        Assert.assertEquals(validationConclusion.getSignatures().get(0).getSubIndication(), qualifiedReport.getSignatures().getSignature().get(0).getSubIndication());
+        Assert.assertEquals(validationConclusion.getSignatures().get(0).getInfo().getBestSignatureTime(), qualifiedReport.getSignatures().getSignature().get(0).getInfo().getBestSignatureTime());
+        Assert.assertEquals(validationConclusion.getSignatures().get(0).getErrors().get(0).getContent(), qualifiedReport.getSignatures().getSignature().get(0).getErrors().getError().get(0).getContent());
+        Assert.assertEquals(validationConclusion.getSignatures().get(0).getWarnings().get(0).getDescription(), qualifiedReport.getSignatures().getSignature().get(0).getWarnings().getWarning().get(0).getDescription());
+        Assert.assertEquals(validationConclusion.getSignatures().get(0).getSignatureScopes().get(0).getContent(), qualifiedReport.getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getContent());
+        Assert.assertEquals(validationConclusion.getSignatures().get(0).getSignatureScopes().get(0).getName(), qualifiedReport.getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getName());
+        Assert.assertEquals(validationConclusion.getSignatures().get(0).getSignatureScopes().get(0).getScope(), qualifiedReport.getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
     }
 
-    private ee.openeid.siva.validation.document.report.QualifiedReport createMockedQualifedReport() {
-        ee.openeid.siva.validation.document.report.QualifiedReport report = new ee.openeid.siva.validation.document.report.QualifiedReport();
+
+    private ValidationConclusion createMockedValidationConclusion() {
+        ValidationConclusion report = new ValidationConclusion();
         report.setValidationTime("2016-09-21T15:00:00Z");
         report.setValidationWarnings(createMockedValidationWarnings());
         report.setDocumentName("document.pdf");

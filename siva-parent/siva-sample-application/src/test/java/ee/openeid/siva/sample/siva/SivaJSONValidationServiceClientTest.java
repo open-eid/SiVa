@@ -68,7 +68,7 @@ public class SivaJSONValidationServiceClientTest {
         final String fileName = "testing.bdoc";
         final UploadedFile inputFile = TestFileUtils.generateUploadFile(testingFolder, fileName, fileContents);
 
-        final Observable<String> result = validationService.validateDocument("", inputFile);
+        final Observable<String> result = validationService.validateDocument("", "", inputFile);
         assertEquals(mockResponse, result.toBlocking().first());
 
         verify(restTemplate).postForObject(anyString(), validationRequestCaptor.capture(), any());
@@ -82,7 +82,7 @@ public class SivaJSONValidationServiceClientTest {
         mockServiceResponse();
 
         final UploadedFile file = TestFileUtils.generateUploadFile(testingFolder, "testing.exe", "error in file");
-        validationService.validateDocument("", file);
+        validationService.validateDocument("","",  file);
 
         verify(restTemplate).postForObject(anyString(), validationRequestCaptor.capture(), any());
         assertEquals(null, validationRequestCaptor.getValue().getDocumentType());
@@ -93,7 +93,7 @@ public class SivaJSONValidationServiceClientTest {
         exception.expect(IOException.class);
         exception.expectMessage("Invalid file object given");
 
-        validationService.validateDocument(null, null);
+        validationService.validateDocument(null, null, null);
     }
 
     @Test
@@ -102,7 +102,7 @@ public class SivaJSONValidationServiceClientTest {
         given(restTemplate.postForObject(anyString(), any(ValidationRequest.class), any()))
                 .willThrow(new ResourceAccessException("Failed to connect to SiVa REST"));
 
-        Observable<String> result = validationService.validateDocument("", file);
+        Observable<String> result = validationService.validateDocument("", "", file);
         verify(restTemplate).postForObject(anyString(), validationRequestCaptor.capture(), any());
 
         assertThat(result.toBlocking().first()).contains("errorCode");

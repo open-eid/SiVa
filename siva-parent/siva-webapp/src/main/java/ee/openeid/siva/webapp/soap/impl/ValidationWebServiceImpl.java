@@ -45,7 +45,7 @@ public class ValidationWebServiceImpl implements ValidationWebService {
     public void validateDocument(SoapValidationRequest validationRequest, Holder<QualifiedReport> validationReport, Holder<ee.openeid.siva.webapp.soap.DetailedReport> validationProcess) {
         ee.openeid.siva.validation.document.report.Report qualifiedReport = validationProxy.validate(requestTransformer.transform(validationRequest));
         ValidateDocumentResponse validateDocumentResponse = responseTransformer.toSoapResponse(qualifiedReport);
-        validationReport.value = validateDocumentResponse.getValidationReport();
+        validationReport.value = validateDocumentResponse.getValidationConclusion();
         validationProcess.value = validateDocumentResponse.getValidationProcess();
     }
 

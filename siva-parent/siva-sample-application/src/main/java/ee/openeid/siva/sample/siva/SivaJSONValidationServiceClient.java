@@ -19,6 +19,7 @@ package ee.openeid.siva.sample.siva;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ee.openeid.siva.sample.cache.UploadedFile;
 import ee.openeid.siva.sample.configuration.SivaRESTWebServiceConfigurationProperties;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
@@ -36,7 +37,7 @@ public class SivaJSONValidationServiceClient implements ValidationService {
     private SivaValidationServiceErrorHandler errorHandler;
 
     @Override
-    public Observable<String> validateDocument(final String policy, final UploadedFile file) throws IOException {
+    public Observable<String> validateDocument(final String policy, final String report, final UploadedFile file) throws IOException {
         if (file == null) {
             throw new IOException("Invalid file object given");
         }
@@ -45,7 +46,10 @@ public class SivaJSONValidationServiceClient implements ValidationService {
 
         final ValidationRequest validationRequest = new ValidationRequest();
         validationRequest.setDocument(base64EncodedFile);
+
         validationRequest.setSignaturePolicy(policy);
+        if (StringUtils.isNotBlank(report))
+            validationRequest.setReportType(report);
         final String filename = file.getFilename();
         validationRequest.setFilename(filename);
         setValidationDocumentType(validationRequest, file);

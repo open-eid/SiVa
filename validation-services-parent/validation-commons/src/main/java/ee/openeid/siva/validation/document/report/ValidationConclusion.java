@@ -21,9 +21,9 @@ public class ValidationConclusion {
 
     private List<SignatureValidationData> signatures;
 
-    private Integer validSignaturesCount;
+    private Integer validSignaturesCount = 0;
 
-    private Integer signaturesCount;
+    private Integer signaturesCount = 0;
 
     private List<TimeStampTokenValidationData> timeStampTokens;
 }

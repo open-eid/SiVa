@@ -11,10 +11,9 @@
                        schemaLocation="DetailedReport.xsd"/>
             <xs:element name="ValidateDocument" type="tns:validateDocument"/>
             <xs:element name="ValidateDocumentResponse" type="tns:ValidateDocumentResponse"/>
-            <xs:element name="ValidationProcess" substitutionGroup="external:DetailedReport"/>
-            <xs:element name="ValidationReport" type="tns:qualifiedReport"/>
+            <xs:element name="ValidationProcess"  substitutionGroup="external:DetailedReport"/>
+            <xs:element name="ValidationConclusion" type="tns:qualifiedReport"/>
             <xs:element name="ValidationRequest" type="tns:soapValidationRequest"/>
-
 
             <xs:complexType name="validateDocument">
                 <xs:sequence>
@@ -25,14 +24,15 @@
                 <xs:sequence>
                     <xs:element name="Document" type="xs:string"/>
                     <xs:element name="Filename" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="ReportType" type="xs:string"/>
                     <xs:element minOccurs="0" maxOccurs="1" name="DocumentType" type="tns:documentType"/>
                     <xs:element minOccurs="0" name="SignaturePolicy" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="ValidateDocumentResponse">
                 <xs:sequence>
-                    <xs:element minOccurs="0" ref="tns:ValidationReport"/>
-                    <xs:element ref="tns:ValidationProcess"/>
+                    <xs:element minOccurs="0" ref="tns:ValidationConclusion"/>
+                    <xs:element minOccurs="0" ref="tns:ValidationProcess"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="qualifiedReport">

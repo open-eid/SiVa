@@ -148,7 +148,7 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
 
     protected Document extractReportDom(String httpBody) {
         Document document = XMLUtils.parseXml(httpBody);
-        Element element = XMLUtils.findElementByXPath(document, "//d:ValidateDocumentResponse/d:ValidationReport", Collections.singletonMap("d", "http://soap.webapp.siva.openeid.ee/"));
+        Element element = XMLUtils.findElementByXPath(document, "//d:ValidateDocumentResponse/d:ValidationConclusion", Collections.singletonMap("d", "http://soap.webapp.siva.openeid.ee/"));
         return XMLUtils.documentFromNode(element);
     }
 

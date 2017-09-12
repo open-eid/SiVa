@@ -63,6 +63,7 @@ class UploadController {
     public ValidationResponse getUploadedFile(
             @RequestParam(value = "file") MultipartFile file,
             @RequestParam String policy,
+            @RequestParam String report,
             @RequestParam String encodedFilename,
             @RequestParam boolean returnDataFiles,
             Model model
@@ -78,7 +79,7 @@ class UploadController {
             if (returnDataFiles) {
                 dataFilesTaskRunner.run(uploadedFile);
             }
-            validationTaskRunner.run(policy, uploadedFile);
+            validationTaskRunner.run(policy, report, uploadedFile);
 
             setModelFlashAttributes(model);
         } catch (IOException e) {

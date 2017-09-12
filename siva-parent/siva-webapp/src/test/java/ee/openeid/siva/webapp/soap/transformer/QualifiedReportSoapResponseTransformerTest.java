@@ -36,7 +36,7 @@ public class QualifiedReportSoapResponseTransformerTest {
         SimpleReport simpleReport = new SimpleReport(validationConclusion);
 
         ValidateDocumentResponse responseReport = transformer.toSoapResponse(simpleReport);
-        QualifiedReport qualifiedReport = responseReport.getValidationReport();
+        QualifiedReport qualifiedReport = responseReport.getValidationConclusion();
         Assert.assertEquals(validationConclusion.getDocumentName(), qualifiedReport.getDocumentName());
         Assert.assertEquals(validationConclusion.getSignatureForm(), qualifiedReport.getSignatureForm());
         Assert.assertEquals(validationConclusion.getValidationTime(), qualifiedReport.getValidationTime());

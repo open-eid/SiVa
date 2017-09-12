@@ -17,6 +17,7 @@
 package ee.openeid.siva.webapp.soap.transformer;
 
 import ee.openeid.siva.proxy.document.ProxyDocument;
+import ee.openeid.siva.proxy.document.ReportType;
 import ee.openeid.siva.proxy.document.typeresolver.DocumentTypeResolver;
 import ee.openeid.siva.webapp.soap.SoapValidationRequest;
 import org.apache.commons.codec.binary.Base64;
@@ -30,6 +31,8 @@ public class SoapValidationRequestToProxyDocumentTransformer {
         proxyDocument.setName(validationRequest.getFilename());
         if (validationRequest.getDocumentType() != null)
             proxyDocument.setDocumentType(DocumentTypeResolver.documentTypeFromString(validationRequest.getDocumentType().name()));
+        if (validationRequest.getReportType() != null)
+            proxyDocument.setReportType(ReportType.reportTypeFromString(validationRequest.getReportType()));
         proxyDocument.setBytes(Base64.decodeBase64(validationRequest.getDocument()));
         proxyDocument.setSignaturePolicy(validationRequest.getSignaturePolicy());
         return proxyDocument;

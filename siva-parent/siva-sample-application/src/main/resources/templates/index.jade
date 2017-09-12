@@ -17,7 +17,7 @@ block content
         .col-lg-2.hidden-md-down.pull-lg-right
             img.pull-lg-right.eu-brand(src="img/eu-logo.svg")
     .row
-        .col-md-4
+        .col-md-3
             .input-group
                 span.input-group-addon#policy-addon Validation policy:
                 select.form-control#policy-select(aria-describedby="policy-addon")
@@ -25,6 +25,13 @@ block content
                     option(value="POLv3") POLv3
                     option(value="POLv4") POLv4
                     option(value="POLv5") POLv5
+        .col-md-3
+            .input-group
+                span.input-group-addon#report-addon Report type:
+                select.form-control#report-select(aria-describedby="report-addon")
+                    option(value="") default
+                    option(value="Simple") Simple
+                    option(value="Detailed") Detailed
         .col-md-3
             .input-group
                 span.input-group-addon Return Data Files:

@@ -22,7 +22,6 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.Appender;
 import ee.openeid.siva.sample.cache.UploadedFile;
-import ee.openeid.siva.sample.configuration.SivaRESTWebServiceConfigurationProperties;
 import ee.openeid.siva.sample.test.utils.TestFileUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -41,7 +40,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 import rx.Observable;
@@ -98,7 +96,7 @@ public class SivaSOAPValidationServiceClientTest {
         serverMockResponse(response);
         UploadedFile uploadedFile = TestFileUtils.generateUploadFile(testingFolder, "hello.bdoc", "Valid document");
 
-        Observable<String> validatedDocument = validationService.validateDocument("", uploadedFile);
+        Observable<String> validatedDocument = validationService.validateDocument("", "", uploadedFile);
         assertThat(validatedDocument.toBlocking().first()).isEqualTo(response);
 
         verify(restTemplate).postForObject(anyString(), validationRequestCaptor.capture(), any());
@@ -110,7 +108,7 @@ public class SivaSOAPValidationServiceClientTest {
     public void givenValidRequestReturnsInvalidXMLReturnsEmptyString() throws Exception {
         serverMockResponse(StringUtils.EMPTY);
         UploadedFile uploadedFile = TestFileUtils.generateUploadFile(testingFolder, "hello.bdoc", "Valid document");
-        Observable<String> validatedDocument = validationService.validateDocument("", uploadedFile);
+        Observable<String> validatedDocument = validationService.validateDocument("", "", uploadedFile);
 
         assertThat(validatedDocument.toBlocking().first()).isEqualTo(StringUtils.EMPTY);
         verify(mockAppender).doAppend(captorLoggingEvent.capture());
@@ -124,7 +122,7 @@ public class SivaSOAPValidationServiceClientTest {
     public void givenNullUploadFileWillThrowException() throws Exception {
         expectedException.expect(IOException.class);
         expectedException.expectMessage("File not found");
-        validationService.validateDocument(null, null);
+        validationService.validateDocument(null, null, null);
     }
 
     private void serverMockResponse(String response) {

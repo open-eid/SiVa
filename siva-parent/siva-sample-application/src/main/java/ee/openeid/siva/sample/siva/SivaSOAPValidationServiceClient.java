@@ -16,14 +16,13 @@
 
 package ee.openeid.siva.sample.siva;
 
-import rx.Observable;
-
 import ee.openeid.siva.sample.cache.UploadedFile;
 import ee.openeid.siva.sample.configuration.SivaRESTWebServiceConfigurationProperties;
-
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import rx.Observable;
 
 import java.io.IOException;
 
@@ -35,22 +34,25 @@ public class SivaSOAPValidationServiceClient implements ValidationService {
     private RestTemplate restTemplate;
 
     @Override
-    public Observable<String> validateDocument(String policy, UploadedFile file) throws IOException {
+    public Observable<String> validateDocument(String policy, String report, UploadedFile file) throws IOException {
         if (file == null) {
             throw new IOException("File not found");
         }
 
         FileType serviceType = ValidationRequestUtils.getValidationServiceType(file);
-        String requestBody = createXMLValidationRequest(file.getEncodedFile(), serviceType, file.getFilename(), policy);
+        String requestBody = createXMLValidationRequest(file.getEncodedFile(), serviceType, file.getFilename(), report, policy);
 
         String fullUrl = properties.getServiceHost() + properties.getSoapServicePath();
         return Observable.just(XMLTransformer.formatXML(restTemplate.postForObject(fullUrl, requestBody, String.class)));
     }
 
-    private static String createXMLValidationRequest(String base64Document, FileType fileType, String filename, String policy) {
+    private static String createXMLValidationRequest(String base64Document, FileType fileType, String filename, String report, String policy) {
         String documentType = "";
+        String reportType = "";
         if (fileType == FileType.XROAD)
             documentType = "<DocumentType>" + fileType.name() + "</DocumentType>" + LINE_SEPARATOR;
+        if(StringUtils.isNotBlank(report))
+            reportType = "<ReportType>" + report + "</ReportType>" + LINE_SEPARATOR;
         return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">" + LINE_SEPARATOR +
                 "   <soapenv:Header/>" + LINE_SEPARATOR +
                 "   <soapenv:Body>" + LINE_SEPARATOR +
@@ -59,6 +61,7 @@ public class SivaSOAPValidationServiceClient implements ValidationService {
                 "            <Document>" + base64Document + "</Document>" + LINE_SEPARATOR +
                 "            <Filename>" + filename + "</Filename>" + LINE_SEPARATOR +
                 documentType +
+                reportType +
                 "            <SignaturePolicy>" + policy + "</SignaturePolicy>" + LINE_SEPARATOR +
                 "         </soap:ValidationRequest>" + LINE_SEPARATOR +
                 "      </soap:ValidateDocument>" + LINE_SEPARATOR +

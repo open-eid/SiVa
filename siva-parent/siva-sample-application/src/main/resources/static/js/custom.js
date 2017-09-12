@@ -36,9 +36,12 @@
         $('#json-data-files-report').empty();
         $('#soap-data-files-report').empty();
         var policy = $('select#policy-select').val();
+        var report = $('select#report-select').val();
         var returnDataFiles = $('#return-data-files').prop('checked');
         console.log('Validation policy: ' + policy);
+        console.log('Report type: ' + report);
         formData.append("policy", policy);
+        formData.append("report", report);
         formData.append("encodedFilename", encodeURI(file.name));
         formData.append("returnDataFiles", returnDataFiles);
     });

@@ -131,7 +131,8 @@ public class UploadControllerTest {
         mockMvc.perform(fileUpload("/upload").file(uploadFile)
                 .param("policy", "")
                 .param("encodedFilename", "ranodom.bdoc")
-                .param("returnDataFiles", "false"))
+                .param("returnDataFiles", "false")
+                .param("report", ""))
                 .andExpect(status().is(200))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
     }
@@ -151,7 +152,8 @@ public class UploadControllerTest {
         mockMvc.perform(fileUpload("/upload").file(uploadFile)
                 .param("policy", "")
                 .param("encodedFilename", "ranodom.bdoc")
-                .param("returnDataFiles", "false"))
+                .param("returnDataFiles", "false")
+                .param("report", ""))
                 .andExpect(status().is(200));
     }
 
@@ -167,13 +169,14 @@ public class UploadControllerTest {
         mockMvc.perform(fileUpload("/upload").file(uploadFile)
                 .param("policy", "")
                 .param("encodedFilename", "ranodom.bdoc")
-                .param("returnDataFiles", "false"))
+                .param("returnDataFiles", "false")
+                .param("report", ""))
                 .andExpect(status().is(200));
     }
 
     @Test
     public void webServiceTaskRunnerThrowsInterruptedExceptionExpectLogMessage() throws Exception {
-        doThrow(new InterruptedException("SiVa Service failure")).when(taskRunner).run(any(), any());
+        doThrow(new InterruptedException("SiVa Service failure")).when(taskRunner).run(any(), any(), any());
         MockMultipartFile uploadFile = new MockMultipartFile(
                 "file",
                 "random.bdoc",
@@ -184,7 +187,8 @@ public class UploadControllerTest {
         mockMvc.perform(fileUpload("/upload").file(uploadFile)
                 .param("policy", "")
                 .param("encodedFilename", "ranodom.bdoc")
-                .param("returnDataFiles", "false"))
+                .param("returnDataFiles", "false")
+                .param("report", ""))
                 .andExpect(status().is(200));
 
         verify(mockAppender).doAppend(captorLoggingEvent.capture());

@@ -20,6 +20,6 @@ import lombok.Data;
 
 @Data
 public class DataFilesRequest {
-    private FileType documentType;
+    private String filename;
     private String document;
 }

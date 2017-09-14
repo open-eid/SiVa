@@ -46,6 +46,7 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
     protected static final String INVALID_SIGNATURE_POLICY = "Invalid signature policy";
     protected static final String INVALID_DOCUMENT_TYPE = "Invalid document type";
     protected static final String INVALID_DOCUMENT_TYPE_DDOC = "Invalid document type. Can only return data files for DDOC type containers.";
+    protected static final String INVALID_DATA_FILE_FILENAME = "Invalid file name. Can only return data files for DDOC type containers.";
 
     protected static String createXMLValidationRequest(String base64Document, String filename) {
         return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
@@ -99,14 +100,14 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
                 "</soapenv:Envelope>";
     }
 
-    protected static String createXMLValidationRequestForDataFiles(String base64Document, String documentType) {
+    protected static String createXMLValidationRequestForDataFiles(String base64Document, String filename) {
         return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
                 "   <soapenv:Header/>\n" +
                 "   <soapenv:Body>\n" +
                 "      <soap:GetDocumentDataFiles>\n" +
                 "         <soap:DataFilesRequest>\n" +
                 "            <Document>" + base64Document + "</Document>\n" +
-                "            <DocumentType>" + documentType + "</DocumentType>\n" +
+                "            <Filename>" + filename + "</Filename>\n" +
                 "            </soap:DataFilesRequest>\n" +
                 "      </soap:GetDocumentDataFiles>\n" +
                 "   </soapenv:Body>\n" +
@@ -124,10 +125,10 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
                 signaturePolicy);
     }
 
-    protected String validationRequestForDocumentDataFilesExtended(String document, String documentType) {
+    protected String validationRequestForDocumentDataFilesExtended(String document, String filename) {
         return createXMLValidationRequestForDataFiles(
                 document,
-                documentType);
+                filename);
     }
 
     protected Response post(String request) {

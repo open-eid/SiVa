@@ -40,19 +40,18 @@ public class SivaSOAPDataFilesServiceClient implements DataFilesService {
         if (file == null) {
             throw new IOException("File not found");
         }
-        FileType fileType = ValidationRequestUtils.getDataFilesFileServiceType(file);
-        String requestBody = createXMLDataFilesRequest(file.getEncodedFile(), fileType.name());
+        String requestBody = createXMLDataFilesRequest(file.getEncodedFile(), file.getFilename());
         return Observable.just(XMLTransformer.formatXML(restTemplate.postForObject(properties.getSoapDataFilesServicePath(), requestBody, String.class)));
     }
 
-    private static String createXMLDataFilesRequest(String base64Document, String documentType) {
+    private static String createXMLDataFilesRequest(String base64Document, String filename) {
         return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">" + LINE_SEPARATOR +
                 "   <soapenv:Header/>" + LINE_SEPARATOR +
                 "   <soapenv:Body>" + LINE_SEPARATOR +
                 "      <soap:GetDocumentDataFiles>" + LINE_SEPARATOR +
                 "         <soap:DataFilesRequest>" + LINE_SEPARATOR +
                 "            <Document>" + base64Document + "</Document>" + LINE_SEPARATOR +
-                "            <DocumentType>" + documentType + "</DocumentType>" + LINE_SEPARATOR +
+                "            <Filename>" + filename + "</Filename>" + LINE_SEPARATOR +
                 "         </soap:DataFilesRequest>" + LINE_SEPARATOR +
                 "      </soap:GetDocumentDataFiles>" + LINE_SEPARATOR +
                 "   </soapenv:Body>" + LINE_SEPARATOR +

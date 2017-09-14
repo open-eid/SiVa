@@ -16,6 +16,18 @@
 
 package ee.openeid.siva.proxy.document;
 
+import java.util.Optional;
+
+import static java.util.Arrays.stream;
+
 public enum DocumentType {
     PDF, XROAD, BDOC, DDOC;
+
+    public static DocumentType documentTypeFromString(String type) {
+        Optional<DocumentType> documentType = stream(DocumentType.class.getEnumConstants())
+                .filter(dt -> dt.name().equalsIgnoreCase(type))
+                .findAny();
+
+        return documentType.orElse(null);
+    }
 }

@@ -16,7 +16,6 @@
 
 package ee.openeid.siva.proxy;
 
-import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.exception.DataFilesServiceNotFoundException;
 import ee.openeid.siva.validation.document.DataFilesDocument;
@@ -39,9 +38,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class DataFilesProxyTest {
@@ -71,7 +68,7 @@ public class DataFilesProxyTest {
 
         exception.expect(DataFilesServiceNotFoundException.class);
         exception.expectMessage("BDOCDataFilesService not found");
-        ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.BDOC);
+        ProxyDocument proxyDocument = mockProxyDocumentWithDocument("filename.bdoc");
         dataFilesProxy.getDataFiles(proxyDocument);
 
         verify(applicationContext).getBean(anyString());
@@ -81,14 +78,14 @@ public class DataFilesProxyTest {
     public void ProxyDocumentWithDDOCDocumentTypeShouldReturnDataFilesReport() throws Exception {
         when(applicationContext.getBean(DDOCDataFilesService.class.getSimpleName())).thenReturn(dataFilesServiceSpy);
 
-        ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.DDOC);
+        ProxyDocument proxyDocument = mockProxyDocumentWithDocument("filename.ddoc");
         DataFilesReport report = dataFilesProxy.getDataFiles(proxyDocument);
         assertEquals(dataFilesServiceSpy.dataFilesReport, report);
     }
 
-    private ProxyDocument mockProxyDocumentWithDocument(DocumentType documentType) {
+    private ProxyDocument mockProxyDocumentWithDocument(String filename) {
         ProxyDocument proxyDocument = new ProxyDocument();
-        proxyDocument.setDocumentType(documentType);
+        proxyDocument.setName(filename);
         return proxyDocument;
     }
 
@@ -111,7 +108,7 @@ public class DataFilesProxyTest {
         private List<DataFileData> createDummyDataFiles() {
             DataFileData dataFileData = new DataFileData();
             dataFileData.setBase64("RGlnaURvY");
-            dataFileData.setFileName("testName");
+            dataFileData.setFilename("testName");
             dataFileData.setMimeType("text/plain");
             dataFileData.setSize(1);
             return Collections.singletonList(dataFileData);

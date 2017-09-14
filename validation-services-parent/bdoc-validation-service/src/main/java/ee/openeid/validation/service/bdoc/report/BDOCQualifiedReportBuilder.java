@@ -120,10 +120,10 @@ public class BDOCQualifiedReportBuilder {
     }
 
     private List<ValidationWarning> getValidationWarningsForUnsignedDataFiles() {
-        List<String> dataFileNames = container.getDataFiles().stream().map(DataFile::getName).collect(Collectors.toList());
+        List<String> dataFilenames = container.getDataFiles().stream().map(DataFile::getName).collect(Collectors.toList());
         return container.getSignatures()
                 .stream()
-                .map(signature -> createValidationWarning(signature, getUnsignedFiles((BDocSignature) signature, dataFileNames)))
+                .map(signature -> createValidationWarning(signature, getUnsignedFiles((BDocSignature) signature, dataFilenames)))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
@@ -138,23 +138,23 @@ public class BDOCQualifiedReportBuilder {
         return createValidationWarning(content);
     }
 
-    private List<String> getUnsignedFiles(BDocSignature bDocSignature, List<String> dataFileNames) {
+    private List<String> getUnsignedFiles(BDocSignature bDocSignature, List<String> dataFilenames) {
         List<String> uris = bDocSignature.getOrigin().getReferences()
                 .stream()
                 .map(reference -> decodeUriIfPossible(reference.getURI()))
-                .filter(dataFileNames::contains)
+                .filter(dataFilenames::contains)
                 .collect(Collectors.toList());
-        return dataFileNames.stream()
+        return dataFilenames.stream()
                 .filter(df -> !uris.contains(df))
                 .collect(Collectors.toList());
     }
 
     private List<SignatureValidationData> createSignaturesForReport(Container container) {
-        List<String> dataFileNames = container.getDataFiles().stream().map(DataFile::getName).collect(Collectors.toList());
-        return container.getSignatures().stream().map(sig -> createSignatureValidationData(sig, dataFileNames)).collect(Collectors.toList());
+        List<String> dataFilenames = container.getDataFiles().stream().map(DataFile::getName).collect(Collectors.toList());
+        return container.getSignatures().stream().map(sig -> createSignatureValidationData(sig, dataFilenames)).collect(Collectors.toList());
     }
 
-    private SignatureValidationData createSignatureValidationData(Signature signature, List<String> dataFileNames) {
+    private SignatureValidationData createSignatureValidationData(Signature signature, List<String> dataFilenames) {
         SignatureValidationData signatureValidationData = new SignatureValidationData();
         BDocSignature bDocSignature = (BDocSignature) signature;
 
@@ -164,7 +164,7 @@ public class BDOCQualifiedReportBuilder {
         signatureValidationData.setSignatureLevel(getSignatureLevel(bDocSignature));
         signatureValidationData.setSignedBy(removeQuotes(bDocSignature.getSigningCertificate().getSubjectName(CN)));
         signatureValidationData.setErrors(getErrors(bDocSignature));
-        signatureValidationData.setSignatureScopes(getSignatureScopes(bDocSignature, dataFileNames));
+        signatureValidationData.setSignatureScopes(getSignatureScopes(bDocSignature, dataFilenames));
         signatureValidationData.setClaimedSigningTime(ReportBuilderUtils.getDateFormatterWithGMTZone().format(bDocSignature.getClaimedSigningTime()));
         signatureValidationData.setWarnings(getWarnings(bDocSignature));
         signatureValidationData.setInfo(getInfo(bDocSignature));
@@ -226,11 +226,11 @@ public class BDOCQualifiedReportBuilder {
 
     }
 
-    private List<SignatureScope> getSignatureScopes(BDocSignature bDocSignature, List<String> dataFileNames) {
+    private List<SignatureScope> getSignatureScopes(BDocSignature bDocSignature, List<String> dataFilenames) {
         return bDocSignature.getOrigin().getReferences()
                 .stream()
                 .map(r -> decodeUriIfPossible(r.getURI()))
-                .filter(dataFileNames::contains) //filters out Signed Properties
+                .filter(dataFilenames::contains) //filters out Signed Properties
                 .map(BDOCQualifiedReportBuilder::createFullSignatureScopeForDataFile)
                 .collect(Collectors.toList());
     }

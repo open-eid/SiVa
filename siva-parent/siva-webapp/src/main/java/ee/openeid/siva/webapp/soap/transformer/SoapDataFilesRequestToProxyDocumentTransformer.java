@@ -17,7 +17,6 @@
 package ee.openeid.siva.webapp.soap.transformer;
 
 import ee.openeid.siva.proxy.document.ProxyDocument;
-import ee.openeid.siva.proxy.document.typeresolver.DocumentTypeResolver;
 import ee.openeid.siva.webapp.soap.SoapDataFilesRequest;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Component;
@@ -27,7 +26,7 @@ public class SoapDataFilesRequestToProxyDocumentTransformer {
 
     public ProxyDocument transform(SoapDataFilesRequest dataFilesRequest) {
         ProxyDocument proxyDocument = new ProxyDocument();
-        proxyDocument.setDocumentType(DocumentTypeResolver.documentTypeFromString(dataFilesRequest.getDocumentType().name()));
+        proxyDocument.setName(dataFilesRequest.getFilename());
         proxyDocument.setBytes(Base64.decodeBase64(dataFilesRequest.getDocument()));
         return proxyDocument;
     }

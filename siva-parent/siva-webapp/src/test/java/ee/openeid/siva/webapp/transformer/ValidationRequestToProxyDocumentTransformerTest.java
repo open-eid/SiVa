@@ -45,7 +45,7 @@ public class ValidationRequestToProxyDocumentTransformerTest {
     }
 
     @Test
-    public void fileNameRemainsUnchanged() {
+    public void filenameRemainsUnchanged() {
         assertEquals(validationRequest.getFilename(), transformer.transform(validationRequest).getName());
     }
 

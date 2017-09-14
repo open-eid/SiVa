@@ -17,7 +17,6 @@
 package ee.openeid.siva.webapp.transformer;
 
 import ee.openeid.siva.proxy.document.ProxyDocument;
-import ee.openeid.siva.proxy.document.typeresolver.DocumentTypeResolver;
 import ee.openeid.siva.webapp.request.DataFilesRequest;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Component;
@@ -27,7 +26,7 @@ public class DataFilesRequestToProxyDocumentTransformer {
 
     public ProxyDocument transform(DataFilesRequest dataFilesRequest) {
         ProxyDocument proxyDocument = new ProxyDocument();
-        proxyDocument.setDocumentType(DocumentTypeResolver.documentTypeFromString(dataFilesRequest.getDocumentType()));
+        proxyDocument.setName(dataFilesRequest.getFilename());
         proxyDocument.setBytes(Base64.decodeBase64(dataFilesRequest.getDocument()));
         return proxyDocument;
     }

@@ -46,7 +46,7 @@ public class DataFilesRequestToProxyDocumentTransformerTest {
 
     @Test
     public void ddocTypeIsCorrectlyTransformedToDocumentType() {
-        assertEquals(DocumentType.DDOC, transformer.transform(dataFilesRequest).getDocumentType());
+        assertEquals(DocumentType.DDOC.name().toLowerCase(), transformer.transform(dataFilesRequest).getName());
     }
 
     @Test
@@ -55,13 +55,6 @@ public class DataFilesRequestToProxyDocumentTransformerTest {
         assertEquals(dataFilesRequest.getDocument(), Base64.encodeBase64String(proxyDocument.getBytes()));
     }
 
-    @Test
-    public void unsupportedTypeThrowsException() {
-        dataFilesRequest = MockDataFilesRequestBuilder.aDataFilesRequest().withType("unsupported").build();
-        expectedException.expect(RuntimeException.class);
-        expectedException.expectMessage("type = unsupported is unsupported");
-        transformer.transform(dataFilesRequest);
-    }
 
     private void setValidDdocDataFilesRequest() throws Exception {
         Path filepath = Paths.get(getClass().getClassLoader().getResource(VALID_DDOC_FILE).toURI());

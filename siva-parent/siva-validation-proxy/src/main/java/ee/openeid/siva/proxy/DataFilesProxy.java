@@ -22,6 +22,7 @@ import ee.openeid.siva.proxy.exception.DataFilesServiceNotFoundException;
 import ee.openeid.siva.validation.document.DataFilesDocument;
 import ee.openeid.siva.validation.document.report.DataFilesReport;
 import ee.openeid.siva.validation.service.DataFilesService;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -30,11 +31,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class DataFilesProxy {
 
-    private ApplicationContext applicationContext;
     private static final String SERVICE_BEAN_NAME_POSTFIX = "DataFilesService";
+    private ApplicationContext applicationContext;
 
     public DataFilesReport getDataFiles(ProxyDocument proxyDocument) {
-        return getServiceForType(proxyDocument.getDocumentType()).getDataFiles(createDataFilesDocument(proxyDocument));
+        return getServiceForType(extractDocumentType(proxyDocument.getName())).getDataFiles(createDataFilesDocument(proxyDocument));
+    }
+
+    private static DocumentType extractDocumentType(String filename) {
+        String extension = FilenameUtils.getExtension(filename);
+        return DocumentType.documentTypeFromString(extension.toUpperCase());
+    }
+
+    private static String constructDataFilesServiceName(DocumentType documentType) {
+        return documentType.name() + SERVICE_BEAN_NAME_POSTFIX;
     }
 
     private DataFilesDocument createDataFilesDocument(ProxyDocument proxyDocument) {
@@ -50,10 +60,6 @@ public class DataFilesProxy {
         } catch (NoSuchBeanDefinitionException e) {
             throw new DataFilesServiceNotFoundException(dataFilesServiceName + " not found");
         }
-    }
-
-    private static String constructDataFilesServiceName(DocumentType documentType) {
-        return documentType.name() + SERVICE_BEAN_NAME_POSTFIX;
     }
 
     @Autowired

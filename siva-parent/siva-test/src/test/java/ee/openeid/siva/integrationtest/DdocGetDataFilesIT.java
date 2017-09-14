@@ -56,7 +56,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         postForDataFiles(dataFilesRequest("18912.ddoc"))
                 .then()
-                .body("dataFiles[0].fileName", Matchers.is("readme"))
+                .body("dataFiles[0].filename", Matchers.is("readme"))
                 .body("dataFiles[0].mimeType", Matchers.is("text/plain"))
                 .body("dataFiles[0].base64", Matchers.startsWith("RGlnaURvYyBpcyBhIGdlbmVyaWMgbGlicmFyeSBp"))
                 .body("dataFiles[0].size", Matchers.is(491));
@@ -80,7 +80,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         postForDataFiles(dataFilesRequest("OCSP nonce vale.ddoc"))
                 .then()
-                .body("dataFiles[0].fileName", Matchers.is("testfail.txt"))
+                .body("dataFiles[0].filename", Matchers.is("testfail.txt"))
                 .body("dataFiles[0].mimeType", Matchers.is("text/plain"))
                 .body("dataFiles[0].base64", Matchers.is("T2xlbiB0ZXN0IGZhaWwu\n"))
                 .body("dataFiles[0].size", Matchers.is(15));
@@ -105,7 +105,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
         postForDataFiles(dataFilesRequest("DIGIDOC-XML1.1.ddoc"))
                 .then()
                 .log().ifError()
-                .body("dataFiles[0].fileName", Matchers.is("puhkus_urmo_062006.doc"))
+                .body("dataFiles[0].filename", Matchers.is("puhkus_urmo_062006.doc"))
                 .body("dataFiles[0].mimeType", Matchers.is("application/msword"))
                 .body("dataFiles[0].base64", Matchers.startsWith("0M8R4KGxGuEAAAAAAAAAAAAAAAAAAAAAPgADAP7/CQAGAAAAAAAAAAAAAAAJAAAA"))
                 .body("dataFiles[0].size", Matchers.is(549376));
@@ -130,7 +130,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
         postForDataFiles(dataFilesRequest("DIGIDOC-XML1.2.ddoc"))
                 .then()
                 .log().ifError()
-                .body("dataFiles[0].fileName", Matchers.is("RO219559508.pdf"))
+                .body("dataFiles[0].filename", Matchers.is("RO219559508.pdf"))
                 .body("dataFiles[0].mimeType", Matchers.is("text/text"))
                 .body("dataFiles[0].base64", Matchers.startsWith("JVBERi0xLjMKJeLjz9MKMSAwIG9iajw8L1Byb2R1Y2VyKGh0bWxkb2MgMS44LjIzIENvcHlyaWdodCAxOTk3LTIwMDI"))
                 .body("dataFiles[0].size", Matchers.is(5252));
@@ -154,7 +154,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         postForDataFiles(dataFilesRequest("DIGIDOC-XML1.3.ddoc"))
                 .then()
-                .body("dataFiles[0].fileName", Matchers.is("Glitter-rock-4_gallery.jpg"))
+                .body("dataFiles[0].filename", Matchers.is("Glitter-rock-4_gallery.jpg"))
                 .body("dataFiles[0].mimeType", Matchers.is("application/octet-stream"))
                 .body("dataFiles[0].base64", Matchers.startsWith("/9j/4AAQSkZJRgABAQAAAQABAAD/4RXeRXhpZgAASUkqAAgAAAACADEBAgAHAAAA"))
                 .body("dataFiles[0].size", Matchers.is(41114));
@@ -179,7 +179,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
         postForDataFiles(dataFilesRequest("DIGIDOC-XML1.3_hashcode.ddoc"))
                 .then()
                 .log().ifError()
-                .body("dataFiles[0].fileName", Matchers.is("Glitter-rock-4_gallery.jpg"))
+                .body("dataFiles[0].filename", Matchers.is("Glitter-rock-4_gallery.jpg"))
                 .body("dataFiles[0].mimeType", Matchers.is("application/octet-stream"))
                 .body("dataFiles[0].base64", Matchers.nullValue())
                 .body("dataFiles[0].size", Matchers.is(41114));
@@ -204,51 +204,51 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
         postForDataFiles(dataFilesRequest("igasugust1.3.ddoc"))
                 .then()
                 .log().ifError()
-                .body("dataFiles[0].fileName", Matchers.is("DigiDocService_spec_1_110_est.pdf"))
+                .body("dataFiles[0].filename", Matchers.is("DigiDocService_spec_1_110_est.pdf"))
                 .body("dataFiles[0].mimeType", Matchers.is("application/pdf"))
                 .body("dataFiles[0].base64", Matchers.startsWith("JVBERi0xLjMKJcfsj6IKOCAwIG9iago8PC9MZW5ndGggOSAwIFIvRmlsdGVyIC9G"))
                 .body("dataFiles[0].size", Matchers.is(435164))
-                .body("dataFiles[1].fileName", Matchers.is("Testilood20070320.doc"))
+                .body("dataFiles[1].filename", Matchers.is("Testilood20070320.doc"))
                 .body("dataFiles[1].mimeType", Matchers.is("application/msword"))
                 .body("dataFiles[1].base64", Matchers.startsWith("0M8R4KGxGuEAAAAAAAAAAAAAAAAAAAAAPgADAP7/CQAGAAAAAAAAAAAAAAAEAAAA"))
                 .body("dataFiles[1].size", Matchers.is(222720))
-                .body("dataFiles[2].fileName", Matchers.is("fail.rtf"))
+                .body("dataFiles[2].filename", Matchers.is("fail.rtf"))
                 .body("dataFiles[2].mimeType", Matchers.is("application/msword"))
                 .body("dataFiles[2].base64", Matchers.startsWith("e1xydGYxXGFuc2lcZGVmZjBcYWRlZmxhbmcxMDI1CntcZm9udHRibHtcZjBcZnJv"))
                 .body("dataFiles[2].size", Matchers.is(2145))
-                .body("dataFiles[3].fileName", Matchers.is("fail.odt"))
+                .body("dataFiles[3].filename", Matchers.is("fail.odt"))
                 .body("dataFiles[3].mimeType", Matchers.is("application/unknown"))
                 .body("dataFiles[3].base64", Matchers.startsWith("UEsDBBQAAAAAAJhRwTpexjIMJwAAACcAAAAIAAAAbWltZXR5cGVhcHBsaWNhdGlv"))
                 .body("dataFiles[3].size", Matchers.is(7427))
-                .body("dataFiles[4].fileName", Matchers.is("4.txt"))
+                .body("dataFiles[4].filename", Matchers.is("4.txt"))
                 .body("dataFiles[4].mimeType", Matchers.is("text/plain"))
                 .body("dataFiles[4].base64", Matchers.startsWith("/GtzZmFpbA==\n"))
                 .body("dataFiles[4].size", Matchers.is(7))
-                .body("dataFiles[5].fileName", Matchers.is("kolm.doc"))
+                .body("dataFiles[5].filename", Matchers.is("kolm.doc"))
                 .body("dataFiles[5].mimeType", Matchers.is("application/msword"))
                 .body("dataFiles[5].base64", Matchers.startsWith("0M8R4KGxGuEAAAAAAAAAAAAAAAAAAAAAPgADAP7/CQAGAAAAAAAAAAAAAAABAAAA"))
                 .body("dataFiles[5].size", Matchers.is(24064))
-                .body("dataFiles[6].fileName", Matchers.is("5.xls"))
+                .body("dataFiles[6].filename", Matchers.is("5.xls"))
                 .body("dataFiles[6].mimeType", Matchers.is("application/vnd.ms-excel"))
                 .body("dataFiles[6].base64", Matchers.startsWith("0M8R4KGxGuEAAAAAAAAAAAAAAAAAAAAAPgADAP7/CQAGAAAAAAAAAAAAAAABAAAA"))
                 .body("dataFiles[6].size", Matchers.is(14848))
-                .body("dataFiles[7].fileName", Matchers.is("kaks.doc"))
+                .body("dataFiles[7].filename", Matchers.is("kaks.doc"))
                 .body("dataFiles[7].mimeType", Matchers.is("application/msword"))
                 .body("dataFiles[7].base64", Matchers.startsWith("0M8R4KGxGuEAAAAAAAAAAAAAAAAAAAAAPgADAP7/CQAGAAAAAAAAAAAAAAABAAAA"))
                 .body("dataFiles[7].size", Matchers.is(24064))
-                .body("dataFiles[8].fileName", Matchers.is("kõõs.txt"))
+                .body("dataFiles[8].filename", Matchers.is("kõõs.txt"))
                 .body("dataFiles[8].mimeType", Matchers.is("text/plain"))
                 .body("dataFiles[8].base64", Matchers.is("bfZoaGho\n"))
                 .body("dataFiles[8].size", Matchers.is(6))
-                .body("dataFiles[9].fileName", Matchers.is("yks.doc"))
+                .body("dataFiles[9].filename", Matchers.is("yks.doc"))
                 .body("dataFiles[9].mimeType", Matchers.is("application/msword"))
                 .body("dataFiles[9].base64", Matchers.startsWith("0M8R4KGxGuEAAAAAAAAAAAAAAAAAAAAAPgADAP7/CQAGAAAAAAAAAAAAAAABAAAA"))
                 .body("dataFiles[9].size", Matchers.is(24064))
-                .body("dataFiles[10].fileName", Matchers.is("testid.txt"))
+                .body("dataFiles[10].filename", Matchers.is("testid.txt"))
                 .body("dataFiles[10].mimeType", Matchers.is("text/plain"))
                 .body("dataFiles[10].base64", Matchers.startsWith("UElOMSBibG9raXM6DQoNCjI1MTMNCjI1MjMNCjI1MjcNCjI1MzENCjI1NTkNCj"))
                 .body("dataFiles[10].size", Matchers.is(414))
-                .body("dataFiles[11].fileName", Matchers.is("NsPdf.PDF"))
+                .body("dataFiles[11].filename", Matchers.is("NsPdf.PDF"))
                 .body("dataFiles[11].mimeType", Matchers.is("application/pdf"))
                 .body("dataFiles[11].base64", Matchers.startsWith("JVBERi0xLjMKJeTjz9IKNSAwIG9iago8PC9MZW5ndGggNiAwIFIKL0ZpbHRlci9G\nbGF0ZURlY29"))
                 .body("dataFiles[11].size", Matchers.is(2783));
@@ -273,8 +273,8 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
         postForDataFiles(dataFilesRequest("BDOC-TS.bdoc"))
                 .then()
                 .log().ifError()
-                .body("requestErrors[0].message", Matchers.is(INVALID_DOCUMENT_TYPE_DDOC))
-                .body("requestErrors[0].key", Matchers.is(DOCUMENT_TYPE));
+                .body("requestErrors[0].message", Matchers.is(INVALID_DATA_FILE_FILENAME))
+                .body("requestErrors[0].key", Matchers.is(FILENAME));
     }
 
     /**
@@ -296,8 +296,8 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
         postForDataFiles(dataFilesRequest("hellopades-lt-b.pdf"))
                 .then()
                 .log().ifError()
-                .body("requestErrors[0].message", Matchers.is(INVALID_DOCUMENT_TYPE_DDOC))
-                .body("requestErrors[0].key", Matchers.is(DOCUMENT_TYPE));
+                .body("requestErrors[0].message", Matchers.is(INVALID_DATA_FILE_FILENAME))
+                .body("requestErrors[0].key", Matchers.is(FILENAME));
     }
     
     @Override

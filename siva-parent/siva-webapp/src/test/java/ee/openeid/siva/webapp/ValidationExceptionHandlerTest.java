@@ -114,12 +114,12 @@ public class ValidationExceptionHandlerTest {
     public void testMethodArgumentNotValidExceptionOnGetDataFilesExceptionHandler() throws Exception {
         mockMvcDataFiles.perform(post(GET_DATA_FILES_URL_TEMPLATE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(requestWithInvalidDocumentType().toString().getBytes()))
+                .content(requestWithInvalidDataFileFilename().toString().getBytes()))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.requestErrors", hasSize(1)))
-                .andExpect(jsonPath("$.requestErrors[0].key", is("documentType")))
-                .andExpect(jsonPath("$.requestErrors[0].message", containsString("Invalid document type. Can only return data files for DDOC type containers.")))
+                .andExpect(jsonPath("$.requestErrors[0].key", is("filename")))
+                .andExpect(jsonPath("$.requestErrors[0].message", containsString("Invalid filename. Can only return data files for DDOC type containers.")))
                 .andReturn();
     }
 
@@ -175,7 +175,7 @@ public class ValidationExceptionHandlerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        assertEquals(content, "{\"requestErrors\":[{\"key\":\"some key\",\"message\":\"some message\"}]}");
+        assertEquals("{\"requestErrors\":[{\"key\":\"some key\",\"message\":\"some message\"}]}", content);
     }
 
     @Test
@@ -257,8 +257,7 @@ public class ValidationExceptionHandlerTest {
     private JSONObject dataFileRequest() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("document", "dGVzdA0K");
-        jsonObject.put("filename", "file.bdoc");
-        jsonObject.put("documentType", "DDOC");
+        jsonObject.put("filename", "file.ddoc");
         return jsonObject;
     }
     private JSONObject requestWithInvalidDocumentType() {
@@ -266,6 +265,13 @@ public class ValidationExceptionHandlerTest {
         jsonObject.put("documentType", "asd");
         return jsonObject;
     }
+
+    private JSONObject requestWithInvalidDataFileFilename() {
+        JSONObject jsonObject = request();
+        jsonObject.put("filename", "test.pdf");
+        return jsonObject;
+    }
+
     private JSONObject requestWithInvalidReportType() {
         JSONObject jsonObject = request();
         jsonObject.put("reportType", "asd");

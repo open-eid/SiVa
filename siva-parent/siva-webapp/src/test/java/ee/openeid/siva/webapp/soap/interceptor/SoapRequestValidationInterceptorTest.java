@@ -64,7 +64,7 @@ public class SoapRequestValidationInterceptorTest {
     private Node documentTypeNode;
     @Mock
     private Node policyNode;
-    private NodeList fileNameNodeList;
+    private NodeList filenameNodeList;
     private NodeList documentNodeList;
     private NodeList documentTypeNodeList;
     private NodeList policyNodeList;
@@ -158,7 +158,7 @@ public class SoapRequestValidationInterceptorTest {
     }
 
     private void mockFilenameNode(String filename) {
-        mockNode(filenameNode, fileNameNodeList, "Filename", filename);
+        mockNode(filenameNode, filenameNodeList, "Filename", filename);
     }
 
     private void mockDocumentTypeNode(String documentType) {

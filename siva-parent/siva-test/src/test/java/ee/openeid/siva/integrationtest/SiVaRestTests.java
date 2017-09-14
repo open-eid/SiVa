@@ -36,6 +36,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
     protected static final String DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE = "Document malformed or not matching documentType";
     protected static final String INVALID_DOCUMENT_TYPE = "Invalid document type";
     protected static final String INVALID_DOCUMENT_TYPE_DDOC = "Invalid document type. Can only return data files for DDOC type containers.";
+    protected static final String INVALID_DATA_FILE_FILENAME = "Invalid filename. Can only return data files for DDOC type containers.";
     protected static final String INVALID_FILENAME = "Invalid filename";
     protected static final String MAY_NOT_BE_EMPTY = "may not be empty";
     protected static final String INVALID_BASE_64 = "Document is not encoded in a valid base64 string";
@@ -134,21 +135,21 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
     protected String dataFilesRequest(String file) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("document", Base64.encodeBase64String(readFileFromTestResources(file)));
-        jsonObject.put("documentType", parseFileExtension(file));
+        jsonObject.put("filename", file);
         return jsonObject.toString();
     }
 
-    protected String dataFilesRequestInvalidValues(String document, String documentType) {
+    protected String dataFilesRequestInvalidValues(String document, String filename) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("document", document);
-        jsonObject.put("documentType", documentType);
+        jsonObject.put("filename", filename);
         return jsonObject.toString();
     }
 
-    protected String dataFilesRequestExtended(String file, String documentType) {
+    protected String dataFilesRequestExtended(String file, String filename) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("document", Base64.encodeBase64String(readFileFromTestResources(file)));
-        jsonObject.put("documentType", documentType);
+        jsonObject.put("filename", filename);
         return jsonObject.toString();
     }
 

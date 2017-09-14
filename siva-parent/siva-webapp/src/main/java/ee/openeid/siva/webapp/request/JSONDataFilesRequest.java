@@ -17,8 +17,7 @@
 package ee.openeid.siva.webapp.request;
 
 import ee.openeid.siva.webapp.request.validation.annotations.ValidBase64String;
-import ee.openeid.siva.webapp.request.validation.annotations.ValidDataFilesDocumentType;
-import ee.openeid.siva.webapp.request.validation.annotations.ValidDocumentType;
+import ee.openeid.siva.webapp.request.validation.annotations.ValidDataFileFilename;
 import lombok.Data;
 
 @Data
@@ -27,7 +26,7 @@ public class JSONDataFilesRequest implements DataFilesRequest {
     @ValidBase64String
     private String document;
 
-    @ValidDataFilesDocumentType
-    private String documentType;
+    @ValidDataFileFilename
+    private String filename;
 
 }

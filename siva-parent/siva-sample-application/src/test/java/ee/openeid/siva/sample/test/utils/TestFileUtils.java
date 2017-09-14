@@ -30,8 +30,8 @@ public final class TestFileUtils {
     private TestFileUtils() {
     }
 
-    public static UploadedFile generateUploadFile(TemporaryFolder testingFolder, String fileName, String fileContents) throws IOException {
-        final File inputFile = testingFolder.newFile(fileName);
+    public static UploadedFile generateUploadFile(TemporaryFolder testingFolder, String filename, String fileContents) throws IOException {
+        final File inputFile = testingFolder.newFile(filename);
         FileUtils.writeStringToFile(inputFile, fileContents);
 
         UploadedFile uploadedFile = new UploadedFile();

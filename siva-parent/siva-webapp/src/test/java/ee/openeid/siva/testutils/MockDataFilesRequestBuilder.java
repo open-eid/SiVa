@@ -25,7 +25,7 @@ import java.nio.file.Path;
 
 public class MockDataFilesRequestBuilder {
 
-    public static final String DEFAULT_TYPE = "ddoc";
+    public static final String DEFAULT_FILENAME = "test.ddoc";
     public static final String DEFAULT_DOCUMENT = "ABC";
 
     private MockDataFilesRequestBuilder.MockDataFilesRequest dataFilesRequest;
@@ -36,8 +36,8 @@ public class MockDataFilesRequestBuilder {
         return builder;
     }
 
-    public MockDataFilesRequestBuilder withType(String type) {
-        this.dataFilesRequest.type = type;
+    public MockDataFilesRequestBuilder withType(String filename) {
+        this.dataFilesRequest.filename = filename;
         return this;
     }
 
@@ -58,7 +58,7 @@ public class MockDataFilesRequestBuilder {
     public static class MockDataFilesRequest implements DataFilesRequest {
 
         private String document = DEFAULT_DOCUMENT;
-        private String type = DEFAULT_TYPE;
+        private String filename = DEFAULT_FILENAME;
 
         @Override
         public String getDocument() {
@@ -66,16 +66,16 @@ public class MockDataFilesRequestBuilder {
         }
 
         @Override
-        public String getDocumentType() {
-            return type;
+        public String getFilename() {
+            return filename;
         }
 
         public void setDocument(String document) {
             this.document = document;
         }
 
-        public void setType(String type) {
-            this.type = type;
+        public void setFilename(String filename) {
+            this.filename = filename;
         }
 
     }

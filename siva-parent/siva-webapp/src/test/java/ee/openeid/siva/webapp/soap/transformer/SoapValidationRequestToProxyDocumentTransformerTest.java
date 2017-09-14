@@ -63,7 +63,7 @@ public class SoapValidationRequestToProxyDocumentTransformerTest {
     }
 
     @Test
-    public void fileNameRemainsUnchanged() {
+    public void filenameRemainsUnchanged() {
         String filename = "random file name.bdoc";
         SoapValidationRequest validationRequest = createSoapValidationRequest("Ymxh", DocumentType.BDOC, filename, "some policy");
         assertEquals(validationRequest.getFilename(), transformer.transform(validationRequest).getName());

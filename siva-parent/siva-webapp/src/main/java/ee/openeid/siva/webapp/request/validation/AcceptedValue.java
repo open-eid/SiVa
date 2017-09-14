@@ -30,11 +30,6 @@ public enum AcceptedValue {
         public List<String> getAcceptedValues() {
             return Collections.singletonList(DocumentType.XROAD.name());
         }
-    }, DATAFILES_REQUEST_DOCUMENT_TYPE {
-        @Override
-        public List<String> getAcceptedValues() {
-            return Collections.singletonList(DocumentType.DDOC.name());
-        }
     }, REPORT_TYPE {
         @Override
         public List<String> getAcceptedValues() {

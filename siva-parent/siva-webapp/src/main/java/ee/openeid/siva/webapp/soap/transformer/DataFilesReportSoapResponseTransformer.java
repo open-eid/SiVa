@@ -43,7 +43,7 @@ public class DataFilesReportSoapResponseTransformer {
     private DataFile mapDataFile(DataFileData dataFileData) {
         DataFile dataFile = new DataFile();
         dataFile.setBase64(dataFileData.getBase64());
-        dataFile.setFileName(dataFileData.getFileName());
+        dataFile.setFilename(dataFileData.getFilename());
         dataFile.setMimeType(dataFileData.getMimeType());
         dataFile.setSize(dataFileData.getSize());
         return dataFile;

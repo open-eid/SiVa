@@ -21,7 +21,7 @@ import lombok.Data;
 @Data
 public class DataFileData {
     private String base64;
-    private String fileName;
+    private String filename;
     private String mimeType;
     private long size;
 }

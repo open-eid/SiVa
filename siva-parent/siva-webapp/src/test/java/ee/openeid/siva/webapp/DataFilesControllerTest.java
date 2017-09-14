@@ -54,14 +54,14 @@ public class DataFilesControllerTest {
                 .content(validRequest().toString().getBytes())
         );
         assertEquals("QVNE", transformerSpy.dataFilesRequest.getDocument());
-        assertEquals("DDOC" , transformerSpy.dataFilesRequest.getDocumentType());
+        assertEquals("test.ddoc" , transformerSpy.dataFilesRequest.getFilename());
     }
 
     @Test
     public void requestWithInvalidDocumentTypeReturnsErroneousResponse() throws Exception {
         mockMvc.perform(post("/getDataFiles")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(requestWithInvalidDocumentType().toString().getBytes()))
+                .content(requestWithInvalidFilename().toString().getBytes()))
                 .andExpect(status().isBadRequest());
     }
 
@@ -84,7 +84,7 @@ public class DataFilesControllerTest {
     @Test
     public void requestWithInvalidKeysShouldBeRejectedWithError() throws Exception {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("dcumentType", "DDOC");
+        jsonObject.put("filename", "test.ddoc");
         jsonObject.put("Document", "QVNE");
 
         mockMvc.perform(post("/getDataFiles")
@@ -113,13 +113,13 @@ public class DataFilesControllerTest {
     private JSONObject validRequest() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("document", "QVNE");
-        jsonObject.put("documentType", "DDOC");
+        jsonObject.put("filename", "test.ddoc");
         return jsonObject;
     }
 
-    private JSONObject requestWithInvalidDocumentType() {
+    private JSONObject requestWithInvalidFilename() {
         JSONObject jsonObject = validRequest();
-        jsonObject.put("documentType", "PDF");
+        jsonObject.put("filename", "");
         return jsonObject;
     }
 

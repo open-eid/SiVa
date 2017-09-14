@@ -34,7 +34,7 @@ public class DataFilesReportSoapResponseTransformerTest {
         DataFilesReport responseReport = transformer.toSoapResponse(dataFilesReport);
 
         assertEquals(dataFilesReport.getDataFiles().get(0).getBase64(), responseReport.getDataFiles().getDataFile().get(0).getBase64());
-        assertEquals(dataFilesReport.getDataFiles().get(0).getFileName(), responseReport.getDataFiles().getDataFile().get(0).getFileName());
+        assertEquals(dataFilesReport.getDataFiles().get(0).getFilename(), responseReport.getDataFiles().getDataFile().get(0).getFilename());
         assertEquals(dataFilesReport.getDataFiles().get(0).getMimeType(), responseReport.getDataFiles().getDataFile().get(0).getMimeType());
         assertEquals(dataFilesReport.getDataFiles().get(0).getSize(), responseReport.getDataFiles().getDataFile().get(0).getSize());
     }
@@ -50,7 +50,7 @@ public class DataFilesReportSoapResponseTransformerTest {
         ee.openeid.siva.validation.document.report.DataFileData dataFile = new ee.openeid.siva.validation.document.report.DataFileData();
         dataFile.setSize(1);
         dataFile.setMimeType("text/plain");
-        dataFile.setFileName("readme");
+        dataFile.setFilename("readme");
         dataFile.setBase64("RGlnaURvYyBpcyB");
         dataFiles.add(dataFile);
         return dataFiles;

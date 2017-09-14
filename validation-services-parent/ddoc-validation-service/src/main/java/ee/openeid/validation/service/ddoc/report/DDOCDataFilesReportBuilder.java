@@ -58,7 +58,7 @@ public class DDOCDataFilesReportBuilder {
         }
         DataFileData dataFileData = new DataFileData();
         dataFileData.setBase64(getBase64String(dataFile));
-        dataFileData.setFileName(dataFile.getFileName());
+        dataFileData.setFilename(dataFile.getFileName());
         dataFileData.setMimeType(dataFile.getMimeType());
         dataFileData.setSize(dataFile.getSize());
         return dataFileData;

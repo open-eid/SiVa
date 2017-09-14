@@ -65,15 +65,15 @@ public class SivaJSONValidationServiceClientTest {
     public void validRequestReturnsCorrectValidationResult() throws Exception {
         final String mockResponse = mockServiceResponse();
         final String fileContents = "Hello Testing World";
-        final String fileName = "testing.bdoc";
-        final UploadedFile inputFile = TestFileUtils.generateUploadFile(testingFolder, fileName, fileContents);
+        final String filename = "testing.bdoc";
+        final UploadedFile inputFile = TestFileUtils.generateUploadFile(testingFolder, filename, fileContents);
 
         final Observable<String> result = validationService.validateDocument("", "", inputFile);
         assertEquals(mockResponse, result.toBlocking().first());
 
         verify(restTemplate).postForObject(anyString(), validationRequestCaptor.capture(), any());
 
-        assertEquals(fileName, validationRequestCaptor.getValue().getFilename());
+        assertEquals(filename, validationRequestCaptor.getValue().getFilename());
         assertEquals(Base64Utils.encodeToString(fileContents.getBytes()), validationRequestCaptor.getValue().getDocument());
     }
 

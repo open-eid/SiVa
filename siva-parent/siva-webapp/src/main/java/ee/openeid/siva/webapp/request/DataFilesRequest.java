@@ -18,5 +18,5 @@ package ee.openeid.siva.webapp.request;
 
 public interface DataFilesRequest {
     String getDocument();
-    String getDocumentType();
+    String getFilename();
 }

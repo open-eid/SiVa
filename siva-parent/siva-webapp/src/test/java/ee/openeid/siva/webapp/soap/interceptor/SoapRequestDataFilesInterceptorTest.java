@@ -49,7 +49,7 @@ public class SoapRequestDataFilesInterceptorTest {
     private static final int EXPECTED_STATUS_CODE = 400;
     private static final String EXPECTED_FAULT_CODE = "Client";
     private static final String INVALID_BASE64 = "Document is not encoded in a valid base64 string";
-    private static final String INVALID_DOCUMENT_TYPE = "Invalid document type. Can only return data files for DDOC type containers.";
+    private static final String INVALID_FILE_NAME = "Invalid file name. Can only return data files for DDOC type containers.";
 
     @Mock
     private SoapMessage message;
@@ -86,21 +86,21 @@ public class SoapRequestDataFilesInterceptorTest {
 
     @Test
     public void whenDocumentTypeIsInvalidThenFaultIsThrownWithInvalidDocumentTypeMessage() throws SOAPException {
-        mockSoapMessage("AABBBAA", "BDOC");
+        mockSoapMessage("AABBBAA", "test.bdoc");
         Fault soapFault = handleMessageInInterceptor(message);
-        assertFaultWithExpectedMessage(soapFault, INVALID_DOCUMENT_TYPE);
+        assertFaultWithExpectedMessage(soapFault, INVALID_FILE_NAME);
     }
 
     @Test
     public void whenDocumentIsInvalidThenFaultIsThrownWithInvalidDocumentMessage() throws SOAPException {
-        mockSoapMessage("ÖÄÜ", "DDOC");
+        mockSoapMessage("ÖÄÜ", "test.ddoc");
         Fault soapFault = handleMessageInInterceptor(message);
         assertFaultWithExpectedMessage(soapFault, INVALID_BASE64);
     }
 
     @Test
     public void noSoapFaultIsThrownWithValidRequest() throws SOAPException {
-        mockSoapMessage("AABBBAA", "DDOC");
+        mockSoapMessage("AABBBAA", "test.ddoc");
         Fault soapFault = handleMessageInInterceptor(message);
         assertNull(soapFault);
     }
@@ -112,21 +112,21 @@ public class SoapRequestDataFilesInterceptorTest {
         assertEquals(message, soapFault.getMessage());
     }
 
-    private void mockSoapMessage(String document, String documentType) throws SOAPException {
+    private void mockSoapMessage(String document, String filename) throws SOAPException {
         doReturn(body).when(envelope).getBody();
         doReturn(envelope).when(soapPart).getEnvelope();
         doReturn(soapPart).when(soapMessage).getSOAPPart();
         doReturn(soapMessage).when(message).getContent(SOAPMessage.class);
         mockDocumentNode(document);
-        mockDocumentTypeNode(documentType);
+        mockFilenameNode(filename);
     }
 
     private void mockDocumentNode(String document) {
         mockNode(documentNode, "Document", document);
     }
 
-    private void mockDocumentTypeNode(String documentType) {
-        mockNode(documentTypeNode, "DocumentType", documentType);
+    private void mockFilenameNode(String filename) {
+        mockNode(documentTypeNode, "Filename", filename);
     }
 
     private void mockNode(Node node, String tagName, String value) {

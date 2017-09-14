@@ -18,6 +18,7 @@ package ee.openeid.siva.webapp.soap.interceptor;
 
 import ee.openeid.siva.webapp.soap.DocumentType;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.binding.soap.interceptor.AbstractSoapInterceptor;
@@ -70,9 +71,9 @@ public class SoapRequestDataFilesInterceptor extends AbstractSoapInterceptor {
     }
 
     private void validateDocumentTypeElement(SOAPBody body) {
-        String documentType = getElementValueFromBody(body, "DocumentType");
-        if (!DocumentType.DDOC.name().equals(documentType)) {
-            throwFault(messageSource.getMessage("validation.error.message.documentType.dataFiles", null, null));
+        String filename = getElementValueFromBody(body, "Filename");
+        if (!DocumentType.DDOC.name().equals(FilenameUtils.getExtension(filename).toUpperCase())) {
+            throwFault("Invalid file name. Can only return data files for DDOC type containers.");
         }
     }
 

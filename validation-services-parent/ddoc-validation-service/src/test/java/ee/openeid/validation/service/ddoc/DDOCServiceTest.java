@@ -138,7 +138,7 @@ public class DDOCServiceTest {
         DataFileData dataFileData = dataFiles.get(0);
 
         assertEquals("VGVzdDENClRlc3QyDQpUZfB0Mw0KS2H+bWFhciAuLi4uDQo=\n", dataFileData.getBase64());
-        assertEquals("Šužlikud sõid ühe õuna ära.txt", dataFileData.getFileName());
+        assertEquals("Šužlikud sõid ühe õuna ära.txt", dataFileData.getFilename());
         assertEquals("text/plain", dataFileData.getMimeType());
         assertEquals(35, dataFileData.getSize());
     }

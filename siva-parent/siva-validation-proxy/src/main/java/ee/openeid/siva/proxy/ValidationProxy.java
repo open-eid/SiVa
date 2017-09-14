@@ -130,10 +130,10 @@ public class ValidationProxy {
     }
 
     private String constructValidatorName(ProxyDocument proxyDocument) {
-        String fileName = proxyDocument.getName();
-        String extension = FilenameUtils.getExtension(fileName).toUpperCase();
+        String filename = proxyDocument.getName();
+        String extension = FilenameUtils.getExtension(filename).toUpperCase();
         if (!StringUtils.isNotBlank(extension)) {
-            throw new IllegalArgumentException("Invalid file format:" + fileName);
+            throw new IllegalArgumentException("Invalid file format:" + filename);
         }
         if (DocumentType.DDOC.name().equals(extension) || DocumentType.BDOC.name().equals(extension)) {
             return extension + SERVICE_BEAN_NAME_POSTFIX;

@@ -94,9 +94,9 @@ public abstract class SiVaIntegrationTestsBase {
 
     protected abstract String getTestFilesDirectory();
 
-    protected byte[] readFileFromTestResources(String fileName) {
+    protected byte[] readFileFromTestResources(String filename) {
         String testFilesBase = getProjectBaseDirectory() + "src/test/resources/";
-        return readFileFromPath(testFilesBase + getTestFilesDirectory() + fileName);
+        return readFileFromPath(testFilesBase + getTestFilesDirectory() + filename);
     }
 
     protected void assertInvalidWithError(SignatureValidationData signatureValidationData, String expectedMessage) {

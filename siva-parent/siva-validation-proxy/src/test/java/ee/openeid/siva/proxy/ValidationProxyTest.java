@@ -245,9 +245,9 @@ public class ValidationProxyTest {
         return proxyDocument;
     }
 
-    private ProxyDocument mockProxyDocumentWithExtension(String fileName) {
+    private ProxyDocument mockProxyDocumentWithExtension(String filename) {
         ProxyDocument proxyDocument = new ProxyDocument();
-        proxyDocument.setName(DEFAULT_DOCUMENT_NAME + fileName);
+        proxyDocument.setName(DEFAULT_DOCUMENT_NAME + filename);
         return proxyDocument;
     }
 

@@ -17,10 +17,14 @@
 package ee.openeid.siva.validation.document.report.builder;
 
 import ee.openeid.siva.validation.document.report.Policy;
+import ee.openeid.siva.validation.document.report.ValidatedDocument;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.bouncycastle.util.encoders.Hex;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
@@ -31,6 +35,7 @@ public final class ReportBuilderUtils {
 
     private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final String GREENWICH_MEAN_TIME = "Etc/GMT";
+    private static final String DIGEST_ALGO = "SHA-256";
 
     public static String emptyWhenNull(String value) {
         return value != null ? value : valueNotPresent();
@@ -52,6 +57,21 @@ public final class ReportBuilderUtils {
         reportPolicy.setPolicyDescription(validationPolicy.getDescription());
         reportPolicy.setPolicyUrl(validationPolicy.getUrl());
         return reportPolicy;
+    }
+
+    public static ValidatedDocument createValidatedDocument(String filename, byte[] document) {
+        String documentHash;
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance(DIGEST_ALGO);
+            documentHash = Hex.toHexString(messageDigest.digest(document)).toUpperCase();
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalArgumentException(e);
+        }
+        ValidatedDocument validatedDocument = new ValidatedDocument();
+        validatedDocument.setFileHashInHex(documentHash);
+        validatedDocument.setFilename(filename);
+        validatedDocument.setHashAlgo(DIGEST_ALGO);
+        return validatedDocument;
     }
 
 }

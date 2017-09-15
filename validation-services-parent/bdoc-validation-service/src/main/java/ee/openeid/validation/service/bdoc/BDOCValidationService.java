@@ -61,7 +61,7 @@ public class BDOCValidationService implements ValidationService {
         try {
             ValidationResult validationResult = container.validate();
             Date validationTime = new Date();
-            return new BDOCQualifiedReportBuilder(container, validationDocument.getName(), validationTime, policyConfiguration.getPolicy(), validationResult.getContainerErrors()).build();
+            return new BDOCQualifiedReportBuilder(container, validationDocument, validationTime, policyConfiguration.getPolicy(), validationResult.getContainerErrors()).build();
         } catch (Exception e) {
             if (isXRoadContainer(container)) {
                 LOGGER.error("XROAD container passed to BDOC validator", e);

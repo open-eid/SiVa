@@ -65,7 +65,7 @@ public class AsicsValidationPassIT extends SiVaRestTests {
                 .body("validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationConclusion.timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
                 .body("validationConclusion.timeStampTokens[0].signedTime", Matchers.is("2017-08-10T12:40:40Z"))
-                .body("validationConclusion.documentName", Matchers.is("DIGIDOC-XML1.3.ddoc"))
+                .body("validationConclusion.validatedDocument.filename", Matchers.is("DIGIDOC-XML1.3.ddoc"))
                 .body("validationConclusion.signaturesCount", Matchers.is(1))
                 .body("validationConclusion.validSignaturesCount", Matchers.is(1));
     }
@@ -94,7 +94,7 @@ public class AsicsValidationPassIT extends SiVaRestTests {
                 .body("validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationConclusion.timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
                 .body("validationConclusion.timeStampTokens[0].signedTime", Matchers.is("2017-08-10T12:40:40Z"))
-                .body("validationConclusion.documentName", Matchers.is("DIGIDOC-XML1.3.ddoc"))
+                .body("validationConclusion.validatedDocument.filename", Matchers.is("DIGIDOC-XML1.3.ddoc"))
                 .body("validationConclusion.signaturesCount", Matchers.is(1))
                 .body("validationConclusion.validSignaturesCount", Matchers.is(1));
     }
@@ -126,7 +126,7 @@ public class AsicsValidationPassIT extends SiVaRestTests {
                 .body("validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationConclusion.timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
                 .body("validationConclusion.timeStampTokens[0].signedTime", Matchers.is("2017-08-10T12:40:40Z"))
-                .body("validationConclusion.documentName", Matchers.is("Valid_IDCard_MobID_signatures.bdoc"))
+                .body("validationConclusion.validatedDocument.filename", Matchers.is("Valid_IDCard_MobID_signatures.bdoc"))
                 .body("validationConclusion.signaturesCount", Matchers.is(2))
                 .body("validationConclusion.validSignaturesCount", Matchers.is(2));
     }
@@ -152,7 +152,7 @@ public class AsicsValidationPassIT extends SiVaRestTests {
                 .body("validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationConclusion.timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
                 .body("validationConclusion.timeStampTokens[0].signedTime", Matchers.is("2017-08-25T09:56:33Z"))
-                .body("validationConclusion.documentName", Matchers.is("TXTinsideAsics.asics"));
+                .body("validationConclusion.validatedDocument.filename", Matchers.is("TXTinsideAsics.asics"));
     }
 
     /**
@@ -176,7 +176,7 @@ public class AsicsValidationPassIT extends SiVaRestTests {
                 .body("validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationConclusion.timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
                 .body("validationConclusion.timeStampTokens[0].signedTime", Matchers.is("2017-08-25T11:24:01Z"))
-                .body("validationConclusion.documentName", Matchers.is("DIGIDOC-XML1.3(1).asics"));
+                .body("validationConclusion.validatedDocument.filename", Matchers.is("DIGIDOC-XML1.3(1).asics"));
     }
 
     /**
@@ -203,7 +203,7 @@ public class AsicsValidationPassIT extends SiVaRestTests {
                 .body("validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationConclusion.timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
                 .body("validationConclusion.timeStampTokens[0].signedTime", Matchers.is("2017-08-10T12:40:40Z"))
-                .body("validationConclusion.documentName", Matchers.is("DIGIDOC-XML1.3.ddoc"))
+                .body("validationConclusion.validatedDocument.filename", Matchers.is("DIGIDOC-XML1.3.ddoc"))
                 .body("validationConclusion.signaturesCount", Matchers.is(1))
                 .body("validationConclusion.validSignaturesCount", Matchers.is(1));
     }
@@ -232,7 +232,7 @@ public class AsicsValidationPassIT extends SiVaRestTests {
                 .body("validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationConclusion.timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
                 .body("validationConclusion.timeStampTokens[0].signedTime", Matchers.is("2017-08-10T12:40:40Z"))
-                .body("validationConclusion.documentName", Matchers.is("DIGIDOC-XML1.3.ddoc"))
+                .body("validationConclusion.validatedDocument.filename", Matchers.is("DIGIDOC-XML1.3.ddoc"))
                 .body("validationConclusion.signaturesCount", Matchers.is(1))
                 .body("validationConclusion.validSignaturesCount", Matchers.is(1));
     }

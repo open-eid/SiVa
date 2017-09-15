@@ -107,7 +107,7 @@ public class DDOCValidationService implements ValidationService {
                     throw new MalformedDocumentException();
                 }
                 Date validationTime = new Date();
-                DDOCQualifiedReportBuilder reportBuilder = new DDOCQualifiedReportBuilder(signedDoc, validationDocument.getName(), validationTime, policy);
+                DDOCQualifiedReportBuilder reportBuilder = new DDOCQualifiedReportBuilder(signedDoc, validationDocument, validationTime, policy);
                 return reportBuilder.build();
             } catch (Exception e) {
                 LOGGER.warn("Unexpected exception when validating DDOC document: " + e.getMessage(), e);

@@ -11,8 +11,6 @@ public class ValidationConclusion {
 
     private String validationTime;
 
-    private String documentName;
-
     private String signatureForm;
 
     private List<ValidationWarning> validationWarnings;

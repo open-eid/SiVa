@@ -70,7 +70,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2016-05-12T10:09:20Z"))
                 .body("validationConclusion.signatureForm", Matchers.is("ASiC_E"))
-                .body("validationConclusion.documentName", Matchers.is("Valid_ID_sig.bdoc"))
+                .body("validationConclusion.validatedDocument.filename", Matchers.is("Valid_ID_sig.bdoc"))
                 .body("validationConclusion.validSignaturesCount", Matchers.is(1))
                 .body("validationConclusion.signaturesCount", Matchers.is(1));
     }
@@ -107,7 +107,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2015-11-20T08:32:42Z"))
                 .body("validationConclusion.signatureForm", Matchers.is("ASiC_E"))
-                .body("validationConclusion.documentName", Matchers.is("23635_bdoc_ts_OCSP_random_nonce.bdoc"))
+                .body("validationConclusion.validatedDocument.filename", Matchers.is("23635_bdoc_ts_OCSP_random_nonce.bdoc"))
                 .body("validationConclusion.validSignaturesCount", Matchers.is(1))
                 .body("validationConclusion.signaturesCount", Matchers.is(1));
     }
@@ -147,7 +147,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].warnings", Matchers.hasSize(0))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2011-10-15T14:59:35Z"))
                 .body("signatureForm", Matchers.is("ASiC_E"))
-                .body("documentName", Matchers.is("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc"))
+                .body("filename", Matchers.is("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc"))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -186,7 +186,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].warnings[0].description", Matchers.is("The certificate is not supported by SSCD!"))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2013-10-24T13:14:50Z"))
                 .body("signatureForm", Matchers.is("ASiC_E"))
-                .body("documentName", Matchers.is("23200_weakdigest-wrong-nonce.asice"))
+                .body("filename", Matchers.is("23200_weakdigest-wrong-nonce.asice"))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -223,7 +223,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2015-11-04T10:24:20Z"))
                 .body("validationConclusion.signatureForm", Matchers.is("ASiC_E"))
-                .body("validationConclusion.documentName", Matchers.is("Baltic MoU digital signing_EST_LT_LV.bdoc"))
+                .body("validationConclusion.validatedDocument.filename", Matchers.is("Baltic MoU digital signing_EST_LT_LV.bdoc"))
                 .body("validationConclusion.validSignaturesCount", Matchers.is(3))
                 .body("validationConclusion.signaturesCount", Matchers.is(3));
     }
@@ -263,7 +263,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].warnings", Matchers.hasSize(0))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2013-10-11T08:15:47Z"))
                 .body("signatureForm", Matchers.is("ASiC_E"))
-                .body("documentName", Matchers.is("SS-4_teadmataCA.4.asice"))
+                .body("filename", Matchers.is("SS-4_teadmataCA.4.asice"))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -289,7 +289,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
                 .body("validationConclusion.signatures", Matchers.isEmptyOrNullString())
                 .body("validationConclusion.signatureForm", Matchers.is("ASiC_E"))
-                .body("validationConclusion.documentName", Matchers.is("BdocContainerNoSignature.bdoc"))
+                .body("validationConclusion.validatedDocument.filename", Matchers.is("BdocContainerNoSignature.bdoc"))
                 .body("validationConclusion.validSignaturesCount", Matchers.is(0))
                 .body("validationConclusion.signaturesCount", Matchers.is(0));
     }
@@ -326,7 +326,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2015-08-25T09:15:06Z"))
                 .body("validationConclusion.signatureForm", Matchers.is("PAdES"))
-                .body("validationConclusion.documentName", Matchers.is("hellopades-lt-sha256-ec256.pdf"))
+                .body("validationConclusion.validatedDocument.filename", Matchers.is("hellopades-lt-sha256-ec256.pdf"))
                 .body("validationConclusion.validSignaturesCount", Matchers.is(1))
                 .body("validationConclusion.signaturesCount", Matchers.is(1));
     }
@@ -363,7 +363,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("validationConclusion.signatures[1].warnings", Matchers.isEmptyOrNullString())
                 .body("validationConclusion.signatures[1].info.bestSignatureTime", Matchers.is("2016-06-27T09:59:48Z"))
                 .body("validationConclusion.signatureForm", Matchers.is("PAdES"))
-                .body("validationConclusion.documentName", Matchers.is("pades_lt_two_valid_sig.pdf"))
+                .body("validationConclusion.validatedDocument.filename", Matchers.is("pades_lt_two_valid_sig.pdf"))
                 .body("validationConclusion.validSignaturesCount", Matchers.is(2))
                 .body("validationConclusion.signaturesCount", Matchers.is(2));
     }
@@ -402,7 +402,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[1].warnings", Matchers.hasSize(0))
                 .body("signatures[1].info.bestSignatureTime", Matchers.is(""))
                 .body("signatureForm", Matchers.is("PAdES"))
-                .body("documentName", Matchers.is("hellopades-lt-b.pdf"))
+                .body("filename", Matchers.is("hellopades-lt-b.pdf"))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(2));
     }
@@ -441,7 +441,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].warnings", Matchers.hasSize(0))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2015-08-24T10:08:25Z"))
                 .body("signatureForm", Matchers.is("PAdES"))
-                .body("documentName", Matchers.is("hellopades-lt-rsa1024-sha1-expired.pdf"))
+                .body("filename", Matchers.is("hellopades-lt-rsa1024-sha1-expired.pdf"))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -467,7 +467,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
                 .body("validationConclusion.signatures", Matchers.isEmptyOrNullString())
                 .body("validationConclusion.signatureForm", Matchers.is("PAdES"))
-                .body("validationConclusion.documentName", Matchers.is("PdfNoSignature.pdf"))
+                .body("validationConclusion.validatedDocument.filename", Matchers.is("PdfNoSignature.pdf"))
                 .body("validationConclusion.validSignaturesCount", Matchers.is(0))
                 .body("validationConclusion.signaturesCount", Matchers.is(0));
     }
@@ -504,7 +504,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].claimedSigningTime", Matchers.is("2012-10-03T07:46:31Z"))
                 .body("signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("documentName", Matchers.is("DIGIDOC-XML1.3.ddoc"))
+                .body("filename", Matchers.is("DIGIDOC-XML1.3.ddoc"))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -543,7 +543,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].warnings", Matchers.hasSize(0))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is(""))
                 .body("signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("documentName", Matchers.is("test1-ddoc-revoked.ddoc"))
+                .body("filename", Matchers.is("test1-ddoc-revoked.ddoc"))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -582,7 +582,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].warnings", Matchers.hasSize(0))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is(""))
                 .body("signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("documentName", Matchers.is("test1-ddoc-unknown.ddoc"))
+                .body("filename", Matchers.is("test1-ddoc-unknown.ddoc"))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -619,7 +619,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].warnings[0].description", Matchers.is("Bad digest for DataFile: D0 alternate digest matches!"))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is(""))
                 .body("signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("documentName", Matchers.is("ns6t3cp7.ddoc"))
+                .body("filename", Matchers.is("ns6t3cp7.ddoc"))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -645,7 +645,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
                 .body("validationConclusion.signatures", Matchers.isEmptyOrNullString())
                 .body("validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationConclusion.documentName", Matchers.is("DdocContainerNoSignature.ddoc"))
+                .body("validationConclusion.validatedDocument.filename", Matchers.is("DdocContainerNoSignature.ddoc"))
                 .body("validationConclusion.validSignaturesCount", Matchers.is(0))
                 .body("validationConclusion.signaturesCount", Matchers.is(0));
     }
@@ -684,7 +684,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].warnings", Matchers.hasSize(0))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is(""))
                 .body("signatureForm", Matchers.is("DIGIDOC_XML_1.0"))
-                .body("documentName", Matchers.is("SK-XML1.0.ddoc"))
+                .body("filename", Matchers.is("SK-XML1.0.ddoc"))
                 .body("validSignaturesCount", Matchers.is(2))
                 .body("signaturesCount", Matchers.is(2));
     }
@@ -720,7 +720,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].claimedSigningTime", Matchers.is("2009-06-01T10:42:19Z"))
                 .body("signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("signatureForm", Matchers.is("DIGIDOC_XML_1.1"))
-                .body("documentName", Matchers.is("igasugust1.1.ddoc"))
+                .body("filename", Matchers.is("igasugust1.1.ddoc"))
                 .body("validSignaturesCount", Matchers.is(3))
                 .body("signaturesCount", Matchers.is(3));
     }
@@ -756,7 +756,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].claimedSigningTime", Matchers.is("2009-06-01T10:45:44Z"))
                 .body("signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("signatureForm", Matchers.is("DIGIDOC_XML_1.2"))
-                .body("documentName", Matchers.is("igasugust1.2.ddoc"))
+                .body("filename", Matchers.is("igasugust1.2.ddoc"))
                 .body("validSignaturesCount", Matchers.is(3))
                 .body("signaturesCount", Matchers.is(3));
     }
@@ -792,7 +792,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].claimedSigningTime", Matchers.is("2009-06-01T10:46:37Z"))
                 .body("signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("documentName", Matchers.is("igasugust1.3.ddoc"))
+                .body("filename", Matchers.is("igasugust1.3.ddoc"))
                 .body("validSignaturesCount", Matchers.is(3))
                 .body("signaturesCount", Matchers.is(3));
     }
@@ -826,7 +826,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-04-27T12:15:42Z"))
                 .body("signatureForm", Matchers.is("ASiC_E"))
-                .body("documentName", Matchers.is("xroad-simple.asice"))
+                .body("filename", Matchers.is("xroad-simple.asice"))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -866,7 +866,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].warnings", Matchers.hasSize(0))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-04-27T12:26:53Z"))
                 .body("signatureForm", Matchers.is("ASiC_E_batchsignature"))
-                .body("documentName", Matchers.is("xroad-batchsignature.asice"))
+                .body("filename", Matchers.is("xroad-batchsignature.asice"))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -901,7 +901,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].warnings", Matchers.hasSize(0))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-04-27T12:30:10Z"))
                 .body("signatureForm", Matchers.is("ASiC_E_batchsignature"))
-                .body("documentName", Matchers.is("xroad-attachment.asice"))
+                .body("filename", Matchers.is("xroad-attachment.asice"))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -940,7 +940,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("signatures[0].info.bestSignatureTime", Matchers.is(""))
                 .body("signatureForm", Matchers.is("ASiC_E"))
-                .body("documentName", Matchers.is("invalid-digest.asice"))
+                .body("filename", Matchers.is("invalid-digest.asice"))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1));
     }

@@ -16,8 +16,10 @@
 
 package ee.openeid.validation.service.ddoc.report;
 
-import ee.openeid.siva.validation.document.report.Error;
+import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.validation.document.report.Error;
+import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.siva.validation.util.CertUtil;
 import ee.sk.digidoc.*;
@@ -43,13 +45,13 @@ public class DDOCQualifiedReportBuilder {
     private static final int ERR_ISSUER_XMLNS = 176;
 
     private SignedDoc signedDoc;
-    private String documentName;
+    private ValidationDocument validationDocument;
     private Date validationTime;
     private ValidationPolicy validationPolicy;
 
-    public DDOCQualifiedReportBuilder(SignedDoc signedDoc, String documentName, Date validationTime, ValidationPolicy validationPolicy) {
+    public DDOCQualifiedReportBuilder(SignedDoc signedDoc, ValidationDocument validationDocument, Date validationTime, ValidationPolicy validationPolicy) {
         this.signedDoc = signedDoc;
-        this.documentName = documentName;
+        this.validationDocument = validationDocument;
         this.validationTime = validationTime;
         this.validationPolicy = validationPolicy;
     }
@@ -64,10 +66,10 @@ public class DDOCQualifiedReportBuilder {
         validationConclusion.setPolicy(createReportPolicy(validationPolicy));
         validationConclusion.setValidationTime(getDateFormatterWithGMTZone().format(validationTime));
         validationConclusion.setValidationWarnings(ddocValidationWarnings());
-        validationConclusion.setDocumentName(documentName);
         validationConclusion.setSignatureForm(getSignatureForm());
         validationConclusion.setSignaturesCount(getSignatures(signedDoc).size());
         validationConclusion.setSignatures(createSignaturesForReport(signedDoc));
+        validationConclusion.setValidatedDocument(ReportBuilderUtils.createValidatedDocument(validationDocument.getName(), validationDocument.getBytes()));
         validationConclusion.setValidSignaturesCount(
                 validationConclusion.getSignatures()
                         .stream()

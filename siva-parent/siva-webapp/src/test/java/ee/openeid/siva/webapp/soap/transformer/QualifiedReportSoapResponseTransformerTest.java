@@ -17,6 +17,7 @@
 package ee.openeid.siva.webapp.soap.transformer;
 
 import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.validation.document.report.ValidatedDocument;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.webapp.soap.QualifiedReport;
 import ee.openeid.siva.webapp.soap.ValidateDocumentResponse;
@@ -37,7 +38,9 @@ public class QualifiedReportSoapResponseTransformerTest {
 
         ValidateDocumentResponse responseReport = transformer.toSoapResponse(simpleReport);
         QualifiedReport qualifiedReport = responseReport.getValidationConclusion();
-        Assert.assertEquals(validationConclusion.getDocumentName(), qualifiedReport.getDocumentName());
+        Assert.assertEquals(validationConclusion.getValidatedDocument().getFilename(), qualifiedReport.getValidatedDocument().getFilename());
+        Assert.assertEquals(validationConclusion.getValidatedDocument().getFileHashInHex(), qualifiedReport.getValidatedDocument().getFileHashInHex());
+        Assert.assertEquals(validationConclusion.getValidatedDocument().getHashAlgo(), qualifiedReport.getValidatedDocument().getHashAlgo());
         Assert.assertEquals(validationConclusion.getSignatureForm(), qualifiedReport.getSignatureForm());
         Assert.assertEquals(validationConclusion.getValidationTime(), qualifiedReport.getValidationTime());
         Assert.assertEquals(validationConclusion.getValidationWarnings().get(0).getContent(), qualifiedReport.getValidationWarnings().getValidationWarning().get(0).getContent());
@@ -67,7 +70,7 @@ public class QualifiedReportSoapResponseTransformerTest {
         ValidationConclusion report = new ValidationConclusion();
         report.setValidationTime("2016-09-21T15:00:00Z");
         report.setValidationWarnings(createMockedValidationWarnings());
-        report.setDocumentName("document.pdf");
+        report.setValidatedDocument(createMockedValidatedDocument());
         report.setSignatureForm("PAdES");
         report.setPolicy(createMockedSignaturePolicy());
         report.setSignaturesCount(1);
@@ -82,6 +85,12 @@ public class QualifiedReportSoapResponseTransformerTest {
         validationWarning.setContent("some validation warning");
         validationWarnings.add(validationWarning);
         return validationWarnings;
+    }
+
+    private ValidatedDocument createMockedValidatedDocument() {
+        ValidatedDocument validatedDocument = new ValidatedDocument();
+        validatedDocument.setFilename("document.pdf");
+        return validatedDocument;
     }
 
     private ee.openeid.siva.validation.document.report.Policy createMockedSignaturePolicy() {

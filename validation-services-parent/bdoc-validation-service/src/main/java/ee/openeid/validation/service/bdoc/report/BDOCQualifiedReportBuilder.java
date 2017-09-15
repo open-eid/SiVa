@@ -16,6 +16,7 @@
 
 package ee.openeid.validation.service.bdoc.report;
 
+import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
@@ -51,14 +52,14 @@ public class BDOCQualifiedReportBuilder {
     private static final String BDOC_SIGNATURE_FORM = "ASiC_E";
 
     private Container container;
-    private String documentName;
+    private ValidationDocument validationDocument;
     private Date validationTime;
     private ValidationPolicy validationPolicy;
     private List<DigiDoc4JException> containerErrors;
 
-    public BDOCQualifiedReportBuilder(Container container, String documentName, Date validationTime, ValidationPolicy validationPolicy, List<DigiDoc4JException> containerErrors) {
+    public BDOCQualifiedReportBuilder(Container container, ValidationDocument validationDocument, Date validationTime, ValidationPolicy validationPolicy, List<DigiDoc4JException> containerErrors) {
         this.container = container;
-        this.documentName = documentName;
+        this.validationDocument = validationDocument;
         this.validationTime = validationTime;
         this.validationPolicy = validationPolicy;
         this.containerErrors = containerErrors;
@@ -99,11 +100,12 @@ public class BDOCQualifiedReportBuilder {
         ValidationConclusion validationConclusion = new ValidationConclusion();
         validationConclusion.setPolicy(createReportPolicy(validationPolicy));
         validationConclusion.setValidationTime(ReportBuilderUtils.getDateFormatterWithGMTZone().format(validationTime));
-        validationConclusion.setDocumentName(documentName);
+
         validationConclusion.setSignatureForm(BDOC_SIGNATURE_FORM);
         validationConclusion.setSignaturesCount(container.getSignatures().size());
         validationConclusion.setValidationWarnings(containerValidationWarnings());
         validationConclusion.setSignatures(createSignaturesForReport(container));
+        validationConclusion.setValidatedDocument(ReportBuilderUtils.createValidatedDocument(validationDocument.getName(), validationDocument.getBytes()));
         validationConclusion.setValidSignaturesCount(
                 validationConclusion.getSignatures()
                         .stream()

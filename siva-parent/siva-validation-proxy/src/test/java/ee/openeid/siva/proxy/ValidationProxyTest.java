@@ -275,12 +275,16 @@ public class ValidationProxyTest {
             validationConclusion.setValidSignaturesCount(0);
             validationConclusion.setSignaturesCount(1);
             validationConclusion.setValidationTime("ValidationTime");
-            validationConclusion.setDocumentName("DocumentName");
+            validationConclusion.setValidatedDocument(createDummyValidatedDocument());
             validationConclusion.setPolicy(createDummyPolicy());
             validationConclusion.setSignatures(createDummySignatures());
             return  new QualifiedReport(new SimpleReport(validationConclusion), null);
         }
-
+        private ValidatedDocument createDummyValidatedDocument(){
+            ValidatedDocument validatedDocument = new ValidatedDocument();
+            validatedDocument.setFilename("DocumentName");
+            return validatedDocument;
+        }
         private List<SignatureValidationData> createDummySignatures() {
             SignatureValidationData signature = new SignatureValidationData();
             signature.setSignatureLevel("SignatureLevel");

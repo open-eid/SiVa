@@ -55,7 +55,7 @@ public class ValidationReportUtilsTest {
 
     @Test
     public void documentNameJsonKeyPresentReturnsDocumentNameValue() throws Exception {
-        final String json = "{\"validationConclusion\":{\"documentName\":\"valid_value.bdoc\"}}";
+        final String json = "{\"validationConclusion\":{\"validatedDocument\":{\"filename\":\"valid_value.bdoc\"}}}";
         assertEquals("valid_value.bdoc", ValidationReportUtils.getValidateFilename(json));
     }
 
@@ -67,7 +67,7 @@ public class ValidationReportUtilsTest {
 
     @Test
     public void documentNameJsonKeyIsNullReturnsEmptyString() throws Exception {
-        final String json = "{\"documentName\": null}";
+        final String json = "{\"filename\": null}";
         assertEquals("", ValidationReportUtils.getValidateFilename(json));
     }
 

@@ -16,6 +16,8 @@
 
 package ee.openeid.siva.validation.document.report.builder;
 
+import ee.openeid.siva.validation.document.report.ValidatedDocument;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.lang.reflect.Constructor;
@@ -41,5 +43,14 @@ public class ReportBuilderUtilsTest {
     @Test
     public void givenNotEmptyStringWillReturnItUnchanged() throws Exception {
         assertThat(ReportBuilderUtils.emptyWhenNull("random")).isEqualTo("random");
+    }
+
+    @Test
+    public void validValidatedDocumentReturned(){
+        byte[] data = "testData".getBytes();
+        ValidatedDocument response = ReportBuilderUtils.createValidatedDocument("filename.asice", data);
+        Assert.assertEquals("filename.asice", response.getFilename());
+        Assert.assertEquals("SHA-256", response.getHashAlgo());
+        Assert.assertEquals("ba477a0ac57e10dd90bb5bf0289c5990fe839c619b26fde7c2aac62f526d4113".toUpperCase(), response.getFileHashInHex());
     }
 }

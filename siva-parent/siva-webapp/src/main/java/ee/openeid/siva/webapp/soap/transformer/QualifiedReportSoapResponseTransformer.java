@@ -18,6 +18,7 @@ package ee.openeid.siva.webapp.soap.transformer;
 
 import ee.openeid.siva.validation.document.report.Report;
 import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
+import ee.openeid.siva.validation.document.report.ValidatedDocument;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.webapp.soap.Error;
 import ee.openeid.siva.webapp.soap.*;
@@ -51,10 +52,9 @@ public class QualifiedReportSoapResponseTransformer {
         QualifiedReport qualifiedReport = new QualifiedReport();
         ValidationConclusion validationConclusion = report.getValidationConclusion();
         qualifiedReport.setSignatureForm(validationConclusion.getSignatureForm());
-        qualifiedReport.setDocumentName(validationConclusion.getDocumentName());
-
         qualifiedReport.setPolicy(toSoapResponsePolicy(validationConclusion.getPolicy()));
 
+        qualifiedReport.setValidatedDocument(toSoapValidatedDocument(validationConclusion.getValidatedDocument()));
         qualifiedReport.setSignaturesCount(validationConclusion.getSignaturesCount());
         if (validationConclusion.getSignatures() != null)
             qualifiedReport.setSignatures(toSoapResponseSignatures(validationConclusion.getSignatures()));
@@ -105,7 +105,14 @@ public class QualifiedReportSoapResponseTransformer {
         detailedReport.getBasicBuildingBlocks().addAll(euDetailReport.getBasicBuildingBlocks());
         return detailedReport;
     }
+    private ValidatedDocumentData toSoapValidatedDocument(ValidatedDocument validatedDocument){
+        ValidatedDocumentData validatedDocumentData = new ValidatedDocumentData();
+        validatedDocumentData.setFilename(validatedDocument.getFilename());
+        validatedDocumentData.setFileHashInHex(validatedDocument.getFileHashInHex());
+        validatedDocumentData.setHashAlgo(validatedDocument.getHashAlgo());
+        return validatedDocumentData;
 
+    }
     private QualifiedReport.ValidationWarnings toSoapResponseValidationWarnings(List<ee.openeid.siva.validation.document.report.ValidationWarning> validationWarnings) {
         QualifiedReport.ValidationWarnings responseValidationWarnings = new QualifiedReport.ValidationWarnings();
         validationWarnings.stream()

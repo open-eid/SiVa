@@ -59,7 +59,7 @@ public class TimeStampTokenValidationService implements ValidationService {
 
         Date validationTime = new Date();
         TimeStampTokenValidationData timeStampTokenValidationData = generateTimeStampTokenData(signedTime, signedBy, errors);
-        TimeStampTokenQualifiedReportBuilder reportBuilder = new TimeStampTokenQualifiedReportBuilder(validationDocument.getName(), validationTime, signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy()), timeStampTokenValidationData);
+        TimeStampTokenQualifiedReportBuilder reportBuilder = new TimeStampTokenQualifiedReportBuilder(validationDocument, validationTime, signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy()), timeStampTokenValidationData);
         return reportBuilder.build();
     }
 

@@ -92,7 +92,7 @@ public class GenericValidationService implements ValidationService {
             final GenericQualifiedReportBuilder reportBuilder = new GenericQualifiedReportBuilder(
                     reports,
                     validationTimeInGMT,
-                    validationDocument.getName(),
+                    validationDocument,
                     policy
             );
             return reportBuilder.build();

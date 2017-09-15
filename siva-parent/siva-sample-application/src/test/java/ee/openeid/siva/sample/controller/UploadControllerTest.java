@@ -114,7 +114,7 @@ public class UploadControllerTest {
     @Test
     public void uploadPageWithFileReturnsValidationResult() throws Exception {
         given(taskRunner.getValidationResult(any(ResultType.class)))
-                .willReturn("{\"documentName\": \"random.bdoc\", \"validSignaturesCount\": 1, \"signaturesCount\": 1}");
+                .willReturn("{\"filename\": \"random.bdoc\", \"validSignaturesCount\": 1, \"signaturesCount\": 1}");
 
         UploadedFile uploadedFile = new UploadedFile();
         uploadedFile.setFilename("random.bdoc");

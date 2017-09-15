@@ -11,7 +11,7 @@
                        schemaLocation="DetailedReport.xsd"/>
             <xs:element name="ValidateDocument" type="tns:validateDocument"/>
             <xs:element name="ValidateDocumentResponse" type="tns:ValidateDocumentResponse"/>
-            <xs:element name="ValidationProcess"  substitutionGroup="external:DetailedReport"/>
+            <xs:element name="ValidationProcess" substitutionGroup="external:DetailedReport"/>
             <xs:element name="ValidationConclusion" type="tns:qualifiedReport"/>
             <xs:element name="ValidationRequest" type="tns:soapValidationRequest"/>
 
@@ -40,6 +40,7 @@
 
                     <xs:element name="Policy" type="tns:policy"/>
                     <xs:element name="ValidationTime" type="xs:string"/>
+                    <xs:element name="ValidatedDocument" type="tns:validatedDocumentData"/>
                     <xs:element name="ValidationWarnings" minOccurs="0">
                         <xs:complexType>
                             <xs:sequence>
@@ -48,7 +49,6 @@
                             </xs:sequence>
                         </xs:complexType>
                     </xs:element>
-                    <xs:element name="DocumentName" type="xs:string"/>
                     <xs:element name="SignatureForm" type="xs:string"/>
                     <xs:element name="Signatures" minOccurs="0">
                         <xs:complexType>
@@ -91,6 +91,14 @@
                     </xs:element>
                 </xs:sequence>
             </xs:complexType>
+            <xs:complexType name="validatedDocumentData">
+                <xs:sequence>
+                    <xs:element name="Filename" type="xs:string"/>
+                    <xs:element name="FileHashInHex" type="xs:string"/>
+                    <xs:element name="HashAlgo" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+
             <xs:complexType name="signatureValidationData">
                 <xs:sequence>
                     <xs:element name="Id" type="xs:string"/>

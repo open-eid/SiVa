@@ -162,7 +162,7 @@ public class BDOCValidationServiceIntegrationTest {
         ValidationConclusion validationConclusion = validationResult2Signatures.getSimpleReport().getValidationConclusion();
         assertNotNull(validationConclusion.getPolicy());
         assertNotNull(validationConclusion.getValidationTime());
-        assertEquals(VALID_BDOC_TM_2_SIGNATURES, validationConclusion.getDocumentName());
+        assertEquals(VALID_BDOC_TM_2_SIGNATURES, validationConclusion.getValidatedDocument().getFilename());
         assertTrue(validationConclusion.getSignatures().size() == 2);
         assertTrue(validationConclusion.getValidSignaturesCount() == 2);
         assertTrue(validationConclusion.getSignaturesCount() == 2);

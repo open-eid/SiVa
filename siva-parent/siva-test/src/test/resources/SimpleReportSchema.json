@@ -12,16 +12,29 @@
         "signaturesCount": {
           "type": "integer"
         },
-        "documentName": {
-          "type": "string",
-          "minLength": 1
-        },
         "signatureForm": {
           "type": "string",
           "minLength": 1
         },
         "validSignaturesCount": {
           "type": "integer"
+        },
+        "validatedDocument": {
+          "type": "object",
+          "properties": {
+            "filename": {
+              "type": "string",
+              "minLength": 1
+            },
+            "fileHashInHex": {
+              "type": "string",
+              "minLength": 1
+            },
+            "hashAlgo": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
         },
         "signatures": {
           "type": "array",
@@ -76,9 +89,10 @@
                     }
                   },
                   "required": [
-					"scope",
+                    "scope",
                     "name",
-                    "content"]
+                    "content"
+                  ]
                 }
               },
               "id": {
@@ -120,18 +134,20 @@
                   }
                 },
                 "required": [
-				  "bestSignatureTime"]
+                  "bestSignatureTime"
+                ]
               }
             },
             "required": [
-			  "signatureFormat",
+              "signatureFormat",
               "signedBy",
               "claimedSigningTime",
               "signatureLevel",
               "signatureScopes",
               "id",
               "indication",
-              "info"]
+              "info"
+            ]
           }
         },
         "policy": {
@@ -151,18 +167,19 @@
             }
           },
           "required": [
-			"policyDescription",
+            "policyDescription",
             "policyUrl",
-            "policyName"]
+            "policyName"
+          ]
         }
       },
       "required": [
         "validationTime",
         "signaturesCount",
-        "documentName",
         "signatureForm",
         "validSignaturesCount",
-        "policy"]
+        "policy"
+      ]
     }
   }
 }

@@ -16,6 +16,7 @@
 
 package ee.openeid.validation.service.generic.validator.report;
 
+import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
@@ -45,13 +46,13 @@ public class GenericQualifiedReportBuilder {
 
     private Reports dssReports;
     private ZonedDateTime validationTime;
-    private String documentName;
+    private ValidationDocument validationDocument;
     private ConstraintDefinedPolicy validationPolicy;
 
-    public GenericQualifiedReportBuilder(Reports dssReports, ZonedDateTime validationTime, String documentName, ConstraintDefinedPolicy policy) {
+    public GenericQualifiedReportBuilder(Reports dssReports, ZonedDateTime validationTime, ValidationDocument validationDocument, ConstraintDefinedPolicy policy) {
         this.dssReports = dssReports;
         this.validationTime = validationTime;
-        this.documentName = documentName;
+        this.validationDocument = validationDocument;
         this.validationPolicy = policy;
     }
 
@@ -64,12 +65,11 @@ public class GenericQualifiedReportBuilder {
         ValidationConclusion validationConclusion = new ValidationConclusion();
         validationConclusion.setPolicy(createReportPolicy(validationPolicy));
         validationConclusion.setValidationTime(parseValidationTimeToString());
-        validationConclusion.setDocumentName(documentName);
         validationConclusion.setSignatureForm(PDF_SIGNATURE_FORM);
         validationConclusion.setValidationWarnings(Collections.emptyList());
         validationConclusion.setSignatures(buildSignatureValidationDataList());
         validationConclusion.setSignaturesCount(validationConclusion.getSignatures().size());
-
+        validationConclusion.setValidatedDocument(ReportBuilderUtils.createValidatedDocument(validationDocument.getName(), validationDocument.getBytes()));
         validationConclusion.setValidSignaturesCount(validationConclusion.getSignatures()
                 .stream()
                 .filter(vd -> StringUtils.equals(vd.getIndication(), SignatureValidationData.Indication.TOTAL_PASSED.toString()))

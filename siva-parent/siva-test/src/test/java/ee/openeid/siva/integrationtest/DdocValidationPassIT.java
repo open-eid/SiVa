@@ -291,7 +291,7 @@ public class DdocValidationPassIT extends SiVaRestTests{
                 .body("validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2012-09-21T11:56:53Z"))
                 .body("validationConclusion.signatures[0].warnings[0].description", Matchers.is("Bad digest for DataFile: D0 alternate digest matches!"))
                 .body("validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationConclusion.documentName", Matchers.is("18912.ddoc"))
+                .body("validationConclusion.validatedDocument.filename", Matchers.is("18912.ddoc"))
                 .body("validationConclusion.validSignaturesCount", Matchers.is(1))
                 .body("validationConclusion.signaturesCount", Matchers.is(1));
     }
@@ -329,7 +329,7 @@ public class DdocValidationPassIT extends SiVaRestTests{
                 .body("signatures[0].warnings", Matchers.hasSize(0))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is(""))
                 .body("signatureForm", Matchers.is("DIGIDOC_XML_1.0_hashcode"))
-                .body("documentName", Matchers.is("SK-XML1.0_hashcode.ddoc"))
+                .body("filename", Matchers.is("SK-XML1.0_hashcode.ddoc"))
                 .body("validSignaturesCount", Matchers.is(2))
                 .body("signaturesCount", Matchers.is(2));
     }
@@ -367,7 +367,7 @@ public class DdocValidationPassIT extends SiVaRestTests{
                 .body("signatures[0].warnings", Matchers.hasSize(0))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is(""))
                 .body("signatureForm", Matchers.is("DIGIDOC_XML_1.1_hashcode"))
-                .body("documentName", Matchers.is("DIGIDOC-XML1.1_hashcode.ddoc"))
+                .body("filename", Matchers.is("DIGIDOC-XML1.1_hashcode.ddoc"))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -405,7 +405,7 @@ public class DdocValidationPassIT extends SiVaRestTests{
                 .body("signatures[0].warnings", Matchers.hasSize(0))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is(""))
                 .body("signatureForm", Matchers.is("DIGIDOC_XML_1.2_hashcode"))
-                .body("documentName", Matchers.is("DIGIDOC-XML1.2_hashcode.ddoc"))
+                .body("filename", Matchers.is("DIGIDOC-XML1.2_hashcode.ddoc"))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -443,7 +443,7 @@ public class DdocValidationPassIT extends SiVaRestTests{
                 .body("signatures[0].warnings", Matchers.hasSize(0))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is(""))
                 .body("signatureForm", Matchers.is("DIGIDOC_XML_1.3_hashcode"))
-                .body("documentName", Matchers.is("DIGIDOC-XML1.3_hashcode.ddoc"))
+                .body("filename", Matchers.is("DIGIDOC-XML1.3_hashcode.ddoc"))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }

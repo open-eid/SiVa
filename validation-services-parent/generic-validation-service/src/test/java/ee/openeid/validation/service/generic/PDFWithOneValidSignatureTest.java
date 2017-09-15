@@ -41,7 +41,7 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
         QualifiedReport report = validationService.validateDocument(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE));
         ValidationConclusion validationConclusion = report.getSimpleReport().getValidationConclusion();
-        assertEquals(PDF_WITH_ONE_VALID_SIGNATURE, validationConclusion.getDocumentName());
+        assertEquals(PDF_WITH_ONE_VALID_SIGNATURE, validationConclusion.getValidatedDocument().getFilename());
         assertTrue(validationConclusion.getValidSignaturesCount() == 1);
         assertTrue(validationConclusion.getSignaturesCount() == 1);
     }
@@ -50,7 +50,7 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
     public void validationReportShouldHaveSameDocumentNameWithValidationRequest() throws Exception {
         QualifiedReport report = validationService.validateDocument(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE));
-        assertEquals(PDF_WITH_ONE_VALID_SIGNATURE, report.getSimpleReport().getValidationConclusion().getDocumentName());
+        assertEquals(PDF_WITH_ONE_VALID_SIGNATURE, report.getSimpleReport().getValidationConclusion().getValidatedDocument().getFilename());
     }
 
     @Test

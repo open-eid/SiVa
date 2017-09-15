@@ -59,7 +59,7 @@ public class LargeFileIT extends SiVaRestTests{
         post(validationRequestWithValidKeys(encodedString, "9MB_PDF.pdf", ""))
                 .then()
                 .body("validationConclusion.signatures[0].signatureFormat",equalTo("PAdES-BASELINE-LT"))
-                .body("validationConclusion.documentName",equalTo("9MB_PDF.pdf"));
+                .body("validationConclusion.validatedDocument.filename",equalTo("9MB_PDF.pdf"));
     }
 
     /**
@@ -81,7 +81,7 @@ public class LargeFileIT extends SiVaRestTests{
         post(validationRequestWithValidKeys(encodedString, "9MB_BDOC-TS.bdoc",""))
                 .then()
                 .body("validationConclusion.signatures[0].signatureFormat",equalTo("XAdES_BASELINE_LT"))
-                .body("validationConclusion.documentName",equalTo("9MB_BDOC-TS.bdoc"))
+                .body("validationConclusion.validatedDocument.filename",equalTo("9MB_BDOC-TS.bdoc"))
                 .body("validationConclusion.validSignaturesCount", equalTo(1));
     }
 
@@ -104,7 +104,7 @@ public class LargeFileIT extends SiVaRestTests{
         post(validationRequestWithValidKeys(encodedString, "9MB_BDOC-TM.bdoc",""))
                 .then()
                 .body("validationConclusion.signatures[0].signatureFormat",equalTo("XAdES_BASELINE_LT_TM"))
-                .body("validationConclusion.documentName",equalTo("9MB_BDOC-TM.bdoc"))
+                .body("validationConclusion.validatedDocument.filename",equalTo("9MB_BDOC-TM.bdoc"))
                 .body("validationConclusion.validSignaturesCount", equalTo(1));
     }
 
@@ -127,7 +127,7 @@ public class LargeFileIT extends SiVaRestTests{
         post(validationRequestWithValidKeys(encodedString, "9MB_DDOC.ddoc", ""))
                 .then()
                 .body("validationConclusion.signatures[0].signatureFormat",equalTo("DIGIDOC_XML_1.3"))
-                .body("validationConclusion.documentName",equalTo("9MB_DDOC.ddoc"))
+                .body("validationConclusion.validatedDocument.filename",equalTo("9MB_DDOC.ddoc"))
                 .body("validationConclusion.validSignaturesCount", equalTo(1));
     }
 

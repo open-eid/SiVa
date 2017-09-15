@@ -61,9 +61,9 @@ public class XROADValidationService implements ValidationService {
         final AsicContainerVerifier verifier = new AsicContainerVerifier(container);
         try {
             verifier.verify();
-            return new XROADQualifiedReportBuilder(verifier, validationDocument.getName(), new Date(), policy).build();
+            return new XROADQualifiedReportBuilder(verifier, validationDocument, new Date(), policy).build();
         } catch (CodedException codedException) {
-            return new XROADQualifiedReportBuilder(verifier, validationDocument.getName(), new Date(), policy, codedException).build();
+            return new XROADQualifiedReportBuilder(verifier, validationDocument, new Date(), policy, codedException).build();
         } catch (Exception e) {
             LOGGER.warn("There was an error validating the document", e);
             throw new ValidationServiceException(getClass().getSimpleName(), e);

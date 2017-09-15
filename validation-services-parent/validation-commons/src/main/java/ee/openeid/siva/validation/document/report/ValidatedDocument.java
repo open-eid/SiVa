@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class ValidatedDocument {
-    private String documentName;
-    private String documentHash;
+    private String filename;
+    private String fileHashInHex;
     private String hashAlgo;
 }

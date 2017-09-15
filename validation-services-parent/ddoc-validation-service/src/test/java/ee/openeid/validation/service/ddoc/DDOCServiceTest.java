@@ -194,7 +194,7 @@ public class DDOCServiceTest {
         ValidationConclusion validationConclusion = validationResult2Signatures.getSimpleReport().getValidationConclusion();
         assertNotNull(validationConclusion.getPolicy());
         assertNotNull(validationConclusion.getValidationTime());
-        assertEquals(VALID_DDOC_2_SIGNATURES, validationConclusion.getDocumentName());
+        assertEquals(VALID_DDOC_2_SIGNATURES, validationConclusion.getValidatedDocument().getFilename());
         assertTrue(validationConclusion.getSignatures().size() == 2);
         assertTrue(validationConclusion.getValidSignaturesCount() == 2);
         assertTrue(validationConclusion.getSignaturesCount() == 2);

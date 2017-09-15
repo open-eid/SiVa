@@ -16,10 +16,12 @@
 
 package ee.openeid.siva.xroad.validation;
 
+import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.DetailedReport;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
+import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.ria.xroad.common.CodedException;
 import ee.ria.xroad.common.asic.AsicContainer;
@@ -41,18 +43,18 @@ public class XROADQualifiedReportBuilder {
     private static final String ASICE_SIGNATURE_FORM = "ASiC_E";
 
     private AsicContainerVerifier verifier;
-    private String documentName;
+    private ValidationDocument validationDocument;
     private Date validationTime;
     private ValidationPolicy validationPolicy;
     private XROADSignatureValidationDataBuilder signatureValidationDataBuilder;
 
     public XROADQualifiedReportBuilder(AsicContainerVerifier verifier,
-                                       String documentName,
+                                       ValidationDocument validationDocument,
                                        Date validationTime,
                                        ValidationPolicy validationPolicy,
                                        CodedException... exceptions) {
         this.verifier = verifier;
-        this.documentName = documentName;
+        this.validationDocument = validationDocument;
         this.validationTime = validationTime;
         this.validationPolicy = validationPolicy;
         this.signatureValidationDataBuilder = new XROADSignatureValidationDataBuilder(verifier, Arrays.asList(exceptions));
@@ -67,7 +69,6 @@ public class XROADQualifiedReportBuilder {
         ValidationConclusion validationConclusion = new ValidationConclusion();
         validationConclusion.setPolicy(createReportPolicy(validationPolicy));
         validationConclusion.setValidationTime(getDateFormatterWithGMTZone().format(validationTime));
-        validationConclusion.setDocumentName(documentName);
         validationConclusion.setSignatureForm(getSignatureForm(verifier.getAsic()));
         validationConclusion.setSignaturesCount(getTotalSignatureCount(verifier.getSignature()));
         validationConclusion.setValidationWarnings(Collections.emptyList());
@@ -78,6 +79,7 @@ public class XROADQualifiedReportBuilder {
                         .filter(signatures -> StringUtils.equals(signatures.getIndication(), TOTAL_PASSED.toString()))
                         .collect(Collectors.toList())
                         .size());
+        validationConclusion.setValidatedDocument(ReportBuilderUtils.createValidatedDocument(validationDocument.getName(), validationDocument.getBytes()));
         return validationConclusion;
     }
 

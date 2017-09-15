@@ -45,10 +45,10 @@ public final class ValidationReportUtils {
         }
 
         try {
-            final String documentName = JsonPath.read(reportJSON, "$.validationConclusion.documentName");
+            final String documentName = JsonPath.read(reportJSON, "$.validationConclusion.validatedDocument.filename");
             return documentName == null ? "" : documentName;
         } catch (final PathNotFoundException ex) {
-            LOGGER.warn("documentName not present in JSON: ", ex);
+            LOGGER.warn("filename not present in JSON: ", ex);
             return StringUtils.EMPTY;
         }
     }

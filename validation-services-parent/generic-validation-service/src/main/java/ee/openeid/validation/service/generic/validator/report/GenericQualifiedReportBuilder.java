@@ -133,7 +133,7 @@ public class GenericQualifiedReportBuilder {
 
     private Warning mapDssWarning(String dssWarning) {
         Warning warning = new Warning();
-        warning.setDescription(emptyWhenNull(dssWarning));
+        warning.setContent(emptyWhenNull(dssWarning));
         return warning;
     }
 

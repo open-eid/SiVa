@@ -179,7 +179,7 @@ public class DDOCQualifiedReportBuilder {
 
     private Warning mapDigiDocExceptionToWarning(DigiDocException dde) {
         Warning warning = new Warning();
-        warning.setDescription(emptyWhenNull(dde.getMessage()));
+        warning.setContent(emptyWhenNull(dde.getMessage()));
         return warning;
     }
 

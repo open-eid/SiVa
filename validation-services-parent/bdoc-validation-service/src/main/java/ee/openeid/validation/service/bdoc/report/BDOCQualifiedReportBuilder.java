@@ -73,7 +73,7 @@ public class BDOCQualifiedReportBuilder {
 
     private static Warning mapDigidoc4JWarning(DigiDoc4JException digiDoc4JException) {
         Warning warning = new Warning();
-        warning.setDescription(emptyWhenNull(digiDoc4JException.getMessage()));
+        warning.setContent(emptyWhenNull(digiDoc4JException.getMessage()));
         return warning;
     }
 

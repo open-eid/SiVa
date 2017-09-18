@@ -20,5 +20,5 @@ import lombok.Data;
 
 @Data
 public class Warning {
-    private String description;
+    private String content;
 }

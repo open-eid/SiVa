@@ -258,7 +258,7 @@ public class DDOCServiceTest {
         SignatureValidationData signature = validationConclusion.getSignatures().get(0);
         assertTrue(signature.getErrors().isEmpty());
         assertTrue(signature.getWarnings().size() == 1);
-        assertEquals("Bad digest for DataFile: D0 alternate digest matches!", signature.getWarnings().get(0).getDescription());
+        assertEquals("Bad digest for DataFile: D0 alternate digest matches!", signature.getWarnings().get(0).getContent());
     }
 
     @Test

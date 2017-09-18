@@ -59,7 +59,7 @@ public class QualifiedReportSoapResponseTransformerTest {
         Assert.assertEquals(validationConclusion.getSignatures().get(0).getSubIndication(), qualifiedReport.getSignatures().getSignature().get(0).getSubIndication());
         Assert.assertEquals(validationConclusion.getSignatures().get(0).getInfo().getBestSignatureTime(), qualifiedReport.getSignatures().getSignature().get(0).getInfo().getBestSignatureTime());
         Assert.assertEquals(validationConclusion.getSignatures().get(0).getErrors().get(0).getContent(), qualifiedReport.getSignatures().getSignature().get(0).getErrors().getError().get(0).getContent());
-        Assert.assertEquals(validationConclusion.getSignatures().get(0).getWarnings().get(0).getDescription(), qualifiedReport.getSignatures().getSignature().get(0).getWarnings().getWarning().get(0).getDescription());
+        Assert.assertEquals(validationConclusion.getSignatures().get(0).getWarnings().get(0).getContent(), qualifiedReport.getSignatures().getSignature().get(0).getWarnings().getWarning().get(0).getContent());
         Assert.assertEquals(validationConclusion.getSignatures().get(0).getSignatureScopes().get(0).getContent(), qualifiedReport.getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getContent());
         Assert.assertEquals(validationConclusion.getSignatures().get(0).getSignatureScopes().get(0).getName(), qualifiedReport.getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getName());
         Assert.assertEquals(validationConclusion.getSignatures().get(0).getSignatureScopes().get(0).getScope(), qualifiedReport.getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
@@ -147,7 +147,7 @@ public class QualifiedReportSoapResponseTransformerTest {
     private List<ee.openeid.siva.validation.document.report.Warning> createMockedSignatureWarnings() {
         List<ee.openeid.siva.validation.document.report.Warning> warnings = new ArrayList<>();
         ee.openeid.siva.validation.document.report.Warning warning = new ee.openeid.siva.validation.document.report.Warning();
-        warning.setDescription("some warning");
+        warning.setContent("some warning");
         warnings.add(warning);
         return warnings;
     }

@@ -151,7 +151,7 @@
             </xs:complexType>
             <xs:complexType name="warning">
                 <xs:sequence>
-                    <xs:element name="Description" type="xs:string"/>
+                    <xs:element name="Content" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="info">

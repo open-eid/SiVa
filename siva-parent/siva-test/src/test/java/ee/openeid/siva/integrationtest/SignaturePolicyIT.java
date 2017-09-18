@@ -56,8 +56,8 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("validationConclusion.signatures[0].signatureLevel", Matchers.is("ADES"))
                 .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
-                .body("validationConclusion.signatures[0].warnings[0].description", Matchers.is("The certificate is not qualified at issuance time!"))
-                .body("validationConclusion.signatures[0].warnings[1].description", Matchers.is("The signature/seal is not created by a QSCD!"))
+                .body("validationConclusion.signatures[0].warnings[0].content", Matchers.is("The certificate is not qualified at issuance time!"))
+                .body("validationConclusion.signatures[0].warnings[1].content", Matchers.is("The signature/seal is not created by a QSCD!"))
                 .body("validationConclusion.validSignaturesCount", Matchers.is(1))
                 .body("validationConclusion.signaturesCount", Matchers.is(1));
     }
@@ -88,8 +88,8 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationConclusion.signatures[0].subIndication", Matchers.is("CHAIN_CONSTRAINTS_FAILURE"))
                 .body("validationConclusion.signatures[0].errors[0].content", Matchers.containsString("The certificate is not qualified!"))
-                .body("validationConclusion.signatures[0].warnings[0].description", Matchers.is("The certificate is not qualified at issuance time!"))
-                .body("validationConclusion.signatures[0].warnings[1].description", Matchers.is("The signature/seal is not created by a QSCD!"))
+                .body("validationConclusion.signatures[0].warnings[0].content", Matchers.is("The certificate is not qualified at issuance time!"))
+                .body("validationConclusion.signatures[0].warnings[1].content", Matchers.is("The signature/seal is not created by a QSCD!"))
                 .body("validationConclusion.validSignaturesCount", Matchers.is(0))
                 .body("validationConclusion.signaturesCount", Matchers.is(1));
     }
@@ -242,7 +242,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("validationConclusion.signatures[0].signatureLevel", Matchers.is("ADESIG_QC"))
                 .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
-                .body("validationConclusion.signatures[0].warnings[0].description", Matchers.is("The signature/seal is not created by a QSCD!"))
+                .body("validationConclusion.signatures[0].warnings[0].content", Matchers.is("The signature/seal is not created by a QSCD!"))
                 .body("validationConclusion.validSignaturesCount", Matchers.is(1))
                 .body("validationConclusion.signaturesCount", Matchers.is(1));
     }
@@ -305,8 +305,8 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationConclusion.signatures[0].subIndication", Matchers.is("CHAIN_CONSTRAINTS_FAILURE"))
                 .body("validationConclusion.signatures[0].errors[0].content", Matchers.containsString("The certificate is not qualified!"))
-                .body("validationConclusion.signatures[0].warnings[0].description", Matchers.is("The certificate is not qualified at issuance time!"))
-                .body("validationConclusion.signatures[0].warnings[1].description", Matchers.is("The signature/seal is not created by a QSCD!"))
+                .body("validationConclusion.signatures[0].warnings[0].content", Matchers.is("The certificate is not qualified at issuance time!"))
+                .body("validationConclusion.signatures[0].warnings[1].content", Matchers.is("The signature/seal is not created by a QSCD!"))
                 .body("validationConclusion.validSignaturesCount", Matchers.is(0))
                 .body("validationConclusion.signaturesCount", Matchers.is(1));
     }

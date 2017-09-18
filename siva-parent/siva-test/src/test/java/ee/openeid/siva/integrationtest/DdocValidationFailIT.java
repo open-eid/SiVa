@@ -408,7 +408,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
         post(validationRequestWithValidKeys(encodedString, "ns6t3cp7.ddoc", ""))
                 .then()
                 .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationConclusion.signatures[0].warnings[0].description", Matchers.is("Bad digest for DataFile: D0 alternate digest matches!"))
+                .body("validationConclusion.signatures[0].warnings[0].content", Matchers.is("Bad digest for DataFile: D0 alternate digest matches!"))
                 .body("validationConclusion.validSignaturesCount", Matchers.is(1))
                 .body("validationConclusion.signaturesCount", Matchers.is(1));
     }

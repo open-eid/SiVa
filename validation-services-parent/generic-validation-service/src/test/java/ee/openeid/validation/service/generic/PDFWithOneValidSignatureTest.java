@@ -114,9 +114,9 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
         List<Warning> firstSignatureWarnings = validationConclusion.getSignatures().get(0).getWarnings();
         List<Warning> secondSignatureWarnings = validationConclusion.getSignatures().get(1).getWarnings();
 
-        assertEquals("The certificate is not supported by SSCD!", firstSignatureWarnings.get(0).getDescription());
-        assertEquals("The certificate is not qualified!", firstSignatureWarnings.get(1).getDescription());
-        assertEquals("The certificate is not supported by SSCD!", secondSignatureWarnings.get(0).getDescription());
-        assertEquals("The certificate is not qualified!", secondSignatureWarnings.get(1).getDescription());
+        assertEquals("The certificate is not supported by SSCD!", firstSignatureWarnings.get(0).getContent());
+        assertEquals("The certificate is not qualified!", firstSignatureWarnings.get(1).getContent());
+        assertEquals("The certificate is not supported by SSCD!", secondSignatureWarnings.get(0).getContent());
+        assertEquals("The certificate is not qualified!", secondSignatureWarnings.get(1).getContent());
     }
 }

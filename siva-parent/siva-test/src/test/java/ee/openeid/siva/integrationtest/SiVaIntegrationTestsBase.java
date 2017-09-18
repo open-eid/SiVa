@@ -109,7 +109,7 @@ public abstract class SiVaIntegrationTestsBase {
     protected void assertHasWarning(SignatureValidationData signatureValidationData, String expectedMessage) {
         boolean warningExists = signatureValidationData.getWarnings()
                 .stream()
-                .anyMatch(warning -> warning.getDescription().equals(expectedMessage));
+                .anyMatch(warning -> warning.getContent().equals(expectedMessage));
         assertTrue(warningExists);
     }
 

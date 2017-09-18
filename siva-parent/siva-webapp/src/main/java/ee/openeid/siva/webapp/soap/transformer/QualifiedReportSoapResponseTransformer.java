@@ -203,7 +203,7 @@ public class QualifiedReportSoapResponseTransformer {
 
         for (ee.openeid.siva.validation.document.report.Warning signatureWarning : signatureWarnings) {
             Warning responseSignatureWarning = new Warning();
-            responseSignatureWarning.setDescription(signatureWarning.getDescription());
+            responseSignatureWarning.setContent(signatureWarning.getContent());
             responseSignatureWarnings.getWarning().add(responseSignatureWarning);
         }
 

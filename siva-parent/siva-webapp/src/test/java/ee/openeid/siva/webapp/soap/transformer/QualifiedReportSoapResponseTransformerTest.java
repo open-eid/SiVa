@@ -17,10 +17,13 @@
 package ee.openeid.siva.webapp.soap.transformer;
 
 import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
 import ee.openeid.siva.validation.document.report.ValidatedDocument;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.webapp.soap.QualifiedReport;
 import ee.openeid.siva.webapp.soap.ValidateDocumentResponse;
+import eu.europa.esig.dss.jaxb.detailedreport.XmlQMatrixBlock;
+import eu.europa.esig.dss.jaxb.detailedreport.XmlTLAnalysis;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -32,7 +35,7 @@ public class QualifiedReportSoapResponseTransformerTest {
     private QualifiedReportSoapResponseTransformer transformer = new QualifiedReportSoapResponseTransformer();
 
     @Test
-    public void qualifiedReportIsCorrectlyTransformedToSoapResponseReport() {
+    public void qualifiedSimpleReportIsCorrectlyTransformedToSoapResponseReport() {
         ValidationConclusion validationConclusion = createMockedValidationConclusion();
         SimpleReport simpleReport = new SimpleReport(validationConclusion);
 
@@ -50,6 +53,11 @@ public class QualifiedReportSoapResponseTransformerTest {
         Assert.assertEquals(validationConclusion.getPolicy().getPolicyName(), qualifiedReport.getPolicy().getPolicyName());
         Assert.assertEquals(validationConclusion.getPolicy().getPolicyUrl(), qualifiedReport.getPolicy().getPolicyUrl());
 
+        Assert.assertEquals(validationConclusion.getTimeStampTokens().get(0).getIndication().name(), qualifiedReport.getTimeStampTokens().getTimeStampToken().get(0).getIndication().name());
+        Assert.assertEquals(validationConclusion.getTimeStampTokens().get(0).getError().get(0).getContent(), qualifiedReport.getTimeStampTokens().getTimeStampToken().get(0).getErrors().getError().get(0).getContent());
+        Assert.assertEquals(validationConclusion.getTimeStampTokens().get(0).getSignedBy(), qualifiedReport.getTimeStampTokens().getTimeStampToken().get(0).getSignedBy());
+        Assert.assertEquals(validationConclusion.getTimeStampTokens().get(0).getSignedTime(), qualifiedReport.getTimeStampTokens().getTimeStampToken().get(0).getSignedTime());
+
         Assert.assertEquals(validationConclusion.getSignatures().get(0).getClaimedSigningTime(), qualifiedReport.getSignatures().getSignature().get(0).getClaimedSigningTime());
         Assert.assertEquals(validationConclusion.getSignatures().get(0).getId(), qualifiedReport.getSignatures().getSignature().get(0).getId());
         Assert.assertEquals(validationConclusion.getSignatures().get(0).getIndication(), qualifiedReport.getSignatures().getSignature().get(0).getIndication().value());
@@ -65,6 +73,35 @@ public class QualifiedReportSoapResponseTransformerTest {
         Assert.assertEquals(validationConclusion.getSignatures().get(0).getSignatureScopes().get(0).getScope(), qualifiedReport.getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
     }
 
+    @Test
+    public void qualifiedDetailedReportIsCorrectlyTransformedToSoapResponseReport() {
+        ValidationConclusion validationConclusion = createMockedValidationConclusion();
+        ee.openeid.siva.validation.document.report.DetailedReport detailedReport = new ee.openeid.siva.validation.document.report.DetailedReport(validationConclusion, null);
+        detailedReport.setValidationProcess(createMockedDetailedReport());
+        ValidateDocumentResponse responseReport = transformer.toSoapResponse(detailedReport);
+        Assert.assertEquals("EE", responseReport.getValidationProcess().getQMatrixBlock().getTLAnalysis().get(0).getCountryCode());
+    }
+
+    @Test
+    public void qualifiedDetailedReportIsNull() {
+        ValidationConclusion validationConclusion = createMockedValidationConclusion();
+        ee.openeid.siva.validation.document.report.DetailedReport detailedReport = new ee.openeid.siva.validation.document.report.DetailedReport(validationConclusion, null);
+        detailedReport.setValidationProcess(null);
+        ValidateDocumentResponse responseReport = transformer.toSoapResponse(detailedReport);
+        QualifiedReport qualifiedReport = responseReport.getValidationConclusion();
+        Assert.assertEquals(validationConclusion.getSignatures().get(0).getIndication(), qualifiedReport.getSignatures().getSignature().get(0).getIndication().value());
+
+    }
+
+    private eu.europa.esig.dss.jaxb.detailedreport.DetailedReport createMockedDetailedReport() {
+        eu.europa.esig.dss.jaxb.detailedreport.DetailedReport euDetailedReport = new eu.europa.esig.dss.jaxb.detailedreport.DetailedReport();
+        XmlQMatrixBlock xmlQMatrixBlock = new XmlQMatrixBlock();
+        XmlTLAnalysis xmlTLAnalysis = new XmlTLAnalysis();
+        xmlTLAnalysis.setCountryCode("EE");
+        xmlQMatrixBlock.getTLAnalysis().add(xmlTLAnalysis);
+        euDetailedReport.setQMatrixBlock(xmlQMatrixBlock);
+        return euDetailedReport;
+    }
 
     private ValidationConclusion createMockedValidationConclusion() {
         ValidationConclusion report = new ValidationConclusion();
@@ -76,7 +113,19 @@ public class QualifiedReportSoapResponseTransformerTest {
         report.setSignaturesCount(1);
         report.setValidSignaturesCount(1);
         report.setSignatures(createMockedSignatures());
+        report.setTimeStampTokens(createMockedTimeStampTokens());
         return report;
+    }
+
+    private List<TimeStampTokenValidationData> createMockedTimeStampTokens() {
+        List<TimeStampTokenValidationData> timeStampTokens = new ArrayList<>();
+        TimeStampTokenValidationData timeStampTokenValidationData = new TimeStampTokenValidationData();
+        timeStampTokenValidationData.setSignedTime("2017-09-18T15:00:00Z");
+        timeStampTokenValidationData.setSignedBy("Signer");
+        timeStampTokenValidationData.setIndication(TimeStampTokenValidationData.Indication.TOTAL_FAILED);
+        timeStampTokenValidationData.setError(createMockedSignatureErrors());
+        timeStampTokens.add(timeStampTokenValidationData);
+        return timeStampTokens;
     }
 
     private List<ee.openeid.siva.validation.document.report.ValidationWarning> createMockedValidationWarnings() {

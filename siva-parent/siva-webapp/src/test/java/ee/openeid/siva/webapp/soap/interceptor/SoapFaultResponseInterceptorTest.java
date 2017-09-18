@@ -17,6 +17,7 @@
 package ee.openeid.siva.webapp.soap.interceptor;
 
 import ee.openeid.siva.proxy.http.RESTValidationProxyRequestException;
+import ee.openeid.siva.validation.exception.DocumentRequirementsException;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import org.apache.cxf.binding.soap.SoapMessage;
@@ -61,6 +62,15 @@ public class SoapFaultResponseInterceptorTest {
     @Test
     public void whenSoapFaultIsCausedByMalformedDocumentExceptionThenFaultStatusAndCodeAreChanged() {
         Fault fault = new Fault(new MalformedDocumentException());
+        doReturn(fault).when(message).getContent(any());
+        soapFaultResponseInterceptor.handleMessage(message);
+        assertTrue(fault.getStatusCode() == 200);
+        assertEquals("Client", fault.getFaultCode().toString());
+    }
+
+    @Test
+    public void whenSoapFaultIsCausedByDocumentRequirementsExceptionThenFaultStatusAndCodeAreChanged() {
+        Fault fault = new Fault(new DocumentRequirementsException());
         doReturn(fault).when(message).getContent(any());
         soapFaultResponseInterceptor.handleMessage(message);
         assertTrue(fault.getStatusCode() == 200);

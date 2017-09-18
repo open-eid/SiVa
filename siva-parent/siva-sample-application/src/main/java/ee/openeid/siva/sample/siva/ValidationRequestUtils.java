@@ -40,21 +40,6 @@ final class ValidationRequestUtils {
         return null;
     }
 
-    static FileType getDataFilesFileServiceType(UploadedFile validationRequest) throws IOException {
-        final String filename = validationRequest.getFilename();
-        FileType parsedFileType = parseFileExtension(filename.substring(filename.lastIndexOf(FILENAME_EXTENSION_SEPARATOR) + 1));
-
-        if (isAsiceFileExtension(parsedFileType) || FileType.SCE == parsedFileType) {
-            parsedFileType = FileType.BDOC;
-        }
-
-        if (isXroadAsiceContainer(validationRequest)) {
-            parsedFileType = FileType.XROAD;
-        }
-
-        return parsedFileType;
-    }
-
     static boolean isXroadAsiceContainer(UploadedFile validationRequest) throws IOException {
         String document = validationRequest.getEncodedFile();
         if (document == null) {

@@ -21,6 +21,7 @@ import ee.openeid.siva.proxy.ValidationProxy;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.http.RESTValidationProxyException;
 import ee.openeid.siva.proxy.http.RESTValidationProxyRequestException;
+import ee.openeid.siva.validation.exception.DocumentRequirementsException;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
@@ -135,6 +136,20 @@ public class ValidationExceptionHandlerTest {
 
         String content = result.getResponse().getContentAsString();
         assertEquals(content, "{\"requestErrors\":[{\"key\":\"document\",\"message\":\"Document malformed or not matching documentType\"}]}");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testDocumentRequirementsExceptionOnValidationExceptionHandler() throws Exception {
+        when(validationProxy.validate(any(ProxyDocument.class))).thenThrow(DocumentRequirementsException.class);
+        MvcResult result = mockMvc.perform(post(VALIDATE_URL_TEMPLATE)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request().toString().getBytes()))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        assertEquals(content, "{\"requestErrors\":[{\"key\":\"document\",\"message\":\"Document does not meet the requirements\"}]}");
     }
 
     @Test

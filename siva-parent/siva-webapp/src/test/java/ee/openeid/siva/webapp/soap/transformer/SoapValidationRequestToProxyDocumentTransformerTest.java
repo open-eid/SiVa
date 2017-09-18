@@ -35,6 +35,14 @@ public class SoapValidationRequestToProxyDocumentTransformerTest {
     }
 
     @Test
+    public void reportTypeIsCorrectlyTransformed(){
+        String documentContent = "ZmlsZWNvbnRlbnQ=";
+        SoapValidationRequest validationRequest = createSoapValidationRequest(documentContent, DocumentType.BDOC, "file.bdoc", "some policy");
+        validationRequest.setReportType("Simple");
+        assertEquals(validationRequest.getReportType(), transformer.transform(validationRequest).getReportType().getValue());
+    }
+
+    @Test
     public void pdfTypeIsCorrectlyTransformedToDocumentType() {
         DocumentType docType = DocumentType.PDF;
         SoapValidationRequest validationRequest = createSoapValidationRequest("Ymxh", docType, "file.pdf", "some policy");

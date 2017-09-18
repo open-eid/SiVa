@@ -164,6 +164,7 @@
                         <exclude>**/xroad-jars/**</exclude>
                         <exclude>**/ee/openeid/siva/webapp/soap/*.class</exclude>
                         <exclude>**/eu/x_road/xsd/**</exclude>
+                        <exclude>**/eu/europa/**</exclude>
                     </excludes>
                 </configuration>
                 <executions>

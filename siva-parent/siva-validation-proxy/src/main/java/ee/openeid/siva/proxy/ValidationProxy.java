@@ -23,11 +23,9 @@ import ee.openeid.siva.proxy.exception.ValidatonServiceNotFoundException;
 import ee.openeid.siva.proxy.http.RESTProxyService;
 import ee.openeid.siva.statistics.StatisticsService;
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
-import ee.openeid.siva.validation.document.report.Report;
-import ee.openeid.siva.validation.document.report.SimpleReport;
-import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
+import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.service.ValidationService;
+import ee.openeid.validation.service.ddoc.report.DDOCQualifiedReportBuilder;
 import ee.openeid.validation.service.timestamptoken.TimeStampTokenValidationService;
 import eu.europa.esig.dss.DSSException;
 import eu.europa.esig.dss.InMemoryDocument;
@@ -42,6 +40,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -79,6 +79,7 @@ public class ValidationProxy {
                 Report dataFileReport = null;
                 try {
                     dataFileReport = chooseReport(dataFileValidationService.validateDocument(createValidationDocument(dataFileProxyDocument)), proxyDocument.getReportType());
+                    removeUnnecessaryWarning(dataFileReport.getValidationConclusion());
                 } catch (DSSException e) {
                     if (!DOCUMENT_FORMAT_NOT_RECOGNIZED.equalsIgnoreCase(e.getMessage())) {
                         throw e;
@@ -89,6 +90,15 @@ public class ValidationProxy {
         }
         statisticsService.publishValidationStatistic(System.nanoTime() - validationStartTime, report.getValidationConclusion());
         return report;
+    }
+
+    void removeUnnecessaryWarning(ValidationConclusion validationConclusion) {
+        List<ValidationWarning> warnings = validationConclusion.getValidationWarnings();
+        if (warnings == null || warnings.isEmpty())
+            return;
+        List<ValidationWarning> newList = new ArrayList<>(warnings);
+        newList.removeIf(s -> DDOCQualifiedReportBuilder.DDOC_TIMESTAMP_WARNING.equals(s.getContent()));
+        validationConclusion.setValidationWarnings(newList);
     }
 
     private Report chooseReport(QualifiedReport qualifiedReport, ReportType reportType) {

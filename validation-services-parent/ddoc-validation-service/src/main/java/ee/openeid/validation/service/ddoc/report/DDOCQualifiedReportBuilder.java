@@ -43,6 +43,7 @@ public class DDOCQualifiedReportBuilder {
     private static final String FULL_SIGNATURE_SCOPE = "FullSignatureScope";
     private static final int ERR_DF_INV_HASH_GOOD_ALT_HASH = 173;
     private static final int ERR_ISSUER_XMLNS = 176;
+    public static final String DDOC_TIMESTAMP_WARNING = "Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa";
 
     private SignedDoc signedDoc;
     private ValidationDocument validationDocument;
@@ -81,7 +82,7 @@ public class DDOCQualifiedReportBuilder {
 
     private List<ValidationWarning> ddocValidationWarnings() {
         ValidationWarning validationWarning = new ValidationWarning();
-        validationWarning.setContent("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa");
+        validationWarning.setContent(DDOC_TIMESTAMP_WARNING);
         return Collections.singletonList(validationWarning);
     }
 

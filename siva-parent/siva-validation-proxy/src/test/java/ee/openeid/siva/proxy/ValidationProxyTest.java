@@ -31,6 +31,7 @@ import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyServic
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.validation.service.bdoc.BDOCValidationService;
 import ee.openeid.validation.service.ddoc.DDOCValidationService;
+import ee.openeid.validation.service.ddoc.report.DDOCQualifiedReportBuilder;
 import ee.openeid.validation.service.generic.GenericValidationService;
 import ee.openeid.validation.service.generic.configuration.GenericSignaturePolicyProperties;
 import ee.openeid.validation.service.timestamptoken.TimeStampTokenValidationService;
@@ -220,6 +221,27 @@ public class ValidationProxyTest {
         assertQualifiedReport(report);
     }
 
+    @Test
+    public void proxyDocumentAsicsNoTeraWarning() throws Exception {
+        when(applicationContext.getBean("timeStampTokenValidationService")).thenReturn(getTimeStampValidationService());
+        when(applicationContext.getBean(DDOCValidationService.class.getSimpleName())).thenReturn(validationServiceSpy);
+        ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
+        proxyDocument.setBytes(buildValidationDocument("timestamptoken-ddoc.asics"));
+        Report report = validationProxy.validate(proxyDocument);
+        assertQualifiedReport(report);
+    }
+
+    @Test
+    public void removeUnnecessaryWarningsFromValidationConclusion() throws Exception {
+        ValidationConclusion validationConclusion = new ValidationConclusion();
+        ValidationWarning validationWarning = new ValidationWarning();
+        validationWarning.setContent(DDOCQualifiedReportBuilder.DDOC_TIMESTAMP_WARNING);
+        validationConclusion.setValidationWarnings(Collections.singletonList(validationWarning));
+        validationProxy.removeUnnecessaryWarning(validationConclusion);
+        Assert.assertTrue( validationConclusion.getValidationWarnings().isEmpty());
+    }
+
+
     private GenericValidationService getGenericValidationService() {
         GenericValidationService validationService = new GenericValidationService();
         GenericSignaturePolicyProperties policyProperties = new GenericSignaturePolicyProperties();
@@ -278,13 +300,15 @@ public class ValidationProxyTest {
             validationConclusion.setValidatedDocument(createDummyValidatedDocument());
             validationConclusion.setPolicy(createDummyPolicy());
             validationConclusion.setSignatures(createDummySignatures());
-            return  new QualifiedReport(new SimpleReport(validationConclusion), null);
+            return new QualifiedReport(new SimpleReport(validationConclusion), null);
         }
-        private ValidatedDocument createDummyValidatedDocument(){
+
+        private ValidatedDocument createDummyValidatedDocument() {
             ValidatedDocument validatedDocument = new ValidatedDocument();
             validatedDocument.setFilename("DocumentName");
             return validatedDocument;
         }
+
         private List<SignatureValidationData> createDummySignatures() {
             SignatureValidationData signature = new SignatureValidationData();
             signature.setSignatureLevel("SignatureLevel");

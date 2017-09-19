@@ -22,6 +22,7 @@ import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.tsl.CustomCertificatesLoader;
+import ee.openeid.tsl.CustomTSLLoader;
 import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.TSLValidationJobFactory;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
@@ -109,7 +110,7 @@ public class PDFValidationServiceTest {
     public static class TestConfiguration {
         @Bean
         public TSLLoader tslLoader() {
-            return new TSLLoader();
+            return new CustomTSLLoader();
         }
 
         @Bean

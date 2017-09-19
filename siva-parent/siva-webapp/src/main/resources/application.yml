@@ -3,7 +3,9 @@ server.max-http-post-size: 13981016 # 10 MB + base64 overhead (ceil(10MB / 3) * 
 siva:
   proxy:
     xroadUrl: http://localhost:8081
-
+  tsl:
+    loader:
+      trustedTerritories: BE, BG, CY, CZ,DE,DK, EE, ES, FI, FR, GR, HU,HR,IE, IS, IT, LT, LU, LV, LI, MT,NO,NL, PL, PT, RO, SE, SI, SK, UK
 management:
   context-path: /monitoring
   health:
@@ -13,6 +15,5 @@ management:
 endpoints:
   enabled: false
   sensitive: true
-
 
 

@@ -39,7 +39,6 @@ public class TSLLoaderTest {
     private static final String TSL_CODE = "CO";
 
     private static final List<String> DEFAULT_TRUSTED_TERRITORIES =  Arrays.asList(/*AT*/ "BE", "BG", "CY", "CZ","DE","DK", "EE", "ES", "FI", "FR", "GR", "HU","HR","IE", "IS", "IT", "LT", "LU", "LV", "LI", "MT","NO","NL", "PL", "PT", "RO", "SE", "SI", "SK", "UK");
-
     @Mock
     private TSLValidationJobFactory tslValidationJobFactory;
     @Mock
@@ -74,6 +73,7 @@ public class TSLLoaderTest {
         props.setUrl(url);
         props.setCode(code);
         props.setLoadFromCache(loadFromCache);
+        props.setTrustedTerritories(DEFAULT_TRUSTED_TERRITORIES);
         return props;
     }
 

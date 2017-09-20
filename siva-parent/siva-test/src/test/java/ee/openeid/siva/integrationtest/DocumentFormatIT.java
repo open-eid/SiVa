@@ -18,6 +18,7 @@ package ee.openeid.siva.integrationtest;
 
 import com.jayway.restassured.RestAssured;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -50,9 +51,9 @@ public class DocumentFormatIT extends SiVaRestTests {
      */
     @Test
     public void PAdESDocumentShouldPass() {
-        ValidationConclusion validationConclusion = postForReport("hellopades-pades-lt-sha256-sign.pdf");
-        assertAllSignaturesAreValid(validationConclusion);
-        assertEquals("PAdES-BASELINE-LT", validationConclusion.getSignatures().get(0).getSignatureFormat());
+        QualifiedReport report = postForReport("hellopades-pades-lt-sha256-sign.pdf");
+        assertAllSignaturesAreValid(report);
+        assertEquals("PAdES-BASELINE-LT", report.getValidationConclusion().getSignatures().get(0).getSignatureFormat());
     }
 
     /**
@@ -70,9 +71,9 @@ public class DocumentFormatIT extends SiVaRestTests {
      */
     @Test
     public void AdESDocumentShouldPass() {
-        ValidationConclusion validationConclusion = postForReport("Valid_IDCard_MobID_signatures.bdoc");
-        assertAllSignaturesAreValid(validationConclusion);
-        assertEquals("XAdES_BASELINE_LT_TM", validationConclusion.getSignatures().get(0).getSignatureFormat());
+        QualifiedReport report = postForReport("Valid_IDCard_MobID_signatures.bdoc");
+        assertAllSignaturesAreValid(report);
+        assertEquals("XAdES_BASELINE_LT_TM", report.getValidationConclusion().getSignatures().get(0).getSignatureFormat());
     }
 
 

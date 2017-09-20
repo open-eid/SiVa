@@ -16,21 +16,24 @@
 
 package ee.openeid.siva.validation.document.report;
 
-
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import eu.europa.esig.dss.jaxb.detailedreport.DetailedReport;
 import lombok.Data;
 
 @Data
+@JsonInclude(Include.NON_NULL)
 public class QualifiedReport {
 
-    private SimpleReport simpleReport;
-    private DetailedReport detailedReport;
+    private ValidationConclusion validationConclusion;
+    private DetailedReport validationProcess;
 
     public QualifiedReport() {
 
     }
 
-    public QualifiedReport(SimpleReport simpleReport, DetailedReport detailedReport) {
-        this.simpleReport = simpleReport;
-        this.detailedReport = detailedReport;
+    public QualifiedReport(ValidationConclusion validationConclusion, DetailedReport validationProcess) {
+        this.validationConclusion = validationConclusion;
+        this.validationProcess = validationProcess;
     }
 }

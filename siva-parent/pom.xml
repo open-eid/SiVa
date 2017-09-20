@@ -35,6 +35,7 @@
         <module>siva-distribution</module>
         <module>siva-statistics</module>
         <module>siva-monitoring</module>
+        <module>siva-signature-service</module>
     </modules>
 
     <properties>

@@ -185,13 +185,13 @@ public class DDOCServiceTest {
     @Test
     public void qualifiedReportShouldIncludeSignatureFormWithCorrectPrefixAndVersion() throws Exception {
         validationResult2Signatures = validationService.validateDocument(ddocValid2Signatures());
-        assertEquals("DIGIDOC_XML_1.3", validationResult2Signatures.getSimpleReport().getValidationConclusion().getSignatureForm());
+        assertEquals("DIGIDOC_XML_1.3", validationResult2Signatures.getValidationConclusion().getSignatureForm());
     }
 
     @Test
     public void qualifiedReportShouldIncludeRequiredFields() throws Exception {
         validationResult2Signatures = validationService.validateDocument(ddocValid2Signatures());
-        ValidationConclusion validationConclusion = validationResult2Signatures.getSimpleReport().getValidationConclusion();
+        ValidationConclusion validationConclusion = validationResult2Signatures.getValidationConclusion();
         assertNotNull(validationConclusion.getPolicy());
         assertNotNull(validationConclusion.getValidationTime());
         assertEquals(VALID_DDOC_2_SIGNATURES, validationConclusion.getValidatedDocument().getFilename());
@@ -203,7 +203,7 @@ public class DDOCServiceTest {
     @Test
     public void qualifiedReportShouldHaveCorrectSignatureValidationDataForSignature1() throws Exception {
         validationResult2Signatures = validationService.validateDocument(ddocValid2Signatures());
-        SignatureValidationData sig1 = validationResult2Signatures.getSimpleReport().getValidationConclusion().getSignatures()
+        SignatureValidationData sig1 = validationResult2Signatures.getValidationConclusion().getSignatures()
                 .stream()
                 .filter(sig -> sig.getId().equals("S0"))
                 .findFirst()
@@ -228,7 +228,7 @@ public class DDOCServiceTest {
     @Test
     public void qualifiedReportShouldHaveCorrectSignatureValidationDataForSignature2() throws Exception {
         validationResult2Signatures = validationService.validateDocument(ddocValid2Signatures());
-        SignatureValidationData sig2 = validationResult2Signatures.getSimpleReport().getValidationConclusion().getSignatures()
+        SignatureValidationData sig2 = validationResult2Signatures.getValidationConclusion().getSignatures()
                 .stream()
                 .filter(sig -> sig.getId().equals("S1"))
                 .findFirst()
@@ -253,7 +253,7 @@ public class DDOCServiceTest {
     @Test
     public void dDocValidationError173ForMissingDataFileXmlnsShouldBeShownAsWarningInReport() throws Exception {
         QualifiedReport report = validationService.validateDocument(buildValidationDocument(DATAFILE_XMLNS_MISSING));
-        ValidationConclusion validationConclusion = report.getSimpleReport().getValidationConclusion();
+        ValidationConclusion validationConclusion = report.getValidationConclusion();
         assertEquals(validationConclusion.getSignaturesCount(), validationConclusion.getValidSignaturesCount());
         SignatureValidationData signature = validationConclusion.getSignatures().get(0);
         assertTrue(signature.getErrors().isEmpty());
@@ -264,24 +264,24 @@ public class DDOCServiceTest {
     @Test
     public void reportShouldHaveHashcodeSingnatureFormSuffixWhenValidatingDdocHashcode13Format() throws Exception {
         QualifiedReport report = validationService.validateDocument(buildValidationDocument(DDOC_1_3_HASHCODE));
-        assertEquals("DIGIDOC_XML_1.3_hashcode", report.getSimpleReport().getValidationConclusion().getSignatureForm());
+        assertEquals("DIGIDOC_XML_1.3_hashcode", report.getValidationConclusion().getSignatureForm());
     }
 
     @Test
     public void reportShouldHaveHashcodeSingnatureFormSuffixWhenValidatingDdocHashcode10Format() throws Exception {
         QualifiedReport report = validationService.validateDocument(buildValidationDocument(DDOC_1_0_HASHCODE));
-        assertEquals("DIGIDOC_XML_1.0_hashcode", report.getSimpleReport().getValidationConclusion().getSignatureForm());
+        assertEquals("DIGIDOC_XML_1.0_hashcode", report.getValidationConclusion().getSignatureForm());
     }
 
     @Test
     public void reportShouldHaveHashcodeSingnatureFormSuffixWhenValidatingDdocHashcode12Format() throws Exception {
         QualifiedReport report = validationService.validateDocument(buildValidationDocument(DDOC_1_2_HASHCODE));
-        assertEquals("DIGIDOC_XML_1.2_hashcode", report.getSimpleReport().getValidationConclusion().getSignatureForm());
+        assertEquals("DIGIDOC_XML_1.2_hashcode", report.getValidationConclusion().getSignatureForm());
     }
 
     @Test
     public void validationReportShouldContainDefaultPolicyWhenPolicyIsNotExplicitlyGiven() throws Exception {
-        Policy policy = validateWithPolicy("").getSimpleReport().getValidationConclusion().getPolicy();
+        Policy policy = validateWithPolicy("").getValidationConclusion().getPolicy();
         assertEquals(ADES_POLICY.getName(), policy.getPolicyName());
         assertEquals(ADES_POLICY.getDescription(), policy.getPolicyDescription());
         assertEquals(ADES_POLICY.getUrl(), policy.getPolicyUrl());
@@ -289,7 +289,7 @@ public class DDOCServiceTest {
 
     @Test
     public void validationReportShouldContainAdesPolicyWhenAdesPolicyIsGivenToValidator() throws Exception {
-        Policy policy = validateWithPolicy("POLv3").getSimpleReport().getValidationConclusion().getPolicy();
+        Policy policy = validateWithPolicy("POLv3").getValidationConclusion().getPolicy();
         assertEquals(ADES_POLICY.getName(), policy.getPolicyName());
         assertEquals(ADES_POLICY.getDescription(), policy.getPolicyDescription());
         assertEquals(ADES_POLICY.getUrl(), policy.getPolicyUrl());
@@ -297,7 +297,7 @@ public class DDOCServiceTest {
 
     @Test
     public void validationReportShouldContainAdesQcPolicyWhenAdesQcPolicyIsGivenToValidator() throws Exception {
-        Policy policy = validateWithPolicy("POLv4").getSimpleReport().getValidationConclusion().getPolicy();
+        Policy policy = validateWithPolicy("POLv4").getValidationConclusion().getPolicy();
         assertEquals(ADES_QC_POLICY.getName(), policy.getPolicyName());
         assertEquals(ADES_QC_POLICY.getDescription(), policy.getPolicyDescription());
         assertEquals(ADES_QC_POLICY.getUrl(), policy.getPolicyUrl());
@@ -305,7 +305,7 @@ public class DDOCServiceTest {
 
     @Test
     public void validationReportShouldContainQESPolicyWhenQESPolicyIsGivenToValidator() throws Exception {
-        Policy policy = validateWithPolicy("POLv5").getSimpleReport().getValidationConclusion().getPolicy();
+        Policy policy = validateWithPolicy("POLv5").getValidationConclusion().getPolicy();
         assertEquals(QES_POLICY.getName(), policy.getPolicyName());
         assertEquals(QES_POLICY.getDescription(), policy.getPolicyDescription());
         assertEquals(QES_POLICY.getUrl(), policy.getPolicyUrl());

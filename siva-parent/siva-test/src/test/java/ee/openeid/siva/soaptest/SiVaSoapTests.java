@@ -20,6 +20,7 @@ import com.jayway.restassured.response.Response;
 import ee.openeid.siva.integrationtest.SiVaIntegrationTestsBase;
 import ee.openeid.siva.webapp.soap.DataFilesReport;
 import ee.openeid.siva.webapp.soap.QualifiedReport;
+import ee.openeid.siva.webapp.soap.ValidateDocumentResponse;
 import org.apache.commons.codec.binary.Base64;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -149,7 +150,13 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
 
     protected Document extractReportDom(String httpBody) {
         Document document = XMLUtils.parseXml(httpBody);
-        Element element = XMLUtils.findElementByXPath(document, "//d:ValidateDocumentResponse/d:ValidationConclusion", Collections.singletonMap("d", "http://soap.webapp.siva.openeid.ee/"));
+        Element element = XMLUtils.findElementByXPath(document, "//d:ValidateDocumentResponse/d:ValidationReport", Collections.singletonMap("d", "http://soap.webapp.siva.openeid.ee/"));
+        return XMLUtils.documentFromNode(element);
+    }
+
+    protected Document extractValidateDocumentResponseDom(String httpBody) {
+        Document document = XMLUtils.parseXml(httpBody);
+        Element element = XMLUtils.findElementByXPath(document, "//d:ValidateDocumentResponse", Collections.singletonMap("d", "http://soap.webapp.siva.openeid.ee/"));
         return XMLUtils.documentFromNode(element);
     }
 
@@ -165,6 +172,18 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             Node xmlNode = reportDom.getDocumentElement();
             JAXBElement<QualifiedReport> jaxbElement = unmarshaller.unmarshal(xmlNode, QualifiedReport.class);
+            return jaxbElement.getValue();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected ValidateDocumentResponse getValidateDocumentResponseFromDom(Document reportDom) {
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(ValidateDocumentResponse.class);
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            Node xmlNode = reportDom.getDocumentElement();
+            JAXBElement<ValidateDocumentResponse> jaxbElement = unmarshaller.unmarshal(xmlNode, ValidateDocumentResponse.class);
             return jaxbElement.getValue();
         } catch (Exception e) {
             throw new RuntimeException(e);

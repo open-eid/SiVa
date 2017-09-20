@@ -130,7 +130,7 @@ public class ValidationRequestIT extends SiVaRestTests {
 
         post(validationRequestWithValidKeys(encodedString, filename,""))
                 .then()
-                .body("validationConclusion.validatedDocument.filename", equalTo(filename));
+                .body("validationReport.validationConclusion.validatedDocument.filename", equalTo(filename));
     }
 
     /**
@@ -181,7 +181,7 @@ public class ValidationRequestIT extends SiVaRestTests {
         jsonObject.put("ExtraTwo", "AnotherValue");
         post(jsonObject.toString())
                 .then()
-                .body("validationConclusion.validatedDocument.filename", equalTo("Valid_IDCard_MobID_signatures.bdoc"));
+                .body("validationReport.validationConclusion.validatedDocument.filename", equalTo("Valid_IDCard_MobID_signatures.bdoc"));
 
     }
 
@@ -203,7 +203,7 @@ public class ValidationRequestIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "ÕValid_IDCard_MobID_signatures.bdocÄÖÜ", ""))
                 .then()
-                .body("validationConclusion.validatedDocument.filename", equalTo("ÕValid_IDCard_MobID_signatures.bdocÄÖÜ"));
+                .body("validationReport.validationConclusion.validatedDocument.filename", equalTo("ÕValid_IDCard_MobID_signatures.bdocÄÖÜ"));
     }
 
     /**
@@ -361,7 +361,7 @@ public class ValidationRequestIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", SMALL_CASE_VALID_SIGNATURE_POLICY_3))
                 .then()
-                .body("validationConclusion.validSignaturesCount", Matchers.is(2));
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(2));
     }
 
     /**
@@ -385,7 +385,7 @@ public class ValidationRequestIT extends SiVaRestTests {
         jsonObject.put(FILENAME, "Valid_IDCard_MobID_signatures.bdoc");
         post(jsonObject.toString())
                 .then()
-                .body("validationConclusion.validatedDocument.filename", equalTo("Valid_IDCard_MobID_signatures.bdoc"));
+                .body("validationReport.validationConclusion.validatedDocument.filename", equalTo("Valid_IDCard_MobID_signatures.bdoc"));
 
     }
 
@@ -431,7 +431,7 @@ public class ValidationRequestIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("bdoc21-TS.asice"));
         post(validationRequestWithValidKeys(encodedString, "bdoc21-TS.bdoc", ""))
                 .then()
-                .body("validationConclusion.validSignaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
 
     }
 
@@ -453,7 +453,7 @@ public class ValidationRequestIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.BDOC", ""))
                 .then()
-                .body("validationConclusion.validSignaturesCount", Matchers.is(2));
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(2));
     }
 
     /**
@@ -614,8 +614,8 @@ public class ValidationRequestIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
         post(validationRequestWithValidKeys(encodedString, "TotallyRandomFilename.exe", ""))
                 .then()
-                .body("validationConclusion.validatedDocument.filename",equalTo("TotallyRandomFilename.exe"))
-                .body("validationConclusion.validSignaturesCount",Matchers.is(1));
+                .body("validationReport.validationConclusion.validatedDocument.filename",equalTo("TotallyRandomFilename.exe"))
+                .body("validationReport.validationConclusion.validSignaturesCount",Matchers.is(1));
     }
 
     /**
@@ -917,8 +917,8 @@ public class ValidationRequestIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
         post(validationRequestWithDocumentTypeValidKeys(encodedString, "TotallyRandomFilename.exe", "XrOaD", ""))
                 .then()
-                .body("validationConclusion.validatedDocument.filename", equalTo("TotallyRandomFilename.exe"))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.validatedDocument.filename", equalTo("TotallyRandomFilename.exe"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
     }
 
     @Override

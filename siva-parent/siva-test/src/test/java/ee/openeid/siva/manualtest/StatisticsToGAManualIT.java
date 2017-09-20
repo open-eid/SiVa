@@ -17,7 +17,7 @@
 package ee.openeid.siva.manualtest;
 
 import ee.openeid.siva.integrationtest.SiVaRestTests;
-import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.validation.document.report.QualifiedReport;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -127,12 +127,12 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
     @Test
     public void bdocWithSignaturesFromDifferentCountries() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Baltic MoU digital signing_EST_LT_LV.bdoc"));
-        SimpleReport report = mapToReport(
+        QualifiedReport report = mapToReport(
                 postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "Baltic MoU digital signing_EST_LT_LV.bdoc", ""), "CountriesTest")
                         .body()
                         .asString()
-        );
-        assertAllSignaturesAreValid(report.getValidationConclusion());
+        ).getValidationReport();
+        assertAllSignaturesAreValid(report);
     }
 
     /**
@@ -152,12 +152,12 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
     public void bdocTSSignatures() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("BDOC-TS.bdoc"));
-        SimpleReport report = mapToReport(
+        QualifiedReport report = mapToReport(
                 postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "BDOC-TS.bdoc", ""), "AsicETSTest")
                         .body()
                         .asString()
-        );
-        assertAllSignaturesAreValid(report.getValidationConclusion());
+        ).getValidationReport();
+        assertAllSignaturesAreValid(report);
     }
 
     /**
@@ -177,12 +177,12 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
     public void xroadWithValidSignatures() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-batchsignature.asice"));
-        SimpleReport report = mapToReport(
+        QualifiedReport report = mapToReport(
                 postWithXAuthUsrHeader(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-batchsignature.asice", "xroad", ""), "XXCountryCodeTest")
                         .body()
                         .asString()
-        );
-        assertAllSignaturesAreValid(report.getValidationConclusion());
+        ).getValidationReport();
+        assertAllSignaturesAreValid(report);
     }
 
     /**
@@ -226,12 +226,12 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
     public void ddocWithInvalidSignatures() {
         setTestFilesDirectory("ddoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("ilma_kehtivuskinnituseta.ddoc"));
-        SimpleReport report = mapToReport(
+        QualifiedReport report = mapToReport(
                 postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "ilma_kehtivuskinnituseta.ddoc", ""), "XAdESTest")
                         .body()
                         .asString()
-        );
-        assertAllSignaturesAreInvalid(report.getValidationConclusion());
+        ).getValidationReport();
+        assertAllSignaturesAreInvalid(report);
     }
 
     @Override

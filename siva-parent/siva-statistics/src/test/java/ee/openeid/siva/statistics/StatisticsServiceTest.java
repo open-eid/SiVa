@@ -20,7 +20,6 @@ import ee.openeid.siva.statistics.googleanalytics.GoogleAnalyticsMeasurementProt
 import ee.openeid.siva.statistics.model.SimpleValidationReport;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
-import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -76,13 +75,13 @@ public class StatisticsServiceTest {
         String signatureFormat = "FORMAT";
 
         QualifiedReport report = createDummyQualifiedReport(signatureForm, validSignaturesCount, totalSignatureCount);
-        addSignatureValidationData(report.getSimpleReport().getValidationConclusion(), indication, subindication, countryCode, signatureFormat);
+        addSignatureValidationData(report.getValidationConclusion(), indication, subindication, countryCode, signatureFormat);
 
         HttpServletRequest mockedRequest = mock(HttpServletRequest.class);
         statisticsService.setHttpRequest(mockedRequest);
         when(mockedRequest.getHeader(X_AUTHENTICATED_USER)).thenReturn("");
 
-        statisticsService.publishValidationStatistic(TimeUnit.MILLISECONDS.toNanos(validationDurationInMillis), report.getSimpleReport().getValidationConclusion());
+        statisticsService.publishValidationStatistic(TimeUnit.MILLISECONDS.toNanos(validationDurationInMillis), report.getValidationConclusion());
         verify(loggerMock).info("{" + LINE_SEPARATOR +
                 "  \"stats\" : {" + LINE_SEPARATOR +
                 "    \"type\" : \"" + expectedContainerType + "\"," + LINE_SEPARATOR +
@@ -117,14 +116,14 @@ public class StatisticsServiceTest {
         String xAuthenticatedUser = "some_user";
 
         QualifiedReport report = createDummyQualifiedReport(signatureForm, validSignaturesCount, totalSignatureCount);
-        addSignatureValidationData(report.getSimpleReport().getValidationConclusion(), firstSignatureIndication, firstSignatureSubindication, firstSignatureCountryCode, firstSignatureFormat);
-        addSignatureValidationData(report.getSimpleReport().getValidationConclusion(), secondSignatureIndication, secondSignatureSubindication, secondSignatureCountryCode, secondSignatureFormat);
+        addSignatureValidationData(report.getValidationConclusion(), firstSignatureIndication, firstSignatureSubindication, firstSignatureCountryCode, firstSignatureFormat);
+        addSignatureValidationData(report.getValidationConclusion(), secondSignatureIndication, secondSignatureSubindication, secondSignatureCountryCode, secondSignatureFormat);
 
         HttpServletRequest mockedRequest = mock(HttpServletRequest.class);
         statisticsService.setHttpRequest(mockedRequest);
         when(mockedRequest.getHeader(X_AUTHENTICATED_USER)).thenReturn(xAuthenticatedUser);
 
-        statisticsService.publishValidationStatistic(TimeUnit.MILLISECONDS.toNanos(validationDurationInMillis), report.getSimpleReport().getValidationConclusion());
+        statisticsService.publishValidationStatistic(TimeUnit.MILLISECONDS.toNanos(validationDurationInMillis), report.getValidationConclusion());
         verify(loggerMock).info("{" + LINE_SEPARATOR +
                 "  \"stats\" : {" + LINE_SEPARATOR +
                 "    \"type\" : \"" + signatureForm + "\"," + LINE_SEPARATOR +
@@ -151,7 +150,7 @@ public class StatisticsServiceTest {
         validationConclusion.setSignaturesCount(totalSignaturesCount);
         validationConclusion.setValidSignaturesCount(validSignaturesCount);
         validationConclusion.setSignatureForm(signatureForm);
-        return new QualifiedReport(new SimpleReport(validationConclusion), null);
+        return new QualifiedReport(validationConclusion, null);
     }
 
     private void addSignatureValidationData(ValidationConclusion validationConclusion, SignatureValidationData.Indication indication, String subindication, String country, String signatureFormat) {

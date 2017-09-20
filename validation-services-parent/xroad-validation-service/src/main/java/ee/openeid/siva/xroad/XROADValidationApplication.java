@@ -40,7 +40,7 @@ public class XROADValidationApplication extends SpringBootServletInitializer {
 
     @RequestMapping(value = "/xroad-validation", method = RequestMethod.POST)
     public ValidationConclusion validateXroad(@RequestBody ValidationDocument validationDocument) {
-        return validationService.validateDocument(validationDocument).getSimpleReport().getValidationConclusion();
+        return validationService.validateDocument(validationDocument).getValidationConclusion();
     }
 
     @Override

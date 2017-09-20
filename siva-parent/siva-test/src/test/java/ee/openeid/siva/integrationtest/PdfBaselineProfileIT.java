@@ -58,13 +58,13 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-pades-b-sha256-auth.pdf"));
         post(validationRequestWithValidKeys(encodedString, "hellopades-pades-b-sha256-auth.pdf", VALID_SIGNATURE_POLICY_3))
                 .then()
-                .body("validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-B"))
-                .body("validationConclusion.signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationConclusion.signatures[0].errors.content", Matchers.hasItems("The expected format is not found!"))
-                .body("validationConclusion.signatures[0].warnings", Matchers.hasSize(1))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationConclusion.signaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-B"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The expected format is not found!"))
+                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.hasSize(1))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -85,13 +85,13 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades-baseline-t-live-aj.pdf"));
         post(validationRequestWithValidKeys(encodedString, "pades-baseline-t-live-aj.pdf", VALID_SIGNATURE_POLICY_3))
                 .then()
-                .body("validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-T"))
-                .body("validationConclusion.signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationConclusion.signatures[0].errors.content", Matchers.hasItems("The expected format is not found!"))
-                .body("validationConclusion.signatures[0].warnings", Matchers.hasSize(1))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationConclusion.signaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-T"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The expected format is not found!"))
+                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.hasSize(1))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -112,13 +112,13 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-pades-lt-sha256-sign.pdf"));
         post(validationRequestWithValidKeys(encodedString, "hellopades-pades-lt-sha256-sign.pdf", VALID_SIGNATURE_POLICY_3))
                 .then()
-                .body("validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
-                .body("validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
-                .body("validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
-                .body("validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationConclusion.signaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -139,13 +139,13 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-pades-lt-sha256-sign.pdf"));
         post(validationRequestWithValidKeys(encodedString, "hellopades-pades-lt-sha256-sign.pdf", VALID_SIGNATURE_POLICY_5))
                 .then()
-                .body("validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
-                .body("validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
-                .body("validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
-                .body("validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationConclusion.signaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -166,13 +166,13 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades-baseline-lta-live-aj.pdf"));
         post(validationRequestWithValidKeys(encodedString, "pades-baseline-lta-live-aj.pdf", VALID_SIGNATURE_POLICY_3))
                 .then()
-                .body("validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LTA"))
-                .body("validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
-                .body("validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
-                .body("validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationConclusion.signaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LTA"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -193,13 +193,13 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades-baseline-lta-live-aj.pdf"));
         post(validationRequestWithValidKeys(encodedString, "pades-baseline-lta-live-aj.pdf", VALID_SIGNATURE_POLICY_5))
                 .then()
-                .body("validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LTA"))
-                .body("validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
-                .body("validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
-                .body("validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationConclusion.signaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LTA"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -284,13 +284,13 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt1-lt2-Serial.pdf"));
         post(validationRequestWithValidKeys(encodedString, "hellopades-lt1-lt2-Serial.pdf", ""))
                 .then()
-                .body("validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LTA"))
-                .body("validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
-                .body("validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
-                .body("validationConclusion.validSignaturesCount", Matchers.is(2))
-                .body("validationConclusion.signaturesCount", Matchers.is(2));
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LTA"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(2))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2));
     }
 
     @Override

@@ -16,12 +16,17 @@
 
 package ee.openeid.siva.webapp.soap.transformer;
 
-import ee.openeid.siva.validation.document.report.Report;
-import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
-import ee.openeid.siva.validation.document.report.ValidatedDocument;
-import ee.openeid.siva.validation.document.report.ValidationConclusion;
+import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.webapp.soap.Error;
 import ee.openeid.siva.webapp.soap.*;
+import ee.openeid.siva.webapp.soap.Info;
+import ee.openeid.siva.webapp.soap.Policy;
+import ee.openeid.siva.webapp.soap.QualifiedReport;
+import ee.openeid.siva.webapp.soap.SignatureScope;
+import ee.openeid.siva.webapp.soap.SignatureValidationData;
+import ee.openeid.siva.webapp.soap.ValidationConclusion;
+import ee.openeid.siva.webapp.soap.ValidationWarning;
+import ee.openeid.siva.webapp.soap.Warning;
 import org.springframework.stereotype.Component;
 
 import javax.xml.bind.*;
@@ -46,33 +51,37 @@ public class QualifiedReportSoapResponseTransformer {
         return responseSignatureInfo;
     }
 
-    public ValidateDocumentResponse toSoapResponse(Report report) {
-        ValidateDocumentResponse validateDocumentResponse = new ValidateDocumentResponse();
+    public QualifiedReport toSoapResponse(ee.openeid.siva.validation.document.report.QualifiedReport report) {
+        QualifiedReport responseQualifiedReport = new QualifiedReport();
 
-        QualifiedReport qualifiedReport = new QualifiedReport();
-        ValidationConclusion validationConclusion = report.getValidationConclusion();
-        qualifiedReport.setSignatureForm(validationConclusion.getSignatureForm());
-        qualifiedReport.setPolicy(toSoapResponsePolicy(validationConclusion.getPolicy()));
+        ValidationConclusion responseValidationConclusion = toSoapValidationConclusion(report.getValidationConclusion());
+        responseQualifiedReport.setValidationConclusion(responseValidationConclusion);
 
-        qualifiedReport.setValidatedDocument(toSoapValidatedDocument(validationConclusion.getValidatedDocument()));
-        qualifiedReport.setSignaturesCount(validationConclusion.getSignaturesCount());
-        if (validationConclusion.getSignatures() != null)
-            qualifiedReport.setSignatures(toSoapResponseSignatures(validationConclusion.getSignatures()));
-        if (validationConclusion.getValidationWarnings() != null)
-            qualifiedReport.setValidationWarnings(toSoapResponseValidationWarnings(validationConclusion.getValidationWarnings()));
-
-        qualifiedReport.setValidSignaturesCount(validationConclusion.getValidSignaturesCount());
-        qualifiedReport.setValidationTime(validationConclusion.getValidationTime());
-        if (validationConclusion.getTimeStampTokens() != null)
-            qualifiedReport.setTimeStampTokens(toSoapResponseResponseTimeStamps(validationConclusion.getTimeStampTokens()));
-
-        validateDocumentResponse.setValidationConclusion(qualifiedReport);
-        if (report instanceof ee.openeid.siva.validation.document.report.DetailedReport) {
-            ee.openeid.siva.webapp.soap.DetailedReport xmlDetailedReport = toSoapDetailedReport(
-                    ((ee.openeid.siva.validation.document.report.DetailedReport) report).getValidationProcess());
-            validateDocumentResponse.setValidationProcess(xmlDetailedReport);
+        if (report.getValidationProcess() != null) {
+            ee.openeid.siva.webapp.soap.DetailedReport xmlDetailedReport = toSoapDetailedReport(report.getValidationProcess());
+            responseQualifiedReport.setValidationProcess(xmlDetailedReport);
         }
-        return validateDocumentResponse;
+
+        return responseQualifiedReport;
+    }
+
+    public ValidationConclusion toSoapValidationConclusion(ee.openeid.siva.validation.document.report.ValidationConclusion validationConclusion) {
+        ValidationConclusion responseValidationConclusion = new ValidationConclusion();
+        responseValidationConclusion.setSignatureForm(validationConclusion.getSignatureForm());
+        responseValidationConclusion.setPolicy(toSoapResponsePolicy(validationConclusion.getPolicy()));
+
+        responseValidationConclusion.setValidatedDocument(toSoapValidatedDocument(validationConclusion.getValidatedDocument()));
+        responseValidationConclusion.setSignaturesCount(validationConclusion.getSignaturesCount());
+        if (validationConclusion.getSignatures() != null)
+            responseValidationConclusion.setSignatures(toSoapResponseSignatures(validationConclusion.getSignatures()));
+        if (validationConclusion.getValidationWarnings() != null)
+            responseValidationConclusion.setValidationWarnings(toSoapResponseValidationWarnings(validationConclusion.getValidationWarnings()));
+
+        responseValidationConclusion.setValidSignaturesCount(validationConclusion.getValidSignaturesCount());
+        responseValidationConclusion.setValidationTime(validationConclusion.getValidationTime());
+        if (validationConclusion.getTimeStampTokens() != null)
+            responseValidationConclusion.setTimeStampTokens(toSoapResponseResponseTimeStamps(validationConclusion.getTimeStampTokens()));
+        return responseValidationConclusion;
     }
 
     @SuppressWarnings("unchecked")
@@ -113,8 +122,8 @@ public class QualifiedReportSoapResponseTransformer {
         return validatedDocumentData;
 
     }
-    private QualifiedReport.ValidationWarnings toSoapResponseValidationWarnings(List<ee.openeid.siva.validation.document.report.ValidationWarning> validationWarnings) {
-        QualifiedReport.ValidationWarnings responseValidationWarnings = new QualifiedReport.ValidationWarnings();
+    private ValidationConclusion.ValidationWarnings toSoapResponseValidationWarnings(List<ee.openeid.siva.validation.document.report.ValidationWarning> validationWarnings) {
+        ValidationConclusion.ValidationWarnings responseValidationWarnings = new ValidationConclusion.ValidationWarnings();
         validationWarnings.stream()
                 .map(this::mapValidationWarning)
                 .forEach(validationWarning -> responseValidationWarnings.getValidationWarning().add(validationWarning));
@@ -127,8 +136,8 @@ public class QualifiedReportSoapResponseTransformer {
         return responseValidationWarning;
     }
 
-    private QualifiedReport.TimeStampTokens toSoapResponseResponseTimeStamps(List<TimeStampTokenValidationData> timeStampTokenValidationDataList) {
-        QualifiedReport.TimeStampTokens responseTimeStamps = new QualifiedReport.TimeStampTokens();
+    private ValidationConclusion.TimeStampTokens toSoapResponseResponseTimeStamps(List<TimeStampTokenValidationData> timeStampTokenValidationDataList) {
+        ValidationConclusion.TimeStampTokens responseTimeStamps = new ValidationConclusion.TimeStampTokens();
 
         timeStampTokenValidationDataList.stream()
                 .map(this::getTimeStampTokenData)
@@ -136,8 +145,8 @@ public class QualifiedReportSoapResponseTransformer {
         return responseTimeStamps;
     }
 
-    private QualifiedReport.Signatures toSoapResponseSignatures(List<ee.openeid.siva.validation.document.report.SignatureValidationData> signatures) {
-        QualifiedReport.Signatures responseSignatures = new QualifiedReport.Signatures();
+    private ValidationConclusion.Signatures toSoapResponseSignatures(List<ee.openeid.siva.validation.document.report.SignatureValidationData> signatures) {
+        ValidationConclusion.Signatures responseSignatures = new ValidationConclusion.Signatures();
 
         for (ee.openeid.siva.validation.document.report.SignatureValidationData signature : signatures) {
             SignatureValidationData responseSignature = getSignatureValidationData(signature);

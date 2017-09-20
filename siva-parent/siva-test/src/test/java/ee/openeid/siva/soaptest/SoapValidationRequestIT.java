@@ -227,7 +227,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
 
         post(validationRequestForDocumentExtended(encodedString, filename, null, ""))
                 .then()
-                .body("Envelope.Body.ValidateDocumentResponse.ValidationConclusion.ValidatedDocument.Filename", Matchers.is(filename));
+                .body("Envelope.Body.ValidateDocumentResponse.ValidationReport.ValidationConclusion.ValidatedDocument.Filename", Matchers.is(filename));
     }
 
     /**
@@ -346,7 +346,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForDocumentExtended(encodedString, "ÕValid_IDCard_MobID_signatures.bdocÄÖÜ", null, ""))
                 .then()
-                .body("Envelope.Body.ValidateDocumentResponse.ValidationConclusion.ValidatedDocument.Filename", Matchers.is("ÕValid_IDCard_MobID_signatures.bdocÄÖÜ"));
+                .body("Envelope.Body.ValidateDocumentResponse.ValidationReport.ValidationConclusion.ValidatedDocument.Filename", Matchers.is("ÕValid_IDCard_MobID_signatures.bdocÄÖÜ"));
     }
 
     /**
@@ -378,7 +378,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 "</soapenv:Envelope>";
         post(requestBody)
                 .then()
-                .body("Envelope.Body.ValidateDocumentResponse.ValidationConclusion.ValidSignaturesCount", Matchers.is("2"));
+                .body("Envelope.Body.ValidateDocumentResponse.ValidationReport.ValidationConclusion.ValidSignaturesCount", Matchers.is("2"));
     }
 
     /**
@@ -571,7 +571,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForDocumentExtended(encodedString, "TotallyRandomFilename.exe", null, ""))
                 .then()
-                .body("Envelope.Body.ValidateDocumentResponse.ValidationConclusion.ValidatedDocument.Filename", Matchers.is("TotallyRandomFilename.exe"));
+                .body("Envelope.Body.ValidateDocumentResponse.ValidationReport.ValidationConclusion.ValidatedDocument.Filename", Matchers.is("TotallyRandomFilename.exe"));
     }
 
     /**
@@ -661,7 +661,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", null, SMALL_CASE_VALID_SIGNATURE_POLICY_3))
                 .then()
-                .body("Envelope.Body.ValidateDocumentResponse.ValidationConclusion.ValidSignaturesCount", Matchers.is("2"));
+                .body("Envelope.Body.ValidateDocumentResponse.ValidationReport.ValidationConclusion.ValidSignaturesCount", Matchers.is("2"));
     }
 
     /**

@@ -38,19 +38,19 @@ public class PDFSignaturePolicyTest extends PDFValidationServiceTest {
     @Test
     public void softCertSignatureShouldBeValidWithNoTypePolicy() throws Exception {
         QualifiedReport report = validateWithPolicy("POLv3", PDF_WITH_SOFT_CERT_SIGNATURE);
-        ValidationConclusion validationConclusion = report.getSimpleReport().getValidationConclusion();
+        ValidationConclusion validationConclusion = report.getValidationConclusion();
         assertEquals(validationConclusion.getSignaturesCount(), validationConclusion.getValidSignaturesCount());
     }
 
     @Test @Ignore //TODO: New test file is needed
     public void softCertSignatureShouldBeInvalidWithQESPolicy() throws Exception {
         QualifiedReport report = validateWithPolicy("POLv5", PDF_WITH_SOFT_CERT_SIGNATURE);
-        assertTrue(report.getSimpleReport().getValidationConclusion().getValidSignaturesCount() == 0);
+        assertTrue(report.getValidationConclusion().getValidSignaturesCount() == 0);
     }
 
     @Test
     public void validationReportShouldContainDefaultPolicyWhenPolicyIsNotExplicitlyGiven() throws Exception {
-        Policy policy = validateWithPolicy("").getSimpleReport().getValidationConclusion().getPolicy();
+        Policy policy = validateWithPolicy("").getValidationConclusion().getPolicy();
         assertEquals(ADES_POLICY.getName(), policy.getPolicyName());
         assertEquals(ADES_POLICY.getDescription(), policy.getPolicyDescription());
         assertEquals(ADES_POLICY.getUrl(), policy.getPolicyUrl());
@@ -58,7 +58,7 @@ public class PDFSignaturePolicyTest extends PDFValidationServiceTest {
 
     @Test
     public void validationReportShouldContainAdesPolicyWhenAdesPolicyIsGivenToValidator() throws Exception {
-        Policy policy = validateWithPolicy("POLv3").getSimpleReport().getValidationConclusion().getPolicy();
+        Policy policy = validateWithPolicy("POLv3").getValidationConclusion().getPolicy();
         assertEquals(ADES_POLICY.getName(), policy.getPolicyName());
         assertEquals(ADES_POLICY.getDescription(), policy.getPolicyDescription());
         assertEquals(ADES_POLICY.getUrl(), policy.getPolicyUrl());
@@ -66,7 +66,7 @@ public class PDFSignaturePolicyTest extends PDFValidationServiceTest {
 
     @Test
     public void validationReportShouldContainAdesQcPolicyWhenAdesQcPolicyIsGivenToValidator() throws Exception {
-        Policy policy = validateWithPolicy("POLv4").getSimpleReport().getValidationConclusion().getPolicy();
+        Policy policy = validateWithPolicy("POLv4").getValidationConclusion().getPolicy();
         assertEquals(ADES_QC_POLICY.getName(), policy.getPolicyName());
         assertEquals(ADES_QC_POLICY.getDescription(), policy.getPolicyDescription());
         assertEquals(ADES_QC_POLICY.getUrl(), policy.getPolicyUrl());
@@ -74,7 +74,7 @@ public class PDFSignaturePolicyTest extends PDFValidationServiceTest {
 
     @Test
     public void validationReportShouldContainQESPolicyWhenQESPolicyIsGivenToValidator() throws Exception {
-        Policy policy = validateWithPolicy("POLv5").getSimpleReport().getValidationConclusion().getPolicy();
+        Policy policy = validateWithPolicy("POLv5").getValidationConclusion().getPolicy();
         assertEquals(QES_POLICY.getName(), policy.getPolicyName());
         assertEquals(QES_POLICY.getDescription(), policy.getPolicyDescription());
         assertEquals(QES_POLICY.getUrl(), policy.getPolicyUrl());

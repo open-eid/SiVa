@@ -58,7 +58,7 @@ public class GenericQualifiedReportBuilder {
 
     public QualifiedReport build() {
         ValidationConclusion validationConclusion = getValidationConclusion();
-        return new QualifiedReport(new SimpleReport(validationConclusion), new DetailedReport(validationConclusion, dssReports.getDetailedReportJaxb()));
+        return new QualifiedReport(validationConclusion, dssReports.getDetailedReportJaxb());
     }
 
     private ValidationConclusion getValidationConclusion() {

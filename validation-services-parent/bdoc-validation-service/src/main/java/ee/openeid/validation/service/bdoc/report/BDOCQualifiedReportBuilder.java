@@ -93,7 +93,7 @@ public class BDOCQualifiedReportBuilder {
 
     public QualifiedReport build() {
         ValidationConclusion validationConclusion = getValidationConclusion();
-        return new QualifiedReport(new ee.openeid.siva.validation.document.report.SimpleReport(validationConclusion), new DetailedReport(validationConclusion, null));
+        return new QualifiedReport(validationConclusion,null);
     }
 
     private ValidationConclusion getValidationConclusion() {

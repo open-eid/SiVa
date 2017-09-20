@@ -95,7 +95,7 @@ public class BDOCValidationServiceIntegrationTest {
     @Test
     public void qualifiedReportShouldHaveValidationWarnings() throws Exception {
         QualifiedReport validationResult = bdocValidationService.validateDocument(buildValidationDocument(BDOC_TEST_FILE_UNSIGNED));
-        List<ValidationWarning> validationWarnings = validationResult.getSimpleReport().getValidationConclusion().getValidationWarnings();
+        List<ValidationWarning> validationWarnings = validationResult.getValidationConclusion().getValidationWarnings();
         assertThat(validationWarnings, hasSize(5));
         assertThat(validationWarnings, containsInAnyOrder(
                 hasProperty("content", is("Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml")),
@@ -109,7 +109,7 @@ public class BDOCValidationServiceIntegrationTest {
     @Test
     public void qualifiedReportShouldNotHaveValidationWarnings() throws Exception {
         QualifiedReport validationResult = bdocValidationService.validateDocument(buildValidationDocument(BDOC_TEST_FILE_ALL_SIGNED));
-        List<ValidationWarning> validationWarnings = validationResult.getSimpleReport().getValidationConclusion().getValidationWarnings();
+        List<ValidationWarning> validationWarnings = validationResult.getValidationConclusion().getValidationWarnings();
         assertThat(validationWarnings, hasSize(0));
     }
 
@@ -159,7 +159,7 @@ public class BDOCValidationServiceIntegrationTest {
     @Test
     public void qualifiedReportShouldIncludeRequiredFields() throws Exception {
         QualifiedReport validationResult2Signatures = bdocValidationService.validateDocument(bdocValid2Signatures());
-        ValidationConclusion validationConclusion = validationResult2Signatures.getSimpleReport().getValidationConclusion();
+        ValidationConclusion validationConclusion = validationResult2Signatures.getValidationConclusion();
         assertNotNull(validationConclusion.getPolicy());
         assertNotNull(validationConclusion.getValidationTime());
         assertEquals(VALID_BDOC_TM_2_SIGNATURES, validationConclusion.getValidatedDocument().getFilename());
@@ -171,9 +171,9 @@ public class BDOCValidationServiceIntegrationTest {
     @Test
     public void signatureScopeShouldBeCorrectWhenDatafilesContainSpacesOrParenthesis() throws Exception {
         QualifiedReport report = bdocValidationService.validateDocument(buildValidationDocument(VALID_ID_CARD_MOB_ID));
-        report.getSimpleReport().getValidationConclusion().getSignatures().forEach(sig -> assertContainsScope(sig, "Proov (2).txt"));
+        report.getValidationConclusion().getSignatures().forEach(sig -> assertContainsScope(sig, "Proov (2).txt"));
         QualifiedReport report2 = bdocValidationService.validateDocument(buildValidationDocument(VALID_BALTIC_EST_LT));
-        report2.getSimpleReport().getValidationConclusion().getSignatures().forEach(sig -> assertContainsScope(sig, "Baltic MoU digital signing_04112015.docx"));
+        report2.getValidationConclusion().getSignatures().forEach(sig -> assertContainsScope(sig, "Baltic MoU digital signing_04112015.docx"));
     }
 
     private void assertContainsScope(SignatureValidationData signature, String filename) {
@@ -188,7 +188,7 @@ public class BDOCValidationServiceIntegrationTest {
     public void qualifiedReportShouldHaveCorrectSignatureValidationDataForSignature1() throws Exception {
 
         QualifiedReport validationResult2Signatures = bdocValidationService.validateDocument(bdocValid2Signatures());
-        SignatureValidationData sig1 = validationResult2Signatures.getSimpleReport().getValidationConclusion().getSignatures()
+        SignatureValidationData sig1 = validationResult2Signatures.getValidationConclusion().getSignatures()
                 .stream()
                 .filter(sig -> sig.getId().equals("S0"))
                 .findFirst()
@@ -213,7 +213,7 @@ public class BDOCValidationServiceIntegrationTest {
     @Test
     public void qualifiedReportShouldHaveCorrectSignatureValidationDataForSignature2() throws Exception {
         QualifiedReport validationResult2Signatures = bdocValidationService.validateDocument(bdocValid2Signatures());
-        SignatureValidationData sig2 = validationResult2Signatures.getSimpleReport().getValidationConclusion().getSignatures()
+        SignatureValidationData sig2 = validationResult2Signatures.getValidationConclusion().getSignatures()
                 .stream()
                 .filter(sig -> sig.getId().equals("S1"))
                 .findFirst()
@@ -238,13 +238,13 @@ public class BDOCValidationServiceIntegrationTest {
     @Test
     public void reportForBdocValidationShouldIncludeCorrectAsiceSignatureForm() throws Exception {
         QualifiedReport report = bdocValidationService.validateDocument(bdocValid2Signatures());
-        assertEquals("ASiC_E", report.getSimpleReport().getValidationConclusion().getSignatureForm());
+        assertEquals("ASiC_E", report.getValidationConclusion().getSignatureForm());
     }
 
     @Test
     public void bestSignatureTimeInQualifiedBdocReportShouldNotBeBlank() throws Exception {
         QualifiedReport report = bdocValidationService.validateDocument(bdocValidIdCardAndMobIdSignatures());
-        ValidationConclusion validationConclusion = report.getSimpleReport().getValidationConclusion();
+        ValidationConclusion validationConclusion = report.getValidationConclusion();
         String bestSignatureTime1 = validationConclusion.getSignatures().get(0).getInfo().getBestSignatureTime();
         String bestSignatureTime2 = validationConclusion.getSignatures().get(1).getInfo().getBestSignatureTime();
         assertTrue(StringUtils.isNotBlank(bestSignatureTime1));
@@ -254,12 +254,12 @@ public class BDOCValidationServiceIntegrationTest {
     @Test
     public void bdocWithCRLRevocationDataOnlyShouldFail() throws Exception {
         QualifiedReport report = bdocValidationService.validateDocument(bdocCRLRevocationOnly());
-        assertTrue(report.getSimpleReport().getValidationConclusion().getValidSignaturesCount() == 0);
+        assertTrue(report.getValidationConclusion().getValidSignaturesCount() == 0);
     }
 
     @Test
     public void validationReportShouldContainDefaultPolicyWhenPolicyIsNotExplicitlyGiven() throws Exception {
-        Policy policy = validateWithPolicy("").getSimpleReport().getValidationConclusion().getPolicy();
+        Policy policy = validateWithPolicy("").getValidationConclusion().getPolicy();
         assertEquals(ADES_POLICY.getName(), policy.getPolicyName());
         assertEquals(ADES_POLICY.getDescription(), policy.getPolicyDescription());
         assertEquals(ADES_POLICY.getUrl(), policy.getPolicyUrl());
@@ -267,7 +267,7 @@ public class BDOCValidationServiceIntegrationTest {
 
     @Test
     public void validationReportShouldContainAdesPolicyWhenAdesPolicyIsGivenToValidator() throws Exception {
-        Policy policy = validateWithPolicy(POL_V3).getSimpleReport().getValidationConclusion().getPolicy();
+        Policy policy = validateWithPolicy(POL_V3).getValidationConclusion().getPolicy();
         assertEquals(ADES_POLICY.getName(), policy.getPolicyName());
         assertEquals(ADES_POLICY.getDescription(), policy.getPolicyDescription());
         assertEquals(ADES_POLICY.getUrl(), policy.getPolicyUrl());
@@ -275,7 +275,7 @@ public class BDOCValidationServiceIntegrationTest {
 
     @Test
     public void validationReportShouldContainAdesQcPolicyWhenAdesQcPolicyIsGivenToValidator() throws Exception {
-        Policy policy = validateWithPolicy(POL_V4).getSimpleReport().getValidationConclusion().getPolicy();
+        Policy policy = validateWithPolicy(POL_V4).getValidationConclusion().getPolicy();
         assertEquals(ADES_QC_POLICY.getName(), policy.getPolicyName());
         assertEquals(ADES_QC_POLICY.getDescription(), policy.getPolicyDescription());
         assertEquals(ADES_QC_POLICY.getUrl(), policy.getPolicyUrl());
@@ -283,7 +283,7 @@ public class BDOCValidationServiceIntegrationTest {
 
     @Test
     public void validationReportShouldContainQESPolicyWhenQESPolicyIsGivenToValidator() throws Exception {
-        Policy policy = validateWithPolicy(POL_V5).getSimpleReport().getValidationConclusion().getPolicy();
+        Policy policy = validateWithPolicy(POL_V5).getValidationConclusion().getPolicy();
         assertEquals(QES_POLICY.getName(), policy.getPolicyName());
         assertEquals(QES_POLICY.getDescription(), policy.getPolicyDescription());
         assertEquals(QES_POLICY.getUrl(), policy.getPolicyUrl());
@@ -292,7 +292,7 @@ public class BDOCValidationServiceIntegrationTest {
     @Test
     public void whenNonExistingPolicyIsGivenThenValidatorShouldThrowException() throws Exception {
         expectedException.expect(InvalidPolicyException.class);
-        validateWithPolicy("non-existing-policy").getSimpleReport().getValidationConclusion().getPolicy();
+        validateWithPolicy("non-existing-policy").getValidationConclusion().getPolicy();
     }
 
     @Test
@@ -314,7 +314,7 @@ public class BDOCValidationServiceIntegrationTest {
         ServiceInfo serviceInfo = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
         removeQcConditions(serviceInfo, QC_WITH_QSCD);
         assertServiceHasQualifiers(serviceInfo, QC_STATEMENT, QC_FOR_ESIG);
-        SignatureValidationData signature = validateWithPolicy(policy, BDOC_TEST_OF_KLASS3_CHAIN).getSimpleReport().getValidationConclusion().getSignatures().get(0);
+        SignatureValidationData signature = validateWithPolicy(policy, BDOC_TEST_OF_KLASS3_CHAIN).getValidationConclusion().getSignatures().get(0);
         assertEquals("TOTAL-FAILED", signature.getIndication());
         assertEquals("AdESQC", signature.getSignatureLevel());
     }
@@ -326,7 +326,7 @@ public class BDOCValidationServiceIntegrationTest {
         ServiceInfo serviceInfo = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
         removeQcConditions(serviceInfo, QC_WITH_QSCD);
         assertServiceHasQualifiers(serviceInfo, QC_STATEMENT, QC_FOR_ESIG);
-        SignatureValidationData signature = validateWithPolicy(policy, BDOC_TEST_OF_KLASS3_CHAIN).getSimpleReport().getValidationConclusion().getSignatures().get(0);
+        SignatureValidationData signature = validateWithPolicy(policy, BDOC_TEST_OF_KLASS3_CHAIN).getValidationConclusion().getSignatures().get(0);
         assertEquals("TOTAL-PASSED", signature.getIndication());
         assertEquals("AdESQC", signature.getSignatureLevel());
     }
@@ -338,7 +338,7 @@ public class BDOCValidationServiceIntegrationTest {
         ServiceInfo serviceInfo = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
         removeQcConditions(serviceInfo, QC_WITH_QSCD, QC_STATEMENT);
         assertServiceHasQualifiers(serviceInfo, QC_FOR_ESIG);
-        SignatureValidationData signature = validateWithPolicy(policy, BDOC_TEST_OF_KLASS3_CHAIN).getSimpleReport().getValidationConclusion().getSignatures().get(0);
+        SignatureValidationData signature = validateWithPolicy(policy, BDOC_TEST_OF_KLASS3_CHAIN).getValidationConclusion().getSignatures().get(0);
         assertEquals("TOTAL-FAILED", signature.getIndication());
         assertEquals("AdES", signature.getSignatureLevel());
     }
@@ -349,7 +349,7 @@ public class BDOCValidationServiceIntegrationTest {
         ServiceInfo serviceInfo = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
         removeQcConditions(serviceInfo, QC_WITH_QSCD, QC_STATEMENT);
         assertServiceHasQualifiers(serviceInfo, QC_FOR_ESIG);
-        SignatureValidationData signature = validateWithPolicy(policy, BDOC_TEST_OF_KLASS3_CHAIN).getSimpleReport().getValidationConclusion().getSignatures().get(0);
+        SignatureValidationData signature = validateWithPolicy(policy, BDOC_TEST_OF_KLASS3_CHAIN).getValidationConclusion().getSignatures().get(0);
         assertEquals("TOTAL-PASSED", signature.getIndication());
         assertEquals("ADESIG", signature.getSignatureLevel());
     }
@@ -357,7 +357,7 @@ public class BDOCValidationServiceIntegrationTest {
     private void testWithAllQualifiersSet(String policy) throws Exception {
         ServiceInfo serviceInfo = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
         assertServiceHasQualifiers(serviceInfo, QC_WITH_QSCD, QC_STATEMENT, QC_FOR_ESIG);
-        SignatureValidationData signature = validateWithPolicy(policy, BDOC_TEST_OF_KLASS3_CHAIN).getSimpleReport().getValidationConclusion().getSignatures().get(0);
+        SignatureValidationData signature = validateWithPolicy(policy, BDOC_TEST_OF_KLASS3_CHAIN).getValidationConclusion().getSignatures().get(0);
         assertEquals("TOTAL-PASSED", signature.getIndication());
         assertEquals("QES", signature.getSignatureLevel());
     }

@@ -21,8 +21,9 @@ import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import ee.openeid.siva.proxy.document.DocumentType;
-import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
+import ee.openeid.siva.webapp.response.ValidationResponse;
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
 
@@ -97,19 +98,19 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         return PRINT_RESPONSE;
     }
 
-    protected ValidationConclusion postForReport(String file, String signaturePolicy) {
+    protected QualifiedReport postForReport(String file, String signaturePolicy) {
         if (shouldPrintResponse()) {
             return postForReportAndPrintResponse(file, signaturePolicy);
         }
-        return mapToReport(post(validationRequestFor(file, signaturePolicy)).andReturn().body().asString()).getValidationConclusion();
+        return mapToReport(post(validationRequestFor(file, signaturePolicy)).andReturn().body().asString()).getValidationReport();
     }
 
-    protected ValidationConclusion postForReport(String file) {
+    protected QualifiedReport postForReport(String file) {
         return postForReport(file, VALID_SIGNATURE_POLICY_5);
     }
 
-    protected ValidationConclusion postForReportAndPrintResponse(String file, String signaturePolicy) {
-        return mapToReport(post(validationRequestFor(file, signaturePolicy)).andReturn().body().prettyPrint()).getValidationConclusion();
+    protected QualifiedReport postForReportAndPrintResponse(String file, String signaturePolicy) {
+        return mapToReport(post(validationRequestFor(file, signaturePolicy)).andReturn().body().prettyPrint()).getValidationReport();
     }
 
     protected String validationRequestFor(String file, String signaturePolicy) {
@@ -190,9 +191,9 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
                 SIGNATURE_POLICY, signaturePolicy);
     }
 
-    protected SimpleReport mapToReport(String json) {
+    protected ValidationResponse mapToReport(String json) {
         try {
-            return new ObjectMapper().readValue(json, SimpleReport.class);
+            return new ObjectMapper().readValue(json, ValidationResponse.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

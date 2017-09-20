@@ -65,18 +65,18 @@ public class ValidationProxy {
     private ApplicationContext applicationContext;
 
 
-    public Report validate(ProxyDocument proxyDocument) {
+    public QualifiedReport validate(ProxyDocument proxyDocument) {
         long validationStartTime = System.nanoTime();
-        Report report;
+        QualifiedReport report;
         if (proxyDocument.getDocumentType() != null && proxyDocument.getDocumentType() == DocumentType.XROAD) {
-            report = new SimpleReport(restProxyService.validate(createValidationDocument(proxyDocument)));
+            report = new QualifiedReport(restProxyService.validate(createValidationDocument(proxyDocument)), null);
         } else {
             ValidationService validationService = getServiceForType(proxyDocument);
             report = chooseReport(validationService.validateDocument(createValidationDocument(proxyDocument)), proxyDocument.getReportType());
             if (validationService instanceof TimeStampTokenValidationService && TimeStampTokenValidationData.Indication.TOTAL_PASSED == report.getValidationConclusion().getTimeStampTokens().get(0).getIndication()) {
                 ProxyDocument dataFileProxyDocument = generateDataFileProxyDocument(proxyDocument);
                 ValidationService dataFileValidationService = getServiceForType(dataFileProxyDocument);
-                Report dataFileReport = null;
+                QualifiedReport dataFileReport = null;
                 try {
                     dataFileReport = chooseReport(dataFileValidationService.validateDocument(createValidationDocument(dataFileProxyDocument)), proxyDocument.getReportType());
                     removeUnnecessaryWarning(dataFileReport.getValidationConclusion());
@@ -101,14 +101,14 @@ public class ValidationProxy {
         validationConclusion.setValidationWarnings(newList);
     }
 
-    private Report chooseReport(QualifiedReport qualifiedReport, ReportType reportType) {
-        if (ReportType.DETAILED == reportType) {
-            return qualifiedReport.getDetailedReport();
+    private QualifiedReport chooseReport(QualifiedReport qualifiedReport, ReportType reportType) {
+        if (reportType == null|| reportType == ReportType.SIMPLE) {
+            qualifiedReport.setValidationProcess(null);
         }
-        return qualifiedReport.getSimpleReport();
+        return qualifiedReport;
     }
 
-    private Report mergeReports(Report timeStampTokenReport, Report dataFileReport) {
+    private QualifiedReport mergeReports(QualifiedReport timeStampTokenReport, QualifiedReport dataFileReport) {
         if (dataFileReport != null) {
             dataFileReport.getValidationConclusion().setTimeStampTokens(timeStampTokenReport.getValidationConclusion().getTimeStampTokens());
             return dataFileReport;

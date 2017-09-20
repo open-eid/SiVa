@@ -30,7 +30,7 @@ public class TimeStampTokenQualifiedReportBuilder {
 
     public QualifiedReport build() {
         ValidationConclusion validationConclusion = getValidationConclusion();
-        return new QualifiedReport(new SimpleReport(validationConclusion), new DetailedReport(validationConclusion, null));
+        return new QualifiedReport(validationConclusion,null);
     }
 
     private ValidationConclusion getValidationConclusion() {

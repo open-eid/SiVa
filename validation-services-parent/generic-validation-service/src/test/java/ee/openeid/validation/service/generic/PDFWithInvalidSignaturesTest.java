@@ -36,7 +36,7 @@ public class PDFWithInvalidSignaturesTest extends PDFValidationServiceTest {
         QualifiedReport report = validationService.validateDocument(
                 buildValidationDocument(PDF_WITH_ONE_BASELINE_PROFILE_B_SIGNATURE));
         assertNotNull(report);
-        ValidationConclusion validationConclusion = report.getSimpleReport().getValidationConclusion();
+        ValidationConclusion validationConclusion = report.getValidationConclusion();
         assertTrue(validationConclusion.getSignaturesCount() == 1);
         assertTrue(validationConclusion.getValidSignaturesCount() == 0);
     }
@@ -47,7 +47,7 @@ public class PDFWithInvalidSignaturesTest extends PDFValidationServiceTest {
         QualifiedReport report = validationService.validateDocument(
                 buildValidationDocument(PDF_WITH_ONE_BASELINE_PROFILE_B_SIGNATURE));
         System.out.println(report);
-        SignatureValidationData signature = report.getSimpleReport().getValidationConclusion().getSignatures().get(0);
+        SignatureValidationData signature = report.getValidationConclusion().getSignatures().get(0);
         assertEquals("TOTAL-FAILED", signature.getIndication());
         assertTrue(signature.getErrors().size() == 1);
         Error error = signature.getErrors().get(0);

@@ -31,7 +31,7 @@ public class PDFWithNoSignaturesTest extends PDFValidationServiceTest {
         QualifiedReport report = validationService.validateDocument(
                 buildValidationDocument(PDF_WITH_NO_SIGNATURES));
         assertNotNull(report);
-        ValidationConclusion validationConclusion = report.getSimpleReport().getValidationConclusion();
+        ValidationConclusion validationConclusion = report.getValidationConclusion();
         assertEquals(PDF_WITH_NO_SIGNATURES, validationConclusion.getValidatedDocument().getFilename());
         assertTrue(validationConclusion.getValidSignaturesCount() == 0);
         assertTrue(validationConclusion.getSignaturesCount() == 0);

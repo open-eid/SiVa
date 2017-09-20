@@ -59,19 +59,19 @@ public class DocumentValidationIT extends SiVaRestTests{
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("3f_2s_1f_unsigned.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "3f_2s_1f_unsigned.bdoc",""))
                 .then()
-                .body("validationConclusion.signaturesCount", Matchers.is(2))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationConclusion.signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
-                .body("validationConclusion.signatures[0].errors.content", Matchers.hasItems("The reference data object(s) is not intact!"))
-                .body("validationConclusion.signatures[1].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationConclusion.signatures[1].subIndication", Matchers.is("HASH_FAILURE"))
-                .body("validationConclusion.signatures[1].errors.content", Matchers.hasItems("The reference data object(s) is not intact!"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file document_3.xml with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file document_3.xml with mimetype application/octet-stream but the signature file for signature S1 does not have an entry for this file"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Container contains a file named document_3.xml which is not found in the signature file"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Signature PUDOV,VADIM,39101013724 has unsigned files: document_3.xml"));
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The reference data object(s) is not intact!"))
+                .body("validationReport.validationConclusion.signatures[1].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[1].subIndication", Matchers.is("HASH_FAILURE"))
+                .body("validationReport.validationConclusion.signatures[1].errors.content", Matchers.hasItems("The reference data object(s) is not intact!"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file document_3.xml with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file document_3.xml with mimetype application/octet-stream but the signature file for signature S1 does not have an entry for this file"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Container contains a file named document_3.xml which is not found in the signature file"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Signature PUDOV,VADIM,39101013724 has unsigned files: document_3.xml"));
 
     }
     /**
@@ -93,14 +93,14 @@ public class DocumentValidationIT extends SiVaRestTests{
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("3f_2s_1partly_signed.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "3f_2s_1partly_signed.bdoc",""))
                 .then()
-                .body("validationConclusion.signaturesCount", Matchers.is(2))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationConclusion.signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
-                .body("validationConclusion.signatures[0].errors.content", Matchers.hasItems("The reference data object(s) is not intact!"))
-                .body("validationConclusion.signatures[1].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file document_3.xml with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml"));
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The reference data object(s) is not intact!"))
+                .body("validationReport.validationConclusion.signatures[1].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file document_3.xml with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml"));
 
     }
 
@@ -124,17 +124,17 @@ public class DocumentValidationIT extends SiVaRestTests{
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("3f_2s_2partly_signed.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "3f_2s_2partly_signed.bdoc",""))
                 .then()
-                .body("validationConclusion.signaturesCount", Matchers.is(2))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationConclusion.signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
-                .body("validationConclusion.signatures[0].errors.content", Matchers.hasItems("The reference data object(s) is not intact!"))
-                .body("validationConclusion.signatures[1].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationConclusion.signatures[0].errors.content", Matchers.hasItems("The reference data object(s) is not intact!"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file document_3.xml with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file document_2.docx with mimetype application/octet-stream but the signature file for signature S1 does not have an entry for this file"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Signature PUDOV,VADIM,39101013724 has unsigned files: document_2.docx"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml"));
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The reference data object(s) is not intact!"))
+                .body("validationReport.validationConclusion.signatures[1].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The reference data object(s) is not intact!"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file document_3.xml with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file document_2.docx with mimetype application/octet-stream but the signature file for signature S1 does not have an entry for this file"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Signature PUDOV,VADIM,39101013724 has unsigned files: document_2.docx"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml"));
 
     }
     /**
@@ -157,21 +157,21 @@ public class DocumentValidationIT extends SiVaRestTests{
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("4f_2s_all_combinations.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "4f_2s_all_combinations.bdoc", ""))
                 .then()
-                .body("validationConclusion.signaturesCount", Matchers.is(2))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationConclusion.signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
-                .body("validationConclusion.signatures[0].errors.content", Matchers.hasItems("The reference data object(s) is not intact!"))
-                .body("validationConclusion.signatures[1].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationConclusion.signatures[0].errors.content", Matchers.hasItems("The reference data object(s) is not intact!"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file unsigned.txt with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file document_3.xml with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file document_2.docx with mimetype application/octet-stream but the signature file for signature S1 does not have an entry for this file"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file unsigned.txt with mimetype application/octet-stream but the signature file for signature S1 does not have an entry for this file"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Container contains a file named document_2.docx which is not found in the signature file"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Container contains a file named unsigned.txt which is not found in the signature file"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Signature PUDOV,VADIM,39101013724 has unsigned files: document_2.docx, unsigned.txt"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml, unsigned.txt"));
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The reference data object(s) is not intact!"))
+                .body("validationReport.validationConclusion.signatures[1].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The reference data object(s) is not intact!"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file unsigned.txt with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file document_3.xml with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file document_2.docx with mimetype application/octet-stream but the signature file for signature S1 does not have an entry for this file"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file unsigned.txt with mimetype application/octet-stream but the signature file for signature S1 does not have an entry for this file"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Container contains a file named document_2.docx which is not found in the signature file"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Container contains a file named unsigned.txt which is not found in the signature file"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Signature PUDOV,VADIM,39101013724 has unsigned files: document_2.docx, unsigned.txt"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml, unsigned.txt"));
 
     }
 
@@ -195,21 +195,21 @@ public class DocumentValidationIT extends SiVaRestTests{
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("6f_2s_3unsigned.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "6f_2s_3unsigned.bdoc", ""))
                 .then()
-                .body("validationConclusion.signaturesCount", Matchers.is(2))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(2))
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationConclusion.signatures[1].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file unsigned.txt with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file unsigned2.txt with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file unsigned3.txt with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file unsigned.txt with mimetype application/octet-stream but the signature file for signature S1 does not have an entry for this file"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file unsigned2.txt with mimetype application/octet-stream but the signature file for signature S1 does not have an entry for this file"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file unsigned3.txt with mimetype application/octet-stream but the signature file for signature S1 does not have an entry for this file"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Container contains a file named unsigned.txt which is not found in the signature file"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Container contains a file named unsigned2.txt which is not found in the signature file"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Container contains a file named unsigned3.txt which is not found in the signature file"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Signature PUDOV,VADIM,39101013724 has unsigned files: unsigned.txt, unsigned2.txt, unsigned3.txt"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: unsigned.txt, unsigned2.txt, unsigned3.txt"));
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(2))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[1].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file unsigned.txt with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file unsigned2.txt with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file unsigned3.txt with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file unsigned.txt with mimetype application/octet-stream but the signature file for signature S1 does not have an entry for this file"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file unsigned2.txt with mimetype application/octet-stream but the signature file for signature S1 does not have an entry for this file"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file unsigned3.txt with mimetype application/octet-stream but the signature file for signature S1 does not have an entry for this file"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Container contains a file named unsigned.txt which is not found in the signature file"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Container contains a file named unsigned2.txt which is not found in the signature file"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Container contains a file named unsigned3.txt which is not found in the signature file"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Signature PUDOV,VADIM,39101013724 has unsigned files: unsigned.txt, unsigned2.txt, unsigned3.txt"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: unsigned.txt, unsigned2.txt, unsigned3.txt"));
 
     }
 
@@ -232,12 +232,12 @@ public class DocumentValidationIT extends SiVaRestTests{
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("2f_2signed_1f_deleted.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "2f_2signed_1f_deleted.bdoc", ""))
                 .then()
-                .body("validationConclusion.signaturesCount", Matchers.is(1))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("validationConclusion.signatures[0].subIndication", Matchers.is("SIGNED_DATA_NOT_FOUND"))
-                .body("validationConclusion.signatures[0].errors.content", Matchers.hasItems("The reference data object(s) is not found!"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file Test document.pdf with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file"))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIGNED_DATA_NOT_FOUND"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The reference data object(s) is not found!"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file Test document.pdf with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file"))
         ;
 
     }
@@ -260,12 +260,12 @@ public class DocumentValidationIT extends SiVaRestTests{
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("2f_2signed_1f_totally_removed.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "2f_2signed_1f_totally_removed.bdoc", ""))
                 .then()
-                .body("validationConclusion.signaturesCount", Matchers.is(1))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("validationConclusion.signatures[0].subIndication", Matchers.is("SIGNED_DATA_NOT_FOUND"))
-                .body("validationConclusion.signatures[0].errors.content", Matchers.hasItems("The reference data object(s) is not found!"))
-                .body("validationConclusion.validationWarnings", Matchers.isEmptyOrNullString());
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIGNED_DATA_NOT_FOUND"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The reference data object(s) is not found!"))
+                .body("validationReport.validationConclusion.validationWarnings", Matchers.isEmptyOrNullString());
 
     }
 
@@ -290,12 +290,12 @@ public class DocumentValidationIT extends SiVaRestTests{
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("3f_2signed_1unsigned_all_in_manifest.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "3f_2signed_1unsigned_all_in_manifest.bdoc", ""))
                 .then()
-                .body("validationConclusion.signaturesCount", Matchers.is(1))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file Test_1703.pdf with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Container contains a file named Test_1703.pdf which is not found in the signature file"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: Test_1703.pdf"));
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file Test_1703.pdf with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Container contains a file named Test_1703.pdf which is not found in the signature file"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: Test_1703.pdf"));
 
     }
     /**
@@ -318,11 +318,11 @@ public class DocumentValidationIT extends SiVaRestTests{
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("3f_2signed_1unsigned_2in_manifest.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "33f_2signed_1unsigned_2in_manifest.bdoc", ""))
                 .then()
-                .body("validationConclusion.signaturesCount", Matchers.is(1))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Container contains a file named Test_1703.pdf which is not found in the signature file"))
-                .body("validationConclusion.validationWarnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: Test_1703.pdf"));
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Container contains a file named Test_1703.pdf which is not found in the signature file"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: Test_1703.pdf"));
 
     }
     /**
@@ -344,10 +344,10 @@ public class DocumentValidationIT extends SiVaRestTests{
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("2f_all_signed.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "2f_all_signed.bdoc", ""))
                 .then()
-                .body("validationConclusion.signaturesCount", Matchers.is(1))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationConclusion.validationWarnings", Matchers.isEmptyOrNullString());
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.validationWarnings", Matchers.isEmptyOrNullString());
 
     }
 

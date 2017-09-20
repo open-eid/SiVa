@@ -17,6 +17,7 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
@@ -104,8 +105,8 @@ public class PdfValidationFailIT extends SiVaRestTests {
      */
     @Test
     public void signingCertificateWithoutNonRepudiationKeyUsageAttributeShouldFail() {
-        ValidationConclusion validationConclusion = postForReport("hellopades-pades-lt-sha256-auth.pdf");
-        assertInvalidWithError(validationConclusion.getSignatures().get(0), "The signer's certificate has not expected key-usage!");
+        QualifiedReport report = postForReport("hellopades-pades-lt-sha256-auth.pdf");
+        assertInvalidWithError(report.getValidationConclusion().getSignatures().get(0), "The signer's certificate has not expected key-usage!");
     }
 
     /**

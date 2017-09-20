@@ -16,6 +16,7 @@
 
 package ee.openeid.siva.integrationtest;
 
+import com.jayway.restassured.response.Response;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
@@ -129,15 +130,19 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
     @Test
     public void documentSignedWithSha256Rsa1024AlgoShouldPass() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-sha256-rsa1024.pdf"));
+
+        Response response = post(validationRequestWithDocumentTypeValidKeys(encodedString, "hellopades-lt-sha256-rsa1024.pdf", null, ""));
+        String responseBody = response.getBody().asString();
+
         post(validationRequestWithDocumentTypeValidKeys(encodedString, "hellopades-lt-sha256-rsa1024.pdf", null, ""))
                 .then()
-                .body("validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
-                .body("validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
-                .body("validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
-                .body("validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationConclusion.signaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**

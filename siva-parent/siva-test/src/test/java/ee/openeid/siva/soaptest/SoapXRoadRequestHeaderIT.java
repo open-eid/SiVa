@@ -92,12 +92,12 @@ public class SoapXRoadRequestHeaderIT extends SiVaSoapTests {
                 "</soapenv:Envelope>";
 
         String expectedSoapResponseHeader =
-                "<soap:Header><xrd:client xmlns:xrd=\"http://x-road.eu/xsd/xroad.xsd\" xmlns:id=\"http://x-road.eu/xsd/identifiers\" id:objectType=\"SUBSYSTEM\">\n" +
+                "<soap:Header><xrd:client xmlns:id=\"http://x-road.eu/xsd/identifiers\" xmlns:xrd=\"http://x-road.eu/xsd/xroad.xsd\" id:objectType=\"SUBSYSTEM\">\n" +
                 "           <id:xRoadInstance>EE</id:xRoadInstance>\n" +
                 "           <id:memberClass>GOV</id:memberClass>\n" +
                 "           <id:memberCode>MEMBER1</id:memberCode>\n" +
                 "           <id:subsystemCode>SUBSYSTEM1</id:subsystemCode>\n" +
-                "       </xrd:client><xrd:service xmlns:xrd=\"http://x-road.eu/xsd/xroad.xsd\" xmlns:id=\"http://x-road.eu/xsd/identifiers\" id:objectType=\"SERVICE\">\n" +
+                "       </xrd:client><xrd:service xmlns:id=\"http://x-road.eu/xsd/identifiers\" xmlns:xrd=\"http://x-road.eu/xsd/xroad.xsd\" id:objectType=\"SERVICE\">\n" +
                 "           <id:xRoadInstance>EE</id:xRoadInstance>\n" +
                 "           <id:memberClass>GOV</id:memberClass>\n" +
                 "           <id:memberCode>MEMBER2</id:memberCode>\n" +
@@ -161,14 +161,14 @@ public class SoapXRoadRequestHeaderIT extends SiVaSoapTests {
                 "</soapenv:Envelope>";
 
         String expectedSoapResponseHeader =
-                "<soap:Header><xrd:service xmlns:xrd=\"http://x-road.eu/xsd/xroad.xsd\" xmlns:id=\"http://x-road.eu/xsd/identifiers\" id:objectType=\"SERVICE\">\n" +
+                "<soap:Header><xrd:service xmlns:id=\"http://x-road.eu/xsd/identifiers\" xmlns:xrd=\"http://x-road.eu/xsd/xroad.xsd\" id:objectType=\"SERVICE\">\n" +
                 "           <id:xRoadInstance>EE</id:xRoadInstance>\n" +
                 "           <id:memberClass>GOV</id:memberClass>\n" +
                 "           <id:memberCode>MEMBER2</id:memberCode>\n" +
                 "           <id:subsystemCode>SUBSYSTEM2</id:subsystemCode>\n" +
                 "           <id:serviceCode>exampleService</id:serviceCode>\n" +
                 "           <id:serviceVersion>v1</id:serviceVersion>\n" +
-                "       </xrd:service><xrd:client xmlns:xrd=\"http://x-road.eu/xsd/xroad.xsd\" xmlns:id=\"http://x-road.eu/xsd/identifiers\" id:objectType=\"SUBSYSTEM\">\n" +
+                "       </xrd:service><xrd:client xmlns:id=\"http://x-road.eu/xsd/identifiers\" xmlns:xrd=\"http://x-road.eu/xsd/xroad.xsd\" id:objectType=\"SUBSYSTEM\">\n" +
                 "           <id:xRoadInstance>EE</id:xRoadInstance>\n" +
                 "           <id:memberClass>GOV</id:memberClass>\n" +
                 "           <id:memberCode>MEMBER1</id:memberCode>\n" +

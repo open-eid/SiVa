@@ -32,7 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.xml.ws.Holder;
 
 @InInterceptors(interceptors = {"ee.openeid.siva.webapp.soap.interceptor.SoapRequestValidationInterceptor"})
-@OutInterceptors(interceptors = {"ee.openeid.siva.webapp.soap.interceptor.SoapResponseHeaderInterceptor"})
+@OutInterceptors(interceptors = {"ee.openeid.siva.webapp.soap.interceptor.SoapResponseHeaderInterceptor", "org.apache.cxf.binding.soap.saaj.SAAJOutInterceptor", "ee.openeid.siva.webapp.soap.interceptor.ReportSignatureInterceptor"})
 @OutFaultInterceptors(interceptors = {"ee.openeid.siva.webapp.soap.interceptor.SoapFaultResponseInterceptor", "ee.openeid.siva.webapp.soap.interceptor.SoapResponseHeaderInterceptor"})
 @SchemaValidation(type = SchemaValidation.SchemaValidationType.IN)
 public class ValidationWebServiceImpl implements ValidationWebService {
@@ -42,11 +42,10 @@ public class ValidationWebServiceImpl implements ValidationWebService {
     private QualifiedReportSoapResponseTransformer responseTransformer;
 
     @Override
-    public void validateDocument(SoapValidationRequest validationRequest, Holder<QualifiedReport> validationReport, Holder<ee.openeid.siva.webapp.soap.DetailedReport> validationProcess) {
-        ee.openeid.siva.validation.document.report.Report qualifiedReport = validationProxy.validate(requestTransformer.transform(validationRequest));
-        ValidateDocumentResponse validateDocumentResponse = responseTransformer.toSoapResponse(qualifiedReport);
-        validationReport.value = validateDocumentResponse.getValidationConclusion();
-        validationProcess.value = validateDocumentResponse.getValidationProcess();
+    public void validateDocument(SoapValidationRequest validationRequest, Holder<QualifiedReport> validationReport, Holder<String> validationReportSignature) {
+        ee.openeid.siva.validation.document.report.QualifiedReport qualifiedReport = validationProxy.validate(requestTransformer.transform(validationRequest));
+        QualifiedReport responseQualifiedReport = responseTransformer.toSoapResponse(qualifiedReport);
+        validationReport.value = responseQualifiedReport;
     }
 
     @Autowired

@@ -58,8 +58,8 @@ public class LargeFileIT extends SiVaRestTests{
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("9MB_PDF.pdf"));
         post(validationRequestWithValidKeys(encodedString, "9MB_PDF.pdf", ""))
                 .then()
-                .body("validationConclusion.signatures[0].signatureFormat",equalTo("PAdES-BASELINE-LT"))
-                .body("validationConclusion.validatedDocument.filename",equalTo("9MB_PDF.pdf"));
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat",equalTo("PAdES-BASELINE-LT"))
+                .body("validationReport.validationConclusion.validatedDocument.filename",equalTo("9MB_PDF.pdf"));
     }
 
     /**
@@ -80,9 +80,9 @@ public class LargeFileIT extends SiVaRestTests{
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("9MB_BDOC-TS.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "9MB_BDOC-TS.bdoc",""))
                 .then()
-                .body("validationConclusion.signatures[0].signatureFormat",equalTo("XAdES_BASELINE_LT"))
-                .body("validationConclusion.validatedDocument.filename",equalTo("9MB_BDOC-TS.bdoc"))
-                .body("validationConclusion.validSignaturesCount", equalTo(1));
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat",equalTo("XAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.validatedDocument.filename",equalTo("9MB_BDOC-TS.bdoc"))
+                .body("validationReport.validationConclusion.validSignaturesCount", equalTo(1));
     }
 
     /**
@@ -103,9 +103,9 @@ public class LargeFileIT extends SiVaRestTests{
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("9MB_BDOC-TM.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "9MB_BDOC-TM.bdoc",""))
                 .then()
-                .body("validationConclusion.signatures[0].signatureFormat",equalTo("XAdES_BASELINE_LT_TM"))
-                .body("validationConclusion.validatedDocument.filename",equalTo("9MB_BDOC-TM.bdoc"))
-                .body("validationConclusion.validSignaturesCount", equalTo(1));
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat",equalTo("XAdES_BASELINE_LT_TM"))
+                .body("validationReport.validationConclusion.validatedDocument.filename",equalTo("9MB_BDOC-TM.bdoc"))
+                .body("validationReport.validationConclusion.validSignaturesCount", equalTo(1));
     }
 
     /**
@@ -126,9 +126,9 @@ public class LargeFileIT extends SiVaRestTests{
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("9MB_DDOC.ddoc"));
         post(validationRequestWithValidKeys(encodedString, "9MB_DDOC.ddoc", ""))
                 .then()
-                .body("validationConclusion.signatures[0].signatureFormat",equalTo("DIGIDOC_XML_1.3"))
-                .body("validationConclusion.validatedDocument.filename",equalTo("9MB_DDOC.ddoc"))
-                .body("validationConclusion.validSignaturesCount", equalTo(1));
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat",equalTo("DIGIDOC_XML_1.3"))
+                .body("validationReport.validationConclusion.validatedDocument.filename",equalTo("9MB_DDOC.ddoc"))
+                .body("validationReport.validationConclusion.validSignaturesCount", equalTo(1));
     }
 
     @Override

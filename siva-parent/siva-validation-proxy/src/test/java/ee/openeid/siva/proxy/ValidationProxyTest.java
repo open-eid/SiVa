@@ -103,7 +103,7 @@ public class ValidationProxyTest {
         given(restProxyService.validate(any(ValidationDocument.class))).willReturn(validationConclusion);
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.XROAD);
 
-        Report validationReport = validationProxy.validate(proxyDocument);
+        QualifiedReport validationReport = validationProxy.validate(proxyDocument);
         verify(restProxyService).validate(any(ValidationDocument.class));
 
         assertThat(validationReport.getValidationConclusion().getValidSignaturesCount()).isEqualTo(1);
@@ -127,7 +127,7 @@ public class ValidationProxyTest {
         when(applicationContext.getBean(BDOCValidationService.class.getSimpleName())).thenReturn(validationServiceSpy);
 
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.BDOC);
-        Report report = validationProxy.validate(proxyDocument);
+        QualifiedReport report = validationProxy.validate(proxyDocument);
         assertQualifiedReport(report);
     }
 
@@ -136,7 +136,7 @@ public class ValidationProxyTest {
         when(applicationContext.getBean("genericValidationService")).thenReturn(validationServiceSpy);
 
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.PDF);
-        Report report = validationProxy.validate(proxyDocument);
+        QualifiedReport report = validationProxy.validate(proxyDocument);
         assertQualifiedReport(report);
     }
 
@@ -145,7 +145,7 @@ public class ValidationProxyTest {
         when(applicationContext.getBean(DDOCValidationService.class.getSimpleName())).thenReturn(validationServiceSpy);
 
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.DDOC);
-        Report report = validationProxy.validate(proxyDocument);
+        QualifiedReport report = validationProxy.validate(proxyDocument);
         assertQualifiedReport(report);
     }
 
@@ -157,7 +157,7 @@ public class ValidationProxyTest {
 
         ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
         proxyDocument.setBytes(buildValidationDocument("timestamptoken-ddoc.asics"));
-        Report report = validationProxy.validate(proxyDocument);
+        QualifiedReport report = validationProxy.validate(proxyDocument);
         TimeStampTokenValidationData timeStampTokenValidationData = report.getValidationConclusion().getTimeStampTokens().get(0);
         Assert.assertEquals(TimeStampTokenValidationData.Indication.TOTAL_PASSED, timeStampTokenValidationData.getIndication());
         assertQualifiedReport(report);
@@ -171,7 +171,7 @@ public class ValidationProxyTest {
 
         ProxyDocument proxyDocument = mockProxyDocumentWithExtension("zip");
         proxyDocument.setBytes(buildValidationDocument("timestamptoken-ddoc.zip"));
-        Report report = validationProxy.validate(proxyDocument);
+        QualifiedReport report = validationProxy.validate(proxyDocument);
         TimeStampTokenValidationData timeStampTokenValidationData = report.getValidationConclusion().getTimeStampTokens().get(0);
         Assert.assertEquals(TimeStampTokenValidationData.Indication.TOTAL_PASSED, timeStampTokenValidationData.getIndication());
         assertQualifiedReport(report);
@@ -185,7 +185,7 @@ public class ValidationProxyTest {
 
         ProxyDocument proxyDocument = mockProxyDocumentWithExtension("scs");
         proxyDocument.setBytes(buildValidationDocument("timestamptoken-ddoc.asics"));
-        Report report = validationProxy.validate(proxyDocument);
+        QualifiedReport report = validationProxy.validate(proxyDocument);
         TimeStampTokenValidationData timeStampTokenValidationData = report.getValidationConclusion().getTimeStampTokens().get(0);
         Assert.assertEquals(TimeStampTokenValidationData.Indication.TOTAL_PASSED, timeStampTokenValidationData.getIndication());
         assertQualifiedReport(report);
@@ -197,7 +197,7 @@ public class ValidationProxyTest {
         when(applicationContext.getBean("genericValidationService")).thenReturn(getGenericValidationService());
         ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
         proxyDocument.setBytes(buildValidationDocument("TXTinsideAsics.asics"));
-        Report report = validationProxy.validate(proxyDocument);
+        QualifiedReport report = validationProxy.validate(proxyDocument);
         TimeStampTokenValidationData timeStampTokenValidationData = report.getValidationConclusion().getTimeStampTokens().get(0);
         Assert.assertEquals(TimeStampTokenValidationData.Indication.TOTAL_PASSED, timeStampTokenValidationData.getIndication());
     }
@@ -217,7 +217,7 @@ public class ValidationProxyTest {
         when(applicationContext.getBean("genericValidationService")).thenReturn(validationServiceSpy);
         ProxyDocument proxyDocument = mockProxyDocumentWithExtension("zip");
         proxyDocument.setBytes(buildValidationDocument("timestamptoken-different-mimetype.zip"));
-        Report report = validationProxy.validate(proxyDocument);
+        QualifiedReport report = validationProxy.validate(proxyDocument);
         assertQualifiedReport(report);
     }
 
@@ -227,7 +227,7 @@ public class ValidationProxyTest {
         when(applicationContext.getBean(DDOCValidationService.class.getSimpleName())).thenReturn(validationServiceSpy);
         ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
         proxyDocument.setBytes(buildValidationDocument("timestamptoken-ddoc.asics"));
-        Report report = validationProxy.validate(proxyDocument);
+        QualifiedReport report = validationProxy.validate(proxyDocument);
         assertQualifiedReport(report);
     }
 
@@ -273,8 +273,8 @@ public class ValidationProxyTest {
         return proxyDocument;
     }
 
-    private void assertQualifiedReport(Report report) throws IOException {
-        assertEquals(validationServiceSpy.qualifiedReport.getSimpleReport(), report);
+    private void assertQualifiedReport(QualifiedReport report) throws IOException {
+        assertEquals(validationServiceSpy.qualifiedReport, report);
     }
 
     private byte[] buildValidationDocument(String testFile) throws Exception {
@@ -300,7 +300,7 @@ public class ValidationProxyTest {
             validationConclusion.setValidatedDocument(createDummyValidatedDocument());
             validationConclusion.setPolicy(createDummyPolicy());
             validationConclusion.setSignatures(createDummySignatures());
-            return new QualifiedReport(new SimpleReport(validationConclusion), null);
+            return  new QualifiedReport(validationConclusion, null);
         }
 
         private ValidatedDocument createDummyValidatedDocument() {

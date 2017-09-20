@@ -39,6 +39,11 @@
             <groupId>ee.openid.siva</groupId>
             <artifactId>siva-monitoring</artifactId>
         </dependency>
+        <dependency>
+            <groupId>ee.openid.siva</groupId>
+            <artifactId>siva-signature-service</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>commons-codec</groupId>

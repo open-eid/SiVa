@@ -131,9 +131,9 @@ public class DdocValidationFailIT extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("test-inv-sig-inf.ddoc"))
                 .then()
-                .body("validationConclusion.signatures[0].errors[0].content", Matchers.containsString("Invalid signature value!"))
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.containsString("Invalid signature value!"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -154,9 +154,9 @@ public class DdocValidationFailIT extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("AndmefailiAtribuudidMuudetud.ddoc"))
                 .then()
-                .body("validationConclusion.signatures[0].errors[0].content", Matchers.containsString("Bad digest for DataFile: D0"))
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.containsString("Bad digest for DataFile: D0"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -177,9 +177,9 @@ public class DdocValidationFailIT extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("ilma_kehtivuskinnituseta.ddoc"))
                 .then()
-                .body("validationConclusion.signatures[0].errors.content", Matchers.hasItems("Signature has no OCSP confirmation!"))
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Signature has no OCSP confirmation!"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -200,9 +200,9 @@ public class DdocValidationFailIT extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("test-non-repu1.ddoc"))
                 .then()
-                .body("validationConclusion.signatures[0].errors.content", Matchers.hasItems("Signers cert does not have non-repudiation bit set!"))
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Signers cert does not have non-repudiation bit set!"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -223,9 +223,9 @@ public class DdocValidationFailIT extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("Belgia_kandeavaldus_LIV.ddoc"))
                 .then()
-                .body("validationConclusion.signatures[1].errors.content", Matchers.hasItems("Signers cert not trusted, missing CA cert!"))
-                .body("validationConclusion.signatures[1].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.signatures[1].errors.content", Matchers.hasItems("Signers cert not trusted, missing CA cert!"))
+                .body("validationReport.validationConclusion.signatures[1].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
     }
 
     /**
@@ -246,9 +246,9 @@ public class DdocValidationFailIT extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("Tundmatu_OCSP_responder.ddoc"))
                 .then()
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationConclusion.signatures[0].errors[2].content", Matchers.containsString("No certificate for responder: 'byName: CN=Belgium OCSP Responder"))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].errors[2].content", Matchers.containsString("No certificate for responder: 'byName: CN=Belgium OCSP Responder"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -269,9 +269,9 @@ public class DdocValidationFailIT extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("lisatud_andmefail.ddoc"))
                 .then()
-                .body("validationConclusion.signatures[0].errors.content", Matchers.hasItems("Missing Reference for file: testfail2.txt"))
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Missing Reference for file: testfail2.txt"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -292,9 +292,9 @@ public class DdocValidationFailIT extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("faileemald1.ddoc"))
                 .then()
-                .body("validationConclusion.signatures[0].errors.content", Matchers.hasItems("Missing DataFile for signature: S0 reference #D0"))
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Missing DataFile for signature: S0 reference #D0"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -315,9 +315,9 @@ public class DdocValidationFailIT extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("OCSP nonce vale.ddoc"))
                 .then()
-                .body("validationConclusion.signatures[0].errors.content", Matchers.hasItems("Notarys digest doesn't match!"))
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Notarys digest doesn't match!"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -407,10 +407,10 @@ public class DdocValidationFailIT extends SiVaRestTests{
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("ns6t3cp7.ddoc"));
         post(validationRequestWithValidKeys(encodedString, "ns6t3cp7.ddoc", ""))
                 .then()
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationConclusion.signatures[0].warnings[0].content", Matchers.is("Bad digest for DataFile: D0 alternate digest matches!"))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationConclusion.signaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("Bad digest for DataFile: D0 alternate digest matches!"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
     @Override
     protected String getTestFilesDirectory() {

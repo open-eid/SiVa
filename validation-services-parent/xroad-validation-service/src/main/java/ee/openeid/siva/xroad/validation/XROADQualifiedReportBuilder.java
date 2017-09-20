@@ -17,9 +17,7 @@
 package ee.openeid.siva.xroad.validation;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.report.DetailedReport;
 import ee.openeid.siva.validation.document.report.QualifiedReport;
-import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
@@ -62,7 +60,7 @@ public class XROADQualifiedReportBuilder {
 
     public QualifiedReport build() {
         ValidationConclusion validationConclusion = getValidationConclusion();
-        return new QualifiedReport(new SimpleReport(validationConclusion), new DetailedReport(validationConclusion, null));
+        return new QualifiedReport(validationConclusion,null);
     }
 
     private ValidationConclusion getValidationConclusion() {

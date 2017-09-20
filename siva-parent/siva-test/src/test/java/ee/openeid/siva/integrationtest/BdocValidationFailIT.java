@@ -17,6 +17,7 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
@@ -59,10 +60,10 @@ public class BdocValidationFailIT extends SiVaRestTests {
      */
     @Test
     public void bdocInvalidSingleSignature() {
-        ValidationConclusion validationConclusion = postForReport("IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc");
-        assertAllSignaturesAreInvalid(validationConclusion);
-        assertEquals("The signature is not intact!", validationConclusion.getSignatures().get(0).getErrors().get(0).getContent());
-        assertEquals(2, validationConclusion.getSignatures().get(0).getErrors().size());
+        QualifiedReport report = postForReport("IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc");
+        assertAllSignaturesAreInvalid(report);
+        assertEquals("The signature is not intact!", report.getValidationConclusion().getSignatures().get(0).getErrors().get(0).getContent());
+        assertEquals(2, report.getValidationConclusion().getSignatures().get(0).getErrors().size());
     }
 
     /**
@@ -123,7 +124,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("BdocContainerNoSignature.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "BdocContainerNoSignature.bdoc", ""))
                 .then()
-                .body("validationConclusion.validationWarnings", Matchers.isEmptyOrNullString());
+                .body("validationReport.validationConclusion.validationWarnings", Matchers.isEmptyOrNullString());
 
     }
 
@@ -245,10 +246,10 @@ public class BdocValidationFailIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-I-26.asice"))
                 .then()
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CONSTRAINTS_FAILURE"))
-                .body("validationConclusion.signatures[0].errors.content", Matchers.hasItems("The signer's certificate has not expected key-usage!"))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CONSTRAINTS_FAILURE"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The signer's certificate has not expected key-usage!"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -270,10 +271,10 @@ public class BdocValidationFailIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("TM-01_bdoc21-unknown-resp.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "TM-01_bdoc21-unknown-resp.bdoc", VALID_SIGNATURE_POLICY_3))
                 .then()
-                .body("validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("validationConclusion.signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
-                .body("validationConclusion.signatures[0].errors.content", Matchers.hasItems("The certificate chain for revocation data is not trusted, there is no trusted anchor."))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The certificate chain for revocation data is not trusted, there is no trusted anchor."))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -320,10 +321,10 @@ public class BdocValidationFailIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-R-25.asice"))
                 .then()
-                .body("validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("validationConclusion.signatures[0].subIndication", Matchers.is("NO_POE"))
-                .body("validationConclusion.signatures[0].errors.content", Matchers.hasItems("The past signature validation is not conclusive!"))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("NO_POE"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The past signature validation is not conclusive!"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -421,10 +422,10 @@ public class BdocValidationFailIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("REF-19_bdoc21-no-sig-asn1-pref.bdoc"))
                 .then()
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
-                .body("validationConclusion.signatures[0].errors.content", Matchers.hasItems("The signature is not intact!"))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The signature is not intact!"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -498,11 +499,11 @@ public class BdocValidationFailIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("SS-4_teadmataCA.4.asice"))
                 .then()
-                .body("validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("validationConclusion.signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
-                .body("validationConclusion.signatures[0].errors[0].content", Matchers.is("The certificate path is not trusted!"))
-                .body("validationConclusion.signatures[0].errors[1].content", Matchers.is("The certificate chain for signature is not trusted, there is no trusted anchor."))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
+                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("The certificate path is not trusted!"))
+                .body("validationReport.validationConclusion.signatures[0].errors[1].content", Matchers.is("The certificate chain for signature is not trusted, there is no trusted anchor."))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -523,10 +524,10 @@ public class BdocValidationFailIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("TM-15_revoked.4.asice"))
                 .then()
-                .body("validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("validationConclusion.signatures[0].subIndication", Matchers.is("NO_POE"))
-                .body("validationConclusion.signatures[0].errors.content", Matchers.hasItems("The past signature validation is not conclusive!"))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("NO_POE"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The past signature validation is not conclusive!"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -572,10 +573,10 @@ public class BdocValidationFailIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("KS-21_fileeemaldatud.4.asice"))
                 .then()
-                .body("validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("validationConclusion.signatures[0].subIndication", Matchers.is("SIGNED_DATA_NOT_FOUND"))
-                .body("validationConclusion.signatures[0].errors[0].content", Matchers.is("The reference data object(s) is not found!"))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIGNED_DATA_NOT_FOUND"))
+                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("The reference data object(s) is not found!"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -646,10 +647,10 @@ public class BdocValidationFailIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("REF-14_filesisumuudetud.4.asice"))
                 .then()
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationConclusion.signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
-                .body("validationConclusion.signatures[0].errors.content", Matchers.hasItem("The reference data object(s) is not intact!"))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("The reference data object(s) is not intact!"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -698,9 +699,9 @@ public class BdocValidationFailIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("23608-bdoc21-TM-ocsp-bad-nonce.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "23608-bdoc21-TM-ocsp-bad-nonce.bdoc", VALID_SIGNATURE_POLICY_3))
                 .then()
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationConclusion.signatures[0].errors.content", Matchers.hasItem("Nonce is invalid"))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("Nonce is invalid"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -722,9 +723,9 @@ public class BdocValidationFailIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("23154_test1-old-sig-sigat-OK-prodat-NOK-1.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "23154_test1-old-sig-sigat-OK-prodat-NOK-1.bdoc", VALID_SIGNATURE_POLICY_3))
                 .then()
-                .body("validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationConclusion.signatures[0].errors.content", Matchers.hasItem("Signature has been created with expired certificate"))
-                .body("validationConclusion.validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("Signature has been created with expired certificate"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**

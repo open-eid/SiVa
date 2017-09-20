@@ -10,10 +10,11 @@
             <xs:import namespace="http://dss.esig.europa.eu/validation/detailed-report"
                        schemaLocation="DetailedReport.xsd"/>
             <xs:element name="ValidateDocument" type="tns:validateDocument"/>
-            <xs:element name="ValidateDocumentResponse" type="tns:ValidateDocumentResponse"/>
-            <xs:element name="ValidationProcess" substitutionGroup="external:DetailedReport"/>
-            <xs:element name="ValidationConclusion" type="tns:qualifiedReport"/>
             <xs:element name="ValidationRequest" type="tns:soapValidationRequest"/>
+            <xs:element name="ValidateDocumentResponse" type="tns:ValidateDocumentResponse"/>
+            <xs:element name="ValidationReport" type="tns:QualifiedReport"/>
+            <xs:element name="ValidationProcess" substitutionGroup="external:DetailedReport"/>
+            <xs:element name="ValidationConclusion" type="tns:ValidationConclusion"/>
 
             <xs:complexType name="validateDocument">
                 <xs:sequence>
@@ -31,11 +32,17 @@
             </xs:complexType>
             <xs:complexType name="ValidateDocumentResponse">
                 <xs:sequence>
-                    <xs:element minOccurs="0" ref="tns:ValidationConclusion"/>
+                    <xs:element minOccurs="1" ref="tns:ValidationReport"/>
+                    <xs:element minOccurs="0" name="ValidationReportSignature" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="QualifiedReport">
+                <xs:sequence>
+                    <xs:element minOccurs="1" ref="tns:ValidationConclusion"/>
                     <xs:element minOccurs="0" ref="tns:ValidationProcess"/>
                 </xs:sequence>
             </xs:complexType>
-            <xs:complexType name="qualifiedReport">
+            <xs:complexType name="ValidationConclusion">
                 <xs:sequence>
 
                     <xs:element name="Policy" type="tns:policy"/>

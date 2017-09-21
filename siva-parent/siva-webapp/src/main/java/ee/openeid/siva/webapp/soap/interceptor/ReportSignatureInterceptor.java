@@ -9,7 +9,9 @@ import org.apache.cxf.binding.soap.interceptor.AbstractSoapInterceptor;
 import org.apache.cxf.phase.Phase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPElement;
@@ -21,6 +23,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPathExpression;
 import java.io.IOException;
 import java.io.StringWriter;
 
@@ -32,7 +35,7 @@ import java.io.StringWriter;
  */
 public class ReportSignatureInterceptor extends AbstractSoapInterceptor {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReportSignatureInterceptor.class);
+    private static final Logger log = LoggerFactory.getLogger(ReportSignatureInterceptor.class);
 
     private SignatureService signatureService = new XadesSignatureService();
 
@@ -45,14 +48,25 @@ public class ReportSignatureInterceptor extends AbstractSoapInterceptor {
         SOAPMessage soapMessage = message.getContent(SOAPMessage.class);
         try {
             if (soapMessage != null) {
-                SOAPBody soapBody = soapMessage.getSOAPPart().getEnvelope().getBody();
-                byte[] validationReportBytes = getValidationReportContent(soapBody);
-                byte[] validationReportSignature = signatureService.getSignature(validationReportBytes);
-                addValidationReportSignature(soapBody, validationReportSignature);
+                SOAPBody responseBody = soapMessage.getSOAPPart().getEnvelope().getBody();
+                SOAPBody requestBody = message.getExchange().getInMessage().getContent(SOAPMessage.class).getSOAPPart().getEnvelope().getBody();
+                if (reportTypeIsDetailed(requestBody)) {
+                    log.debug("Starting to create report signature");
+                    byte[] validationReportBytes = getValidationReportContent(responseBody);
+                    byte[] validationReportSignature = signatureService.getSignature(validationReportBytes);
+                    addValidationReportSignature(responseBody, validationReportSignature);
+                    log.debug("Finished creating report signature");
+                }
             }
         } catch (Exception e) {
-            LOGGER.error("Error producing report singature", e);
+            log.error("Error producing report signature", e);
         }
+    }
+
+    private boolean reportTypeIsDetailed(SOAPBody soapBody) {
+        Node ReportTypeNode = soapBody.getElementsByTagName("ReportType").item(0);
+        ReportTypeNode = ReportTypeNode == null ? null : ReportTypeNode.getFirstChild();
+        return "Detailed".equals(ReportTypeNode.getNodeValue()) ? true : false;
     }
 
     private byte[] getValidationReportContent(SOAPBody soapBody) throws IOException, SOAPException, TransformerException {

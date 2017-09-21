@@ -23,7 +23,6 @@ import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import eu.europa.esig.dss.validation.SignatureQualification;
 import eu.europa.esig.dss.validation.policy.rules.SubIndication;
-import eu.europa.esig.dss.validation.reports.SimpleReport;
 import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.*;
 import org.digidoc4j.exceptions.DigiDoc4JException;
@@ -41,9 +40,9 @@ import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUt
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
 import static org.digidoc4j.X509Cert.SubjectName.CN;
 
-public class BDOCQualifiedReportBuilder {
+public class BDOCValidationReportBuilder {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(BDOCQualifiedReportBuilder.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(BDOCValidationReportBuilder.class);
 
     private static final String FULL_SIGNATURE_SCOPE = "FullSignatureScope";
     private static final String FULL_DOCUMENT = "Full document";
@@ -57,7 +56,7 @@ public class BDOCQualifiedReportBuilder {
     private ValidationPolicy validationPolicy;
     private List<DigiDoc4JException> containerErrors;
 
-    public BDOCQualifiedReportBuilder(Container container, ValidationDocument validationDocument, Date validationTime, ValidationPolicy validationPolicy, List<DigiDoc4JException> containerErrors) {
+    public BDOCValidationReportBuilder(Container container, ValidationDocument validationDocument, Date validationTime, ValidationPolicy validationPolicy, List<DigiDoc4JException> containerErrors) {
         this.container = container;
         this.validationDocument = validationDocument;
         this.validationTime = validationTime;
@@ -91,9 +90,11 @@ public class BDOCQualifiedReportBuilder {
         return error;
     }
 
-    public QualifiedReport build() {
+    public Reports build() {
         ValidationConclusion validationConclusion = getValidationConclusion();
-        return new QualifiedReport(validationConclusion,null);
+        SimpleReport simpleReport = new SimpleReport(validationConclusion);
+        DetailedReport detailedReport = new DetailedReport(validationConclusion, null);
+        return new Reports(simpleReport, detailedReport);
     }
 
     private ValidationConclusion getValidationConclusion() {
@@ -186,7 +187,7 @@ public class BDOCQualifiedReportBuilder {
         return signatureLevel != null ? signatureLevel.name() : "";
     }
 
-    private SimpleReport getDssSimpleReport(BDocSignature bDocSignature) {
+    private eu.europa.esig.dss.validation.reports.SimpleReport getDssSimpleReport(BDocSignature bDocSignature) {
         return bDocSignature.getDssValidationReport().getReport().getSimpleReport();
     }
 
@@ -223,7 +224,7 @@ public class BDOCQualifiedReportBuilder {
     private List<Warning> getWarnings(BDocSignature bDocSignature) {
         return bDocSignature.validateSignature().getWarnings()
                 .stream()
-                .map(BDOCQualifiedReportBuilder::mapDigidoc4JWarning)
+                .map(BDOCValidationReportBuilder::mapDigidoc4JWarning)
                 .collect(Collectors.toList());
 
     }
@@ -233,7 +234,7 @@ public class BDOCQualifiedReportBuilder {
                 .stream()
                 .map(r -> decodeUriIfPossible(r.getURI()))
                 .filter(dataFilenames::contains) //filters out Signed Properties
-                .map(BDOCQualifiedReportBuilder::createFullSignatureScopeForDataFile)
+                .map(BDOCValidationReportBuilder::createFullSignatureScopeForDataFile)
                 .collect(Collectors.toList());
     }
 
@@ -249,7 +250,7 @@ public class BDOCQualifiedReportBuilder {
     private List<Error> getErrors(BDocSignature bDocSignature) {
         return bDocSignature.validateSignature().getErrors()
                 .stream()
-                .map(BDOCQualifiedReportBuilder::mapDigidoc4JException)
+                .map(BDOCValidationReportBuilder::mapDigidoc4JException)
                 .collect(Collectors.toList());
     }
 

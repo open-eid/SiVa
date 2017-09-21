@@ -16,7 +16,7 @@
 
 package ee.openeid.siva.xroad.validation;
 
-import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import org.junit.Before;
 import org.junit.Rule;
@@ -45,10 +45,10 @@ public class XROADErroneousDocumentsTest {
 
     @Test
     public void reportWithErrorsAndIndicationTotalFailedShouldBeReturnedWhenAsicVerificationThrowsException() throws Exception {
-        QualifiedReport report = validationService.validateDocument(buildValidationDocument(XROAD_INVALID_DIGEST));
+        SimpleReport report = validationService.validateDocument(buildValidationDocument(XROAD_INVALID_DIGEST)).getSimpleReport();
         assertSignatureIsInvalidAndHasErrors(report.getValidationConclusion().getSignatures().get(0));
 
-        QualifiedReport report2 = validationService.validateDocument(buildValidationDocument(XROAD_VALID_SIGNED_MESSAGE));
+        SimpleReport report2 = validationService.validateDocument(buildValidationDocument(XROAD_VALID_SIGNED_MESSAGE)).getSimpleReport();
         assertSignatureIsInvalidAndHasErrors(report2.getValidationConclusion().getSignatures().get(0));
     }
 

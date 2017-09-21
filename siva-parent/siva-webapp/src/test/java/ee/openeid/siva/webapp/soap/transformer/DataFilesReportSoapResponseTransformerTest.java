@@ -29,7 +29,7 @@ public class DataFilesReportSoapResponseTransformerTest {
     DataFilesReportSoapResponseTransformer transformer = new DataFilesReportSoapResponseTransformer();
 
     @Test
-    public void qualifiedReportIsCorrectlyTransformedToSoapResponseReport() {
+    public void vIsCorrectlyTransformedToSoapResponseReport() {
         ee.openeid.siva.validation.document.report.DataFilesReport dataFilesReport = createMockedDataFilesReport();
         DataFilesReport responseReport = transformer.toSoapResponse(dataFilesReport);
 

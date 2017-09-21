@@ -18,7 +18,7 @@ package ee.openeid.siva.xroad.validation;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Policy;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import org.junit.Before;
 import org.junit.Rule;
@@ -42,42 +42,42 @@ public class XROADValidationReportTest {
     }
 
     @Test
-    public void ValidatingXRoadSimpleContainerShouldHaveOnlyTheCNFieldOfTheSingersCerificateAsSignedByFieldInQualifiedReport() throws Exception {
+    public void ValidatingXRoadSimpleContainerShouldHaveOnlyTheCNFieldOfTheSingersCerificateAsSignedByFieldInValidationReport() throws Exception {
         ValidationDocument validationDocument = buildValidationDocument(XROAD_SIMPLE);
-        QualifiedReport report = validationService.validateDocument(validationDocument);
+        SimpleReport report = validationService.validateDocument(validationDocument).getSimpleReport();
         assertEquals("Riigi Infosüsteemi Amet", report.getValidationConclusion().getSignatures().get(0).getSignedBy());
     }
 
     @Test
     public void validationReportForXroadBatchSignatureShouldHaveCorrectSignatureForm() throws Exception {
         ValidationDocument validationDocument = buildValidationDocument(XROAD_BATCHSIGNATURE);
-        QualifiedReport report = validationService.validateDocument(validationDocument);
+        SimpleReport report = validationService.validateDocument(validationDocument).getSimpleReport();
         assertEquals("ASiC_E_batchsignature", report.getValidationConclusion().getSignatureForm());
     }
 
     @Test
     public void validationReportForXROADSimpleAndPatchSignatureShouldHaveEmptySignatureLevel() throws Exception {
-        QualifiedReport report1 = validationService.validateDocument(buildValidationDocument(XROAD_SIMPLE));
-        QualifiedReport report2 = validationService.validateDocument(buildValidationDocument(XROAD_BATCHSIGNATURE));
+        SimpleReport report1 = validationService.validateDocument(buildValidationDocument(XROAD_SIMPLE)).getSimpleReport();
+        SimpleReport report2 = validationService.validateDocument(buildValidationDocument(XROAD_BATCHSIGNATURE)).getSimpleReport();
         assertEquals("", report1.getValidationConclusion().getSignatures().get(0).getSignatureLevel());
         assertEquals("", report2.getValidationConclusion().getSignatures().get(0).getSignatureLevel());
     }
 
     @Test
     public void signatureFormInReportShouldBeAsicEWhenValidatingXROADSimpleContainer() throws Exception {
-        QualifiedReport report = validationService.validateDocument(buildValidationDocument(XROAD_SIMPLE));
+        SimpleReport report = validationService.validateDocument(buildValidationDocument(XROAD_SIMPLE)).getSimpleReport();
         assertEquals("ASiC_E", report.getValidationConclusion().getSignatureForm());
     }
 
     @Test
     public void signatureFormatInReportShouldBeXadesBaselineBWhenValidatingXROADBatchSignature() throws Exception {
-        QualifiedReport report = validationService.validateDocument(buildValidationDocument(XROAD_BATCHSIGNATURE));
+        SimpleReport report = validationService.validateDocument(buildValidationDocument(XROAD_BATCHSIGNATURE)).getSimpleReport();
         assertEquals("XAdES_BASELINE_B_BES", report.getValidationConclusion().getSignatures().get(0).getSignatureFormat());
     }
 
     @Test
     public void signatureFormatInReportShouldBeXadesBaselineLTWhenValidatingXROADSimpleContainer() throws Exception {
-        QualifiedReport report = validationService.validateDocument(buildValidationDocument(XROAD_SIMPLE));
+        SimpleReport report = validationService.validateDocument(buildValidationDocument(XROAD_SIMPLE)).getSimpleReport();
         assertEquals("XAdES_BASELINE_LT", report.getValidationConclusion().getSignatures().get(0).getSignatureFormat());
     }
 
@@ -109,10 +109,10 @@ public class XROADValidationReportTest {
         validateWithPolicy("non-existing-policy");
     }
 
-    private QualifiedReport validateWithPolicy(String policyName) throws Exception {
+    private SimpleReport validateWithPolicy(String policyName) throws Exception {
         ValidationDocument validationDocument = buildValidationDocument(XROAD_SIMPLE);
         validationDocument.setSignaturePolicy(policyName);
-        return validationService.validateDocument(validationDocument);
+        return validationService.validateDocument(validationDocument).getSimpleReport();
     }
 
 }

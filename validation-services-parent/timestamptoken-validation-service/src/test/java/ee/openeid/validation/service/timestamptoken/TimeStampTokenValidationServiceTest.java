@@ -2,7 +2,7 @@ package ee.openeid.validation.service.timestamptoken;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
 import ee.openeid.siva.validation.exception.DocumentRequirementsException;
 import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
@@ -37,8 +37,8 @@ public class TimeStampTokenValidationServiceTest {
 
     @Test
     public void validTimeStampToken() throws Exception {
-        QualifiedReport qualifiedReport = validationService.validateDocument(buildValidationDocument("timestamptoken-ddoc.asics"));
-        TimeStampTokenValidationData validationData = qualifiedReport.getValidationConclusion().getTimeStampTokens().get(0);
+        SimpleReport simpleReport = validationService.validateDocument(buildValidationDocument("timestamptoken-ddoc.asics")).getSimpleReport();
+        TimeStampTokenValidationData validationData = simpleReport.getValidationConclusion().getTimeStampTokens().get(0);
         Assert.assertEquals(TimeStampTokenValidationData.Indication.TOTAL_PASSED, validationData.getIndication());
         Assert.assertEquals("SK TIMESTAMPING AUTHORITY", validationData.getSignedBy());
         Assert.assertNull(validationData.getError());
@@ -54,8 +54,8 @@ public class TimeStampTokenValidationServiceTest {
 
     @Test
     public void dataFiledChanged() throws Exception {
-        QualifiedReport qualifiedReport = validationService.validateDocument(buildValidationDocument("timestamptoken-datafile-changed.asics"));
-        Assert.assertEquals("Signature not intact", qualifiedReport.getValidationConclusion().getTimeStampTokens().get(0).getError().get(0).getContent());
+        SimpleReport simpleReport = validationService.validateDocument(buildValidationDocument("timestamptoken-datafile-changed.asics")).getSimpleReport();
+        Assert.assertEquals("Signature not intact", simpleReport.getValidationConclusion().getTimeStampTokens().get(0).getError().get(0).getContent());
     }
 
 

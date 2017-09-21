@@ -17,14 +17,14 @@
 package ee.openeid.validation.service.ddoc;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.validation.service.ddoc.configuration.DDOCValidationServiceProperties;
-import ee.openeid.validation.service.ddoc.report.DDOCQualifiedReportBuilder;
+import ee.openeid.validation.service.ddoc.report.DDOCValidationReportBuilder;
 import ee.sk.digidoc.DigiDocException;
 import ee.sk.digidoc.SignedDoc;
 import ee.sk.digidoc.factory.DigiDocFactory;
@@ -86,7 +86,7 @@ public class DDOCValidationService implements ValidationService {
     }
 
     @Override
-    public QualifiedReport validateDocument(ValidationDocument validationDocument) {
+    public Reports validateDocument(ValidationDocument validationDocument) {
         ValidationPolicy policy = signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy());
 
         if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
@@ -107,7 +107,7 @@ public class DDOCValidationService implements ValidationService {
                     throw new MalformedDocumentException();
                 }
                 Date validationTime = new Date();
-                DDOCQualifiedReportBuilder reportBuilder = new DDOCQualifiedReportBuilder(signedDoc, validationDocument, validationTime, policy);
+                DDOCValidationReportBuilder reportBuilder = new DDOCValidationReportBuilder(signedDoc, validationDocument, validationTime, policy);
                 return reportBuilder.build();
             } catch (Exception e) {
                 LOGGER.warn("Unexpected exception when validating DDOC document: " + e.getMessage(), e);

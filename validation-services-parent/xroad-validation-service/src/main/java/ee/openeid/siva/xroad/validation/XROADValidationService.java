@@ -17,7 +17,8 @@
 package ee.openeid.siva.xroad.validation;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.document.report.Reports;
+import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.ValidationService;
@@ -48,7 +49,7 @@ public class XROADValidationService implements ValidationService {
     private SignaturePolicyService<ValidationPolicy> signaturePolicyService;
 
     @Override
-    public QualifiedReport validateDocument(ValidationDocument validationDocument) {
+    public Reports validateDocument(ValidationDocument validationDocument) {
         ValidationPolicy policy = signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy());
         final InputStream inputStream = new ByteArrayInputStream(Base64.decodeBase64(validationDocument.getDataBase64Encoded()));
         AsicContainer container;
@@ -61,9 +62,9 @@ public class XROADValidationService implements ValidationService {
         final AsicContainerVerifier verifier = new AsicContainerVerifier(container);
         try {
             verifier.verify();
-            return new XROADQualifiedReportBuilder(verifier, validationDocument, new Date(), policy).build();
+            return new XROADValidationReportBuilder(verifier, validationDocument, new Date(), policy).build();
         } catch (CodedException codedException) {
-            return new XROADQualifiedReportBuilder(verifier, validationDocument, new Date(), policy, codedException).build();
+            return new XROADValidationReportBuilder(verifier, validationDocument, new Date(), policy, codedException).build();
         } catch (Exception e) {
             LOGGER.warn("There was an error validating the document", e);
             throw new ValidationServiceException(getClass().getSimpleName(), e);

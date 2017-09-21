@@ -17,8 +17,7 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
-import ee.openeid.siva.validation.document.report.ValidationConclusion;
+import ee.openeid.siva.validation.document.report.SimpleReport;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -60,7 +59,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      */
     @Test
     public void bdocInvalidSingleSignature() {
-        QualifiedReport report = postForReport("IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc");
+        SimpleReport report = postForReport("IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc");
         assertAllSignaturesAreInvalid(report);
         assertEquals("The signature is not intact!", report.getValidationConclusion().getSignatures().get(0).getErrors().get(0).getContent());
         assertEquals(2, report.getValidationConclusion().getSignatures().get(0).getErrors().size());

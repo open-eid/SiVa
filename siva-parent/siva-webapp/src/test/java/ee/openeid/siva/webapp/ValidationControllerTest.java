@@ -18,7 +18,7 @@ package ee.openeid.siva.webapp;
 
 import ee.openeid.siva.proxy.ValidationProxy;
 import ee.openeid.siva.proxy.document.ProxyDocument;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.webapp.request.ValidationRequest;
 import ee.openeid.siva.webapp.transformer.ValidationRequestToProxyDocumentTransformer;
 import org.json.JSONObject;
@@ -229,7 +229,7 @@ public class ValidationControllerTest {
         private ProxyDocument document;
 
         @Override
-        public QualifiedReport validate(ProxyDocument document) {
+        public SimpleReport validate(ProxyDocument document) {
             this.document = document;
             return null;
         }

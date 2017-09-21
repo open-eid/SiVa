@@ -17,10 +17,10 @@
 package ee.openeid.validation.service.bdoc;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.ValidationService;
-import ee.openeid.validation.service.bdoc.report.BDOCQualifiedReportBuilder;
+import ee.openeid.validation.service.bdoc.report.BDOCValidationReportBuilder;
 import ee.openeid.validation.service.bdoc.signature.policy.BDOCConfigurationService;
 import ee.openeid.validation.service.bdoc.signature.policy.PolicyConfigurationWrapper;
 import eu.europa.esig.dss.DSSException;
@@ -48,7 +48,7 @@ public class BDOCValidationService implements ValidationService {
     private BDOCConfigurationService configurationService;
 
     @Override
-    public QualifiedReport validateDocument(ValidationDocument validationDocument) {
+    public Reports validateDocument(ValidationDocument validationDocument) {
         PolicyConfigurationWrapper policyConfiguration = configurationService.loadPolicyConfiguration(validationDocument.getSignaturePolicy());
         Container container;
         try {
@@ -61,7 +61,7 @@ public class BDOCValidationService implements ValidationService {
         try {
             ValidationResult validationResult = container.validate();
             Date validationTime = new Date();
-            return new BDOCQualifiedReportBuilder(container, validationDocument, validationTime, policyConfiguration.getPolicy(), validationResult.getContainerErrors()).build();
+            return new BDOCValidationReportBuilder(container, validationDocument, validationTime, policyConfiguration.getPolicy(), validationResult.getContainerErrors()).build();
         } catch (Exception e) {
             if (isXRoadContainer(container)) {
                 LOGGER.error("XROAD container passed to BDOC validator", e);

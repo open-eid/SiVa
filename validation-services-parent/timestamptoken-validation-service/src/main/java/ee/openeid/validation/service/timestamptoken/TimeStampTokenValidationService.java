@@ -2,14 +2,14 @@ package ee.openeid.validation.service.timestamptoken;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Error;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
 import ee.openeid.siva.validation.exception.DocumentRequirementsException;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
-import ee.openeid.validation.service.timestamptoken.validator.report.TimeStampTokenQualifiedReportBuilder;
+import ee.openeid.validation.service.timestamptoken.validator.report.TimeStampTokenValidationReportBuilder;
 import eu.europa.esig.dss.DSSUtils;
 import eu.europa.esig.dss.DigestAlgorithm;
 import eu.europa.esig.dss.InMemoryDocument;
@@ -48,7 +48,7 @@ public class TimeStampTokenValidationService implements ValidationService {
     private SignaturePolicyService<ValidationPolicy> signaturePolicyService;
 
     @Override
-    public QualifiedReport validateDocument(ValidationDocument validationDocument) {
+    public Reports validateDocument(ValidationDocument validationDocument) {
 
         List<InMemoryDocument> documents = getFilesFromContainer(validationDocument);
         validateContainer(documents);
@@ -59,7 +59,7 @@ public class TimeStampTokenValidationService implements ValidationService {
 
         Date validationTime = new Date();
         TimeStampTokenValidationData timeStampTokenValidationData = generateTimeStampTokenData(signedTime, signedBy, errors);
-        TimeStampTokenQualifiedReportBuilder reportBuilder = new TimeStampTokenQualifiedReportBuilder(validationDocument, validationTime, signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy()), timeStampTokenValidationData);
+        TimeStampTokenValidationReportBuilder reportBuilder = new TimeStampTokenValidationReportBuilder(validationDocument, validationTime, signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy()), timeStampTokenValidationData);
         return reportBuilder.build();
     }
 

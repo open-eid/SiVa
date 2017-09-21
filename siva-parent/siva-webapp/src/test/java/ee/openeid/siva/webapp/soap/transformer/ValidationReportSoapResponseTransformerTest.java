@@ -16,10 +16,12 @@
 
 package ee.openeid.siva.webapp.soap.transformer;
 
+import ee.openeid.siva.validation.document.report.DetailedReport;
+import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
 import ee.openeid.siva.validation.document.report.ValidatedDocument;
-import ee.openeid.siva.webapp.soap.QualifiedReport;
 import ee.openeid.siva.webapp.soap.ValidationConclusion;
+import ee.openeid.siva.webapp.soap.ValidationReport;
 import eu.europa.esig.dss.jaxb.detailedreport.XmlQMatrixBlock;
 import eu.europa.esig.dss.jaxb.detailedreport.XmlTLAnalysis;
 import org.junit.Assert;
@@ -28,18 +30,18 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QualifiedReportSoapResponseTransformerTest {
+public class ValidationReportSoapResponseTransformerTest {
 
-    private QualifiedReportSoapResponseTransformer transformer = new QualifiedReportSoapResponseTransformer();
+    private ValidationReportSoapResponseTransformer transformer = new ValidationReportSoapResponseTransformer();
 
     @Test
     public void qualifiedSimpleReportIsCorrectlyTransformedToSoapResponseReport() {
         ee.openeid.siva.validation.document.report.ValidationConclusion validationConclusion = createMockedValidationConclusion();
-        ee.openeid.siva.validation.document.report.QualifiedReport qualifiedReport = new ee.openeid.siva.validation.document.report.QualifiedReport();
-        qualifiedReport.setValidationConclusion(validationConclusion);
+        SimpleReport simpleReport = new SimpleReport();
+        simpleReport.setValidationConclusion(validationConclusion);
 
-        QualifiedReport soapQualifiedReport = transformer.toSoapResponse(qualifiedReport);
-        ValidationConclusion soapValidationConclusion = soapQualifiedReport.getValidationConclusion();
+        ValidationReport soapValidationReport = transformer.toSoapResponse(simpleReport);
+        ValidationConclusion soapValidationConclusion = soapValidationReport.getValidationConclusion();
         Assert.assertEquals(validationConclusion.getValidatedDocument().getFilename(), soapValidationConclusion.getValidatedDocument().getFilename());
         Assert.assertEquals(validationConclusion.getValidatedDocument().getFileHashInHex(), soapValidationConclusion.getValidatedDocument().getFileHashInHex());
         Assert.assertEquals(validationConclusion.getValidatedDocument().getHashAlgo(), soapValidationConclusion.getValidatedDocument().getHashAlgo());
@@ -75,24 +77,24 @@ public class QualifiedReportSoapResponseTransformerTest {
     @Test
     public void qualifiedDetailedReportIsCorrectlyTransformedToSoapResponseReport() {
         ee.openeid.siva.validation.document.report.ValidationConclusion validationConclusion = createMockedValidationConclusion();
-        ee.openeid.siva.validation.document.report.QualifiedReport detailedReport = new ee.openeid.siva.validation.document.report.QualifiedReport(validationConclusion, null);
-        detailedReport.setValidationProcess(createMockedDetailedReport());
-        QualifiedReport responseQualifiedReport = transformer.toSoapResponse(detailedReport);
-        Assert.assertEquals("EE", responseQualifiedReport.getValidationProcess().getQMatrixBlock().getTLAnalysis().get(0).getCountryCode());
+        eu.europa.esig.dss.jaxb.detailedreport.DetailedReport validationProcess = createMockedValidationProcess();
+        DetailedReport detailedReport = new DetailedReport(validationConclusion, validationProcess);
+        detailedReport.setValidationProcess(createMockedValidationProcess());
+        ValidationReport responseValidationReport = transformer.toSoapResponse(detailedReport);
+        Assert.assertEquals("EE", responseValidationReport.getValidationProcess().getQMatrixBlock().getTLAnalysis().get(0).getCountryCode());
     }
 
     @Test
     public void qualifiedDetailedReportIsNull() {
         ee.openeid.siva.validation.document.report.ValidationConclusion validationConclusion = createMockedValidationConclusion();
-        ee.openeid.siva.validation.document.report.QualifiedReport qualifiedReport = new ee.openeid.siva.validation.document.report.QualifiedReport(validationConclusion, null);
-        qualifiedReport.setValidationProcess(null);
-        QualifiedReport responseQualifiedReport = transformer.toSoapResponse(qualifiedReport);
-        ValidationConclusion responseValidationConclusion = responseQualifiedReport.getValidationConclusion();
+        SimpleReport simpleReport = new SimpleReport(validationConclusion);
+        ValidationReport responseValidationReport = transformer.toSoapResponse(simpleReport);
+        ValidationConclusion responseValidationConclusion = responseValidationReport.getValidationConclusion();
         Assert.assertEquals(validationConclusion.getSignatures().get(0).getIndication(), responseValidationConclusion.getSignatures().getSignature().get(0).getIndication().value());
 
     }
 
-    private eu.europa.esig.dss.jaxb.detailedreport.DetailedReport createMockedDetailedReport() {
+    private eu.europa.esig.dss.jaxb.detailedreport.DetailedReport createMockedValidationProcess() {
         eu.europa.esig.dss.jaxb.detailedreport.DetailedReport euDetailedReport = new eu.europa.esig.dss.jaxb.detailedreport.DetailedReport();
         XmlQMatrixBlock xmlQMatrixBlock = new XmlQMatrixBlock();
         XmlTLAnalysis xmlTLAnalysis = new XmlTLAnalysis();

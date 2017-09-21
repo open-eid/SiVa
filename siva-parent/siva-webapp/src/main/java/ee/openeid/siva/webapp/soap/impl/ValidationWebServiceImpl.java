@@ -17,11 +17,11 @@
 package ee.openeid.siva.webapp.soap.impl;
 
 import ee.openeid.siva.proxy.ValidationProxy;
-import ee.openeid.siva.webapp.soap.QualifiedReport;
+import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.webapp.soap.SoapValidationRequest;
-import ee.openeid.siva.webapp.soap.ValidateDocumentResponse;
+import ee.openeid.siva.webapp.soap.ValidationReport;
 import ee.openeid.siva.webapp.soap.ValidationWebService;
-import ee.openeid.siva.webapp.soap.transformer.QualifiedReportSoapResponseTransformer;
+import ee.openeid.siva.webapp.soap.transformer.ValidationReportSoapResponseTransformer;
 import ee.openeid.siva.webapp.soap.transformer.SoapValidationRequestToProxyDocumentTransformer;
 import org.apache.cxf.annotations.SchemaValidation;
 import org.apache.cxf.interceptor.InInterceptors;
@@ -39,13 +39,13 @@ public class ValidationWebServiceImpl implements ValidationWebService {
 
     private ValidationProxy validationProxy;
     private SoapValidationRequestToProxyDocumentTransformer requestTransformer;
-    private QualifiedReportSoapResponseTransformer responseTransformer;
+    private ValidationReportSoapResponseTransformer responseTransformer;
 
     @Override
-    public void validateDocument(SoapValidationRequest validationRequest, Holder<QualifiedReport> validationReport, Holder<String> validationReportSignature) {
-        ee.openeid.siva.validation.document.report.QualifiedReport qualifiedReport = validationProxy.validate(requestTransformer.transform(validationRequest));
-        QualifiedReport responseQualifiedReport = responseTransformer.toSoapResponse(qualifiedReport);
-        validationReport.value = responseQualifiedReport;
+    public void validateDocument(SoapValidationRequest validationRequest, Holder<ValidationReport> validationReport, Holder<String> validationReportSignature) {
+        SimpleReport simpleReport = validationProxy.validate(requestTransformer.transform(validationRequest));
+        ValidationReport responseValidationReport = responseTransformer.toSoapResponse(simpleReport);
+        validationReport.value = responseValidationReport;
     }
 
     @Autowired
@@ -59,7 +59,7 @@ public class ValidationWebServiceImpl implements ValidationWebService {
     }
 
     @Autowired
-    public void setResponseTransformer(QualifiedReportSoapResponseTransformer responseTransformer) {
+    public void setResponseTransformer(ValidationReportSoapResponseTransformer responseTransformer) {
         this.responseTransformer = responseTransformer;
     }
 

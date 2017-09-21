@@ -18,7 +18,7 @@ package ee.openeid.validation.service.generic;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Policy;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import org.junit.Ignore;
@@ -37,14 +37,14 @@ public class PDFSignaturePolicyTest extends PDFValidationServiceTest {
 
     @Test
     public void softCertSignatureShouldBeValidWithNoTypePolicy() throws Exception {
-        QualifiedReport report = validateWithPolicy("POLv3", PDF_WITH_SOFT_CERT_SIGNATURE);
+        SimpleReport report = validateWithPolicy("POLv3", PDF_WITH_SOFT_CERT_SIGNATURE);
         ValidationConclusion validationConclusion = report.getValidationConclusion();
         assertEquals(validationConclusion.getSignaturesCount(), validationConclusion.getValidSignaturesCount());
     }
 
     @Test @Ignore //TODO: New test file is needed
     public void softCertSignatureShouldBeInvalidWithQESPolicy() throws Exception {
-        QualifiedReport report = validateWithPolicy("POLv5", PDF_WITH_SOFT_CERT_SIGNATURE);
+        SimpleReport report = validateWithPolicy("POLv5", PDF_WITH_SOFT_CERT_SIGNATURE);
         assertTrue(report.getValidationConclusion().getValidSignaturesCount() == 0);
     }
 
@@ -86,13 +86,13 @@ public class PDFSignaturePolicyTest extends PDFValidationServiceTest {
         validateWithPolicy("non-existing-policy");
     }
 
-    private QualifiedReport validateWithPolicy(String policyName) throws Exception {
+    private SimpleReport validateWithPolicy(String policyName) throws Exception {
         return validateWithPolicy(policyName, PDF_WITH_ONE_VALID_SIGNATURE);
     }
 
-    private QualifiedReport validateWithPolicy(String policyName, String document) throws Exception {
+    private SimpleReport validateWithPolicy(String policyName, String document) throws Exception {
         ValidationDocument validationDocument = buildValidationDocument(document);
         validationDocument.setSignaturePolicy(policyName);
-        return validationService.validateDocument(validationDocument);
+        return validationService.validateDocument(validationDocument).getSimpleReport();
     }
 }

@@ -17,8 +17,8 @@
 package ee.openeid.siva.validation.service;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.document.report.Reports;
 
 public interface ValidationService {
-    QualifiedReport validateDocument(ValidationDocument wsDocument);
+    Reports validateDocument(ValidationDocument wsDocument);
 }

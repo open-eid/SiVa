@@ -24,7 +24,6 @@ import ee.openeid.siva.validation.service.signature.policy.properties.Constraint
 import eu.europa.esig.dss.jaxb.diagnostic.XmlSignatureScope;
 import eu.europa.esig.dss.validation.policy.rules.Indication;
 import eu.europa.esig.dss.validation.policy.rules.SubIndication;
-import eu.europa.esig.dss.validation.reports.Reports;
 import eu.europa.esig.dss.validation.reports.wrapper.TimestampWrapper;
 import org.apache.commons.lang3.StringUtils;
 
@@ -39,26 +38,28 @@ import java.util.stream.Collectors;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
 
-public class GenericQualifiedReportBuilder {
+public class GenericValidationReportBuilder {
 
     private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final String PDF_SIGNATURE_FORM = "PAdES";
 
-    private Reports dssReports;
+    private eu.europa.esig.dss.validation.reports.Reports dssReports;
     private ZonedDateTime validationTime;
     private ValidationDocument validationDocument;
     private ConstraintDefinedPolicy validationPolicy;
 
-    public GenericQualifiedReportBuilder(Reports dssReports, ZonedDateTime validationTime, ValidationDocument validationDocument, ConstraintDefinedPolicy policy) {
+    public GenericValidationReportBuilder(eu.europa.esig.dss.validation.reports.Reports dssReports, ZonedDateTime validationTime, ValidationDocument validationDocument, ConstraintDefinedPolicy policy) {
         this.dssReports = dssReports;
         this.validationTime = validationTime;
         this.validationDocument = validationDocument;
         this.validationPolicy = policy;
     }
 
-    public QualifiedReport build() {
+    public Reports build() {
         ValidationConclusion validationConclusion = getValidationConclusion();
-        return new QualifiedReport(validationConclusion, dssReports.getDetailedReportJaxb());
+        SimpleReport simpleReport = new SimpleReport(validationConclusion);
+        DetailedReport detailedReport = new DetailedReport(validationConclusion, dssReports.getDetailedReportJaxb());
+        return new Reports(simpleReport, detailedReport);
     }
 
     private ValidationConclusion getValidationConclusion() {

@@ -18,7 +18,7 @@ package ee.openeid.siva.statistics;
 
 import ee.openeid.siva.statistics.googleanalytics.GoogleAnalyticsMeasurementProtocolClient;
 import ee.openeid.siva.statistics.model.SimpleValidationReport;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import org.junit.BeforeClass;
@@ -62,7 +62,7 @@ public class StatisticsServiceTest {
     }
 
     @Test
-    public void testValidationStatisticsLoggingWhereAllSignaturesInQualifiedReportAreValid() {
+    public void testValidationStatisticsLoggingWhereAllSignaturesInValidationReportAreValid() {
         long validationDurationInMillis = 1000L;
         String signatureForm = "ASiC_E";
         String expectedContainerType = "ASiC-E";
@@ -74,7 +74,7 @@ public class StatisticsServiceTest {
         String xAuthenticatedUser = "N/A";
         String signatureFormat = "FORMAT";
 
-        QualifiedReport report = createDummyQualifiedReport(signatureForm, validSignaturesCount, totalSignatureCount);
+        SimpleReport report = createDummySimpleReport(signatureForm, validSignaturesCount, totalSignatureCount);
         addSignatureValidationData(report.getValidationConclusion(), indication, subindication, countryCode, signatureFormat);
 
         HttpServletRequest mockedRequest = mock(HttpServletRequest.class);
@@ -100,7 +100,7 @@ public class StatisticsServiceTest {
     }
 
     @Test
-    public void testValidationStatisticsLoggingWhereOneSignatureInQualifiedReportIsValid() {
+    public void testValidationStatisticsLoggingWhereOneSignatureInValidationReportIsValid() {
         long validationDurationInMillis = 2000L;
         String signatureForm = "PAdES";
         int validSignaturesCount = 1;
@@ -115,7 +115,7 @@ public class StatisticsServiceTest {
         String secondSignatureFormat = "";
         String xAuthenticatedUser = "some_user";
 
-        QualifiedReport report = createDummyQualifiedReport(signatureForm, validSignaturesCount, totalSignatureCount);
+        SimpleReport report = createDummySimpleReport(signatureForm, validSignaturesCount, totalSignatureCount);
         addSignatureValidationData(report.getValidationConclusion(), firstSignatureIndication, firstSignatureSubindication, firstSignatureCountryCode, firstSignatureFormat);
         addSignatureValidationData(report.getValidationConclusion(), secondSignatureIndication, secondSignatureSubindication, secondSignatureCountryCode, secondSignatureFormat);
 
@@ -145,12 +145,12 @@ public class StatisticsServiceTest {
         );
     }
 
-    private QualifiedReport createDummyQualifiedReport(String signatureForm, int validSignaturesCount, int totalSignaturesCount) {
+    private SimpleReport createDummySimpleReport(String signatureForm, int validSignaturesCount, int totalSignaturesCount) {
         ValidationConclusion validationConclusion = new ValidationConclusion();
         validationConclusion.setSignaturesCount(totalSignaturesCount);
         validationConclusion.setValidSignaturesCount(validSignaturesCount);
         validationConclusion.setSignatureForm(signatureForm);
-        return new QualifiedReport(validationConclusion, null);
+        return new SimpleReport(validationConclusion);
     }
 
     private void addSignatureValidationData(ValidationConclusion validationConclusion, SignatureValidationData.Indication indication, String subindication, String country, String signatureFormat) {

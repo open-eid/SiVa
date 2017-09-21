@@ -19,8 +19,8 @@ package ee.openeid.siva.soaptest;
 import com.jayway.restassured.response.Response;
 import ee.openeid.siva.integrationtest.SiVaIntegrationTestsBase;
 import ee.openeid.siva.webapp.soap.DataFilesReport;
-import ee.openeid.siva.webapp.soap.QualifiedReport;
 import ee.openeid.siva.webapp.soap.ValidateDocumentResponse;
+import ee.openeid.siva.webapp.soap.ValidationReport;
 import org.apache.commons.codec.binary.Base64;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -85,6 +85,23 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
                 "   </soapenv:Body>\n" +
                 "</soapenv:Envelope>";
     }
+
+    protected static String createXMLValidationRequestWithReportType(String base64Document, String filename, String reportType) {
+
+        return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
+                "   <soapenv:Header/>\n" +
+                "   <soapenv:Body>\n" +
+                "      <soap:ValidateDocument>\n" +
+                "         <soap:ValidationRequest>\n" +
+                "            <Document>" + base64Document + "</Document>\n" +
+                "            <Filename>" + filename + "</Filename>\n" +
+                "            <ReportType>" + reportType + "</ReportType>\n" +
+                "         </soap:ValidationRequest>\n" +
+                "      </soap:ValidateDocument>\n" +
+                "   </soapenv:Body>\n" +
+                "</soapenv:Envelope>";
+    }
+
     protected static String createXMLValidationRequestWithoutDocumentType(String base64Document, String filename, String signaturePolicy) {
 
         return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
@@ -124,6 +141,12 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
                 filename,
                 documentType,
                 signaturePolicy);
+    }
+
+    protected String validationRequestForDocumentReportType(String filename, String reportType) {
+        return createXMLValidationRequestWithReportType(
+                Base64.encodeBase64String(readFileFromTestResources(filename)),
+                filename, reportType);
     }
 
     protected String validationRequestForDocumentDataFilesExtended(String document, String filename) {
@@ -166,12 +189,12 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
         return XMLUtils.documentFromNode(element);
     }
 
-    protected QualifiedReport getQualifiedReportFromDom(Document reportDom) {
+    protected ValidationReport getValidationReportFromDom(Document reportDom) {
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(QualifiedReport.class);
+            JAXBContext jaxbContext = JAXBContext.newInstance(ValidationReport.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             Node xmlNode = reportDom.getDocumentElement();
-            JAXBElement<QualifiedReport> jaxbElement = unmarshaller.unmarshal(xmlNode, QualifiedReport.class);
+            JAXBElement<ValidationReport> jaxbElement = unmarshaller.unmarshal(xmlNode, ValidationReport.class);
             return jaxbElement.getValue();
         } catch (Exception e) {
             throw new RuntimeException(e);

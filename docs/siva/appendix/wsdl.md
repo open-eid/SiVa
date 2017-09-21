@@ -11,7 +11,7 @@ See also [Interfaces](/siva/v2/interfaces) for more information about the SOAP i
 			<xs:import namespace="http://x-road.eu/xsd/xroad.xsd" schemaLocation="http://x-road.eu/xsd/xroad.xsd"/>
 			<xs:element name="ValidateDocument" type="tns:validateDocument"/>
 			<xs:element name="ValidateDocumentResponse" type="tns:ValidateDocumentResponse"/>
-			<xs:element name="ValidationReport" type="tns:qualifiedReport"/>
+			<xs:element name="ValidationReport" type="tns:simpleReport"/>
 			<xs:element name="ValidationRequest" type="tns:soapValidationRequest"/>
 			<xs:complexType name="validateDocument">
 				<xs:sequence>
@@ -31,7 +31,7 @@ See also [Interfaces](/siva/v2/interfaces) for more information about the SOAP i
 					<xs:element minOccurs="0" ref="tns:ValidationReport"/>
 				</xs:sequence>
 			</xs:complexType>
-			<xs:complexType name="qualifiedReport">
+			<xs:complexType name="simpleReport">
 				<xs:sequence>
 					<xs:element name="Policy" type="tns:policy"/>
 					<xs:element name="ValidationTime" type="xs:string"/>

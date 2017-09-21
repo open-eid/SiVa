@@ -17,11 +17,11 @@
 package ee.openeid.siva.webapp.soap.transformer;
 
 import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.validation.document.report.DetailedReport;
 import ee.openeid.siva.webapp.soap.Error;
 import ee.openeid.siva.webapp.soap.*;
 import ee.openeid.siva.webapp.soap.Info;
 import ee.openeid.siva.webapp.soap.Policy;
-import ee.openeid.siva.webapp.soap.QualifiedReport;
 import ee.openeid.siva.webapp.soap.SignatureScope;
 import ee.openeid.siva.webapp.soap.SignatureValidationData;
 import ee.openeid.siva.webapp.soap.ValidationConclusion;
@@ -35,7 +35,7 @@ import java.io.StringWriter;
 import java.util.List;
 
 @Component
-public class QualifiedReportSoapResponseTransformer {
+public class ValidationReportSoapResponseTransformer {
     private static final String EU_DETAILED_REPORT_PACKAGE = "eu.europa.esig.dss.validation.detailed_report";
     private static Policy toSoapResponsePolicy(ee.openeid.siva.validation.document.report.Policy policy) {
         Policy responsePolicy = new Policy();
@@ -51,18 +51,18 @@ public class QualifiedReportSoapResponseTransformer {
         return responseSignatureInfo;
     }
 
-    public QualifiedReport toSoapResponse(ee.openeid.siva.validation.document.report.QualifiedReport report) {
-        QualifiedReport responseQualifiedReport = new QualifiedReport();
+    public ValidationReport toSoapResponse(SimpleReport report) {
+        ValidationReport responseValidationReport = new ValidationReport();
 
         ValidationConclusion responseValidationConclusion = toSoapValidationConclusion(report.getValidationConclusion());
-        responseQualifiedReport.setValidationConclusion(responseValidationConclusion);
+        responseValidationReport.setValidationConclusion(responseValidationConclusion);
 
-        if (report.getValidationProcess() != null) {
-            ee.openeid.siva.webapp.soap.DetailedReport xmlDetailedReport = toSoapDetailedReport(report.getValidationProcess());
-            responseQualifiedReport.setValidationProcess(xmlDetailedReport);
+        if (report instanceof DetailedReport) {
+            ee.openeid.siva.webapp.soap.DetailedReport xmlDetailedReport = toSoapDetailedReport(((DetailedReport) report).getValidationProcess());
+            responseValidationReport.setValidationProcess(xmlDetailedReport);
         }
 
-        return responseQualifiedReport;
+        return responseValidationReport;
     }
 
     public ValidationConclusion toSoapValidationConclusion(ee.openeid.siva.validation.document.report.ValidationConclusion validationConclusion) {

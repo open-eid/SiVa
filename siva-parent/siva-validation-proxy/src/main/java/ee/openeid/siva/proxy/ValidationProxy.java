@@ -25,7 +25,7 @@ import ee.openeid.siva.statistics.StatisticsService;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.service.ValidationService;
-import ee.openeid.validation.service.ddoc.report.DDOCQualifiedReportBuilder;
+import ee.openeid.validation.service.ddoc.report.DDOCValidationReportBuilder;
 import ee.openeid.validation.service.timestamptoken.TimeStampTokenValidationService;
 import eu.europa.esig.dss.DSSException;
 import eu.europa.esig.dss.InMemoryDocument;
@@ -65,18 +65,21 @@ public class ValidationProxy {
     private ApplicationContext applicationContext;
 
 
-    public QualifiedReport validate(ProxyDocument proxyDocument) {
+    public SimpleReport validate(ProxyDocument proxyDocument) {
         long validationStartTime = System.nanoTime();
-        QualifiedReport report;
+        Reports reports;
+        SimpleReport report;
         if (proxyDocument.getDocumentType() != null && proxyDocument.getDocumentType() == DocumentType.XROAD) {
-            report = new QualifiedReport(restProxyService.validate(createValidationDocument(proxyDocument)), null);
+            reports = restProxyService.validate(createValidationDocument(proxyDocument));
+            report = chooseReport(reports, proxyDocument.getReportType());
         } else {
             ValidationService validationService = getServiceForType(proxyDocument);
-            report = chooseReport(validationService.validateDocument(createValidationDocument(proxyDocument)), proxyDocument.getReportType());
+            reports = validationService.validateDocument(createValidationDocument(proxyDocument));
+            report = chooseReport(reports, proxyDocument.getReportType());
             if (validationService instanceof TimeStampTokenValidationService && TimeStampTokenValidationData.Indication.TOTAL_PASSED == report.getValidationConclusion().getTimeStampTokens().get(0).getIndication()) {
                 ProxyDocument dataFileProxyDocument = generateDataFileProxyDocument(proxyDocument);
                 ValidationService dataFileValidationService = getServiceForType(dataFileProxyDocument);
-                QualifiedReport dataFileReport = null;
+                SimpleReport dataFileReport = null;
                 try {
                     dataFileReport = chooseReport(dataFileValidationService.validateDocument(createValidationDocument(dataFileProxyDocument)), proxyDocument.getReportType());
                     removeUnnecessaryWarning(dataFileReport.getValidationConclusion());
@@ -97,18 +100,18 @@ public class ValidationProxy {
         if (warnings == null || warnings.isEmpty())
             return;
         List<ValidationWarning> newList = new ArrayList<>(warnings);
-        newList.removeIf(s -> DDOCQualifiedReportBuilder.DDOC_TIMESTAMP_WARNING.equals(s.getContent()));
+        newList.removeIf(s -> DDOCValidationReportBuilder.DDOC_TIMESTAMP_WARNING.equals(s.getContent()));
         validationConclusion.setValidationWarnings(newList);
     }
 
-    private QualifiedReport chooseReport(QualifiedReport qualifiedReport, ReportType reportType) {
-        if (reportType == null|| reportType == ReportType.SIMPLE) {
-            qualifiedReport.setValidationProcess(null);
+    private SimpleReport chooseReport(Reports reports, ReportType reportType) {
+        if (reportType == ReportType.DETAILED) {
+            return reports.getDetailedReport();
         }
-        return qualifiedReport;
+        return reports.getSimpleReport();
     }
 
-    private QualifiedReport mergeReports(QualifiedReport timeStampTokenReport, QualifiedReport dataFileReport) {
+    private SimpleReport mergeReports(SimpleReport timeStampTokenReport, SimpleReport dataFileReport) {
         if (dataFileReport != null) {
             dataFileReport.getValidationConclusion().setTimeStampTokens(timeStampTokenReport.getValidationConclusion().getTimeStampTokens());
             return dataFileReport;

@@ -30,16 +30,16 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
     private static final String PDF_SIGNED_WITH_UNQUALIFIED_CERTIFICATE = "hellopades-lt1-lt2-parallel3.pdf";
 
     @Test
-    public void validatingWithValidPdfShouldReturnQualifiedReportPojo() throws Exception {
-        QualifiedReport report = validationService.validateDocument(
-                buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE));
+    public void validatingWithValidPdfShouldReturnValidationReportPojo() throws Exception {
+        SimpleReport report = validationService.validateDocument(
+                buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
         assertNotNull(report);
     }
 
     @Test
     public void validationReportForValidPdfShouldHaveEqualSignatureCountAndValidSignatureCount() throws Exception {
-        QualifiedReport report = validationService.validateDocument(
-                buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE));
+        SimpleReport report = validationService.validateDocument(
+                buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
         ValidationConclusion validationConclusion = report.getValidationConclusion();
         assertEquals(PDF_WITH_ONE_VALID_SIGNATURE, validationConclusion.getValidatedDocument().getFilename());
         assertTrue(validationConclusion.getValidSignaturesCount() == 1);
@@ -48,15 +48,15 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
 
     @Test
     public void validationReportShouldHaveSameDocumentNameWithValidationRequest() throws Exception {
-        QualifiedReport report = validationService.validateDocument(
-                buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE));
+        SimpleReport report = validationService.validateDocument(
+                buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
         assertEquals(PDF_WITH_ONE_VALID_SIGNATURE, report.getValidationConclusion().getValidatedDocument().getFilename());
     }
 
     @Test
     public void whenValidatingValidPDFThenDateTimesShouldBeCorrectlyParsed() throws Exception {
-        QualifiedReport report = validationService.validateDocument(
-                buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE));
+        SimpleReport report = validationService.validateDocument(
+                buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
         SignatureValidationData signature = report.getValidationConclusion().getSignatures().get(0);
         assertEquals("2015-07-09T07:00:48Z", signature.getClaimedSigningTime());
         assertEquals("2015-07-09T07:00:55Z", signature.getInfo().getBestSignatureTime());
@@ -64,16 +64,16 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
 
     @Test
     public void validatedSignatureShouldHaveCorrectId() throws Exception {
-        QualifiedReport report = validationService.validateDocument(
-                buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE));
+        SimpleReport report = validationService.validateDocument(
+                buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
         SignatureValidationData signature = report.getValidationConclusion().getSignatures().get(0);
         assertEquals("id-65dc6b043effc2542519162d271ad4f9780e552845d04b66868301a5cf0ed8ba", signature.getId());
     }
 
     @Test
     public void validatedSignatureShouldHaveFormatAndLevel() throws Exception {
-        QualifiedReport report = validationService.validateDocument(
-                buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE));
+        SimpleReport report = validationService.validateDocument(
+                buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
         SignatureValidationData signature = report.getValidationConclusion().getSignatures().get(0);
         assertEquals("QESIG", signature.getSignatureLevel());
         assertEquals("PAdES-BASELINE-LT", signature.getSignatureFormat());
@@ -81,8 +81,8 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
 
     @Test
     public void validationResultForValidPDFShouldHaveCorrectSignatureScopeForPDF() throws Exception {
-        QualifiedReport report = validationService.validateDocument(
-                buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE));
+        SimpleReport report = validationService.validateDocument(
+                buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
         SignatureScope scope = report.getValidationConclusion().getSignatures().get(0).getSignatureScopes().get(0);
 
         assertEquals("The document byte range: [0, 14153, 52047, 491]", scope.getContent());
@@ -92,23 +92,23 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
 
     @Test
     public void validationResultForValidPDFShouldNotHaveErrorsOrWarnings() throws Exception {
-        QualifiedReport report = validationService.validateDocument(
-                buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE));
+        SimpleReport report = validationService.validateDocument(
+                buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
         report.getValidationConclusion().getSignatures().forEach(this::assertNoErrorsOrWarnings);
     }
 
     @Test
     public void validationResultForPdfShouldContainCorrectPadesSignatureForm() throws Exception {
-        QualifiedReport report = validationService.validateDocument(
-                buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE));
+        SimpleReport report = validationService.validateDocument(
+                buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
         assertEquals("PAdES", report.getValidationConclusion().getSignatureForm());
     }
 
     @Test
     @Ignore //TODO: Warnings are not returned when validationLevel is set to ARCHIVAL_DATA (default level)
     public void validatingPdfSignedWithUnqualifiedCertificateReturnsReportWithoutErrorsButWithWarning() throws Exception {
-        QualifiedReport report = validationService.validateDocument(
-                buildValidationDocument(PDF_SIGNED_WITH_UNQUALIFIED_CERTIFICATE));
+        SimpleReport report = validationService.validateDocument(
+                buildValidationDocument(PDF_SIGNED_WITH_UNQUALIFIED_CERTIFICATE)).getSimpleReport();
         assertNotNull(report);
         ValidationConclusion validationConclusion = report.getValidationConclusion();
         List<Warning> firstSignatureWarnings = validationConclusion.getSignatures().get(0).getWarnings();

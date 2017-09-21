@@ -18,8 +18,7 @@ package ee.openeid.siva.integrationtest;
 
 import com.jayway.restassured.RestAssured;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
-import ee.openeid.siva.validation.document.report.ValidationConclusion;
+import ee.openeid.siva.validation.document.report.SimpleReport;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -51,7 +50,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      */
     @Test
     public void PAdESDocumentShouldPass() {
-        QualifiedReport report = postForReport("hellopades-pades-lt-sha256-sign.pdf");
+        SimpleReport report = postForReport("hellopades-pades-lt-sha256-sign.pdf");
         assertAllSignaturesAreValid(report);
         assertEquals("PAdES-BASELINE-LT", report.getValidationConclusion().getSignatures().get(0).getSignatureFormat());
     }
@@ -71,7 +70,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      */
     @Test
     public void AdESDocumentShouldPass() {
-        QualifiedReport report = postForReport("Valid_IDCard_MobID_signatures.bdoc");
+        SimpleReport report = postForReport("Valid_IDCard_MobID_signatures.bdoc");
         assertAllSignaturesAreValid(report);
         assertEquals("XAdES_BASELINE_LT_TM", report.getValidationConclusion().getSignatures().get(0).getSignatureFormat());
     }

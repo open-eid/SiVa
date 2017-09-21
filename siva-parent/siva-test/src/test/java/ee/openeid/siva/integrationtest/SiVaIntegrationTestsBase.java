@@ -20,9 +20,8 @@ import com.jayway.restassured.RestAssured;
 import ee.openeid.siva.SivaWebApplication;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.proxy.document.DocumentType;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
-import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -114,15 +113,15 @@ public abstract class SiVaIntegrationTestsBase {
         assertTrue(warningExists);
     }
 
-    protected void assertAllSignaturesAreValid(QualifiedReport report) {
+    protected void assertAllSignaturesAreValid(SimpleReport report) {
         assertTrue(report.getValidationConclusion().getSignaturesCount().equals(report.getValidationConclusion().getValidSignaturesCount()));
     }
 
-    protected void assertSomeSignaturesAreValid(QualifiedReport report, int expectedValidSignatures) {
+    protected void assertSomeSignaturesAreValid(SimpleReport report, int expectedValidSignatures) {
         assertTrue(expectedValidSignatures == report.getValidationConclusion().getValidSignaturesCount());
     }
 
-    protected void assertAllSignaturesAreInvalid(QualifiedReport report) {
+    protected void assertAllSignaturesAreInvalid(SimpleReport report) {
         assertTrue(report.getValidationConclusion().getValidSignaturesCount() == 0);
     }
 

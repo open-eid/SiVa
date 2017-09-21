@@ -24,8 +24,14 @@ public class ReportSignatureIT extends SiVaSoapTests {
     }
 
     @Test
-    public void validationReportSignatureInResponse() {
+    public void whenRequestingSimpleReport_thenValidationReportSignatureIsNotInResponse() {
         Document report = extractValidateDocumentResponseDom(post(validationRequestForDocument("hellopades-pades-lt-sha256-sign.pdf")).andReturn().body().asString());
+        Assert.assertThat(getValidateDocumentResponseFromDom(report).getValidationReportSignature(), isEmptyOrNullString());
+    }
+
+    @Test
+    public void whenRequestingDetailedReport_thenValidationReportSignatureIsInResponse() {
+        Document report = extractValidateDocumentResponseDom(post(validationRequestForDocumentReportType("hellopades-pades-lt-sha256-sign.pdf", "Detailed")).andReturn().body().asString());
         Assert.assertThat(getValidateDocumentResponseFromDom(report).getValidationReportSignature(), not(isEmptyOrNullString()));
     }
 

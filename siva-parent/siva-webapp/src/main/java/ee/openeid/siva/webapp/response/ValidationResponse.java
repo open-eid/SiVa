@@ -1,19 +1,19 @@
 package ee.openeid.siva.webapp.response;
 
-import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.document.report.SimpleReport;
 import lombok.Data;
 
 @Data
 public class ValidationResponse {
 
-    private QualifiedReport validationReport;
+    private SimpleReport validationReport;
 
     private String validationReportSignature;
 
     public ValidationResponse() {
     }
 
-    public ValidationResponse(QualifiedReport report) {
+    public ValidationResponse(SimpleReport report) {
         validationReport = report;
     }
 

@@ -33,7 +33,7 @@ import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUt
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
 import static org.cryptacular.util.CertUtil.subjectCN;
 
-public class DDOCQualifiedReportBuilder {
+public class DDOCValidationReportBuilder {
 
     private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final String FULL_DOCUMENT = "Full document";
@@ -50,16 +50,18 @@ public class DDOCQualifiedReportBuilder {
     private Date validationTime;
     private ValidationPolicy validationPolicy;
 
-    public DDOCQualifiedReportBuilder(SignedDoc signedDoc, ValidationDocument validationDocument, Date validationTime, ValidationPolicy validationPolicy) {
+    public DDOCValidationReportBuilder(SignedDoc signedDoc, ValidationDocument validationDocument, Date validationTime, ValidationPolicy validationPolicy) {
         this.signedDoc = signedDoc;
         this.validationDocument = validationDocument;
         this.validationTime = validationTime;
         this.validationPolicy = validationPolicy;
     }
 
-    public QualifiedReport build() {
+    public Reports build() {
         ValidationConclusion validationConclusion = getValidationConclusion();
-        return new QualifiedReport(validationConclusion,null);
+        SimpleReport simpleReport = new SimpleReport(validationConclusion);
+        DetailedReport detailedReport = new DetailedReport(validationConclusion, null);
+        return new Reports(simpleReport, detailedReport);
     }
 
     private ValidationConclusion getValidationConclusion() {

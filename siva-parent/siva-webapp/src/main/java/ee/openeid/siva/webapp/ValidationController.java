@@ -17,7 +17,6 @@
 package ee.openeid.siva.webapp;
 
 import ee.openeid.siva.proxy.ValidationProxy;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
 import ee.openeid.siva.webapp.request.JSONValidationRequest;
 import ee.openeid.siva.webapp.response.ValidationResponse;
 import ee.openeid.siva.webapp.transformer.ValidationRequestToProxyDocumentTransformer;

@@ -12,7 +12,7 @@ import java.util.List;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.getDateFormatterWithGMTZone;
 
-public class TimeStampTokenQualifiedReportBuilder {
+public class TimeStampTokenValidationReportBuilder {
 
     private static final String ASICS_SIGNATURE_FORMAT = "ASICS";
 
@@ -21,16 +21,18 @@ public class TimeStampTokenQualifiedReportBuilder {
     private ValidationPolicy validationPolicy;
     private TimeStampTokenValidationData timeStampTokenValidationData;
 
-    public TimeStampTokenQualifiedReportBuilder(ValidationDocument validationDocument, Date validationTime, ValidationPolicy validationPolicy, TimeStampTokenValidationData timeStampTokenValidationData) {
+    public TimeStampTokenValidationReportBuilder(ValidationDocument validationDocument, Date validationTime, ValidationPolicy validationPolicy, TimeStampTokenValidationData timeStampTokenValidationData) {
         this.validationDocument = validationDocument;
         this.validationTime = validationTime;
         this.validationPolicy = validationPolicy;
         this.timeStampTokenValidationData = timeStampTokenValidationData;
     }
 
-    public QualifiedReport build() {
+    public Reports build() {
         ValidationConclusion validationConclusion = getValidationConclusion();
-        return new QualifiedReport(validationConclusion,null);
+        SimpleReport simpleReport = new SimpleReport(validationConclusion);
+        DetailedReport detailedReport = new DetailedReport(validationConclusion, null);
+        return new Reports(simpleReport, detailedReport);
     }
 
     private ValidationConclusion getValidationConclusion() {

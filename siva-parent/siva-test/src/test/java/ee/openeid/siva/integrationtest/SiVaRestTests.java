@@ -21,8 +21,7 @@ import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import ee.openeid.siva.proxy.document.DocumentType;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
-import ee.openeid.siva.validation.document.report.ValidationConclusion;
+import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.webapp.response.ValidationResponse;
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
@@ -98,22 +97,22 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         return PRINT_RESPONSE;
     }
 
-    protected QualifiedReport postForReport(String file, String signaturePolicy) {
+    protected SimpleReport postForReport(String file, String signaturePolicy) {
         if (shouldPrintResponse()) {
             return postForReportAndPrintResponse(file, signaturePolicy);
         }
-        return mapToReport(post(validationRequestFor(file, signaturePolicy)).andReturn().body().asString()).getValidationReport();
+        return mapToReport(post(validationRequestFor(file, signaturePolicy, null)).andReturn().body().asString()).getValidationReport();
     }
 
-    protected QualifiedReport postForReport(String file) {
+    protected SimpleReport postForReport(String file) {
         return postForReport(file, VALID_SIGNATURE_POLICY_5);
     }
 
-    protected QualifiedReport postForReportAndPrintResponse(String file, String signaturePolicy) {
-        return mapToReport(post(validationRequestFor(file, signaturePolicy)).andReturn().body().prettyPrint()).getValidationReport();
+    protected SimpleReport postForReportAndPrintResponse(String file, String signaturePolicy) {
+        return mapToReport(post(validationRequestFor(file, signaturePolicy,null)).andReturn().body().prettyPrint()).getValidationReport();
     }
 
-    protected String validationRequestFor(String file, String signaturePolicy) {
+    protected String validationRequestFor(String file, String signaturePolicy, String reportType) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("document", Base64.encodeBase64String(readFileFromTestResources(file)));
         jsonObject.put("filename", file);
@@ -125,12 +124,15 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         } else {
             jsonObject.put("signaturePolicy", VALID_SIGNATURE_POLICY_5);
         }
+        if (reportType != null) {
+            jsonObject.put("reportType", reportType);
+        }
         String output = jsonObject.toString();
         return output;
     }
 
     protected String validationRequestFor(String file) {
-        return validationRequestFor(file, null);
+        return validationRequestFor(file, null, null);
     }
 
     protected String dataFilesRequest(String file) {

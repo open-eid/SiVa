@@ -17,7 +17,9 @@
 package ee.openeid.siva.xroad.validation;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.document.report.DetailedReport;
+import ee.openeid.siva.validation.document.report.Reports;
+import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
@@ -35,7 +37,7 @@ import java.util.stream.Collectors;
 import static ee.openeid.siva.validation.document.report.SignatureValidationData.Indication.TOTAL_PASSED;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.*;
 
-public class XROADQualifiedReportBuilder {
+public class XROADValidationReportBuilder {
 
     private static final String XROAD_SIGNATURE_FORM = "ASiC_E_batchsignature";
     private static final String ASICE_SIGNATURE_FORM = "ASiC_E";
@@ -46,7 +48,7 @@ public class XROADQualifiedReportBuilder {
     private ValidationPolicy validationPolicy;
     private XROADSignatureValidationDataBuilder signatureValidationDataBuilder;
 
-    public XROADQualifiedReportBuilder(AsicContainerVerifier verifier,
+    public XROADValidationReportBuilder(AsicContainerVerifier verifier,
                                        ValidationDocument validationDocument,
                                        Date validationTime,
                                        ValidationPolicy validationPolicy,
@@ -58,9 +60,11 @@ public class XROADQualifiedReportBuilder {
         this.signatureValidationDataBuilder = new XROADSignatureValidationDataBuilder(verifier, Arrays.asList(exceptions));
     }
 
-    public QualifiedReport build() {
+    public Reports build() {
         ValidationConclusion validationConclusion = getValidationConclusion();
-        return new QualifiedReport(validationConclusion,null);
+        SimpleReport simpleReport = new SimpleReport(validationConclusion);
+        DetailedReport detailedReport = new DetailedReport(validationConclusion, null);
+        return new Reports(simpleReport, detailedReport);
     }
 
     private ValidationConclusion getValidationConclusion() {

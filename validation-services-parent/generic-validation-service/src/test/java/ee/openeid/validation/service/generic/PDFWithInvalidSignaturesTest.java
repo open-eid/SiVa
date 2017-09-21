@@ -17,7 +17,7 @@
 package ee.openeid.validation.service.generic;
 
 import ee.openeid.siva.validation.document.report.Error;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import org.apache.commons.lang3.StringUtils;
@@ -33,8 +33,8 @@ public class PDFWithInvalidSignaturesTest extends PDFValidationServiceTest {
     @Test
     @Ignore("java.lang.OutOfMemoryError: Java heap space may occur")
     public void validatingPdfWithOneBaselineProfileBSignatureReturnsReportWithNoValidSignatures() throws Exception {
-        QualifiedReport report = validationService.validateDocument(
-                buildValidationDocument(PDF_WITH_ONE_BASELINE_PROFILE_B_SIGNATURE));
+        SimpleReport report = validationService.validateDocument(
+                buildValidationDocument(PDF_WITH_ONE_BASELINE_PROFILE_B_SIGNATURE)).getSimpleReport();
         assertNotNull(report);
         ValidationConclusion validationConclusion = report.getValidationConclusion();
         assertTrue(validationConclusion.getSignaturesCount() == 1);
@@ -44,8 +44,8 @@ public class PDFWithInvalidSignaturesTest extends PDFValidationServiceTest {
     @Ignore(/*TODO:*/"SignatureFormatConstraint outputs error node in wrong format, so error is not parsed correctly to report (VAL-197)")
     @Test
     public void validatingPdfWithOneBaselineProfileBSignatureReturnsReportWithOneCorrectlyFormattedError() throws Exception {
-        QualifiedReport report = validationService.validateDocument(
-                buildValidationDocument(PDF_WITH_ONE_BASELINE_PROFILE_B_SIGNATURE));
+        SimpleReport report = validationService.validateDocument(
+                buildValidationDocument(PDF_WITH_ONE_BASELINE_PROFILE_B_SIGNATURE)).getSimpleReport();
         System.out.println(report);
         SignatureValidationData signature = report.getValidationConclusion().getSignatures().get(0);
         assertEquals("TOTAL-FAILED", signature.getIndication());

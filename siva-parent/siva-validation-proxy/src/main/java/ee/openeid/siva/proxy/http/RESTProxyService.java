@@ -17,6 +17,7 @@
 package ee.openeid.siva.proxy.http;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
+import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +29,9 @@ public class RESTProxyService {
     private static final String VALIDATION_URL_PATH = "/xroad-validation";
     private RestTemplate restTemplate;
 
-    public ValidationConclusion validate(ValidationDocument validationDocument) {
+    public Reports validate(ValidationDocument validationDocument) {
         validationDocument.setDataBase64Encoded(Base64.encodeBase64String(validationDocument.getBytes()));
-        return restTemplate.postForObject(VALIDATION_URL_PATH, validationDocument, ValidationConclusion.class);
+        return restTemplate.postForObject(VALIDATION_URL_PATH, validationDocument, Reports.class);
     }
 
     @Autowired

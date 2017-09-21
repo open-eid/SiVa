@@ -17,7 +17,7 @@
 package ee.openeid.validation.service.generic;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.ValidationService;
@@ -26,7 +26,7 @@ import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyExceptio
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.tsl.configuration.AlwaysFailingCRLSource;
 import ee.openeid.tsl.configuration.AlwaysFailingOCSPSource;
-import ee.openeid.validation.service.generic.validator.report.GenericQualifiedReportBuilder;
+import ee.openeid.validation.service.generic.validator.report.GenericValidationReportBuilder;
 import eu.europa.esig.dss.DSSDocument;
 import eu.europa.esig.dss.DSSException;
 import eu.europa.esig.dss.InMemoryDocument;
@@ -35,7 +35,7 @@ import eu.europa.esig.dss.client.http.commons.CommonsDataLoader;
 import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
-import eu.europa.esig.dss.validation.reports.Reports;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +55,7 @@ public class GenericValidationService implements ValidationService {
     private ConstraintLoadingSignaturePolicyService signaturePolicyService;
 
     @Override
-    public QualifiedReport validateDocument(ValidationDocument validationDocument) throws DSSException {
+    public Reports validateDocument(ValidationDocument validationDocument) throws DSSException {
         try {
             if (LOGGER.isInfoEnabled()) {
                 LOGGER.info("WsValidateDocument: begin");
@@ -73,7 +73,7 @@ public class GenericValidationService implements ValidationService {
                     new AlwaysFailingCRLSource(), new AlwaysFailingOCSPSource(), new CommonsDataLoader());
             LOGGER.info("Certificate pool size: {}", getCertificatePoolSize(certificateVerifier));
             validator.setCertificateVerifier(certificateVerifier);
-            final Reports reports;
+            final eu.europa.esig.dss.validation.reports.Reports reports;
             synchronized (lock) {
                 reports = validator.validateDocument(policy.getConstraintDataStream());
             }
@@ -89,7 +89,7 @@ public class GenericValidationService implements ValidationService {
                 LOGGER.info("WsValidateDocument: end");
             }
 
-            final GenericQualifiedReportBuilder reportBuilder = new GenericQualifiedReportBuilder(
+            final GenericValidationReportBuilder reportBuilder = new GenericValidationReportBuilder(
                     reports,
                     validationTimeInGMT,
                     validationDocument,

@@ -93,8 +93,8 @@ public class BDOCValidationServiceIntegrationTest {
     public ExpectedException expectedException = ExpectedException.none();
 
     @Test
-    public void qualifiedReportShouldHaveValidationWarnings() throws Exception {
-        QualifiedReport validationResult = bdocValidationService.validateDocument(buildValidationDocument(BDOC_TEST_FILE_UNSIGNED));
+    public void vShouldHaveValidationWarnings() throws Exception {
+        SimpleReport validationResult = bdocValidationService.validateDocument(buildValidationDocument(BDOC_TEST_FILE_UNSIGNED)).getSimpleReport();
         List<ValidationWarning> validationWarnings = validationResult.getValidationConclusion().getValidationWarnings();
         assertThat(validationWarnings, hasSize(5));
         assertThat(validationWarnings, containsInAnyOrder(
@@ -107,8 +107,8 @@ public class BDOCValidationServiceIntegrationTest {
     }
 
     @Test
-    public void qualifiedReportShouldNotHaveValidationWarnings() throws Exception {
-        QualifiedReport validationResult = bdocValidationService.validateDocument(buildValidationDocument(BDOC_TEST_FILE_ALL_SIGNED));
+    public void vShouldNotHaveValidationWarnings() throws Exception {
+        SimpleReport validationResult = bdocValidationService.validateDocument(buildValidationDocument(BDOC_TEST_FILE_ALL_SIGNED)).getSimpleReport();
         List<ValidationWarning> validationWarnings = validationResult.getValidationConclusion().getValidationWarnings();
         assertThat(validationWarnings, hasSize(0));
     }
@@ -151,14 +151,14 @@ public class BDOCValidationServiceIntegrationTest {
     }
 
     @Test
-    public void bdocValidationResultShouldIncludeQualifiedReportPOJO() throws Exception {
-        QualifiedReport validationResult2Signatures = bdocValidationService.validateDocument(bdocValid2Signatures());
+    public void bdocValidationResultShouldIncludeValidationReportPOJO() throws Exception {
+        SimpleReport validationResult2Signatures = bdocValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
         assertNotNull(validationResult2Signatures);
     }
 
     @Test
-    public void qualifiedReportShouldIncludeRequiredFields() throws Exception {
-        QualifiedReport validationResult2Signatures = bdocValidationService.validateDocument(bdocValid2Signatures());
+    public void vShouldIncludeRequiredFields() throws Exception {
+        SimpleReport validationResult2Signatures = bdocValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
         ValidationConclusion validationConclusion = validationResult2Signatures.getValidationConclusion();
         assertNotNull(validationConclusion.getPolicy());
         assertNotNull(validationConclusion.getValidationTime());
@@ -170,9 +170,9 @@ public class BDOCValidationServiceIntegrationTest {
 
     @Test
     public void signatureScopeShouldBeCorrectWhenDatafilesContainSpacesOrParenthesis() throws Exception {
-        QualifiedReport report = bdocValidationService.validateDocument(buildValidationDocument(VALID_ID_CARD_MOB_ID));
+        SimpleReport report = bdocValidationService.validateDocument(buildValidationDocument(VALID_ID_CARD_MOB_ID)).getSimpleReport();
         report.getValidationConclusion().getSignatures().forEach(sig -> assertContainsScope(sig, "Proov (2).txt"));
-        QualifiedReport report2 = bdocValidationService.validateDocument(buildValidationDocument(VALID_BALTIC_EST_LT));
+        SimpleReport report2 = bdocValidationService.validateDocument(buildValidationDocument(VALID_BALTIC_EST_LT)).getSimpleReport();
         report2.getValidationConclusion().getSignatures().forEach(sig -> assertContainsScope(sig, "Baltic MoU digital signing_04112015.docx"));
     }
 
@@ -185,9 +185,9 @@ public class BDOCValidationServiceIntegrationTest {
     }
 
     @Test
-    public void qualifiedReportShouldHaveCorrectSignatureValidationDataForSignature1() throws Exception {
+    public void vShouldHaveCorrectSignatureValidationDataForSignature1() throws Exception {
 
-        QualifiedReport validationResult2Signatures = bdocValidationService.validateDocument(bdocValid2Signatures());
+        SimpleReport validationResult2Signatures = bdocValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
         SignatureValidationData sig1 = validationResult2Signatures.getValidationConclusion().getSignatures()
                 .stream()
                 .filter(sig -> sig.getId().equals("S0"))
@@ -211,8 +211,8 @@ public class BDOCValidationServiceIntegrationTest {
     }
 
     @Test
-    public void qualifiedReportShouldHaveCorrectSignatureValidationDataForSignature2() throws Exception {
-        QualifiedReport validationResult2Signatures = bdocValidationService.validateDocument(bdocValid2Signatures());
+    public void vShouldHaveCorrectSignatureValidationDataForSignature2() throws Exception {
+        SimpleReport validationResult2Signatures = bdocValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
         SignatureValidationData sig2 = validationResult2Signatures.getValidationConclusion().getSignatures()
                 .stream()
                 .filter(sig -> sig.getId().equals("S1"))
@@ -237,13 +237,13 @@ public class BDOCValidationServiceIntegrationTest {
 
     @Test
     public void reportForBdocValidationShouldIncludeCorrectAsiceSignatureForm() throws Exception {
-        QualifiedReport report = bdocValidationService.validateDocument(bdocValid2Signatures());
+        SimpleReport report = bdocValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
         assertEquals("ASiC_E", report.getValidationConclusion().getSignatureForm());
     }
 
     @Test
     public void bestSignatureTimeInQualifiedBdocReportShouldNotBeBlank() throws Exception {
-        QualifiedReport report = bdocValidationService.validateDocument(bdocValidIdCardAndMobIdSignatures());
+        SimpleReport report = bdocValidationService.validateDocument(bdocValidIdCardAndMobIdSignatures()).getSimpleReport();
         ValidationConclusion validationConclusion = report.getValidationConclusion();
         String bestSignatureTime1 = validationConclusion.getSignatures().get(0).getInfo().getBestSignatureTime();
         String bestSignatureTime2 = validationConclusion.getSignatures().get(1).getInfo().getBestSignatureTime();
@@ -253,7 +253,7 @@ public class BDOCValidationServiceIntegrationTest {
 
     @Test
     public void bdocWithCRLRevocationDataOnlyShouldFail() throws Exception {
-        QualifiedReport report = bdocValidationService.validateDocument(bdocCRLRevocationOnly());
+        SimpleReport report = bdocValidationService.validateDocument(bdocCRLRevocationOnly()).getSimpleReport();
         assertTrue(report.getValidationConclusion().getValidSignaturesCount() == 0);
     }
 
@@ -390,14 +390,14 @@ public class BDOCValidationServiceIntegrationTest {
         Arrays.stream(qualifiers).forEach(qualifiersAndConditions::remove);
     }
 
-    private QualifiedReport validateWithPolicy(String policyName) throws Exception {
+    private SimpleReport validateWithPolicy(String policyName) throws Exception {
         return validateWithPolicy(policyName, VALID_BDOC_TM_2_SIGNATURES);
     }
 
-    private QualifiedReport validateWithPolicy(String policyName, String file) throws Exception {
+    private SimpleReport validateWithPolicy(String policyName, String file) throws Exception {
         ValidationDocument validationDocument = buildValidationDocument(file);
         validationDocument.setSignaturePolicy(policyName);
-        return bdocValidationService.validateDocument(validationDocument);
+        return bdocValidationService.validateDocument(validationDocument).getSimpleReport();
     }
 
     private ValidationDocument bdocValid2Signatures() throws Exception {

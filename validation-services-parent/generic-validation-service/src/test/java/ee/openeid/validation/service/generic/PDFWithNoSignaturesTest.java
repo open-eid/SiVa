@@ -16,7 +16,7 @@
 
 package ee.openeid.validation.service.generic;
 
-import ee.openeid.siva.validation.document.report.QualifiedReport;
+import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import org.junit.Test;
 
@@ -28,8 +28,8 @@ public class PDFWithNoSignaturesTest extends PDFValidationServiceTest {
 
     @Test
     public void validatingPdfWithNoSignaturesReturnsReport() throws Exception {
-        QualifiedReport report = validationService.validateDocument(
-                buildValidationDocument(PDF_WITH_NO_SIGNATURES));
+        SimpleReport report = validationService.validateDocument(
+                buildValidationDocument(PDF_WITH_NO_SIGNATURES)).getSimpleReport();
         assertNotNull(report);
         ValidationConclusion validationConclusion = report.getValidationConclusion();
         assertEquals(PDF_WITH_NO_SIGNATURES, validationConclusion.getValidatedDocument().getFilename());

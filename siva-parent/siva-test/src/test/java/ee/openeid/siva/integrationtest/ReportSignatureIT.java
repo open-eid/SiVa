@@ -18,8 +18,15 @@ public class ReportSignatureIT extends SiVaRestTests {
     }
 
     @Test
-    public void validationReportSignatureInResponse() {
-        post(validationRequestFor("hellopades-pades-lt-sha256-sign.pdf"))
+    public void whenRequestingSimpleReport_thenValidationReportSignatureIsNotInResponse() {
+        post(validationRequestFor("hellopades-pades-lt-sha256-sign.pdf", null, "Simple"))
+                .then()
+                .body("validationReportSignature", isEmptyOrNullString());
+    }
+
+    @Test
+    public void whenRequestingDetailedReport_thenValidationReportSignatureIsInResponse() {
+        post(validationRequestFor("hellopades-pades-lt-sha256-sign.pdf", null, "Detailed"))
                 .then()
                 .body("validationReportSignature", not(isEmptyOrNullString()));
     }

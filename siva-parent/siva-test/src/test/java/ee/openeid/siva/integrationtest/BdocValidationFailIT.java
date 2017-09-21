@@ -101,7 +101,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
     @Test
     public void bdocInvalidAndValidMultipleSignatures() {
         setTestFilesDirectory("bdoc/test/timemark/");
-        assertSomeSignaturesAreValid(postForReport("BdocMultipleSignaturesMixedWithValidAndInvalid.bdoc"), 2);
+        assertSomeSignaturesAreValid(postForReport("BdocMultipleSignaturesMixedWithValidAndInvalid.bdoc"), 3);
     }
 
     /**

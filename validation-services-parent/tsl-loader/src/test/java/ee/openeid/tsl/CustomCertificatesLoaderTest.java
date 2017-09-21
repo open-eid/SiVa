@@ -45,7 +45,7 @@ public class CustomCertificatesLoaderTest {
     @Test
     public void allTestCertificatesShouldBeAddedToTSL() {
         List<CertificateToken> certTokens = getCertificateTokens();
-        assertEquals(9, certTokens.size());
+        assertEquals(10, certTokens.size());
     }
 
     @Test

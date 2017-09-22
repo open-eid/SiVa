@@ -45,7 +45,7 @@ public final class ValidationReportUtils {
         }
 
         try {
-            final String documentName = JsonPath.read(reportJSON, "$.validationConclusion.validatedDocument.filename");
+            final String documentName = JsonPath.read(reportJSON, "$.validationReport.validationConclusion.validatedDocument.filename");
             return documentName == null ? "" : documentName;
         } catch (final PathNotFoundException ex) {
             LOGGER.warn("filename not present in JSON: ", ex);
@@ -55,7 +55,7 @@ public final class ValidationReportUtils {
 
     public static List<String> getValidationWarnings(final String jsonValidationResult) {
         try {
-            return JsonPath.read(jsonValidationResult, "$.validationConclusion.validationWarnings[*].content");
+            return JsonPath.read(jsonValidationResult, "$.validationReport.validationConclusion.validationWarnings[*].content");
         } catch (PathNotFoundException e) {
             LOGGER.trace("Validation warnings not present in JSON: ", e);
             return Collections.emptyList();
@@ -69,8 +69,8 @@ public final class ValidationReportUtils {
         }
 
         try {
-            final Integer validSignatureCount = JsonPath.read(reportJSON, "$.validationConclusion.validSignaturesCount");
-            final Integer totalSignatureCount = JsonPath.read(reportJSON, "$.validationConclusion.signaturesCount");
+            final Integer validSignatureCount = JsonPath.read(reportJSON, "$.validationReport.validationConclusion.validSignaturesCount");
+            final Integer totalSignatureCount = JsonPath.read(reportJSON, "$.validationReport.validationConclusion.signaturesCount");
             if (validSignatureCount == null || totalSignatureCount == null) {
                 LOGGER.warn("No validSignatureCount or totalSignatureCount present in response JSON");
                 return ERROR_VALIDATION;

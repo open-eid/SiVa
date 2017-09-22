@@ -43,7 +43,7 @@ public class ValidationReportUtilsTest {
         List<String> expected = new ArrayList<>();
         expected.add("Some validation warning");
 
-        final String json = "{\"validationConclusion\":{\"validationWarnings\":[{\"content\":\"Some validation warning\"}]}}";
+        final String json = "{\"validationReport\":{\"validationConclusion\":{\"validationWarnings\":[{\"content\":\"Some validation warning\"}]}}}";
         assertEquals(expected, ValidationReportUtils.getValidationWarnings(json));
     }
 
@@ -55,7 +55,7 @@ public class ValidationReportUtilsTest {
 
     @Test
     public void documentNameJsonKeyPresentReturnsDocumentNameValue() throws Exception {
-        final String json = "{\"validationConclusion\":{\"validatedDocument\":{\"filename\":\"valid_value.bdoc\"}}}";
+        final String json = "{\"validationReport\":{\"validationConclusion\":{\"validatedDocument\":{\"filename\":\"valid_value.bdoc\"}}}}";
         assertEquals("valid_value.bdoc", ValidationReportUtils.getValidateFilename(json));
     }
 
@@ -73,7 +73,7 @@ public class ValidationReportUtilsTest {
 
     @Test
     public void overallValidationRequiredJsonKeysArePresentReturnsValid() throws Exception {
-        final String json = "{\"validationConclusion\":{\"validSignaturesCount\": 1, \"signaturesCount\": 1}}";
+        final String json = "{\"validationReport\":{\"validationConclusion\":{\"validSignaturesCount\": 1, \"signaturesCount\": 1}}}";
         assertEquals("VALID", ValidationReportUtils.getOverallValidationResult(json));
     }
 
@@ -85,13 +85,13 @@ public class ValidationReportUtilsTest {
 
     @Test
     public void overallValidationRequiredJsonKeysWithValuesZeroReturnsInvalid() throws Exception {
-        final String json = "{\"validationConclusion\":{\"validSignaturesCount\": 0, \"signaturesCount\": 0}}";
+        final String json = "{\"validationReport\":{\"validationConclusion\":{\"validSignaturesCount\": 0, \"signaturesCount\": 0}}}";
         assertEquals("INVALID", ValidationReportUtils.getOverallValidationResult(json));
     }
 
     @Test
     public void overallValidationRequiredKeysPresentValuesNullReturnsInvalid() throws Exception {
-        final String json = "{\"validationConclusion\":{\"validSignaturesCount\": null, \"signaturesCount\": null}}";
+        final String json = "{\"validationReport\":{\"validationConclusion\":{\"validSignaturesCount\": null, \"signaturesCount\": null}}}";
         assertEquals("ERROR", ValidationReportUtils.getOverallValidationResult(json));
     }
 

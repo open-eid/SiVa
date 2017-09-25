@@ -114,6 +114,7 @@ public class ValidationProxy {
     private SimpleReport mergeReports(SimpleReport timeStampTokenReport, SimpleReport dataFileReport) {
         if (dataFileReport != null) {
             dataFileReport.getValidationConclusion().setTimeStampTokens(timeStampTokenReport.getValidationConclusion().getTimeStampTokens());
+            dataFileReport.getValidationConclusion().setSignatureForm(timeStampTokenReport.getValidationConclusion().getSignatureForm());
             return dataFileReport;
         }
         return timeStampTokenReport;

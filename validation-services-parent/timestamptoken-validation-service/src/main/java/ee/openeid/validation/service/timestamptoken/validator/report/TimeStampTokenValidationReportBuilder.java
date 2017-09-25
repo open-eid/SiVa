@@ -14,7 +14,7 @@ import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUt
 
 public class TimeStampTokenValidationReportBuilder {
 
-    private static final String ASICS_SIGNATURE_FORMAT = "ASiC_S";
+    private static final String ASICS_SIGNATURE_FORMAT = "ASiC-S";
 
     private ValidationDocument validationDocument;
     private Date validationTime;

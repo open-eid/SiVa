@@ -64,7 +64,7 @@ public class StatisticsServiceTest {
     @Test
     public void testValidationStatisticsLoggingWhereAllSignaturesInValidationReportAreValid() {
         long validationDurationInMillis = 1000L;
-        String signatureForm = "ASiC_E";
+        String signatureForm = "ASiC-E";
         String expectedContainerType = "ASiC-E";
         int validSignaturesCount = 1;
         int totalSignatureCount = 1;

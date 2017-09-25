@@ -22,8 +22,8 @@ import static ee.openeid.siva.statistics.SignatureFormToContainerTypeTransormer.
 import static org.junit.Assert.*;
 
 public class SignatureFormToContainerTypeTransormerTest {
-    private static final String ASIC_E_SIGNATURE_FORM = "ASiC_E";
-    private static final String XROAD_SIGNATURE_FORM = "ASiC_E_batchsignature";
+    private static final String ASIC_E_SIGNATURE_FORM = "ASiC-E";
+    private static final String XROAD_SIGNATURE_FORM = "ASiC-E_batchsignature";
     private static final String PDF_SIGNATURE_FORM = "PAdES";
     private static final String DDOC_SIGNATURE_FORM_PREFIX = "DIGIDOC_XML_";
 

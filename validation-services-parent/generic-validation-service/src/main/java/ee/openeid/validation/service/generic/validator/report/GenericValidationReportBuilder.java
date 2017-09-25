@@ -66,7 +66,7 @@ public class GenericValidationReportBuilder {
         ValidationConclusion validationConclusion = new ValidationConclusion();
         validationConclusion.setPolicy(createReportPolicy(validationPolicy));
         validationConclusion.setValidationTime(parseValidationTimeToString());
-        validationConclusion.setSignatureForm(PDF_SIGNATURE_FORM);
+        validationConclusion.setSignatureForm(getContainerType());
         validationConclusion.setValidationWarnings(Collections.emptyList());
         validationConclusion.setSignatures(buildSignatureValidationDataList());
         validationConclusion.setSignaturesCount(validationConclusion.getSignatures().size());
@@ -84,6 +84,12 @@ public class GenericValidationReportBuilder {
                 .stream()
                 .map(this::buildSignatureValidationData)
                 .collect(Collectors.toList());
+    }
+
+    private String getContainerType() {
+        if (dssReports.getDiagnosticData().getContainerInfo() != null)
+            return dssReports.getDiagnosticData().getContainerInfo().getContainerType();
+        return null;
     }
 
     private SignatureValidationData buildSignatureValidationData(String signatureId) {

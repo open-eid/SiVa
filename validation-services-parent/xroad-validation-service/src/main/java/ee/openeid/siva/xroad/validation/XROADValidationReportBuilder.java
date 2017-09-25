@@ -39,8 +39,8 @@ import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUt
 
 public class XROADValidationReportBuilder {
 
-    private static final String XROAD_SIGNATURE_FORM = "ASiC_E_batchsignature";
-    private static final String ASICE_SIGNATURE_FORM = "ASiC_E";
+    private static final String XROAD_SIGNATURE_FORM = "ASiC-E_batchsignature";
+    private static final String ASICE_SIGNATURE_FORM = "ASiC-E";
 
     private AsicContainerVerifier verifier;
     private ValidationDocument validationDocument;

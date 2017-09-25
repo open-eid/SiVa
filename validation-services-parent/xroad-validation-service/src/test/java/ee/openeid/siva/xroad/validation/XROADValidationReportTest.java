@@ -52,7 +52,7 @@ public class XROADValidationReportTest {
     public void validationReportForXroadBatchSignatureShouldHaveCorrectSignatureForm() throws Exception {
         ValidationDocument validationDocument = buildValidationDocument(XROAD_BATCHSIGNATURE);
         SimpleReport report = validationService.validateDocument(validationDocument).getSimpleReport();
-        assertEquals("ASiC_E_batchsignature", report.getValidationConclusion().getSignatureForm());
+        assertEquals("ASiC-E_batchsignature", report.getValidationConclusion().getSignatureForm());
     }
 
     @Test
@@ -66,7 +66,7 @@ public class XROADValidationReportTest {
     @Test
     public void signatureFormInReportShouldBeAsicEWhenValidatingXROADSimpleContainer() throws Exception {
         SimpleReport report = validationService.validateDocument(buildValidationDocument(XROAD_SIMPLE)).getSimpleReport();
-        assertEquals("ASiC_E", report.getValidationConclusion().getSignatureForm());
+        assertEquals("ASiC-E", report.getValidationConclusion().getSignatureForm());
     }
 
     @Test

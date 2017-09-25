@@ -48,7 +48,7 @@ public class BDOCValidationReportBuilder {
     private static final String FULL_DOCUMENT = "Full document";
     private static final String XADES_FORMAT_PREFIX = "XAdES_BASELINE_";
     private static final String REPORT_INDICATION_INDETERMINATE = "INDETERMINATE";
-    private static final String BDOC_SIGNATURE_FORM = "ASiC_E";
+    private static final String BDOC_SIGNATURE_FORM = "ASiC-E";
 
     private Container container;
     private ValidationDocument validationDocument;

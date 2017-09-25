@@ -1,17 +1,14 @@
 package ee.openeid.siva.webapp.soap.interceptor;
 
-import ee.openeid.siva.singature.XadesSignatureService;
 import ee.openeid.siva.singature.SignatureService;
-
+import ee.openeid.siva.singature.XadesSignatureService;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.binding.soap.interceptor.AbstractSoapInterceptor;
 import org.apache.cxf.phase.Phase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPElement;
@@ -23,7 +20,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.xpath.XPathExpression;
 import java.io.IOException;
 import java.io.StringWriter;
 
@@ -64,9 +60,9 @@ public class ReportSignatureInterceptor extends AbstractSoapInterceptor {
     }
 
     private boolean reportTypeIsDetailed(SOAPBody soapBody) {
-        Node ReportTypeNode = soapBody.getElementsByTagName("ReportType").item(0);
-        ReportTypeNode = ReportTypeNode == null ? null : ReportTypeNode.getFirstChild();
-        return "Detailed".equals(ReportTypeNode.getNodeValue()) ? true : false;
+        Node reportTypeNode = soapBody.getElementsByTagName("ReportType").item(0);
+        reportTypeNode = reportTypeNode == null ? null : reportTypeNode.getFirstChild();
+        return reportTypeNode != null && "Detailed".equals(reportTypeNode.getNodeValue());
     }
 
     private byte[] getValidationReportContent(SOAPBody soapBody) throws IOException, SOAPException, TransformerException {

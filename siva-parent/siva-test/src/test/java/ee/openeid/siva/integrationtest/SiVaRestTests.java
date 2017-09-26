@@ -116,13 +116,8 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("document", Base64.encodeBase64String(readFileFromTestResources(file)));
         jsonObject.put("filename", file);
-        String documentType = parseFileExtension(file);
-        if (DocumentType.XROAD.name().equalsIgnoreCase(documentType))
-            jsonObject.put("documentType", documentType);
         if (signaturePolicy != null) {
             jsonObject.put("signaturePolicy", signaturePolicy);
-        } else {
-            jsonObject.put("signaturePolicy", VALID_SIGNATURE_POLICY_5);
         }
         if (reportType != null) {
             jsonObject.put("reportType", reportType);

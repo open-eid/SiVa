@@ -121,6 +121,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      */
     @Test
+    @Ignore("Invalid signatureLevel")
     public void SoapBdocCorrectValuesArePresentValidLtSignatureAdes() {
         setTestFilesDirectory("bdoc/test/timemark/");
         Document report = extractReportDom(post(validationRequestForDocument("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc")).andReturn().body().asString());

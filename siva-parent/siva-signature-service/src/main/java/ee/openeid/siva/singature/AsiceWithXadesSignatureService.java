@@ -1,37 +1,38 @@
 package ee.openeid.siva.singature;
 
 import eu.europa.esig.dss.*;
+import eu.europa.esig.dss.asic.ASiCWithXAdESSignatureParameters;
+import eu.europa.esig.dss.asic.signature.ASiCWithXAdESService;
 import eu.europa.esig.dss.token.DSSPrivateKeyEntry;
 import eu.europa.esig.dss.token.Pkcs12SignatureToken;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
-import eu.europa.esig.dss.xades.XAdESSignatureParameters;
-import eu.europa.esig.dss.xades.signature.XAdESService;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-public class XadesSignatureService implements SignatureService {
+public class AsiceWithXadesSignatureService implements SignatureService {
 
     @Override
-    public byte[] getSignature(byte[] dataToSign) throws IOException {
+    public byte[] getSignature(byte[] dataToSign, String dataName, String mimeTypeString) throws IOException {
         InputStream p12InputStream = this.getClass().getResourceAsStream("/test.p12");
 
         Pkcs12SignatureToken signatureToken = new Pkcs12SignatureToken(p12InputStream, "password");
         DSSPrivateKeyEntry privateKeyEntry = signatureToken.getKeys().get(0);
 
-        XAdESSignatureParameters parameters = new XAdESSignatureParameters();
+        ASiCWithXAdESSignatureParameters parameters = new ASiCWithXAdESSignatureParameters();
         parameters.setSignatureLevel(SignatureLevel.XAdES_BASELINE_B);
-        parameters.setSignaturePackaging(SignaturePackaging.DETACHED);
+        parameters.aSiC().setContainerType(ASiCContainerType.ASiC_E);
         parameters.setDigestAlgorithm(DigestAlgorithm.SHA256);
+        parameters.aSiC().setMimeType(MimeType.ASICE.getMimeTypeString());
         parameters.setSigningCertificate(privateKeyEntry.getCertificate());
 
         CommonCertificateVerifier commonCertificateVerifier = new CommonCertificateVerifier();
-        XAdESService service = new XAdESService(commonCertificateVerifier);
+        ASiCWithXAdESService service = new ASiCWithXAdESService(commonCertificateVerifier);
 
-        DSSDocument documentToBeSigned = new InMemoryDocument(dataToSign);
+        DSSDocument documentToBeSigned = new InMemoryDocument(dataToSign, dataName);
         MimeType mimeType = new MimeType();
-        mimeType.setMimeTypeString("application/json");
+        mimeType.setMimeTypeString(mimeTypeString);
         documentToBeSigned.setMimeType(mimeType);
 
         ToBeSigned toBeSigned = service.getDataToSign(documentToBeSigned, parameters);

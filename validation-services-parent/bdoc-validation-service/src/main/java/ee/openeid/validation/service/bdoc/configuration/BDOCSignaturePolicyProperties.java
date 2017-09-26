@@ -47,7 +47,7 @@ public class BDOCSignaturePolicyProperties extends SignaturePolicyProperties<Con
     @PostConstruct
     public void init() {
         if (defaultPolicy == null) {
-            setDefaultPolicy(ADES_POLICY.getName());
+            setDefaultPolicy(ADES_QC_POLICY.getName());
         }
         if (policies.isEmpty()) {
             setPolicies(getDefaultBdocPolicies());

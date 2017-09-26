@@ -22,7 +22,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Data
 @ConfigurationProperties(prefix = "siva.service")
 public class SivaRESTWebServiceConfigurationProperties {
-    private static final String DEFAULT_SERVICE_URL = "http://localhost:8080";
+    private static final String DEFAULT_SERVICE_URL = "http://localhost:8080/root";
     private String jsonServicePath = "/validate";
     private String jsonDataFilesServicePath = DEFAULT_SERVICE_URL + "/getDataFiles";
     private String soapDataFilesServicePath = DEFAULT_SERVICE_URL + "/soap/dataFilesWebService/getDocumentDataFiles";

@@ -1,5 +1,23 @@
 <ConstraintsParameters Name="SiVA Signature Validation Policy - Version 2" xmlns="http://dss.esig.europa.eu/validation/policy">
     <Description>Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result.</Description>
+	<ContainerConstraints>
+        <AcceptableContainerTypes Level="FAIL">
+            <Id>ASiC-S</Id>
+            <Id>ASiC-E</Id>
+        </AcceptableContainerTypes>
+        <!-- 		<ZipCommentPresent Level="WARN" /> -->
+        <!-- 		<AcceptableZipComment Level="WARN"> -->
+        <!-- 			<Id>mimetype=application/vnd.etsi.asic-s+zip</Id> -->
+        <!-- 			<Id>mimetype=application/vnd.etsi.asic-e+zip</Id> -->
+        <!-- 		</AcceptableZipComment> -->
+        <MimeTypeFilePresent Level="FAIL" />
+        <AcceptableMimeTypeFileContent Level="WARN">
+            <Id>application/vnd.etsi.asic-s+zip</Id>
+            <Id>application/vnd.etsi.asic-e+zip</Id>
+        </AcceptableMimeTypeFileContent>
+        <ManifestFilePresent Level="WARN" />
+        <AllFilesSigned Level="WARN" />
+    </ContainerConstraints>
     <SignatureConstraints>
         <AcceptablePolicies Level="FAIL">
             <Id>ANY_POLICY</Id>

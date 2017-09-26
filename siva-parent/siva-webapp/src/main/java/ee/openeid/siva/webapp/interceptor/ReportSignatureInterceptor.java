@@ -2,7 +2,7 @@ package ee.openeid.siva.webapp.interceptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ee.openeid.siva.singature.XadesSignatureService;
+import ee.openeid.siva.singature.AsiceWithXadesSignatureService;
 import ee.openeid.siva.singature.SignatureService;
 
 import ee.openeid.siva.validation.document.report.DetailedReport;
@@ -32,7 +32,7 @@ public class ReportSignatureInterceptor implements ResponseBodyAdvice<Object> {
     @Autowired
     private ObjectMapper jacksonObjectMapper;
 
-    private SignatureService signatureService = new XadesSignatureService();
+    private SignatureService signatureService = new AsiceWithXadesSignatureService();
 
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
@@ -46,7 +46,7 @@ public class ReportSignatureInterceptor implements ResponseBodyAdvice<Object> {
                 log.debug("Start to create the signature of the detailed report ");
                 ValidationResponse validationResponse = (ValidationResponse) responseObject;
                 String validationReportJsonString = jacksonObjectMapper.writeValueAsString(validationResponse.getValidationReport());
-                byte[] reportSignatureBytes = signatureService.getSignature(validationReportJsonString.getBytes());
+                byte[] reportSignatureBytes = signatureService.getSignature(validationReportJsonString.getBytes(), "validationReport.json", "application/json");
                 validationResponse.setValidationReportSignature(Base64.encodeBase64String(reportSignatureBytes));
                 log.debug("Finished creating signature of the detailed report ");
                 return validationResponse;

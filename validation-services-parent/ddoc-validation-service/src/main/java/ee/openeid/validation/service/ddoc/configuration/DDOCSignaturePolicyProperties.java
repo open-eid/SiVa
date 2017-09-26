@@ -58,7 +58,7 @@ public class DDOCSignaturePolicyProperties extends SignaturePolicyProperties<Val
     }
 
     private void setPolicyValue() {
-        final String policyName = defaultPolicy == null ? ADES_POLICY.getName() : defaultPolicy;
+        final String policyName = defaultPolicy == null ? ADES_QC_POLICY.getName() : defaultPolicy;
         setAbstractDefaultPolicy(policyName);
     }
 

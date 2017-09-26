@@ -51,9 +51,9 @@ public class PDFSignaturePolicyTest extends PDFValidationServiceTest {
     @Test
     public void validationReportShouldContainDefaultPolicyWhenPolicyIsNotExplicitlyGiven() throws Exception {
         Policy policy = validateWithPolicy("").getValidationConclusion().getPolicy();
-        assertEquals(ADES_POLICY.getName(), policy.getPolicyName());
-        assertEquals(ADES_POLICY.getDescription(), policy.getPolicyDescription());
-        assertEquals(ADES_POLICY.getUrl(), policy.getPolicyUrl());
+        assertEquals(ADES_QC_POLICY.getName(), policy.getPolicyName());
+        assertEquals(ADES_QC_POLICY.getDescription(), policy.getPolicyDescription());
+        assertEquals(ADES_QC_POLICY.getUrl(), policy.getPolicyUrl());
     }
 
     @Test

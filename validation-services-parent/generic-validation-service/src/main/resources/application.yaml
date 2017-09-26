@@ -20,4 +20,4 @@ siva:
           url: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv5
           constraintPath: generic_constraint_qes.xml
           allowCrlRevocationSource: false
-      defaultPolicy: POLv3
+      defaultPolicy: POLv4

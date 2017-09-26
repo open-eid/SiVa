@@ -119,7 +119,7 @@ public class BDOCValidationServiceIntegrationTest {
         System.out.println(configurationService.loadPolicyConfiguration(POL_V5).getConfiguration().getValidationPolicy());
         System.out.println(configurationService.loadPolicyConfiguration(POL_V4).getConfiguration().getValidationPolicy());
         System.out.println(configurationService.loadPolicyConfiguration(POL_V3).getConfiguration().getValidationPolicy());
-        assertTrue(configurationService.loadPolicyConfiguration(null).getConfiguration().getValidationPolicy().contains("siva-bdoc-POLv3-constraint"));
+        assertTrue(configurationService.loadPolicyConfiguration(null).getConfiguration().getValidationPolicy().contains("siva-bdoc-POLv4-constraint"));
         assertTrue(configurationService.loadPolicyConfiguration(POL_V5).getConfiguration().getValidationPolicy().contains("siva-bdoc-POLv5-constraint"));
         assertTrue(configurationService.loadPolicyConfiguration(POL_V4).getConfiguration().getValidationPolicy().contains("siva-bdoc-POLv4-constraint"));
         assertTrue(configurationService.loadPolicyConfiguration(POL_V3).getConfiguration().getValidationPolicy().contains("siva-bdoc-POLv3-constraint"));
@@ -260,9 +260,9 @@ public class BDOCValidationServiceIntegrationTest {
     @Test
     public void validationReportShouldContainDefaultPolicyWhenPolicyIsNotExplicitlyGiven() throws Exception {
         Policy policy = validateWithPolicy("").getValidationConclusion().getPolicy();
-        assertEquals(ADES_POLICY.getName(), policy.getPolicyName());
-        assertEquals(ADES_POLICY.getDescription(), policy.getPolicyDescription());
-        assertEquals(ADES_POLICY.getUrl(), policy.getPolicyUrl());
+        assertEquals(ADES_QC_POLICY.getName(), policy.getPolicyName());
+        assertEquals(ADES_QC_POLICY.getDescription(), policy.getPolicyDescription());
+        assertEquals(ADES_QC_POLICY.getUrl(), policy.getPolicyUrl());
     }
 
     @Test

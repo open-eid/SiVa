@@ -25,27 +25,27 @@ import static lombok.AccessLevel.PRIVATE;
 class SignatureFormToContainerTypeTransormer {
 
     private static final String ASIC_E_SIGNATURE_FORM = "ASiC-E";
+    private static final String ASIC_S_SIGNATURE_FORM = "ASiC-S";
     private static final String XROAD_SIGNATURE_FORM = "ASiC-E_batchsignature";
-    private static final String PDF_SIGNATURE_FORM = "PAdES";
     private static final String DDOC_SIGNATURE_FORM_PREFIX = "DIGIDOC_XML_";
 
     private static final String ASIC_E_CONTAINER_TYPE = "ASiC-E";
+    private static final String ASIC_S_CONTAINER_TYPE = "ASiC-S";
     private static final String XROAD_CONTAINER_TYPE = "ASiC-E (BatchSignature)";
-    private static final String PDF_CONTAINER_TYPE= "PAdES";
     private static final String DDOC_CONTAINER_TYPE = "XAdES";
 
     static String transformToContainerTypeOrEmpty(String signatureForm) {
         if (signatureForm == null) {
             return valueNotPresent();
         }
-        if (isAsic(signatureForm)) {
+        if (isAsicE(signatureForm)) {
             return ASIC_E_CONTAINER_TYPE;
+        }
+        if (isAsicS(signatureForm)) {
+            return ASIC_S_CONTAINER_TYPE;
         }
         if (isXRoad(signatureForm)) {
             return XROAD_CONTAINER_TYPE;
-        }
-        if (isPdf(signatureForm)) {
-            return PDF_CONTAINER_TYPE;
         }
         if (isDdoc(signatureForm)) {
             return DDOC_CONTAINER_TYPE;
@@ -53,20 +53,18 @@ class SignatureFormToContainerTypeTransormer {
         return valueNotPresent();
     }
 
-    private static boolean isAsic(String signatureForm) {
+    private static boolean isAsicE(String signatureForm) {
         return signatureForm.equals(ASIC_E_SIGNATURE_FORM);
     }
-
+    private static boolean isAsicS(String signatureForm) {
+        return signatureForm.equals(ASIC_S_SIGNATURE_FORM);
+    }
     private static boolean isXRoad(String signatureForm) {
         return signatureForm.equals(XROAD_SIGNATURE_FORM);
     }
 
     private static boolean isDdoc(String signatureForm) {
         return signatureForm.startsWith(DDOC_SIGNATURE_FORM_PREFIX);
-    }
-
-    private static boolean isPdf(String signatureForm) {
-        return signatureForm.equals(PDF_SIGNATURE_FORM);
     }
 
     private static String valueNotPresent() {

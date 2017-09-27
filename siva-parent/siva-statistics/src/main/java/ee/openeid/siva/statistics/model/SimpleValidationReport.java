@@ -16,6 +16,7 @@
 
 package ee.openeid.siva.statistics.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
@@ -38,6 +39,7 @@ public class SimpleValidationReport {
     @JsonProperty("sigRslt")
     private List<SimpleSignatureReport> simpleSignatureReports;
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @JsonProperty("type")
     private String containerType;
 

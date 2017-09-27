@@ -102,7 +102,7 @@ public class StatisticsServiceTest {
     @Test
     public void testValidationStatisticsLoggingWhereOneSignatureInValidationReportIsValid() {
         long validationDurationInMillis = 2000L;
-        String signatureForm = "PAdES";
+        String signatureForm = "ASiC-E";
         int validSignaturesCount = 1;
         int totalSignatureCount = 2;
         SignatureValidationData.Indication firstSignatureIndication = SignatureValidationData.Indication.TOTAL_PASSED;

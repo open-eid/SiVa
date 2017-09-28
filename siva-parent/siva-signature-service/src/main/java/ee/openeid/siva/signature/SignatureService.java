@@ -1,4 +1,4 @@
-package ee.openeid.siva.singature;
+package ee.openeid.siva.signature;
 
 import java.io.IOException;
 

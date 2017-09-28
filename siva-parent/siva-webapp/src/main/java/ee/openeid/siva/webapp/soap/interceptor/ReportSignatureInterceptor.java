@@ -1,13 +1,15 @@
 package ee.openeid.siva.webapp.soap.interceptor;
 
-import ee.openeid.siva.singature.AsiceWithXadesSignatureService;
-import ee.openeid.siva.singature.SignatureService;
+import ee.openeid.siva.signature.SignatureService;
+import ee.openeid.siva.webapp.configuration.SivaWebApplicationConfigurationProperties;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.binding.soap.interceptor.AbstractSoapInterceptor;
 import org.apache.cxf.phase.Phase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.w3c.dom.Node;
 
 import javax.xml.soap.SOAPBody;
@@ -29,11 +31,16 @@ import java.io.StringWriter;
  * This means that {@link org.apache.cxf.binding.soap.saaj.SAAJOutInterceptor SAAJOutInterceptor} needs to be added into the outbound interceptor chain
  * otherwise {@link javax.xml.soap.SOAPMessage} never will be created
  */
+@Component("SoapReportSignatureInterceptor")
 public class ReportSignatureInterceptor extends AbstractSoapInterceptor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReportSignatureInterceptor.class);
 
-    private SignatureService signatureService = new AsiceWithXadesSignatureService();
+    @Autowired
+    private SignatureService signatureService;
+
+    @Autowired
+    private SivaWebApplicationConfigurationProperties properties;
 
     public ReportSignatureInterceptor() {
         super(Phase.POST_PROTOCOL);
@@ -41,21 +48,23 @@ public class ReportSignatureInterceptor extends AbstractSoapInterceptor {
 
     @Override
     public void handleMessage(SoapMessage message) {
-        SOAPMessage soapMessage = message.getContent(SOAPMessage.class);
-        try {
-            if (soapMessage != null) {
-                SOAPBody responseBody = soapMessage.getSOAPPart().getEnvelope().getBody();
-                SOAPBody requestBody = message.getExchange().getInMessage().getContent(SOAPMessage.class).getSOAPPart().getEnvelope().getBody();
-                if (reportTypeIsDetailed(requestBody)) {
-                    LOGGER.debug("Starting to create report signature");
-                    byte[] validationReportBytes = getValidationReportContent(responseBody);
-                    byte[] validationReportSignature = signatureService.getSignature(validationReportBytes, "validationReport.xml", "application/xml");
-                    addValidationReportSignature(responseBody, validationReportSignature);
-                    LOGGER.debug("Finished creating report signature");
+        if (properties.isReportSignatureEnabled()) {
+            SOAPMessage soapMessage = message.getContent(SOAPMessage.class);
+            try {
+                if (soapMessage != null) {
+                    SOAPBody responseBody = soapMessage.getSOAPPart().getEnvelope().getBody();
+                    SOAPBody requestBody = message.getExchange().getInMessage().getContent(SOAPMessage.class).getSOAPPart().getEnvelope().getBody();
+                    if (reportTypeIsDetailed(requestBody)) {
+                        LOGGER.debug("Starting to create report signature");
+                        byte[] validationReportBytes = getValidationReportContent(responseBody);
+                        byte[] validationReportSignature = signatureService.getSignature(validationReportBytes, "validationReport.xml", "application/xml");
+                        addValidationReportSignature(responseBody, validationReportSignature);
+                        LOGGER.debug("Finished creating report signature");
+                    }
                 }
+            } catch (Exception e) {
+                LOGGER.error("Error producing report signature", e);
             }
-        } catch (Exception e) {
-            LOGGER.error("Error producing report signature", e);
         }
     }
 

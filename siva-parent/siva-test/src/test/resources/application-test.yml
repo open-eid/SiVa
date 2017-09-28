@@ -3,3 +3,10 @@ endpoints:
     enabled: true
 plugtest:
   location: url
+siva:
+  webapp:
+    reportSignatureEnabled: true
+  signatureService:
+    keystorePath: src/test/resources/test.p12
+    keystorePassword: password
+    signatureLevel: XAdES_BASELINE_B

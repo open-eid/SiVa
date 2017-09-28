@@ -22,6 +22,7 @@ import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import eu.europa.esig.dss.jaxb.diagnostic.XmlSignatureScope;
+import eu.europa.esig.dss.validation.executor.ValidationLevel;
 import eu.europa.esig.dss.validation.policy.rules.Indication;
 import eu.europa.esig.dss.validation.policy.rules.SubIndication;
 import eu.europa.esig.dss.validation.reports.wrapper.TimestampWrapper;
@@ -41,23 +42,25 @@ import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUt
 public class GenericValidationReportBuilder {
 
     private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-    private static final String PDF_SIGNATURE_FORM = "PAdES";
 
     private eu.europa.esig.dss.validation.reports.Reports dssReports;
     private ZonedDateTime validationTime;
     private ValidationDocument validationDocument;
     private ConstraintDefinedPolicy validationPolicy;
+    private ValidationLevel validationLevel;
 
-    public GenericValidationReportBuilder(eu.europa.esig.dss.validation.reports.Reports dssReports, ZonedDateTime validationTime, ValidationDocument validationDocument, ConstraintDefinedPolicy policy) {
+    public GenericValidationReportBuilder(eu.europa.esig.dss.validation.reports.Reports dssReports, ZonedDateTime validationTime, ValidationLevel validationLevel, ValidationDocument validationDocument, ConstraintDefinedPolicy policy) {
         this.dssReports = dssReports;
         this.validationTime = validationTime;
         this.validationDocument = validationDocument;
         this.validationPolicy = policy;
+        this.validationLevel = validationLevel;
     }
 
     public Reports build() {
         ValidationConclusion validationConclusion = getValidationConclusion();
         SimpleReport simpleReport = new SimpleReport(validationConclusion);
+        validationConclusion.setValidationLevel(validationLevel.name());
         DetailedReport detailedReport = new DetailedReport(validationConclusion, dssReports.getDetailedReportJaxb());
         return new Reports(simpleReport, detailedReport);
     }

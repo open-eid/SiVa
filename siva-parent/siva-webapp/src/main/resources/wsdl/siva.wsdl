@@ -48,6 +48,7 @@
                     <xs:element name="Policy" type="tns:policy"/>
                     <xs:element name="ValidationTime" type="xs:string"/>
                     <xs:element name="ValidatedDocument" type="tns:validatedDocumentData"/>
+                    <xs:element name="ValidationLevel" type="xs:string"/>
                     <xs:element name="ValidationWarnings" minOccurs="0">
                         <xs:complexType>
                             <xs:sequence>

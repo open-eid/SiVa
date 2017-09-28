@@ -17,6 +17,8 @@ public class ValidationConclusion {
 
     private ValidatedDocument validatedDocument;
 
+    private String validationLevel;
+
     private List<SignatureValidationData> signatures;
 
     private Integer validSignaturesCount = 0;

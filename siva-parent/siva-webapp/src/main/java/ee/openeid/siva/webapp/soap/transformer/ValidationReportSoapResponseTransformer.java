@@ -65,11 +65,11 @@ public class ValidationReportSoapResponseTransformer {
         return responseValidationReport;
     }
 
-    public ValidationConclusion toSoapValidationConclusion(ee.openeid.siva.validation.document.report.ValidationConclusion validationConclusion) {
+    private ValidationConclusion toSoapValidationConclusion(ee.openeid.siva.validation.document.report.ValidationConclusion validationConclusion) {
         ValidationConclusion responseValidationConclusion = new ValidationConclusion();
         responseValidationConclusion.setSignatureForm(validationConclusion.getSignatureForm());
         responseValidationConclusion.setPolicy(toSoapResponsePolicy(validationConclusion.getPolicy()));
-
+        responseValidationConclusion.setValidationLevel(validationConclusion.getValidationLevel());
         responseValidationConclusion.setValidatedDocument(toSoapValidatedDocument(validationConclusion.getValidatedDocument()));
         responseValidationConclusion.setSignaturesCount(validationConclusion.getSignaturesCount());
         if (validationConclusion.getSignatures() != null)

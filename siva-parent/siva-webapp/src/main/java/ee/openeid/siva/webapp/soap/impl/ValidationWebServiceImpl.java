@@ -32,7 +32,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.xml.ws.Holder;
 
 @InInterceptors(interceptors = {"ee.openeid.siva.webapp.soap.interceptor.SoapRequestValidationInterceptor"})
-@OutInterceptors(interceptors = {"ee.openeid.siva.webapp.soap.interceptor.SoapResponseHeaderInterceptor", "org.apache.cxf.binding.soap.saaj.SAAJOutInterceptor", "ee.openeid.siva.webapp.soap.interceptor.ReportSignatureInterceptor"})
 @OutFaultInterceptors(interceptors = {"ee.openeid.siva.webapp.soap.interceptor.SoapFaultResponseInterceptor", "ee.openeid.siva.webapp.soap.interceptor.SoapResponseHeaderInterceptor"})
 @SchemaValidation(type = SchemaValidation.SchemaValidationType.IN)
 public class ValidationWebServiceImpl implements ValidationWebService {

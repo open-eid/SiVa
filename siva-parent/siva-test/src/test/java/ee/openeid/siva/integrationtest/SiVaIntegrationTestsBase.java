@@ -48,7 +48,6 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @SpringBootTest(classes = SivaWebApplication.class, webEnvironment=RANDOM_PORT)
 @ActiveProfiles("test")
 @TestPropertySource(locations="classpath:application-test.yml")
-
 public abstract class SiVaIntegrationTestsBase {
 
     private static final String PROJECT_SUBMODULE_NAME =  "siva-test";

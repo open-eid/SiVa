@@ -23,11 +23,13 @@ import static org.junit.Assert.*;
 
 public class SignatureFormToContainerTypeTransormerTest {
     private static final String ASIC_E_SIGNATURE_FORM = "ASiC-E";
+    private static final String ASIC_S_SIGNATURE_FORM = "ASiC-S";
     private static final String XROAD_SIGNATURE_FORM = "ASiC-E_batchsignature";
     private static final String PDF_SIGNATURE_FORM = "PAdES";
     private static final String DDOC_SIGNATURE_FORM_PREFIX = "DIGIDOC_XML_";
 
     private static final String ASIC_E_CONTAINER_TYPE = "ASiC-E";
+    private static final String ASIC_S_CONTAINER_TYPE = "ASiC-S";
     private static final String XROAD_CONTAINER_TYPE = "ASiC-E (BatchSignature)";
     private static final String PDF_CONTAINER_TYPE= "PAdES";
     private static final String DDOC_CONTAINER_TYPE = "XAdES";
@@ -51,15 +53,13 @@ public class SignatureFormToContainerTypeTransormerTest {
     public void transformingAsiceSignatureFormReturnsAsiceContainerType() {
         assertEquals(ASIC_E_CONTAINER_TYPE, transformToContainerTypeOrEmpty(ASIC_E_SIGNATURE_FORM));
     }
-
+    @Test
+    public void transformingAsicsSignatureFormReturnsAsicsContainerType(){
+        assertEquals(ASIC_S_CONTAINER_TYPE, transformToContainerTypeOrEmpty(ASIC_S_SIGNATURE_FORM));
+    }
     @Test
     public void transformingXRoadSignatureFormReturnsXRoadContainerType() {
         assertEquals(XROAD_CONTAINER_TYPE, transformToContainerTypeOrEmpty(XROAD_SIGNATURE_FORM));
-    }
-
-    @Test
-    public void transformingPDFSignatureFormReturnsPDFContainerType() {
-        assertEquals(PDF_CONTAINER_TYPE, transformToContainerTypeOrEmpty(PDF_SIGNATURE_FORM));
     }
 
     @Test

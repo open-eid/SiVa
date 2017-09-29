@@ -20,15 +20,21 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import ee.openeid.siva.monitoring.configuration.MonitoringConfiguration;
 import ee.openeid.siva.monitoring.indicator.UrlHealthIndicator;
 import ee.openeid.siva.proxy.configuration.ProxyConfigurationProperties;
+import ee.openeid.siva.webapp.configuration.SivaWebApplicationConfigurationProperties;
 import ee.openeid.siva.webapp.soap.DataFilesWebService;
 import ee.openeid.siva.webapp.soap.ValidationWebService;
 import ee.openeid.siva.webapp.soap.impl.DataFilesWebServiceImpl;
 import ee.openeid.siva.webapp.soap.impl.ValidationWebServiceImpl;
+import ee.openeid.siva.webapp.soap.interceptor.ReportSignatureInterceptor;
+import ee.openeid.siva.webapp.soap.interceptor.SoapResponseHeaderInterceptor;
 import org.apache.cxf.Bus;
+import org.apache.cxf.binding.soap.interceptor.AbstractSoapInterceptor;
+import org.apache.cxf.binding.soap.saaj.SAAJOutInterceptor;
 import org.apache.cxf.bus.spring.SpringBus;
 import org.apache.cxf.jaxws.EndpointImpl;
 import org.apache.cxf.transport.servlet.CXFServlet;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -42,12 +48,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootConfiguration
-@EnableConfigurationProperties({ProxyConfigurationProperties.class})
+@EnableConfigurationProperties({SivaWebApplicationConfigurationProperties.class, ProxyConfigurationProperties.class})
 public class ServletConfiguration extends MonitoringConfiguration {
     private static final String ENDPOINT = "/validationWebService";
     private static final String DATAFILES_ENDPOINT = "/dataFilesWebService";
     private static final String URL_MAPPING = "/soap/*";
+
     private ProxyConfigurationProperties proxyProperties;
+
+    @Autowired
+    @Qualifier("SoapReportSignatureInterceptor")
+    ReportSignatureInterceptor reportSignatureInterceptor;
 
     @Bean(name = Bus.DEFAULT_BUS_ID)
     public SpringBus springBus() {
@@ -82,6 +93,13 @@ public class ServletConfiguration extends MonitoringConfiguration {
     public Endpoint endpoint(SpringBus springBus, ValidationWebService validationWebService) {
         EndpointImpl endpoint = new EndpointImpl(springBus, validationWebService);
         endpoint.setWsdlLocation("wsdl/siva.wsdl");
+
+        List<AbstractSoapInterceptor> outInterceptors = new ArrayList<>();
+        outInterceptors.add(new SoapResponseHeaderInterceptor());
+        outInterceptors.add(new SAAJOutInterceptor());
+        outInterceptors.add(reportSignatureInterceptor);
+        endpoint.getOutInterceptors().addAll(outInterceptors);
+
         endpoint.publish(ENDPOINT);
         return endpoint;
     }

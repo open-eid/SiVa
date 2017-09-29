@@ -25,7 +25,7 @@ import static org.junit.Assert.*;
 public class PDFWithNoSignaturesTest extends PDFValidationServiceTest {
 
     private static final String PDF_WITH_NO_SIGNATURES = "no-signatures.pdf";
-
+    private static final String VALIDATION_LEVEL = "ARCHIVAL_DATA";
     @Test
     public void validatingPdfWithNoSignaturesReturnsReport() throws Exception {
         SimpleReport report = validationService.validateDocument(
@@ -36,6 +36,7 @@ public class PDFWithNoSignaturesTest extends PDFValidationServiceTest {
         assertTrue(validationConclusion.getValidSignaturesCount() == 0);
         assertTrue(validationConclusion.getSignaturesCount() == 0);
         assertTrue(validationConclusion.getSignatures().isEmpty());
+        assertEquals(VALIDATION_LEVEL, validationConclusion.getValidationLevel());
         assertNotNull(validationConclusion.getValidationTime());
     }
 }

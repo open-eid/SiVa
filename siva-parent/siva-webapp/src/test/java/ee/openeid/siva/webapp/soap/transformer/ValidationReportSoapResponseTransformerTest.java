@@ -54,6 +54,8 @@ public class ValidationReportSoapResponseTransformerTest {
         Assert.assertEquals(validationConclusion.getPolicy().getPolicyName(), soapValidationConclusion.getPolicy().getPolicyName());
         Assert.assertEquals(validationConclusion.getPolicy().getPolicyUrl(), soapValidationConclusion.getPolicy().getPolicyUrl());
 
+        Assert.assertEquals(validationConclusion.getValidationLevel(), soapValidationConclusion.getValidationLevel());
+
         Assert.assertEquals(validationConclusion.getTimeStampTokens().get(0).getIndication().name(), soapValidationConclusion.getTimeStampTokens().getTimeStampToken().get(0).getIndication().name());
         Assert.assertEquals(validationConclusion.getTimeStampTokens().get(0).getError().get(0).getContent(), soapValidationConclusion.getTimeStampTokens().getTimeStampToken().get(0).getErrors().getError().get(0).getContent());
         Assert.assertEquals(validationConclusion.getTimeStampTokens().get(0).getSignedBy(), soapValidationConclusion.getTimeStampTokens().getTimeStampToken().get(0).getSignedBy());
@@ -111,6 +113,7 @@ public class ValidationReportSoapResponseTransformerTest {
         report.setValidatedDocument(createMockedValidatedDocument());
         report.setSignatureForm("PAdES");
         report.setPolicy(createMockedSignaturePolicy());
+        report.setValidationLevel("ARCHIVAL_DATA");
         report.setSignaturesCount(1);
         report.setValidSignaturesCount(1);
         report.setSignatures(createMockedSignatures());

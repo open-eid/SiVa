@@ -35,7 +35,7 @@ import eu.europa.esig.dss.client.http.commons.CommonsDataLoader;
 import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
-
+import eu.europa.esig.dss.validation.executor.ValidationLevel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +49,8 @@ import java.time.ZonedDateTime;
 public class GenericValidationService implements ValidationService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GenericValidationService.class);
+    private static final ValidationLevel VALIDATION_LEVEL = ValidationLevel.ARCHIVAL_DATA;
     private final Object lock = new Object();
-
     private TrustedListsCertificateSource trustedListsCertificateSource;
     private ConstraintLoadingSignaturePolicyService signaturePolicyService;
 
@@ -73,6 +73,7 @@ public class GenericValidationService implements ValidationService {
                     new AlwaysFailingCRLSource(), new AlwaysFailingOCSPSource(), new CommonsDataLoader());
             LOGGER.info("Certificate pool size: {}", getCertificatePoolSize(certificateVerifier));
             validator.setCertificateVerifier(certificateVerifier);
+            validator.setValidationLevel(VALIDATION_LEVEL);
             final eu.europa.esig.dss.validation.reports.Reports reports;
             synchronized (lock) {
                 reports = validator.validateDocument(policy.getConstraintDataStream());
@@ -92,6 +93,7 @@ public class GenericValidationService implements ValidationService {
             final GenericValidationReportBuilder reportBuilder = new GenericValidationReportBuilder(
                     reports,
                     validationTimeInGMT,
+                    VALIDATION_LEVEL,
                     validationDocument,
                     policy
             );

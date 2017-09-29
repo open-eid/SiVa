@@ -1,11 +1,9 @@
 package ee.openeid.siva.webapp.interceptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import ee.openeid.siva.singature.AsiceWithXadesSignatureService;
-import ee.openeid.siva.singature.SignatureService;
-
+import ee.openeid.siva.signature.SignatureService;
 import ee.openeid.siva.validation.document.report.DetailedReport;
+import ee.openeid.siva.webapp.configuration.SivaWebApplicationConfigurationProperties;
 import ee.openeid.siva.webapp.response.ValidationResponse;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
@@ -27,12 +25,16 @@ import java.io.IOException;
 @RestControllerAdvice
 public class ReportSignatureInterceptor implements ResponseBodyAdvice<Object> {
 
-    private static final Logger log = LoggerFactory.getLogger(ReportSignatureInterceptor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReportSignatureInterceptor.class);
 
     @Autowired
     private ObjectMapper jacksonObjectMapper;
 
-    private SignatureService signatureService = new AsiceWithXadesSignatureService();
+    @Autowired
+    private SignatureService signatureService;
+
+    @Autowired
+    private SivaWebApplicationConfigurationProperties properties;
 
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
@@ -41,19 +43,21 @@ public class ReportSignatureInterceptor implements ResponseBodyAdvice<Object> {
 
     @Override
     public Object beforeBodyWrite(Object responseObject, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
-        try {
-            if (responseObject instanceof ValidationResponse && ((ValidationResponse) responseObject).getValidationReport() instanceof DetailedReport) {
-                log.debug("Start to create the signature of the detailed report ");
-                ValidationResponse validationResponse = (ValidationResponse) responseObject;
-                String validationReportJsonString = jacksonObjectMapper.writeValueAsString(validationResponse.getValidationReport());
-                byte[] reportSignatureBytes = signatureService.getSignature(validationReportJsonString.getBytes(), "validationReport.json", "application/json");
-                validationResponse.setValidationReportSignature(Base64.encodeBase64String(reportSignatureBytes));
-                log.debug("Finished creating signature of the detailed report ");
-                return validationResponse;
+        if (properties.isReportSignatureEnabled()) {
+            try {
+                if (responseObject instanceof ValidationResponse && ((ValidationResponse) responseObject).getValidationReport() instanceof DetailedReport) {
+                    LOGGER.debug("Start to create the signature of the detailed report ");
+                    ValidationResponse validationResponse = (ValidationResponse) responseObject;
+                    String validationReportJsonString = jacksonObjectMapper.writeValueAsString(validationResponse.getValidationReport());
+                    byte[] reportSignatureBytes = signatureService.getSignature(validationReportJsonString.getBytes(), "validationReport.json", "application/json");
+                    validationResponse.setValidationReportSignature(Base64.encodeBase64String(reportSignatureBytes));
+                    LOGGER.debug("Finished creating signature of the detailed report ");
+                    return validationResponse;
+                }
+            } catch (Exception e) {
+                LOGGER.error("Error producing report signature", e);
+                return responseObject;
             }
-        } catch (IOException e) {
-            log.error("Error producing report singature", e);
-            return responseObject;
         }
         return responseObject;
     }

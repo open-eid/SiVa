@@ -280,10 +280,9 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      * File: hellopades-lt1-lt2-Serial.pdf
      */
     @Test
-    @Ignore("Invalid signatureLevel")
     public void documentSignedWithMultipleSignersSerialSignature() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt1-lt2-Serial.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "hellopades-lt1-lt2-Serial.pdf", ""))
+        post(validationRequestWithValidKeys(encodedString, "hellopades-lt1-lt2-Serial.pdf", "POLv3"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LTA"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))

@@ -10,3 +10,5 @@ siva:
     keystorePath: src/test/resources/test.p12
     keystorePassword: password
     signatureLevel: XAdES_BASELINE_B
+    tspUrl: http://demo.sk.ee/tsa
+    ocspUrl: http://demo.sk.ee/ocsp

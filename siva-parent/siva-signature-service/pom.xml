@@ -13,15 +13,14 @@
     <dependencies>
         <dependency>
             <groupId>ee.openid.siva</groupId>
+            <artifactId>tsl-loader</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ee.openid.siva</groupId>
             <artifactId>validation-commons</artifactId>
         </dependency>
 
         <!-- DSS dependencies -->
-        <dependency>
-            <groupId>org.digidoc4j.dss</groupId>
-            <artifactId>dss-service</artifactId>
-            <version>${dss.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-asic-xades</artifactId>
@@ -32,6 +31,16 @@
             <artifactId>dss-token</artifactId>
             <version>${dss.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcpkix-jdk15on</artifactId>
+            <version>1.54</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>1.54</version>
+        </dependency>
 
         <dependency>
             <groupId>commons-io</groupId>
@@ -41,7 +50,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

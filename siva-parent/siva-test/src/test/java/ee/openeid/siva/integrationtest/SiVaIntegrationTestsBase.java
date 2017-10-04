@@ -54,12 +54,11 @@ public abstract class SiVaIntegrationTestsBase {
 
     protected static final String VALID_SIGNATURE_POLICY_3 = "POLv3";
     protected static final String VALID_SIGNATURE_POLICY_4 = "POLv4";
-    protected static final String VALID_SIGNATURE_POLICY_5 = "POLv5";
 
     protected static final String INVALID_SIGNATURE_POLICY = "RUS";
 
     protected static final String SMALL_CASE_VALID_SIGNATURE_POLICY_3 = "polv3";
-    protected static final String SMALL_CASE_VALID_SIGNATURE_POLICY_5 = "polv5";
+    protected static final String SMALL_CASE_VALID_SIGNATURE_POLICY_4 = "polv4";
 
     protected static final String POLICY_3_DESCRIPTION = "Policy for validating Electronic Signatures and Electronic " +
             "Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), " +
@@ -68,15 +67,12 @@ public abstract class SiVaIntegrationTestsBase {
             "does not change the total validation result of the signature.";
     protected static final String POLICY_4_DESCRIPTION = "Policy for validating Qualified Electronic Signatures and " +
             "Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been " +
-            "recognized as Advanced electronic Signatures (AdES) do not produce a positive validation result.";
-    protected static final String POLICY_5_DESCRIPTION = "Policy for validating Qualified Electronic Signatures and " +
-            "Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been " +
             "recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate " +
             "(AdES/QC) do not produce a positive validation result.";
 
     protected static final String POLICY_3_URL = "http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv3";
     protected static final String POLICY_4_URL = "http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv4";
-    protected static final String POLICY_5_URL = "http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv5";
+
 
     @Value("${local.server.port}")
     protected int serverPort;

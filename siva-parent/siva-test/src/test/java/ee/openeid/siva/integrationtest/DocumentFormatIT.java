@@ -40,7 +40,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement:  http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
+     * Requirement:  http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
      * Title: Validation of pdf document acceptance
      *
@@ -60,7 +60,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement:  http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
+     * Requirement:  http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
      * Title: Validation of bdoc document acceptance
      *

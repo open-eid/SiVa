@@ -39,7 +39,6 @@ public class BDOCSignaturePolicyProperties extends SignaturePolicyProperties<Con
 
     private static final String QES_BDOC_CONSTRAINT = "bdoc_constraint_qes.xml";
     private static final String ADES_BDOC_CONSTRAINT = "bdoc_constraint_ades.xml";
-    private static final String ADES_QC_BDOC_CONSTRAINT = "bdoc_constraint_ades_qc.xml";
 
     private String defaultPolicy;
     private List<ConstraintDefinedPolicy> policies = new ArrayList<>();
@@ -47,7 +46,7 @@ public class BDOCSignaturePolicyProperties extends SignaturePolicyProperties<Con
     @PostConstruct
     public void init() {
         if (defaultPolicy == null) {
-            setDefaultPolicy(ADES_QC_POLICY.getName());
+            setDefaultPolicy(QES_POLICY.getName());
         }
         if (policies.isEmpty()) {
             setPolicies(getDefaultBdocPolicies());
@@ -57,15 +56,11 @@ public class BDOCSignaturePolicyProperties extends SignaturePolicyProperties<Con
     }
 
     private List<ConstraintDefinedPolicy> getDefaultBdocPolicies() {
-        return Collections.unmodifiableList(Stream.of(getAdesPolicy(), getAdesQcPolicy(), getQesPolicy()).collect(Collectors.toList()));
+        return Collections.unmodifiableList(Stream.of(getAdesPolicy(), getQesPolicy()).collect(Collectors.toList()));
     }
 
     private ConstraintDefinedPolicy getQesPolicy() {
         return createConstraintDefinedPolicy(QES_POLICY, QES_BDOC_CONSTRAINT);
-    }
-
-    private ConstraintDefinedPolicy getAdesQcPolicy() {
-        return createConstraintDefinedPolicy(ADES_QC_POLICY, ADES_QC_BDOC_CONSTRAINT);
     }
 
     private ConstraintDefinedPolicy getAdesPolicy() {

@@ -100,7 +100,7 @@ public class XROADValidationReportTest {
     @Test
     public void validatorShouldThrowExceptionWhenGivenQESPolicy() throws Exception {
         expectedException.expect(InvalidPolicyException.class);
-        validateWithPolicy("polv5");
+        validateWithPolicy("polv4");
     }
 
     @Test

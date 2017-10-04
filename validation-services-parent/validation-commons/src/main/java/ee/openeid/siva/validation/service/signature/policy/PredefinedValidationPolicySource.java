@@ -23,8 +23,7 @@ import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
 public class PredefinedValidationPolicySource {
-    public static final ValidationPolicy QES_POLICY = createValidationPolicyPolV5();
-    public static final ValidationPolicy ADES_QC_POLICY = createValidationPolicyPolV4();
+    public static final ValidationPolicy QES_POLICY = createValidationPolicyPolV4();
     public static final ValidationPolicy ADES_POLICY = createValidationPolicyPolV3();
 
     private static final String POL_V3_NAME = "POLv3";
@@ -39,14 +38,9 @@ public class PredefinedValidationPolicySource {
     private static final String POL_V4_URL = "http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv4";
     private static final String POL_V4_DESCRIPTION = "Policy for validating Qualified Electronic Signatures and "
             + "Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been "
-            + "recognized as Advanced electronic Signatures (AdES) do not produce a positive validation result.";
-
-    private static final String POL_V5_NAME = "POLv5";
-    private static final String POL_V5_URL = "http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv5";
-    private static final String POL_V5_DESCRIPTION = "Policy for validating Qualified Electronic Signatures and "
-            + "Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been "
             + "recognized as Advanced electronic Signatures (AdES) and AdES supported by a "
             + "Qualified Certificate (AdES/QC) do not produce a positive validation result.";
+    
 
     private static ValidationPolicy createValidationPolicyPolV3() {
         return new ValidationPolicy(POL_V3_NAME, POL_V3_DESCRIPTION, POL_V3_URL);
@@ -54,7 +48,5 @@ public class PredefinedValidationPolicySource {
     private static ValidationPolicy createValidationPolicyPolV4() {
         return new ValidationPolicy(POL_V4_NAME, POL_V4_DESCRIPTION, POL_V4_URL);
     }
-    private static ValidationPolicy createValidationPolicyPolV5() {
-        return new ValidationPolicy(POL_V5_NAME, POL_V5_DESCRIPTION, POL_V5_URL);
-    }
+
 }

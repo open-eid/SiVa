@@ -45,7 +45,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
      * Title: The PDF has PAdES-B profile signature polv3
      *
@@ -72,7 +72,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
      * Title: The PDF has PAdES-T profile signature polv3
      *
@@ -99,7 +99,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
      * Title: The PDF has PAdES-LT profile signature polv3
      *
@@ -126,18 +126,18 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
-     * Title: The PDF has PAdES-LT profile signature polv5
+     * Title: The PDF has PAdES-LT profile signature polv4
      *
      * Expected Result: Document validation should pass with any policy
      *
      * File: hellopades-pades-lt-sha256-sign.pdf
      */
     @Test
-    public void baselineProfileLTDocumentShouldPasspolv5() {
+    public void baselineProfileLTDocumentShouldPasspolv4() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-pades-lt-sha256-sign.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "hellopades-pades-lt-sha256-sign.pdf", VALID_SIGNATURE_POLICY_5))
+        post(validationRequestWithValidKeys(encodedString, "hellopades-pades-lt-sha256-sign.pdf", VALID_SIGNATURE_POLICY_4))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
@@ -153,7 +153,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
      * Title: The PDF has PAdES-LTA profile signature polv3
      *
@@ -180,18 +180,18 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
-     * Title: The PDF has PAdES-LTA profile signature polv5
+     * Title: The PDF has PAdES-LTA profile signature polv4
      *
      * Expected Result: Document validation should pass with any policy
      *
      * File: pades-baseline-lta-live-aj.pdf
      */
     @Test
-    public void baselineProfileLTADocumentShouldPasspolv5() {
+    public void baselineProfileLTADocumentShouldPasspolv4() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades-baseline-lta-live-aj.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "pades-baseline-lta-live-aj.pdf", VALID_SIGNATURE_POLICY_5))
+        post(validationRequestWithValidKeys(encodedString, "pades-baseline-lta-live-aj.pdf", VALID_SIGNATURE_POLICY_4))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LTA"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
@@ -207,7 +207,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
      * Title: The PDF has PAdES-LT and B profile signature
      *
@@ -242,7 +242,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
      * Title: PDF document message digest attribute value does not match calculate value
      *
@@ -271,7 +271,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
      * Title: PDF file with a serial signature
      *

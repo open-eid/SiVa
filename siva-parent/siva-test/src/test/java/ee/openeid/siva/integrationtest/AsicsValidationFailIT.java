@@ -55,7 +55,7 @@ public class AsicsValidationFailIT extends SiVaRestTests {
     @Test
     public void ValidDdocInsideValidAsicsZipExtension() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("TwoDataFilesAsics.asics"));
-        post(validationRequestWithValidKeys(encodedString, "TwoDataFilesAsics.asics", VALID_SIGNATURE_POLICY_5))
+        post(validationRequestWithValidKeys(encodedString, "TwoDataFilesAsics.asics", VALID_SIGNATURE_POLICY_4))
                 .then()
                 .body("requestErrors[0].key", Matchers.is("document"))
                 .body("requestErrors[0].message", Matchers.is("Document does not meet the requirements"));

@@ -9,4 +9,6 @@ public class SignatureServiceConfigurationProperties {
     private String keystorePath;
     private String keystorePassword;
     private String signatureLevel;
+    private String tspUrl;
+    private String ocspUrl;
 } 

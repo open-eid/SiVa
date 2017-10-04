@@ -2,12 +2,18 @@ package ee.openeid.siva.signature;
 
 import ee.openeid.siva.signature.configuration.SignatureServiceConfigurationProperties;
 import ee.openeid.siva.signature.exception.SignatureServiceException;
+import ee.openeid.siva.signature.ocsp.SkOcspSource;
+import ee.openeid.siva.signature.tsp.SKTimestampDataLoader;
 import eu.europa.esig.dss.*;
 import eu.europa.esig.dss.asic.ASiCWithXAdESSignatureParameters;
 import eu.europa.esig.dss.asic.signature.ASiCWithXAdESService;
+import eu.europa.esig.dss.client.tsp.OnlineTSPSource;
 import eu.europa.esig.dss.token.DSSPrivateKeyEntry;
 import eu.europa.esig.dss.token.Pkcs12SignatureToken;
+import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
+import eu.europa.esig.dss.x509.ocsp.OCSPSource;
+import eu.europa.esig.dss.x509.tsp.TSPSource;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,8 +32,15 @@ public class AsiceWithXadesSignatureService implements SignatureService {
     @Autowired
     private SignatureServiceConfigurationProperties properties;
 
+    @Autowired
+    private TrustedListsCertificateSource trustedListSource;
+
     @Override
     public byte[] getSignature(byte[] dataToSign, String dataName, String mimeTypeString) throws IOException {
+        if (properties == null) {
+            throw new SignatureServiceException("Signature configuration properties not set!");
+        }
+
         InputStream p12InputStream = getKeystoreInputStream(properties.getKeystorePath());
         Pkcs12SignatureToken signatureToken = new Pkcs12SignatureToken(p12InputStream, properties.getKeystorePassword());
         DSSPrivateKeyEntry privateKeyEntry = signatureToken.getKeys().get(0);
@@ -35,13 +48,20 @@ public class AsiceWithXadesSignatureService implements SignatureService {
         ASiCWithXAdESSignatureParameters parameters = new ASiCWithXAdESSignatureParameters();
         SignatureLevel signatureLevel = getSingatureLevel(properties.getSignatureLevel());
         parameters.setSignatureLevel(signatureLevel);
+        parameters.setSignaturePackaging(SignaturePackaging.DETACHED);
         parameters.aSiC().setContainerType(ASiCContainerType.ASiC_E);
         parameters.setDigestAlgorithm(DigestAlgorithm.SHA256);
         parameters.aSiC().setMimeType(MimeType.ASICE.getMimeTypeString());
         parameters.setSigningCertificate(privateKeyEntry.getCertificate());
 
         CommonCertificateVerifier commonCertificateVerifier = new CommonCertificateVerifier();
+        OCSPSource ocspSource = getOcspSource(properties.getOcspUrl());
+        commonCertificateVerifier.setOcspSource(ocspSource);
+        commonCertificateVerifier.setTrustedCertSource(trustedListSource);
+
         ASiCWithXAdESService service = new ASiCWithXAdESService(commonCertificateVerifier);
+        TSPSource tspSource = getTspSource(properties.getTspUrl());
+        service.setTspSource(tspSource);
 
         DSSDocument documentToBeSigned = new InMemoryDocument(dataToSign, dataName);
         MimeType mimeType = new MimeType();
@@ -53,6 +73,10 @@ public class AsiceWithXadesSignatureService implements SignatureService {
         DSSDocument signedDocument = service.signDocument(documentToBeSigned, parameters, signatureValue);
 
         return IOUtils.toByteArray(signedDocument.openStream());
+    }
+
+    public SignatureServiceConfigurationProperties getProperties() {
+        return properties;
     }
 
     public void setProperties(SignatureServiceConfigurationProperties properties) {
@@ -81,5 +105,16 @@ public class AsiceWithXadesSignatureService implements SignatureService {
         } catch (IllegalArgumentException | NullPointerException e) {
             throw new SignatureServiceException("Invalid signature level - '" + signatureLevel + "'! Valid signature levels: " + Arrays.asList(SignatureLevel.values()));
         }
+    }
+
+    private OCSPSource getOcspSource(String ocspSourceUrl) {
+        return new SkOcspSource(ocspSourceUrl);
+    }
+
+    private TSPSource getTspSource(String tspSourceUrl) {
+        OnlineTSPSource tspSource = new OnlineTSPSource(tspSourceUrl);
+        SKTimestampDataLoader dataLoader = new SKTimestampDataLoader();
+        tspSource.setDataLoader(dataLoader);
+        return tspSource;
     }
 }

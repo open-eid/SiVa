@@ -62,4 +62,16 @@ public class ReportSignatureInterceptor implements ResponseBodyAdvice<Object> {
         return responseObject;
     }
 
+    public void setJacksonObjectMapper(ObjectMapper jacksonObjectMapper) {
+        this.jacksonObjectMapper = jacksonObjectMapper;
+    }
+
+    public void setSignatureService(SignatureService signatureService) {
+        this.signatureService = signatureService;
+    }
+
+    public void setProperties(SivaWebApplicationConfigurationProperties properties) {
+        this.properties = properties;
+    }
+
 }

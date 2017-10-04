@@ -90,4 +90,12 @@ public class ReportSignatureInterceptor extends AbstractSoapInterceptor {
         validationResponseElement.addChildElement("ValidationReportSignature").setTextContent(Base64.encodeBase64String(validationReportSignature));
     }
 
+    public void setSignatureService(SignatureService signatureService) {
+        this.signatureService = signatureService;
+    }
+
+    public void setProperties(SivaWebApplicationConfigurationProperties properties) {
+        this.properties = properties;
+    }
+
 }

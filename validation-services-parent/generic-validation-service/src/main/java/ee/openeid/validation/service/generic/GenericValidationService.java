@@ -50,6 +50,7 @@ public class GenericValidationService implements ValidationService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GenericValidationService.class);
     private static final ValidationLevel VALIDATION_LEVEL = ValidationLevel.ARCHIVAL_DATA;
+
     private final Object lock = new Object();
     private TrustedListsCertificateSource trustedListsCertificateSource;
     private ConstraintLoadingSignaturePolicyService signaturePolicyService;
@@ -89,7 +90,6 @@ public class GenericValidationService implements ValidationService {
 
                 LOGGER.info("WsValidateDocument: end");
             }
-
             final GenericValidationReportBuilder reportBuilder = new GenericValidationReportBuilder(
                     reports,
                     validationTimeInGMT,

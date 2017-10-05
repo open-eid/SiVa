@@ -264,7 +264,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: soft-cert-signature.pdf
      */
     @Test
-    public void pdfDocumentAdesNonSscdCompliantShouldFailWithAdesQcPolicy() {
+    public void pdfDocumentAdesNonSscdCompliantShouldFailWithQesPolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("soft-cert-signature.pdf"));
         post(validationRequestWithValidKeys(encodedString, "soft-cert-signature.pdf", VALID_SIGNATURE_POLICY_4))
                 .then()
@@ -273,13 +273,11 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_4_URL))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("ADES"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-//                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("CHAIN_CONSTRAINTS_FAILURE"))
-//                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.containsString("The certificate is not qualified!"))
-//                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The certificate is not qualified at issuance time!"))
-//                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The signature/seal is not created by a QSCD!"))
-//                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                //TODO: change test
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.containsString("Signature/seal level do not meet the minimal level required by applied policy"))
+                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The certificate is not qualified at issuance time!"))
+                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The signature/seal is not created by a QSCD!"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
 

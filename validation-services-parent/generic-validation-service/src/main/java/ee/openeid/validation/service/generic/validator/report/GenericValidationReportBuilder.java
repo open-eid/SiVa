@@ -22,9 +22,11 @@ import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import eu.europa.esig.dss.jaxb.diagnostic.XmlSignatureScope;
+import eu.europa.esig.dss.validation.SignatureQualification;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
 import eu.europa.esig.dss.validation.policy.rules.Indication;
 import eu.europa.esig.dss.validation.policy.rules.SubIndication;
+import eu.europa.esig.dss.validation.reports.wrapper.CertificateWrapper;
 import eu.europa.esig.dss.validation.reports.wrapper.TimestampWrapper;
 import org.apache.commons.lang3.StringUtils;
 
@@ -42,7 +44,9 @@ import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUt
 public class GenericValidationReportBuilder {
 
     private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-
+    private static final String QES_POLICY = "POLv4";
+    private static final String SIGNATURE_LEVEL_ERROR = "Signature/seal level do not meet the minimal level required by applied policy";
+    private static final String SIGNATURE_LEVEL_WARNING = "The signature is not in the Qualified Electronic Signature level";
     private eu.europa.esig.dss.validation.reports.Reports dssReports;
     private ZonedDateTime validationTime;
     private ValidationDocument validationDocument;
@@ -59,10 +63,44 @@ public class GenericValidationReportBuilder {
 
     public Reports build() {
         ValidationConclusion validationConclusion = getValidationConclusion();
+        processSignatureIndications(validationConclusion);
+
         SimpleReport simpleReport = new SimpleReport(validationConclusion);
         validationConclusion.setValidationLevel(validationLevel.name());
         DetailedReport detailedReport = new DetailedReport(validationConclusion, dssReports.getDetailedReportJaxb());
         return new Reports(simpleReport, detailedReport);
+    }
+
+    void processSignatureIndications(ValidationConclusion validationConclusion) {
+        if (QES_POLICY.equals(validationPolicy.getName())) {
+            for (SignatureValidationData signature : validationConclusion.getSignatures()) {
+                if (SignatureValidationData.Indication.TOTAL_PASSED.toString().equals(signature.getIndication())) {
+                    String signatureLevel = signature.getSignatureLevel();
+                    if (SignatureQualification.ADESEAL_QC.name().equals(signatureLevel) || SignatureQualification.QES.name().equals(signatureLevel)
+                            || SignatureQualification.QESIG.name().equals(signatureLevel) || SignatureQualification.QESEAL.name().equals(signatureLevel)) {
+                        continue;
+                    } else if (SignatureQualification.ADESIG_QC.name().equals(signatureLevel)) {
+                        signature.getWarnings().add(getSignatureLevelWarning());
+                        continue;
+                    }
+                    signature.setIndication(SignatureValidationData.Indication.TOTAL_FAILED);
+                    signature.getErrors().add(getSignatureLevelNotAcceptedError());
+                    validationConclusion.setValidSignaturesCount(validationConclusion.getValidSignaturesCount() - 1);
+                }
+            }
+        }
+    }
+
+    private Error getSignatureLevelNotAcceptedError() {
+        Error error = new Error();
+        error.setContent(SIGNATURE_LEVEL_ERROR);
+        return error;
+    }
+
+    private Warning getSignatureLevelWarning() {
+        Warning warning = new Warning();
+        warning.setContent(SIGNATURE_LEVEL_WARNING);
+        return warning;
     }
 
     private ValidationConclusion getValidationConclusion() {
@@ -202,8 +240,12 @@ public class GenericValidationReportBuilder {
         String signingCertId = dssReports.getDiagnosticData().getSigningCertificateId();
         Optional<String> countryCode = dssReports.getDiagnosticData().getUsedCertificates().stream()
                 .filter(cert -> cert.getId().equals(signingCertId))
-                .map(cert -> cert.getCountryName())
+                .map(CertificateWrapper::getCountryName)
                 .findFirst();
-        return countryCode.isPresent() ? countryCode.get() : null;
+        return countryCode.orElse(null);
+    }
+
+    public void setValidationPolicy(ConstraintDefinedPolicy validationPolicy) {
+        this.validationPolicy = validationPolicy;
     }
 }

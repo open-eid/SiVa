@@ -77,7 +77,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: soft-cert-signature.pdf
      */
     @Test
-    @Ignore("Unknown signatureFormat")
+    @Ignore("This test needs post DSS signature level validation to work")
     public void pdfDocumentAdesNonSscdCompliantShouldFailWithGivenPolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("soft-cert-signature.pdf"));
         post(validationRequestWithValidKeys(encodedString, "soft-cert-signature.pdf", VALID_SIGNATURE_POLICY_5))
@@ -172,7 +172,6 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: PadesProfileT.pdf
      */
     @Test
-    @Ignore("Unknown signatureFormat")
     public void pdfDocumentWithoutRevocationInfoShouldFail() {
         setTestFilesDirectory("signature_policy_test_files/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PadesProfileT.pdf"));
@@ -182,7 +181,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_5))
                 .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_5_URL))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-T"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("INDETERMINATE_QESIG"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("The expected format is not found!"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))

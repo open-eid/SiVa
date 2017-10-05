@@ -640,7 +640,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
-                .body("Envelope.Body.Fault.faultstring", Matchers.containsString("Invalid signature policy: " + INVALID_SIGNATURE_POLICY + "; Available abstractPolicies: [" + VALID_SIGNATURE_POLICY_3 + ", " + VALID_SIGNATURE_POLICY_4 + ", " + VALID_SIGNATURE_POLICY_5 + "]"));
+                .body("Envelope.Body.Fault.faultstring", Matchers.containsString("Invalid signature policy: " + INVALID_SIGNATURE_POLICY + "; Available abstractPolicies: [" + VALID_SIGNATURE_POLICY_3 + ", " + VALID_SIGNATURE_POLICY_4 +  "]"));
     }
 
     /**
@@ -800,7 +800,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
-                .body("Envelope.Body.Fault.faultstring", Matchers.is("Invalid signature policy: " + INVALID_SIGNATURE_POLICY + "; Available abstractPolicies: [" + VALID_SIGNATURE_POLICY_3 + ", " + VALID_SIGNATURE_POLICY_4 + ", " + VALID_SIGNATURE_POLICY_5 + "]"));
+                .body("Envelope.Body.Fault.faultstring", Matchers.is("Invalid signature policy: " + INVALID_SIGNATURE_POLICY + "; Available abstractPolicies: [" + VALID_SIGNATURE_POLICY_3 + ", " + VALID_SIGNATURE_POLICY_4 + "]"));
     }
 
     /**
@@ -870,7 +870,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
-                .body("Envelope.Body.Fault.faultstring", Matchers.is("Invalid signature policy: " + INVALID_SIGNATURE_POLICY + "; Available abstractPolicies: [" + VALID_SIGNATURE_POLICY_3 + ", " + VALID_SIGNATURE_POLICY_4 + ", " + VALID_SIGNATURE_POLICY_5 + "]"));
+                .body("Envelope.Body.Fault.faultstring", Matchers.is("Invalid signature policy: " + INVALID_SIGNATURE_POLICY + "; Available abstractPolicies: [" + VALID_SIGNATURE_POLICY_3 + ", " + VALID_SIGNATURE_POLICY_4 + "]"));
     }
 
     /**

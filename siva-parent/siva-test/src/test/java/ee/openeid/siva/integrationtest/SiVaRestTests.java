@@ -20,7 +20,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
-import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.webapp.response.ValidationResponse;
 import org.apache.commons.codec.binary.Base64;
@@ -105,7 +104,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
     }
 
     protected SimpleReport postForReport(String file) {
-        return postForReport(file, VALID_SIGNATURE_POLICY_5);
+        return postForReport(file, VALID_SIGNATURE_POLICY_4);
     }
 
     protected SimpleReport postForReportAndPrintResponse(String file, String signaturePolicy) {

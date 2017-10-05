@@ -282,9 +282,9 @@ public class DDOCServiceTest {
     @Test
     public void validationReportShouldContainDefaultPolicyWhenPolicyIsNotExplicitlyGiven() throws Exception {
         Policy policy = validateWithPolicy("").getValidationConclusion().getPolicy();
-        assertEquals(ADES_QC_POLICY.getName(), policy.getPolicyName());
-        assertEquals(ADES_QC_POLICY.getDescription(), policy.getPolicyDescription());
-        assertEquals(ADES_QC_POLICY.getUrl(), policy.getPolicyUrl());
+        assertEquals(QES_POLICY.getName(), policy.getPolicyName());
+        assertEquals(QES_POLICY.getDescription(), policy.getPolicyDescription());
+        assertEquals(QES_POLICY.getUrl(), policy.getPolicyUrl());
     }
 
     @Test
@@ -296,16 +296,8 @@ public class DDOCServiceTest {
     }
 
     @Test
-    public void validationReportShouldContainAdesQcPolicyWhenAdesQcPolicyIsGivenToValidator() throws Exception {
-        Policy policy = validateWithPolicy("POLv4").getValidationConclusion().getPolicy();
-        assertEquals(ADES_QC_POLICY.getName(), policy.getPolicyName());
-        assertEquals(ADES_QC_POLICY.getDescription(), policy.getPolicyDescription());
-        assertEquals(ADES_QC_POLICY.getUrl(), policy.getPolicyUrl());
-    }
-
-    @Test
     public void validationReportShouldContainQESPolicyWhenQESPolicyIsGivenToValidator() throws Exception {
-        Policy policy = validateWithPolicy("POLv5").getValidationConclusion().getPolicy();
+        Policy policy = validateWithPolicy("POLv4").getValidationConclusion().getPolicy();
         assertEquals(QES_POLICY.getName(), policy.getPolicyName());
         assertEquals(QES_POLICY.getDescription(), policy.getPolicyDescription());
         assertEquals(QES_POLICY.getUrl(), policy.getPolicyUrl());

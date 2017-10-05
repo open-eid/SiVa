@@ -38,7 +38,6 @@ import static ee.openeid.siva.validation.service.signature.policy.PredefinedVali
 public class GenericSignaturePolicyProperties extends SignaturePolicyProperties<ConstraintDefinedPolicy> {
 
     private static final String ADES_CONSTRAINT = "generic_constraint_ades.xml";
-    private static final String ADES_QC_CONSTRAINT = "generic_constraint_ades_qc.xml";
     private static final String QES_CONSTRAINT = "generic_constraint_qes.xml";
 
     private String defaultPolicy;
@@ -56,11 +55,11 @@ public class GenericSignaturePolicyProperties extends SignaturePolicyProperties<
     }
 
     private List<ConstraintDefinedPolicy> getDefaultPdfPolicies() {
-        return Collections.unmodifiableList(Stream.of(getAdesPolicy(), getAdesQcPolicy(), getQesPolicy()).collect(Collectors.toList()));
+        return Collections.unmodifiableList(Stream.of(getAdesPolicy(),  getQesPolicy()).collect(Collectors.toList()));
     }
 
     private void setPolicyValue() {
-        final String policyName = defaultPolicy == null ? ADES_QC_POLICY.getName() : defaultPolicy;
+        final String policyName = defaultPolicy == null ? QES_POLICY.getName() : defaultPolicy;
         setAbstractDefaultPolicy(policyName);
     }
 
@@ -72,9 +71,6 @@ public class GenericSignaturePolicyProperties extends SignaturePolicyProperties<
         return createConstraintDefinedPolicy(ADES_POLICY, ADES_CONSTRAINT);
     }
 
-    private ConstraintDefinedPolicy getAdesQcPolicy() {
-        return createConstraintDefinedPolicy(ADES_QC_POLICY, ADES_QC_CONSTRAINT);
-    }
 
     private ConstraintDefinedPolicy createConstraintDefinedPolicy(ValidationPolicy validationPolicy, String constraintPath) {
         ConstraintDefinedPolicy constraintDefinedPolicy = new ConstraintDefinedPolicy(validationPolicy);

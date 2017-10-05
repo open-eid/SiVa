@@ -35,7 +35,7 @@ public class XRoadValidationPassIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
      * Title: Simple xroad document
      *
@@ -60,7 +60,7 @@ public class XRoadValidationPassIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
      * Title: Batchsignature xroad document
      *
@@ -85,7 +85,7 @@ public class XRoadValidationPassIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv5
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
      * Title: Attachment xroad document
      *

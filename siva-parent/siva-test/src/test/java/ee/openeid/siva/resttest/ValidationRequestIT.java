@@ -340,7 +340,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(SIGNATURE_POLICY))
-                .body("requestErrors[0].message", Matchers.containsString("Invalid signature policy: " + INVALID_SIGNATURE_POLICY + "; Available abstractPolicies: [" + VALID_SIGNATURE_POLICY_3 + ", " + VALID_SIGNATURE_POLICY_4 + ", " + VALID_SIGNATURE_POLICY_5 + "]"));
+                .body("requestErrors[0].message", Matchers.containsString("Invalid signature policy: " + INVALID_SIGNATURE_POLICY + "; Available abstractPolicies: [" + VALID_SIGNATURE_POLICY_3 + ", " + VALID_SIGNATURE_POLICY_4 + "]"));
     }
 
     /**
@@ -546,7 +546,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(SIGNATURE_POLICY))
-                .body("requestErrors[0].message", Matchers.containsString("Invalid signature policy: " + "POLv2" + "; Available abstractPolicies: [" + VALID_SIGNATURE_POLICY_3 + ", " + VALID_SIGNATURE_POLICY_4 + ", " + VALID_SIGNATURE_POLICY_5 + "]"));
+                .body("requestErrors[0].message", Matchers.containsString("Invalid signature policy: " + "POLv2" + "; Available abstractPolicies: [" + VALID_SIGNATURE_POLICY_3 + ", " + VALID_SIGNATURE_POLICY_4 +"]"));
     }
 
     /**
@@ -569,7 +569,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(SIGNATURE_POLICY))
-                .body("requestErrors[0].message", Matchers.containsString("Invalid signature policy: " + INVALID_SIGNATURE_POLICY + "; Available abstractPolicies: [" + VALID_SIGNATURE_POLICY_3 + ", " + VALID_SIGNATURE_POLICY_4 + ", " + VALID_SIGNATURE_POLICY_5 + "]"));
+                .body("requestErrors[0].message", Matchers.containsString("Invalid signature policy: " + INVALID_SIGNATURE_POLICY + "; Available abstractPolicies: [" + VALID_SIGNATURE_POLICY_3 + ", " + VALID_SIGNATURE_POLICY_4 +  "]"));
     }
 
     /**
@@ -708,7 +708,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is("signaturePolicy"))
-                .body("requestErrors[0].message", Matchers.is("Invalid signature policy: " + INVALID_SIGNATURE_POLICY + "; Available abstractPolicies: [" + VALID_SIGNATURE_POLICY_3 + ", " + VALID_SIGNATURE_POLICY_4 + ", " + VALID_SIGNATURE_POLICY_5 + "]"));
+                .body("requestErrors[0].message", Matchers.is("Invalid signature policy: " + INVALID_SIGNATURE_POLICY + "; Available abstractPolicies: [" + VALID_SIGNATURE_POLICY_3 + ", " + VALID_SIGNATURE_POLICY_4 + "]"));
     }
 
     /**

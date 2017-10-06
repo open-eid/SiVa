@@ -46,7 +46,7 @@ public class AsiceWithXadesSignatureServiceTest {
     @Test
     public void AsiceSignatureServiceNotConfiguredWithPkcs12Properties_shouldThrowException() throws IOException {
         expectedException.expect(SignatureServiceException.class);
-        expectedException.expectMessage("Signature configuration properties not set!");
+        expectedException.expectMessage("Either Pkcs11 or Pkcs12 must be configured! Currently there is none configured..");
 
         asiceSignatureService.getProperties().setPkcs12(null);
         asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text");

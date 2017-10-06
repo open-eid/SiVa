@@ -1,5 +1,6 @@
 package ee.openeid.siva.signature;
 
+import ee.openeid.siva.signature.configuration.Pkcs12Properties;
 import ee.openeid.siva.signature.configuration.SignatureServiceConfigurationProperties;
 import ee.openeid.siva.signature.exception.SignatureServiceException;
 import eu.europa.esig.dss.DSSException;
@@ -23,11 +24,13 @@ public class AsiceWithXadesSignatureServiceTest {
     public void setUp() {
         asiceSignatureService = new AsiceWithXadesSignatureService();
         SignatureServiceConfigurationProperties properties = new SignatureServiceConfigurationProperties();
-        properties.setKeystorePath("classpath:test.p12");
-        properties.setKeystorePassword("password");
         properties.setSignatureLevel("XAdES_BASELINE_B");
         properties.setTspUrl("http://demo.sk.ee/tsa");
         properties.setOcspUrl("http://demo.sk.ee/ocsp");
+        Pkcs12Properties pkcs12Properties = new Pkcs12Properties();
+        pkcs12Properties.setPath("classpath:test.p12");
+        pkcs12Properties.setPassword("password");
+        properties.setPkcs12(pkcs12Properties);
         asiceSignatureService.setProperties(properties);
     }
 
@@ -41,25 +44,34 @@ public class AsiceWithXadesSignatureServiceTest {
     }
 
     @Test
-    public void AsiceSignatureServiceNotConfiguredWithInvalidKeystore_shouldThrowException() throws IOException {
+    public void AsiceSignatureServiceNotConfiguredWithPkcs12Properties_shouldThrowException() throws IOException {
+        expectedException.expect(SignatureServiceException.class);
+        expectedException.expectMessage("Signature configuration properties not set!");
+
+        asiceSignatureService.getProperties().setPkcs12(null);
+        asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text");
+    }
+
+    @Test
+    public void AsiceSignatureServiceConfiguredWithInvalidPkcs12Keystore_shouldThrowException() throws IOException {
         expectedException.expect(SignatureServiceException.class);
         expectedException.expectMessage("Error reading keystore from path: ");
 
-        asiceSignatureService.getProperties().setKeystorePath("classpath:invalid.p12");
+        asiceSignatureService.getProperties().getPkcs12().setPath("classpath:invalid.p12");
         asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text");
     }
 
     @Test
-    public void AsiceSignatureServiceNotConfiguredWithInvalidPassword_shouldThrowException() throws IOException {
+    public void AsiceSignatureServiceConfiguredWithInvalidPkcs12Password_shouldThrowException() throws IOException {
         expectedException.expect(DSSException.class);
         expectedException.expectMessage("keystore password was incorrect");
 
-        asiceSignatureService.getProperties().setKeystorePassword("invalid password");
+        asiceSignatureService.getProperties().getPkcs12().setPassword("invalid password");
         asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text");
     }
 
     @Test
-    public void AsiceSignatureServiceNotConfiguredWithInvalidSignatureLevel_shouldThrowException() throws IOException {
+    public void AsiceSignatureServiceConfiguredWithInvalidSignatureLevel_shouldThrowException() throws IOException {
         expectedException.expect(SignatureServiceException.class);
         expectedException.expectMessage("Invalid signature level - 'SOME_INVALID_LEVEL'! Valid signature levels:");
 

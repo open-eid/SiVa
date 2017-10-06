@@ -7,8 +7,9 @@ siva:
   webapp:
     reportSignatureEnabled: true
   signatureService:
-    keystorePath: src/test/resources/test.p12
-    keystorePassword: password
     signatureLevel: XAdES_BASELINE_B
     tspUrl: http://demo.sk.ee/tsa
     ocspUrl: http://demo.sk.ee/ocsp
+    pkcs12:
+      path: src/test/resources/test.p12
+      password: password

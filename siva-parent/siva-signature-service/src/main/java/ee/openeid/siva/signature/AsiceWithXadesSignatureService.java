@@ -1,5 +1,7 @@
 package ee.openeid.siva.signature;
 
+import ee.openeid.siva.signature.configuration.Pkcs11Properties;
+import ee.openeid.siva.signature.configuration.Pkcs12Properties;
 import ee.openeid.siva.signature.configuration.SignatureServiceConfigurationProperties;
 import ee.openeid.siva.signature.exception.SignatureServiceException;
 import ee.openeid.siva.signature.ocsp.SkOcspSource;
@@ -8,7 +10,9 @@ import eu.europa.esig.dss.*;
 import eu.europa.esig.dss.asic.ASiCWithXAdESSignatureParameters;
 import eu.europa.esig.dss.asic.signature.ASiCWithXAdESService;
 import eu.europa.esig.dss.client.tsp.OnlineTSPSource;
+import eu.europa.esig.dss.token.AbstractSignatureTokenConnection;
 import eu.europa.esig.dss.token.DSSPrivateKeyEntry;
+import eu.europa.esig.dss.token.Pkcs11SignatureToken;
 import eu.europa.esig.dss.token.Pkcs12SignatureToken;
 import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
@@ -41,8 +45,8 @@ public class AsiceWithXadesSignatureService implements SignatureService {
             throw new SignatureServiceException("Signature configuration properties not set!");
         }
 
-        InputStream p12InputStream = getKeystoreInputStream(properties.getKeystorePath());
-        Pkcs12SignatureToken signatureToken = new Pkcs12SignatureToken(p12InputStream, properties.getKeystorePassword());
+        AbstractSignatureTokenConnection signatureToken = getSignatureToken(properties);
+
         DSSPrivateKeyEntry privateKeyEntry = signatureToken.getKeys().get(0);
 
         ASiCWithXAdESSignatureParameters parameters = new ASiCWithXAdESSignatureParameters();
@@ -81,6 +85,19 @@ public class AsiceWithXadesSignatureService implements SignatureService {
 
     public void setProperties(SignatureServiceConfigurationProperties properties) {
         this.properties = properties;
+    }
+
+    private AbstractSignatureTokenConnection getSignatureToken(SignatureServiceConfigurationProperties properties) {
+        Pkcs11Properties pkcs11Properties = properties.getPkcs11();
+        Pkcs12Properties pkcs12Properties = properties.getPkcs12();
+        if (pkcs11Properties != null) {
+            return new Pkcs11SignatureToken(pkcs11Properties.getPath(), pkcs11Properties.getPassword().toCharArray(), pkcs11Properties.getSlotIndex());
+        } else if (pkcs12Properties != null) {
+            InputStream p12InputStream = getKeystoreInputStream(pkcs12Properties.getPath());
+            return new Pkcs12SignatureToken(p12InputStream, pkcs12Properties.getPassword());
+        } else {
+            throw new SignatureServiceException("Either Pkcs11 or Pkcs12 must be configured! Currently there is none configured..");
+        }
     }
 
     private InputStream getKeystoreInputStream(String keystorePath) {

@@ -46,12 +46,12 @@ public class ReportSignatureInterceptor implements ResponseBodyAdvice<Object> {
         if (properties.isReportSignatureEnabled()) {
             try {
                 if (responseObject instanceof ValidationResponse && ((ValidationResponse) responseObject).getValidationReport() instanceof DetailedReport) {
-                    LOGGER.debug("Start to create the signature of the detailed report ");
+                    LOGGER.debug("Starting to create report signature");
                     ValidationResponse validationResponse = (ValidationResponse) responseObject;
                     String validationReportJsonString = jacksonObjectMapper.writeValueAsString(validationResponse.getValidationReport());
                     byte[] reportSignatureBytes = signatureService.getSignature(validationReportJsonString.getBytes(), "validationReport.json", "application/json");
                     validationResponse.setValidationReportSignature(Base64.encodeBase64String(reportSignatureBytes));
-                    LOGGER.debug("Finished creating signature of the detailed report ");
+                    LOGGER.debug("Finished creating report signature");
                     return validationResponse;
                 }
             } catch (Exception e) {

@@ -48,8 +48,7 @@ public class SkOcspDataLoader extends OCSPDataLoader {
             client = getHttpClient(url);
             httpResponse = getHttpResponse(client, httpRequest, url);
 
-            final byte[] returnedBytes = readHttpResponse(url, httpResponse);
-            return returnedBytes;
+            return readHttpResponse(url, httpResponse);
         } catch (IOException e) {
             throw new DSSException(e);
         } finally {

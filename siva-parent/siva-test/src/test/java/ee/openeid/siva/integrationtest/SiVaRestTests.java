@@ -121,8 +121,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         if (reportType != null) {
             jsonObject.put("reportType", reportType);
         }
-        String output = jsonObject.toString();
-        return output;
+        return jsonObject.toString();
     }
 
     protected String validationRequestFor(String file) {

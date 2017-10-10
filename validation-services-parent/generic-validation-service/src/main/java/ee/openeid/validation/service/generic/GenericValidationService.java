@@ -72,7 +72,7 @@ public class GenericValidationService implements ValidationService {
     private static boolean isInRangeMillis(Date date1, Date date2, int rangeInMillis) {
         Date latestTime = addMilliseconds(date2, rangeInMillis);
         Date earliestTime = addMilliseconds(date2, -rangeInMillis);
-        return date1.before(latestTime) && date1.after(earliestTime);
+        return !date1.before(latestTime) || !date1.after(earliestTime);
     }
 
     @Override
@@ -144,7 +144,7 @@ public class GenericValidationService implements ValidationService {
                             reports.getSimpleReport().getErrors(signatureWrapper.getId()).add(REVOCATION_FRESHNESS_FAULT);
                         } else {
                             boolean revocationFreshnessCheckInvokeWarning = certificateWrapper.getRevocationData().stream().anyMatch(
-                                    r -> !CRL_REVOCATION_SOURCE.equals(r.getSource()) && !isInRangeMillis(r.getProductionDate(), timeStampWrapper.getProductionTime(), REVOCATION_FRESHNESS_FIFTEEN_MINUTES_DIFFERENCE));
+                                    r -> !CRL_REVOCATION_SOURCE.equals(r.getSource()) && isInRangeMillis(r.getProductionDate(), timeStampWrapper.getProductionTime(), REVOCATION_FRESHNESS_FIFTEEN_MINUTES_DIFFERENCE));
                             if (revocationFreshnessCheckInvokeWarning) {
                                 reports.getSimpleReport().getWarnings(signatureWrapper.getId()).add(REVOCATION_FRESHNESS_FAULT);
                             }
@@ -161,7 +161,7 @@ public class GenericValidationService implements ValidationService {
                     if (CRL_REVOCATION_SOURCE.equals(r.getSource())) {
                         return !(timeStampWrapper.getProductionTime().after(r.getThisUpdate()) && timeStampWrapper.getProductionTime().before(r.getNextUpdate()));
                     }
-                    return !isInRangeMillis(r.getProductionDate(), timeStampWrapper.getProductionTime(), REVOCATION_FRESHNESS_DAY_DIFFERENCE);
+                    return isInRangeMillis(r.getProductionDate(), timeStampWrapper.getProductionTime(), REVOCATION_FRESHNESS_DAY_DIFFERENCE);
                 });
     }
 

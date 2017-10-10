@@ -119,7 +119,7 @@ public class SkOcspSource implements OCSPSource {
         return null;
     }
 
-    protected void checkNonce(BasicOCSPResp basicOCSPResp, Extension expectedNonceExtension) {
+    private void checkNonce(BasicOCSPResp basicOCSPResp, Extension expectedNonceExtension) {
         final Extension extension = basicOCSPResp.getExtension(OCSPObjectIdentifiers.id_pkix_ocsp_nonce);
         final DEROctetString expectedNonce = (DEROctetString) expectedNonceExtension.getExtnValue();
         final DEROctetString receivedNonce = (DEROctetString) extension.getExtnValue();
@@ -129,11 +129,10 @@ public class SkOcspSource implements OCSPSource {
         }
     }
 
-    Extension createNonce() {
+    private Extension createNonce() {
         byte[] bytes = generateRandomNonce();
         DEROctetString nonce = new DEROctetString(bytes);
-        boolean critical = false;
-        return new Extension(OCSPObjectIdentifiers.id_pkix_ocsp_nonce, critical, nonce);
+        return new Extension(OCSPObjectIdentifiers.id_pkix_ocsp_nonce, false, nonce);
     }
 
     private byte[] generateRandomNonce() {

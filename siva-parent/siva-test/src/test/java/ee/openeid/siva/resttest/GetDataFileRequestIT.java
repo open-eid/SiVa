@@ -103,7 +103,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
     @Test
     public void testGetDataFileRequestChangedOrderOfKeys() {
         String invalidRequest = "{\"document\":\"" + Base64.encodeBase64String(readFileFromTestResources("susisevad1_3.ddoc")) + "\",\"filename\":\"susisevad1_3.ddoc\"}";
-        postForDataFiles(invalidRequest.toString())
+        postForDataFiles(invalidRequest)
                 .then()
                 .body("dataFiles[0].filename", Matchers.is("Šužlikud sõid ühe õuna ära.txt"))
                 .body("dataFiles[0].mimeType", Matchers.is("text/plain"))
@@ -151,7 +151,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
     @Test
     public void testGetDataFileRequestDuplicatedKey() {
         String invalidRequest = "{\"documentType\":\"DDOC\",\"documentType\":\"BDOC\",\"document\":\"" + Base64.encodeBase64String(readFileFromTestResources("susisevad1_3.ddoc")) + "\"}";
-        String response = postForDataFiles(invalidRequest.toString()).asString();
+        String response = postForDataFiles(invalidRequest).asString();
         assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME) == 1);
     }
 

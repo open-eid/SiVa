@@ -25,7 +25,7 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties(GenericSignaturePolicyProperties.class)
 public class GenericValidationServiceConfiguration {
 
-    @Bean(name = "PDFPolicyService")
+    @Bean(name = "GenericPolicyService")
     public ConstraintLoadingSignaturePolicyService signaturePolicyService(GenericSignaturePolicyProperties properties) {
         return new ConstraintLoadingSignaturePolicyService(properties);
     }

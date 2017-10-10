@@ -119,12 +119,10 @@ public class BdocValidationFailIT extends SiVaRestTests {
     @Test
     public void bdocNoSignatures() {
         setTestFilesDirectory("document_format_test_files/");
-        assertAllSignaturesAreInvalid(postForReport("BdocContainerNoSignature.bdoc"));
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("BdocContainerNoSignature.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "BdocContainerNoSignature.bdoc", ""))
+        post(validationRequestFor("BdocContainerNoSignature.bdoc"))
                 .then()
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
                 .body("validationReport.validationConclusion.validationWarnings", Matchers.isEmptyOrNullString());
-
     }
 
     /**
@@ -161,14 +159,12 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * Expected Result: The document should fail the validation
      * <p>
-     * File: EE_SER-AEX-B-LT-V-33.asice
+     * File: EE_SER-AEX-B-LT-V-33.bdoc
      */
     @Test
-    @Ignore("DD4J to DSS ")
     public void bdocInvalidMimeTypeChars() {
         setTestFilesDirectory("bdoc/live/timestamp/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("EE_SER-AEX-B-LT-V-33.asice"));
-        post(validationRequestWithValidKeys(encodedString, "EE_SER-AEX-B-LT-V-33.asice", ""))
+        post(validationRequestFor("EE_SER-AEX-B-LT-V-33.bdoc"))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -215,16 +211,15 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: EE_SER-AEX-B-LT-I-43.asice
      */
     @Test
-    @Ignore("Unknown reason")
     public void bdocInvalidNonRepudiationKey() {
         setTestFilesDirectory("bdoc/live/timestamp/");
-        post(validationRequestFor("EE_SER-AEX-B-LT-I-43.asice"))
+        post(validationRequestFor("EE_SER-AEX-B-LT-I-43.asice", VALID_SIGNATURE_POLICY_3,"Simple"))
                 .then()
-                .body("signatures[0].signatureLevel", Matchers.is("AdES"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is("SIG_CONSTRAINTS_FAILURE"))
-                .body("signatures[0].errors.content", Matchers.hasItems("The signer's certificate has not expected key-usage!"))
-                .body("validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("NOT_ADES"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CONSTRAINTS_FAILURE"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The signer's certificate has not expected key-usage!"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -294,12 +289,12 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocNotTrustedTsaCert() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("TS-05_23634_TS_unknown_TSA.asice"));
-        post(validationRequestWithValidKeys(encodedString, "TS-05_23634_TS_unknown_TSA.asice", VALID_SIGNATURE_POLICY_3))
+        post(validationRequestWithValidKeys(encodedString, "TS-05_23634_TS_unknown_TSA.bdoc", VALID_SIGNATURE_POLICY_3))
                 .then()
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors.content", Matchers.hasItems("Signature has an invalid timestamp"))
-                .body("validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is(""))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Signature has an invalid timestamp"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -340,16 +335,14 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: EE_SER-AEX-B-LT-V-20.asice
      */
     @Test
-    @Ignore("DD4J to DSS ")
     public void bdocOcspAndTsDifferenceOver24H() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("EE_SER-AEX-B-LT-V-20.asice"));
-        post(validationRequestWithValidKeys(encodedString, "EE_SER-AEX-B-LT-V-20.asice", VALID_SIGNATURE_POLICY_3))
+        post(validationRequestWithValidKeys(encodedString, "EE_SER-AEX-B-LT-V-20.bdoc", VALID_SIGNATURE_POLICY_3))
                 .then()
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors.content", Matchers.hasItems("The difference between the OCSP response time and the signature time stamp is too large"))
-                .body("validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The difference between the OCSP response time and the signature time stamp is too large"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -441,17 +434,15 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: signWithIdCard_d4j_1.0.4_BES.asice
      */
     @Test
-    @Ignore("java.lang.OutOfMemoryError: Java heap space may occur")
     public void bdocBaselineBesSignatureLevel() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("signWithIdCard_d4j_1.0.4_BES.asice"))
                 .then()
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors.content", Matchers.hasItems("The expected format is not found!"))
-                .body("validSignaturesCount", Matchers.is(0))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-B"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The expected format is not found!"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -468,16 +459,14 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: TM-04_kehtivuskinnituset.4.asice
      */
     @Test
-    @Ignore("DD4J to DSS ")
     public void bdocBaselineEpesSignatureLevel() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("TM-04_kehtivuskinnituset.4.asice"))
                 .then()
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_EPES"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors.content", Matchers.hasItems("The expected format is not found!"))
-                .body("validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-B"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The expected format is not found!"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -543,15 +532,14 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: TM-16_unknown.4.asice
      */
     @Test
-    @Ignore("DD4J to DSS ")
     public void bdocTmOcspStatusUnknown() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("TM-16_unknown.4.asice"))
                 .then()
-                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("signatures[0].subIndication", Matchers.is("NO_POE"))
-                .body("signatures[0].errors.content", Matchers.hasItems("The past signature validation is not conclusive!"))
-                .body("validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("TRY_LATER"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("No revocation data for the certificate"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -616,16 +604,14 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: TM-10_noncevale.4.asice
      */
     @Test
-    @Ignore("DD4J to DSS ")
     public void bdocWrongOcspNonce() {
         setTestFilesDirectory("bdoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("TM-10_noncevale.4.asice"));
-        post(validationRequestWithValidKeys(encodedString, "TM-10_noncevale.4.asice", VALID_SIGNATURE_POLICY_3))
+        post(validationRequestWithValidKeys(encodedString, "TM-10_noncevale.4.bdoc", VALID_SIGNATURE_POLICY_3))
                 .then()
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors.content", Matchers.hasItem("Nonce is invalid"))
-                .body("validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("Nonce is invalid"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -666,17 +652,16 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: TS-06_23634_TS_missing_OCSP.asice
      */
     @Test
-    @Ignore("DD4J to DSS ")
     public void bdocBaselineTSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("TS-06_23634_TS_missing_OCSP.asice"));
         post(validationRequestWithValidKeys(encodedString, "TS-06_23634_TS_missing_OCSP.asice", VALID_SIGNATURE_POLICY_3))
                 .then()
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT")) //TODO: Shouldnt it return XAdES_BASELINE_T instead?
-                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("signatures[0].subIndication", Matchers.is("TRY_LATER"))
-                .body("signatures[0].errors.content", Matchers.hasItem("No revocation data for the certificate"))
-                .body("validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-LT")) //TODO: Shouldnt it return XAdES_BASELINE_T instead?
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("TRY_LATER"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("No revocation data for the certificate"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**

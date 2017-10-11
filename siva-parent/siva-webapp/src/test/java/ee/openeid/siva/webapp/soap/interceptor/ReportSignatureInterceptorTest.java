@@ -131,7 +131,7 @@ public class ReportSignatureInterceptorTest {
                                     "<Signatures>" +
                                         "<Signature>" +
                                             "<Id>id-65dc6b043effc2542519162d271ad4f9780e552845d04b66868301a5cf0ed8ba</Id>" +
-                                            "<SignatureFormat>PAdES-BASELINE-LT</SignatureFormat>" +
+                                            "<SignatureFormat>PAdES_BASELINE_LT</SignatureFormat>" +
                                             "<SignatureLevel>QESIG</SignatureLevel>" +
                                             "<SignedBy>SINIVEE,VEIKO,36706020210</SignedBy>" +
                                             "<Indication>TOTAL-PASSED</Indication>" +

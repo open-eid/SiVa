@@ -438,7 +438,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("signWithIdCard_d4j_1.0.4_BES.asice"))
                 .then()
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-B"))
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The expected format is not found!"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
@@ -463,7 +463,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("TM-04_kehtivuskinnituset.4.asice"))
                 .then()
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-B"))
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The expected format is not found!"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
@@ -657,7 +657,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("TS-06_23634_TS_missing_OCSP.asice"));
         post(validationRequestWithValidKeys(encodedString, "TS-06_23634_TS_missing_OCSP.asice", VALID_SIGNATURE_POLICY_3))
                 .then()
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES-BASELINE-LT")) //TODO: Shouldnt it return XAdES_BASELINE_T instead?
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT")) //TODO: Shouldnt it return XAdES_BASELINE_T instead?
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("TRY_LATER"))
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("No revocation data for the certificate"))

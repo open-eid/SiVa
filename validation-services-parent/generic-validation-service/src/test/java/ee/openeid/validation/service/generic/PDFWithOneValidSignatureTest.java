@@ -76,7 +76,7 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
         SignatureValidationData signature = report.getValidationConclusion().getSignatures().get(0);
         assertEquals("QESIG", signature.getSignatureLevel());
-        assertEquals("PAdES-BASELINE-LT", signature.getSignatureFormat());
+        assertEquals("PAdES_BASELINE_LT", signature.getSignatureFormat());
     }
 
     @Test

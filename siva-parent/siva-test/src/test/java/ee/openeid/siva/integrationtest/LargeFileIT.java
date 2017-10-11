@@ -58,7 +58,7 @@ public class LargeFileIT extends SiVaRestTests{
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("9MB_PDF.pdf"));
         post(validationRequestWithValidKeys(encodedString, "9MB_PDF.pdf", ""))
                 .then()
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat",equalTo("PAdES-BASELINE-LT"))
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat",equalTo("PAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.validatedDocument.filename",equalTo("9MB_PDF.pdf"));
     }
 

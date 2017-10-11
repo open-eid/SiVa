@@ -52,7 +52,7 @@ public class DocumentFormatIT extends SiVaRestTests {
     public void PAdESDocumentShouldPass() {
         SimpleReport report = postForReport("hellopades-pades-lt-sha256-sign.pdf");
         assertAllSignaturesAreValid(report);
-        assertEquals("PAdES-BASELINE-LT", report.getValidationConclusion().getSignatures().get(0).getSignatureFormat());
+        assertEquals("PAdES_BASELINE_LT", report.getValidationConclusion().getSignatures().get(0).getSignatureFormat());
     }
 
     /**

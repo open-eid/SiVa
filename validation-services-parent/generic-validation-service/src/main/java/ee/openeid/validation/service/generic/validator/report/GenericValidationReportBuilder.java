@@ -136,7 +136,7 @@ public class GenericValidationReportBuilder {
     private SignatureValidationData buildSignatureValidationData(String signatureId) {
         SignatureValidationData signatureValidationData = new SignatureValidationData();
         signatureValidationData.setId(signatureId);
-        signatureValidationData.setSignatureFormat(dssReports.getSimpleReport().getSignatureFormat(signatureId));
+        signatureValidationData.setSignatureFormat(changeSignatureFormat(dssReports.getSimpleReport().getSignatureFormat(signatureId)));
         signatureValidationData.setSignatureLevel(dssReports.getSimpleReport().getSignatureQualification(signatureId).name());
         signatureValidationData.setSignedBy(parseSignedBy(signatureId));
         signatureValidationData.setClaimedSigningTime(parseClaimedSigningTime(signatureId));
@@ -149,6 +149,10 @@ public class GenericValidationReportBuilder {
         signatureValidationData.setSubIndication(parseSubIndication(signatureId, signatureValidationData.getErrors()));
 
         return signatureValidationData;
+    }
+
+    private String changeSignatureFormat(String signatureFormat){
+        return signatureFormat.replace("-", "_");
     }
 
     private Info parseSignatureInfo(String signatureId) {

@@ -48,7 +48,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-rsa1024-sha1-expired.pdf"));
         post(validationRequestWithValidKeys(encodedString, "hellopades-lt-rsa1024-sha1-expired.pdf", ""))
                 .then()
-                .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("INDETERMINATE_QES"))
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("signatures[0].subIndication", Matchers.is("TRY_LATER"))
@@ -77,7 +77,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades_lt_revoked.pdf"));
         post(validationRequestWithValidKeys(encodedString, "pades_lt_revoked.pdf", VALID_SIGNATURE_POLICY_3))
                 .then()
-                .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("INDETERMINATE_QESIG"))
                 .body("signatures[0].signedBy", Matchers.is("NURM,AARE,38211015222"))
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
@@ -158,7 +158,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-sha256-rsa1024-expired2.pdf"));
         post(validationRequestWithValidKeys(encodedString, "hellopades-lt-sha256-rsa1024-expired2.pdf", ""))
                 .then()
-                .body("signatures[0].signatureFormat", Matchers.is("PAdES-BASELINE-LT"))
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1));
     }

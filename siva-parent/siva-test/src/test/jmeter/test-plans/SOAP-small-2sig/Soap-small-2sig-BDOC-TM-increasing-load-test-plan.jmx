@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jmeterTestPlan version="1.2" properties="2.8" jmeter="2.13 r1665067">
+<jmeterTestPlan version="1.2" properties="3.2" jmeter="3.3 r1808647">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
@@ -51,11 +51,6 @@
           <elementProp name="ERRORS_DIR" elementType="Argument">
             <stringProp name="Argument.name">ERRORS_DIR</stringProp>
             <stringProp name="Argument.value">${__P(errors.dir,errors)}</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
-          <elementProp name="FILETYPE" elementType="Argument">
-            <stringProp name="Argument.name">FILETYPE</stringProp>
-            <stringProp name="Argument.value">BDOC</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="DURATION" elementType="Argument">
@@ -115,7 +110,6 @@
           	&lt;soap:ValidationRequest&gt;&#xd;
                	&lt;Document&gt;${__property(TESTFILE_BASE64)}&lt;/Document&gt;&#xd;
                     &lt;Filename&gt;${TESTFILE}&lt;/Filename&gt;&#xd;
-                    &lt;DocumentType&gt;${FILETYPE}&lt;/DocumentType&gt;&#xd;
           	&lt;/soap:ValidationRequest&gt;&#xd;
      	&lt;/soap:ValidateDocument&gt;&#xd;
 	&lt;/soapenv:Body&gt;&#xd;
@@ -126,8 +120,6 @@
             </elementProp>
             <stringProp name="HTTPSampler.domain">${HOSTNAME}</stringProp>
             <stringProp name="HTTPSampler.port">${PORT}</stringProp>
-            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-            <stringProp name="HTTPSampler.response_timeout">${RESPONSE_TIMEOUT}</stringProp>
             <stringProp name="HTTPSampler.protocol"></stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
             <stringProp name="HTTPSampler.path">${ENDPOINT_PATH}</stringProp>
@@ -136,8 +128,9 @@
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-            <boolProp name="HTTPSampler.monitor">false</boolProp>
             <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout">${RESPONSE_TIMEOUT}</stringProp>
           </HTTPSamplerProxy>
           <hashTree>
             <XMLAssertion guiclass="XMLAssertionGui" testclass="XMLAssertion" testname="XML Assertion" enabled="true"/>
@@ -507,5 +500,9 @@ try {
       </ResultCollector>
       <hashTree/>
     </hashTree>
+    <WorkBench guiclass="WorkBenchGui" testclass="WorkBench" testname="WorkBench" enabled="true">
+      <boolProp name="WorkBench.save">true</boolProp>
+    </WorkBench>
+    <hashTree/>
   </hashTree>
 </jmeterTestPlan>

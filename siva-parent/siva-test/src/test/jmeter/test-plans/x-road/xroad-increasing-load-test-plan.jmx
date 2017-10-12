@@ -130,7 +130,7 @@
           </HTTPSamplerProxy>
           <hashTree>
             <com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.JSONPathAssertion guiclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.gui.JSONPathAssertionGui" testclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.JSONPathAssertion" testname="Validate signatures count" enabled="true">
-              <stringProp name="JSON_PATH">$.signaturesCount</stringProp>
+              <stringProp name="JSON_PATH">$.validationReport.validationConclusion.signaturesCount</stringProp>
               <stringProp name="EXPECTED_VALUE">1</stringProp>
               <boolProp name="JSONVALIDATION">true</boolProp>
               <boolProp name="EXPECT_NULL">false</boolProp>
@@ -138,7 +138,7 @@
             </com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.JSONPathAssertion>
             <hashTree/>
             <com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.JSONPathAssertion guiclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.gui.JSONPathAssertionGui" testclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathassertion.JSONPathAssertion" testname="Validate valid signatures count" enabled="true">
-              <stringProp name="JSON_PATH">$.validSignaturesCount</stringProp>
+              <stringProp name="JSON_PATH">$.validationReport.validationConclusion.validSignaturesCount</stringProp>
               <stringProp name="EXPECTED_VALUE">1</stringProp>
               <boolProp name="JSONVALIDATION">true</boolProp>
               <boolProp name="EXPECT_NULL">false</boolProp>

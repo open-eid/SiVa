@@ -185,16 +185,14 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: TS-02_23634_TS_wrong_SignatureValue.asice
      */
     @Test
-    @Ignore("DD4J to DSS ")
     public void bdocInvalidTimeStampDontMatchSigValue() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("TS-02_23634_TS_wrong_SignatureValue.asice"))
                 .then()
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
-                .body("signatures[0].errors.content", Matchers.hasItems("Signature has an invalid timestamp"))
-                .body("signatures[0].errors.content", Matchers.hasItems("The signature is not intact!"))
-                .body("validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The signature is not intact!"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -285,14 +283,12 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: TS-05_23634_TS_unknown_TSA.asice
      */
     @Test
-    @Ignore("DD4J to DSS ")
     public void bdocNotTrustedTsaCert() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("TS-05_23634_TS_unknown_TSA.asice"));
         post(validationRequestWithValidKeys(encodedString, "TS-05_23634_TS_unknown_TSA.bdoc", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is(""))
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Signature has an invalid timestamp"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
@@ -354,20 +350,18 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * Title: Asice unsigned data files in the container
      * <p>
-     * Expected Result: The document should fail the validation
+     * Expected Result: The document should pass the validation with warning
      * <p>
      * File: EE_SER-AEX-B-LT-V-34.asice
      */
     @Test
-    @Ignore //TODO: https://github.com/open-eid/SiVa/issues/18
-    public void bdocUnsignedDataFiles() {
+    public void asiceUnsignedDataFiles() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-V-34.asice"))
                 .then()
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors.content", Matchers.hasItems(""))
-                .body("validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].warnings.content", Matchers.hasItems("All files are not signed!"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
 
     }
 
@@ -380,20 +374,18 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * Title: Bdoc different data file mime-type values in signatures.xml and manifest.xml files
      * <p>
-     * Expected Result: The document should fail the validation
+     * Expected Result: The document should return warning regarding the mismatch
      * <p>
      * File: 23613_TM_wrong-manifest-mimetype.bdoc
      */
     @Test
-    @Ignore //TODO: https://github.com/open-eid/SiVa/issues/18
     public void bdocDifferentDataFileInSignature() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("23613_TM_wrong-manifest-mimetype.bdoc"))
                 .then()
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors.content", Matchers.hasItems(""))
-                .body("validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file test.txt with mimetype application/binary but the signature file for signature S0 indicates the mimetype is application/octet-stream"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
     }
 
     /**

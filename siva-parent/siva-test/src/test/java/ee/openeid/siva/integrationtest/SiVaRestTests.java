@@ -24,6 +24,7 @@ import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.webapp.response.ValidationResponse;
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.IOException;
 
@@ -43,6 +44,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
     protected static final String FILENAME = "filename";
     protected static final String DOCUMENT = "document";
     protected static final String SIGNATURE_POLICY = "signaturePolicy";
+    protected static final String REPORT_TYPE = "reportType";
 
     private static final String VALIDATION_ENDPOINT = "/validate";
     private static final String DATA_FILES_ENDPOINT = "/getDataFiles";
@@ -120,6 +122,20 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         }
         if (reportType != null) {
             jsonObject.put("reportType", reportType);
+        }
+        return jsonObject.toString();
+    }
+
+    protected String validationRequestForDD4j(String file, String signaturePolicy, String reportType) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(DOCUMENT, Base64.encodeBase64String(readFileFromTestResources(file)));
+        String basename = FilenameUtils.getBaseName(file);
+        jsonObject.put(FILENAME, basename + ".bdoc");
+        if (signaturePolicy != null) {
+            jsonObject.put(SIGNATURE_POLICY, signaturePolicy);
+        }
+        if (reportType != null) {
+            jsonObject.put(REPORT_TYPE, reportType);
         }
         return jsonObject.toString();
     }

@@ -29,7 +29,7 @@ Below is list of Java libraries we use and for which digitally signed document f
   that are compliant with ASiCE standard
 * [DigiDoc4J DSS fork](https://github.com/open-eid/sd-dss) - to validate digitally signed PDF files that
   comply with Estonian laws
-* [asicverifier](https://github.com/vrk-kpa/xroad-public/tree/master/src/asicverifier) is used to validate
+* [asicverifier](https://github.com/ria-ee/X-Road/tree/master/src/asicverifier) is used to validate
   XRoad signature containers
 
 ## Requirements

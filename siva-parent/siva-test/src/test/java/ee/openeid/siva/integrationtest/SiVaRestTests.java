@@ -140,6 +140,20 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         return jsonObject.toString();
     }
 
+    protected String validationRequestForDSS(String file, String signaturePolicy, String reportType) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(DOCUMENT, Base64.encodeBase64String(readFileFromTestResources(file)));
+        String basename = FilenameUtils.getBaseName(file);
+        jsonObject.put(FILENAME, basename + ".asice");
+        if (signaturePolicy != null) {
+            jsonObject.put(SIGNATURE_POLICY, signaturePolicy);
+        }
+        if (reportType != null) {
+            jsonObject.put(REPORT_TYPE, reportType);
+        }
+        return jsonObject.toString();
+    }
+
     protected String validationRequestFor(String file) {
         return validationRequestFor(file, null, null);
     }

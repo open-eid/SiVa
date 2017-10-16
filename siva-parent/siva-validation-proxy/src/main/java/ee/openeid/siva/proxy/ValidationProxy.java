@@ -192,6 +192,7 @@ public class ValidationProxy {
 
     private ValidationService getServiceForType(ProxyDocument proxyDocument) {
         String validatorName = constructValidatorName(proxyDocument);
+        LOGGER.info("Validation service: {}", validatorName);
         try {
             return (ValidationService) applicationContext.getBean(validatorName);
         } catch (NoSuchBeanDefinitionException e) {

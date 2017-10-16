@@ -49,7 +49,7 @@
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcpkix-jdk15on</artifactId>
-            <version>1.52</version>
+            <version>1.54</version>
         </dependency>
 
         <dependency>
@@ -73,7 +73,7 @@
         <dependency>
             <groupId>ee.openid.siva</groupId>
             <artifactId>xroad-asice-verifier</artifactId>
-            <version>1.0.4</version>
+            <version>1.0.5</version>
         </dependency>
 
         <dependency>
@@ -174,7 +174,7 @@
                                 <configuration>
                                     <groupId>${project.groupId}</groupId>
                                     <artifactId>xroad-asice-verifier</artifactId>
-                                    <version>1.0.4</version>
+                                    <version>1.0.5</version>
                                     <localRepositoryPath>${basedir}/external-lib-repository</localRepositoryPath>
                                     <packaging>jar</packaging>
                                     <file>${xroad.jar.base}/${xroad.output.file}</file>

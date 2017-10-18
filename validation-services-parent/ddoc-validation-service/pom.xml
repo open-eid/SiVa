@@ -56,6 +56,13 @@
             </exclusions>
         </dependency>
 
+        <!-- Override vulnerable version of transitive JDigiDoc dependency -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.13</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>

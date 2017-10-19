@@ -36,6 +36,7 @@ public final class ReportBuilderUtils {
     private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final String GREENWICH_MEAN_TIME = "Etc/GMT";
     private static final String DIGEST_ALGO = "SHA-256";
+    private static final String UNKNOWN_VALUE = "NA";
 
     public static String emptyWhenNull(String value) {
         return value != null ? value : valueNotPresent();
@@ -49,6 +50,10 @@ public final class ReportBuilderUtils {
 
     public static String valueNotPresent() {
         return StringUtils.EMPTY;
+    }
+
+    public static String valueNotKnown() {
+        return UNKNOWN_VALUE;
     }
 
     public static Policy createReportPolicy(ValidationPolicy validationPolicy) {

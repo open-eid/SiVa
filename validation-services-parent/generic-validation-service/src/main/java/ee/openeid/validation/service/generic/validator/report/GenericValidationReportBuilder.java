@@ -38,8 +38,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.*;
 
 public class GenericValidationReportBuilder {
 
@@ -151,7 +150,7 @@ public class GenericValidationReportBuilder {
         return signatureValidationData;
     }
 
-    private String changeSignatureFormat(String signatureFormat){
+    private String changeSignatureFormat(String signatureFormat) {
         return signatureFormat.replace("-", "_");
     }
 
@@ -205,7 +204,10 @@ public class GenericValidationReportBuilder {
     }
 
     private String parseClaimedSigningTime(String signatureId) {
-        return emptyWhenNull(ReportBuilderUtils.getDateFormatterWithGMTZone().format(dssReports.getSimpleReport().getSigningTime(signatureId)));
+        Date signingDate = dssReports.getSimpleReport().getSigningTime(signatureId);
+        if (signingDate == null)
+            return valueNotKnown();
+        return emptyWhenNull(ReportBuilderUtils.getDateFormatterWithGMTZone().format(signingDate));
     }
 
     private SignatureValidationData.Indication parseIndication(String signatureId, List<Error> errors) {

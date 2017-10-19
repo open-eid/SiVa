@@ -5,9 +5,11 @@ siva:
     xroadUrl: http://localhost:8081
   tsl:
     loader:
-      trustedTerritories: BE, BG, CY, CZ,DE,DK, EE, ES, FI, FR, GR, HU,HR,IE, IS, IT, LT, LU, LV, LI, MT,NO,NL, PL, PT, RO, SE, SI, SK, UK
+      trustedTerritories: BE, BG, CY, CZ, DE, DK, EE, ES, FI, FR, GR, HU, HR, IE, IS, IT, LT, LU, LV, LI, MT, NO, NL, PL, PT, RO, SE, SI, SK, UK
 management:
   context-path: /monitoring
+  security:
+    enabled: false
   health:
     diskspace:
       enabled: false

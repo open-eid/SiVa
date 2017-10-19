@@ -3,9 +3,11 @@ server:
 
 management:
   context-path: /monitoring
+  security:
+    enabled: false
   health:
-      diskspace:
-        enabled: false
+    diskspace:
+      enabled: false
 
 endpoints:
   enabled: false

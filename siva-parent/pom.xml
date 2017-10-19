@@ -41,7 +41,7 @@
     <properties>
         <project.encoding>UTF-8</project.encoding>
         <language.level>1.8</language.level>
-        <spring.boot.version>1.4.2.RELEASE</spring.boot.version>
+        <spring.boot.version>1.5.8.RELEASE</spring.boot.version>
         <dss.version>5.0.d4j.3</dss.version>
         <cxf.version>3.1.13</cxf.version>
         <junit.version>4.12</junit.version>
@@ -288,13 +288,6 @@
                 <version>1.8.0.10</version>
             </dependency>
 
-            <dependency>
-                <groupId>commons-httpclient</groupId>
-                <artifactId>commons-httpclient</artifactId>
-                <version>3.1</version>
-            </dependency>
-
-            <!-- Override vulnerable version of Logback among transitive dependencies -->
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>

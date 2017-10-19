@@ -21,6 +21,7 @@ import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -104,7 +105,7 @@ public class XROADValidationExceptionHandlerTest {
         assertEquals("{\"message\":\"Unfortunately there was an error validating your document\"}", content);
     }
 
-    private JSONObject mockRequest() {
+    private JSONObject mockRequest() throws JSONException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("bytes", "");
         jsonObject.put("name", "");

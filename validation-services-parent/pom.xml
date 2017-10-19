@@ -39,7 +39,7 @@
         <project.encoding>UTF-8</project.encoding>
         <language.level>1.8</language.level>
         <dss.version>5.0.d4j.3</dss.version>
-        <spring.boot.version>1.4.2.RELEASE</spring.boot.version>
+        <spring.boot.version>1.5.8.RELEASE</spring.boot.version>
         <digidoc4j.version>1.0.7.beta.2</digidoc4j.version>
         <powermock.version>1.7.3</powermock.version>
     </properties>
@@ -102,7 +102,6 @@
                 <version>20160212</version>
             </dependency>
 
-            <!-- Override vulnerable version of Logback among transitive dependencies -->
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>

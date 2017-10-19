@@ -20,8 +20,6 @@ import ee.openeid.siva.statistics.googleanalytics.GoogleAnalyticsMeasurementProt
 import ee.openeid.siva.statistics.googleanalytics.configuration.properties.GoogleAnalyticsMeasurementProtocolProperties;
 import ee.openeid.siva.statistics.model.SimpleSignatureReport;
 import ee.openeid.siva.statistics.model.SimpleValidationReport;
-import org.apache.commons.httpclient.URIException;
-import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +31,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -78,7 +78,7 @@ public class GoogleAnalyticsMeasurementProtocolClientTest {
     }
 
     @Test
-    public void checkIfRequestIsNotSentWhenDisabled() throws URIException {
+    public void checkIfRequestIsNotSentWhenDisabled() throws Exception {
         long validationDurationinMillis = 1000L;
         int validSignaturesCount = 1;
         int totalSignatureCount = 1;
@@ -100,7 +100,7 @@ public class GoogleAnalyticsMeasurementProtocolClientTest {
     }
 
     @Test
-    public void checkIfRequestIsSentWhenEnabled() throws URIException {
+    public void checkIfRequestIsSentWhenEnabled() throws Exception {
         long validationDurationinMillis = 1000L;
         int validSignaturesCount = 1;
         int totalSignatureCount = 1;
@@ -124,7 +124,7 @@ public class GoogleAnalyticsMeasurementProtocolClientTest {
     }
 
     @Test
-    public void checkIfModifiedPropertiesApplyToRequest() throws URIException {
+    public void checkIfModifiedPropertiesApplyToRequest() throws Exception {
         long validationDurationinMillis = 1000L;
         int validSignaturesCount = 2;
         int totalSignatureCount = 1;
@@ -176,15 +176,15 @@ public class GoogleAnalyticsMeasurementProtocolClientTest {
         report.getSimpleSignatureReports().add(sigReport);
     }
 
-    private String getExpectedHttpRequestBody(SimpleValidationReport report, String userIdentifier) throws URIException {
+    private String getExpectedHttpRequestBody(SimpleValidationReport report, String userIdentifier) throws UnsupportedEncodingException {
         StringBuilder sb = new StringBuilder();
-        sb.append(URIUtil.encodeQuery("v=1&t=event&ds=" + properties.getDataSourceName() + "&tid=" + properties.getTrackingId() + "&cid=" + MOCKED_UUID_STRING + "&cd1=" + userIdentifier + "&ec=" + CONTAINER_TYPE + "&ea=Container validation&el=duration&ev=" + report.getDuration()) + "\n");
-        sb.append(URIUtil.encodeQuery("v=1&t=event&ds=" + properties.getDataSourceName() + "&tid=" + properties.getTrackingId() + "&cid=" + MOCKED_UUID_STRING + "&cd1=" + userIdentifier + "&ec=" + CONTAINER_TYPE + "&ea=Container validation&el=signaturesCount&ev=" + report.getSignatureCount()) + "\n");
-        sb.append(URIUtil.encodeQuery("v=1&t=event&ds=" + properties.getDataSourceName() + "&tid=" + properties.getTrackingId() + "&cid=" + MOCKED_UUID_STRING + "&cd1=" + userIdentifier + "&ec=" + CONTAINER_TYPE + "&ea=Container validation&el=validSignaturesCount&ev=" + report.getValidSignatureCount()) + "\n");
+        sb.append(UriUtils.encodeFragment("v=1&t=event&ds=" + properties.getDataSourceName() + "&tid=" + properties.getTrackingId() + "&cid=" + MOCKED_UUID_STRING + "&cd1=" + userIdentifier + "&ec=" + CONTAINER_TYPE + "&ea=Container validation&el=duration&ev=" + report.getDuration(), "UTF-8") + "\n");
+        sb.append(UriUtils.encodeFragment("v=1&t=event&ds=" + properties.getDataSourceName() + "&tid=" + properties.getTrackingId() + "&cid=" + MOCKED_UUID_STRING + "&cd1=" + userIdentifier + "&ec=" + CONTAINER_TYPE + "&ea=Container validation&el=signaturesCount&ev=" + report.getSignatureCount(), "UTF-8") + "\n");
+        sb.append(UriUtils.encodeFragment("v=1&t=event&ds=" + properties.getDataSourceName() + "&tid=" + properties.getTrackingId() + "&cid=" + MOCKED_UUID_STRING + "&cd1=" + userIdentifier + "&ec=" + CONTAINER_TYPE + "&ea=Container validation&el=validSignaturesCount&ev=" + report.getValidSignatureCount(), "UTF-8") + "\n");
         for (SimpleSignatureReport sigReport : report.getSimpleSignatureReports()) {
             String indicationSubIndicationPair = expectedIndicationSubIndicationPair(sigReport.getIndication(), sigReport.getSubIndication());
             String containerTypeSigFormatPair = CONTAINER_TYPE + "/" + sigReport.getSignatureFormat();
-            sb.append(URIUtil.encodeQuery("v=1&t=event&ds=" + properties.getDataSourceName() + "&tid=" + properties.getTrackingId() + "&cid=" + MOCKED_UUID_STRING + "&cd1=" + userIdentifier + "&ec=" + containerTypeSigFormatPair + "&ea=Signature validation&el=" + indicationSubIndicationPair + "&geoid=" + sigReport.getCountryCode()) + "\n");
+            sb.append(UriUtils.encodeFragment("v=1&t=event&ds=" + properties.getDataSourceName() + "&tid=" + properties.getTrackingId() + "&cid=" + MOCKED_UUID_STRING + "&cd1=" + userIdentifier + "&ec=" + containerTypeSigFormatPair + "&ea=Signature validation&el=" + indicationSubIndicationPair + "&geoid=" + sigReport.getCountryCode(), "UTF-8") + "\n");
         }
         return sb.toString();
     }

@@ -1,8 +1,14 @@
 endpoints:
   health:
     enabled: true
+
+management:
+  security:
+    enabled: false
+
 plugtest:
   location: url
+
 siva:
   webapp:
     reportSignatureEnabled: true

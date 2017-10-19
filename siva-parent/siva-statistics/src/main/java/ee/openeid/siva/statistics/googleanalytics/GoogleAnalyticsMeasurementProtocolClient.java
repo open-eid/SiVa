@@ -19,8 +19,6 @@ package ee.openeid.siva.statistics.googleanalytics;
 import ee.openeid.siva.statistics.googleanalytics.configuration.properties.GoogleAnalyticsMeasurementProtocolProperties;
 import ee.openeid.siva.statistics.model.SimpleSignatureReport;
 import ee.openeid.siva.statistics.model.SimpleValidationReport;
-import org.apache.commons.httpclient.URIException;
-import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +28,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -54,20 +54,20 @@ public class GoogleAnalyticsMeasurementProtocolClient {
         try {
             HttpEntity<String> entity = new HttpEntity<>(composeBatchRequestBody(simpleValidationReport));
             restTemplate.postForObject(properties.getUrl(), entity, byte[].class);
-        } catch (URIException e) {
+        } catch (UnsupportedEncodingException e) {
             LOGGER.error("Error on URI-encoding request body: {}", e.getMessage(), e);
         } catch (HttpStatusCodeException e) {
             LOGGER.error("Batch request failed with status code: {}", e.getStatusCode(), e);
         }
     }
 
-    private String composeBatchRequestBody(SimpleValidationReport report) throws URIException {
+    private String composeBatchRequestBody(SimpleValidationReport report) throws UnsupportedEncodingException {
         List<String> events = new ArrayList<>();
         events.addAll(getContainerEvents(report));
         report.getSimpleSignatureReports().forEach(sigReport -> events.add(createSignatureEvent(sigReport, report.getContainerType(), report.getUserIdentifier())));
         StringBuilder requestBodyBuilder = new StringBuilder();
         for (String event : events) {
-            String encodedEvent = URIUtil.encodeQuery(event);
+            String encodedEvent = UriUtils.encodeFragment(event, "UTF-8");
             requestBodyBuilder.append(encodedEvent + "\n");
         }
 

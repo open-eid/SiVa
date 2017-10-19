@@ -14,6 +14,8 @@ spring:
       spec: maximumSize=100,expireAfterAccess=20s
 management:
   context-path: /monitoring
+  security:
+    enabled: false
   health:
     diskspace:
       enabled: false

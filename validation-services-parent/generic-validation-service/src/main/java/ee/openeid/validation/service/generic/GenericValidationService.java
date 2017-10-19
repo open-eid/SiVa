@@ -65,7 +65,6 @@ public class GenericValidationService implements ValidationService {
     private static final String REVOCATION_FRESHNESS_FAULT = "The revocation information is not considered as 'fresh'.";
     private static final String CRL_REVOCATION_SOURCE = "CRLToken";
 
-    private final Object lock = new Object();
     private TrustedListsCertificateSource trustedListsCertificateSource;
     private ConstraintLoadingSignaturePolicyService signaturePolicyService;
 
@@ -96,10 +95,7 @@ public class GenericValidationService implements ValidationService {
             validator.setCertificateVerifier(certificateVerifier);
             validator.setValidationLevel(VALIDATION_LEVEL);
             final eu.europa.esig.dss.validation.reports.Reports reports;
-            synchronized (lock) {
-                reports = validator.validateDocument(policy.getConstraintDataStream());
-            }
-
+            reports = validator.validateDocument(policy.getConstraintDataStream());
             validateRevocationFreshness(reports);
             final ZonedDateTime validationTimeInGMT = ZonedDateTime.now(ZoneId.of("GMT"));
             if (LOGGER.isInfoEnabled()) {

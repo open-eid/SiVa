@@ -28,7 +28,7 @@ branchespython-dev:
   - develop
 install: true
 before_script: ls -al $TMPDIR
-script: ./mvnw clean install -q
+script: ./mvnw clean install -q -P\!dependency-check
 after_success:
 - "./mvnw jacoco:report coveralls:report -q -Dcoveralls.repo.token=$COVERALLS_REPO_TOKEN"
 notifications:

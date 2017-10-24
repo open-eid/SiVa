@@ -115,6 +115,7 @@ public class ValidationProxy {
         if (dataFileReport != null) {
             dataFileReport.getValidationConclusion().setTimeStampTokens(timeStampTokenReport.getValidationConclusion().getTimeStampTokens());
             dataFileReport.getValidationConclusion().setSignatureForm(timeStampTokenReport.getValidationConclusion().getSignatureForm());
+            dataFileReport.getValidationConclusion().setValidatedDocument(timeStampTokenReport.getValidationConclusion().getValidatedDocument());
             return dataFileReport;
         }
         return timeStampTokenReport;

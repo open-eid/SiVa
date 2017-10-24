@@ -44,7 +44,8 @@ public class TimeStampTokenValidationService implements ValidationService {
     private static final String TIMESTAMP_FILE = "TIMESTAMP.TST";
     private static final String META_INF_FOLDER = "META-INF/";
     private static final String MIME_TYPE = "mimetype";
-
+    private static final String SIGNATURE_FILE_EXTENSION_P7S = "SIGNATURE.P7S";
+    private static final String SIGNATURE_FILE_EXTENSION_XML = "SIGNATURES.XML";
     private SignaturePolicyService<ValidationPolicy> signaturePolicyService;
 
     @Override
@@ -81,10 +82,17 @@ public class TimeStampTokenValidationService implements ValidationService {
         long dataFileCount = documents.stream()
                 .filter(d -> !d.getName().startsWith(META_INF_FOLDER))
                 .filter(d -> !d.getName().endsWith(MIME_TYPE)).count();
+
         long timeStampCount = documents.stream()
                 .filter(d -> d.getName().startsWith(META_INF_FOLDER))
                 .filter(d -> d.getName().toUpperCase().endsWith(TIMESTAMP_FILE)).count();
-        if (dataFileCount != 1 || timeStampCount != 1) {
+
+        long signatureFileCount = documents.stream()
+                .filter(d -> d.getName().startsWith(META_INF_FOLDER))
+                .filter(d -> d.getName().toUpperCase().endsWith(SIGNATURE_FILE_EXTENSION_P7S)
+                        || d.getName().toUpperCase().endsWith(SIGNATURE_FILE_EXTENSION_XML)).count();
+
+        if (dataFileCount != 1 || timeStampCount != 1 || signatureFileCount > 0) {
             throw new DocumentRequirementsException();
         }
     }
@@ -103,35 +111,35 @@ public class TimeStampTokenValidationService implements ValidationService {
     private List<Error> validateTimeStamp(List<InMemoryDocument> documents, TimeStampToken timeStampToken) {
         List<Error> errors = new ArrayList<>();
         boolean isSignatureValid = isSignatureValid(timeStampToken);
-            if (!isSignatureValid) {
-                errors.add(mapError("Signature not intact"));
-            }
-            byte[] dataFile = documents.stream()
-                    .filter(d -> !d.getName().startsWith(META_INF_FOLDER))
-                    .filter(d -> !d.getName().endsWith(MIME_TYPE)).findAny().orElseThrow(IllegalArgumentException::new).getBytes();
-            boolean isMessageImprintsValid = isMessageImprintsValid(dataFile, timeStampToken);
-            if (isSignatureValid && !isMessageImprintsValid) {
-                errors.add(mapError("Signature not intact"));
-            }
-            boolean isVersionValid = isVersionValid(timeStampToken);
-            if (!isVersionValid) {
-                errors.add(mapError("TST version not supported"));
-            }
-            return errors;
+        if (!isSignatureValid) {
+            errors.add(mapError("Signature not intact"));
+        }
+        byte[] dataFile = documents.stream()
+                .filter(d -> !d.getName().startsWith(META_INF_FOLDER))
+                .filter(d -> !d.getName().endsWith(MIME_TYPE)).findAny().orElseThrow(IllegalArgumentException::new).getBytes();
+        boolean isMessageImprintsValid = isMessageImprintsValid(dataFile, timeStampToken);
+        if (isSignatureValid && !isMessageImprintsValid) {
+            errors.add(mapError("Signature not intact"));
+        }
+        boolean isVersionValid = isVersionValid(timeStampToken);
+        if (!isVersionValid) {
+            errors.add(mapError("TST version not supported"));
+        }
+        return errors;
 
     }
 
     private boolean isSignatureValid(TimeStampToken timeStampToken) {
-        try{
-        JcaSimpleSignerInfoVerifierBuilder sigVerifierBuilder = new JcaSimpleSignerInfoVerifierBuilder();
-        Collection certCollection = timeStampToken.getCertificates().getMatches(timeStampToken.getSID());
-        Iterator certIt = certCollection.iterator();
-        X509CertificateHolder cert = (X509CertificateHolder) certIt.next();
-        Certificate x509Cert = CertificateFactory.getInstance("X.509").generateCertificate(new ByteArrayInputStream(cert.getEncoded()));
+        try {
+            JcaSimpleSignerInfoVerifierBuilder sigVerifierBuilder = new JcaSimpleSignerInfoVerifierBuilder();
+            Collection certCollection = timeStampToken.getCertificates().getMatches(timeStampToken.getSID());
+            Iterator certIt = certCollection.iterator();
+            X509CertificateHolder cert = (X509CertificateHolder) certIt.next();
+            Certificate x509Cert = CertificateFactory.getInstance("X.509").generateCertificate(new ByteArrayInputStream(cert.getEncoded()));
 
-        SignerInformationVerifier signerInfoVerifier = sigVerifierBuilder.setProvider(BouncyCastleProvider.PROVIDER_NAME).build(x509Cert.getPublicKey());
-        return timeStampToken.isSignatureValid(signerInfoVerifier);
-        }catch (Exception e){
+            SignerInformationVerifier signerInfoVerifier = sigVerifierBuilder.setProvider(BouncyCastleProvider.PROVIDER_NAME).build(x509Cert.getPublicKey());
+            return timeStampToken.isSignatureValid(signerInfoVerifier);
+        } catch (Exception e) {
             throw new MalformedDocumentException(e);
         }
     }

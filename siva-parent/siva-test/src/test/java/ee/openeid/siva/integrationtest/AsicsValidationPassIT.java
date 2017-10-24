@@ -48,24 +48,24 @@ public class AsicsValidationPassIT extends SiVaRestTests {
      * <p>
      * Requirement:
      * <p>
-     * Title:
+     * Title: Validation of ASICs with DDOC inside
      * <p>
-     * Expected Result:
+     * Expected Result: TST and inner DDOC are valid
      * <p>
-     * File: DDOCinsideAsics.asics
+     * File: ValidDDOCinsideAsics.asics
      */
-    @Test
+    @Test //TODO: SIVARIA2-92
     public void validDdocInsideValidAsics() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("ValidDDOCinsideAsics.asics"));
-        post(validationRequestWithValidKeys(encodedString, "ValidDDOCinsideAsics.asics", VALID_SIGNATURE_POLICY_4))
+        post(validationRequestFor("ValidDDOCinsideAsics.asics"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-S"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2012-10-03T07:46:31Z"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].signedTime", Matchers.is("2017-08-10T12:40:40Z"))
-                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("DIGIDOC-XML1.3.ddoc"))
+    //            .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("ValidDDOCinsideAsics.asics"))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
     }
@@ -77,24 +77,24 @@ public class AsicsValidationPassIT extends SiVaRestTests {
      * <p>
      * Requirement:
      * <p>
-     * Title:
+     * Title: Validation of ASICs with DDOC inside SCS extension
      * <p>
-     * Expected Result:
+     * Expected Result: TST and inner DDOC are valid
      * <p>
-     * File: DDOCinsideAsics.asics
+     * File: ValidDDOCinsideAsics.scs
      */
-    @Test
+    @Test //TODO: SIVARIA2-92
     public void validDdocInsideValidAsicsScsExtension() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("ValidDDOCinsideAsics.scs"));
-        post(validationRequestWithValidKeys(encodedString, "ValidDDOCinsideAsics.scs", VALID_SIGNATURE_POLICY_4))
+        post(validationRequestFor( "ValidDDOCinsideAsics.scs"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-S"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2012-10-03T07:46:31Z"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].signedTime", Matchers.is("2017-08-10T12:40:40Z"))
-                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("DIGIDOC-XML1.3.ddoc"))
+      //          .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("ValidDDOCinsideAsics.scs"))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
     }
@@ -106,17 +106,17 @@ public class AsicsValidationPassIT extends SiVaRestTests {
      * <p>
      * Requirement:
      * <p>
-     * Title:
+     * Title: Validation of ASICs with BDOC inside
      * <p>
-     * Expected Result:
+     * Expected Result: TST and inner BDOC are valid
      * <p>
-     * File: DDOCinsideAsics.asics
+     * File: ValidBDOCinsideAsics.asics
      */
-    @Test
+    @Test //TODO: SIVARIA2-92
     public void validBdocInsideValidAsics() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("ValidBDOCinsideAsics.asics"));
-        post(validationRequestWithValidKeys(encodedString, "ValidBDOCinsideAsics.asics", VALID_SIGNATURE_POLICY_4))
+        post(validationRequestFor("ValidBDOCinsideAsics.asics"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-S"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2016-05-11T10:18:06Z"))
@@ -126,7 +126,7 @@ public class AsicsValidationPassIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].signedTime", Matchers.is("2017-08-10T12:40:40Z"))
-                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("Valid_IDCard_MobID_signatures.bdoc"))
+    //            .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("ValidBDOCinsideAsics.asics"))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(2));
     }
@@ -138,21 +138,23 @@ public class AsicsValidationPassIT extends SiVaRestTests {
      * <p>
      * Requirement:
      * <p>
-     * Title:
+     * Title: Validation of ASICs with text document inside
      * <p>
-     * Expected Result:
+     * Expected Result: TST is valid
      * <p>
-     * File: DDOCinsideAsics.asics
+     * File: TXTinsideAsics.asics
      */
-    @Test //TODO: We should return 0 as signatureCount?
+    @Test
     public void textInsideValidAsics() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("TXTinsideAsics.asics"));
-        post(validationRequestWithValidKeys(encodedString, "TXTinsideAsics.asics", VALID_SIGNATURE_POLICY_4))
+        post(validationRequestFor("TXTinsideAsics.asics"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-S"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].signedTime", Matchers.is("2017-08-25T09:56:33Z"))
-                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("TXTinsideAsics.asics"));
+                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("TXTinsideAsics.asics"))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(0))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -162,21 +164,23 @@ public class AsicsValidationPassIT extends SiVaRestTests {
      * <p>
      * Requirement:
      * <p>
-     * Title:
+     * Title: Validation of ASICs with ASICs inside
      * <p>
-     * Expected Result:
+     * Expected Result: TST is valid, no inner looping of ASICs
      * <p>
-     * File: DDOCinsideAsics.asics
+     * File: ValidASICSinsideAsics.asics
      */
-    @Test //TODO: We should return 0 as signatureCount?
+    @Test //TODO: SIVARIA2-92
     public void asicsInsideValidAsics() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("ValidASICSinsideAsics.asics"));
-        post(validationRequestWithValidKeys(encodedString, "ValidASICSinsideAsics.asics", VALID_SIGNATURE_POLICY_4))
+        post(validationRequestFor("ValidASICSinsideAsics.asics"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-S"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].signedTime", Matchers.is("2017-08-25T11:24:01Z"))
-                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("DIGIDOC-XML1.3(1).asics"));
+     //           .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("ValidASICSinsideAsics.asics"))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(0))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -186,24 +190,24 @@ public class AsicsValidationPassIT extends SiVaRestTests {
      * <p>
      * Requirement:
      * <p>
-     * Title:
+     * Title: Validation of ASICs with DDOC inside ZIP extension
      * <p>
-     * Expected Result:
+     * Expected Result: TST and inner DDOC are valid
      * <p>
-     * File: DDOCinsideAsics.asics
+     * File: ValidDDOCinsideAsics.zip
      */
-    @Test
+    @Test //TODO: SIVARIA2-92
     public void ValidDdocInsideValidAsicsZipExtension() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("ValidDDOCinsideAsics.zip"));
-        post(validationRequestWithValidKeys(encodedString, "ValidDDOCinsideAsics.zip", VALID_SIGNATURE_POLICY_4))
+        post(validationRequestFor("ValidDDOCinsideAsics.zip"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-S"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2012-10-03T07:46:31Z"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].signedTime", Matchers.is("2017-08-10T12:40:40Z"))
-                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("DIGIDOC-XML1.3.ddoc"))
+   //             .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("ValidDDOCinsideAsics.zip"))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
     }
@@ -215,29 +219,27 @@ public class AsicsValidationPassIT extends SiVaRestTests {
      * <p>
      * Requirement:
      * <p>
-     * Title:
+     * Title: Validation of ASICs with wrong mimetype with DDOC inside
      * <p>
-     * Expected Result:
+     * Expected Result: TST and inner DDOC are valid
      * <p>
-     * File: DDOCinsideAsics.asics
+     * File: ValidDDOCinsideAsicsWrongMime.asics
      */
-    @Test
+    @Test //TODO: SIVARIA2-92
     public void ValidDdocInsideValidAsicsWrongMimeType() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("ValidDDOCinsideAsicsWrongMime.asics"));
-        post(validationRequestWithValidKeys(encodedString, "ValidDDOCinsideAsicsWrongMime.asics", VALID_SIGNATURE_POLICY_4))
+        post(validationRequestFor("ValidDDOCinsideAsicsWrongMime.asics"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-S"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2012-10-03T07:46:31Z"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].signedTime", Matchers.is("2017-08-10T12:40:40Z"))
-                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("DIGIDOC-XML1.3.ddoc"))
+    //            .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("ValidDDOCinsideAsicsWrongMime.asics"))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
     }
-
-
 
     @Override
     protected String getTestFilesDirectory() {

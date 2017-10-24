@@ -20,6 +20,7 @@ import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -40,27 +41,179 @@ public class AsicsValidationFailIT extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: Asics-ValidationPass-1
+     * TestCaseID: Asics-ValidationFail-1
      * <p>
      * TestType: Automated
      * <p>
      * Requirement:
      * <p>
-     * Title:
+     * Title: Only one datafile is allowed in ASIC-s
      * <p>
-     * Expected Result:
+     * Expected Result: The validation should fail
      * <p>
-     * File: DDOCinsideAsics.asics
+     * File: TwoDataFilesAsics.asics
      */
     @Test
-    public void ValidDdocInsideValidAsicsZipExtension() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("TwoDataFilesAsics.asics"));
-        post(validationRequestWithValidKeys(encodedString, "TwoDataFilesAsics.asics", VALID_SIGNATURE_POLICY_4))
+    public void moreThanOneDataFileInAsicsShouldFail() {
+        post(validationRequestFor("TwoDataFilesAsics.asics"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is("document"))
                 .body("requestErrors[0].message", Matchers.is("Document does not meet the requirements"));
     }
 
+    /**
+     * TestCaseID: Asics-ValidationFail-2
+     * <p>
+     * TestType: Automated
+     * <p>
+     * Requirement:
+     * <p>
+     * Title: No data file in ASIC-s
+     * <p>
+     * Expected Result: The validation should fail
+     * <p>
+     * File: DataFileMissingAsics.asics
+     */
+    @Test
+    public void noDataFileInAsicsShouldFail() {
+        post(validationRequestFor("DataFileMissingAsics.asics"))
+                .then()
+                .body("requestErrors[0].key", Matchers.is("document"))
+                .body("requestErrors[0].message", Matchers.is("Document does not meet the requirements"));
+    }
+
+    /**
+     * TestCaseID: Asics-ValidationFail-3
+     * <p>
+     * TestType: Automated
+     * <p>
+     * Requirement:
+     * <p>
+     * Title: more folders that META-INF in ASIC-s
+     * <p>
+     * Expected Result: The validation should fail
+     * <p>
+     * File: FoldersInAsics.asics
+     */
+    @Test
+    public void additionalFoldersInAsicsShouldFail() {
+        post(validationRequestFor("FoldersInAsics.asics"))
+                .then()
+                .body("requestErrors[0].key", Matchers.is("document"))
+                .body("requestErrors[0].message", Matchers.is("Document does not meet the requirements"));
+    }
+
+    /**
+     * TestCaseID: Asics-ValidationFail-4
+     * <p>
+     * TestType: Automated
+     * <p>
+     * Requirement:
+     * <p>
+     * Title: META-INF folder not in root of container
+     * <p>
+     * Expected Result: The validation should fail
+     * <p>
+     * File: MetaInfNotInRoot.asics
+     */
+    @Test
+    public void metaInfFolderNotInRootAsicsShouldFail() {
+        post(validationRequestFor("MetaInfNotInRoot.asics"))
+                .then()
+                .body("requestErrors[0].key", Matchers.is("document"))
+                .body("requestErrors[0].message", Matchers.is("Document does not meet the requirements"));
+    }
+
+    /**
+     * TestCaseID: Asics-ValidationFail-5
+     * <p>
+     * TestType: Automated
+     * <p>
+     * Requirement:
+     * <p>
+     * Title: Not allowed files in META-INF folder
+     * <p>
+     * Expected Result: The validation should fail
+     * <p>
+     * File: signatureMixedWithTST.asics
+     */
+    @Ignore //TODO: SIVARIA2-93
+    @Test
+    public void signatureFilesInAddtionToTstAsicsShouldFail() {
+        post(validationRequestFor("signatureMixedWithTST.asics"))
+                .then()
+                .body("requestErrors[0].key", Matchers.is("document"))
+                .body("requestErrors[0].message", Matchers.is("Document does not meet the requirements"));
+    }
+
+    /**
+     * TestCaseID: Asics-ValidationFail-6
+     * <p>
+     * TestType: Automated
+     * <p>
+     * Requirement:
+     * <p>
+     * Title: TST not intact
+     * <p>
+     * Expected Result: The validation should fail
+     * <p>
+
+     * File: AsicsTSTsignatureModified.asics
+     */
+    @Test
+    public void modifiedTstShouldFail() {
+        post(validationRequestFor("AsicsTSTsignatureModified.asics"))
+                .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-S"))
+                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("AsicsTSTsignatureModified.asics"))
+                .body("validationReport.validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.timeStampTokens[0].error[0].content", Matchers.is("Signature not intact"));
+    }
+
+    /**
+     * TestCaseID: Asics-ValidationFail-7
+     * <p>
+     * TestType: Automated
+     * <p>
+     * Requirement:
+     * <p>
+     * Title: TST has been corrupted
+     * <p>
+     * Expected Result: The validation should fail
+     * <p>
+     * File: AsicsTSTsignatureBroken.asics
+     */
+    @Ignore //TODO: SIVARIA2-94, exact error message not known yet.
+    @Test
+    public void brokenTstAsicsShouldFail() {
+        post(validationRequestFor("AsicsTSTsignatureBroken.asics"))
+                .then()
+                .body("requestErrors[0].key", Matchers.is("document"))
+                .body("requestErrors[0].message", Matchers.is("Document does not meet the requirements"));
+    }
+
+    /**
+     * TestCaseID: Asics-ValidationFail-8
+     * <p>
+     * TestType: Automated
+     * <p>
+     * Requirement:
+     * <p>
+     * Title: Data file changed
+     * <p>
+     * Expected Result: The validation should fail
+     * <p>
+     * File: DatafileAlteredButStillValid.asics
+     */
+    @Test
+    public void dataFileChangedAsicsShouldFail() {
+        post(validationRequestFor("DatafileAlteredButStillValid.asics"))
+                .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-S"))
+                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("DatafileAlteredButStillValid.asics"))
+                .body("validationReport.validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.timeStampTokens[0].error[0].content", Matchers.is("Signature not intact"));
+    }
 
     @Override
     protected String getTestFilesDirectory() {

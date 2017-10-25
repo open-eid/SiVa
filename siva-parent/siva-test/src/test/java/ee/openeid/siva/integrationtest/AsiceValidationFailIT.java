@@ -585,7 +585,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * <p>
      * File: 23154_test1-old-sig-sigat-OK-prodat-NOK-1.bdoc
      */
-    @Ignore //TODO: needs investigation, why OCSP is not taken into account.
+    @Ignore //TODO: after certificate expiration check is done
     @Test
     public void asiceCertificateValidityOutOfOcspRange() {
         setTestFilesDirectory("bdoc/live/timemark/");

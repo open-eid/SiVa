@@ -216,25 +216,25 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      * File: hellopades-lt-b.pdf
      */
     @Test
-    @Ignore("Unknown reason")
+    @Ignore //TODO new file needed. LT needs QES atribute.
     public void documentWithBaselineProfilesBAndLTSignaturesShouldFail() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-b.pdf"));
         post(validationRequestWithValidKeys(encodedString, "hellopades-lt-b.pdf", ""))
                 .then()
-                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
-                .body("signatures[0].signatureLevel", Matchers.is("QES"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors", Matchers.hasSize(0))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
-                .body("signatures[1].signatureFormat", Matchers.is("PAdES_BASELINE_B"))
-                .body("signatures[1].signatureLevel", Matchers.is("QES"))
-                .body("signatures[1].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[1].subIndication", Matchers.is(""))
-                .body("signatures[1].errors.content", Matchers.hasItems("The expected format is not found!"))
-                .body("signatures[1].warnings", Matchers.hasSize(0))
-                .body("validSignaturesCount", Matchers.is(1))
-                .body("signaturesCount", Matchers.is(2));
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("Signature/seal level do not meet the minimal level required by applied policy"))
+                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.hasSize(0))
+                .body("validationReport.validationConclusion.signatures[1].signatureFormat", Matchers.is("PAdES_BASELINE_B"))
+                .body("validationReport.validationConclusion.signatures[1].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
+                .body("validationReport.validationConclusion.signatures[1].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[1].subIndication", Matchers.is(""))
+                .body("validationReport.validationConclusion.signatures[1].errors[1].content", Matchers.is("The expected format is not found!"))
+                .body("validationReport.validationConclusion.signatures[1].warnings[1].content", Matchers.is("The signature/seal is not a valid AdES!"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2));
+
     }
 
     /**
@@ -251,7 +251,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      * File: hellopades-lt1-lt2-wrongDigestValue.pdf
      */
     @Test
-    @Ignore("Unknown reason")
+    @Ignore //TODO new file needed. LT needs QES atribute.
     public void documentMessageDigestAttributeValueDoesNotMatchCalculatedValue() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt1-lt2-wrongDigestValue.pdf"));
         post(validationRequestWithValidKeys(encodedString, "hellopades-lt1-lt2-wrongDigestValue.pdf", ""))

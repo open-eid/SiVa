@@ -93,14 +93,15 @@ public class BdocValidationPassIT extends SiVaRestTests {
      * File: bdoc_weak_warning_sha1.bdoc
      */
     @Test
-    @Ignore //TODO: https://github.com/open-eid/SiVa/issues/20
+    @Ignore //TODO: New file needed. This one has different mimetype value in manifest.xml and signature.xml
     public void validSignatureWithWarning() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("bdoc_weak_warning_sha1.bdoc"))
                 .then()
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].subIndication", Matchers.is(""))
-                .body("validSignaturesCount", Matchers.is(2));
+                .body("validSignaturesCount", Matchers.is(1));
+
     }
 
     /**

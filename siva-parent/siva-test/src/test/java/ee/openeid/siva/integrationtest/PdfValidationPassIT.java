@@ -22,6 +22,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import org.apache.commons.codec.binary.Base64;
+import org.hamcrest.Matchers;
+
+
 @Category(IntegrationTest.class)
 public class PdfValidationPassIT extends SiVaRestTests {
 
@@ -47,9 +51,17 @@ public class PdfValidationPassIT extends SiVaRestTests {
      * File: hellopades-lt-sha256-rsa1024-not-expired.pdf
      */
     @Test
-    @Ignore("Unknown reason")
     public void validSignaturesRemainValidAfterSigningCertificateExpires() {
-        assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-rsa1024-not-expired.pdf"));
+        String filename = "hellopades-lt-sha256-rsa1024-not-expired.pdf";
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources(filename));
+        post(validationRequestWithValidKeys(encodedString, filename, VALID_SIGNATURE_POLICY_3))
+                .then()
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+
     }
 
     /**
@@ -66,9 +78,17 @@ public class PdfValidationPassIT extends SiVaRestTests {
      * File: hellopades-lt-sha256-rsa2048-7d.pdf
      */
     @Test
-    @Ignore("Unknown reason")
     public void certificateExpired7DaysAfterDocumentSigningShouldPass() {
-        assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-rsa2048-7d.pdf"));
+        String filename = "hellopades-lt-sha256-rsa2048-7d.pdf";
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources(filename));
+        post(validationRequestWithValidKeys(encodedString, filename, VALID_SIGNATURE_POLICY_3))
+                .then()
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+
     }
 
     /**

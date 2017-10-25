@@ -144,15 +144,14 @@ public class AsicsValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void textInsideValidAsics() {
-        post(validationRequestFor("TXTinsideAsics.asics"))
+        String filename = "TXTinsideAsics.asics";
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources(filename));
+        post(validationRequestWithValidKeys(encodedString, filename, VALID_SIGNATURE_POLICY_4))
                 .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-S"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].signedTime", Matchers.is("2017-08-25T09:56:33Z"))
-                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("TXTinsideAsics.asics"))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("TXTinsideAsics.asics")).log().all();
     }
 
     /**

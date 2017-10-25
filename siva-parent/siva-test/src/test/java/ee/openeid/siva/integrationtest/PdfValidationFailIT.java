@@ -24,6 +24,14 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.http.ContentType;
+
+import static com.jayway.restassured.RestAssured.given;
+import static com.jayway.restassured.config.EncoderConfig.encoderConfig;
+
+
+
 @Category(IntegrationTest.class)
 public class PdfValidationFailIT extends SiVaRestTests {
 
@@ -43,19 +51,20 @@ public class PdfValidationFailIT extends SiVaRestTests {
      * File: hellopades-lt-rsa1024-sha1-expired.pdf
      */
     @Test
-    @Ignore("Unknown reason")
     public void signaturesMadeWithExpiredSigningCertificatesAreInvalid() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-rsa1024-sha1-expired.pdf"));
         post(validationRequestWithValidKeys(encodedString, "hellopades-lt-rsa1024-sha1-expired.pdf", ""))
                 .then()
-                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
-                .body("signatures[0].signatureLevel", Matchers.is("INDETERMINATE_QES"))
-                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("signatures[0].subIndication", Matchers.is("TRY_LATER"))
-                .body("signatures[0].errors.content", Matchers.hasItem("The certificate validation is not concluant!"))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
-                .body("validSignaturesCount", Matchers.is(0))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("INDETERMINATE_QES"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("TRY_LATER"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("No revocation data for the certificate"))
+                .body("validationReport.validationConclusion.signatures[0].warnings.content[0]", Matchers.is("The signature/seal is an INDETERMINATE AdES!"))
+                .body("validationReport.validationConclusion.signatures[0].warnings.content[1]", Matchers.is("The certificate is not for eSig at signing time!"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+
     }
 
     /**
@@ -72,21 +81,21 @@ public class PdfValidationFailIT extends SiVaRestTests {
      * File: pades_lt_revoked.pdf
      */
     @Test
-    @Ignore("Unknown reason")
     public void documentSignedWithRevokedCertificateShouldFail() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades_lt_revoked.pdf"));
         post(validationRequestWithValidKeys(encodedString, "pades_lt_revoked.pdf", VALID_SIGNATURE_POLICY_3))
                 .then()
-                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
-                .body("signatures[0].signatureLevel", Matchers.is("INDETERMINATE_QESIG"))
-                .body("signatures[0].signedBy", Matchers.is("NURM,AARE,38211015222"))
-                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("signatures[0].subIndication", Matchers.is("NO_POE"))
-                .body("signatures[0].errors[0].content", Matchers.is("The past signature validation is not conclusive!"))
-                .body("signatures[0].claimedSigningTime", Matchers.is("2016-06-29T08:38:31Z"))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
-                .body("validSignaturesCount", Matchers.is(0))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("INDETERMINATE_QESIG"))
+                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("NURM,AARE,38211015222"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("NO_POE"))
+                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("The past signature validation is not conclusive!"))
+                .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2016-06-29T08:38:31Z"))
+                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The signature/seal is an INDETERMINATE AdES!"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+
     }
 
     /**
@@ -123,19 +132,19 @@ public class PdfValidationFailIT extends SiVaRestTests {
      * File: hellopades-lt-sha256-rsa2048-expired.pdf
      */
     @Test
-    @Ignore //TODO https://jira.nortal.com/browse/SIVARIA-17
+    @Ignore //TODO: after certificate expiration check is done
     public void documentSignedWithExpiredRsa2048CertificateShouldFail() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-sha256-rsa2048-expired.pdf"));
         post(validationRequestWithValidKeys(encodedString, "hellopades-lt-sha256-rsa2048-expired.pdf", ""))
                 .then()
-                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
-                .body("signatures[0].signatureLevel", Matchers.is("AdES"))
-                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("signatures[0].subIndication", Matchers.is("NO_POE"))
-                .body("signatures[0].errors.content", Matchers.hasItem("The past signature validation is not conclusive!"))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
-                .body("validSignaturesCount", Matchers.is(0))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("NO_POE"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("The past signature validation is not conclusive!"))
+                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.hasSize(0))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**

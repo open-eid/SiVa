@@ -73,8 +73,21 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      * File: hellopades-lt-sha1.pdf
      */
     @Test @Ignore //TODO: remove ignore after pull request merged (https://github.com/open-eid/sd-dss/pull/3) and digidoc4j maven repository updated
+    //TODO new file needed. not sha1 certificate used.
     public void documentSignedWithSha1CertificateShouldFail() {
-        assertAllSignaturesAreInvalid(postForReport("hellopades-lt-sha1.pdf"));
+        String filename = "hellopades-lt-sha1.pdf";
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources(filename));
+
+        post(validationRequestWithDocumentTypeValidKeys(encodedString, filename, null, VALID_SIGNATURE_POLICY_3))
+                .then()
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1)).log().all();
+
     }
 
     /**
@@ -155,8 +168,13 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      * File: hellopades-lt-sha256-rsa1023.pdf
      */
     @Test @Ignore //TODO Bug fixed in DSS version 5.1. https://ec.europa.eu/cefdigital/tracker/browse/DSS-1145
+    //TODO new file needed.
     public void documentSignedWithRsa1023AlgoShouldPass() {
-        assertAllSignaturesAreInvalid(postForReport("hellopades-lt-sha256-rsa1023.pdf"));
+        String filename = "hellopades-lt-sha256-rsa1023.pdf";
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources(filename));
+        post(validationRequestWithValidKeys(encodedString, filename, ""))
+                .then().body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT")).log().all();
+
     }
 
     /**
@@ -173,9 +191,19 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      * File: hellopades-lt-sha256-rsa2047.pdf
      */
     @Test
-    @Ignore("Unknown reason")
+    @Ignore //TODO new file needed. not rsa2047
+
     public void documentSignedWithRsa2047AlgoShouldPass() {
-        assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-rsa2047.pdf"));
+        String filename = "hellopades-lt-sha256-rsa2047.pdf";
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources(filename));
+        post(validationRequestWithValidKeys(encodedString, filename, ""))
+                .then()
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+
     }
 
     /**

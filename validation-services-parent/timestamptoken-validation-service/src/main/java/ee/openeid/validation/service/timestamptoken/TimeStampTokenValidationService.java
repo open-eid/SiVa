@@ -104,7 +104,7 @@ public class TimeStampTokenValidationService implements ValidationService {
                     .filter(d -> d.getName().toUpperCase().endsWith(TIMESTAMP_FILE)).findAny().orElseThrow(IllegalArgumentException::new).getBytes());
             return new TimeStampToken(cms);
         } catch (CMSException | TSPException | IOException e) {
-            throw new RuntimeException(e);
+            throw new MalformedDocumentException(e);
         }
     }
 

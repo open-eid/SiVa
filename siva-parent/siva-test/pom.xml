@@ -94,39 +94,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <plugin>
-                <groupId>com.bazaarvoice.maven.plugins</groupId>
-                <artifactId>process-exec-maven-plugin</artifactId>
-                <version>0.7</version>
-                <executions>
-                    <execution>
-                        <id>xroad-validator-application</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>start</goal>
-                        </goals>
-                        <configuration>
-                            <name>xroad-validator</name>
-                            <workingDir>xroad-validator</workingDir>
-                            <waitForInterrupt>false</waitForInterrupt>
-                            <arguments>
-                                <argument>java</argument>
-                                <argument>-jar</argument>
-                                <argument>${basedir}/../../validation-services-parent/xroad-validation-service/target/xroad-validation-service-${project.version}.jar</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>stop-all</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>stop-all</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
         </plugins>
     </build>
 

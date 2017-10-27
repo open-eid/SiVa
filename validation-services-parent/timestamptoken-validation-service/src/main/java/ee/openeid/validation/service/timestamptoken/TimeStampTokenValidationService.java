@@ -26,6 +26,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.tsp.TSPException;
 import org.bouncycastle.tsp.TimeStampToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
@@ -183,6 +184,7 @@ public class TimeStampTokenValidationService implements ValidationService {
     }
 
     @Autowired
+    @Qualifier("TimeStampTokenPolicyService")
     public void setSignaturePolicyService(SignaturePolicyService<ValidationPolicy> signaturePolicyService) {
         this.signaturePolicyService = signaturePolicyService;
     }

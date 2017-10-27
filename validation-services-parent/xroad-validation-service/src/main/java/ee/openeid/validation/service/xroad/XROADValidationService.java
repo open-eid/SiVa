@@ -14,17 +14,17 @@
  * See the Licence for the specific language governing permissions and limitations under the Licence.
  */
 
-package ee.openeid.siva.xroad.validation;
+package ee.openeid.validation.service.xroad;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Reports;
-import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
-import ee.openeid.siva.xroad.configuration.XROADValidationServiceProperties;
+import ee.openeid.validation.service.xroad.configuration.XROADValidationServiceProperties;
+import ee.openeid.validation.service.xroad.report.XROADValidationReportBuilder;
 import ee.ria.xroad.common.CodedException;
 import ee.ria.xroad.common.SystemProperties;
 import ee.ria.xroad.common.asic.AsicContainer;
@@ -51,7 +51,7 @@ public class XROADValidationService implements ValidationService {
     @Override
     public Reports validateDocument(ValidationDocument validationDocument) {
         ValidationPolicy policy = signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy());
-        final InputStream inputStream = new ByteArrayInputStream(Base64.decodeBase64(validationDocument.getDataBase64Encoded()));
+        final InputStream inputStream = new ByteArrayInputStream(validationDocument.getBytes());
         AsicContainer container;
         try {
             container = AsicContainer.read(inputStream);
@@ -72,7 +72,7 @@ public class XROADValidationService implements ValidationService {
     }
 
     @PostConstruct
-    void loadXroadConfigurationDirectory() {
+    public void loadXroadConfigurationDirectory() {
         String configurationDirectoryPath = properties.getConfigurationDirectoryPath();
         System.setProperty(SystemProperties.CONFIGURATION_PATH, configurationDirectoryPath);
         LOGGER.info("Loading configuration from path: {}", configurationDirectoryPath);

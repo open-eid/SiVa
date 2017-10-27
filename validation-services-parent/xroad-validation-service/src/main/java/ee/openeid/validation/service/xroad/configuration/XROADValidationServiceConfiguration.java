@@ -14,7 +14,7 @@
  * See the Licence for the specific language governing permissions and limitations under the Licence.
  */
 
-package ee.openeid.siva.xroad.configuration;
+package ee.openeid.validation.service.xroad.configuration;
 
 import ee.openeid.siva.monitoring.configuration.MonitoringConfiguration;
 import ee.openeid.siva.monitoring.indicator.UrlHealthIndicator;

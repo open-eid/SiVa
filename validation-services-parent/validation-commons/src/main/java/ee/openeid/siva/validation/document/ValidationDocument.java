@@ -27,8 +27,4 @@ public class ValidationDocument {
 
     private String signaturePolicy;
 
-    private String dataBase64Encoded;
-
-
-
 }

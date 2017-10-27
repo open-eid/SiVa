@@ -19,8 +19,6 @@ package ee.openeid.siva.webapp;
 import ee.openeid.siva.proxy.DataFilesProxy;
 import ee.openeid.siva.proxy.ValidationProxy;
 import ee.openeid.siva.proxy.document.ProxyDocument;
-import ee.openeid.siva.proxy.http.RESTValidationProxyException;
-import ee.openeid.siva.proxy.http.RESTValidationProxyRequestException;
 import ee.openeid.siva.validation.exception.DocumentRequirementsException;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
@@ -32,10 +30,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.MessageSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.MessageSource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -163,62 +160,6 @@ public class ValidationExceptionHandlerTest {
 
         String content = result.getResponse().getContentAsString();
         assertEquals(content, "{\"requestErrors\":[{\"key\":\"document\",\"message\":\"Document malformed or not matching documentType\"}]}");
-    }
-
-    @Test
-    public void handlingRESTValidationProxyRequestExceptionPreservesInitialErrorInformation() throws Exception {
-        when(validationProxy.validate(any(ProxyDocument.class)))
-                .thenThrow(new RESTValidationProxyRequestException("some key", "some message", HttpStatus.BAD_REQUEST));
-        MvcResult result = mockMvc.perform(post(VALIDATE_URL_TEMPLATE)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(request().toString().getBytes()))
-                .andExpect(status().isBadRequest())
-                .andReturn();
-
-        String content = result.getResponse().getContentAsString();
-        assertEquals(content, "{\"requestErrors\":[{\"key\":\"some key\",\"message\":\"some message\"}]}");
-    }
-
-    @Test
-    public void handlingRESTDataFilesProxyRequestExceptionPreservesInitialErrorInformation() throws Exception {
-        when(dataFilesProxy.getDataFiles(any(ProxyDocument.class)))
-                .thenThrow(new RESTValidationProxyRequestException("some key", "some message", HttpStatus.BAD_REQUEST));
-        MvcResult result = mockMvcDataFiles.perform(post(GET_DATA_FILES_URL_TEMPLATE)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(dataFileRequest().toString().getBytes()))
-                .andExpect(status().isBadRequest())
-                .andReturn();
-
-        String content = result.getResponse().getContentAsString();
-        assertEquals("{\"requestErrors\":[{\"key\":\"some key\",\"message\":\"some message\"}]}", content);
-    }
-
-    @Test
-    public void handlingRESTValidationProxyExceptionPreservesInitialErrorInformation() throws Exception {
-        when(validationProxy.validate(any(ProxyDocument.class)))
-                .thenThrow(new RESTValidationProxyException("some message", HttpStatus.INTERNAL_SERVER_ERROR));
-        MvcResult result = mockMvc.perform(post(VALIDATE_URL_TEMPLATE)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(request().toString().getBytes()))
-                .andExpect(status().isInternalServerError())
-                .andReturn();
-
-        String content = result.getResponse().getContentAsString();
-        assertEquals(content, "some message");
-    }
-
-    @Test
-    public void handlingRESTDataFilesProxyExceptionPreservesInitialErrorInformation() throws Exception {
-        when(dataFilesProxy.getDataFiles(any(ProxyDocument.class)))
-                .thenThrow(new RESTValidationProxyException("some message", HttpStatus.INTERNAL_SERVER_ERROR));
-        MvcResult result = mockMvcDataFiles.perform(post(GET_DATA_FILES_URL_TEMPLATE)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(dataFileRequest().toString().getBytes()))
-                .andExpect(status().isInternalServerError())
-                .andReturn();
-
-        String content = result.getResponse().getContentAsString();
-        assertEquals(content, "some message");
     }
 
     @SuppressWarnings("unchecked")

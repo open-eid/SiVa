@@ -21,6 +21,7 @@ import ee.openeid.siva.validation.service.signature.policy.properties.Validation
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ import static ee.openeid.siva.validation.service.signature.policy.PredefinedVali
 
 @Getter @Setter
 @EqualsAndHashCode(callSuper = true)
+@ConfigurationProperties
 public class TimeStampTokenSignaturePolicyProperties extends SignaturePolicyProperties<ValidationPolicy> {
 
     private String defaultPolicy;

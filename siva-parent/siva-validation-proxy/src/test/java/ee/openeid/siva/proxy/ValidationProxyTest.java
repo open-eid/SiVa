@@ -19,7 +19,6 @@ package ee.openeid.siva.proxy;
 import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.exception.ValidatonServiceNotFoundException;
-import ee.openeid.siva.proxy.http.RESTProxyService;
 import ee.openeid.siva.statistics.StatisticsService;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Error;
@@ -36,6 +35,7 @@ import ee.openeid.validation.service.generic.GenericValidationService;
 import ee.openeid.validation.service.generic.configuration.GenericSignaturePolicyProperties;
 import ee.openeid.validation.service.timestamptoken.TimeStampTokenValidationService;
 import ee.openeid.validation.service.timestamptoken.configuration.TimeStampTokenSignaturePolicyProperties;
+import ee.openeid.validation.service.xroad.XROADValidationService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -53,10 +53,8 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -73,8 +71,6 @@ public class ValidationProxyTest {
 
     private ValidationServiceSpy validationServiceSpy;
 
-    private RESTProxyService restProxyService;
-
     private StatisticsService statisticsService;
 
     @Before
@@ -84,9 +80,6 @@ public class ValidationProxyTest {
         applicationContext = mock(ApplicationContext.class);
         validationProxy.setApplicationContext(applicationContext);
 
-        restProxyService = mock(RESTProxyService.class);
-        validationProxy.setRestProxyService(restProxyService);
-
         statisticsService = mock(StatisticsService.class);
         validationProxy.setStatisticsService(statisticsService);
 
@@ -95,19 +88,11 @@ public class ValidationProxyTest {
 
     @Test
     public void givenXroadValidationWillReturnValidatedDocument() throws Exception {
-        ValidationConclusion validationConclusion = new ValidationConclusion();
-        validationConclusion.setSignaturesCount(1);
-        validationConclusion.setValidSignaturesCount(1);
-        Reports reports = new Reports(new SimpleReport(validationConclusion), null);
+        when(applicationContext.getBean(XROADValidationService.class.getSimpleName())).thenReturn(validationServiceSpy);
 
-        given(restProxyService.validate(any(ValidationDocument.class))).willReturn(reports);
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.XROAD);
-
-        SimpleReport validationReport = validationProxy.validate(proxyDocument);
-        verify(restProxyService).validate(any(ValidationDocument.class));
-
-        assertThat(validationReport.getValidationConclusion().getValidSignaturesCount()).isEqualTo(1);
-        assertThat(validationReport.getValidationConclusion().getSignaturesCount()).isEqualTo(1);
+        SimpleReport report = validationProxy.validate(proxyDocument);
+        assertSimpleReport(report);
     }
 
     @Test

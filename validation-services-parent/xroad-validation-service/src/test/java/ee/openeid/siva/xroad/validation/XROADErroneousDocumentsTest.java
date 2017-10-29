@@ -18,6 +18,7 @@ package ee.openeid.siva.xroad.validation;
 
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.validation.service.xroad.XROADValidationService;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

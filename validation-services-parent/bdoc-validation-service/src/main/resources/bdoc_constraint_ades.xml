@@ -115,6 +115,31 @@
                     <Algo>SHA512</Algo>
                     <Algo>RIPEMD160</Algo>
                 </AcceptableDigestAlgo>
+                <AlgoExpirationDate Format="yyyy-MM-dd">
+                    <!-- Algorithms under 112 bit strength: -->
+                    <Algo Date="2018-02-24">SHA1</Algo>
+                    <Algo Date="2018-02-24">RSA1023</Algo>
+                    <Algo Date="2018-02-24">RSA1024</Algo>
+                    <Algo Date="2018-02-24">RSA1536</Algo>
+
+                    <!-- Algorithms with ~ 112 bit strength: -->
+                    <Algo Date="2025-02-24">SHA224</Algo>
+                    <Algo Date="2025-02-24">RSA2047</Algo>
+                    <Algo Date="2025-02-24">RSA2048</Algo>
+                    <Algo Date="2025-02-24">ECDSA224</Algo>
+
+                    <!-- Algorithms with ~ 128 bit strength: -->
+                    <Algo Date="2030-02-24">SHA256</Algo>
+                    <Algo Date="2030-02-24">RSA3072</Algo>
+                    <Algo Date="2030-02-24">RSA4096</Algo>
+                    <Algo Date="2030-02-24">ECDSA256</Algo>
+
+                    <!-- Algorithms with ~ 192 bit strength: -->
+                    <Algo Date="2035-02-24">SHA384</Algo>
+
+                    <!-- Algorithms with ~ 256 bit strength: -->
+                    <Algo Date="2035-02-24">SHA512</Algo>
+                </AlgoExpirationDate>
             </Cryptographic>
         </BasicSignatureConstraints>
         <SignedAttributes>

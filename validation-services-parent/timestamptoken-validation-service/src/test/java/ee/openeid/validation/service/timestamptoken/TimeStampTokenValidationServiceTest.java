@@ -5,6 +5,7 @@ import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilde
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
 import ee.openeid.siva.validation.exception.DocumentRequirementsException;
+import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.validation.service.timestamptoken.configuration.TimeStampTokenSignaturePolicyProperties;
@@ -49,6 +50,12 @@ public class TimeStampTokenValidationServiceTest {
     public void multipleDataFile() throws Exception {
         expectedException.expect(DocumentRequirementsException.class);
         validationService.validateDocument(buildValidationDocument("timestamptoken-two-data-files.asics"));
+    }
+
+    @Test
+    public void notValidTstFile() throws Exception {
+        expectedException.expect(MalformedDocumentException.class);
+        validationService.validateDocument(buildValidationDocument("timestamptoken-invalid.asics"));
     }
 
     @Test

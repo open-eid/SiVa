@@ -45,7 +45,7 @@
           </elementProp>
           <elementProp name="TESTFILE" elementType="Argument">
             <stringProp name="Argument.name">TESTFILE</stringProp>
-            <stringProp name="Argument.value">BDOC-TS.asice</stringProp>
+            <stringProp name="Argument.value">ASICE.asice</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="ERRORS_DIR" elementType="Argument">

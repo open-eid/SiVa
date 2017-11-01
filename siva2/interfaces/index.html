@@ -1,0 +1,1944 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+      
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      
+        <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      
+      <meta name="generator" content="mkdocs-0.17.1, mkdocs-material-2.0.1">
+    
+    
+      
+        <title>9.4. INTERFACES - SiVa - Validation Service Documentation</title>
+      
+    
+    
+      <script src="../../assets/javascripts/modernizr-e826f8942a.js"></script>
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/application-462a8722ef.css">
+      
+    
+    
+      
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    
+      <link rel="stylesheet" href="../../override.css">
+    
+    
+  </head>
+  
+    <body>
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="drawer">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="search">
+    <label class="md-overlay" data-md-component="overlay" for="drawer"></label>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../../siva/version_info/" title="SiVa - Validation Service Documentation" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon">school</i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <span class="md-flex__ellipsis md-header-nav__title">
+          
+            
+              
+                <span class="md-header-nav__parent">
+                  9. SIVA 2.0
+                </span>
+              
+            
+            9.4. INTERFACES
+          
+        </span>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          
+            <label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
+            
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="search"></label>
+  <div class="md-search__inner">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" required placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query">
+      <label class="md-icon md-search__icon" for="search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset">&#xE5CD;</button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+          
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+
+  <a href="https://github.com/open-eid/SiVa/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="drawer">
+    <span class="md-nav__button md-logo">
+      
+        <i class="md-icon">school</i>
+      
+    </span>
+    SiVa - Validation Service Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+
+  <a href="https://github.com/open-eid/SiVa/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/version_info/" title="VERSION HISTORY" class="md-nav__link">
+      VERSION HISTORY
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="INTRODUCTION" class="md-nav__link">
+      INTRODUCTION
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/definitions/" title="1. DEFINITIONS" class="md-nav__link">
+      1. DEFINITIONS
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/overview/" title="2. BACKGROUND" class="md-nav__link">
+      2. BACKGROUND
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+    
+    <label class="md-nav__link" for="nav-5">
+      3. STRUCTURE & ACTIVITIES
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        3. STRUCTURE & ACTIVITIES
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/v2/structure_and_activities/" title="3.1 Component model" class="md-nav__link">
+      3.1 Component model
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/v2/use_cases/" title="3.2 Use cases" class="md-nav__link">
+      3.2 Use cases
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/v2/interfaces/" title="4. INTERFACES" class="md-nav__link">
+      4. INTERFACES
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+    
+    <label class="md-nav__link" for="nav-7">
+      5. DEPLOYMENT
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
+        5. DEPLOYMENT
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/v2/deployment/" title="5.1 Deployment model" class="md-nav__link">
+      5.1 Deployment model
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/v2/systemintegrators_guide/" title="5.2 System integrator's guide" class="md-nav__link">
+      5.2 System integrator's guide
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8">
+    
+    <label class="md-nav__link" for="nav-8">
+      6. QUALITY ASSURANCE
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-8">
+        6. QUALITY ASSURANCE
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/qa_strategy/" title="6.1 QA Strategy" class="md-nav__link">
+      6.1 QA Strategy
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/test_plan/" title="6.2 Test Plan" class="md-nav__link">
+      6.2 Test Plan
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/references/" title="7. REFERENCES" class="md-nav__link">
+      7. REFERENCES
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-10" type="checkbox" id="nav-10">
+    
+    <label class="md-nav__link" for="nav-10">
+      8. APPENDICES
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-10">
+        8. APPENDICES
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/appendix/validation_policy/" title="Appendix 1 - Validation Policy" class="md-nav__link">
+      Appendix 1 - Validation Policy
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/appendix/test_cases/" title="Appendix 2 - Test Case Descriptions" class="md-nav__link">
+      Appendix 2 - Test Case Descriptions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/appendix/wsdl/" title="Appendix 3 - WSDL of SOAP Interface" class="md-nav__link">
+      Appendix 3 - WSDL of SOAP Interface
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/appendix/known_issues/" title="Appendix 4 - Known Issues" class="md-nav__link">
+      Appendix 4 - Known Issues
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-11" type="checkbox" id="nav-11" checked>
+    
+    <label class="md-nav__link" for="nav-11">
+      9. SIVA 2.0
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-11">
+        9. SIVA 2.0
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../definitions/" title="9.1. DEFINITIONS" class="md-nav__link">
+      9.1. DEFINITIONS
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../overview/" title="9.2. BACKGROUND" class="md-nav__link">
+      9.2. BACKGROUND
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-11-3" type="checkbox" id="nav-11-3">
+    
+    <label class="md-nav__link" for="nav-11-3">
+      9.3. STRUCTURE & ACTIVITIES
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-11-3">
+        9.3. STRUCTURE & ACTIVITIES
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../structure_and_activities/" title="9.3.1 Component model" class="md-nav__link">
+      9.3.1 Component model
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../use_cases/" title="9.3.2 Use cases" class="md-nav__link">
+      9.3.2 Use cases
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="toc">
+        9.4. INTERFACES
+      </label>
+    
+    <a href="./" title="9.4. INTERFACES" class="md-nav__link md-nav__link--active">
+      9.4. INTERFACES
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#validation-request-interface" title="Validation request interface" class="md-nav__link">
+    Validation request interface
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#validation-request-parameters" title="Validation request parameters" class="md-nav__link">
+    Validation request parameters
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-json-request" title="Sample JSON request" class="md-nav__link">
+    Sample JSON request
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-soap-request" title="Sample SOAP request" class="md-nav__link">
+    Sample SOAP request
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-response-interface" title="Validation response interface" class="md-nav__link">
+    Validation response interface
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#validation-response-parameters-successful-scenario" title="Validation response parameters (successful scenario)" class="md-nav__link">
+    Validation response parameters (successful scenario)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-json-response-successful-scenario" title="Sample JSON response (successful scenario)" class="md-nav__link">
+    Sample JSON response (successful scenario)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-soap-response-successful-scenario" title="Sample SOAP response (successful scenario)" class="md-nav__link">
+    Sample SOAP response (successful scenario)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-json-response-error-situation" title="Sample JSON response (error situation)" class="md-nav__link">
+    Sample JSON response (error situation)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-soap-response-error-situation" title="Sample SOAP response (error situation)" class="md-nav__link">
+    Sample SOAP response (error situation)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-files-request-interface" title="Data files request interface" class="md-nav__link">
+    Data files request interface
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#data-files-request-parameters" title="Data files request parameters" class="md-nav__link">
+    Data files request parameters
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-json-request_1" title="Sample JSON request" class="md-nav__link">
+    Sample JSON request
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-soap-request_1" title="Sample SOAP request" class="md-nav__link">
+    Sample SOAP request
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-files-response-interface" title="Data files response interface" class="md-nav__link">
+    Data files response interface
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#data-files-response-parameters-successful-scenario" title="Data files response parameters (successful scenario)" class="md-nav__link">
+    Data files response parameters (successful scenario)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-json-response-successful-scenario_1" title="Sample JSON response (successful scenario)" class="md-nav__link">
+    Sample JSON response (successful scenario)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-soap-response-successful-scenario_1" title="Sample SOAP response (successful scenario)" class="md-nav__link">
+    Sample SOAP response (successful scenario)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-json-response-error-situation_1" title="Sample JSON response (error situation)" class="md-nav__link">
+    Sample JSON response (error situation)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-soap-response-error-situation_1" title="Sample SOAP response (error situation)" class="md-nav__link">
+    Sample SOAP response (error situation)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-health-monitoring" title="Service health monitoring" class="md-nav__link">
+    Service health monitoring
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-request" title="The request" class="md-nav__link">
+    The request
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-response" title="The response" class="md-nav__link">
+    The response
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-11-5" type="checkbox" id="nav-11-5">
+    
+    <label class="md-nav__link" for="nav-11-5">
+      9.5. DEPLOYMENT
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-11-5">
+        9.5. DEPLOYMENT
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../deployment/" title="9.5.1 Deployment model" class="md-nav__link">
+      9.5.1 Deployment model
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../systemintegrators_guide/" title="9.5.2 System integrator's guide" class="md-nav__link">
+      9.5.2 System integrator's guide
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-11-6" type="checkbox" id="nav-11-6">
+    
+    <label class="md-nav__link" for="nav-11-6">
+      9.6. QUALITY ASSURANCE
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-11-6">
+        9.6. QUALITY ASSURANCE
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../qa_strategy/" title="9.6.1 QA Strategy" class="md-nav__link">
+      9.6.1 QA Strategy
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../test_plan/" title="9.6.2 Test Plan" class="md-nav__link">
+      9.6.2 Test Plan
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../references/" title="9.7. REFERENCES" class="md-nav__link">
+      9.7. REFERENCES
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-11-8" type="checkbox" id="nav-11-8">
+    
+    <label class="md-nav__link" for="nav-11-8">
+      9.8. APPENDICES
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-11-8">
+        9.8. APPENDICES
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../appendix/validation_policy/" title="Appendix 1 - Validation Policy" class="md-nav__link">
+      Appendix 1 - Validation Policy
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../appendix/test_cases/" title="Appendix 2 - Test Case Descriptions" class="md-nav__link">
+      Appendix 2 - Test Case Descriptions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../appendix/wsdl/" title="Appendix 3 - WSDL of SOAP Interface" class="md-nav__link">
+      Appendix 3 - WSDL of SOAP Interface
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../appendix/known_issues/" title="Appendix 4 - Known Issues" class="md-nav__link">
+      Appendix 4 - Known Issues
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#validation-request-interface" title="Validation request interface" class="md-nav__link">
+    Validation request interface
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#validation-request-parameters" title="Validation request parameters" class="md-nav__link">
+    Validation request parameters
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-json-request" title="Sample JSON request" class="md-nav__link">
+    Sample JSON request
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-soap-request" title="Sample SOAP request" class="md-nav__link">
+    Sample SOAP request
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-response-interface" title="Validation response interface" class="md-nav__link">
+    Validation response interface
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#validation-response-parameters-successful-scenario" title="Validation response parameters (successful scenario)" class="md-nav__link">
+    Validation response parameters (successful scenario)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-json-response-successful-scenario" title="Sample JSON response (successful scenario)" class="md-nav__link">
+    Sample JSON response (successful scenario)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-soap-response-successful-scenario" title="Sample SOAP response (successful scenario)" class="md-nav__link">
+    Sample SOAP response (successful scenario)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-json-response-error-situation" title="Sample JSON response (error situation)" class="md-nav__link">
+    Sample JSON response (error situation)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-soap-response-error-situation" title="Sample SOAP response (error situation)" class="md-nav__link">
+    Sample SOAP response (error situation)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-files-request-interface" title="Data files request interface" class="md-nav__link">
+    Data files request interface
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#data-files-request-parameters" title="Data files request parameters" class="md-nav__link">
+    Data files request parameters
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-json-request_1" title="Sample JSON request" class="md-nav__link">
+    Sample JSON request
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-soap-request_1" title="Sample SOAP request" class="md-nav__link">
+    Sample SOAP request
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-files-response-interface" title="Data files response interface" class="md-nav__link">
+    Data files response interface
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#data-files-response-parameters-successful-scenario" title="Data files response parameters (successful scenario)" class="md-nav__link">
+    Data files response parameters (successful scenario)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-json-response-successful-scenario_1" title="Sample JSON response (successful scenario)" class="md-nav__link">
+    Sample JSON response (successful scenario)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-soap-response-successful-scenario_1" title="Sample SOAP response (successful scenario)" class="md-nav__link">
+    Sample SOAP response (successful scenario)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-json-response-error-situation_1" title="Sample JSON response (error situation)" class="md-nav__link">
+    Sample JSON response (error situation)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-soap-response-error-situation_1" title="Sample SOAP response (error situation)" class="md-nav__link">
+    Sample SOAP response (error situation)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-health-monitoring" title="Service health monitoring" class="md-nav__link">
+    Service health monitoring
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-request" title="The request" class="md-nav__link">
+    The request
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-response" title="The response" class="md-nav__link">
+    The response
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/open-eid/SiVa/edit/master/docs/siva2/interfaces.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                  <h1>9.4. INTERFACES</h1>
+                
+                <!--# Interface description-->
+
+<p>In this section the SiVa signature validation service's external interfaces that are provided for the service's clients are described. For information of internal components and their interfaces, please refer to <a href="../structure_and_activities"><strong>Structure and activities</strong></a>.</p>
+<p>SiVa service provides <strong>REST JSON</strong> and <strong>SOAP</strong> interfaces that enable the service users to:</p>
+<ul>
+<li>request validation of signatures in a digitally signed document (i.e. signature container like BDOC/ASiC-E or PDF); </li>
+<li>receive a response with the validation result of all the signatures in the document.</li>
+</ul>
+<p>SiVa service SOAP interface supports X-Road v6. However, it is optional whether to integrate SiVa service using X-Road or using "plain" SOAP interface. This document only describes the SiVa service part of the interface, for the X-Road specifics visit Riigi Infosüsteemi Amet <a href="https://www.ria.ee/ee/x-tee.html">webpage</a>.</p>
+<p>In the following subsections, the SiVa validation request and response interfaces are described in detail. </p>
+<h2 id="validation-request-interface">Validation request interface</h2>
+<p><strong> REST JSON Endpoint </strong></p>
+<div class="codehilite"><pre><span></span>POST https://&lt;server url&gt;/validate
+</pre></div>
+
+
+<p><strong> SOAP Endpoint </strong></p>
+<div class="codehilite"><pre><span></span>POST https://&lt;server url&gt;/soap/validationWebService/validateDocument
+</pre></div>
+
+
+<p><strong> SOAP WSDL </strong></p>
+<div class="codehilite"><pre><span></span>POST https://&lt;server url&gt;/soap/validationWebService/validateDocument?wsdl
+</pre></div>
+
+
+<h3 id="validation-request-parameters">Validation request parameters</h3>
+<p>Validation request parameters for JSON and SOAP interfaces are described in the table below. Data types of SOAP parameters are defined in the <a href="../../siva/appendix/wsdl">SiVa WSDL document</a>.</p>
+<table>
+<thead>
+<tr>
+<th>JSON parameter</th>
+<th>SOAP parameter</th>
+<th>Mandatory</th>
+<th>JSON data type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>document</td>
+<td>Document</td>
+<td>+</td>
+<td>String</td>
+<td>Base64 encoded string of digitally signed document to be validated</td>
+</tr>
+<tr>
+<td>filename</td>
+<td>Filename</td>
+<td>+</td>
+<td>String</td>
+<td>File name of the digitally signed document (i.e. sample.bdoc)</td>
+</tr>
+<tr>
+<td>documentType</td>
+<td>DocumentType</td>
+<td>+</td>
+<td>String</td>
+<td>Format of the digitally signed document. This value determines the validation service type that will be used for validation. <br> <strong>Possible values:</strong> <br> * BDOC - for documents in <a href="http://id.ee/public/bdoc-spec212-eng.pdf">BDOC</a> (ASiC-E/XAdES) format. Both time-stamp (TS) and time-mark (TM) profiles are supported here. <br> * DDOC - for documents in <a href="http://id.ee/public/DigiDoc_format_1.3.pdf">DIGIDOC-XML</a> format, supported versions are DIGIDOC-XML 1.0 (also known as SK-XML 1.0) to DIGIDOC-XML 1.3. In case of DIGIDOC_XML documents, also the hashcode format is supported (see <a href="http://sertkeskus.github.io/dds-documentation/api/api_docs/#ddoc-format-and-hashcode">DigiDocService Specification</a> for more information). <br> * PDF - for signed PDF document in <a href="http://www.etsi.org/deliver/etsi_en/319100_319199/31914201/01.01.01_60/en_31914201v010101p.pdf">PAdES</a> format. <br>* XROAD - for documents created in the <a href="https://www.ria.ee/en/x-road.html">X-Road</a> information system, see also <a href="https://cyber.ee/uploads/2013/05/T-4-23-Profile-for-High-Performance-Digital-Signatures1.pdf">specification document</a> of the signature format.</td>
+</tr>
+<tr>
+<td>signaturePolicy</td>
+<td>SignaturePolicy</td>
+<td>-</td>
+<td>String</td>
+<td>Can be used to change the default signature validation policy that is used by the service. <br> See also <a href="../../siva/appendix/validation_policy">SiVa Validation Policy</a> for more information. <br> <strong>Possible values:</strong> <br> * POLv1 - the default policy. Signatures with all legal levels are accepted (i.e. QES, AdES and AdESqc, according to Regulation (EU) No 910/2014.) <br> * POLv2 - only signatures with QES legal level (according to Regulation (EU) No 910/2014) are accepted.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sample-json-request">Sample JSON request</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;filename&quot;</span><span class="p">:</span><span class="s2">&quot;sample.ddoc&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;documentType&quot;</span><span class="p">:</span><span class="s2">&quot;DDOC&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;document&quot;</span><span class="p">:</span><span class="s2">&quot;PD94bWwgdmVyc2lvbj0iMS4....&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;signaturePolicy&quot;</span><span class="p">:</span> <span class="s2">&quot;POLv1&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="sample-soap-request">Sample SOAP request</h3>
+<div class="codehilite"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;soap:Envelope</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;soap:Body&gt;</span>
+    <span class="nt">&lt;ns2:ValidateDocument</span> <span class="na">xmlns:ns2=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;ns2:ValidationRequest&gt;</span>
+        <span class="nt">&lt;Document&gt;</span>PD94bWwgdmVyc2lvbj0iMS4....<span class="nt">&lt;/Document&gt;</span>
+        <span class="nt">&lt;Filename&gt;</span>sample.ddoc<span class="nt">&lt;/Filename&gt;</span>
+        <span class="nt">&lt;DocumentType&gt;</span>DDOC<span class="nt">&lt;/DocumentType&gt;</span>
+        <span class="nt">&lt;SignaturePolicy&gt;</span>POLv1<span class="nt">&lt;/SignaturePolicy&gt;</span>
+      <span class="nt">&lt;/ns2:ValidationRequest&gt;</span>
+    <span class="nt">&lt;/ns2:ValidateDocument&gt;</span>
+  <span class="nt">&lt;/soap:Body&gt;</span>
+<span class="nt">&lt;/soap:Envelope&gt;</span>
+</pre></div>
+
+
+<h2 id="validation-response-interface">Validation response interface</h2>
+<h3 id="validation-response-parameters-successful-scenario">Validation response parameters (successful scenario)</h3>
+<p>The signature validation report (i.e. the validation response) for JSON and SOAP interfaces is described in the table below. Data types of SOAP parameters are defined in the <a href="../../siva/appendix/wsdl">SiVa WSDL document</a>.</p>
+<table>
+<thead>
+<tr>
+<th>JSON parameter</th>
+<th>SOAP parameter</th>
+<th>JSON data type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>policy</td>
+<td>Policy</td>
+<td>Object</td>
+<td>Object containing information of the SiVa signature validation policy that was used for validation</td>
+</tr>
+<tr>
+<td>policy.policyName</td>
+<td>Policy.PolicyName</td>
+<td>String</td>
+<td>Name of the validation policy</td>
+</tr>
+<tr>
+<td>policy. policyDescription</td>
+<td>Policy. PolicyDescription</td>
+<td>String</td>
+<td>Short description of the validation policy</td>
+</tr>
+<tr>
+<td>policy.policyUrl</td>
+<td>Policy.PolicyUrl</td>
+<td>String</td>
+<td>URL where the signature validation policy document can be downloaded. The validation policy document shall include information about validation of all the document formats, including the different validation policies that are used in case of different file formats and base libraries.</td>
+</tr>
+<tr>
+<td>signaturesCount</td>
+<td>SignaturesCount</td>
+<td>Number</td>
+<td>Number of signatures found inside digitally signed file</td>
+</tr>
+<tr>
+<td>validSignaturesCount</td>
+<td>ValidSignaturesCount</td>
+<td>Number</td>
+<td>Signatures count that have validated to <code>TOTAL-PASSED</code>. See also <code>Signature.Indication</code> field.</td>
+</tr>
+<tr>
+<td>validationTime</td>
+<td>ValidationTime</td>
+<td>Date</td>
+<td>Time of validating the signature by the service</td>
+</tr>
+<tr>
+<td>validationWarnings</td>
+<td>ValidationWarnings</td>
+<td>Array</td>
+<td>Block of SiVa validation warnings that do not affect the overall validation result and applicable only to BDOC/ASiC-E type containers. Known warning situations: container includes unsigned files, manifest validation warnings.</td>
+</tr>
+<tr>
+<td>filename</td>
+<td>DocumentName</td>
+<td>String</td>
+<td>Digitally signed document's file name</td>
+</tr>
+<tr>
+<td>signatureForm</td>
+<td>SignatureForm</td>
+<td>String</td>
+<td>Format (and optionally version) of the digitally signed document container. <br> In case of documents in <a href="http://id.ee/public/DigiDoc_format_1.3.pdf">DIGIDOC-XML</a> (DDOC) format, the "hashcode" suffix is used to denote that the container was validated in <a href="http://sertkeskus.github.io/dds-documentation/api/api_docs/#ddoc-format-and-hashcode">hashcode mode</a>, i.e. without original data files. <br> <strong>Possible values:</strong>  <br> * DIGIDOC_XML_1.0 <br> * DIGIDOC_XML_1.0_hashcode <br> * DIGIDOC_XML_1.1 <br> * DIGIDOC_XML_1.1_hashcode <br> * DIGIDOC_XML_1.2 <br> * DIGIDOC_XML_1.2_hashcode <br> * DIGIDOC_XML_1.3 <br> * DIGIDOC_XML_1.3_hashcode <br> * PAdES - used in case of signed PDF document <br> * ASiC_E - used in case of all <a href="http://id.ee/public/bdoc-spec212-eng.pdf">BDOC</a> documents and X-Road simple containers that don't use batch time-stamping (see <a href="https://cyber.ee/uploads/2013/05/T-4-23-Profile-for-High-Performance-Digital-Signatures1.pdf">specification document</a>)<br> * ASiC_E_batchsignature - used in case of X-Road containers with batch signature (see <a href="https://cyber.ee/uploads/2013/05/T-4-23-Profile-for-High-Performance-Digital-Signatures1.pdf">specification document</a>)</td>
+</tr>
+<tr>
+<td>signatures</td>
+<td>Signatures</td>
+<td>Array</td>
+<td>Collection of signatures found in digitally signed document</td>
+</tr>
+<tr>
+<td>signatures[0]</td>
+<td>Signature</td>
+<td>Object</td>
+<td>Signature information object</td>
+</tr>
+<tr>
+<td>signatures[0]. claimedSigningTime</td>
+<td>Signature. ClaimedSigningTime</td>
+<td>Date</td>
+<td>Claimed signing time, i.e. signer's computer time during signature creation</td>
+</tr>
+<tr>
+<td>signatures[0].id</td>
+<td>Signature.Id</td>
+<td>String</td>
+<td>Signature ID attribute</td>
+</tr>
+<tr>
+<td>signatures[0].indication</td>
+<td>Signature.Indication</td>
+<td>String</td>
+<td>Overall result of the signature's validation process, according to <a href="http://www.etsi.org/deliver/etsi_en/319100_319199/31910201/01.01.01_60/en_31910201v010101p.pdf">ETSI EN 319 102-1</a> "Table 5: Status indications of the signature validation process". <br> Note that the validation results of different signatures in one signed document (signature container) may vary. <br> See also <code>validSignaturesCount</code> and <code>SignaturesCount</code> fields. <br><strong>Possible values:</strong> <br> * TOTAL-PASSED <br> * TOTAL-FAILED <br> * INDETERMINATE</td>
+</tr>
+<tr>
+<td>signatures[0]. subIndication</td>
+<td>Signature. SubIndication</td>
+<td>String</td>
+<td>Additional subindication in case of failed or indeterminate validation result, according to <a href="http://www.etsi.org/deliver/etsi_en/319100_319199/31910201/01.01.01_60/en_31910201v010101p.pdf">ETSI EN 319 102-1</a> "Table 6: Validation Report Structure and Semantics"</td>
+</tr>
+<tr>
+<td>signatures[0].errors</td>
+<td>Signature.Errors</td>
+<td>Array</td>
+<td>Information about validation error(s), array of error messages.</td>
+</tr>
+<tr>
+<td>signatures[0].errors[0].  content</td>
+<td>Signature.Errors. Error.Content</td>
+<td>String</td>
+<td>Error message, as returned by the base library that was used for signature validation.</td>
+</tr>
+<tr>
+<td>signatures[0].info</td>
+<td>Signature.Info</td>
+<td>Object</td>
+<td>Object containing trusted signing time information.</td>
+</tr>
+<tr>
+<td>signatures[0].info. bestSignatureTime</td>
+<td>Signature.Info. BestSignatureTime</td>
+<td>Date</td>
+<td>Time value that is regarded as trusted signing time, denoting the earliest time when it can be trusted by the validation application (because proven by some Proof-of-Existence present in the signature) that a signature has existed.<br>The source of the value depends on the signature profile (see also <code>SignatureFormat</code> parameter):<br>- Signature with time-mark (LT_TM level) - the producedAt value of the earliest valid time-mark (OCSP confirmation of the signer's certificate) in the signature.<br>- Signature with time-stamp (LT or LTA level) - the genTime value of the earliest valid signature time-stamp token in the signature. <br> - Signature with BES or EPES level - the value is empty, i.e. there is no trusted signing time value available.</td>
+</tr>
+<tr>
+<td>signatures[0]. signatureFormat</td>
+<td>Signature. SignatureFormat</td>
+<td>String</td>
+<td>Format and profile (according to Baseline Profile) of the signature. See <a href="http://www.etsi.org/deliver/etsi_ts/103100_103199/103171/02.01.01_60/ts_103171v020101p.pdf">XAdES Baseline Profile</a> and <a href="http://www.etsi.org/deliver/etsi_ts/103100_103199/103172/02.02.02_60/ts_103172v020202p.pdf">PAdES Baseline Profile</a> for detailed description of the Baseline Profile levels. Levels that are accepted in SiVa validation policy are described in <a href="../../siva/appendix/validation_policy">SiVa signature validation policy</a> <br><strong>Possible values:</strong>  <br> * XAdES_BASELINE_B_BES <br> * XAdES_BASELINE_B_EPES <br> * XAdES_BASELINE_T <br> * XAdES_BASELINE_LT - long-term level XAdES signature where time-stamp is used as a assertion of trusted signing time<br> * XAdES_BASELINE_LT_TM - long-term level XAdES signature where time-mark is used as a assertion of trusted signing time. Used in case of <a href="http://id.ee/public/bdoc-spec212-eng.pdf">BDOC</a> signatures with time-mark profile and <a href="http://id.ee/public/DigiDoc_format_1.3.pdf">DIGIDOC-XML</a> (DDOC) signatures.<br> * XAdES_BASELINE_LTA <br> * PAdES_BASELINE_B_BES <br> * PAdES_BASELINE_B_EPES <br> * PAdES_BASELINE_T <br> * PAdES_BASELINE_LT <br> * PAdES_BASELINE_LTA</td>
+</tr>
+<tr>
+<td>signatures[0]. signatureLevel</td>
+<td>Signature. SignatureLevel</td>
+<td>String</td>
+<td>Legal level of the signature, according to Regulation (EU) No 910/2014. <br> - In case of BDOC and PAdES formats: indication whether the signature is Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES). <br> - In case of DIGIDOC-XML 1.0..1.3 formats, empty value is used as the signature level is not checked by the JDigiDoc base library that is used for validation. However, the signatures can be indirectly regarded as QES level signatures, see also <a href="../../siva/appendix/validation_policy">SiVa Validation Policy</a></td>
+</tr>
+<tr>
+<td>signatures[0].signedBy</td>
+<td>Signature.SignedBy</td>
+<td>String</td>
+<td>Signers name and identification number, i.e. value of the CN field of the signer's certificate</td>
+</tr>
+<tr>
+<td>signatures[0]. signatureScopes</td>
+<td>Signature. SignatureScopes</td>
+<td>Array</td>
+<td>Contains information of the original data that is covered by the signature.</td>
+</tr>
+<tr>
+<td>signatures[0]. signatureScopes[0]. name</td>
+<td>Signature. SignatureScopes.  SignatureScope.Name</td>
+<td>String</td>
+<td>Name of the signature scope.  <br>- In case of XAdES signature: name of the data file that is signed. <br>- In case of PAdES signature: PDF version that is covered by the signature, e.g. 'PDF previous version #1'</td>
+</tr>
+<tr>
+<td>signatures[0]. signatureScopes[0]. scope</td>
+<td>Signature. SignatureScopes.  SignatureScope. Scope</td>
+<td>String</td>
+<td>Type of the signature scope.<br>- In case of XAdES signature: 'FullSignatureScope'<br>- In case of PAdES signature: 'PdfByteRangeSignatureScope'</td>
+</tr>
+<tr>
+<td>signatures[0]. signatureScopes[0]. content</td>
+<td>Signature. SignatureScopes.  SignatureScope. Content</td>
+<td>String</td>
+<td>- In case of XAdES signatures: 'Full document', indicating that the whole document is covered by the signature. <br>- In case of PAdES signatures: the byte range that is covered by the signature.</td>
+</tr>
+<tr>
+<td>signatures[0].warnings</td>
+<td>Signature.Warnings</td>
+<td>Array</td>
+<td>Block of validation warnings that do not affect the overall validation result. Known warning situations (according to http://id.ee/public/SK-JDD-PRG-GUIDE.pdf, chap. 5.2.4.1): <br>- BDOC (ASiC-E) and PAdES: weaker digest method (SHA-1) has been used than recommended when calculating either Reference or Signature element’s digest value; <br> - DIGIDOC-XML 1.0-1.3: DataFile element’s xmlns attribute is missing;<br> - DIGIDOC-XML 1.0-1.3: IssuerSerial/X509IssuerName and/or IssuerSerial/X509IssuerSerial element’s xmlns attribute is missing.</td>
+</tr>
+<tr>
+<td>signatures[0].warnings[0]. description</td>
+<td>Signature.Warnings. Warning.Description</td>
+<td>String</td>
+<td>Warning description, as retuned by the base library that was used for validation.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sample-json-response-successful-scenario">Sample JSON response (successful scenario)</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;policy&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;policyName&quot;</span><span class="p">:</span> <span class="s2">&quot;POLv2&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;policyDescription&quot;</span><span class="p">:</span> <span class="s2">&quot;Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result.&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;policyUrl&quot;</span><span class="p">:</span> <span class="s2">&quot;http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv2&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;signaturesCount&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nt">&quot;validSignaturesCount&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nt">&quot;validationTime&quot;</span><span class="p">:</span> <span class="s2">&quot;2016-07-28T14:41:45Z&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;documentName&quot;</span><span class="p">:</span> <span class="s2">&quot;sample.bdoc&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;validationWarnings&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span><span class="nt">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Manifest file has an entry for file document_3.xml with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="nt">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml&quot;</span><span class="p">}</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;signatures&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;claimedSigningTime&quot;</span><span class="p">:</span> <span class="s2">&quot;2016-05-11T10:17:57Z&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;errors&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;S0&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;indication&quot;</span><span class="p">:</span> <span class="s2">&quot;TOTAL-PASSED&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;info&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;bestSignatureTime&quot;</span><span class="p">:</span> <span class="s2">&quot;2016-05-11T10:18:06Z&quot;</span>
+            <span class="p">},</span>
+            <span class="nt">&quot;signatureFormat&quot;</span><span class="p">:</span> <span class="s2">&quot;XAdES_BASELINE_LT_TM&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;signatureLevel&quot;</span><span class="p">:</span> <span class="s2">&quot;QES&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;signatureScopes&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="nt">&quot;signedBy&quot;</span><span class="p">:</span> <span class="s2">&quot;NURM,AARE,38211015222&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;subIndication&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;warnings&quot;</span><span class="p">:</span> <span class="p">[]</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="sample-soap-response-successful-scenario">Sample SOAP response (successful scenario)</h3>
+<div class="codehilite"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;soap:Envelope</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;soap:Body&gt;</span>
+    <span class="nt">&lt;ns2:ValidateDocumentResponse</span> <span class="na">xmlns:ns2=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span> <span class="na">xmlns:ns3=</span><span class="s">&quot;http://x-road.eu/xsd/identifiers&quot;</span> <span class="na">xmlns:ns4=</span><span class="s">&quot;http://x-road.eu/xsd/xroad.xsd&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;ns2:ValidationReport&gt;</span>
+        <span class="nt">&lt;Policy&gt;</span>
+          <span class="nt">&lt;PolicyDescription&gt;</span>Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.<span class="nt">&lt;/PolicyDescription&gt;</span>
+          <span class="nt">&lt;PolicyName&gt;</span>POLv1<span class="nt">&lt;/PolicyName&gt;</span>
+          <span class="nt">&lt;PolicyUrl&gt;</span>http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv1<span class="nt">&lt;/PolicyUrl&gt;</span>
+        <span class="nt">&lt;/Policy&gt;</span>
+        <span class="nt">&lt;ValidationTime&gt;</span>2016-09-27T06:42:33Z<span class="nt">&lt;/ValidationTime&gt;</span>
+        <span class="nt">&lt;ValidationWarnings&gt;</span>
+          <span class="nt">&lt;ValidationWarning&gt;</span>
+            <span class="nt">&lt;Content&gt;</span>Manifest file has an entry for file document_3.xml with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file<span class="nt">&lt;/Content&gt;</span>
+          <span class="nt">&lt;/ValidationWarning&gt;</span>
+          <span class="nt">&lt;ValidationWarning&gt;</span>
+            <span class="nt">&lt;Content&gt;</span>Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml<span class="nt">&lt;/Content&gt;</span>
+          <span class="nt">&lt;/ValidationWarning&gt;</span>
+        <span class="nt">&lt;/ValidationWarnings&gt;</span>
+        <span class="nt">&lt;DocumentName&gt;</span>Valid_ID_sig.bdoc<span class="nt">&lt;/DocumentName&gt;</span>
+        <span class="nt">&lt;SignatureForm&gt;</span>ASiC_E<span class="nt">&lt;/SignatureForm&gt;</span>
+        <span class="nt">&lt;Signatures&gt;</span>
+          <span class="nt">&lt;Signature&gt;</span>
+            <span class="nt">&lt;Id&gt;</span>S0<span class="nt">&lt;/Id&gt;</span>
+            <span class="nt">&lt;SignatureFormat&gt;</span>XAdES_BASELINE_LT_TM<span class="nt">&lt;/SignatureFormat&gt;</span>
+            <span class="nt">&lt;SignatureLevel&gt;</span>QES<span class="nt">&lt;/SignatureLevel&gt;</span>
+            <span class="nt">&lt;SignedBy&gt;</span>NURM,AARE,38211015222<span class="nt">&lt;/SignedBy&gt;</span>
+            <span class="nt">&lt;Indication&gt;</span>TOTAL-PASSED<span class="nt">&lt;/Indication&gt;</span>
+            <span class="nt">&lt;SubIndication/&gt;</span>
+            <span class="nt">&lt;Errors/&gt;</span>
+            <span class="nt">&lt;SignatureScopes&gt;</span>
+              <span class="nt">&lt;SignatureScope&gt;</span>
+                <span class="nt">&lt;Name&gt;</span>Proov.txt<span class="nt">&lt;/Name&gt;</span>
+                <span class="nt">&lt;Scope&gt;</span>FullSignatureScope<span class="nt">&lt;/Scope&gt;</span>
+                <span class="nt">&lt;Content&gt;</span>Full document<span class="nt">&lt;/Content&gt;</span>
+              <span class="nt">&lt;/SignatureScope&gt;</span>
+            <span class="nt">&lt;/SignatureScopes&gt;</span>
+            <span class="nt">&lt;ClaimedSigningTime&gt;</span>2016-05-12T10:09:09Z<span class="nt">&lt;/ClaimedSigningTime&gt;</span>
+            <span class="nt">&lt;Warnings/&gt;</span>
+            <span class="nt">&lt;Info&gt;</span>
+              <span class="nt">&lt;bestSignatureTime&gt;</span>2016-05-12T10:09:20Z<span class="nt">&lt;/bestSignatureTime&gt;</span>
+            <span class="nt">&lt;/Info&gt;</span>
+          <span class="nt">&lt;/Signature&gt;</span>
+        <span class="nt">&lt;/Signatures&gt;</span>
+        <span class="nt">&lt;ValidSignaturesCount&gt;</span>1<span class="nt">&lt;/ValidSignaturesCount&gt;</span>
+        <span class="nt">&lt;SignaturesCount&gt;</span>1<span class="nt">&lt;/SignaturesCount&gt;</span>
+      <span class="nt">&lt;/ns2:ValidationReport&gt;</span>
+    <span class="nt">&lt;/ns2:ValidateDocumentResponse&gt;</span>
+  <span class="nt">&lt;/soap:Body&gt;</span>
+<span class="nt">&lt;/soap:Envelope&gt;</span>
+</pre></div>
+
+
+<h3 id="sample-json-response-error-situation">Sample JSON response (error situation)</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span><span class="nt">&quot;requestErrors&quot;</span><span class="p">:</span> <span class="p">[{</span>
+    <span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Document malformed or not matching documentType&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;document&quot;</span>
+<span class="p">}]}</span>
+</pre></div>
+
+
+<h3 id="sample-soap-response-error-situation">Sample SOAP response (error situation)</h3>
+<div class="codehilite"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;soap:Envelope</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;soap:Body&gt;</span>
+    <span class="nt">&lt;soap:Fault&gt;</span>
+      <span class="nt">&lt;faultcode&gt;</span>soap:Server<span class="nt">&lt;/faultcode&gt;</span>
+      <span class="nt">&lt;faultstring&gt;</span>Document malformed or not matching documentType<span class="nt">&lt;/faultstring&gt;</span>
+    <span class="nt">&lt;/soap:Fault&gt;</span>
+  <span class="nt">&lt;/soap:Body&gt;</span>
+<span class="nt">&lt;/soap:Envelope&gt;</span>
+</pre></div>
+
+
+<h2 id="data-files-request-interface">Data files request interface</h2>
+<p><strong> REST JSON Endpoint </strong></p>
+<div class="codehilite"><pre><span></span>POST https://&lt;server url&gt;/getDataFiles
+</pre></div>
+
+
+<p><strong> SOAP Endpoint </strong></p>
+<div class="codehilite"><pre><span></span>POST https://&lt;server url&gt;/soap/dataFilesWebService/getDocumentDataFiles
+</pre></div>
+
+
+<p><strong> SOAP WSDL </strong></p>
+<div class="codehilite"><pre><span></span>POST https://&lt;server url&gt;/soap/dataFilesWebService/getDocumentDataFiles?wsdl
+</pre></div>
+
+
+<h3 id="data-files-request-parameters">Data files request parameters</h3>
+<p>Data files request parameters for JSON and SOAP interfaces are described in the table below. Data types of SOAP parameters are defined in the <a href="../../siva/appendix/wsdl">SiVa WSDL document</a>.</p>
+<table>
+<thead>
+<tr>
+<th>JSON parameter</th>
+<th>SOAP parameter</th>
+<th>Mandatory</th>
+<th>JSON data type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>document</td>
+<td>Document</td>
+<td>+</td>
+<td>String</td>
+<td>Base64 encoded string of digitally signed DDOC document</td>
+</tr>
+<tr>
+<td>documentType</td>
+<td>DocumentType</td>
+<td>+</td>
+<td>String</td>
+<td>Format of the digitally signed document. <br> <strong>Possible values:</strong> <br> * DDOC - for documents in <a href="http://id.ee/public/DigiDoc_format_1.3.pdf">DIGIDOC-XML</a> format, supported versions are DIGIDOC-XML 1.0 (also known as SK-XML 1.0) to DIGIDOC-XML 1.3. Currently only DDOC file format is supported for this operation</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sample-json-request_1">Sample JSON request</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;documentType&quot;</span><span class="p">:</span><span class="s2">&quot;DDOC&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;document&quot;</span><span class="p">:</span><span class="s2">&quot;PD94bWwgdmVyc2lvbj0iMS4....&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="sample-soap-request_1">Sample SOAP request</h3>
+<div class="codehilite"><pre><span></span><span class="nt">&lt;soapenv:Envelope</span> <span class="na">xmlns:soapenv=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;soapenv:Header/&gt;</span>
+  <span class="nt">&lt;soapenv:Body&gt;</span>
+    <span class="nt">&lt;soap:GetDocumentDataFiles&gt;</span>
+      <span class="nt">&lt;soap:DataFilesRequest&gt;</span>
+        <span class="nt">&lt;Document&gt;</span>PD94bWwgdmVyc2lvbj0iMS4wI...<span class="nt">&lt;/Document&gt;</span>
+        <span class="nt">&lt;DocumentType&gt;</span>DDOC<span class="nt">&lt;/DocumentType&gt;</span>
+      <span class="nt">&lt;/soap:DataFilesRequest&gt;</span>
+    <span class="nt">&lt;/soap:GetDocumentDataFiles&gt;</span>
+  <span class="nt">&lt;/soapenv:Body&gt;</span>
+<span class="nt">&lt;/soapenv:Envelope&gt;</span>
+</pre></div>
+
+
+<h2 id="data-files-response-interface">Data files response interface</h2>
+<h3 id="data-files-response-parameters-successful-scenario">Data files response parameters (successful scenario)</h3>
+<p>The data file extraction report (i.e. the data files response) for JSON and SOAP interfaces is described in the table below. Data types of SOAP parameters are defined in the <a href="../../siva/appendix/wsdl">SiVa WSDL document</a>.
+SiVa returns all data files as they are extracted by JDigiDoc library in an as is form. No extra operations or validations are done.</p>
+<table>
+<thead>
+<tr>
+<th>JSON parameter</th>
+<th>SOAP parameter</th>
+<th>JSON data type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dataFiles</td>
+<td>DataFiles</td>
+<td>Array</td>
+<td>Collection of data files found in digitally signed document</td>
+</tr>
+<tr>
+<td>dataFiles[0]</td>
+<td>DataFile</td>
+<td>Object</td>
+<td>Extracted data file object</td>
+</tr>
+<tr>
+<td>dataFiles[0].fileName</td>
+<td>DataFile.FileName</td>
+<td>String</td>
+<td>File name of the extracted data file</td>
+</tr>
+<tr>
+<td>dataFiles[0].size</td>
+<td>DataFile.Size</td>
+<td>Long</td>
+<td>Extracted data file size in bytes</td>
+</tr>
+<tr>
+<td>dataFiles[0].base64</td>
+<td>DataFile.Base64</td>
+<td>String</td>
+<td>Base64 encoded string of extracted data file</td>
+</tr>
+<tr>
+<td>dataFiles[0].mimeType</td>
+<td>DataFile.MimeType</td>
+<td>String</td>
+<td>MIME type of the extracted data file</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sample-json-response-successful-scenario_1">Sample JSON response (successful scenario)</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+<span class="nt">&quot;dataFiles&quot;</span><span class="p">:</span> <span class="p">[{</span>
+ <span class="nt">&quot;fileName&quot;</span><span class="p">:</span> <span class="s2">&quot;Glitter-rock-4_gallery.jpg&quot;</span><span class="p">,</span>
+ <span class="nt">&quot;size&quot;</span><span class="p">:</span> <span class="mi">41114</span><span class="p">,</span>
+ <span class="nt">&quot;base64&quot;</span><span class="p">:</span> <span class="s2">&quot;/9j/4AAQSkZJ...&quot;</span><span class="p">,</span>
+ <span class="nt">&quot;mimeType&quot;</span><span class="p">:</span> <span class="s2">&quot;application/octet-stream&quot;</span> <span class="p">}]</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="sample-soap-response-successful-scenario_1">Sample SOAP response (successful scenario)</h3>
+<div class="codehilite"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;soap:Envelope</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;soap:Body&gt;</span>
+    <span class="nt">&lt;ns2:GetDocumentDataFilesResponse</span> <span class="na">xmlns:ns2=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span> <span class="na">xmlns:ns3=</span><span class="s">&quot;http://x-road.eu/xsd/identifiers&quot;</span> <span class="na">xmlns:ns4=</span><span class="s">&quot;http://x-road.eu/xsd/xroad.xsd&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;ns2:DataFilesReport&gt;</span>
+       <span class="nt">&lt;DataFiles&gt;</span>
+         <span class="nt">&lt;DataFile&gt;</span>
+           <span class="nt">&lt;Base64&gt;</span>UCgUCgUCgUCgUCgUCgUCgUCgUCgUCgUCgUH...<span class="nt">&lt;/Base64&gt;</span>
+           <span class="nt">&lt;FileName&gt;</span>Glitter-rock-4_gallery.jpg<span class="nt">&lt;/FileName&gt;</span>
+           <span class="nt">&lt;MimeType&gt;</span>application/octet-stream<span class="nt">&lt;/MimeType&gt;</span>
+           <span class="nt">&lt;Size&gt;</span>41114<span class="nt">&lt;/Size&gt;</span>
+         <span class="nt">&lt;/DataFile&gt;</span>
+       <span class="nt">&lt;/DataFiles&gt;</span>
+     <span class="nt">&lt;/ns2:DataFilesReport&gt;</span>
+   <span class="nt">&lt;/ns2:GetDocumentDataFilesResponse&gt;</span>
+  <span class="nt">&lt;/soap:Body&gt;</span>
+<span class="nt">&lt;/soap:Envelope&gt;</span>
+</pre></div>
+
+
+<h3 id="sample-json-response-error-situation_1">Sample JSON response (error situation)</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span><span class="nt">&quot;requestErrors&quot;</span><span class="p">:</span> <span class="p">[{</span>
+    <span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid document type. Can only return data files for DDOC type containers.&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;documentType&quot;</span>
+<span class="p">}]}</span>
+</pre></div>
+
+
+<h3 id="sample-soap-response-error-situation_1">Sample SOAP response (error situation)</h3>
+<div class="codehilite"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;soap:Envelope</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;soap:Body&gt;</span>
+    <span class="nt">&lt;soap:Fault&gt;</span>
+      <span class="nt">&lt;faultcode&gt;</span>soap:Client<span class="nt">&lt;/faultcode&gt;</span>
+      <span class="nt">&lt;faultstring&gt;</span>Invalid document type. Can only return data files for DDOC type containers.<span class="nt">&lt;/faultstring&gt;</span>
+    <span class="nt">&lt;/soap:Fault&gt;</span>
+  <span class="nt">&lt;/soap:Body&gt;</span>
+<span class="nt">&lt;/soap:Envelope&gt;</span>
+</pre></div>
+
+
+<h2 id="service-health-monitoring">Service health monitoring</h2>
+<p>SiVa webapps provide an interface for external monitoring tools (to periodically check the generic service health status).</p>
+<h3 id="the-request">The request</h3>
+<p>The monitoring endpoint is accessible via HTTP GET at <strong>/monitoring/health</strong> or <strong>/monitoring/health.json</strong> url.</p>
+<p>Sample request:</p>
+<div class="codehilite"><pre><span></span>GET https://&lt;server url&gt;/monitoring/health
+</pre></div>
+
+
+<h3 id="the-response">The response</h3>
+<p>As a response, a JSON object is returned with the following information:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>status</td>
+<td>General status of the webapp. <br/>Possible values: <ul><li><strong>DOWN</strong> - when some of the dependent indicators status are down (ie when <code>link{number}.status</code> is DOWN, the overall service status is DOWN)</li><li><strong>UP</strong> - the default value. </li></ul></td>
+</tr>
+<tr>
+<td>health.status</td>
+<td>Status of current webapp - constant value <strong>UP</strong></td>
+</tr>
+<tr>
+<td>health.webappName</td>
+<td>The artifact name of the webapp. Taken from the MANIFEST.MF file (inside the jar/war file).</td>
+</tr>
+<tr>
+<td>health.version</td>
+<td>The release version fo the webapp. Taken from the MANIFEST.MF (inside the jar/war file).</td>
+</tr>
+<tr>
+<td>health.buildTime</td>
+<td>Build date and time (format yyyy-MM-dd'T'HH:mm:ss'Z') of the webapp. Taken from the MANIFEST.MF (inside the jar/war file).</td>
+</tr>
+<tr>
+<td>health.startTime</td>
+<td>Webapp startup date and time (format yyyy-MM-dd'T'HH:mm:ss'Z')</td>
+</tr>
+<tr>
+<td>health.currentTime</td>
+<td>Current server date and time (format yyyy-MM-dd'T'HH:mm:ss'Z')</td>
+</tr>
+<tr>
+<td>link{number}.status</td>
+<td>(OPTIONAL) Represents the status of a link to the external system that the webapp depends on. <ul><li><strong>DOWN</strong> when the webapp does not respond (within a specified timeout limit - default 10 seconds) or the response is in invalid format (default Spring boot actuator /health endpoint format is expected).</li><li><strong>UP</strong> if the service responds with HTTP status code 200 and returns a valid JSON object with status "UP"</li></ul></td>
+</tr>
+<tr>
+<td>link{number}.name</td>
+<td>(OPTIONAL) Descriptive name for the link to the external system</td>
+</tr>
+</tbody>
+</table>
+<p>Sample response:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="s2">&quot;UP&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;health&quot;</span><span class="p">:{</span>
+      <span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="s2">&quot;UP&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;webappName&quot;</span><span class="p">:</span><span class="s2">&quot;siva-sample-application&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="s2">&quot;2.0.3-SNAPSHOT&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;buildTime&quot;</span><span class="p">:</span><span class="s2">&quot;2016-10-21T15:56:21Z&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;startTime&quot;</span><span class="p">:</span><span class="s2">&quot;2016-10-21T15:57:48Z&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;currentTime&quot;</span><span class="p">:</span><span class="s2">&quot;2016-10-21T15:58:39Z&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;link1&quot;</span><span class="p">:{</span>
+      <span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="s2">&quot;UP&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;sivaService&quot;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+                
+                  
+                
+              
+              
+                
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../use_cases/" title="9.3.2 Use cases" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                9.3.2 Use cases
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../deployment/" title="9.5.1 Deployment model" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                9.5.1 Deployment model
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="http://www.mkdocs.org" title="MkDocs">MkDocs</a>
+        and
+        <a href="http://squidfunk.github.io/mkdocs-material/" title="Material for MkDocs">
+          Material for MkDocs</a>
+      </div>
+      
+        
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/application-84693e5e49.js"></script>
+      
+      <script>app.initialize({version:"0.17.1",url:{base:"../.."}})</script>
+      
+    
+    
+      
+    
+  </body>
+</html>

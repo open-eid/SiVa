@@ -1,395 +1,1204 @@
+
+
+
+
 <!DOCTYPE html>
-<!--[if lt IE 7 ]><html class="no-js ie6"><![endif]-->
-<!--[if IE 7 ]><html class="no-js ie7"><![endif]-->
-<!--[if IE 8 ]><html class="no-js ie8"><![endif]-->
-<!--[if IE 9 ]><html class="no-js ie9"><![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js"> <!--<![endif]-->
+<html lang="en" class="no-js">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1">
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+      
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      
+        <link rel="shortcut icon" href="../../../assets/images/favicon.png">
+      
+      <meta name="generator" content="mkdocs-0.17.1, mkdocs-material-2.0.1">
+    
     
       
         <title>Appendix 1 - Validation Policy - SiVa - Validation Service Documentation</title>
       
+    
+    
+      <script src="../../../assets/javascripts/modernizr-e826f8942a.js"></script>
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/application-462a8722ef.css">
       
-      
-      
-    
-    <meta property="og:url" content="None">
-    <meta property="og:title" content="SiVa - Validation Service Documentation">
-    <meta property="og:image" content="None/../../../">
-    <meta name="apple-mobile-web-app-title" content="SiVa - Validation Service Documentation">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
-    
-    <link rel="shortcut icon" type="image/x-icon" href="../../../None">
-    <link rel="icon" type="image/x-icon" href="../../../None">
-    <style>
-      @font-face {
-      	font-family: 'Icon';
-      	src: url('../../../assets/fonts/icon.eot?52m981');
-      	src: url('../../../assets/fonts/icon.eot?#iefix52m981')
-               format('embedded-opentype'),
-      		   url('../../../assets/fonts/icon.woff?52m981')
-               format('woff'),
-      		   url('../../../assets/fonts/icon.ttf?52m981')
-               format('truetype'),
-      		   url('../../../assets/fonts/icon.svg?52m981#icon')
-               format('svg');
-      	font-weight: normal;
-      	font-style: normal;
-      }
-    </style>
-    <link rel="stylesheet" href="../../../assets/stylesheets/application-0dac3e5884.css">
-    
-      <link rel="stylesheet" href="../../../assets/stylesheets/palettes-05ab2406df.css">
     
     
       
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
       
-      
-      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu:400,700|Roboto+Mono">
-      <style>
-        body, input {
-          font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
-        }
-        pre, code {
-          font-family: 'Roboto Mono', 'Courier New', 'Courier', monospace;
-        }
-      </style>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     
     
       <link rel="stylesheet" href="../../../override.css">
     
-    <script src="../../../assets/javascripts/modernizr-4ab42b99fd.js"></script>
     
   </head>
   
+    <body>
   
-  
-  <body class="palette-primary-cyan palette-accent-light-blue">
-    
-      
-      
-    
-    <div class="backdrop">
-      <div class="backdrop-paper"></div>
-    </div>
-    <input class="toggle" type="checkbox" id="toggle-drawer">
-    <input class="toggle" type="checkbox" id="toggle-search">
-    <label class="toggle-button overlay" for="toggle-drawer"></label>
-    <header class="header">
-      <nav aria-label="Header">
-  <div class="bar default">
-    <div class="button button-menu" role="button" aria-label="Menu">
-      <label class="toggle-button icon icon-menu" for="toggle-drawer">
-        <span></span>
-      </label>
-    </div>
-    <div class="stretch">
-      <div class="title">
+    <svg class="md-svg">
+      <defs>
         
-          <span class="path">
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="drawer">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="search">
+    <label class="md-overlay" data-md-component="overlay" for="drawer"></label>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../../version_info/" title="SiVa - Validation Service Documentation" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon">school</i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <span class="md-flex__ellipsis md-header-nav__title">
+          
             
               
-                APPENDICES <i class="icon icon-link"></i>
+                <span class="md-header-nav__parent">
+                  8. APPENDICES
+                </span>
               
             
-          </span>
+            Appendix 1 - Validation Policy
+          
+        </span>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
         
-        Appendix 1 - Validation Policy
-      </div>
-    </div>
-    
-    
-    <div class="button button-search" role="button" aria-label="Search">
-      <label class="toggle-button icon icon-search" title="Search" for="toggle-search"></label>
-    </div>
-  </div>
-  <div class="bar search">
-    <div class="button button-close" role="button" aria-label="Close">
-      <label class="toggle-button icon icon-back" for="toggle-search"></label>
-    </div>
-    <div class="stretch">
-      <div class="field">
-        <input class="query" type="text" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck>
-      </div>
-    </div>
-    <div class="button button-reset" role="button" aria-label="Search">
-      <button class="toggle-button icon icon-close" id="reset-search"></button>
-    </div>
-  </div>
-</nav>
-    </header>
-    <main class="main">
-      
-      <div class="drawer">
-        <nav aria-label="Navigation">
-  
-  <a href="https://github.com/open-eid/SiVa" class="project">
-    <div class="banner">
-      
-      <div class="name">
-        <strong>
-          SiVa - Validation Service Documentation
-          <span class="version">
+          
+            <label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
             
-          </span>
-        </strong>
-        
-          <br>
-          open-eid/SiVa
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="search"></label>
+  <div class="md-search__inner">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" required placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query">
+      <label class="md-icon md-search__icon" for="search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset">&#xE5CD;</button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+          
         
       </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+
+  <a href="https://github.com/open-eid/SiVa/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
     </div>
   </a>
-  <div class="scrollable">
-    <div class="wrapper">
+
+          </div>
+        </div>
       
-        <ul class="repo">
-          <li class="repo-download">
-            
-            <a href="https://github.com/open-eid/SiVa/archive/master.zip" target="_blank" title="Download" data-action="download">
-              <i class="icon icon-download"></i> Download
-            </a>
-          </li>
-          <li class="repo-stars">
-            <a href="https://github.com/open-eid/SiVa/stargazers" target="_blank" title="Stargazers" data-action="star">
-              <i class="icon icon-star"></i> Stars
-              <span class="count">&ndash;</span>
-            </a>
-          </li>
-        </ul>
-        <hr>
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
       
-      <div class="toc">
-        <ul>
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
           
             
-  <li>
-    <a class="" title="VERSION HISTORY" href="../../version_info/">
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="drawer">
+    <span class="md-nav__button md-logo">
+      
+        <i class="md-icon">school</i>
+      
+    </span>
+    SiVa - Validation Service Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+
+  <a href="https://github.com/open-eid/SiVa/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../version_info/" title="VERSION HISTORY" class="md-nav__link">
       VERSION HISTORY
     </a>
-    
   </li>
 
-          
-            
-  <li>
-    <a class="" title="INTRODUCTION" href="../../..">
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../.." title="INTRODUCTION" class="md-nav__link">
       INTRODUCTION
     </a>
-    
   </li>
 
-          
-            
-  <li>
-    <a class="" title="1. DEFINITIONS" href="../../definitions/">
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../definitions/" title="1. DEFINITIONS" class="md-nav__link">
       1. DEFINITIONS
     </a>
-    
   </li>
 
-          
-            
-  <li>
-    <a class="" title="2. BACKGROUND" href="../../overview/">
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../overview/" title="2. BACKGROUND" class="md-nav__link">
       2. BACKGROUND
     </a>
-    
   </li>
 
-          
-            
-  <li>
-    <span class="section">3. STRUCTURE & ACTIVITIES</span>
-    <ul>
+    
       
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+    
+    <label class="md-nav__link" for="nav-5">
+      3. STRUCTURE & ACTIVITIES
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        3. STRUCTURE & ACTIVITIES
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
         
-  <li>
-    <a class="" title="3.1 Component model" href="../../v2/structure_and_activities/">
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../v2/structure_and_activities/" title="3.1 Component model" class="md-nav__link">
       3.1 Component model
     </a>
-    
   </li>
 
-      
         
-  <li>
-    <a class="" title="3.2 Use cases" href="../../v2/use_cases/">
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../v2/use_cases/" title="3.2 Use cases" class="md-nav__link">
       3.2 Use cases
     </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
     
-  </li>
-
       
-    </ul>
-  </li>
+      
+      
 
-          
-            
-  <li>
-    <a class="" title="4. INTERFACES" href="../../v2/interfaces/">
+
+  <li class="md-nav__item">
+    <a href="../../v2/interfaces/" title="4. INTERFACES" class="md-nav__link">
       4. INTERFACES
     </a>
-    
   </li>
 
-          
-            
-  <li>
-    <span class="section">5. DEPLOYMENT</span>
-    <ul>
+    
       
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+    
+    <label class="md-nav__link" for="nav-7">
+      5. DEPLOYMENT
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
+        5. DEPLOYMENT
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
         
-  <li>
-    <a class="" title="5.1 Deployment model" href="../../v2/deployment/">
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../v2/deployment/" title="5.1 Deployment model" class="md-nav__link">
       5.1 Deployment model
     </a>
-    
   </li>
 
-      
         
-  <li>
-    <a class="" title="5.2 System integrator's guide" href="../../v2/systemintegrators_guide/">
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../v2/systemintegrators_guide/" title="5.2 System integrator's guide" class="md-nav__link">
       5.2 System integrator's guide
     </a>
-    
   </li>
 
-      
-    </ul>
-  </li>
-
-          
-            
-  <li>
-    <span class="section">6. QUALITY ASSURANCE</span>
-    <ul>
-      
         
-  <li>
-    <a class="" title="6.1 QA Strategy" href="../../qa_strategy/">
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8">
+    
+    <label class="md-nav__link" for="nav-8">
+      6. QUALITY ASSURANCE
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-8">
+        6. QUALITY ASSURANCE
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../qa_strategy/" title="6.1 QA Strategy" class="md-nav__link">
       6.1 QA Strategy
     </a>
-    
   </li>
 
-      
         
-  <li>
-    <a class="" title="6.2 Test Plan" href="../../test_plan/">
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../test_plan/" title="6.2 Test Plan" class="md-nav__link">
       6.2 Test Plan
     </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
     
-  </li>
-
       
-    </ul>
-  </li>
+      
+      
 
-          
-            
-  <li>
-    <a class="" title="7. REFERENCES" href="../../references/">
+
+  <li class="md-nav__item">
+    <a href="../../references/" title="7. REFERENCES" class="md-nav__link">
       7. REFERENCES
     </a>
-    
   </li>
 
-          
-            
-  <li>
-    <span class="section">APPENDICES</span>
-    <ul>
+    
       
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-10" type="checkbox" id="nav-10" checked>
+    
+    <label class="md-nav__link" for="nav-10">
+      8. APPENDICES
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-10">
+        8. APPENDICES
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
         
-  <li>
-    <a class="current" title="Appendix 1 - Validation Policy" href="./">
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="toc">
+        Appendix 1 - Validation Policy
+      </label>
+    
+    <a href="./" title="Appendix 1 - Validation Policy" class="md-nav__link md-nav__link--active">
       Appendix 1 - Validation Policy
     </a>
     
       
-        
-      
-      
-        <ul>
-          
-            <li class="anchor">
-              <a title="Introduction" href="#introduction">
-                Introduction
-              </a>
-            </li>
-          
-            <li class="anchor">
-              <a title="SiVA Signature Validation Policy - Version 1 (POLv1)" href="#siva-signature-validation-policy-version-1-polv1">
-                SiVA Signature Validation Policy - Version 1 (POLv1)
-              </a>
-            </li>
-          
-            <li class="anchor">
-              <a title="SiVA Signature Validation Policy - Version 2 (POLv2)" href="#siva-signature-validation-policy-version-2-polv2">
-                SiVA Signature Validation Policy - Version 2 (POLv2)
-              </a>
-            </li>
-          
-            <li class="anchor">
-              <a title="Common validation constraints (POLv1, POLv2)" href="#common-validation-constraints-polv1-polv2">
-                Common validation constraints (POLv1, POLv2)
-              </a>
-            </li>
-          
-        </ul>
-      
+<nav class="md-nav md-nav--secondary">
+  
+  
     
-  </li>
-
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
       
+        <li class="md-nav__item">
+  <a href="#introduction" title="Introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
         
-  <li>
-    <a class="" title="Appendix 2 - Test Case Descriptions" href="../test_cases/">
-      Appendix 2 - Test Case Descriptions
-    </a>
-    
-  </li>
-
+          <li class="md-nav__item">
+  <a href="#versioning" title="Versioning" class="md-nav__link">
+    Versioning
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#general-principles-of-siva-validation-policies" title="General principles of SiVa validation policies" class="md-nav__link">
+    General principles of SiVa validation policies
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
+        <li class="md-nav__item">
+  <a href="#siva-signature-validation-policy-version-1-polv1" title="SiVA Signature Validation Policy - Version 1 (POLv1)" class="md-nav__link">
+    SiVA Signature Validation Policy - Version 1 (POLv1)
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
         
-  <li>
-    <a class="" title="Appendix 3 - WSDL of SOAP Interface" href="../wsdl/">
-      Appendix 3 - WSDL of SOAP Interface
-    </a>
-    
-  </li>
-
+          <li class="md-nav__item">
+  <a href="#description" title="Description" class="md-nav__link">
+    Description
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#url" title="URL" class="md-nav__link">
+    URL
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#polv1-validation-constraints" title="POLv1 validation constraints" class="md-nav__link">
+    POLv1 validation constraints
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
+        <li class="md-nav__item">
+  <a href="#siva-signature-validation-policy-version-2-polv2" title="SiVA Signature Validation Policy - Version 2 (POLv2)" class="md-nav__link">
+    SiVA Signature Validation Policy - Version 2 (POLv2)
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
         
-  <li>
-    <a class="" title="Appendix 4 - Known Issues" href="../known_issues/">
-      Appendix 4 - Known Issues
-    </a>
-    
-  </li>
-
+          <li class="md-nav__item">
+  <a href="#description_1" title="Description" class="md-nav__link">
+    Description
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#url_1" title="URL" class="md-nav__link">
+    URL
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#polv2-validation-constraints" title="POLv2 validation constraints" class="md-nav__link">
+    POLv2 validation constraints
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-validation-constraints-polv1-polv2" title="Common validation constraints (POLv1, POLv2)" class="md-nav__link">
+    Common validation constraints (POLv1, POLv2)
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#general-constraints" title="General constraints" class="md-nav__link">
+    General constraints
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#signature-format-constraints" title="Signature format constraints" class="md-nav__link">
+    Signature format constraints
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#baseline-profile-constraints" title="Baseline Profile constraints" class="md-nav__link">
+    Baseline Profile constraints
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#x509-validation-constraints" title="X.509 validation constraints" class="md-nav__link">
+    X.509 validation constraints
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cryptographic-algorithm-constraints" title="Cryptographic algorithm constraints" class="md-nav__link">
+    Cryptographic algorithm constraints
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trust-anchor-constraints" title="Trust anchor constraints" class="md-nav__link">
+    Trust anchor constraints
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#revocation-data-constraints" title="Revocation data constraints" class="md-nav__link">
+    Revocation data constraints
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#signer-certificates-revocation-freshness-constraints" title="Signer certificate's revocation freshness constraints" class="md-nav__link">
+    Signer certificate's revocation freshness constraints
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trusted-signing-time-constraints" title="Trusted signing time constraints" class="md-nav__link">
+    Trusted signing time constraints
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bdocasic-e-container-spceific-requirements" title="BDOC/ASiC-E container spceific requirements" class="md-nav__link">
+    BDOC/ASiC-E container spceific requirements
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
       
     </ul>
+  
+</nav>
+    
   </li>
 
-          
-        </ul>
         
-      </div>
-    </div>
-  </div>
-</nav>
-      </div>
-      <article class="article">
-        <div class="wrapper">
           
-          <h1 id="siva-signature-validation-policy">SiVa Signature Validation Policy</h1>
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../test_cases/" title="Appendix 2 - Test Case Descriptions" class="md-nav__link">
+      Appendix 2 - Test Case Descriptions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../wsdl/" title="Appendix 3 - WSDL of SOAP Interface" class="md-nav__link">
+      Appendix 3 - WSDL of SOAP Interface
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../known_issues/" title="Appendix 4 - Known Issues" class="md-nav__link">
+      Appendix 4 - Known Issues
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-11" type="checkbox" id="nav-11">
+    
+    <label class="md-nav__link" for="nav-11">
+      9. SIVA 2.0
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-11">
+        9. SIVA 2.0
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../siva2/definitions/" title="9.1. DEFINITIONS" class="md-nav__link">
+      9.1. DEFINITIONS
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../siva2/overview/" title="9.2. BACKGROUND" class="md-nav__link">
+      9.2. BACKGROUND
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-11-3" type="checkbox" id="nav-11-3">
+    
+    <label class="md-nav__link" for="nav-11-3">
+      9.3. STRUCTURE & ACTIVITIES
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-11-3">
+        9.3. STRUCTURE & ACTIVITIES
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../siva2/structure_and_activities/" title="9.3.1 Component model" class="md-nav__link">
+      9.3.1 Component model
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../siva2/use_cases/" title="9.3.2 Use cases" class="md-nav__link">
+      9.3.2 Use cases
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../siva2/interfaces/" title="9.4. INTERFACES" class="md-nav__link">
+      9.4. INTERFACES
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-11-5" type="checkbox" id="nav-11-5">
+    
+    <label class="md-nav__link" for="nav-11-5">
+      9.5. DEPLOYMENT
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-11-5">
+        9.5. DEPLOYMENT
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../siva2/deployment/" title="9.5.1 Deployment model" class="md-nav__link">
+      9.5.1 Deployment model
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../siva2/systemintegrators_guide/" title="9.5.2 System integrator's guide" class="md-nav__link">
+      9.5.2 System integrator's guide
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-11-6" type="checkbox" id="nav-11-6">
+    
+    <label class="md-nav__link" for="nav-11-6">
+      9.6. QUALITY ASSURANCE
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-11-6">
+        9.6. QUALITY ASSURANCE
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../siva2/qa_strategy/" title="9.6.1 QA Strategy" class="md-nav__link">
+      9.6.1 QA Strategy
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../siva2/test_plan/" title="9.6.2 Test Plan" class="md-nav__link">
+      9.6.2 Test Plan
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../siva2/references/" title="9.7. REFERENCES" class="md-nav__link">
+      9.7. REFERENCES
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-11-8" type="checkbox" id="nav-11-8">
+    
+    <label class="md-nav__link" for="nav-11-8">
+      9.8. APPENDICES
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-11-8">
+        9.8. APPENDICES
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../siva2/appendix/validation_policy/" title="Appendix 1 - Validation Policy" class="md-nav__link">
+      Appendix 1 - Validation Policy
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../siva2/appendix/test_cases/" title="Appendix 2 - Test Case Descriptions" class="md-nav__link">
+      Appendix 2 - Test Case Descriptions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../siva2/appendix/wsdl/" title="Appendix 3 - WSDL of SOAP Interface" class="md-nav__link">
+      Appendix 3 - WSDL of SOAP Interface
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../siva2/appendix/known_issues/" title="Appendix 4 - Known Issues" class="md-nav__link">
+      Appendix 4 - Known Issues
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" title="Introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#versioning" title="Versioning" class="md-nav__link">
+    Versioning
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#general-principles-of-siva-validation-policies" title="General principles of SiVa validation policies" class="md-nav__link">
+    General principles of SiVa validation policies
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#siva-signature-validation-policy-version-1-polv1" title="SiVA Signature Validation Policy - Version 1 (POLv1)" class="md-nav__link">
+    SiVA Signature Validation Policy - Version 1 (POLv1)
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description" title="Description" class="md-nav__link">
+    Description
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#url" title="URL" class="md-nav__link">
+    URL
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#polv1-validation-constraints" title="POLv1 validation constraints" class="md-nav__link">
+    POLv1 validation constraints
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#siva-signature-validation-policy-version-2-polv2" title="SiVA Signature Validation Policy - Version 2 (POLv2)" class="md-nav__link">
+    SiVA Signature Validation Policy - Version 2 (POLv2)
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description_1" title="Description" class="md-nav__link">
+    Description
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#url_1" title="URL" class="md-nav__link">
+    URL
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#polv2-validation-constraints" title="POLv2 validation constraints" class="md-nav__link">
+    POLv2 validation constraints
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-validation-constraints-polv1-polv2" title="Common validation constraints (POLv1, POLv2)" class="md-nav__link">
+    Common validation constraints (POLv1, POLv2)
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#general-constraints" title="General constraints" class="md-nav__link">
+    General constraints
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#signature-format-constraints" title="Signature format constraints" class="md-nav__link">
+    Signature format constraints
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#baseline-profile-constraints" title="Baseline Profile constraints" class="md-nav__link">
+    Baseline Profile constraints
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#x509-validation-constraints" title="X.509 validation constraints" class="md-nav__link">
+    X.509 validation constraints
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cryptographic-algorithm-constraints" title="Cryptographic algorithm constraints" class="md-nav__link">
+    Cryptographic algorithm constraints
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trust-anchor-constraints" title="Trust anchor constraints" class="md-nav__link">
+    Trust anchor constraints
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#revocation-data-constraints" title="Revocation data constraints" class="md-nav__link">
+    Revocation data constraints
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#signer-certificates-revocation-freshness-constraints" title="Signer certificate's revocation freshness constraints" class="md-nav__link">
+    Signer certificate's revocation freshness constraints
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trusted-signing-time-constraints" title="Trusted signing time constraints" class="md-nav__link">
+    Trusted signing time constraints
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bdocasic-e-container-spceific-requirements" title="BDOC/ASiC-E container spceific requirements" class="md-nav__link">
+    BDOC/ASiC-E container spceific requirements
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/open-eid/SiVa/edit/master/docs/siva/appendix/validation_policy.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                <h1 id="siva-signature-validation-policy">SiVa Signature Validation Policy</h1>
 <h2 id="introduction">Introduction</h2>
 <p>This signature validation policy document specifies signature validation rules used for validating signatures in <strong>SiVa digital signature validation service</strong> (hereinafter: Service).</p>
 <h3 id="versioning">Versioning</h3>
@@ -662,79 +1471,82 @@
 <li>Only relative file paths are supported, for example "META-INF/signatures.xml" and "document.txt" instead of "/META-INF/signatures.xml" and "/document.txt".</li>
 <li>"META-INF/manifest.xml" file shall be conformant to OASIS Open Document Format version <a href="http://docs.oasis-open.org/office/v1.0/OpenDocument-v1.0-os.pdf">1.0</a> or <a href="http://docs.oasis-open.org/office/v1.2/OpenDocument-v1.2-part3.pdf">1.2</a>. </li>
 </ol>
-          <aside class="copyright" role="note">
-            
-            Documentation built with
-            <a href="http://www.mkdocs.org" target="_blank">MkDocs</a>
-            using the
-            <a href="http://squidfunk.github.io/mkdocs-material/" target="_blank">
-              Material
-            </a>
-            theme.
-          </aside>
-          
-            <footer class="footer">
+                
+                  
+                
               
-  <nav class="pagination" aria-label="Footer">
-    <div class="previous">
+              
+                
+              
+            </article>
+          </div>
+        </div>
+      </main>
       
-        <a href="../../references/" title="7. REFERENCES">
-          <span class="direction">
-            Previous
-          </span>
-          <div class="page">
-            <div class="button button-previous" role="button" aria-label="Previous">
-              <i class="icon icon-back"></i>
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../../references/" title="7. REFERENCES" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
-            <div class="stretch">
-              <div class="title">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
                 7. REFERENCES
-              </div>
+              </span>
             </div>
-          </div>
-        </a>
-      
-    </div>
-    <div class="next">
-      
-        <a href="../test_cases/" title="Appendix 2 - Test Case Descriptions">
-          <span class="direction">
-            Next
-          </span>
-          <div class="page">
-            <div class="stretch">
-              <div class="title">
+          </a>
+        
+        
+          <a href="../test_cases/" title="Appendix 2 - Test Case Descriptions" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
                 Appendix 2 - Test Case Descriptions
-              </div>
+              </span>
             </div>
-            <div class="button button-next" role="button" aria-label="Next">
-              <i class="icon icon-forward"></i>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
             </div>
-          </div>
-        </a>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="http://www.mkdocs.org" title="MkDocs">MkDocs</a>
+        and
+        <a href="http://squidfunk.github.io/mkdocs-material/" title="Material for MkDocs">
+          Material for MkDocs</a>
+      </div>
+      
+        
       
     </div>
-  </nav>
-
-            </footer>
-          
-        </div>
-      </article>
-      <div class="results" role="status" aria-live="polite">
-        <div class="scrollable">
-          <div class="wrapper">
-            <div class="meta"></div>
-            <div class="list"></div>
-          </div>
-        </div>
-      </div>
-    </main>
-    <script>
-      var base_url = '../../..';
-      var repo_id  = 'open-eid/SiVa';
-    </script>
-    <script src="../../../assets/javascripts/application-997097ee0c.js"></script>
+  </div>
+</footer>
+      
+    </div>
     
+      <script src="../../../assets/javascripts/application-84693e5e49.js"></script>
+      
+      <script>app.initialize({version:"0.17.1",url:{base:"../../.."}})</script>
+      
+    
+    
+      
     
   </body>
 </html>

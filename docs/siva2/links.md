@@ -1,0 +1,1 @@
+<https://www.ria.ee/ee/xtee-teenuste-arendamine.html> - XRoad impolentations guides to be used for SiVa XRoad implementation

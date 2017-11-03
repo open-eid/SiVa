@@ -38,7 +38,7 @@ pages:
       - Appendix 2 - Test Case Descriptions: siva/appendix/test_cases.md
       - Appendix 3 - WSDL of SOAP Interface : siva/appendix/wsdl.md
       - Appendix 4 - Known Issues : siva/appendix/known_issues.md
-- 9. SIVA 2.0:
+- 9. SIVA 2.0 (DRAFT):
       - 9.1. DEFINITIONS: siva2/definitions.md
       - 9.2. BACKGROUND: siva2/overview.md
       - 9.3. STRUCTURE & ACTIVITIES:

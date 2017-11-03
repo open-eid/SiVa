@@ -77,31 +77,6 @@ public class AsiceValidationPassIT extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: Asice-ValidationPass-3
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4
-     *
-     * Title: Asice with warning on signature
-     *
-     * Expected Result: The document should pass the validation but warning should be returned
-     *
-     * File: bdoc_weak_warning_sha1.bdoc
-     */
-    @Test
-    @Ignore //TODO: New file needed. This one has different mimetype value in manifest.xml and signature.xml
-    public void validSignatureWithWarning() {
-        setTestFilesDirectory("bdoc/live/timemark/");
-        post(validationRequestFor("bdoc_weak_warning_sha1.bdoc"))
-                .then()
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("validSignaturesCount", Matchers.is(1));
-
-    }
-
-    /**
      * TestCaseID: Asice-ValidationPass-4
      *
      * TestType: Automated
@@ -119,6 +94,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
         post(validationRequestFor("EE_SER-AEX-B-LT-V-30.asice"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
     }
 
@@ -142,6 +118,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
     }
 
@@ -164,6 +141,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LTA"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
     }
 
@@ -186,6 +164,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
     }
 
@@ -209,6 +188,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
     }
 
@@ -232,6 +212,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QES"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
     }
 
@@ -252,6 +233,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
     public void asiceWithSceFileExtensionShouldPass() {
         post(validationRequestFor("ASICE_TS_LTA_content_as_sce.sce"))
                 .then()
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LTA"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -282,6 +264,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("!~#¤%%&()=+-_.txt"))
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
@@ -305,6 +288,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("All files are not signed!"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
 
     }

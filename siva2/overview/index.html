@@ -951,92 +951,47 @@
                 <!--# SiVa overview-->
 
 <h2 id="what-is-siva">What is SiVa?</h2>
-<p>SiVa (Signature Validation) web service
-is continued development of PDF Validation web service. Service provides
-a JSON and SOAP based API web interface which purpose is to validate signatures
-in digitally signed BDOC, DDOC, PDF and X-Road ASiCE files according to
-validation policy (described in the <a href="../appendix/validation_policy">Validation Policy</a>
-section).</p>
+<p>SiVa (Signature Validation) web service provides JSON and SOAP based API web interface to validate digital signatures.
+Please take a look in <a href="../appendix/validation_policy">Validation Policy</a> section for supported formats and applied constraints.</p>
 <p>SiVa uses following Java libraries and command line utilities:</p>
 <ul>
-<li>EU DSS (Digital Signature Service) library is chosen for digitally signed
-  PDF file validation</li>
 <li>DigiDoc4J Java library to validate BDOC containers. Supported signature
   types are <code>TimeStamp</code> and <code>TimeMark</code></li>
-<li>JDigiDoc Java library is used to validate DDOC files starting from version</li>
+<li>JDigiDoc Java library is used to validate DDOC containers.</li>
 <li>X-Road ASiCE containers are validated using X-Road security server project
   provided command line utility</li>
+<li>EU DSS (Digital Signature Service) library is used to validate all other types of digital signatures that are not covered above.</li>
 </ul>
 <h2 id="validation-libraries">Validation libraries</h2>
 <h3 id="digidoc4j-eu-dss-fork">DigiDoc4j EU DSS fork</h3>
-<p>DigiDoc4J EU DSS fork library for PDF files was chosen because it all the main
-validation constrains already provided and all new constraints can be added easily.
-For more information on EU DSS, see:
-<a href="https://joinup.ec.europa.eu/asset/sd-dss/description">https://joinup.ec.europa.eu/asset/sd-dss/description</a>.</p>
+<p><a href="https://github.com/open-eid/sd-dss">DigiDoc4J EU DSS fork</a> is used as the main validation library. The fork includes <a href="https://github.com/open-eid/sd-dss/wiki/BDoc-specific-modifications">Estonian specific changes</a> and may not be suitable for all signatures.</p>
 <p><strong>SiVa will use the following functionality of EU DSS library:</strong></p>
 <ul>
-<li>PaDES Validation Functionality</li>
+<li>XAdES/CAdES/PAdES Validation Functionality</li>
+<li>ASIC-E and ASIC-S container validation</li>
 <li>TSL loading functionality</li>
 </ul>
 <h3 id="digidoc4j">DigiDoc4J</h3>
-<p>DigiDoc4J will be used to validate both <code>TimeMark</code> and <code>TimeStamp</code> based BDOC containers.
-DigiDoc4J was chosen because it's only Java library that can validate Estonian BDOC files
-according to SiVa validation policy.
-For more information on DigiDoc4J:
-<a href="https://github.com/open-eid/digidoc4j">https://github.com/open-eid/digidoc4j</a></p>
+<p>DigiDoc4J is used to validate both <code>TimeMark</code> and <code>TimeStamp</code> based BDOC containers. For more information on DigiDoc4J visit <a href="https://github.com/open-eid/digidoc4j">Github</a></p>
 <p>SiVa will use the following functionality of DigiDoc4J:</p>
 <ul>
 <li>BDOC validation functionality</li>
 </ul>
 <h3 id="jdigidoc">JDigiDoc</h3>
-<p>JDigiDoc provides support for DDOC files the library was chosen because it provides most
-complete support for all required DDOC versions.
-Read more about JDigiDoc:
-<a href="https://github.com/open-eid/jdigidoc">https://github.com/open-eid/jdigidoc</a></p>
+<p>JDigiDoc is used to validate DDOC containers. For more information on JDigiDoc visit <a href="https://github.com/open-eid/jdigidoc">GitHub</a></p>
 <p>SiVa will use the following functionality of JDigiDoc:</p>
 <ul>
 <li>DDOC validation functionality</li>
 </ul>
 <h3 id="x-road-signature-validation-utility">X-Road signature validation utility</h3>
 <p>X-Road signature validation utility is command line tool to validate X-Road Security server
-generated ASiCe files. The utility was chosen because it's only available packaged to tool
-to validate X-Road signature files.</p>
+generated ASiCe files. For more information on this utility visit <a href="https://github.com/ria-ee/X-Road">GitHub</a></p>
 <h2 id="main-features-of-siva-validation-service">Main features of SiVa validation service:</h2>
 <ul>
-<li>SiVa SOAP ETSI compliant API to validate all supported signatures.</li>
-<li>SiVa REST ETSI compliant API to validate all supported signatures.</li>
-<li>SiVa handles files in PDF-format version 1.7 and later,
-  signed with PadES-profile signatures.</li>
-<li>Service handles DDOC files starting from version 1.0 or later</li>
-<li>Service supports BDOC files starting from version 2.1 or later</li>
-<li>Service supports X-Road 6 security server ASiCE containers</li>
-<li>Service supports up to 10MB file size upload</li>
-<li>SiVa uses European Commission’s TSL (Trusted Service
-  Status List) for certificate chain validation for PDF and BDOC files.<ul>
-<li>European Commission’s TSL contains references to TSLs of
-  European Union’s member states and members of the European
-  Economic Area. This allows the PDF Validator to validate
-  signature that has been signed with certificates issued in any
-  of European Union’s member states.</li>
-<li>During the validation process, a certificate chain is created
-  from signer’s certificate up to the trust anchor (national trust
-  list referenced by the central European Commission's trust list)
-  for all certificates included in the signature (i.e. the
-  signer's certificate, OCSP service's certificate, time-stamping
-  Service's certificate).</li>
-</ul>
-</li>
-<li>SiVas for DDOC and X-Road signature containers will use configured
-  list certificates.</li>
-<li>Signatures with PadES-LT and PadES-LTA profile are supported.</li>
-<li>BDOC signatures with type BDOC-TM and BDOC-TS are supported</li>
-<li>SiVa extracts data files from DDOC containers.</li>
-</ul>
-<p>At the time of creating the current documentation, it is expected that
-SiVa will be used by the following applications:</p>
-<ul>
-<li>DigiDoc3 Client application</li>
-<li>Third party document management applications</li>
+<li>SOAP and REST/JSON API to validate signatures.</li>
+<li>SOAP and REST/JSON API to retrieve data files from DDOC containers.</li>
+<li>SOAP API is compadible with X-Road v6.</li>
+<li>Signing of validation report.</li>
 </ul>
                 
                   

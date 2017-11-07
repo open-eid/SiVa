@@ -589,10 +589,10 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
 |----------------|----------------|-----------|----------------|-------------|
 | dataFiles | DataFiles | - |  Array | Collection of data files found in digitally signed document |
 | dataFiles[0] | DataFile | + | Object | Extracted data file object |
-| dataFiles[0].fileName | - | DataFile.FileName |  String | File name of the extracted data file |
-| dataFiles[0].size | - | DataFile.Size |  Long | Extracted data file size in bytes |
-| dataFiles[0].base64 | - | DataFile.Base64 | String | Base64 encoded string of extracted data file |
-| dataFiles[0].mimeType | - | DataFile.MimeType |  String | MIME type of the extracted data file  |
+| dataFiles[0].fileName | DataFile.FileName | - |  String | File name of the extracted data file |
+| dataFiles[0].size | DataFile.Size | - | Long | Extracted data file size in bytes |
+| dataFiles[0].base64 | DataFile.Base64 | - |String | Base64 encoded string of extracted data file |
+| dataFiles[0].mimeType | DataFile.MimeType |  - | String | MIME type of the extracted data file  |
 
 ### Sample JSON response (successful scenario)
 

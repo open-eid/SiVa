@@ -607,20 +607,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#x-road-validation-webapp" title="X-road validation webapp" class="md-nav__link">
-    X-road validation webapp
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#x-road-validation-webapp-interfaces" title="X-road validation webapp interfaces" class="md-nav__link">
-    X-road validation webapp interfaces
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#demo-webapp" title="Demo webapp" class="md-nav__link">
     Demo webapp
   </a>
@@ -917,20 +903,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#x-road-validation-webapp" title="X-road validation webapp" class="md-nav__link">
-    X-road validation webapp
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#x-road-validation-webapp-interfaces" title="X-road validation webapp interfaces" class="md-nav__link">
-    X-road validation webapp interfaces
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#demo-webapp" title="Demo webapp" class="md-nav__link">
     Demo webapp
   </a>
@@ -1030,8 +1002,8 @@ library is described in each of the validation service section.</p>
 <td>Provides files extraction services for DigiDoc containers. DDOC for previous generation digitally signed files will use latest Maven release of <strong>JDigiDoc</strong></td>
 </tr>
 <tr>
-<td><strong>Digidoc4j</strong></td>
-<td>Digidoc4j implementation is used by BDOC validation service. See the project Github <a href="https://github.com/open-eid/digidoc4j">page</a> for further details.</td>
+<td><strong>X-Road validation service</strong></td>
+<td>X-Road containers are similar to ASiCE containers but are <strong>not</strong> valid ASiCE containers. There we could not use DSS nor DigiDoc4J provided ASiCE validation functionality but need to X-Road developed <code>asicverifier</code> Java command line utility to validate these containers.<br><br>Source code for <code>asicverifier</code> can be found in <a href="https://github.com/ria-ee/X-Road/tree/master/src/asicverifier">GitHub xroad-public repository</a>: <code>Asicverfier</code> has been integrated into SiVa as Java library. Making possible to use all the Java libraries packaged into <code>asicverifier</code> fat JAR.<br><br>Configurable functionality:<br>- In SiVa configuration <code>application.yml</code> file You can define alternative location for <code>globalconf</code> directory to be loaded in using input stream. <strong>PS!</strong> X-road validation service is no longer distributed as a separate webapp installation since SiVa 2.0</td>
 </tr>
 <tr>
 <td><strong>Dss</strong></td>
@@ -1040,6 +1012,10 @@ library is described in each of the validation service section.</p>
 <tr>
 <td><strong>JDigiDoc</strong></td>
 <td>JDigiDoc implementation is used by DDOC validation service and for the DDOC data files service. See the project Github <a href="https://github.com/open-eid/jdigidoc">page</a> for further details.</td>
+</tr>
+<tr>
+<td><strong>Asicverifier</strong></td>
+<td>X-road signature validation utility (see <a href="https://github.com/vrk-kpa/xroad-public/tree/master/src/asicverifier">github project</a> for details). A command line tool to validate X-Road Security server generated ASiCe files. The utility was chosen because it's only available packaged to tool to validate X-Road signature file.</td>
 </tr>
 <tr>
 <td><strong>TSL loader</strong></td>
@@ -1092,61 +1068,6 @@ library is described in each of the validation service section.</p>
 <li>X-road validation webapp - interface for validating X-road signed requests</li>
 <li>EU TSL provider interface - interface for loading the TSL</li>
 <li>Google Analytics service - interface for collection statistics (optional)</li>
-</ul>
-<h3 id="x-road-validation-webapp">X-road validation webapp</h3>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>X-road validation webapp is distributed as a separate webapp installation to avoid BouncyCastle libraries version conflicts and class loader issues.</p>
-</div>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>X-Road validation service</strong></td>
-<td>X-Road containers are similar to ASiCE containers but are <strong>not</strong> valid ASiCE containers. There we could not use DSS nor DigiDoc4J provided ASiCE validation functionality but need to X-Road developed <code>asicverifier</code> Java command line utility to validate these containers.<br><br>Source code for <code>asicverifier</code> can be found in <a href="https://github.com/vrk-kpa/xroad-public/tree/master/src/asicverifier">GitHub xroad-public repository</a>: <code>Asicverfier</code> has been integrated into SiVa as Java library. Making possible to use all the Java libraries packaged into <code>asicverifier</code> fat JAR.<br><br>Configurable functionality:<br>- In SiVa configuration <code>application.yml</code> file You can define alternative location for <code>globalconf</code> directory to be loaded in using input stream</td>
-</tr>
-<tr>
-<td><strong>Asicverifier</strong></td>
-<td>X-road signature validation utility (see <a href="https://github.com/vrk-kpa/xroad-public/tree/master/src/asicverifier">github project</a> for details). A command line tool to validate X-Road Security server generated ASiCe files. The utility was chosen because it's only available packaged to tool to validate X-Road signature file.</td>
-</tr>
-<tr>
-<td><strong>Logger</strong></td>
-<td>Logger is a global component used throughout the webapp by every other components. Logging functionality is handled by the <strong>SLF4J</strong> logging facade and on top of it the <strong>Logback</strong> framework is used. As a result, logging can be configured via the standard Logback configuration file. By default, logging works on the <code>INFO</code> level and logs are directed to the system console. Additional logging appenders can be added (consult logback documentation for more <a href="http://logback.qos.ch/documentation.html">details</a>)</td>
-</tr>
-<tr>
-<td><strong>Configuration</strong></td>
-<td>Configuration is a global component used throughout the webapp. Responsible for reading and handling the application configuration management</td>
-</tr>
-<tr>
-<td><strong>Validation commons</strong></td>
-<td>Common interfaces and utilities for all validation services (ie utilities for default and additional policies and constraints)</td>
-</tr>
-<tr>
-<td><strong>Monitoring service</strong></td>
-<td>Service that provides generic information about the webapp - it's name, version, uptime and link status. (The service is disabled by default)</td>
-</tr>
-</tbody>
-</table>
-<h3 id="x-road-validation-webapp-interfaces">X-road validation webapp interfaces</h3>
-<p>Provided:</p>
-<ul>
-<li>Validation service REST interface - interface for handling X-Road signed requests.<ul>
-<li>JSON formatted POST queries</li>
-</ul>
-</li>
-<li>Monitoring service REST interface - interface for retrieving the webapp's health information<ul>
-<li>HTTP GET that returns JSON formatted respónses</li>
-</ul>
-</li>
-</ul>
-<p>Required:</p>
-<ul>
-<li>N/A</li>
 </ul>
 <h3 id="demo-webapp">Demo webapp</h3>
 <table>

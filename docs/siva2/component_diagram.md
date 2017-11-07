@@ -86,7 +86,7 @@ DDOC for previous generation digitally signed files will use latest Maven releas
 X-Road containers are similar to ASiCE containers but are **not** valid ASiCE containers. There we could not use DSS nor DigiDoc4J provided
 ASiCE validation functionality but need to X-Road developed `asicverifier` Java command line utility to validate these containers.
 
-Source code for `asicverifier` can be found in [GitHub xroad-public repository](https://github.com/vrk-kpa/xroad-public/tree/master/src/asicverifier)*[]:
+Source code for `asicverifier` can be found in [GitHub xroad-public repository](https://github.com/ria-ee/X-Road/tree/master/src/asicverifier)*[]:
 `Asicverfier` has been integrated into SiVa as Java library. Making possible to use all the Java libraries packaged into `asicverifier` fat JAR.
 
 Configurable functionality:

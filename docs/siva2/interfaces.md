@@ -38,17 +38,19 @@ Validation request parameters for JSON and SOAP interfaces are described in the 
 |----------------|----------------|-----------|-------------|----------------|
 | document | Document | + |  String | Base64 encoded string of digitally signed document to be validated |
 | filename | Filename | + |  String |File name of the digitally signed document (i.e. sample.bdoc) |
-| documentType | DocumentType | + |  String | Format of the digitally signed document. This value determines the validation service type that will be used for validation. <br> **Possible values:** <br> * BDOC - for documents in [BDOC](http://id.ee/public/bdoc-spec212-eng.pdf) (ASiC-E/XAdES) format. Both time-stamp (TS) and time-mark (TM) profiles are supported here. <br> * DDOC - for documents in [DIGIDOC-XML](http://id.ee/public/DigiDoc_format_1.3.pdf) format, supported versions are DIGIDOC-XML 1.0 (also known as SK-XML 1.0) to DIGIDOC-XML 1.3. In case of DIGIDOC_XML documents, also the hashcode format is supported (see [DigiDocService Specification](http://sertkeskus.github.io/dds-documentation/api/api_docs/#ddoc-format-and-hashcode) for more information). <br> * PDF - for signed PDF document in [PAdES](http://www.etsi.org/deliver/etsi_en/319100_319199/31914201/01.01.01_60/en_31914201v010101p.pdf) format. <br>* XROAD - for documents created in the [X-Road](https://www.ria.ee/en/x-road.html) information system, see also [specification document](https://cyber.ee/uploads/2013/05/T-4-23-Profile-for-High-Performance-Digital-Signatures1.pdf) of the signature format. |
+| documentType | DocumentType | - |  String | Format of the digitally signed document. If not present, SIVA decides document type automatically based on filename extension. If present, only supported value is XROAD. |
 | signaturePolicy | SignaturePolicy | - |  String | Can be used to change the default signature validation policy that is used by the service. <br> See also [SiVa Validation Policy](/siva/appendix/validation_policy) for more information. <br> **Possible values:** <br> * POLv1 - the default policy. Signatures with all legal levels are accepted (i.e. QES, AdES and AdESqc, according to Regulation (EU) No 910/2014.) <br> * POLv2 - only signatures with QES legal level (according to Regulation (EU) No 910/2014) are accepted. |
+| reportType | ReportType | - |  String | * Simple - default report type. Returns overall validation result (validationConclusion block) <br> * Detailed - returns detailed information about the signatures and their validation results (validationConclusion, validationProcess and validationReportSignature. Two later ones are optionally present). |
+
 
 ### Sample JSON request
 
 ```json
 {
   "filename":"sample.ddoc",
-  "documentType":"DDOC",
   "document":"PD94bWwgdmVyc2lvbj0iMS4....",
-  "signaturePolicy": "POLv1"
+  "signaturePolicy": "POLv3",
+  "reportType": "Simple"
 }
 ```
 
@@ -63,8 +65,8 @@ Validation request parameters for JSON and SOAP interfaces are described in the 
       <ns2:ValidationRequest>
         <Document>PD94bWwgdmVyc2lvbj0iMS4....</Document>
         <Filename>sample.ddoc</Filename>
-        <DocumentType>DDOC</DocumentType>
-        <SignaturePolicy>POLv1</SignaturePolicy>
+        <SignaturePolicy>POLv3</SignaturePolicy>
+        <ReportType>Simple</ReportType>
       </ns2:ValidationRequest>
     </ns2:ValidateDocument>
   </soap:Body>
@@ -78,6 +80,9 @@ Validation request parameters for JSON and SOAP interfaces are described in the 
 
 The signature validation report (i.e. the validation response) for JSON and SOAP interfaces is described in the table below. Data types of SOAP parameters are defined in the [SiVa WSDL document](/siva/appendix/wsdl).
 
+Following parameter are wrapped with `validationConclusion` object which itself is wrapped with `validationReport` object
+
+
 | JSON parameter | SOAP parameter |  JSON data type | Description |
 |----------------|----------------|-----------------|-------------|
 | policy | Policy |  Object | Object containing information of the SiVa signature validation policy that was used for validation |
@@ -87,9 +92,13 @@ The signature validation report (i.e. the validation response) for JSON and SOAP
 | signaturesCount | SignaturesCount |  Number | Number of signatures found inside digitally signed file |
 | validSignaturesCount | ValidSignaturesCount |  Number | Signatures count that have validated to `TOTAL-PASSED`. See also `Signature.Indication` field. |
 | validationTime | ValidationTime |  Date | Time of validating the signature by the service |
+| validationLevel | ValidationLevel |  String | Level of the validated document. <br> **Possible values:**  <br> * BASIC_SIGNATURES <br> * TIMESTAMPS <br> * LONG_TERM_DATA <br> * ARCHIVAL_DATA |
 | validationWarnings | ValidationWarnings |  Array | Block of SiVa validation warnings that do not affect the overall validation result and applicable only to BDOC/ASiC-E type containers. Known warning situations: container includes unsigned files, manifest validation warnings. |
-| filename | DocumentName |  String | Digitally signed document's file name |
-| signatureForm | SignatureForm |  String | Format (and optionally version) of the digitally signed document container. <br> In case of documents in [DIGIDOC-XML](http://id.ee/public/DigiDoc_format_1.3.pdf) (DDOC) format, the "hashcode" suffix is used to denote that the container was validated in [hashcode mode](http://sertkeskus.github.io/dds-documentation/api/api_docs/#ddoc-format-and-hashcode), i.e. without original data files. <br> **Possible values:**  <br> * DIGIDOC_XML_1.0 <br> * DIGIDOC_XML_1.0_hashcode <br> * DIGIDOC_XML_1.1 <br> * DIGIDOC_XML_1.1_hashcode <br> * DIGIDOC_XML_1.2 <br> * DIGIDOC_XML_1.2_hashcode <br> * DIGIDOC_XML_1.3 <br> * DIGIDOC_XML_1.3_hashcode <br> * PAdES - used in case of signed PDF document <br> * ASiC_E - used in case of all [BDOC](http://id.ee/public/bdoc-spec212-eng.pdf) documents and X-Road simple containers that don't use batch time-stamping (see [specification document](https://cyber.ee/uploads/2013/05/T-4-23-Profile-for-High-Performance-Digital-Signatures1.pdf))<br> * ASiC_E_batchsignature - used in case of X-Road containers with batch signature (see [specification document](https://cyber.ee/uploads/2013/05/T-4-23-Profile-for-High-Performance-Digital-Signatures1.pdf))|
+| validatedDocument | ValidatedDocument |  Object | Object containing information of about the signed document a.k.a. datafile |
+| validatedDocument.filename | ValidatedDocument.FileName |  String | Digitally signed document's file name |
+| validatedDocument.fileHashInHex | ValidatedDocument.FileHashInHex |  String | Digitally signed document's hash in hex format |
+| validatedDocument.hashAlgo | ValidatedDocument.HashAlgo |  String | Digitally signed document's hash algorithm |
+| signatureForm | SignatureForm |  String | Format (and optionally version) of the digitally signed document container. <br> In case of documents in [DIGIDOC_XML_1.3](http://id.ee/public/DigiDoc_format_1.3.pdf) (DDOC) format, the "_hashcode" suffix is used to denote that the container was validated in [hashcode mode](http://sertkeskus.github.io/dds-documentation/api/api_docs/#ddoc-format-and-hashcode), i.e. without original data files. <br> **Possible values:**  <br> * DIGIDOC_XML_1.0 <br> * DIGIDOC_XML_1.0_hashcode <br> * DIGIDOC_XML_1.1 <br> * DIGIDOC_XML_1.1_hashcode <br> * DIGIDOC_XML_1.2 <br> * DIGIDOC_XML_1.2_hashcode <br> * DIGIDOC_XML_1.3 <br> * DIGIDOC_XML_1.3_hashcode <br> * ASiC-E - used in case of all [BDOC](http://id.ee/public/bdoc-spec212-eng.pdf) documents and X-Road simple containers that don't use batch time-stamping (see [specification document](https://cyber.ee/uploads/2013/05/T-4-23-Profile-for-High-Performance-Digital-Signatures1.pdf))<br> * ASiC-E_batchsignature - used in case of X-Road containers with batch signature (see [specification document](https://cyber.ee/uploads/2013/05/T-4-23-Profile-for-High-Performance-Digital-Signatures1.pdf)). In case of PDFs this field will be absent. |
 | signatures | Signatures |  Array | Collection of signatures found in digitally signed document |
 | signatures[0] | Signature |  Object | Signature information object |
 | signatures[0]. claimedSigningTime | Signature. ClaimedSigningTime |  Date | Claimed signing time, i.e. signer's computer time during signature creation |
@@ -108,42 +117,45 @@ The signature validation report (i.e. the validation response) for JSON and SOAP
 | signatures[0]. signatureScopes[0]. scope | Signature. SignatureScopes.  SignatureScope. Scope |  String | Type of the signature scope.<br>- In case of XAdES signature: 'FullSignatureScope'<br>- In case of PAdES signature: 'PdfByteRangeSignatureScope' |
 | signatures[0]. signatureScopes[0]. content | Signature. SignatureScopes.  SignatureScope. Content |  String | - In case of XAdES signatures: 'Full document', indicating that the whole document is covered by the signature. <br>- In case of PAdES signatures: the byte range that is covered by the signature. |
 | signatures[0].warnings | Signature.Warnings |  Array | Block of validation warnings that do not affect the overall validation result. Known warning situations (according to http://id.ee/public/SK-JDD-PRG-GUIDE.pdf, chap. 5.2.4.1): <br>- BDOC (ASiC-E) and PAdES: weaker digest method (SHA-1) has been used than recommended when calculating either Reference or Signature element’s digest value; <br> - DIGIDOC-XML 1.0-1.3: DataFile element’s xmlns attribute is missing;<br> - DIGIDOC-XML 1.0-1.3: IssuerSerial/X509IssuerName and/or IssuerSerial/X509IssuerSerial element’s xmlns attribute is missing. |
-| signatures[0].warnings[0]. description | Signature.Warnings. Warning.Description |  String | Warning description, as retuned by the base library that was used for validation. |
+| signatures[0].warnings[0]. content | Signature.Warnings. Warning.Content |  String | Warning description, as returned by the base library that was used for validation. |
 
 ### Sample JSON response (successful scenario)
 
 ```json
 {
-    "policy": {
-        "policyName": "POLv2",
-        "policyDescription": "Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result.",
-        "policyUrl": "http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv2"
-    },
-    "signaturesCount": 1,
-    "validSignaturesCount": 1,
-    "validationTime": "2016-07-28T14:41:45Z",
-    "documentName": "sample.bdoc",
-    "validationWarnings": [
-        {"content": "Manifest file has an entry for file document_3.xml with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file"},
-        {"content": "Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml"}
-    ],
-    "signatures": [
-        {
-            "claimedSigningTime": "2016-05-11T10:17:57Z",
-            "errors": [],
-            "id": "S0",
-            "indication": "TOTAL-PASSED",
-            "info": {
-                "bestSignatureTime": "2016-05-11T10:18:06Z"
+    "validationReport": {
+         "validationConclusion": {
+            "validationTime": "2017-11-06T22:32:00Z",
+            "signaturesCount": 1,
+            "validationLevel": "ARCHIVAL_DATA",
+            "validatedDocument": {
+                "filename": "ValidLiveSignature.asice",
+                "fileHashInHex": "0A805C920603750E0B427C3F25D7B22DCEC183DEF3CA14BE9A2D4488887DD501",
+                "hashAlgo": "SHA-256"
             },
-            "signatureFormat": "XAdES_BASELINE_LT_TM",
-            "signatureLevel": "QES",
-            "signatureScopes": [],
-            "signedBy": "NURM,AARE,38211015222",
-            "subIndication": "",
-            "warnings": []
+            "validSignaturesCount": 1,
+            "signatures": [{
+                "signatureFormat": "XAdES_BASELINE_LT",
+                "signedBy": "NURM,AARE,38211015222",
+                "claimedSigningTime": "2016-10-11T09:35:48Z",
+                "signatureLevel": "QESIG",
+                "signatureScopes": [{
+                    "scope": "FullSignatureScope",
+                    "name": "Tresting.txt",
+                    "content": "Full document"
+                }],
+                "id": "S0",
+                "indication": "TOTAL-PASSED",
+                "info": {"bestSignatureTime": "2016-10-11T09:36:10Z"}
+            }],
+            "policy": {
+                "policyDescription": "Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result.",
+                "policyUrl": "http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv4",
+                "policyName": "POLv4"
+            },
+            "signatureForm": "ASiC-E"
         }
-    ]
+    }
 }
 ```
 
@@ -153,49 +165,49 @@ The signature validation report (i.e. the validation response) for JSON and SOAP
 <?xml version="1.0" encoding="UTF-8"?>
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
   <soap:Body>
-    <ns2:ValidateDocumentResponse xmlns:ns2="http://soap.webapp.siva.openeid.ee/" xmlns:ns3="http://x-road.eu/xsd/identifiers" xmlns:ns4="http://x-road.eu/xsd/xroad.xsd">
+    <ns2:ValidateDocumentResponse xmlns:ns2="http://soap.webapp.siva.openeid.ee/" xmlns:ns3="http://dss.esig.europa.eu/validation/detailed-report" xmlns:ns4="http://x-road.eu/xsd/identifiers" xmlns:ns5="http://x-road.eu/xsd/xroad.xsd">
       <ns2:ValidationReport>
-        <Policy>
-          <PolicyDescription>Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.</PolicyDescription>
-          <PolicyName>POLv1</PolicyName>
-          <PolicyUrl>http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv1</PolicyUrl>
-        </Policy>
-        <ValidationTime>2016-09-27T06:42:33Z</ValidationTime>
-        <ValidationWarnings>
-          <ValidationWarning>
-            <Content>Manifest file has an entry for file document_3.xml with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file</Content>
-          </ValidationWarning>
-          <ValidationWarning>
-            <Content>Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml</Content>
-          </ValidationWarning>
-        </ValidationWarnings>
-        <DocumentName>Valid_ID_sig.bdoc</DocumentName>
-        <SignatureForm>ASiC_E</SignatureForm>
-        <Signatures>
-          <Signature>
-            <Id>S0</Id>
-            <SignatureFormat>XAdES_BASELINE_LT_TM</SignatureFormat>
-            <SignatureLevel>QES</SignatureLevel>
-            <SignedBy>NURM,AARE,38211015222</SignedBy>
-            <Indication>TOTAL-PASSED</Indication>
-            <SubIndication/>
-            <Errors/>
-            <SignatureScopes>
-              <SignatureScope>
-                <Name>Proov.txt</Name>
-                <Scope>FullSignatureScope</Scope>
-                <Content>Full document</Content>
-              </SignatureScope>
-            </SignatureScopes>
-            <ClaimedSigningTime>2016-05-12T10:09:09Z</ClaimedSigningTime>
-            <Warnings/>
-            <Info>
-              <bestSignatureTime>2016-05-12T10:09:20Z</bestSignatureTime>
-            </Info>
-          </Signature>
-        </Signatures>
-        <ValidSignaturesCount>1</ValidSignaturesCount>
-        <SignaturesCount>1</SignaturesCount>
+        <ns2:ValidationConclusion>
+          <Policy>
+            <PolicyDescription>Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result.</PolicyDescription>
+            <PolicyName>POLv4</PolicyName>
+            <PolicyUrl>http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv4</PolicyUrl>
+          </Policy>
+          <ValidationTime>2017-11-06T22:32:00Z</ValidationTime>
+          <ValidatedDocument>
+            <Filename>ValidLiveSignature.asice</Filename>
+            <FileHashInHex>0A805C920603750E0B427C3F25D7B22DCEC183DEF3CA14BE9A2D4488887DD501</FileHashInHex>
+            <HashAlgo>SHA-256</HashAlgo>
+          </ValidatedDocument>
+          <ValidationLevel>ARCHIVAL_DATA</ValidationLevel>
+          <ValidationWarnings/>
+          <SignatureForm>ASiC-E</SignatureForm>
+          <Signatures>
+            <Signature>
+              <Id>S0</Id>
+              <SignatureFormat>XAdES_BASELINE_LT</SignatureFormat>
+              <SignatureLevel>QESIG</SignatureLevel>
+              <SignedBy>NURM,AARE,38211015222</SignedBy>
+              <Indication>TOTAL-PASSED</Indication>
+              <SubIndication/>
+              <Errors/>
+              <SignatureScopes>
+                <SignatureScope>
+                  <Name>Tresting.txt</Name>
+                  <Scope>FullSignatureScope</Scope>
+                  <Content>Full document</Content>
+                </SignatureScope>
+              </SignatureScopes>
+              <ClaimedSigningTime>2016-10-11T09:35:48Z</ClaimedSigningTime>
+              <Warnings/>
+              <Info>
+                <bestSignatureTime>2016-10-11T09:36:10Z</bestSignatureTime>
+              </Info>
+            </Signature>
+          </Signatures>
+          <ValidSignaturesCount>1</ValidSignaturesCount>
+          <SignaturesCount>1</SignaturesCount>
+        </ns2:ValidationConclusion>
       </ns2:ValidationReport>
     </ns2:ValidateDocumentResponse>
   </soap:Body>

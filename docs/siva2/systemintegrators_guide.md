@@ -345,6 +345,55 @@ endpoints.health.links[0].timeout=1000
     The external link configuration must be explicitly set when the monitoring service on the target machine is configured to run on a different port as the target service itself(ie using the  `management.port` option in configuration) .
 
 
+## Validation Report Signature
+
+SiVa provdes the ability to sign the validation report signature. The idea of supplementing the validation report with a validation report signature is to prove the authority's authenticity and integrity over the validation.
+
+!!! note
+    Note that validation report signature is disabled by default
+
+To enable it, use the following configuration parameter:
+```bash
+siva.webapp.reportSignatureEnabled=true
+```
+
+When validation report signature is enabled, only detailed validation reports will be signed and simple reports will be ignored in this regard.
+The validation report's digital signature is composed out of response's `validationReport` object. The target format of the signature is ASiC-E (signature level is configurable). The ASiC-E container contents are encoded into Base64 and put on the same level int the response as the validation report itself.
+
+
+Example structure of the response containing report signature:
+
+```json
+{
+  "validationReport": {
+  ...
+  },
+  "validationReportSignature": "ZHNmYmhkZmdoZGcgZmRmMTM0NTM..."
+}
+```
+
+Supported interfaces for signature creation:
+
+* **PKCS#11** - a platform-independent API for cryptographic tokens, such as hardware security modules (HSM) and smart cards
+* **PKCS#12** - for files bundled with private key and certificate
+
+Report signature configuration parameters:
+
+Property | Description |
+| -------- | ----------- |
+|**siva.webapp.reportSignatureEnabled**| Enables singing the validation report. Validation report will only be signed when requesting detailed report.  <ul><li>Default: **false**</li></ul> |
+|**siva.signatureService.signatureLevel**| The level of the validation report signature. <br> **Example values:** <br> * XAdES_BASELINE_B <br> * XAdES_BASELINE_T <br> * XAdES_BASELINE_LT <br> * XAdES_BASELINE_LTA |
+|**siva.signatureService.tspUrl**| URL of the timestamp provider. <br> Only needed when the configured signature level is at least XAdES_BASELINE_T |
+|**siva.signatureService.ocspUrl**| URL of the OCSP provider. <br> Only needed when the configured signature level is at least XAdES_BASELINE_LT |
+|**siva.signatureService.pkcs11.path**| path to PKCS#11 module (depends on your installed smart card or hardware token library, for example: /usr/local/lib/opensc-pkcs11.so) |
+|**siva.signatureService.pkcs11.password**| pin/password of the smart card or hardware token |
+|**siva.signatureService.pkcs11.slotIndex**| depends on the hardware token. E.g. Estonian Smart Card uses 2, USB eToken uses 0. <ul><li>Default: **0**</li></ul> |
+|**siva.signatureService.pkcs12.path**| path to keystore file containing certificate and private key |
+|**siva.signatureService.pkcs12.password**| password of the keystore file containing certificate and private key |
+
+!!! note
+    When configuring report signature, either PKCS#11 or PKCS#12 should be configured, no need to configure both.
+
 --------------------------------------------------------------------------------------
 ## Configuration parameters
 
@@ -497,8 +546,6 @@ siva.ddoc.signaturePolicy.defaultPolicy=POLv1
 !!! note
     Default policy configuration is lost when policy detail properties (name, description, url or constraintPath) are overridden or new custom policies added in custom configuration files (in this case, the existing default policies must be redefined in configuration files explicitly)
 
-### X-road validation webapp parameters
-
 * X-road validation
 
 | Property | Description |
@@ -528,8 +575,7 @@ siva.ddoc.signaturePolicy.defaultPolicy= POLv1
     Default policy configuration is lost when policy detail properties (name, description, url or constraintPath) are overridden or new custom policies added in custom configuration files (in this case, the existing default policies must be redefined in configuration files explicitly)
 !!! note
     By default, X-road validation currently supports only POLv1
-
-
+   
 ### Demo webapp parameters
 
 * Linking to SiVa webapp

@@ -347,7 +347,7 @@ endpoints.health.links[0].timeout=1000
 
 ## Validation Report Signature
 
-SiVa provdes the ability to sign the validation report signature. The idea of supplementing the validation report with a validation report signature is to prove the authority's authenticity and integrity over the validation.
+SiVa provdes the ability to sign the validation report. The idea of supplementing the validation report with a validation report signature is to prove the authority's authenticity and integrity over the validation.
 
 !!! note
     Note that validation report signature is disabled by default

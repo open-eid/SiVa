@@ -64,6 +64,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The reference data object(s) is not intact!"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
                 .body("validationReport.validationConclusion.validatedDocument.fileHashInHex", Matchers.is("FBF589854B8E94FD110DF10D4DA4B3112AFE0DB8390F7198712DC2B2A8CF9B45"));
     }
@@ -91,6 +92,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[1].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationReport.validationConclusion.signatures[1].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
                 .body("validationReport.validationConclusion.signatures[1].errors.content", Matchers.hasItems("The signature is not intact!"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2))
                 .body("validationReport.validationConclusion.validatedDocument.fileHashInHex", Matchers.is("B341F436C824E71E85600FAAEB9918A3C10D226E194CCC714A232339F35C2EA4"));
@@ -117,6 +119,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The signature is not intact!"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2))
                 .body("validationReport.validationConclusion.validatedDocument.fileHashInHex", Matchers.is("4545537760A1E178AD08D9369ED253081DDA017F984A47BFC5B21DF08C022689"));
@@ -140,6 +143,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
         setTestFilesDirectory("document_format_test_files/");
         post(validationRequestFor("AsiceContainerNoSignature.asice"))
                 .then()
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(0))
                 .body("validationReport.validationConclusion.validationWarnings", Matchers.isEmptyOrNullString());
@@ -165,6 +169,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The signature is not intact!"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
@@ -189,6 +194,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CONSTRAINTS_FAILURE"))
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The signer's certificate has not expected key-usage!"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
@@ -209,6 +215,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     public void asiceInvalidNonRepudiationKeyNoComplianceInfo() {
         post(validationRequestFor("EE_SER-AEX-B-LT-I-26.asice"))
                 .then()
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CONSTRAINTS_FAILURE"))
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The signer's certificate has not expected key-usage!"))
@@ -233,11 +240,12 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     @Test
     public void asiceNotTrustedOcspCert() {
         setTestFilesDirectory("bdoc/live/timemark/");
-        post(validationRequestFor("TM-01_bdoc21-unknown-resp.bdoc", null, null))
+        post(validationRequestForDSS("TM-01_bdoc21-unknown-resp.bdoc", null, null))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The certificate chain for revocation data is not trusted, there is no trusted anchor."))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
@@ -261,6 +269,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Signature has an invalid timestamp"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
@@ -284,6 +293,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("NO_POE"))
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The past signature validation is not conclusive!"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
@@ -306,6 +316,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The revocation information is not considered as 'fresh'."))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
@@ -328,6 +339,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.signatures[0].warnings.content", Matchers.hasItems("All files are not signed!"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
 
     }
@@ -353,6 +365,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The signature is not intact!"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
@@ -376,6 +389,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The expected format is not found!"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
@@ -401,6 +415,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The expected format is not found!"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
@@ -426,6 +441,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
                 .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("The certificate path is not trusted!"))
                 .body("validationReport.validationConclusion.signatures[0].errors[1].content", Matchers.is("The certificate chain for signature is not trusted, there is no trusted anchor."))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
@@ -450,6 +466,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("NO_POE"))
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The past signature validation is not conclusive!"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
@@ -474,6 +491,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("TRY_LATER"))
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("No revocation data for the certificate"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
@@ -498,6 +516,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIGNED_DATA_NOT_FOUND"))
                 .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("The reference data object(s) is not found!"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
@@ -545,6 +564,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("The reference data object(s) is not intact!"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
@@ -569,6 +589,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("TRY_LATER"))
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("No revocation data for the certificate"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
@@ -593,6 +614,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("Signature has been created with expired certificate"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 

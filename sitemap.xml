@@ -4,7 +4,7 @@
     
     <url>
      <loc>/siva/version_info/</loc>
-     <lastmod>2017-11-07</lastmod>
+     <lastmod>2017-11-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -12,7 +12,7 @@
     
     <url>
      <loc>/</loc>
-     <lastmod>2017-11-07</lastmod>
+     <lastmod>2017-11-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -20,7 +20,7 @@
     
     <url>
      <loc>/siva/definitions/</loc>
-     <lastmod>2017-11-07</lastmod>
+     <lastmod>2017-11-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -28,7 +28,7 @@
     
     <url>
      <loc>/siva/overview/</loc>
-     <lastmod>2017-11-07</lastmod>
+     <lastmod>2017-11-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -37,13 +37,13 @@
         
     <url>
      <loc>/siva/v2/structure_and_activities/</loc>
-     <lastmod>2017-11-07</lastmod>
+     <lastmod>2017-11-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/siva/v2/use_cases/</loc>
-     <lastmod>2017-11-07</lastmod>
+     <lastmod>2017-11-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -52,7 +52,7 @@
     
     <url>
      <loc>/siva/v2/interfaces/</loc>
-     <lastmod>2017-11-07</lastmod>
+     <lastmod>2017-11-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -61,13 +61,13 @@
         
     <url>
      <loc>/siva/v2/deployment/</loc>
-     <lastmod>2017-11-07</lastmod>
+     <lastmod>2017-11-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/siva/v2/systemintegrators_guide/</loc>
-     <lastmod>2017-11-07</lastmod>
+     <lastmod>2017-11-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -77,13 +77,13 @@
         
     <url>
      <loc>/siva/qa_strategy/</loc>
-     <lastmod>2017-11-07</lastmod>
+     <lastmod>2017-11-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/siva/test_plan/</loc>
-     <lastmod>2017-11-07</lastmod>
+     <lastmod>2017-11-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -92,7 +92,7 @@
     
     <url>
      <loc>/siva/references/</loc>
-     <lastmod>2017-11-07</lastmod>
+     <lastmod>2017-11-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -101,25 +101,25 @@
         
     <url>
      <loc>/siva/appendix/validation_policy/</loc>
-     <lastmod>2017-11-07</lastmod>
+     <lastmod>2017-11-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/siva/appendix/test_cases/</loc>
-     <lastmod>2017-11-07</lastmod>
+     <lastmod>2017-11-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/siva/appendix/wsdl/</loc>
-     <lastmod>2017-11-07</lastmod>
+     <lastmod>2017-11-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/siva/appendix/known_issues/</loc>
-     <lastmod>2017-11-07</lastmod>
+     <lastmod>2017-11-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -129,13 +129,13 @@
         
     <url>
      <loc>/siva2/definitions/</loc>
-     <lastmod>2017-11-07</lastmod>
+     <lastmod>2017-11-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/siva2/overview/</loc>
-     <lastmod>2017-11-07</lastmod>
+     <lastmod>2017-11-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -147,7 +147,7 @@
         
     <url>
      <loc>/siva2/interfaces/</loc>
-     <lastmod>2017-11-07</lastmod>
+     <lastmod>2017-11-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -165,7 +165,7 @@
         
     <url>
      <loc>/siva2/references/</loc>
-     <lastmod>2017-11-07</lastmod>
+     <lastmod>2017-11-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
         

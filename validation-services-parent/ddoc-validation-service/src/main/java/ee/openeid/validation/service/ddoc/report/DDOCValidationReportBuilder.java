@@ -122,12 +122,7 @@ public class DDOCValidationReportBuilder {
         signatureValidationData.setClaimedSigningTime(getDateFormatterWithGMTZone().format(signature.getSignedProperties().getSigningTime()));
         signatureValidationData.setIndication(getIndication(signature));
 
-        //report fields that are not applicable for ddoc
-        signatureValidationData.setSignatureLevel("");
-        signatureValidationData.setInfo(createEmptySignatureInfo());
-        signatureValidationData.setSubIndication("");
         signatureValidationData.setCountryCode(CertUtil.getCountryCode(signature.getKeyInfo().getSignersCertificate()));
-
         return signatureValidationData;
     }
 
@@ -150,12 +145,6 @@ public class DDOCValidationReportBuilder {
                 .stream()
                 .filter(df -> StringUtils.equalsIgnoreCase(HASHCODE_CONTENT_TYPE, df.getContentType()))
                 .count() > 0;
-    }
-
-    private Info createEmptySignatureInfo() {
-        Info info = new Info();
-        info.setBestSignatureTime("");
-        return info;
     }
 
     private String getSignatureFormat() {

@@ -16,17 +16,12 @@
 
 package ee.openeid.siva.webapp.soap.transformer;
 
-import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.document.report.DetailedReport;
+import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
+import ee.openeid.siva.validation.document.report.ValidatedDocument;
 import ee.openeid.siva.webapp.soap.Error;
 import ee.openeid.siva.webapp.soap.*;
-import ee.openeid.siva.webapp.soap.Info;
-import ee.openeid.siva.webapp.soap.Policy;
-import ee.openeid.siva.webapp.soap.SignatureScope;
-import ee.openeid.siva.webapp.soap.SignatureValidationData;
-import ee.openeid.siva.webapp.soap.ValidationConclusion;
-import ee.openeid.siva.webapp.soap.ValidationWarning;
-import ee.openeid.siva.webapp.soap.Warning;
 import org.springframework.stereotype.Component;
 
 import javax.xml.bind.*;
@@ -37,6 +32,7 @@ import java.util.List;
 @Component
 public class ValidationReportSoapResponseTransformer {
     private static final String EU_DETAILED_REPORT_PACKAGE = "eu.europa.esig.dss.validation.detailed_report";
+
     private static Policy toSoapResponsePolicy(ee.openeid.siva.validation.document.report.Policy policy) {
         Policy responsePolicy = new Policy();
         responsePolicy.setPolicyDescription(policy.getPolicyDescription());
@@ -46,6 +42,8 @@ public class ValidationReportSoapResponseTransformer {
     }
 
     private static Info toSoapResponseSignatureInfo(ee.openeid.siva.validation.document.report.Info signatureInfo) {
+        if (signatureInfo == null)
+            return null;
         Info responseSignatureInfo = new Info();
         responseSignatureInfo.setBestSignatureTime(signatureInfo.getBestSignatureTime());
         return responseSignatureInfo;
@@ -114,7 +112,8 @@ public class ValidationReportSoapResponseTransformer {
         detailedReport.getBasicBuildingBlocks().addAll(euDetailReport.getBasicBuildingBlocks());
         return detailedReport;
     }
-    private ValidatedDocumentData toSoapValidatedDocument(ValidatedDocument validatedDocument){
+
+    private ValidatedDocumentData toSoapValidatedDocument(ValidatedDocument validatedDocument) {
         ValidatedDocumentData validatedDocumentData = new ValidatedDocumentData();
         validatedDocumentData.setFilename(validatedDocument.getFilename());
         validatedDocumentData.setFileHashInHex(validatedDocument.getFileHashInHex());
@@ -122,6 +121,7 @@ public class ValidationReportSoapResponseTransformer {
         return validatedDocumentData;
 
     }
+
     private ValidationConclusion.ValidationWarnings toSoapResponseValidationWarnings(List<ee.openeid.siva.validation.document.report.ValidationWarning> validationWarnings) {
         ValidationConclusion.ValidationWarnings responseValidationWarnings = new ValidationConclusion.ValidationWarnings();
         validationWarnings.stream()

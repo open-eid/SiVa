@@ -249,7 +249,6 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         assertEquals("validSignaturesCount should equal with signaturesCount", getValidationReportFromDom(report).getValidationConclusion().getSignaturesCount(),getValidationReportFromDom(report).getValidationConclusion().getValidSignaturesCount());
         assertEquals("SignatureFormat should match expected", "DIGIDOC_XML_1.1", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureFormat());
         assertEquals("Indication should match expected", "TOTAL-PASSED", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getIndication().value());
-        assertTrue("SignatureLevel should match expected", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureLevel().isEmpty());
         assertEquals("SignatureScopes should match expected", "FullSignatureScope", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
         assertTrue("Errors should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getErrors().getError().isEmpty());
         assertTrue("Warnings should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getWarnings().getWarning().isEmpty());
@@ -278,7 +277,6 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         assertEquals("validSignaturesCount should equal with signaturesCount", getValidationReportFromDom(report).getValidationConclusion().getSignaturesCount(),getValidationReportFromDom(report).getValidationConclusion().getValidSignaturesCount());
         assertEquals("SignatureFormat should match expected", "DIGIDOC_XML_1.2", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureFormat());
         assertEquals("Indication should match expected", "TOTAL-PASSED", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getIndication().value());
-        assertTrue("SignatureLevel should match expected", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureLevel().isEmpty());
         assertEquals("SignatureScopes should match expected", "FullSignatureScope", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
         assertTrue("Errors should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getErrors().getError().isEmpty());
         assertTrue("Warnings should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getWarnings().getWarning().isEmpty());
@@ -307,7 +305,6 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         assertEquals("validSignaturesCount should equal with signaturesCount", getValidationReportFromDom(report).getValidationConclusion().getSignaturesCount(),getValidationReportFromDom(report).getValidationConclusion().getValidSignaturesCount());
         assertEquals("SignatureFormat should match expected", "DIGIDOC_XML_1.3", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureFormat());
         assertEquals("Indication should match expected", "TOTAL-PASSED", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getIndication().value());
-        assertTrue("SignatureLevel should match expected", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureLevel().isEmpty());
         assertEquals("SignatureScopes should match expected", "FullSignatureScope", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
         assertTrue("Errors should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getErrors().getError().isEmpty());
         assertTrue("Warnings should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getWarnings().getWarning().isEmpty());

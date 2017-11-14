@@ -55,7 +55,7 @@ public abstract class SiVaIntegrationTestsBase {
     protected static final String VALID_SIGNATURE_POLICY_3 = "POLv3";
     protected static final String VALID_SIGNATURE_POLICY_4 = "POLv4";
 
-    protected static final String INVALID_SIGNATURE_POLICY = "RUS";
+    protected static final String INVALID_SIGNATURE_POLICY = "POLv1";
 
     protected static final String SMALL_CASE_VALID_SIGNATURE_POLICY_3 = "polv3";
     protected static final String SMALL_CASE_VALID_SIGNATURE_POLICY_4 = "polv4";

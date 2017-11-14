@@ -38,6 +38,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
     protected static final String INVALID_DOCUMENT_TYPE_DDOC = "Invalid document type. Can only return data files for DDOC type containers.";
     protected static final String INVALID_DATA_FILE_FILENAME = "Invalid filename. Can only return data files for DDOC type containers.";
     protected static final String INVALID_FILENAME = "Invalid filename";
+    protected static final String INVALID_REPORT_TYPE = "Invalid report type";
     protected static final String MAY_NOT_BE_EMPTY = "may not be empty";
     protected static final String INVALID_BASE_64 = "Document is not encoded in a valid base64 string";
     protected static final String DOCUMENT_TYPE = "documentType";

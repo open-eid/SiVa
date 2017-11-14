@@ -6,38 +6,39 @@
         <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://soap.webapp.siva.openeid.ee/"
                    targetNamespace="http://soap.webapp.siva.openeid.ee/">
             <xs:import namespace="http://x-road.eu/xsd/xroad.xsd" schemaLocation="http://x-road.eu/xsd/xroad.xsd"/>
-            <xs:element name="GetDocumentDataFiles" type="tns:getDocumentDataFiles"/>
+            <xs:element name="GetDocumentDataFiles" type="tns:GetDocumentDataFiles"/>
             <xs:element name="GetDocumentDataFilesResponse" type="tns:GetDocumentDataFilesResponse"/>
-            <xs:element name="DataFilesReport" type="tns:dataFilesReport"/>
-            <xs:element name="DataFilesRequest" type="tns:soapDataFilesRequest"/>
-            <xs:complexType name="getDocumentDataFiles">
+            <xs:element name="DataFilesReport" type="tns:DataFilesReport"/>
+            <xs:element name="DataFilesRequest" type="tns:SoapDataFilesRequest"/>
+            <xs:complexType name="GetDocumentDataFiles">
                 <xs:sequence>
                     <xs:element ref="tns:DataFilesRequest"/>
                 </xs:sequence>
             </xs:complexType>
-            <xs:complexType name="soapDataFilesRequest">
+            <xs:complexType name="SoapDataFilesRequest">
                 <xs:sequence>
                     <xs:element name="Document" type="xs:string"/>
                     <xs:element minOccurs="0" maxOccurs="1" name="Filename" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
+
             <xs:complexType name="GetDocumentDataFilesResponse">
                 <xs:sequence>
                     <xs:element minOccurs="0" ref="tns:DataFilesReport"/>
                 </xs:sequence>
             </xs:complexType>
-            <xs:complexType name="dataFilesReport">
+            <xs:complexType name="DataFilesReport">
                 <xs:sequence>
                     <xs:element name="DataFiles">
                         <xs:complexType>
                             <xs:sequence>
-                                <xs:element maxOccurs="unbounded" minOccurs="0" name="DataFile" type="tns:dataFile"/>
+                                <xs:element maxOccurs="unbounded" minOccurs="0" name="DataFile" type="tns:DataFile"/>
                             </xs:sequence>
                         </xs:complexType>
                     </xs:element>
                 </xs:sequence>
             </xs:complexType>
-            <xs:complexType name="dataFile">
+            <xs:complexType name="DataFile">
                 <xs:sequence>
                     <xs:element name="Base64" type="xs:string"/>
                     <xs:element name="Filename" type="xs:string"/>
@@ -45,7 +46,7 @@
                     <xs:element name="Size" type="xs:long"/>
                 </xs:sequence>
             </xs:complexType>
-            <xs:simpleType name="documentType">
+            <xs:simpleType name="DocumentType">
                 <xs:restriction base="xs:string">
                     <xs:enumeration value="PDF"/>
                     <xs:enumeration value="XROAD"/>

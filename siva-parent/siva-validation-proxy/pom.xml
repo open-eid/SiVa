@@ -87,10 +87,6 @@
         </dependency>
         <dependency>
             <groupId>ee.openid.siva</groupId>
-            <artifactId>xroad-validation-service</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>ee.openid.siva</groupId>
             <artifactId>siva-statistics</artifactId>
         </dependency>
 

@@ -19,9 +19,8 @@ package ee.openeid.siva.xroad.validation;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
 import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
-import ee.openeid.validation.service.xroad.XROADValidationService;
-import ee.openeid.validation.service.xroad.configuration.XROADSignaturePolicyProperties;
-import ee.openeid.validation.service.xroad.configuration.XROADValidationServiceProperties;
+import ee.openeid.siva.xroad.configuration.XROADSignaturePolicyProperties;
+import ee.openeid.siva.xroad.configuration.XROADValidationServiceProperties;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 
@@ -40,7 +39,7 @@ public class XROADTestUtils {
                 .withDocument(fileLocation)
                 .withName(testFile)
                 .build();
-        document.setBytes(IOUtils.toByteArray(getFileStream(fileLocation)));
+        document.setDataBase64Encoded(Base64.encodeBase64String(IOUtils.toByteArray(getFileStream(fileLocation))));
         return document;
     }
 

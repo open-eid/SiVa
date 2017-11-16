@@ -17,6 +17,9 @@
 package ee.openeid.siva;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import ee.openeid.siva.monitoring.configuration.MonitoringConfiguration;
+import ee.openeid.siva.monitoring.indicator.UrlHealthIndicator;
+import ee.openeid.siva.proxy.configuration.ProxyConfigurationProperties;
 import ee.openeid.siva.webapp.configuration.SivaWebApplicationConfigurationProperties;
 import ee.openeid.siva.webapp.soap.DataFilesWebService;
 import ee.openeid.siva.webapp.soap.ValidationWebService;
@@ -45,11 +48,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootConfiguration
-@EnableConfigurationProperties({SivaWebApplicationConfigurationProperties.class})
-public class ServletConfiguration {
+@EnableConfigurationProperties({SivaWebApplicationConfigurationProperties.class, ProxyConfigurationProperties.class})
+public class ServletConfiguration extends MonitoringConfiguration {
     private static final String ENDPOINT = "/validationWebService";
     private static final String DATAFILES_ENDPOINT = "/dataFilesWebService";
     private static final String URL_MAPPING = "/soap/*";
+
+    private ProxyConfigurationProperties proxyProperties;
 
     @Autowired
     @Qualifier("SoapReportSignatureInterceptor")
@@ -112,4 +117,14 @@ public class ServletConfiguration {
         return endpoint;
     }
 
+    @Autowired
+    public void setProxyProperties(ProxyConfigurationProperties proxyProperties) {
+        this.proxyProperties = proxyProperties;
+    }
+
+    public List<UrlHealthIndicator.ExternalLink> getDefaultExternalLinks() {
+        return new ArrayList<UrlHealthIndicator.ExternalLink>() {{
+            add(new UrlHealthIndicator.ExternalLink("xRoadService", proxyProperties.getXroadUrl() + DEFAULT_MONITORING_ENDPOINT, DEFAULT_TIMEOUT));
+        }};
+    }
 }

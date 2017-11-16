@@ -14,21 +14,18 @@
  * See the Licence for the specific language governing permissions and limitations under the Licence.
  */
 
-package ee.openeid.siva.validation.document;
+package ee.openeid.siva.proxy.http;
 
-import lombok.Data;
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
-@Data
-public class ValidationDocument {
+public class RESTValidationProxyException extends RuntimeException {
 
-    private byte[] bytes;
+    @Getter
+    private final HttpStatus httpStatus;
 
-    private String name;
-
-    private String signaturePolicy;
-
-    private String dataBase64Encoded;
-
-
-
+    public RESTValidationProxyException(String message, HttpStatus httpStatus) {
+        super(message);
+        this.httpStatus = httpStatus;
+    }
 }

@@ -14,7 +14,7 @@
  * See the Licence for the specific language governing permissions and limitations under the Licence.
  */
 
-package ee.openeid.validation.service.xroad.configuration;
+package ee.openeid.siva.xroad.configuration;
 
 import lombok.AccessLevel;
 import lombok.Data;

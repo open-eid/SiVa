@@ -14,21 +14,13 @@
  * See the Licence for the specific language governing permissions and limitations under the Licence.
  */
 
-package ee.openeid.siva.validation.document;
+package ee.openeid.siva.proxy.configuration;
 
 import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Data
-public class ValidationDocument {
-
-    private byte[] bytes;
-
-    private String name;
-
-    private String signaturePolicy;
-
-    private String dataBase64Encoded;
-
-
-
+@ConfigurationProperties("siva.proxy")
+public class ProxyConfigurationProperties {
+    private String xroadUrl = "http://localhost:8081";
 }

@@ -40,8 +40,10 @@ public class MonitoringIT extends SiVaRestTests {
         getMonitoring()
                 .then()
                 .body(matchesJsonSchemaInClasspath("MonitorStatusSchema.json"))
-                .body("status", Matchers.is("UP"))
-                .body("health.status", Matchers.is("UP"));
+                .body("status", Matchers.is("DOWN"))
+                .body("health.status", Matchers.is("UP"))
+                .body("link1.status", Matchers.is("DOWN"))
+                .body("link1.name", Matchers.is("xRoadService"));
     }
 
     @Override

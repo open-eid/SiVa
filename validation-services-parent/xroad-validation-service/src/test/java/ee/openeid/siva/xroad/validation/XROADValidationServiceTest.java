@@ -18,7 +18,6 @@ package ee.openeid.siva.xroad.validation;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
-import ee.openeid.validation.service.xroad.XROADValidationService;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -47,7 +46,7 @@ public class XROADValidationServiceTest {
     @Test
     public void validatingInvalidBase64EncodedDocumentResultsInMalformedDocumentException() throws Exception {
         ValidationDocument doc = new ValidationDocument();
-        doc.setBytes("ASDASDAFGOAGMRASGMASPÖGLMOP".getBytes());
+        doc.setDataBase64Encoded("ASDASDAFGOAGMRASGMASPÖGLMOP");
         expectedException.expect(MalformedDocumentException.class);
         expectedException.expectMessage(DOCUMENT_MALFORMED_MESSAGE);
         validationService.validateDocument(doc);

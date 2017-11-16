@@ -6,7 +6,7 @@
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
  *
- * https://joinup.ec.europa.eu/software/page/eupl
+ * https://joinup.ec.europa.eu/software/page/eupl5
  *
  * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
  * distributed on an "AS IS" basis,
@@ -14,21 +14,18 @@
  * See the Licence for the specific language governing permissions and limitations under the Licence.
  */
 
-package ee.openeid.siva.validation.document;
+package ee.openeid.siva.proxy.http;
 
-import lombok.Data;
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
-@Data
-public class ValidationDocument {
+public class RESTValidationProxyRequestException extends RESTValidationProxyException {
 
-    private byte[] bytes;
+    @Getter
+    private final String errorKey;
 
-    private String name;
-
-    private String signaturePolicy;
-
-    private String dataBase64Encoded;
-
-
-
+    public RESTValidationProxyRequestException(String key, String message, HttpStatus httpStatus) {
+        super(message, httpStatus);
+        this.errorKey = key;
+    }
 }

@@ -14,21 +14,14 @@
  * See the Licence for the specific language governing permissions and limitations under the Licence.
  */
 
-package ee.openeid.siva.validation.document;
+package ee.openeid.siva.proxy.http;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 @Data
-public class ValidationDocument {
-
-    private byte[] bytes;
-
-    private String name;
-
-    private String signaturePolicy;
-
-    private String dataBase64Encoded;
-
-
-
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class RESTProxyError {
+    private String key;
+    private String message;
 }

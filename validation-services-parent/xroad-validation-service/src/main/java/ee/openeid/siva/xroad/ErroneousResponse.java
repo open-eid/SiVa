@@ -6,7 +6,7 @@
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
  *
- * https://joinup.ec.europa.eu/software/page/eupl
+ * https://joinup.ec.europa.eu/software/page/eupl5
  *
  * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
  * distributed on an "AS IS" basis,
@@ -14,21 +14,18 @@
  * See the Licence for the specific language governing permissions and limitations under the Licence.
  */
 
-package ee.openeid.siva.validation.document;
+package ee.openeid.siva.xroad;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-@Data
-public class ValidationDocument {
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
-    private byte[] bytes;
-
-    private String name;
-
-    private String signaturePolicy;
-
-    private String dataBase64Encoded;
-
-
-
+@Getter
+@AllArgsConstructor
+@JsonInclude(NON_NULL)
+public class ErroneousResponse {
+    private String key;
+    private String message;
 }

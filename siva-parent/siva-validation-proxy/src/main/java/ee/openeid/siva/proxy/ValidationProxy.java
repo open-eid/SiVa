@@ -20,6 +20,7 @@ import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.document.ReportType;
 import ee.openeid.siva.proxy.exception.ValidatonServiceNotFoundException;
+import ee.openeid.siva.proxy.http.RESTProxyService;
 import ee.openeid.siva.statistics.StatisticsService;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.*;
@@ -58,6 +59,8 @@ public class ValidationProxy {
     private static final String ASICS_MIME_TYPE = "application/vnd.etsi.asic-s+zip";
     private static final String META_INF_FOLDER = "META-INF/";
     private static final String DOCUMENT_FORMAT_NOT_RECOGNIZED = "Document format not recognized/handled";
+
+    private RESTProxyService restProxyService;
     private StatisticsService statisticsService;
     private ApplicationContext applicationContext;
 
@@ -66,22 +69,27 @@ public class ValidationProxy {
         long validationStartTime = System.nanoTime();
         Reports reports;
         SimpleReport report;
-        ValidationService validationService = getServiceForType(proxyDocument);
-        reports = validationService.validateDocument(createValidationDocument(proxyDocument));
-        report = chooseReport(reports, proxyDocument.getReportType());
-        if (validationService instanceof TimeStampTokenValidationService && TimeStampTokenValidationData.Indication.TOTAL_PASSED == report.getValidationConclusion().getTimeStampTokens().get(0).getIndication()) {
-            ProxyDocument dataFileProxyDocument = generateDataFileProxyDocument(proxyDocument);
-            ValidationService dataFileValidationService = getServiceForType(dataFileProxyDocument);
-            SimpleReport dataFileReport = null;
-            try {
-                dataFileReport = chooseReport(dataFileValidationService.validateDocument(createValidationDocument(dataFileProxyDocument)), proxyDocument.getReportType());
-                removeUnnecessaryWarning(dataFileReport.getValidationConclusion());
-            } catch (DSSException e) {
-                if (!DOCUMENT_FORMAT_NOT_RECOGNIZED.equalsIgnoreCase(e.getMessage())) {
-                    throw e;
+        if (proxyDocument.getDocumentType() != null && proxyDocument.getDocumentType() == DocumentType.XROAD) {
+            reports = restProxyService.validate(createValidationDocument(proxyDocument));
+            report = chooseReport(reports, proxyDocument.getReportType());
+        } else {
+            ValidationService validationService = getServiceForType(proxyDocument);
+            reports = validationService.validateDocument(createValidationDocument(proxyDocument));
+            report = chooseReport(reports, proxyDocument.getReportType());
+            if (validationService instanceof TimeStampTokenValidationService && TimeStampTokenValidationData.Indication.TOTAL_PASSED == report.getValidationConclusion().getTimeStampTokens().get(0).getIndication()) {
+                ProxyDocument dataFileProxyDocument = generateDataFileProxyDocument(proxyDocument);
+                ValidationService dataFileValidationService = getServiceForType(dataFileProxyDocument);
+                SimpleReport dataFileReport = null;
+                try {
+                    dataFileReport = chooseReport(dataFileValidationService.validateDocument(createValidationDocument(dataFileProxyDocument)), proxyDocument.getReportType());
+                    removeUnnecessaryWarning(dataFileReport.getValidationConclusion());
+                } catch (DSSException e) {
+                    if (!DOCUMENT_FORMAT_NOT_RECOGNIZED.equalsIgnoreCase(e.getMessage())) {
+                        throw e;
+                    }
                 }
+                report = mergeReports(report, dataFileReport);
             }
-            report = mergeReports(report, dataFileReport);
         }
         statisticsService.publishValidationStatistic(System.nanoTime() - validationStartTime, report.getValidationConclusion());
         return report;
@@ -137,9 +145,6 @@ public class ValidationProxy {
     }
 
     private String constructValidatorName(ProxyDocument proxyDocument) {
-        if (DocumentType.XROAD == proxyDocument.getDocumentType()) {
-            return proxyDocument.getDocumentType().name() + SERVICE_BEAN_NAME_POSTFIX;
-        }
         String filename = proxyDocument.getName();
         String extension = FilenameUtils.getExtension(filename).toUpperCase();
         if (!StringUtils.isNotBlank(extension)) {
@@ -203,6 +208,11 @@ public class ValidationProxy {
         validationDocument.setBytes(proxyDocument.getBytes());
         validationDocument.setSignaturePolicy(proxyDocument.getSignaturePolicy());
         return validationDocument;
+    }
+
+    @Autowired
+    public void setRestProxyService(RESTProxyService restProxyService) {
+        this.restProxyService = restProxyService;
     }
 
     @Autowired

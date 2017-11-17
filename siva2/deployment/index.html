@@ -889,8 +889,8 @@
 <td>Load balancer distributes traffic between SiVa server nodes when there is more than one Siva server instance running. SiVa does not set any specific requirements for load balancer. As an example, the nginx reverse proxy is used.</td>
 </tr>
 <tr>
-<td><strong>Siva webapp</strong></td>
-<td>SiVa web appliction is executable Spring Boot JAR file. This means all the dependencies and servlet containers are packaged inside single JAR file. The JAR file can be placed anywhere in server and the JAR must be marked executable if its not already.<br/><br/>There also should be separate user created to run executalbe JAR as Linux service.<br/><br/>Read more about running <a href="https://docs.spring.io/spring-boot/docs/current/reference/html/deployment-install.html#deployment-service">Spring Boot applications as Linux system service</a></td>
+<td><strong>Siva server</strong></td>
+<td>Two separate services are set up to run on SiVa server: the <strong>SiVa webapp</strong> itself and the <strong>X-road validation webapp</strong>, to provide X-road support<ul><li>SiVa webapp</li></ul><br/>SiVa web appliction is executable Spring Boot JAR file. This means all the dependencies and servlet containers are packaged inside single JAR file. The JAR file can be placed anywhere in server and the JAR must be marked executable if its not already.<br/><br/>There also should be separate user created to run executalbe JAR as Linux service.<br/><br/>Read more about running <a href="https://docs.spring.io/spring-boot/docs/current/reference/html/deployment-install.html#deployment-service">Spring Boot applications as Linux system service</a><br/><ul><li>X-road validation webapp</li></ul><br/>SiVa X-Road validation service is also Spring Boot executable JAR application and also should be installed as Linux service. X-Road validation service communicates with SiVa web application over HTTP and default port is 8081<br/><br/>Note that X-Road separate installation is required to avoid BouncyCastle library version conflicts and class loader issues.</td>
 </tr>
 <tr>
 <td><strong>X-road security server</strong></td>

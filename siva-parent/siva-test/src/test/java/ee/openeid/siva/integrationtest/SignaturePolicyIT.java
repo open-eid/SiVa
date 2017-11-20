@@ -1206,7 +1206,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
     @Test
     public void pdfDocumentWithCrlAsRevocationInfoShouldPass() {
         setTestFilesDirectory("signature_policy_test_files/");
-        post(validationRequestFor("PadesProfileT.pdf", VALID_SIGNATURE_POLICY_4, null))
+        post(validationRequestFor("PadesProfileLtWithCrl.pdf", VALID_SIGNATURE_POLICY_4, null))
                 .then()
                 .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
                 .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))

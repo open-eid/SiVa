@@ -460,6 +460,34 @@ public class BdocValidationPassIT extends SiVaRestTests {
 
     }
 
+    /**
+     * TestCaseID: Bdoc-ValidationPass-19
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     *
+     * Title: ECC signature vith BDOC TM
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: testECCDemo.bdoc
+     */
+    @Ignore
+    @Test
+    public void bdocWithEccTimeMarkShouldPass() {
+
+        setTestFilesDirectory("bdoc/test/timemark/");
+        post(validationRequestForDD4j("testECCDemo.bdoc", null, null))
+                .then()
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+    }
+
+
     @Override
     protected String getTestFilesDirectory() {
         return testFilesDirectory;

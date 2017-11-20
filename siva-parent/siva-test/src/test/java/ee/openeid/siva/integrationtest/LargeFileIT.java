@@ -56,7 +56,7 @@ public class LargeFileIT extends SiVaRestTests{
     @Test
     public void pdfNineMegabyteFilesWithLtSignatureAreAccepted() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("9MB_PDF.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "9MB_PDF.pdf", ""))
+        post(validationRequestWithValidKeys(encodedString, "9MB_PDF.pdf", "POLv3"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat",equalTo("PAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.validatedDocument.filename",equalTo("9MB_PDF.pdf"));
@@ -78,7 +78,7 @@ public class LargeFileIT extends SiVaRestTests{
     @Test
     public void bdocTsNineMegabyteFilesValidSignatureAreAccepted() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("9MB_BDOC-TS.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "9MB_BDOC-TS.bdoc",""))
+        post(validationRequestWithValidKeys(encodedString, "9MB_BDOC-TS.bdoc","POLv3"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat",equalTo("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.validatedDocument.filename",equalTo("9MB_BDOC-TS.bdoc"))
@@ -101,7 +101,7 @@ public class LargeFileIT extends SiVaRestTests{
     @Test
     public void bdocTmNineMegabyteFilesValidSignatureAreAccepted() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("9MB_BDOC-TM.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "9MB_BDOC-TM.bdoc",""))
+        post(validationRequestWithValidKeys(encodedString, "9MB_BDOC-TM.bdoc","POLv3"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat",equalTo("XAdES_BASELINE_LT_TM"))
                 .body("validationReport.validationConclusion.validatedDocument.filename",equalTo("9MB_BDOC-TM.bdoc"))
@@ -124,7 +124,7 @@ public class LargeFileIT extends SiVaRestTests{
     @Test
     public void ddocTenMegabyteFilesWithValidSignatureAreAccepted() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("9MB_DDOC.ddoc"));
-        post(validationRequestWithValidKeys(encodedString, "9MB_DDOC.ddoc", ""))
+        post(validationRequestWithValidKeys(encodedString, "9MB_DDOC.ddoc", "POLv3"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat",equalTo("DIGIDOC_XML_1.3"))
                 .body("validationReport.validationConclusion.validatedDocument.filename",equalTo("9MB_DDOC.ddoc"))

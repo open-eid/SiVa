@@ -325,7 +325,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     @Test
     public void validationRequestNonBase64Input() {
         String encodedString = ",:";
-        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc",""))
+        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc","POLv3"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
                 .body("requestErrors[0].message", Matchers.containsString(INVALID_BASE_64));
@@ -389,7 +389,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     @Test
     public void validationRequestInvalidFilename() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "*.exe", ""))
+        post(validationRequestWithValidKeys(encodedString, "*.exe", "POLv3"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is(FILENAME))
                 .body("requestErrors[0].message", Matchers.containsString(INVALID_FILENAME));
@@ -466,7 +466,7 @@ public class ValidationRequestIT extends SiVaRestTests {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(DOCUMENT, encodedString);
         jsonObject.put(FILENAME, "Valid_IDCard_MobID_signatures.bdoc");
-        jsonObject.put(SIGNATURE_POLICY, "");
+        jsonObject.put(SIGNATURE_POLICY, "POLv3");
 
         post(jsonObject.toString())
                 .then()
@@ -734,7 +734,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     @Test
     public void bdocValidationRequestNotMatchingDocumentTypeAndActualFilePdf() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "PdfValidSingleSignature.bdoc", ""))
+        post(validationRequestWithValidKeys(encodedString, "PdfValidSingleSignature.bdoc", "POLv3"))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -757,7 +757,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     @Test
     public void validationRequestRandomInputAsBdocDocument() {
         String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
-        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", ""))
+        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "POLv3"))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -781,7 +781,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     public void validationRequestDocumentTypeBdocAndFileAsice() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("bdoc21-TS.asice"));
-        post(validationRequestWithValidKeys(encodedString, "bdoc21-TS.bdoc", ""))
+        post(validationRequestWithValidKeys(encodedString, "bdoc21-TS.bdoc", "POLv3"))
                 .then()
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
     }
@@ -802,7 +802,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     @Test
     public void validationRequestRandomInputAsPdfDocument() {
         String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
-        post(validationRequestWithValidKeys(encodedString, "some_pdf.pdf", ""))
+        post(validationRequestWithValidKeys(encodedString, "some_pdf.pdf", "POLv3"))
                 .then()
                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .body("message", Matchers.containsString("Document format not recognized/handled"));
@@ -824,7 +824,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     @Test
     public void ddocValidationRequestNotMatchingDocumentTypeAndActualFileBdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.ddoc", ""))
+        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.ddoc", "POLv3"))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -847,7 +847,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     @Test
     public void validationRequestRandomInputAsDdocDocument() {
         String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
-        post(validationRequestWithValidKeys(encodedString, "some_pdf.ddoc", ""))
+        post(validationRequestWithValidKeys(encodedString, "some_pdf.ddoc", "POlv3"))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -870,7 +870,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     @Test
     public void xroadValidationRequestNotMatchingDocumentTypeAndActualFileDdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
-        post(validationRequestWithDocumentTypeValidKeys(encodedString, "igasugust1.3.ddoc", "xroad", ""))
+        post(validationRequestWithDocumentTypeValidKeys(encodedString, "igasugust1.3.ddoc", "xroad", "POLv3"))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -893,7 +893,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     @Test
     public void validationRequestRandomInputAsXroadDocument() {
         String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
-        post(validationRequestWithDocumentTypeValidKeys(encodedString, "some_pdf.asice", "xroad", ""))
+        post(validationRequestWithDocumentTypeValidKeys(encodedString, "some_pdf.asice", "xroad", "POLv3"))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))

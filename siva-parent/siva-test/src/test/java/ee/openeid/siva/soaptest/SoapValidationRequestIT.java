@@ -225,7 +225,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                         "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
                         "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong.bdoc";
 
-        post(validationRequestForDocumentExtended(encodedString, filename, null, ""))
+        post(validationRequestForDocumentExtended(encodedString, filename, null, "POLv4"))
                 .then()
                 .body("Envelope.Body.ValidateDocumentResponse.ValidationReport.ValidationConclusion.ValidatedDocument.Filename", Matchers.is(filename));
     }
@@ -500,7 +500,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
     @Test
     public void soapValidationRequestWithEmptyFilename() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestForDocumentExtended(encodedString, "", "BDOC", VALID_SIGNATURE_POLICY_3))
+        post(validationRequestForDocumentExtended(encodedString, "", null, VALID_SIGNATURE_POLICY_3))
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
@@ -523,7 +523,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
     @Test
     public void soapValidationWithNotAllowedSignaturePolicyContent() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "BDOC", "/"))
+        post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", null, "/"))
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))

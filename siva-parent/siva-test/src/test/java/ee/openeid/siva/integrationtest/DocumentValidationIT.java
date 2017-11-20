@@ -57,7 +57,7 @@ public class DocumentValidationIT extends SiVaRestTests{
     public void bdocWithOneUnsignedDocumentShouldFail() {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("3f_2s_1f_unsigned.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "3f_2s_1f_unsigned.bdoc",""))
+        post(validationRequestWithValidKeys(encodedString, "3f_2s_1f_unsigned.bdoc","POLv3"))
                 .then()
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
@@ -91,7 +91,7 @@ public class DocumentValidationIT extends SiVaRestTests{
     public void bdocWithDocumentWithOneSignatureShouldFail() {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("3f_2s_1partly_signed.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "3f_2s_1partly_signed.bdoc",""))
+        post(validationRequestWithValidKeys(encodedString, "3f_2s_1partly_signed.bdoc","POLv3"))
                 .then()
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
@@ -122,7 +122,7 @@ public class DocumentValidationIT extends SiVaRestTests{
     public void bdocWithNonOverlapingSignaturesShouldFail() {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("3f_2s_2partly_signed.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "3f_2s_2partly_signed.bdoc",""))
+        post(validationRequestWithValidKeys(encodedString, "3f_2s_2partly_signed.bdoc","POLv3"))
                 .then()
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
@@ -155,7 +155,7 @@ public class DocumentValidationIT extends SiVaRestTests{
     public void bdocWithNonOverlapingSignaturesAndOneUnsignedDocumentShouldFail() {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("4f_2s_all_combinations.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "4f_2s_all_combinations.bdoc", ""))
+        post(validationRequestWithValidKeys(encodedString, "4f_2s_all_combinations.bdoc", "POLv3"))
                 .then()
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
@@ -193,7 +193,7 @@ public class DocumentValidationIT extends SiVaRestTests{
     public void bdocWithThreeUnsignedDocumentShouldPass() {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("6f_2s_3unsigned.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "6f_2s_3unsigned.bdoc", ""))
+        post(validationRequestWithValidKeys(encodedString, "6f_2s_3unsigned.bdoc", "POLv3"))
                 .then()
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(2))
@@ -230,7 +230,7 @@ public class DocumentValidationIT extends SiVaRestTests{
     public void bdocWithDeletedDocumentNamedInManifestShouldFail() {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("2f_2signed_1f_deleted.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "2f_2signed_1f_deleted.bdoc", ""))
+        post(validationRequestWithValidKeys(encodedString, "2f_2signed_1f_deleted.bdoc", "POLv3"))
                 .then()
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
@@ -258,7 +258,7 @@ public class DocumentValidationIT extends SiVaRestTests{
     public void bdocWithRemovedDocumentDeletedFromManifestShouldFail() {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("2f_2signed_1f_totally_removed.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "2f_2signed_1f_totally_removed.bdoc", ""))
+        post(validationRequestWithValidKeys(encodedString, "2f_2signed_1f_totally_removed.bdoc", "POLv3"))
                 .then()
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
@@ -288,7 +288,7 @@ public class DocumentValidationIT extends SiVaRestTests{
     public void bdocWithOneUnsignedDocumentNamedInManifestShouldPass() {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("3f_2signed_1unsigned_all_in_manifest.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "3f_2signed_1unsigned_all_in_manifest.bdoc", ""))
+        post(validationRequestWithValidKeys(encodedString, "3f_2signed_1unsigned_all_in_manifest.bdoc", "POLv3"))
                 .then()
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
@@ -316,7 +316,7 @@ public class DocumentValidationIT extends SiVaRestTests{
     public void bdocWithOneUnsignedDocumentNotNamedInManifestShouldPass() {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("3f_2signed_1unsigned_2in_manifest.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "33f_2signed_1unsigned_2in_manifest.bdoc", ""))
+        post(validationRequestWithValidKeys(encodedString, "33f_2signed_1unsigned_2in_manifest.bdoc", "POLv3"))
                 .then()
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
@@ -342,7 +342,7 @@ public class DocumentValidationIT extends SiVaRestTests{
     public void bdocWithAllSignedDocumentsShouldPass() {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("2f_all_signed.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "2f_all_signed.bdoc", ""))
+        post(validationRequestWithValidKeys(encodedString, "2f_all_signed.bdoc", "POLv3"))
                 .then()
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))

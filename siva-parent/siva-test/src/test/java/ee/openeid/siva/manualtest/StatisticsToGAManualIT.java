@@ -62,7 +62,7 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
     public void xAuthUsrWithValidSignatures() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades_lt_two_valid_sig.pdf"));
-        postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "pades_lt_two_valid_sig.pdf", ""), "XAuthTest")
+        postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "pades_lt_two_valid_sig.pdf", "POLv3"), "XAuthTest")
                 .then()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -84,7 +84,7 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
     public void xAuthUsrEmptyWithValidSignatures() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades_lt_two_valid_sig.pdf"));
-        postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "pades_lt_two_valid_sig.pdf", ""), "")
+        postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "pades_lt_two_valid_sig.pdf", "POLv3"), "")
                 .then()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -106,7 +106,7 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
     public void xAuthMissingWithValidSignatures() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades_lt_two_valid_sig.pdf"));
-        post(validationRequestWithValidKeys(encodedString, "pades_lt_two_valid_sig.pdf", ""))
+        post(validationRequestWithValidKeys(encodedString, "pades_lt_two_valid_sig.pdf", "POLv3"))
                 .then()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -128,7 +128,7 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
     public void bdocWithSignaturesFromDifferentCountries() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Baltic MoU digital signing_EST_LT_LV.bdoc"));
         SimpleReport report = mapToReport(
-                postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "Baltic MoU digital signing_EST_LT_LV.bdoc", ""), "CountriesTest")
+                postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "Baltic MoU digital signing_EST_LT_LV.bdoc", "POLv3"), "CountriesTest")
                         .body()
                         .asString()
         ).getValidationReport();
@@ -153,7 +153,7 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timestamp/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("BDOC-TS.bdoc"));
         SimpleReport report = mapToReport(
-                postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "BDOC-TS.bdoc", ""), "AsicETSTest")
+                postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "BDOC-TS.bdoc", "POLv3"), "AsicETSTest")
                         .body()
                         .asString()
         ).getValidationReport();
@@ -178,7 +178,7 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-batchsignature.asice"));
         SimpleReport report = mapToReport(
-                postWithXAuthUsrHeader(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-batchsignature.asice", "xroad", ""), "XXCountryCodeTest")
+                postWithXAuthUsrHeader(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-batchsignature.asice", "xroad", "POLv3"), "XXCountryCodeTest")
                         .body()
                         .asString()
         ).getValidationReport();
@@ -202,7 +202,7 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
     public void ddocWithErrorResponse() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "xroad-simple.ddoc", ""), "IsNotShownTest")
+        postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "xroad-simple.ddoc", "POLv3"), "IsNotShownTest")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -227,7 +227,7 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
         setTestFilesDirectory("ddoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("ilma_kehtivuskinnituseta.ddoc"));
         SimpleReport report = mapToReport(
-                postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "ilma_kehtivuskinnituseta.ddoc", ""), "XAdESTest")
+                postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "ilma_kehtivuskinnituseta.ddoc", "POLv3"), "XAdESTest")
                         .body()
                         .asString()
         ).getValidationReport();

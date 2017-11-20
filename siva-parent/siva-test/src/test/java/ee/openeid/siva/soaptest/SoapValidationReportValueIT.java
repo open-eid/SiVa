@@ -389,7 +389,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     public void SoapXroadCorrectValuesArePresentValidSimpleSignature() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        Document report = extractReportDom(post(validationRequestForDocumentExtended(encodedString, "xroad-simple.asice", "XROAD","")).andReturn().body().asString());
+        Document report = extractReportDom(post(validationRequestForDocumentExtended(encodedString, "xroad-simple.asice", "XROAD","POLv3")).andReturn().body().asString());
         assertEquals("validSignaturesCount should equal with signaturesCount", getValidationReportFromDom(report).getValidationConclusion().getValidSignaturesCount(), getValidationReportFromDom(report).getValidationConclusion().getSignaturesCount());
         assertEquals("SignatureFormat should match expected", "XAdES_BASELINE_LT", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureFormat());
         assertEquals("Indication should match expected", "TOTAL-PASSED", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getIndication().value());
@@ -419,7 +419,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     public void SoapXroadCorrectValuesArePresentInvalidSimpleSignature() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("invalid-digest.asice"));
-        Document report = extractReportDom(post(validationRequestForDocumentExtended(encodedString, "invalid-digest.asice", "XROAD","")).andReturn().body().asString());
+        Document report = extractReportDom(post(validationRequestForDocumentExtended(encodedString, "invalid-digest.asice", "XROAD","POLv3")).andReturn().body().asString());
         assertEquals("validSignaturesCount is zero", new Integer(0), getValidationReportFromDom(report).getValidationConclusion().getValidSignaturesCount());
         assertEquals("SignatureFormat should match expected", "XAdES_BASELINE_LT", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureFormat());
         assertEquals("Indication should match expected", "TOTAL-FAILED", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getIndication().value());

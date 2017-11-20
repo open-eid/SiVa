@@ -130,7 +130,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     public void bdocWithErrorResponse() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        post(validationRequestWithValidKeys(encodedString, "xroad-simple.bdoc", ""))
+        post(validationRequestWithValidKeys(encodedString, "xroad-simple.bdoc", "POLv3"))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -265,7 +265,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     public void ddocWithErrorResponse() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        post(validationRequestWithValidKeys(encodedString, "xroad-simple.ddoc", ""))
+        post(validationRequestWithValidKeys(encodedString, "xroad-simple.ddoc", "POLv3"))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -510,7 +510,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     public void xroadWithErrorResponse() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("BDOC-TS.bdoc"));
-        post(validationRequestWithDocumentTypeValidKeys(encodedString, "BDOC-TS.bdoc", "xroad", ""))
+        post(validationRequestWithDocumentTypeValidKeys(encodedString, "BDOC-TS.bdoc", "xroad", "POLv3"))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))

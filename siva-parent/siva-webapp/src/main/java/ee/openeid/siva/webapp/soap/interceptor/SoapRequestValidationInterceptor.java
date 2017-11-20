@@ -39,9 +39,8 @@ import java.util.regex.Pattern;
 
 public class SoapRequestValidationInterceptor extends AbstractSoapInterceptor {
     private static final String EMPTY_STRING = "";
-    private ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-
     SoapInterceptor saajIn = new SAAJInInterceptor();
+    private ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
 
     public SoapRequestValidationInterceptor() {
         super(Phase.POST_PROTOCOL);
@@ -78,10 +77,11 @@ public class SoapRequestValidationInterceptor extends AbstractSoapInterceptor {
     private void validateFilenameElement(SOAPBody body) {
         String filenameValue = getElementValueFromBody(body, "Filename");
         Pattern pattern = Pattern.compile(NotNullValidFilenamePattern.PATTERN);
-        Matcher matcher = pattern.matcher(filenameValue);
-        if (!matcher.matches()) {
+
+        if (StringUtils.isBlank(filenameValue) || !pattern.matcher(filenameValue).matches() || filenameValue.length() > 260 || filenameValue.length() < 1) {
             throwFault(messageSource.getMessage("validation.error.message.filename", null, null));
         }
+
     }
 
     private void validateDocumentTypeElement(SOAPBody body) {
@@ -93,21 +93,23 @@ public class SoapRequestValidationInterceptor extends AbstractSoapInterceptor {
 
     private void validateSignaturePolicyElement(SOAPBody body) {
         String signaturePolicyValue = getElementValueFromBody(body, "SignaturePolicy");
-        Pattern pattern = Pattern.compile(ValidSignaturePolicyPattern.PATTERN);
-        Matcher matcher = pattern.matcher(signaturePolicyValue);
-        if (!matcher.matches()) {
-            throwFault(messageSource.getMessage("validation.error.message.signaturePolicy", null, null));
+        if (signaturePolicyValue != null) {
+            Pattern pattern = Pattern.compile(ValidSignaturePolicyPattern.PATTERN);
+            Matcher matcher = pattern.matcher(signaturePolicyValue);
+            if (!matcher.matches() || signaturePolicyValue.length() > 100 || signaturePolicyValue.length() < 1) {
+                throwFault(messageSource.getMessage("validation.error.message.signaturePolicy", null, null));
+            }
         }
     }
 
     private String getElementValueFromBody(SOAPBody body, String elementName) {
         Node elementNode = body.getElementsByTagName(elementName).item(0);
         elementNode = elementNode == null ? null : elementNode.getFirstChild();
-        return elementNode == null ? "" : elementNode.getNodeValue();
+        return elementNode == null ? null : elementNode.getNodeValue();
     }
 
     private boolean isValidDocumentType(String inputDocumentType) {
-        if (EMPTY_STRING.equals(inputDocumentType)) {
+        if (inputDocumentType == null) {
             return true;
         }
         for (DocumentType dt : DocumentType.values()) {

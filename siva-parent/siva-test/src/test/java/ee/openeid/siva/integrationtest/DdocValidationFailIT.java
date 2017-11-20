@@ -405,7 +405,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
     public void ddocNamespaceErrorShouldFail() {
         setTestFilesDirectory("ddoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("ns6t3cp7.ddoc"));
-        post(validationRequestWithValidKeys(encodedString, "ns6t3cp7.ddoc", ""))
+        post(validationRequestWithValidKeys(encodedString, "ns6t3cp7.ddoc", "POLv3"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("Bad digest for DataFile: D0 alternate digest matches!"))

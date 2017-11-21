@@ -46,8 +46,8 @@ public class SivaJSONValidationServiceClient implements ValidationService {
 
         final ValidationRequest validationRequest = new ValidationRequest();
         validationRequest.setDocument(base64EncodedFile);
-
-        validationRequest.setSignaturePolicy(policy);
+        if (StringUtils.isNotBlank(policy))
+            validationRequest.setSignaturePolicy(policy);
         if (StringUtils.isNotBlank(report))
             validationRequest.setReportType(report);
         final String filename = file.getFilename();

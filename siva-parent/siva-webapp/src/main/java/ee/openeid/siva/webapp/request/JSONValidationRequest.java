@@ -19,8 +19,6 @@ package ee.openeid.siva.webapp.request;
 import ee.openeid.siva.webapp.request.validation.annotations.*;
 import lombok.Data;
 
-import javax.validation.constraints.Size;
-
 @Data
 public class JSONValidationRequest implements ValidationRequest {
 
@@ -28,14 +26,12 @@ public class JSONValidationRequest implements ValidationRequest {
     private String document;
 
     @ValidFilename
-    @Size(min = 1, max = 260)
     private String filename;
 
     @ValidDocumentType
     private String documentType;
 
     @ValidSignaturePolicy
-    @Size(min = 1, max = 100)
     private String signaturePolicy;
 
     @ValidReportType

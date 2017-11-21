@@ -25,7 +25,6 @@ import org.hamcrest.Matchers;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
@@ -101,7 +100,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     public void validationRequestAllInputs() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        post(validationRequestWithDocumentTypeValidKeys(encodedString,"xroad-simple.asice", "XROAD", "POLv3" ))
+        post(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-simple.asice", "XROAD", "POLv3"))
                 .then()
                 .body("validationReport.validationConclusion.validatedDocument.filename", equalTo("xroad-simple.asice"))
                 .body("validationReport.validationConclusion.policy.policyName", equalTo("POLv3"))
@@ -280,7 +279,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     @Test
     public void validationRequestCorrectBase64() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestWithValidKeys(encodedString,"Valid_IDCard_MobID_signatures.bdoc", null  ))
+        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", null))
                 .then()
                 .body("validationReport.validationConclusion.validatedDocument.filename", equalTo("Valid_IDCard_MobID_signatures.bdoc"))
                 .body("validationReport.validationConclusion.validSignaturesCount", equalTo(2));
@@ -302,7 +301,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     @Test
     public void validationRequestFaultyBase64() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestWithValidKeys("a"+encodedString,"Valid_IDCard_MobID_signatures.bdoc", null  ))
+        post(validationRequestWithValidKeys("a" + encodedString, "Valid_IDCard_MobID_signatures.bdoc", null))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
@@ -325,7 +324,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     @Test
     public void validationRequestNonBase64Input() {
         String encodedString = ",:";
-        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc","POLv3"))
+        post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "POLv3"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
                 .body("requestErrors[0].message", Matchers.containsString(INVALID_BASE_64));
@@ -370,7 +369,7 @@ public class ValidationRequestIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "Valid IDCard Mob ID_signatures .bDoC", null))
                 .then()
-                .body("validationReport.validationConclusion.validSignaturesCount",equalTo(2));
+                .body("validationReport.validationConclusion.validSignaturesCount", equalTo(2));
     }
 
     /**
@@ -409,13 +408,12 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
-    @Ignore //TODO: SIVARIA2-109
     public void validationRequestMaxFilename() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
 
-        String filename = StringUtils.repeat("a",38780) + ".bdoc";
+        String filename = StringUtils.repeat("a", 250) + ".bdoc";
 
-        post(validationRequestWithValidKeys(encodedString, filename,""))
+        post(validationRequestWithValidKeys(encodedString, filename, "POLv3"))
                 .then()
                 .body("validationReport.validationConclusion.validatedDocument.filename", equalTo(filename));
     }
@@ -434,17 +432,16 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
-    @Ignore //TODO: SIVARIA2-109
     public void validationRequestTooLongFilename() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
 
-        String filename = StringUtils.repeat("a",38780) + ".bdoc";
+        String filename = StringUtils.repeat("a", 261) + ".bdoc";
 
-        post(validationRequestWithValidKeys(encodedString, filename,""))
+        post(validationRequestWithValidKeys(encodedString, filename, "POLv3"))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("requestErrors[0].key", Matchers.is(DOCUMENT_TYPE))
-                .body("requestErrors[0].message", Matchers.containsString(INVALID_DOCUMENT_TYPE));
+                .body("requestErrors[0].key", Matchers.is(FILENAME))
+                .body("requestErrors[0].message", Matchers.containsString(INVALID_FILENAME_SIZE));
     }
 
     /**
@@ -608,7 +605,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(SIGNATURE_POLICY))
-                .body("requestErrors[0].message", Matchers.is("Invalid signature policy: " + INVALID_SIGNATURE_POLICY + "; Available abstractPolicies: [" + VALID_SIGNATURE_POLICY_3 + ", " + VALID_SIGNATURE_POLICY_4 +"]"));
+                .body("requestErrors[0].message", Matchers.is("Invalid signature policy: " + INVALID_SIGNATURE_POLICY + "; Available abstractPolicies: [" + VALID_SIGNATURE_POLICY_3 + ", " + VALID_SIGNATURE_POLICY_4 + "]"));
     }
 
     /**
@@ -716,6 +713,88 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(REPORT_TYPE))
                 .body("requestErrors[0].message", Matchers.containsString(INVALID_REPORT_TYPE));
+    }
+
+    /**
+     * TestCaseID: ValidationRequest-Parameters-28
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Filename is under allowed length
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_IDCard_MobID_signatures.bdoc
+     */
+    @Test
+    public void validationRequestTooShortFilename() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
+
+        String filename = "";
+
+        post(validationRequestWithValidKeys(encodedString, filename, "POLv3"))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+
+                .body("requestErrors[0].key", Matchers.is(FILENAME))
+                .body("requestErrors[0].message", Matchers.isOneOf(INVALID_FILENAME, INVALID_FILENAME_SIZE, MAY_NOT_BE_EMPTY))
+                .body("requestErrors[1].key", Matchers.is(FILENAME))
+                .body("requestErrors[1].message", Matchers.isOneOf(INVALID_FILENAME, INVALID_FILENAME_SIZE, MAY_NOT_BE_EMPTY))
+                .body("requestErrors[2].key", Matchers.is(FILENAME))
+                .body("requestErrors[2].message", Matchers.isOneOf(INVALID_FILENAME, INVALID_FILENAME_SIZE, MAY_NOT_BE_EMPTY));
+
+
+    }
+
+    /**
+     * TestCaseID: ValidationRequest-Parameters-29
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: SignaturePolicy is under allowed length
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_IDCard_MobID_signatures.bdoc
+     */
+    @Test
+    public void validationRequestTooShortSignaturePolicy() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
+        String signaturePolicy = "";
+
+        post(validationRequestWithValidKeys(encodedString, "filename.bdoc", signaturePolicy))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(SIGNATURE_POLICY))
+                .body("requestErrors[0].message", Matchers.containsString(INVALID_POLICY_SIZE));
+    }
+
+    /**
+     * TestCaseID: ValidationRequest-Parameters-30
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_IDCard_MobID_signatures.bdoc
+     */
+    @Test
+    public void validationRequestTooLongSignaturePolicy() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
+        String signaturePolicy = StringUtils.repeat("a", 101);
+
+        post(validationRequestWithValidKeys(encodedString, "filename.bdoc", signaturePolicy))
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(SIGNATURE_POLICY))
+                .body("requestErrors[0].message", Matchers.containsString(INVALID_POLICY_SIZE));
     }
 
     /**

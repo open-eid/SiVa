@@ -18,6 +18,7 @@ package ee.openeid.siva.soaptest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -166,66 +167,10 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
     @Test
     public void soapValidationRequestLongFilename() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
+        String filename = StringUtils.repeat("a", 250) + ".bdoc";
 
-        String filename =
-                "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong" +
-                        "FilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLongFilenameToBeInsertedLong.bdoc";
-
-        post(validationRequestForDocumentExtended(encodedString, filename, null, "POLv4"))
+        String request = validationRequestForDocumentExtended(encodedString, filename, null, "POLv4");
+        post(request)
                 .then()
                 .body("Envelope.Body.ValidateDocumentResponse.ValidationReport.ValidationConclusion.ValidatedDocument.Filename", Matchers.is(filename));
     }
@@ -344,7 +289,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
     @Test
     public void soapValidationRequestUnusualChars() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestForDocumentExtended(encodedString, "ÕValid_IDCard_MobID_signatures.bdocÄÖÜ", null, ""))
+        post(validationRequestForDocumentExtended(encodedString, "ÕValid_IDCard_MobID_signatures.bdocÄÖÜ", null, "POLv3"))
                 .then()
                 .body("Envelope.Body.ValidateDocumentResponse.ValidationReport.ValidationConclusion.ValidatedDocument.Filename", Matchers.is("ÕValid_IDCard_MobID_signatures.bdocÄÖÜ"));
     }
@@ -531,6 +476,112 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
     }
 
     /**
+     * TestCaseID: Soap-ValidationRequest-17
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
+     *
+     * Title: SignaturePolicy is over allowed length
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_IDCard_MobID_signatures.bdoc
+     */
+    @Test
+    public void soapValidationRequestTooLongSignaturePolicy() {
+        String filename = "Valid_IDCard_MobID_signatures.bdoc";
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources(filename));
+        String signaturePolicy = StringUtils.repeat("a", 101);
+
+        String request = validationRequestForDocumentExtended(encodedString, filename, null, signaturePolicy);
+        post(request)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
+                .body("Envelope.Body.Fault.faultstring", Matchers.is(INVALID_SIGNATURE_POLICY));
+    }
+
+    /**
+     * TestCaseID: Soap-ValidationRequest-18
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
+     *
+     * Title: SignaturePolicy is under allowed length
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_IDCard_MobID_signatures.bdoc
+     */
+    @Test
+    public void soapValidationRequestTooShortSignaturePolicy() {
+        String filename = "Valid_IDCard_MobID_signatures.bdoc";
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources(filename));
+        String signaturePolicy = "";
+
+        String request = validationRequestForDocumentExtended(encodedString, filename, null, signaturePolicy);
+        post(request)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
+                .body("Envelope.Body.Fault.faultstring", Matchers.is(INVALID_SIGNATURE_POLICY));
+    }
+
+    /**
+     * TestCaseID: Soap-ValidationRequest-19
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
+     *
+     * Title: Filename is under allowed length
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_IDCard_MobID_signatures.bdoc
+     */
+    @Test
+    public void soapValidationRequestTooShortFilename() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
+        String filename = "";
+
+        String request = validationRequestForDocumentExtended(encodedString, filename, null, "POLv3");
+        post(request)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
+                .body("Envelope.Body.Fault.faultstring", Matchers.is(INVALID_FILENAME));
+    }
+
+    /**
+     * TestCaseID: Soap-ValidationRequest-20
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-request-interface
+     *
+     * Title: Filename is over allowed length
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_IDCard_MobID_signatures.bdoc
+     */
+    @Test
+    public void soapValidationRequestTooLongFilename() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
+        String filename = StringUtils.repeat("a", 261) + ".bdoc";
+
+        String request = validationRequestForDocumentExtended(encodedString, filename, null, "POLv3");
+        post(request)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
+                .body("Envelope.Body.Fault.faultstring", Matchers.is(INVALID_FILENAME));
+    }
+
+    /**
      * TestCaseID: Soap-BdocValidationRequest-1
      *
      * TestType: Automated
@@ -569,7 +620,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
     @Test
     public void soapValidationRequestWrongFilename() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestForDocumentExtended(encodedString, "TotallyRandomFilename.exe", null, ""))
+        post(validationRequestForDocumentExtended(encodedString, "TotallyRandomFilename.exe", null, "POLv3"))
                 .then()
                 .body("Envelope.Body.ValidateDocumentResponse.ValidationReport.ValidationConclusion.ValidatedDocument.Filename", Matchers.is("TotallyRandomFilename.exe"));
     }
@@ -590,7 +641,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
     @Test
     public void soapBdocValidationRequestNotMatchingDocumentTypeAndActualFilePdf() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
-        post(validationRequestForDocumentExtended(encodedString, "PdfValidSingleSignature.bdoc", null, ""))
+        post(validationRequestForDocumentExtended(encodedString, "PdfValidSingleSignature.bdoc", null, "POLv3"))
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
@@ -613,7 +664,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
     @Test
     public void soapBdocValidationRequestNotMatchingDocumentTypeAndActualFileDdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
-        post(validationRequestForDocumentExtended(encodedString, "igasugust1.3.bdoc", null, ""))
+        post(validationRequestForDocumentExtended(encodedString, "igasugust1.3.bdoc", null, "POLv3"))
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
@@ -640,7 +691,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
-                .body("Envelope.Body.Fault.faultstring", Matchers.containsString("Invalid signature policy: " + INVALID_SIGNATURE_POLICY + "; Available abstractPolicies: [" + VALID_SIGNATURE_POLICY_3 + ", " + VALID_SIGNATURE_POLICY_4 +  "]"));
+                .body("Envelope.Body.Fault.faultstring", Matchers.containsString("Invalid signature policy: " + INVALID_SIGNATURE_POLICY + "; Available abstractPolicies: [" + VALID_SIGNATURE_POLICY_3 + ", " + VALID_SIGNATURE_POLICY_4 + "]"));
     }
 
     /**
@@ -681,7 +732,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
     public void soapBdocValidationRequestNotMatchingDocumentTypeAndActualFileXroad() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        post(validationRequestForDocumentExtended(encodedString, "xroad-simple.ddoc", null, ""))
+        post(validationRequestForDocumentExtended(encodedString, "xroad-simple.ddoc", null, "POLv3"))
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
@@ -750,7 +801,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
     @Test
     public void soapDdocValidationRequestNotMatchingDocumentTypeAndActualFileBdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.ddoc", null, ""))
+        post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.ddoc", null, "POLv3"))
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
@@ -773,7 +824,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
     @Test
     public void soapDdocValidationRequestNotMatchingDocumentTypeAndActualFilePdf() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
-        post(validationRequestForDocumentExtended(encodedString, "PdfValidSingleSignature.ddoc", null, ""))
+        post(validationRequestForDocumentExtended(encodedString, "PdfValidSingleSignature.ddoc", null, "POLv3"))
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
@@ -820,7 +871,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
     public void soapDdocValidationRequestNotMatchingDocumentTypeAndActualFileXroad() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-attachment.asice"));
-        post(validationRequestForDocumentExtended(encodedString, "xroad-attachment.ddoc", null, ""))
+        post(validationRequestForDocumentExtended(encodedString, "xroad-attachment.ddoc", null, "POLv3"))
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
@@ -913,7 +964,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
     @Test
     public void soapXroadValidationRequestNotMatchingDocumentTypeAndActualFileDdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
-        post(validationRequestForDocumentExtended(encodedString, "igasugust1.3.ddoc", "XROAD", ""))
+        post(validationRequestForDocumentExtended(encodedString, "igasugust1.3.ddoc", "XROAD", "POLv3"))
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
@@ -959,7 +1010,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
     @Test
     public void soapXroadValidationRequestNotMatchingDocumentTypeAndActualFilePdf() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
-        post(validationRequestForDocumentExtended(encodedString, "PdfValidSingleSignature.pdf", "XROAD", ""))
+        post(validationRequestForDocumentExtended(encodedString, "PdfValidSingleSignature.pdf", "XROAD", "POLv3"))
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))

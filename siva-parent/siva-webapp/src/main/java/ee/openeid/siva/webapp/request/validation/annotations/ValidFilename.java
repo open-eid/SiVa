@@ -16,16 +16,18 @@
 
 package ee.openeid.siva.webapp.request.validation.annotations;
 
-import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
+import javax.validation.constraints.Size;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@NotBlank
+@Size(min = 1, max = 260)
+@NotEmpty
 @NotNullValidFilenamePattern
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

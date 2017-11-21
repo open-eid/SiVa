@@ -473,12 +473,12 @@ public class BdocValidationPassIT extends SiVaRestTests {
      *
      * File: testECCDemo.bdoc
      */
-    @Ignore
+    @Ignore //TODO: SIVARIA2-115
     @Test
     public void bdocWithEccTimeMarkShouldPass() {
 
         setTestFilesDirectory("bdoc/test/timemark/");
-        post(validationRequestForDD4j("testECCDemo.bdoc", null, null))
+        post(validationRequestFor("testECCDemo.bdoc", null, null))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
@@ -487,6 +487,32 @@ public class BdocValidationPassIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
 
+    /**
+     * TestCaseID: Bdoc-ValidationPass-20
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     *
+     * Title: ECC signature vith BDOC TS
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice
+     */
+    @Ignore //TODO: SIVARIA2-115
+    @Test
+    public void bdocWithEccTimeStampShouldPass() {
+
+        setTestFilesDirectory("bdoc/test/timestamp/");
+        post(validationRequestForDD4j("Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice", null, null))
+                .then()
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+    }
 
     @Override
     protected String getTestFilesDirectory() {

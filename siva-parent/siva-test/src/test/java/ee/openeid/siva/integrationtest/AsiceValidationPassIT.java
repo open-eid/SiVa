@@ -293,6 +293,32 @@ public class AsiceValidationPassIT extends SiVaRestTests {
 
     }
 
+    /**
+     * TestCaseID: Asice-ValidationPass-13
+     * <p>
+     * TestType: Automated
+     * <p>
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     * <p>
+     * Title: New Estonian ECC signature
+     * <p>
+     * Expected Result: The document should pass the validation
+     * <p>
+     * File: Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice
+     */
+    @Ignore //TODO: SIVARIA2-115
+    @Test
+    public void asiceEccSignatureShouldPass() {
+        setTestFilesDirectory("bdoc/test/timestamp/");
+        post(validationRequestFor("Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice"))
+                .then()
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
+
+    }
+
     @Override
     protected String getTestFilesDirectory() {
         return testFilesDirectory;

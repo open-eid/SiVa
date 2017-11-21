@@ -117,7 +117,7 @@ public class SoapRequestValidationInterceptorTest {
 
     @Test
     public void noSoapFaultIsThrownWithValidRequest() throws SOAPException {
-        mockSoapMessage("filename", "AABBBAA", "BDOC", "AA");
+        mockSoapMessage("filename", "c2Q=", "BDOC", "AA");
         Fault soapFault = handleMessageInInterceptor(message);
         assertNull(soapFault);
     }

@@ -34,7 +34,6 @@ import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SoapRequestValidationInterceptor extends AbstractSoapInterceptor {
@@ -77,7 +76,6 @@ public class SoapRequestValidationInterceptor extends AbstractSoapInterceptor {
     private void validateFilenameElement(SOAPBody body) {
         String filenameValue = getElementValueFromBody(body, "Filename");
         Pattern pattern = Pattern.compile(NotNullValidFilenamePattern.PATTERN);
-
         if (StringUtils.isBlank(filenameValue) || !pattern.matcher(filenameValue).matches() || filenameValue.length() > 260 || filenameValue.length() < 1) {
             throwFault(messageSource.getMessage("validation.error.message.filename", null, null));
         }
@@ -93,19 +91,19 @@ public class SoapRequestValidationInterceptor extends AbstractSoapInterceptor {
 
     private void validateSignaturePolicyElement(SOAPBody body) {
         String signaturePolicyValue = getElementValueFromBody(body, "SignaturePolicy");
-        if (signaturePolicyValue != null) {
-            Pattern pattern = Pattern.compile(ValidSignaturePolicyPattern.PATTERN);
-            Matcher matcher = pattern.matcher(signaturePolicyValue);
-            if (!matcher.matches() || signaturePolicyValue.length() > 100 || signaturePolicyValue.length() < 1) {
-                throwFault(messageSource.getMessage("validation.error.message.signaturePolicy", null, null));
-            }
+
+        Pattern pattern = Pattern.compile(ValidSignaturePolicyPattern.PATTERN);
+        if (signaturePolicyValue!=null && (!pattern.matcher(signaturePolicyValue).matches() || signaturePolicyValue.length() > 100 || signaturePolicyValue.length() < 1)) {
+            throwFault(messageSource.getMessage("validation.error.message.signaturePolicy", null, null));
         }
+
     }
 
     private String getElementValueFromBody(SOAPBody body, String elementName) {
         Node elementNode = body.getElementsByTagName(elementName).item(0);
-        elementNode = elementNode == null ? null : elementNode.getFirstChild();
-        return elementNode == null ? null : elementNode.getNodeValue();
+        if (elementNode == null)
+            return null;
+        return elementNode.getNodeValue() == null ? elementNode.getTextContent() : elementNode.getNodeValue();
     }
 
     private boolean isValidDocumentType(String inputDocumentType) {

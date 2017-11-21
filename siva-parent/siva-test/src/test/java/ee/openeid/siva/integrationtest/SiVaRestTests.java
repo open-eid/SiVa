@@ -23,8 +23,8 @@ import com.jayway.restassured.response.Response;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.webapp.response.ValidationResponse;
 import org.apache.commons.codec.binary.Base64;
-import org.json.JSONObject;
 import org.apache.commons.io.FilenameUtils;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -38,6 +38,8 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
     protected static final String INVALID_DOCUMENT_TYPE_DDOC = "Invalid document type. Can only return data files for DDOC type containers.";
     protected static final String INVALID_DATA_FILE_FILENAME = "Invalid filename. Can only return data files for DDOC type containers.";
     protected static final String INVALID_FILENAME = "Invalid filename";
+    protected static final String INVALID_FILENAME_SIZE = "size must be between 1 and 260";
+    protected static final String INVALID_POLICY_SIZE = "size must be between 1 and 100";
     protected static final String INVALID_REPORT_TYPE = "Invalid report type";
     protected static final String MAY_NOT_BE_EMPTY = "may not be empty";
     protected static final String INVALID_BASE_64 = "Document is not encoded in a valid base64 string";
@@ -111,7 +113,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
     }
 
     protected SimpleReport postForReportAndPrintResponse(String file, String signaturePolicy) {
-        return mapToReport(post(validationRequestFor(file, signaturePolicy,null)).andReturn().body().prettyPrint()).getValidationReport();
+        return mapToReport(post(validationRequestFor(file, signaturePolicy, null)).andReturn().body().prettyPrint()).getValidationReport();
     }
 
     protected String validationRequestFor(String file, String signaturePolicy, String reportType) {
@@ -191,9 +193,9 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
     }
 
     protected String validationRequestDocumentTypeExtended(String documentKey, String encodedDocument,
-                                                  String filenameKey, String file,
-                                                  String documentTypeKey, String documentType,
-                                                  String signaturePolicyKey, String signaturePolicy) {
+                                                           String filenameKey, String file,
+                                                           String documentTypeKey, String documentType,
+                                                           String signaturePolicyKey, String signaturePolicy) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(documentKey, encodedDocument);
         jsonObject.put(filenameKey, file);

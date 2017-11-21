@@ -17,10 +17,7 @@
 package ee.openeid.siva.integrationtest;
 
 import com.jayway.restassured.RestAssured;
-
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
-
-import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -473,7 +470,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
      *
      * File: testECCDemo.bdoc
      */
-    @Ignore
+
     @Test
     public void bdocWithEccTimeMarkShouldPass() {
 

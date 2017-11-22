@@ -63,6 +63,7 @@ public class GenericValidationReportBuilder {
         SimpleReport simpleReport = new SimpleReport(validationConclusion);
         validationConclusion.setValidationLevel(validationLevel.name());
         DetailedReport detailedReport = new DetailedReport(validationConclusion, dssReports.getDetailedReportJaxb());
+
         return new Reports(simpleReport, detailedReport);
     }
 
@@ -213,9 +214,5 @@ public class GenericValidationReportBuilder {
                 .map(CertificateWrapper::getCountryName)
                 .findFirst();
         return countryCode.orElse(null);
-    }
-
-    public void setValidationPolicy(ConstraintDefinedPolicy validationPolicy) {
-        this.validationPolicy = validationPolicy;
     }
 }

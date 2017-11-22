@@ -37,7 +37,6 @@ import javax.xml.soap.SOAPMessage;
 import java.util.regex.Pattern;
 
 public class SoapRequestValidationInterceptor extends AbstractSoapInterceptor {
-    private static final String EMPTY_STRING = "";
     SoapInterceptor saajIn = new SAAJInInterceptor();
     private ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
 

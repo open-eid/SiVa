@@ -57,6 +57,7 @@ public class AsiceWithXadesSignatureService implements SignatureService {
         parameters.setDigestAlgorithm(DigestAlgorithm.SHA256);
         parameters.aSiC().setMimeType(MimeType.ASICE.getMimeTypeString());
         parameters.setSigningCertificate(privateKeyEntry.getCertificate());
+        parameters.setEncryptionAlgorithm(privateKeyEntry.getEncryptionAlgorithm());
 
         CommonCertificateVerifier commonCertificateVerifier = new CommonCertificateVerifier();
         OCSPSource ocspSource = getOcspSource(properties.getOcspUrl());

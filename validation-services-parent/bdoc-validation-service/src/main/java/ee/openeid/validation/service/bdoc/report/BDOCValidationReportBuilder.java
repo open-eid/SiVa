@@ -38,6 +38,7 @@ import java.util.stream.Collectors;
 
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.processSignatureIndications;
 import static org.digidoc4j.X509Cert.SubjectName.CN;
 
 public class BDOCValidationReportBuilder {
@@ -92,6 +93,8 @@ public class BDOCValidationReportBuilder {
 
     public Reports build() {
         ValidationConclusion validationConclusion = getValidationConclusion();
+        processSignatureIndications(validationConclusion, validationPolicy.getName());
+
         SimpleReport simpleReport = new SimpleReport(validationConclusion);
         DetailedReport detailedReport = new DetailedReport(validationConclusion, null);
         return new Reports(simpleReport, detailedReport);

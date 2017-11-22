@@ -16,9 +16,10 @@
 
 package ee.openeid.siva.validation.document.report.builder;
 
-import ee.openeid.siva.validation.document.report.Policy;
-import ee.openeid.siva.validation.document.report.ValidatedDocument;
+import ee.openeid.siva.validation.document.report.Error;
+import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
+import eu.europa.esig.dss.validation.SignatureQualification;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.util.encoders.Hex;
@@ -37,6 +38,9 @@ public final class ReportBuilderUtils {
     private static final String GREENWICH_MEAN_TIME = "Etc/GMT";
     private static final String DIGEST_ALGO = "SHA-256";
     private static final String UNKNOWN_VALUE = "NA";
+    private static final String QES_POLICY = "POLv4";
+    private static final String SIGNATURE_LEVEL_ERROR = "Signature/seal level do not meet the minimal level required by applied policy";
+    private static final String SIGNATURE_LEVEL_WARNING = "The signature is not in the Qualified Electronic Signature level";
 
     public static String emptyWhenNull(String value) {
         return value != null ? value : valueNotPresent();
@@ -78,5 +82,36 @@ public final class ReportBuilderUtils {
         validatedDocument.setHashAlgo(DIGEST_ALGO);
         return validatedDocument;
     }
+    public static void processSignatureIndications(ValidationConclusion validationConclusion, String policyName) {
+        if (QES_POLICY.equals(policyName)) {
+            for (SignatureValidationData signature : validationConclusion.getSignatures()) {
+                if (SignatureValidationData.Indication.TOTAL_PASSED.toString().equals(signature.getIndication())) {
+                    String signatureLevel = signature.getSignatureLevel();
+                    if (SignatureQualification.ADESEAL_QC.name().equals(signatureLevel) || SignatureQualification.QES.name().equals(signatureLevel)
+                            || SignatureQualification.QESIG.name().equals(signatureLevel) || SignatureQualification.QESEAL.name().equals(signatureLevel)) {
+                        continue;
+                    } else if (SignatureQualification.ADESIG_QC.name().equals(signatureLevel)) {
+                        signature.getWarnings().add(getSignatureLevelWarning());
+                        continue;
+                    }
+                    signature.setIndication(SignatureValidationData.Indication.TOTAL_FAILED);
+                    signature.getErrors().add(getSignatureLevelNotAcceptedError());
+                    validationConclusion.setValidSignaturesCount(validationConclusion.getValidSignaturesCount() - 1);
+                }
+            }
+        }
+    }
 
+
+    private static Error getSignatureLevelNotAcceptedError() {
+        Error error = new Error();
+        error.setContent(SIGNATURE_LEVEL_ERROR);
+        return error;
+    }
+
+    private static Warning getSignatureLevelWarning() {
+        Warning warning = new Warning();
+        warning.setContent(SIGNATURE_LEVEL_WARNING);
+        return warning;
+    }
 }

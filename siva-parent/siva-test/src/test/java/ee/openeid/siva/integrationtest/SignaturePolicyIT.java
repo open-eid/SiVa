@@ -16,7 +16,6 @@
 
 package ee.openeid.siva.integrationtest;
 
-import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -77,7 +76,6 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File: allkiri_ades.asice
      */
-    @Ignore //TODO: SIVARIA2-114
     @Test
     public void bdocDocumentAdesNonSscdCompliantShouldFailWithGivenPolicy() {
         setTestFilesDirectory("bdoc/test/timestamp/");
@@ -89,10 +87,10 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("ADES"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("Signature/seal level do not meet the minimal level required by applied policy"))
                 .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The certificate is not qualified at issuance time!"))
                 .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The signature/seal is not created by a QSCD!"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
 
@@ -268,7 +266,6 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File: testAdesQC.asice
      */
-    @Ignore //TODO: SIVARIA2-114
     @Test
     public void bdocDocumentAdesQcSigCompliantShouldPassWithWarning() {
         setTestFilesDirectory("bdoc/live/timestamp/");
@@ -832,7 +829,6 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File: testAdesQC.asice
      */
-    @Ignore //TODO: SIVARIA2-114
     @Test
     public void bdocDocumentAdesQcSigShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/live/timestamp/");
@@ -846,7 +842,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The signature/seal is not created by a QSCD!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The signature is not in the Qualified Electronic Signature level"))
+                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.hasSize(1))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }

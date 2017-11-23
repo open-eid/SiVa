@@ -16,9 +16,9 @@
 
 package ee.openeid.siva.xroad.validation;
 
+import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Reports;
-import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.ValidationService;
@@ -40,13 +40,14 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.Date;
 
 @Service
 public class XROADValidationService implements ValidationService {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(XROADValidationService.class);
     private XROADValidationServiceProperties properties;
     private SignaturePolicyService<ValidationPolicy> signaturePolicyService;
+    private ReportConfigurationProperties reportConfigurationProperties;
 
     @Override
     public Reports validateDocument(ValidationDocument validationDocument) {
@@ -62,9 +63,9 @@ public class XROADValidationService implements ValidationService {
         final AsicContainerVerifier verifier = new AsicContainerVerifier(container);
         try {
             verifier.verify();
-            return new XROADValidationReportBuilder(verifier, validationDocument, new Date(), policy).build();
+            return new XROADValidationReportBuilder(verifier, validationDocument, policy, reportConfigurationProperties.isReportSignatureEnabled()).build();
         } catch (CodedException codedException) {
-            return new XROADValidationReportBuilder(verifier, validationDocument, new Date(), policy, codedException).build();
+            return new XROADValidationReportBuilder(verifier, validationDocument, policy, reportConfigurationProperties.isReportSignatureEnabled(), codedException).build();
         } catch (Exception e) {
             LOGGER.warn("There was an error validating the document", e);
             throw new ValidationServiceException(getClass().getSimpleName(), e);
@@ -92,5 +93,10 @@ public class XROADValidationService implements ValidationService {
     @Qualifier(value = "XROADPolicyService")
     public void setSignaturePolicyService(SignaturePolicyService<ValidationPolicy> signaturePolicyService) {
         this.signaturePolicyService = signaturePolicyService;
+    }
+
+    @Autowired
+    public void setReportConfigurationProperties(ReportConfigurationProperties reportConfigurationProperties) {
+        this.reportConfigurationProperties = reportConfigurationProperties;
     }
 }

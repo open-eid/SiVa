@@ -1,5 +1,6 @@
 package ee.openeid.validation.service.timestamptoken;
 
+import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.Reports;
@@ -47,6 +48,8 @@ public class TimeStampTokenValidationService implements ValidationService {
     private static final String SIGNATURE_FILE_EXTENSION_P7S = "SIGNATURE.P7S";
     private static final String SIGNATURE_FILE_EXTENSION_XML = "SIGNATURES.XML";
     private SignaturePolicyService<ValidationPolicy> signaturePolicyService;
+    private ReportConfigurationProperties reportConfigurationProperties;
+
 
     @Override
     public Reports validateDocument(ValidationDocument validationDocument) {
@@ -58,9 +61,8 @@ public class TimeStampTokenValidationService implements ValidationService {
         Date signedTime = timeStampToken.getTimeStampInfo().getGenTime();
         String signedBy = getTimeStampTokenSigner(timeStampToken);
 
-        Date validationTime = new Date();
         TimeStampTokenValidationData timeStampTokenValidationData = generateTimeStampTokenData(signedTime, signedBy, errors);
-        TimeStampTokenValidationReportBuilder reportBuilder = new TimeStampTokenValidationReportBuilder(validationDocument, validationTime, signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy()), timeStampTokenValidationData);
+        TimeStampTokenValidationReportBuilder reportBuilder = new TimeStampTokenValidationReportBuilder(validationDocument, signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy()), timeStampTokenValidationData, reportConfigurationProperties.isReportSignatureEnabled());
         return reportBuilder.build();
     }
 
@@ -186,4 +188,10 @@ public class TimeStampTokenValidationService implements ValidationService {
     public void setSignaturePolicyService(SignaturePolicyService<ValidationPolicy> signaturePolicyService) {
         this.signaturePolicyService = signaturePolicyService;
     }
+
+    @Autowired
+    public void setReportConfigurationProperties(ReportConfigurationProperties reportConfigurationProperties) {
+        this.reportConfigurationProperties = reportConfigurationProperties;
+    }
+
 }

@@ -36,9 +36,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.processSignatureIndications;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.*;
 import static org.digidoc4j.X509Cert.SubjectName.CN;
 
 public class BDOCValidationReportBuilder {
@@ -53,16 +51,16 @@ public class BDOCValidationReportBuilder {
 
     private Container container;
     private ValidationDocument validationDocument;
-    private Date validationTime;
     private ValidationPolicy validationPolicy;
     private List<DigiDoc4JException> containerErrors;
+    private boolean isReportSignatureEnabled;
 
-    public BDOCValidationReportBuilder(Container container, ValidationDocument validationDocument, Date validationTime, ValidationPolicy validationPolicy, List<DigiDoc4JException> containerErrors) {
+    public BDOCValidationReportBuilder(Container container, ValidationDocument validationDocument, ValidationPolicy validationPolicy, List<DigiDoc4JException> containerErrors, boolean isReportSignatureEnabled) {
         this.container = container;
         this.validationDocument = validationDocument;
-        this.validationTime = validationTime;
         this.validationPolicy = validationPolicy;
         this.containerErrors = containerErrors;
+        this.isReportSignatureEnabled = isReportSignatureEnabled;
     }
 
     private static ValidationWarning createValidationWarning(String content) {
@@ -103,13 +101,13 @@ public class BDOCValidationReportBuilder {
     private ValidationConclusion getValidationConclusion() {
         ValidationConclusion validationConclusion = new ValidationConclusion();
         validationConclusion.setPolicy(createReportPolicy(validationPolicy));
-        validationConclusion.setValidationTime(ReportBuilderUtils.getDateFormatterWithGMTZone().format(validationTime));
+        validationConclusion.setValidationTime(getValidationTime());
 
         validationConclusion.setSignatureForm(BDOC_SIGNATURE_FORM);
         validationConclusion.setSignaturesCount(container.getSignatures().size());
         validationConclusion.setValidationWarnings(containerValidationWarnings());
         validationConclusion.setSignatures(createSignaturesForReport(container));
-        validationConclusion.setValidatedDocument(ReportBuilderUtils.createValidatedDocument(validationDocument.getName(), validationDocument.getBytes()));
+        validationConclusion.setValidatedDocument(ReportBuilderUtils.createValidatedDocument(isReportSignatureEnabled, validationDocument.getName(), validationDocument.getBytes()));
         validationConclusion.setValidSignaturesCount(
                 validationConclusion.getSignatures()
                         .stream()

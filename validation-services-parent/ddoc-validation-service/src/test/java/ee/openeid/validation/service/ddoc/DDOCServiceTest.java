@@ -17,6 +17,7 @@
 package ee.openeid.validation.service.ddoc;
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.DataFilesDocument;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
@@ -90,6 +91,7 @@ public class DDOCServiceTest {
         validationService.setXMLEntityAttackValidator(xmlEntityAttackValidator);
         validationService.setSignaturePolicyService(signaturePolicyService);
         validationService.initConfig();
+        validationService.setReportConfigurationProperties(new ReportConfigurationProperties(true));
 
         dataFilesService.setXMLEntityAttackValidator(xmlEntityAttackValidator);
     }

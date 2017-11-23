@@ -13,8 +13,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Collections;
 
 
@@ -23,7 +21,7 @@ public class GenericValidationReportBuilderTest {
 
     @Test
     public void totalPassedIndicationReportBuild() {
-        Reports reports = new GenericValidationReportBuilder(getDssReports(), getValidationTime(), ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy()).build();
+        Reports reports = new GenericValidationReportBuilder(getDssReports(), ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
         Assert.assertEquals(new Integer(1), reports.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
         Assert.assertEquals("TOTAL-PASSED", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getIndication());
     }
@@ -33,7 +31,7 @@ public class GenericValidationReportBuilderTest {
         eu.europa.esig.dss.validation.reports.Reports dssReports = getDssReports();
         dssReports.getSimpleReportJaxb().getSignature().get(0).setIndication(Indication.TOTAL_FAILED);
         dssReports.getSimpleReportJaxb().getSignature().get(0).getErrors().add("Something is wrong");
-        Reports reports = new GenericValidationReportBuilder(dssReports, getValidationTime(), ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy()).build();
+        Reports reports = new GenericValidationReportBuilder(dssReports, ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
         Assert.assertEquals(new Integer(0), reports.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
         Assert.assertEquals("TOTAL-FAILED", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getIndication());
         Assert.assertEquals("Something is wrong", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getErrors().get(0).getContent());
@@ -43,7 +41,7 @@ public class GenericValidationReportBuilderTest {
     public void indeterminateIndicationReportBuild() {
         eu.europa.esig.dss.validation.reports.Reports dssReports = getDssReports();
         dssReports.getSimpleReportJaxb().getSignature().get(0).setIndication(Indication.INDETERMINATE);
-        Reports reports = new GenericValidationReportBuilder(dssReports, getValidationTime(), ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy()).build();
+        Reports reports = new GenericValidationReportBuilder(dssReports, ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
         Assert.assertEquals(new Integer(0), reports.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
         Assert.assertEquals("INDETERMINATE", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getIndication());
     }
@@ -61,10 +59,6 @@ public class GenericValidationReportBuilderTest {
         validationPolicy.setDescription("description");
         validationPolicy.setUrl("localhost");
         return new ConstraintDefinedPolicy(validationPolicy);
-    }
-
-    private ZonedDateTime getValidationTime() {
-        return ZonedDateTime.now(ZoneId.of("GMT"));
     }
 
     private eu.europa.esig.dss.validation.reports.Reports getDssReports() {

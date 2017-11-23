@@ -354,7 +354,7 @@ SiVa provdes the ability to sign the validation report. The idea of supplementin
 
 To enable it, use the following configuration parameter:
 ```bash
-siva.webapp.reportSignatureEnabled=true
+siva.report.reportSignatureEnabled=true
 ```
 
 When validation report signature is enabled, only detailed validation reports will be signed and simple reports will be ignored in this regard.
@@ -381,7 +381,7 @@ Report signature configuration parameters:
 
 Property | Description |
 | -------- | ----------- |
-|**siva.webapp.reportSignatureEnabled**| Enables singing the validation report. Validation report will only be signed when requesting detailed report.  <ul><li>Default: **false**</li></ul> |
+|**siva.report.reportSignatureEnabled**| Enables singing the validation report. Validation report will only be signed when requesting detailed report.  <ul><li>Default: **false**</li></ul> |
 |**siva.signatureService.signatureLevel**| The level of the validation report signature. <br> **Example values:** <br> * XAdES_BASELINE_B <br> * XAdES_BASELINE_T <br> * XAdES_BASELINE_LT <br> * XAdES_BASELINE_LTA |
 |**siva.signatureService.tspUrl**| URL of the timestamp provider. <br> Only needed when the configured signature level is at least XAdES_BASELINE_T |
 |**siva.signatureService.ocspUrl**| URL of the OCSP provider. <br> Only needed when the configured signature level is at least XAdES_BASELINE_LT |

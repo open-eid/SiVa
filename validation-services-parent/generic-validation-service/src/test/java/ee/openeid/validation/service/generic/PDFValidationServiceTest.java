@@ -16,6 +16,7 @@
 
 package ee.openeid.validation.service.generic;
 
+import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
@@ -67,6 +68,7 @@ public class PDFValidationServiceTest {
 
         signaturePolicyService = new ConstraintLoadingSignaturePolicyService(policySettings);
         validationService.setSignaturePolicyService(signaturePolicyService);
+        validationService.setReportConfigurationProperties(new ReportConfigurationProperties(true));
     }
 
     @Test

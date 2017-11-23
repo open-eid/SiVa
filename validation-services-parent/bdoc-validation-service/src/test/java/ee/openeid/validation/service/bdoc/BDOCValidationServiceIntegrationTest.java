@@ -16,6 +16,7 @@
 
 package ee.openeid.validation.service.bdoc;
 
+import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
@@ -67,7 +68,8 @@ import static org.junit.Assert.*;
         BDOCValidationService.class,
         BDOCSignaturePolicyService.class,
         ConstraintLoadingSignaturePolicyService.class,
-        BDOCConfigurationService.class
+        BDOCConfigurationService.class,
+        ReportConfigurationProperties.class
 })
 @ActiveProfiles("test")
 public class BDOCValidationServiceIntegrationTest {
@@ -86,6 +88,9 @@ public class BDOCValidationServiceIntegrationTest {
 
     @Autowired
     private BDOCConfigurationService configurationService;
+
+    @Autowired
+    private ReportConfigurationProperties reportConfigurationProperties;
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();

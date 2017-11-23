@@ -6,12 +6,10 @@ import com.jayway.restassured.response.Response;
 import ee.openeid.siva.SivaWebApplication;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.signature.configuration.SignatureServiceConfigurationProperties;
+import ee.openeid.siva.soaptest.SiVaSoapTests;
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.w3c.dom.Document;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +29,8 @@ import java.nio.file.Paths;
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.config.EncoderConfig.encoderConfig;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -39,7 +40,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @ActiveProfiles("test")
 @TestPropertySource(locations="classpath:application-test.yml")
 
-public class ReportSignatureManualT {
+public class ReportSignatureManuallT  extends SiVaSoapTests {
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "pdf/signature_cryptographic_algorithm_test_files/";
     private static final String VALIDATION_ENDPOINT = "/validate";
     protected static final String VALID_SIGNATURE_POLICY_4 = "POLv4";
@@ -75,38 +76,6 @@ public class ReportSignatureManualT {
 
     @Ignore
     @Test
-    public void validateDetailedReportRsaSignatureXadesBaselineLT() {
-        signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_LT");
-        signatureServiceConfigurationProperties.setTspUrl("http://demo.sk.ee/tsa");
-        signatureServiceConfigurationProperties.setOcspUrl("http://demo.sk.ee/ocsp");
-        signatureServiceConfigurationProperties.getPkcs12().setPath("src/test/resources/test.p12");
-        signatureServiceConfigurationProperties.getPkcs12().setPassword("password");
-        String filename = "hellopades-lt-sha256-rsa2048.pdf";
-        String request = detailedReportRequest(filename,VALID_SIGNATURE_POLICY_4);
-        response =  validateRequestForDetailedReport(request,VALIDATION_ENDPOINT);
-        String validationReportSignature = response.jsonPath().getString("validationReportSignature");
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("document",validationReportSignature);
-        jsonObject.put("filename","filename.pdf");
-        Response reportSignatureValidation = given()
-                .contentType(ContentType.JSON)
-                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
-                .body(jsonObject.toString())
-                .when()
-                .post(VALIDATION_ENDPOINT)
-                .then()
-                .log()
-                .all()
-                .extract()
-                .response();
-        assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signaturesCount"), equalTo("1"));
-        assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.validSignaturesCount"), equalTo("1"));
-        assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signatures.signatureFormat"), equalTo("XAdES_BASELINE_LT"));
-        assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signatures.signatureLevel"), equalTo("QESIG"));
-    }
-
-    @Ignore
-    @Test
     public void validateDetailedReportRsaSignatureXadesBaselineLTA() {
         signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_LTA");
         signatureServiceConfigurationProperties.setTspUrl("http://demo.sk.ee/tsa");
@@ -134,6 +103,38 @@ public class ReportSignatureManualT {
         assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signaturesCount"), equalTo("1"));
         assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.validSignaturesCount"), equalTo("1"));
         assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signatures.signatureFormat"), equalTo("XAdES_BASELINE_LTA"));
+        assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signatures.signatureLevel"), equalTo("QESIG"));
+    }
+
+    @Ignore
+    @Test
+    public void validateDetailedReportRsaSignatureXadesBaselineLT() {
+        signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_LT");
+        signatureServiceConfigurationProperties.setTspUrl("http://demo.sk.ee/tsa");
+        signatureServiceConfigurationProperties.setOcspUrl("http://demo.sk.ee/ocsp");
+        signatureServiceConfigurationProperties.getPkcs12().setPath("src/test/resources/test.p12");
+        signatureServiceConfigurationProperties.getPkcs12().setPassword("password");
+        String filename = "hellopades-lt-sha256-rsa2048.pdf";
+        String request = detailedReportRequest(filename,VALID_SIGNATURE_POLICY_4);
+        response =  validateRequestForDetailedReport(request,VALIDATION_ENDPOINT);
+        String validationReportSignature = response.jsonPath().getString("validationReportSignature");
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("document",validationReportSignature);
+        jsonObject.put("filename","filename.pdf");
+        Response reportSignatureValidation = given()
+                .contentType(ContentType.JSON)
+                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+                .body(jsonObject.toString())
+                .when()
+                .post(VALIDATION_ENDPOINT)
+                .then()
+                .log()
+                .all()
+                .extract()
+                .response();
+        assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signaturesCount"), equalTo("1"));
+        assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.validSignaturesCount"), equalTo("1"));
+        assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signatures.signatureFormat"), equalTo("XAdES_BASELINE_LT"));
         assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signatures.signatureLevel"), equalTo("QESIG"));
     }
 
@@ -200,43 +201,11 @@ public class ReportSignatureManualT {
 
     @Ignore
     @Test
-    public void validateDetailedReportEccSignatureXadesBaselineLT() {
-        signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_LT");
-        signatureServiceConfigurationProperties.setTspUrl("http://demo.sk.ee/tsa");
-        signatureServiceConfigurationProperties.setOcspUrl("http://demo.sk.ee/ocsp");
-        signatureServiceConfigurationProperties.getPkcs12().setPath("src/test/resources/ecc.p12");
-        signatureServiceConfigurationProperties.getPkcs12().setPassword("password");
-        String filename = "hellopades-lt-sha256-rsa2048.pdf";
-        String request = detailedReportRequest(filename,VALID_SIGNATURE_POLICY_4);
-        response =  validateRequestForDetailedReport(request,VALIDATION_ENDPOINT);
-        String validationReportSignature = response.jsonPath().getString("validationReportSignature");
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("document",validationReportSignature);
-        jsonObject.put("filename","filename.pdf");
-        Response reportSignatureValidation = given()
-                .contentType(ContentType.JSON)
-                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
-                .body(jsonObject.toString())
-                .when()
-                .post(VALIDATION_ENDPOINT)
-                .then()
-                .log()
-                .all()
-                .extract()
-                .response();
-        assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signaturesCount"), equalTo("1"));
-        assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.validSignaturesCount"), equalTo("1"));
-        assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signatures.signatureFormat"), equalTo("XAdES_BASELINE_LT"));
-        assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signatures.signatureLevel"), equalTo("QESIG"));
-    }
-
-    @Ignore
-    @Test
     public void validateDetailedReportEccSignatureXadesBaselineLTA() {
         signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_LTA");
         signatureServiceConfigurationProperties.setTspUrl("http://demo.sk.ee/tsa");
         signatureServiceConfigurationProperties.setOcspUrl("http://demo.sk.ee/ocsp");
-        signatureServiceConfigurationProperties.getPkcs12().setPath("src/test/resources/test.p12");
+        signatureServiceConfigurationProperties.getPkcs12().setPath("src/test/resources/ecc.p12");
         signatureServiceConfigurationProperties.getPkcs12().setPassword("password");
         String filename = "hellopades-lt-sha256-rsa2048.pdf";
         String request = detailedReportRequest(filename,VALID_SIGNATURE_POLICY_4);
@@ -264,8 +233,8 @@ public class ReportSignatureManualT {
 
     @Ignore
     @Test
-    public void validateDetailedReportEccSignatureXadesBaselineB() {
-        signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_B");
+    public void validateDetailedReportEccSignatureXadesBaselineLT() {
+        signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_LT");
         signatureServiceConfigurationProperties.setTspUrl("http://demo.sk.ee/tsa");
         signatureServiceConfigurationProperties.setOcspUrl("http://demo.sk.ee/ocsp");
         signatureServiceConfigurationProperties.getPkcs12().setPath("src/test/resources/test.p12");
@@ -289,7 +258,9 @@ public class ReportSignatureManualT {
                 .extract()
                 .response();
         assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signaturesCount"), equalTo("1"));
-        assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signatures.signatureFormat[0]"), equalTo("XAdES_BASELINE_B"));
+        assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.validSignaturesCount"), equalTo("1"));
+        assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signatures.signatureFormat"), equalTo("XAdES_BASELINE_LT"));
+        assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signatures.signatureLevel"), equalTo("QESIG"));
     }
 
     @Ignore
@@ -324,10 +295,40 @@ public class ReportSignatureManualT {
 
     @Ignore
     @Test
+    public void validateDetailedReportEccSignatureXadesBaselineB() {
+        signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_B");
+        signatureServiceConfigurationProperties.setTspUrl("http://demo.sk.ee/tsa");
+        signatureServiceConfigurationProperties.setOcspUrl("http://demo.sk.ee/ocsp");
+        signatureServiceConfigurationProperties.getPkcs12().setPath("src/test/resources/test.p12");
+        signatureServiceConfigurationProperties.getPkcs12().setPassword("password");
+        String filename = "hellopades-lt-sha256-rsa2048.pdf";
+        String request = detailedReportRequest(filename,VALID_SIGNATURE_POLICY_4);
+        response =  validateRequestForDetailedReport(request,VALIDATION_ENDPOINT);
+        String validationReportSignature = response.jsonPath().getString("validationReportSignature");
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("document",validationReportSignature);
+        jsonObject.put("filename","filename.pdf");
+        Response reportSignatureValidation = given()
+                .contentType(ContentType.JSON)
+                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+                .body(jsonObject.toString())
+                .when()
+                .post(VALIDATION_ENDPOINT)
+                .then()
+                .log()
+                .all()
+                .extract()
+                .response();
+        assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signaturesCount"), equalTo("1"));
+        assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signatures.signatureFormat[0]"), equalTo("XAdES_BASELINE_B"));
+    }
+
+    @Ignore
+    @Test
     public void validateDetailedReportSignatureOcspUrlValueEmpty() {
         signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_LT");
         signatureServiceConfigurationProperties.setTspUrl("http://demo.sk.ee/tsa");
-        signatureServiceConfigurationProperties.setOcspUrl(" ");
+        signatureServiceConfigurationProperties.setOcspUrl(null);
         signatureServiceConfigurationProperties.getPkcs12().setPath("src/test/resources/test.p12");
         signatureServiceConfigurationProperties.getPkcs12().setPassword("password");
         String filename = "hellopades-lt-sha256-rsa2048.pdf";
@@ -395,16 +396,43 @@ public class ReportSignatureManualT {
     //Testitud ja töötab RSA sertifikaatidega id-kaardiga. Ei tööta ECC kaardiga.
     //Installida OpenSC
     //slotIndex: 1 /Pin1 ja slotIndex: 2/Pin2
-    @Ignore
+
     @Test
     public void validateDetailedReportSignatureLevelPkcs11() {
         signatureServiceConfigurationProperties.getPkcs11().setPath("C:/Windows/System32/opensc-pkcs11.dll");
         signatureServiceConfigurationProperties.getPkcs11().setPassword("PIN2");
         signatureServiceConfigurationProperties.getPkcs11().setSlotIndex(2);
-
         String filename = "hellopades-lt-sha256-rsa2048.pdf";
         String request = detailedReportRequest(filename,VALID_SIGNATURE_POLICY_4);
         response =  validateRequestForDetailedReport(request,VALIDATION_ENDPOINT);
+    }
+
+    @Ignore
+    @Test
+    public void validateDetailedReportRsaSignatureXadesBaselineLTASoap() {
+        signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_LTA");
+        signatureServiceConfigurationProperties.setTspUrl("http://demo.sk.ee/tsa");
+        signatureServiceConfigurationProperties.setOcspUrl("http://demo.sk.ee/ocsp");
+        signatureServiceConfigurationProperties.getPkcs12().setPath("src/test/resources/test.p12");
+        signatureServiceConfigurationProperties.getPkcs12().setPassword("password");
+        Document report = extractValidateDocumentResponseDom(post(validationRequestForDocumentReportType("hellopades-lt-sha256-rsa2048.pdf", "Detailed")).andReturn().body().asString());
+        String signedReport = (getValidateDocumentResponseFromDom(report).getValidationReportSignature());
+        Document reportSignatureValidation  = extractValidateDocumentResponseDom(post(createXMLValidationRequestWithReportType(signedReport, "hellopades-lt-sha256-rsa2048.pdf", "Detailed")).andReturn().body().asString());
+        Assert.assertThat(getValidateDocumentResponseFromDom(reportSignatureValidation).getValidationReportSignature(), not(isEmptyOrNullString()));
+    }
+
+    @Ignore
+    @Test
+    public void validateDetailedReportRsaSignatureXadesBaselineLTSoap() {
+        signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_LT");
+        signatureServiceConfigurationProperties.setTspUrl("http://demo.sk.ee/tsa");
+        signatureServiceConfigurationProperties.setOcspUrl("http://demo.sk.ee/ocsp");
+        signatureServiceConfigurationProperties.getPkcs12().setPath("src/test/resources/test.p12");
+        signatureServiceConfigurationProperties.getPkcs12().setPassword("password");
+        Document report = extractValidateDocumentResponseDom(post(validationRequestForDocumentReportType("hellopades-lt-sha256-rsa2048.pdf", "Detailed")).andReturn().body().asString());
+        String signedReport = (getValidateDocumentResponseFromDom(report).getValidationReportSignature());
+        Document reportSignatureValidation  = extractValidateDocumentResponseDom(post(createXMLValidationRequestWithReportType(signedReport, "hellopades-lt-sha256-rsa2048.pdf", "Detailed")).andReturn().body().asString());
+        Assert.assertThat(getValidateDocumentResponseFromDom(reportSignatureValidation).getValidationReportSignature(), not(isEmptyOrNullString()));
     }
 
 
@@ -452,6 +480,28 @@ public class ReportSignatureManualT {
         pathLength = pathLength == -1 ? path.length() : pathLength;
         path = path.substring(0 , pathLength);
         return path + File.separator + PROJECT_SUBMODULE_NAME + File.separator;
+    }
+
+    protected static String createXMLValidationRequestWithReportType(String base64Document, String filename, String reportType) {
+
+        return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
+                "   <soapenv:Header/>\n" +
+                "   <soapenv:Body>\n" +
+                "      <soap:ValidateDocument>\n" +
+                "         <soap:ValidationRequest>\n" +
+                "            <Document>" + base64Document + "</Document>\n" +
+                "            <Filename>" + filename + "</Filename>\n" +
+                "            <ReportType>" + reportType + "</ReportType>\n" +
+                "         </soap:ValidationRequest>\n" +
+                "      </soap:ValidateDocument>\n" +
+                "   </soapenv:Body>\n" +
+                "</soapenv:Envelope>";
+    }
+
+    protected String validationRequestForDocumentReportType(String filename, String reportType) {
+        return createXMLValidationRequestWithReportType(
+                Base64.encodeBase64String(readFileFromTestResources(filename)),
+                filename, reportType);
     }
 
 

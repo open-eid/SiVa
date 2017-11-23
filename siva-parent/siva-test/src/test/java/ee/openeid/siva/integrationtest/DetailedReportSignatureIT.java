@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -33,6 +34,9 @@ public class DetailedReportSignatureIT extends SiVaRestTests{
     public void setTestFilesDirectory(String testFilesDirectory) {
         this.testFilesDirectory = testFilesDirectory;
     }
+
+    @Value("${local.server.port}")
+    protected int serverPort;
 
     @Before
     public void DirectoryBackToDefault() {
@@ -568,6 +572,32 @@ public class DetailedReportSignatureIT extends SiVaRestTests{
         assertThat(response.jsonPath().getString(validationConclusion + ".signaturesCount"), equalTo("1"));
         assertThat(response.jsonPath().getString(validationConclusion + ".validSignaturesCount"), equalTo("1"));
     }
+
+    @Test
+    public void validateDetailedReportSignature() {
+        String filename = "hellopades-lt-sha256-rsa2048.pdf";
+        String request = detailedReportRequest(filename,VALID_SIGNATURE_POLICY_4);
+        response =  validateRequestForDetailedReport(request,VALIDATION_ENDPOINT);
+        String validationReportSignature = response.jsonPath().getString("validationReportSignature");
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("document",validationReportSignature);
+        jsonObject.put("filename","filename.pdf");
+        Response reportSignatureValidation = given()
+                .contentType(ContentType.JSON)
+                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+                .body(jsonObject.toString())
+                .when()
+                .post(VALIDATION_ENDPOINT)
+                .then()
+                .log()
+                .all()
+                .extract()
+                .response();
+        assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signaturesCount"), equalTo("1"));
+        assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.validSignaturesCount"), equalTo("1"));
+        assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signatures.signatureFormat[0]"), equalTo("XAdES_BASELINE_LT"));
+    }
+
 
     private String currentDateTime(String timeZone, String timeFormat){
         final Date currentTime = new Date();

@@ -1,7 +1,7 @@
 package ee.openeid.siva.webapp.soap.interceptor;
 
 import ee.openeid.siva.signature.SignatureService;
-import ee.openeid.siva.webapp.configuration.SivaWebApplicationConfigurationProperties;
+import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.message.Exchange;
@@ -13,7 +13,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPMessage;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
@@ -49,8 +48,7 @@ public class ReportSignatureInterceptorTest {
 
         reportSignatureInterceptor = new ReportSignatureInterceptor();
         reportSignatureInterceptor.setSignatureService(signatureService);
-        SivaWebApplicationConfigurationProperties properties = new SivaWebApplicationConfigurationProperties();
-        properties.setReportSignatureEnabled(true);
+        ReportConfigurationProperties properties = new ReportConfigurationProperties(true);
         reportSignatureInterceptor.setProperties(properties);
     }
 

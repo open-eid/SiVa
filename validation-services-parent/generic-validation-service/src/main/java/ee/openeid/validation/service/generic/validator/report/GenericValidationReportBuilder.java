@@ -29,8 +29,6 @@ import eu.europa.esig.dss.validation.reports.wrapper.CertificateWrapper;
 import eu.europa.esig.dss.validation.reports.wrapper.TimestampWrapper;
 import org.apache.commons.lang3.StringUtils;
 
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -41,19 +39,18 @@ import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUt
 
 public class GenericValidationReportBuilder {
 
-    private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private eu.europa.esig.dss.validation.reports.Reports dssReports;
-    private ZonedDateTime validationTime;
     private ValidationDocument validationDocument;
     private ConstraintDefinedPolicy validationPolicy;
     private ValidationLevel validationLevel;
+    private boolean isReportSignatureEnabled;
 
-    public GenericValidationReportBuilder(eu.europa.esig.dss.validation.reports.Reports dssReports, ZonedDateTime validationTime, ValidationLevel validationLevel, ValidationDocument validationDocument, ConstraintDefinedPolicy policy) {
+    public GenericValidationReportBuilder(eu.europa.esig.dss.validation.reports.Reports dssReports, ValidationLevel validationLevel, ValidationDocument validationDocument, ConstraintDefinedPolicy policy, boolean isReportSignatureEnabled) {
         this.dssReports = dssReports;
-        this.validationTime = validationTime;
         this.validationDocument = validationDocument;
         this.validationPolicy = policy;
         this.validationLevel = validationLevel;
+        this.isReportSignatureEnabled = isReportSignatureEnabled;
     }
 
     public Reports build() {
@@ -70,12 +67,12 @@ public class GenericValidationReportBuilder {
     private ValidationConclusion getValidationConclusion() {
         ValidationConclusion validationConclusion = new ValidationConclusion();
         validationConclusion.setPolicy(createReportPolicy(validationPolicy));
-        validationConclusion.setValidationTime(parseValidationTimeToString());
+        validationConclusion.setValidationTime(getValidationTime());
         validationConclusion.setSignatureForm(getContainerType());
         validationConclusion.setValidationWarnings(Collections.emptyList());
         validationConclusion.setSignatures(buildSignatureValidationDataList());
         validationConclusion.setSignaturesCount(validationConclusion.getSignatures().size());
-        validationConclusion.setValidatedDocument(ReportBuilderUtils.createValidatedDocument(validationDocument.getName(), validationDocument.getBytes()));
+        validationConclusion.setValidatedDocument(ReportBuilderUtils.createValidatedDocument(isReportSignatureEnabled, validationDocument.getName(), validationDocument.getBytes()));
         validationConclusion.setValidSignaturesCount(validationConclusion.getSignatures()
                 .stream()
                 .filter(vd -> StringUtils.equals(vd.getIndication(), SignatureValidationData.Indication.TOTAL_PASSED.toString()))
@@ -196,15 +193,6 @@ public class GenericValidationReportBuilder {
 
     private String parseSignedBy(String signatureId) {
         return emptyWhenNull(dssReports.getSimpleReport().getSignedBy(signatureId));
-    }
-
-    private String parseValidationTimeToString() {
-        return getFormattedTimeValue(validationTime);
-    }
-
-    private String getFormattedTimeValue(ZonedDateTime zonedDateTime) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT);
-        return zonedDateTime.format(formatter);
     }
 
     private String getCountryCode() {

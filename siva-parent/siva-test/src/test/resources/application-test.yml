@@ -10,7 +10,7 @@ plugtest:
   location: url
 
 siva:
-  webapp:
+  report:
     reportSignatureEnabled: true
   signatureService:
     signatureLevel: XAdES_BASELINE_LT

@@ -1,5 +1,6 @@
 package ee.openeid.validation.service.timestamptoken;
 
+import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
 import ee.openeid.siva.validation.document.report.SimpleReport;
@@ -34,6 +35,8 @@ public class TimeStampTokenValidationServiceTest {
         policyProperties.initPolicySettings();
         SignaturePolicyService<ValidationPolicy> signaturePolicyService = new SignaturePolicyService<>(policyProperties);
         validationService.setSignaturePolicyService(signaturePolicyService);
+        ReportConfigurationProperties reportConfigurationProperties = new ReportConfigurationProperties(true);
+        validationService.setReportConfigurationProperties(reportConfigurationProperties);
     }
 
     @Test

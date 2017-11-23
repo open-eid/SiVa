@@ -16,6 +16,7 @@
 
 package ee.openeid.validation.service.generic;
 
+import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
@@ -46,8 +47,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -67,6 +66,7 @@ public class GenericValidationService implements ValidationService {
 
     private TrustedListsCertificateSource trustedListsCertificateSource;
     private ConstraintLoadingSignaturePolicyService signaturePolicyService;
+    private ReportConfigurationProperties reportConfigurationProperties;
 
     private static boolean isInRangeMillis(Date date1, Date date2, int rangeInMillis) {
         Date latestTime = addMilliseconds(date2, rangeInMillis);
@@ -97,7 +97,7 @@ public class GenericValidationService implements ValidationService {
             final eu.europa.esig.dss.validation.reports.Reports reports;
             reports = validator.validateDocument(policy.getConstraintDataStream());
             validateRevocationFreshness(reports);
-            final ZonedDateTime validationTimeInGMT = ZonedDateTime.now(ZoneId.of("GMT"));
+
             if (LOGGER.isInfoEnabled()) {
                 LOGGER.info(
                         "Validation completed. Total signature count: {} and valid signature count: {}",
@@ -109,10 +109,10 @@ public class GenericValidationService implements ValidationService {
             }
             final GenericValidationReportBuilder reportBuilder = new GenericValidationReportBuilder(
                     reports,
-                    validationTimeInGMT,
                     VALIDATION_LEVEL,
                     validationDocument,
-                    policy
+                    policy,
+                    reportConfigurationProperties.isReportSignatureEnabled()
             );
             return reportBuilder.build();
         } catch (MalformedDocumentException | InvalidPolicyException | DSSException e) {
@@ -194,5 +194,10 @@ public class GenericValidationService implements ValidationService {
     @Autowired
     public void setTrustedListsCertificateSource(TrustedListsCertificateSource trustedListsCertificateSource) {
         this.trustedListsCertificateSource = trustedListsCertificateSource;
+    }
+
+    @Autowired
+    public void setReportConfigurationProperties(ReportConfigurationProperties reportConfigurationProperties) {
+        this.reportConfigurationProperties = reportConfigurationProperties;
     }
 }

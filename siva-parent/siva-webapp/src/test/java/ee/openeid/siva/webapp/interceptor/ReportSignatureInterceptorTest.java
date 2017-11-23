@@ -5,8 +5,8 @@ import ee.openeid.siva.signature.SignatureService;
 import ee.openeid.siva.validation.document.report.DetailedReport;
 import ee.openeid.siva.validation.document.report.ValidatedDocument;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
-import ee.openeid.siva.webapp.configuration.SivaWebApplicationConfigurationProperties;
 import ee.openeid.siva.webapp.response.ValidationResponse;
+import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,8 +37,7 @@ public class ReportSignatureInterceptorTest {
         reportSignatureInterceptor = new ReportSignatureInterceptor();
         reportSignatureInterceptor.setSignatureService(signatureService);
         reportSignatureInterceptor.setJacksonObjectMapper(new ObjectMapper());
-        SivaWebApplicationConfigurationProperties properties = new SivaWebApplicationConfigurationProperties();
-        properties.setReportSignatureEnabled(true);
+        ReportConfigurationProperties properties = new ReportConfigurationProperties(true);
         reportSignatureInterceptor.setProperties(properties);
     }
 

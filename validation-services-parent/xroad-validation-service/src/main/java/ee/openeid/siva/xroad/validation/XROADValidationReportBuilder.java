@@ -31,7 +31,6 @@ import org.apache.commons.lang.StringUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.stream.Collectors;
 
 import static ee.openeid.siva.validation.document.report.SignatureValidationData.Indication.TOTAL_PASSED;
@@ -44,19 +43,19 @@ public class XROADValidationReportBuilder {
 
     private AsicContainerVerifier verifier;
     private ValidationDocument validationDocument;
-    private Date validationTime;
     private ValidationPolicy validationPolicy;
     private XROADSignatureValidationDataBuilder signatureValidationDataBuilder;
+    private boolean isReportSignatureEnabled;
 
     public XROADValidationReportBuilder(AsicContainerVerifier verifier,
-                                       ValidationDocument validationDocument,
-                                       Date validationTime,
-                                       ValidationPolicy validationPolicy,
-                                       CodedException... exceptions) {
+                                        ValidationDocument validationDocument,
+                                        ValidationPolicy validationPolicy,
+                                        boolean isReportSignatureEnabled,
+                                        CodedException... exceptions) {
         this.verifier = verifier;
         this.validationDocument = validationDocument;
-        this.validationTime = validationTime;
         this.validationPolicy = validationPolicy;
+        this.isReportSignatureEnabled = isReportSignatureEnabled;
         this.signatureValidationDataBuilder = new XROADSignatureValidationDataBuilder(verifier, Arrays.asList(exceptions));
     }
 
@@ -70,7 +69,7 @@ public class XROADValidationReportBuilder {
     private ValidationConclusion getValidationConclusion() {
         ValidationConclusion validationConclusion = new ValidationConclusion();
         validationConclusion.setPolicy(createReportPolicy(validationPolicy));
-        validationConclusion.setValidationTime(getDateFormatterWithGMTZone().format(validationTime));
+        validationConclusion.setValidationTime(getValidationTime());
         validationConclusion.setSignatureForm(getSignatureForm(verifier.getAsic()));
         validationConclusion.setSignaturesCount(getTotalSignatureCount(verifier.getSignature()));
         validationConclusion.setValidationWarnings(Collections.emptyList());
@@ -81,7 +80,7 @@ public class XROADValidationReportBuilder {
                         .filter(signatures -> StringUtils.equals(signatures.getIndication(), TOTAL_PASSED.toString()))
                         .collect(Collectors.toList())
                         .size());
-        validationConclusion.setValidatedDocument(ReportBuilderUtils.createValidatedDocument(validationDocument.getName(), validationDocument.getBytes()));
+        validationConclusion.setValidatedDocument(ReportBuilderUtils.createValidatedDocument(isReportSignatureEnabled, validationDocument.getName(), validationDocument.getBytes()));
         return validationConclusion;
     }
 

@@ -62,21 +62,21 @@ public class ReportBuilderUtilsTest {
     }
 
     @Test
-    public void indicationToTotalFailedAdesQsSignatureLevel(){
+    public void indicationToTotalFailedAdesQsSignatureLevel() {
         ValidationConclusion validationConclusion = getDefaultValidationConclusion(SignatureQualification.ADES_QC);
         ReportBuilderUtils.processSignatureIndications(validationConclusion, QES_POLICY);
         assertTotalFailed(validationConclusion);
     }
 
     @Test
-    public void indicationToTotalFailedAdesSignatureLevel(){
+    public void indicationToTotalFailedAdesSignatureLevel() {
         ValidationConclusion validationConclusion = getDefaultValidationConclusion(SignatureQualification.ADES);
         ReportBuilderUtils.processSignatureIndications(validationConclusion, QES_POLICY);
         assertTotalFailed(validationConclusion);
     }
 
     @Test
-    public void indicationToPassedWithWarningFailedAdesigQsSignatureLevel(){
+    public void indicationToPassedWithWarningFailedAdesigQsSignatureLevel() {
         ValidationConclusion validationConclusion = getDefaultValidationConclusion(SignatureQualification.ADESIG_QC);
         ReportBuilderUtils.processSignatureIndications(validationConclusion, QES_POLICY);
         Assert.assertEquals("TOTAL-PASSED", validationConclusion.getSignatures().get(0).getIndication());
@@ -85,14 +85,14 @@ public class ReportBuilderUtilsTest {
         Assert.assertEquals("The signature is not in the Qualified Electronic Signature level", validationConclusion.getSignatures().get(0).getWarnings().get(0).getContent());
     }
 
-    private void assertTotalPassed(ValidationConclusion validationConclusion){
+    private void assertTotalPassed(ValidationConclusion validationConclusion) {
         SignatureValidationData signatureValidationData = validationConclusion.getSignatures().get(0);
         Assert.assertEquals("TOTAL-PASSED", signatureValidationData.getIndication());
         Assert.assertTrue(signatureValidationData.getWarnings().isEmpty());
         Assert.assertTrue(signatureValidationData.getErrors().isEmpty());
     }
 
-    private void assertTotalFailed(ValidationConclusion validationConclusion){
+    private void assertTotalFailed(ValidationConclusion validationConclusion) {
         Assert.assertEquals("TOTAL-FAILED", validationConclusion.getSignatures().get(0).getIndication());
         Assert.assertTrue(validationConclusion.getSignatures().get(0).getWarnings().isEmpty());
         List<Error> errors = validationConclusion.getSignatures().get(0).getErrors();
@@ -141,11 +141,20 @@ public class ReportBuilderUtilsTest {
     }
 
     @Test
-    public void validValidatedDocumentReturned(){
+    public void validValidatedDocumentReturned() {
         byte[] data = "testData".getBytes();
-        ValidatedDocument response = ReportBuilderUtils.createValidatedDocument("filename.asice", data);
+        ValidatedDocument response = ReportBuilderUtils.createValidatedDocument(true, "filename.asice", data);
         Assert.assertEquals("filename.asice", response.getFilename());
         Assert.assertEquals("SHA-256", response.getHashAlgo());
         Assert.assertEquals("ba477a0ac57e10dd90bb5bf0289c5990fe839c619b26fde7c2aac62f526d4113".toUpperCase(), response.getFileHashInHex());
+    }
+
+    @Test
+    public void validValidatedDocumentReturnedWithoutReportSignature() {
+        byte[] data = "testData".getBytes();
+        ValidatedDocument response = ReportBuilderUtils.createValidatedDocument(false, "filename.asice", data);
+        Assert.assertEquals("filename.asice", response.getFilename());
+        Assert.assertEquals(null, response.getHashAlgo());
+        Assert.assertEquals(null, response.getFileHashInHex());
     }
 }

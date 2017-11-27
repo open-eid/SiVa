@@ -48,7 +48,7 @@
                     <xs:element name="Policy" type="tns:Policy"/>
                     <xs:element name="ValidationTime" type="xs:string"/>
                     <xs:element name="ValidatedDocument" type="tns:ValidatedDocumentData"/>
-                    <xs:element name="ValidationLevel" type="xs:string"/>
+                    <xs:element name="ValidationLevel" minOccurs="0" type="xs:string"/>
                     <xs:element name="ValidationWarnings" minOccurs="0">
                         <xs:complexType>
                             <xs:sequence>
@@ -57,7 +57,7 @@
                             </xs:sequence>
                         </xs:complexType>
                     </xs:element>
-                    <xs:element name="SignatureForm" type="xs:string"/>
+                    <xs:element name="SignatureForm" minOccurs="0" type="xs:string"/>
                     <xs:element name="Signatures" minOccurs="0">
                         <xs:complexType>
                             <xs:sequence>
@@ -102,8 +102,8 @@
             <xs:complexType name="ValidatedDocumentData">
                 <xs:sequence>
                     <xs:element name="Filename" type="xs:string"/>
-                    <xs:element name="FileHashInHex" type="xs:string"/>
-                    <xs:element name="HashAlgo" type="xs:string"/>
+                    <xs:element name="FileHashInHex" minOccurs="0" type="xs:string"/>
+                    <xs:element name="HashAlgo" minOccurs="0" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
 

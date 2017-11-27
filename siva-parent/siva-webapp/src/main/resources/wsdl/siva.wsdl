@@ -137,7 +137,7 @@
                             </xs:sequence>
                         </xs:complexType>
                     </xs:element>
-                    <xs:element name="Info" type="tns:Info"/>
+                    <xs:element name="Info" minOccurs="0" type="tns:Info"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="Error">

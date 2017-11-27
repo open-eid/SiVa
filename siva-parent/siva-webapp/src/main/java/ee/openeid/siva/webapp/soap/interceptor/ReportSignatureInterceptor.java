@@ -1,7 +1,7 @@
 package ee.openeid.siva.webapp.soap.interceptor;
 
 import ee.openeid.siva.signature.SignatureService;
-import ee.openeid.siva.webapp.configuration.SivaWebApplicationConfigurationProperties;
+import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.binding.soap.interceptor.AbstractSoapInterceptor;
@@ -40,7 +40,7 @@ public class ReportSignatureInterceptor extends AbstractSoapInterceptor {
     private SignatureService signatureService;
 
     @Autowired
-    private SivaWebApplicationConfigurationProperties properties;
+    private ReportConfigurationProperties properties;
 
     public ReportSignatureInterceptor() {
         super(Phase.POST_PROTOCOL);
@@ -71,7 +71,7 @@ public class ReportSignatureInterceptor extends AbstractSoapInterceptor {
     private boolean reportTypeIsDetailed(SOAPBody soapBody) {
         Node reportTypeNode = soapBody.getElementsByTagName("ReportType").item(0);
         reportTypeNode = reportTypeNode == null ? null : reportTypeNode.getFirstChild();
-        return reportTypeNode == null ? false : "Detailed".equals(reportTypeNode.getNodeValue());
+        return reportTypeNode != null && "Detailed".equals(reportTypeNode.getNodeValue());
     }
 
     private byte[] getValidationReportContent(SOAPBody soapBody) throws IOException, SOAPException, TransformerException {
@@ -94,7 +94,7 @@ public class ReportSignatureInterceptor extends AbstractSoapInterceptor {
         this.signatureService = signatureService;
     }
 
-    public void setProperties(SivaWebApplicationConfigurationProperties properties) {
+    public void setProperties(ReportConfigurationProperties properties) {
         this.properties = properties;
     }
 

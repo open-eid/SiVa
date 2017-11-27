@@ -22,7 +22,6 @@ import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import eu.europa.esig.dss.jaxb.diagnostic.XmlSignatureScope;
-import eu.europa.esig.dss.validation.SignatureQualification;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
 import eu.europa.esig.dss.validation.policy.rules.Indication;
 import eu.europa.esig.dss.validation.policy.rules.SubIndication;
@@ -30,8 +29,6 @@ import eu.europa.esig.dss.validation.reports.wrapper.CertificateWrapper;
 import eu.europa.esig.dss.validation.reports.wrapper.TimestampWrapper;
 import org.apache.commons.lang3.StringUtils;
 
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -42,75 +39,40 @@ import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUt
 
 public class GenericValidationReportBuilder {
 
-    private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-    private static final String QES_POLICY = "POLv4";
-    private static final String SIGNATURE_LEVEL_ERROR = "Signature/seal level do not meet the minimal level required by applied policy";
-    private static final String SIGNATURE_LEVEL_WARNING = "The signature is not in the Qualified Electronic Signature level";
     private eu.europa.esig.dss.validation.reports.Reports dssReports;
-    private ZonedDateTime validationTime;
     private ValidationDocument validationDocument;
     private ConstraintDefinedPolicy validationPolicy;
     private ValidationLevel validationLevel;
+    private boolean isReportSignatureEnabled;
 
-    public GenericValidationReportBuilder(eu.europa.esig.dss.validation.reports.Reports dssReports, ZonedDateTime validationTime, ValidationLevel validationLevel, ValidationDocument validationDocument, ConstraintDefinedPolicy policy) {
+    public GenericValidationReportBuilder(eu.europa.esig.dss.validation.reports.Reports dssReports, ValidationLevel validationLevel, ValidationDocument validationDocument, ConstraintDefinedPolicy policy, boolean isReportSignatureEnabled) {
         this.dssReports = dssReports;
-        this.validationTime = validationTime;
         this.validationDocument = validationDocument;
         this.validationPolicy = policy;
         this.validationLevel = validationLevel;
+        this.isReportSignatureEnabled = isReportSignatureEnabled;
     }
 
     public Reports build() {
         ValidationConclusion validationConclusion = getValidationConclusion();
-        processSignatureIndications(validationConclusion);
+        processSignatureIndications(validationConclusion, validationPolicy.getName());
 
         SimpleReport simpleReport = new SimpleReport(validationConclusion);
         validationConclusion.setValidationLevel(validationLevel.name());
         DetailedReport detailedReport = new DetailedReport(validationConclusion, dssReports.getDetailedReportJaxb());
+
         return new Reports(simpleReport, detailedReport);
-    }
-
-    void processSignatureIndications(ValidationConclusion validationConclusion) {
-        if (QES_POLICY.equals(validationPolicy.getName())) {
-            for (SignatureValidationData signature : validationConclusion.getSignatures()) {
-                if (SignatureValidationData.Indication.TOTAL_PASSED.toString().equals(signature.getIndication())) {
-                    String signatureLevel = signature.getSignatureLevel();
-                    if (SignatureQualification.ADESEAL_QC.name().equals(signatureLevel) || SignatureQualification.QES.name().equals(signatureLevel)
-                            || SignatureQualification.QESIG.name().equals(signatureLevel) || SignatureQualification.QESEAL.name().equals(signatureLevel)) {
-                        continue;
-                    } else if (SignatureQualification.ADESIG_QC.name().equals(signatureLevel)) {
-                        signature.getWarnings().add(getSignatureLevelWarning());
-                        continue;
-                    }
-                    signature.setIndication(SignatureValidationData.Indication.TOTAL_FAILED);
-                    signature.getErrors().add(getSignatureLevelNotAcceptedError());
-                    validationConclusion.setValidSignaturesCount(validationConclusion.getValidSignaturesCount() - 1);
-                }
-            }
-        }
-    }
-
-    private Error getSignatureLevelNotAcceptedError() {
-        Error error = new Error();
-        error.setContent(SIGNATURE_LEVEL_ERROR);
-        return error;
-    }
-
-    private Warning getSignatureLevelWarning() {
-        Warning warning = new Warning();
-        warning.setContent(SIGNATURE_LEVEL_WARNING);
-        return warning;
     }
 
     private ValidationConclusion getValidationConclusion() {
         ValidationConclusion validationConclusion = new ValidationConclusion();
         validationConclusion.setPolicy(createReportPolicy(validationPolicy));
-        validationConclusion.setValidationTime(parseValidationTimeToString());
+        validationConclusion.setValidationTime(getValidationTime());
         validationConclusion.setSignatureForm(getContainerType());
         validationConclusion.setValidationWarnings(Collections.emptyList());
         validationConclusion.setSignatures(buildSignatureValidationDataList());
         validationConclusion.setSignaturesCount(validationConclusion.getSignatures().size());
-        validationConclusion.setValidatedDocument(ReportBuilderUtils.createValidatedDocument(validationDocument.getName(), validationDocument.getBytes()));
+        validationConclusion.setValidatedDocument(ReportBuilderUtils.createValidatedDocument(isReportSignatureEnabled, validationDocument.getName(), validationDocument.getBytes()));
         validationConclusion.setValidSignaturesCount(validationConclusion.getSignatures()
                 .stream()
                 .filter(vd -> StringUtils.equals(vd.getIndication(), SignatureValidationData.Indication.TOTAL_PASSED.toString()))
@@ -233,15 +195,6 @@ public class GenericValidationReportBuilder {
         return emptyWhenNull(dssReports.getSimpleReport().getSignedBy(signatureId));
     }
 
-    private String parseValidationTimeToString() {
-        return getFormattedTimeValue(validationTime);
-    }
-
-    private String getFormattedTimeValue(ZonedDateTime zonedDateTime) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT);
-        return zonedDateTime.format(formatter);
-    }
-
     private String getCountryCode() {
         String signingCertId = dssReports.getDiagnosticData().getSigningCertificateId();
         Optional<String> countryCode = dssReports.getDiagnosticData().getUsedCertificates().stream()
@@ -249,9 +202,5 @@ public class GenericValidationReportBuilder {
                 .map(CertificateWrapper::getCountryName)
                 .findFirst();
         return countryCode.orElse(null);
-    }
-
-    public void setValidationPolicy(ConstraintDefinedPolicy validationPolicy) {
-        this.validationPolicy = validationPolicy;
     }
 }

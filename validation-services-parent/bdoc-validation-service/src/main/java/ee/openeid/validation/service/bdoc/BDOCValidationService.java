@@ -16,6 +16,7 @@
 
 package ee.openeid.validation.service.bdoc;
 
+import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
@@ -37,7 +38,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.Date;
 
 @Service
 public class BDOCValidationService implements ValidationService {
@@ -45,6 +45,7 @@ public class BDOCValidationService implements ValidationService {
 
     private static final String CONTAINER_TYPE_DDOC = "DDOC";
 
+    private ReportConfigurationProperties reportConfigurationProperties;
     private BDOCConfigurationService configurationService;
 
     @Override
@@ -60,8 +61,7 @@ public class BDOCValidationService implements ValidationService {
         verifyContainerTypeNotDDOC(container.getType());
         try {
             ValidationResult validationResult = container.validate();
-            Date validationTime = new Date();
-            return new BDOCValidationReportBuilder(container, validationDocument, validationTime, policyConfiguration.getPolicy(), validationResult.getContainerErrors()).build();
+            return new BDOCValidationReportBuilder(container, validationDocument, policyConfiguration.getPolicy(), validationResult.getContainerErrors(), reportConfigurationProperties.isReportSignatureEnabled()).build();
         } catch (Exception e) {
             if (isXRoadContainer(container)) {
                 LOGGER.error("XROAD container passed to BDOC validator", e);
@@ -98,5 +98,10 @@ public class BDOCValidationService implements ValidationService {
     @Autowired
     public void setConfigurationService(BDOCConfigurationService configurationService) {
         this.configurationService = configurationService;
+    }
+
+    @Autowired
+    public void setReportConfigurationProperties(ReportConfigurationProperties reportConfigurationProperties) {
+        this.reportConfigurationProperties = reportConfigurationProperties;
     }
 }

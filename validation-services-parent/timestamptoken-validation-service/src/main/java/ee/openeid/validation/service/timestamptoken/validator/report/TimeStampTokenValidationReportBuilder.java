@@ -6,26 +6,24 @@ import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.getDateFormatterWithGMTZone;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.*;
 
 public class TimeStampTokenValidationReportBuilder {
 
     private static final String ASICS_SIGNATURE_FORMAT = "ASiC-S";
 
     private ValidationDocument validationDocument;
-    private Date validationTime;
     private ValidationPolicy validationPolicy;
     private TimeStampTokenValidationData timeStampTokenValidationData;
+    private boolean isReportSignatureEnabled;
 
-    public TimeStampTokenValidationReportBuilder(ValidationDocument validationDocument, Date validationTime, ValidationPolicy validationPolicy, TimeStampTokenValidationData timeStampTokenValidationData) {
+    public TimeStampTokenValidationReportBuilder(ValidationDocument validationDocument, ValidationPolicy validationPolicy, TimeStampTokenValidationData timeStampTokenValidationData, boolean isReportSignatureEnabled) {
         this.validationDocument = validationDocument;
-        this.validationTime = validationTime;
         this.validationPolicy = validationPolicy;
         this.timeStampTokenValidationData = timeStampTokenValidationData;
+        this.isReportSignatureEnabled = isReportSignatureEnabled;
     }
 
     public Reports build() {
@@ -38,12 +36,12 @@ public class TimeStampTokenValidationReportBuilder {
     private ValidationConclusion getValidationConclusion() {
         ValidationConclusion validationConclusion = new ValidationConclusion();
         validationConclusion.setPolicy(createReportPolicy(validationPolicy));
-        validationConclusion.setValidationTime(getDateFormatterWithGMTZone().format(validationTime));
+        validationConclusion.setValidationTime(getValidationTime());
         validationConclusion.setSignatureForm(ASICS_SIGNATURE_FORMAT);
         List<TimeStampTokenValidationData> timeStampTokenValidationDataList = new ArrayList<>();
         timeStampTokenValidationDataList.add(timeStampTokenValidationData);
         validationConclusion.setTimeStampTokens(timeStampTokenValidationDataList);
-        validationConclusion.setValidatedDocument(ReportBuilderUtils.createValidatedDocument(validationDocument.getName(), validationDocument.getBytes()));
+        validationConclusion.setValidatedDocument(ReportBuilderUtils.createValidatedDocument(isReportSignatureEnabled, validationDocument.getName(), validationDocument.getBytes()));
         return validationConclusion;
     }
 

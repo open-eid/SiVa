@@ -16,6 +16,7 @@
 
 package ee.openeid.validation.service.ddoc;
 
+import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
@@ -41,23 +42,19 @@ import org.xml.sax.SAXNotSupportedException;
 
 import javax.annotation.PostConstruct;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.Security;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
 public class DDOCValidationService implements ValidationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DDOCValidationService.class);
     private final Object lock = new Object();
+
+    private ReportConfigurationProperties reportConfigurationProperties;
 
     private DDOCValidationServiceProperties properties;
     private SignaturePolicyService<ValidationPolicy> signaturePolicyService;
@@ -106,8 +103,8 @@ public class DDOCValidationService implements ValidationService {
                 if (signedDoc == null) {
                     throw new MalformedDocumentException();
                 }
-                Date validationTime = new Date();
-                DDOCValidationReportBuilder reportBuilder = new DDOCValidationReportBuilder(signedDoc, validationDocument, validationTime, policy);
+
+                DDOCValidationReportBuilder reportBuilder = new DDOCValidationReportBuilder(signedDoc, validationDocument, policy, reportConfigurationProperties.isReportSignatureEnabled());
                 return reportBuilder.build();
             } catch (Exception e) {
                 LOGGER.warn("Unexpected exception when validating DDOC document: " + e.getMessage(), e);
@@ -134,5 +131,10 @@ public class DDOCValidationService implements ValidationService {
     @Autowired
     public void setXMLEntityAttackValidator(XMLEntityAttackValidator xmlEntityAttackValidator) {
         this.xmlEntityAttackValidator = xmlEntityAttackValidator;
+    }
+
+    @Autowired
+    public void setReportConfigurationProperties(ReportConfigurationProperties reportConfigurationProperties) {
+        this.reportConfigurationProperties = reportConfigurationProperties;
     }
 }

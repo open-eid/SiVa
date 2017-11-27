@@ -28,12 +28,25 @@ import java.io.IOException;
 
 @Service(value = SivaServiceType.SOAP_SERVICE)
 public class SivaSOAPValidationServiceClient implements ValidationService {
-    private static final String LINE_SEPARATOR = System.lineSeparator();
+    static final String LINE_SEPARATOR = System.lineSeparator();
     private static final String EMPTY_STRING = "";
     private SivaRESTWebServiceConfigurationProperties properties;
     private RestTemplate restTemplate;
 
-    private static String createXMLValidationRequest(String base64Document, FileType fileType, String filename, String report, String policy) {
+    @Override
+    public Observable<String> validateDocument(String policy, String report, UploadedFile file) throws IOException {
+        if (file == null) {
+            throw new IOException("File not found");
+        }
+
+        FileType serviceType = ValidationRequestUtils.getValidationServiceType(file);
+        String requestBody = createXMLValidationRequest(file.getEncodedFile(), serviceType, file.getFilename(), report, policy);
+
+        String fullUrl = properties.getServiceHost() + properties.getSoapServicePath();
+        return Observable.just(XMLTransformer.formatXML(restTemplate.postForObject(fullUrl, requestBody, String.class)));
+    }
+
+     static String createXMLValidationRequest(String base64Document, FileType fileType, String filename, String report, String policy) {
         String documentType = getSoapDocumentTypeRow(fileType);
         String reportType = getSoapReportTypeRow(report);
         String policyType = getSoapPolicyTypeRow(policy);
@@ -55,33 +68,20 @@ public class SivaSOAPValidationServiceClient implements ValidationService {
 
     private static String getSoapPolicyTypeRow(String policy) {
         if (StringUtils.isNotBlank(policy))
-            return "<SignaturePolicy>" + policy + "</SignaturePolicy>" + LINE_SEPARATOR;
+            return "            <SignaturePolicy>" + policy + "</SignaturePolicy>" + LINE_SEPARATOR;
         return EMPTY_STRING;
     }
 
     private static String getSoapReportTypeRow(String report) {
         if (StringUtils.isNotBlank(report))
-            return "<ReportType>" + report + "</ReportType>" + LINE_SEPARATOR;
+            return "            <ReportType>" + report + "</ReportType>" + LINE_SEPARATOR;
         return EMPTY_STRING;
     }
 
     private static String getSoapDocumentTypeRow(FileType fileType) {
         if (fileType == FileType.XROAD)
-            return "<DocumentType>" + fileType.name() + "</DocumentType>" + LINE_SEPARATOR;
+            return "            <DocumentType>" + fileType.name() + "</DocumentType>" + LINE_SEPARATOR;
         return EMPTY_STRING;
-    }
-
-    @Override
-    public Observable<String> validateDocument(String policy, String report, UploadedFile file) throws IOException {
-        if (file == null) {
-            throw new IOException("File not found");
-        }
-
-        FileType serviceType = ValidationRequestUtils.getValidationServiceType(file);
-        String requestBody = createXMLValidationRequest(file.getEncodedFile(), serviceType, file.getFilename(), report, policy);
-
-        String fullUrl = properties.getServiceHost() + properties.getSoapServicePath();
-        return Observable.just(XMLTransformer.formatXML(restTemplate.postForObject(fullUrl, requestBody, String.class)));
     }
 
     @Autowired

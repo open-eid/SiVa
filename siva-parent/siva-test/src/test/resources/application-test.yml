@@ -10,12 +10,14 @@ plugtest:
   location: url
 
 siva:
-  webapp:
+  report:
     reportSignatureEnabled: true
   signatureService:
-    signatureLevel: XAdES_BASELINE_B
+    signatureLevel: XAdES_BASELINE_LT
     tspUrl: http://demo.sk.ee/tsa
     ocspUrl: http://demo.sk.ee/ocsp
     pkcs12:
-      path: src/test/resources/test.p12
-      password: password
+          path: src/test/resources/test.p12
+          password: password
+
+

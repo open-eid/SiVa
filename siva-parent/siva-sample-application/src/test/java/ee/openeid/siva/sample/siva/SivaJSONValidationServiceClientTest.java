@@ -82,7 +82,7 @@ public class SivaJSONValidationServiceClientTest {
         mockServiceResponse();
 
         final UploadedFile file = TestFileUtils.generateUploadFile(testingFolder, "testing.exe", "error in file");
-        validationService.validateDocument("","",  file);
+        validationService.validateDocument("POLv3","Simple",  file);
 
         verify(restTemplate).postForObject(anyString(), validationRequestCaptor.capture(), any());
         assertEquals(null, validationRequestCaptor.getValue().getDocumentType());

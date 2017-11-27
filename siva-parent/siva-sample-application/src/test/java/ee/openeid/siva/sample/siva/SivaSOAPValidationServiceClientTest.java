@@ -25,10 +25,7 @@ import ee.openeid.siva.sample.cache.UploadedFile;
 import ee.openeid.siva.sample.test.utils.TestFileUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
@@ -46,6 +43,7 @@ import rx.Observable;
 
 import java.io.IOException;
 
+import static ee.openeid.siva.sample.siva.SivaSOAPValidationServiceClient.LINE_SEPARATOR;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.verify;
@@ -54,19 +52,15 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class SivaSOAPValidationServiceClientTest {
+    @Rule
+    public TemporaryFolder testingFolder = new TemporaryFolder();
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
     @Autowired
     @Qualifier(value = "sivaSOAP")
     private ValidationService validationService;
-
     @MockBean
     private RestTemplate restTemplate;
-
-    @Rule
-    public TemporaryFolder testingFolder = new TemporaryFolder();
-
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
-
     @Captor
     private ArgumentCaptor<String> validationRequestCaptor;
 
@@ -123,6 +117,26 @@ public class SivaSOAPValidationServiceClientTest {
         expectedException.expect(IOException.class);
         expectedException.expectMessage("File not found");
         validationService.validateDocument(null, null, null);
+    }
+
+    @Test
+    public void validXmlSoapCreation() {
+        String request = SivaSOAPValidationServiceClient.createXMLValidationRequest("dGVzdA==", FileType.XROAD, "filename.asice", "Simple", "POLv3");
+        String expectedRequest = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">" + LINE_SEPARATOR +
+                "   <soapenv:Header/>" + LINE_SEPARATOR +
+                "   <soapenv:Body>" + LINE_SEPARATOR +
+                "      <soap:ValidateDocument>" + LINE_SEPARATOR +
+                "         <soap:ValidationRequest>" + LINE_SEPARATOR +
+                "            <Document>dGVzdA==</Document>" + LINE_SEPARATOR +
+                "            <Filename>filename.asice</Filename>" + LINE_SEPARATOR +
+                "            <DocumentType>XROAD</DocumentType>" + LINE_SEPARATOR +
+                "            <ReportType>Simple</ReportType>" + LINE_SEPARATOR +
+                "            <SignaturePolicy>POLv3</SignaturePolicy>" + LINE_SEPARATOR +
+                "         </soap:ValidationRequest>" + LINE_SEPARATOR +
+                "      </soap:ValidateDocument>" + LINE_SEPARATOR +
+                "   </soapenv:Body>" + LINE_SEPARATOR +
+                "</soapenv:Envelope>";
+        Assert.assertEquals(expectedRequest, request);
     }
 
     private void serverMockResponse(String response) {

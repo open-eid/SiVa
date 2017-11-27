@@ -21,6 +21,7 @@ import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.exception.ValidatonServiceNotFoundException;
 import ee.openeid.siva.proxy.http.RESTProxyService;
 import ee.openeid.siva.statistics.StatisticsService;
+import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
@@ -248,6 +249,7 @@ public class ValidationProxyTest {
         policyProperties.initPolicySettings();
         ConstraintLoadingSignaturePolicyService signaturePolicyService = new ConstraintLoadingSignaturePolicyService(policyProperties);
         validationService.setSignaturePolicyService(signaturePolicyService);
+        validationService.setReportConfigurationProperties(new ReportConfigurationProperties(true));
         return validationService;
     }
 
@@ -257,6 +259,7 @@ public class ValidationProxyTest {
         policyProperties.initPolicySettings();
         SignaturePolicyService<ValidationPolicy> signaturePolicyService = new SignaturePolicyService<>(policyProperties);
         validationService.setSignaturePolicyService(signaturePolicyService);
+        validationService.setReportConfigurationProperties(new ReportConfigurationProperties(true));
         return validationService;
     }
 

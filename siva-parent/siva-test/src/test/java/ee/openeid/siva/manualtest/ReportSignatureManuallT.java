@@ -396,7 +396,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
     //Testitud ja töötab RSA sertifikaatidega id-kaardiga. Ei tööta ECC kaardiga.
     //Installida OpenSC
     //slotIndex: 1 /Pin1 ja slotIndex: 2/Pin2
-
+    @Ignore
     @Test
     public void validateDetailedReportSignatureLevelPkcs11() {
         signatureServiceConfigurationProperties.getPkcs11().setPath("C:/Windows/System32/opensc-pkcs11.dll");

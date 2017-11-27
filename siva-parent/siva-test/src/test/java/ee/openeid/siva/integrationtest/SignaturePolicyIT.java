@@ -545,17 +545,17 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * Expected Result: Signatures are valid according to policy
      *
-     * File: EE_SER-AEX-B-LT-V-28.asice
+     * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
      */
-    @Test //TODO: BDOC-TM should be found
+    @Test
     public void bdocDocumentQesNoTypeShouldPassWithStrictPolicy() {
-        setTestFilesDirectory("bdoc/live/timestamp/");
-        post(validationRequestForDD4j("EE_SER-AEX-B-LT-V-28.asice", VALID_SIGNATURE_POLICY_4, null))
+        setTestFilesDirectory("bdoc/test/timemark/");
+        post(validationRequestFor("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc", VALID_SIGNATURE_POLICY_4, null))
                 .then()
                 .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
                 .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
                 .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_4_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QES"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
@@ -1108,17 +1108,17 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * Expected Result: Signatures are valid according to policy
      *
-     * File: EE_SER-AEX-B-LT-V-28.asice
+     * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
      */
-    @Test //TODO: BDOC-TM should be found
+    @Test
     public void bdocDocumentQesNoTypeShouldPassWithGivenPolicy() {
-        setTestFilesDirectory("bdoc/live/timestamp/");
-        post(validationRequestForDD4j("EE_SER-AEX-B-LT-V-28.asice", VALID_SIGNATURE_POLICY_3, null))
+        setTestFilesDirectory("bdoc/test/timemark/");
+        post(validationRequestForDD4j("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc", VALID_SIGNATURE_POLICY_3, null))
                 .then()
                 .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
                 .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
                 .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_3_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QES"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())

@@ -48,7 +48,7 @@
                     <xs:element name="Policy" type="tns:Policy"/>
                     <xs:element name="ValidationTime" type="xs:string"/>
                     <xs:element name="ValidatedDocument" type="tns:ValidatedDocumentData"/>
-                    <xs:element name="ValidationLevel" type="xs:string"/>
+                    <xs:element name="ValidationLevel" minOccurs="0" type="xs:string"/>
                     <xs:element name="ValidationWarnings" minOccurs="0">
                         <xs:complexType>
                             <xs:sequence>
@@ -57,7 +57,7 @@
                             </xs:sequence>
                         </xs:complexType>
                     </xs:element>
-                    <xs:element name="SignatureForm" type="xs:string"/>
+                    <xs:element name="SignatureForm" minOccurs="0" type="xs:string"/>
                     <xs:element name="Signatures" minOccurs="0">
                         <xs:complexType>
                             <xs:sequence>
@@ -102,8 +102,8 @@
             <xs:complexType name="ValidatedDocumentData">
                 <xs:sequence>
                     <xs:element name="Filename" type="xs:string"/>
-                    <xs:element name="FileHashInHex" type="xs:string"/>
-                    <xs:element name="HashAlgo" type="xs:string"/>
+                    <xs:element name="FileHashInHex" minOccurs="0" type="xs:string"/>
+                    <xs:element name="HashAlgo" minOccurs="0" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
 
@@ -111,18 +111,18 @@
                 <xs:sequence>
                     <xs:element name="Id" type="xs:string"/>
                     <xs:element name="SignatureFormat" type="xs:string"/>
-                    <xs:element name="SignatureLevel" type="xs:string"/>
+                    <xs:element name="SignatureLevel" minOccurs="0" type="xs:string"/>
                     <xs:element name="SignedBy" type="xs:string"/>
                     <xs:element name="Indication" type="tns:Indication"/>
-                    <xs:element name="SubIndication" type="xs:string"/>
-                    <xs:element name="Errors">
+                    <xs:element name="SubIndication" minOccurs="0" type="xs:string"/>
+                    <xs:element name="Errors" minOccurs="0">
                         <xs:complexType>
                             <xs:sequence>
                                 <xs:element maxOccurs="unbounded" minOccurs="0" name="Error" type="tns:Error"/>
                             </xs:sequence>
                         </xs:complexType>
                     </xs:element>
-                    <xs:element name="SignatureScopes">
+                    <xs:element name="SignatureScopes" minOccurs="0">
                         <xs:complexType>
                             <xs:sequence>
                                 <xs:element maxOccurs="unbounded" name="SignatureScope" type="tns:SignatureScope"/>
@@ -130,14 +130,14 @@
                         </xs:complexType>
                     </xs:element>
                     <xs:element name="ClaimedSigningTime" type="xs:string"/>
-                    <xs:element name="Warnings">
+                    <xs:element name="Warnings" minOccurs="0">
                         <xs:complexType>
                             <xs:sequence>
                                 <xs:element maxOccurs="unbounded" minOccurs="0" name="Warning" type="tns:Warning"/>
                             </xs:sequence>
                         </xs:complexType>
                     </xs:element>
-                    <xs:element name="Info" type="tns:Info"/>
+                    <xs:element name="Info" minOccurs="0" type="tns:Info"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="Error">
@@ -152,9 +152,9 @@
             </xs:complexType>
             <xs:complexType name="SignatureScope">
                 <xs:sequence>
-                    <xs:element name="Name" type="xs:string"/>
-                    <xs:element name="Scope" type="xs:string"/>
-                    <xs:element name="Content" type="xs:string"/>
+                    <xs:element name="Name" minOccurs="0" type="xs:string"/>
+                    <xs:element name="Scope" minOccurs="0" type="xs:string"/>
+                    <xs:element name="Content" minOccurs="0" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="Warning">

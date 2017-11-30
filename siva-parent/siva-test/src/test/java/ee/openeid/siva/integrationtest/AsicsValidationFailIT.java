@@ -227,7 +227,6 @@ public class AsicsValidationFailIT extends SiVaRestTests {
      * <p>
      * File: evidencerecordMixedWithTST.asics
      */
-    @Ignore //TODO: SIVARIA2-93
     @Test
     public void evidencereecordFilesInAddtionToTstAsicsShouldFail() {
         post(validationRequestFor("evidencerecordMixedWithTST.asics"))

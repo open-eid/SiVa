@@ -194,6 +194,30 @@ public class PdfValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
 
+    /**
+     * TestCaseID: PDF-ValidationFail-8
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     *
+     * Title: CRL is out of thisUpdate and nextUpdate range
+     *
+     * Expected Result: Validation should fail
+     *
+     * File: pades-lt-CRL-taken-days-later.pdf
+     */
+    @Test
+    public void crlTaken24hAfterTsShouldFail() {
+        setTestFilesDirectory("pdf/signature_revocation_value_test_files/");
+        post(validationRequestFor("pades-lt-CRL-taken-days-later.pdf"))
+                .then()
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("The revocation information is not considered as 'fresh'."))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+    }
+
     @Override
     protected String getTestFilesDirectory() {
         return testFilesDirectory;

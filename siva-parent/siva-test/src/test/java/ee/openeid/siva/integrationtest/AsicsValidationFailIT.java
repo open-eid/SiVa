@@ -137,7 +137,6 @@ public class AsicsValidationFailIT extends SiVaRestTests {
      * <p>
      * File: signatureMixedWithTST.asics
      */
-    @Ignore //TODO: SIVARIA2-93
     @Test
     public void signatureFilesInAddtionToTstAsicsShouldFail() {
         post(validationRequestFor("signatureMixedWithTST.asics"))
@@ -184,13 +183,12 @@ public class AsicsValidationFailIT extends SiVaRestTests {
      * <p>
      * File: AsicsTSTsignatureBroken.asics
      */
-    @Ignore //TODO: SIVARIA2-94, exact error message not known yet.
     @Test
     public void brokenTstAsicsShouldFail() {
         post(validationRequestFor("AsicsTSTsignatureBroken.asics"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is("document"))
-                .body("requestErrors[0].message", Matchers.is("Document does not meet the requirements"));
+                .body("requestErrors[0].message", Matchers.is("Document malformed or not matching documentType"));
     }
 
     /**
@@ -215,6 +213,28 @@ public class AsicsValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.validatedDocument.fileHashInHex", Matchers.is("80D0D18045E2A8C41A4197C542DDDE244A829A3D221CDCF2B03A656AB27B3EEA"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].error[0].content", Matchers.is("Signature not intact"));
+    }
+
+    /**
+     * TestCaseID: Asics-ValidationFail-9
+     * <p>
+     * TestType: Automated
+     * <p>
+     * Requirement:
+     * <p>
+     * Title: Exluding files in META-INF folder together with TST
+     * <p>
+     * Expected Result: The validation should fail
+     * <p>
+     * File: evidencerecordMixedWithTST.asics
+     */
+    @Ignore //TODO: SIVARIA2-93
+    @Test
+    public void evidencereecordFilesInAddtionToTstAsicsShouldFail() {
+        post(validationRequestFor("evidencerecordMixedWithTST.asics"))
+                .then()
+                .body("requestErrors[0].key", Matchers.is("document"))
+                .body("requestErrors[0].message", Matchers.is("Document does not meet the requirements"));
     }
 
     @Override

@@ -1,7 +1,7 @@
 The following chapter depicts SiVa software on a component diagram.
 Note that not all of the external base libraries are included in the component model to avoid duplicity with other documentation. Only relevant base libraries and dependencies are listed and described in the documentation. Information about additional and transitive dependencies of the respective validation service components can be found via the references provided.
 
-![SiVa component diagram](../../img/siva/siva_component_diagram.png)
+![SiVa component diagram](../img/siva/siva_component_diagram.png)
 
 ## System components
 ### Siva webapp
@@ -15,12 +15,13 @@ library is described in each of the validation service section.
 | **Validation proxy service** | Acts as a router for the request and response. It is responsible for selecting the appropriate validation service for incoming document.<br>- Proxy service accepts an in memory representation of a document and finds a matching validation service based on document type. The incoming request is converted to validation request and forwarded to the specific validation service.<br>- The report returned by the specific validation service is passed to the statistics service before returning it to Web service. |
 | **Data files proxy service** | Acts as a router for the request and response. It is responsible for selecting the appropriate data files extraction service for incoming document.<br>- Proxy service accepts an in memory representation of a document and finds a matching validation service based on document type. |
 | **Statistics service** | An optional component that can be turned on or off using configuration file. It is Spring Boot module and main purpose for it is to collect data about: incoming request, validation reports and errors that have been reported during validation process.<br>- When HTTP authentication header have been set the reporting service will also add this info to statistics report.<br>- After the report object have been created the data will be sent to configured reporting service. SiVa is preconfigured to work with Google Analytics.<br>- More info and specifics about the statistics service can be found in [SiVa_statistics.pdf](/pdf-files/SiVa_statistics.pdf)|
-| **PDF validation service** | PDF uses **DSS** PaDES validation functionality along with the preconfigured validation policy that complies with Estonian laws and regulations.|
-| **BDOC validation service** | Provides validation services for BDOC containers. BDOC for ASiC compliant containers both TM and TS will use latest Maven released **DigiDoc4J** library |
-| **DDOC validation service** | Provides validation services for DigiDoc containers. DDOC for previous generation digitally signed files will use latest Maven release of **JDigiDoc** |
-| **DDOC data files service** | Provides files extraction services for DigiDoc containers. DDOC for previous generation digitally signed files will use latest Maven release of **JDigiDoc** |
+| **Generic validation service** | Provides validation services for ASIC containers along with PAdES, CAdES and XAdES signatures. Uses Maven released *DigiDoc4J EU DSS fork* library|
+| **BDOC validation service** | Provides validation services for BDOC containers. BDOC for ASiC compliant containers both TM and TS is supported. Uses Maven released **DigiDoc4J** library |
+| **DDOC validation service** | Provides validation services for DigiDoc containers. DDOC for previous generation digitally signed files. Uses latest Maven release of **JDigiDoc** |
+| **TST validation service** | Provides validation service for Time Stamp Token based ASIC-S containers with Estonian specific validation policy |
+| **DDOC data files service** | Provides files extraction services for DigiDoc containers. DDOC for previous generation digitally signed files. Uses latest Maven release of **JDigiDoc** |
 | **X-Road validation service** | X-Road containers are similar to ASiCE containers but are **not** valid ASiCE containers. There we could not use DSS nor DigiDoc4J provided ASiCE validation functionality but need to X-Road developed `asicverifier` Java command line utility to validate these containers.<br><br>Source code for `asicverifier` can be found in [GitHub xroad-public repository](https://github.com/ria-ee/X-Road/tree/master/src/asicverifier): `Asicverfier` has been integrated into SiVa as Java library. Making possible to use all the Java libraries packaged into `asicverifier` fat JAR.<br><br>Configurable functionality:<br>- In SiVa configuration `application.yml` file You can define alternative location for `globalconf` directory to be loaded in using input stream. **PS!** X-road validation service is no longer distributed as a separate webapp installation since SiVa 2.0 |
-| **Dss** | Dss library implementations are used for PaDES validation and TSL loading. SiVa uses [Digidoc4J DSS fork Java library](https://github.com/open-eid/sd-dss). |
+| **Dss** | Dss library implementations are used for ASICE, XAdES, CAdES and PAdES validation and TSL loading. SiVa uses [Digidoc4J DSS fork Java library](https://github.com/open-eid/sd-dss). |
 | **JDigiDoc** | JDigiDoc implementation is used by DDOC validation service and for the DDOC data files service. See the project Github [page](https://github.com/open-eid/jdigidoc) for further details. |
 | **Asicverifier** | X-road signature validation utility (see [github project](https://github.com/vrk-kpa/xroad-public/tree/master/src/asicverifier) for details). A command line tool to validate X-Road Security server generated ASiCe files. The utility was chosen because it's only available packaged to tool to validate X-Road signature file. |  **Digidoc4j** | Digidoc4j implementation is used by BDOC validation service. See the project Github [page](https://github.com/open-eid/digidoc4j) for further details. |
 | **TSL loader** | TSL loader loads the contents of TSL file from given URL in online mode or from directory when using offline mode in predefined interval.|
@@ -72,7 +73,7 @@ Required:
 
 | Component | Description |
 |------------------------------|--------------------------------------------------------|
-| **Policies and constraints** | (Optional) By default, two policies are supported and integrated into SiVa - see [SiVa Validation Policy](/siva/appendix/validation_policy). However, it is possible to customize the validation policies and their constraints. Configuration is validation service specific. See the [overriding configuration](/siva/v2/systemintegrators_guide/#configuration-parameters) section for details. |
+| **Policies and constraints** | (Optional) By default, two policies are supported and integrated into SiVa - see [SiVa Validation Policy](/siva2/appendix/validation_policy). However, it is possible to customize the validation policies and their constraints. Configuration is validation service specific. See the [overriding configuration](/siva2/systemintegrators_guide/#configuration-parameters) section for details. |
 | **Externalized configuration** | Application specific configuration (property files, command line variables, etc) that allow overriding the default values set within the webapp. |
 
 ## External subsystems

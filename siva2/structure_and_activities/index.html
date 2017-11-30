@@ -956,7 +956,7 @@
                 
                 <p>The following chapter depicts SiVa software on a component diagram.
 Note that not all of the external base libraries are included in the component model to avoid duplicity with other documentation. Only relevant base libraries and dependencies are listed and described in the documentation. Information about additional and transitive dependencies of the respective validation service components can be found via the references provided.</p>
-<p><img alt="SiVa component diagram" src="../../../img/siva/siva_component_diagram.png" /></p>
+<p><img alt="SiVa component diagram" src="../../img/siva/siva_component_diagram.png" /></p>
 <h2 id="system-components">System components</h2>
 <h3 id="siva-webapp">Siva webapp</h3>
 <p>All validation services use different Java library to validate given document in request. The used validation
@@ -986,20 +986,24 @@ library is described in each of the validation service section.</p>
 <td>An optional component that can be turned on or off using configuration file. It is Spring Boot module and main purpose for it is to collect data about: incoming request, validation reports and errors that have been reported during validation process.<br>- When HTTP authentication header have been set the reporting service will also add this info to statistics report.<br>- After the report object have been created the data will be sent to configured reporting service. SiVa is preconfigured to work with Google Analytics.<br>- More info and specifics about the statistics service can be found in <a href="../../pdf-files/SiVa_statistics.pdf">SiVa_statistics.pdf</a></td>
 </tr>
 <tr>
-<td><strong>PDF validation service</strong></td>
-<td>PDF uses <strong>DSS</strong> PaDES validation functionality along with the preconfigured validation policy that complies with Estonian laws and regulations.</td>
+<td><strong>Generic validation service</strong></td>
+<td>Provides validation services for ASIC containers along with PAdES, CAdES and XAdES signatures. Uses Maven released <em>DigiDoc4J EU DSS fork</em> library</td>
 </tr>
 <tr>
 <td><strong>BDOC validation service</strong></td>
-<td>Provides validation services for BDOC containers. BDOC for ASiC compliant containers both TM and TS will use latest Maven released <strong>DigiDoc4J</strong> library</td>
+<td>Provides validation services for BDOC containers. BDOC for ASiC compliant containers both TM and TS is supported. Uses Maven released <strong>DigiDoc4J</strong> library</td>
 </tr>
 <tr>
 <td><strong>DDOC validation service</strong></td>
-<td>Provides validation services for DigiDoc containers. DDOC for previous generation digitally signed files will use latest Maven release of <strong>JDigiDoc</strong></td>
+<td>Provides validation services for DigiDoc containers. DDOC for previous generation digitally signed files. Uses latest Maven release of <strong>JDigiDoc</strong></td>
+</tr>
+<tr>
+<td><strong>TST validation service</strong></td>
+<td>Provides validation service for Time Stamp Token based ASIC-S containers with Estonian specific validation policy</td>
 </tr>
 <tr>
 <td><strong>DDOC data files service</strong></td>
-<td>Provides files extraction services for DigiDoc containers. DDOC for previous generation digitally signed files will use latest Maven release of <strong>JDigiDoc</strong></td>
+<td>Provides files extraction services for DigiDoc containers. DDOC for previous generation digitally signed files. Uses latest Maven release of <strong>JDigiDoc</strong></td>
 </tr>
 <tr>
 <td><strong>X-Road validation service</strong></td>
@@ -1007,7 +1011,7 @@ library is described in each of the validation service section.</p>
 </tr>
 <tr>
 <td><strong>Dss</strong></td>
-<td>Dss library implementations are used for PaDES validation and TSL loading. SiVa uses <a href="https://github.com/open-eid/sd-dss">Digidoc4J DSS fork Java library</a>.</td>
+<td>Dss library implementations are used for ASICE, XAdES, CAdES and PAdES validation and TSL loading. SiVa uses <a href="https://github.com/open-eid/sd-dss">Digidoc4J DSS fork Java library</a>.</td>
 </tr>
 <tr>
 <td><strong>JDigiDoc</strong></td>
@@ -1108,7 +1112,7 @@ library is described in each of the validation service section.</p>
 <tbody>
 <tr>
 <td><strong>Policies and constraints</strong></td>
-<td>(Optional) By default, two policies are supported and integrated into SiVa - see <a href="../../siva/appendix/validation_policy">SiVa Validation Policy</a>. However, it is possible to customize the validation policies and their constraints. Configuration is validation service specific. See the <a href="../../siva/v2/systemintegrators_guide/#configuration-parameters">overriding configuration</a> section for details.</td>
+<td>(Optional) By default, two policies are supported and integrated into SiVa - see <a href="../../siva2/appendix/validation_policy">SiVa Validation Policy</a>. However, it is possible to customize the validation policies and their constraints. Configuration is validation service specific. See the <a href="../../siva2/systemintegrators_guide/#configuration-parameters">overriding configuration</a> section for details.</td>
 </tr>
 <tr>
 <td><strong>Externalized configuration</strong></td>

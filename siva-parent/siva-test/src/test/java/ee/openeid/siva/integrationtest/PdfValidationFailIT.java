@@ -17,21 +17,11 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
-import ee.openeid.siva.validation.document.report.SimpleReport;
-import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.http.ContentType;
-
-import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.config.EncoderConfig.encoderConfig;
-
-
 
 @Category(IntegrationTest.class)
 public class PdfValidationFailIT extends SiVaRestTests {

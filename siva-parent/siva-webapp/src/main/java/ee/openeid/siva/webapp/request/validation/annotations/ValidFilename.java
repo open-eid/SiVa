@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
 @NotNullValidFilenamePattern
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy={})
+@Constraint(validatedBy = {})
 public @interface ValidFilename {
 
     String message() default "{validation.error.message.filename}";

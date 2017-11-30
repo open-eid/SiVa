@@ -24,6 +24,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.BDDMockito;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -38,9 +40,6 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.never;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
@@ -73,8 +72,8 @@ public class GoogleAnalyticsMeasurementProtocolClientTest {
 
         uuid = mock(UUID.class);
         mockStatic(UUID.class);
-        given(UUID.randomUUID()).willReturn(uuid);
-        given(uuid.toString()).willReturn(MOCKED_UUID_STRING);
+        BDDMockito.given(UUID.randomUUID()).willReturn(uuid);
+        BDDMockito.given(uuid.toString()).willReturn(MOCKED_UUID_STRING);
     }
 
     @Test
@@ -94,7 +93,7 @@ public class GoogleAnalyticsMeasurementProtocolClientTest {
 
         RestTemplate restTemplateMock = mock(RestTemplate.class);
         gaClient.setRestTemplate(restTemplateMock);
-        Mockito.verify(restTemplateMock, never()).postForObject(any(String.class), any(HttpEntity.class), any());
+        Mockito.verify(restTemplateMock, Mockito.never()).postForObject(Matchers.any(String.class), Matchers.any(HttpEntity.class), Matchers.any());
 
         gaClient.sendStatisticalData(report);
     }

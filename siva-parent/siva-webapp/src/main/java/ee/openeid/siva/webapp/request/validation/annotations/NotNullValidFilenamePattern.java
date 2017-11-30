@@ -33,7 +33,7 @@ import static ee.openeid.siva.webapp.request.validation.annotations.NotNullValid
 @Pattern(regexp = PATTERN)
 @Target(ElementType.ANNOTATION_TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy={})
+@Constraint(validatedBy = {})
 @ReportAsSingleViolation
 public @interface NotNullValidFilenamePattern {
 

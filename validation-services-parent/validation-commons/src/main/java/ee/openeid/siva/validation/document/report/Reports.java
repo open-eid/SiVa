@@ -33,4 +33,4 @@ public class Reports {
         this.detailedReport = detailedReport;
     }
 
-} 
+}

@@ -26,7 +26,6 @@ import ee.openeid.siva.webapp.soap.transformer.SoapValidationRequestToProxyDocum
 import org.apache.cxf.annotations.SchemaValidation;
 import org.apache.cxf.interceptor.InInterceptors;
 import org.apache.cxf.interceptor.OutFaultInterceptors;
-import org.apache.cxf.interceptor.OutInterceptors;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.xml.ws.Holder;

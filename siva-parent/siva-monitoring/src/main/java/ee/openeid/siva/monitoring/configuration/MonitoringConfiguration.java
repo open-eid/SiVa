@@ -36,7 +36,7 @@ import java.util.List;
 public abstract class MonitoringConfiguration implements BeanFactoryAware {
 
     public static final String DEFAULT_MONITORING_ENDPOINT = "/monitoring/health";
-    public static final int DEFAULT_TIMEOUT = 10 * 000;
+    public static final int DEFAULT_TIMEOUT = 10000;
 
     private BeanFactory beanFactory;
 
@@ -76,7 +76,7 @@ public abstract class MonitoringConfiguration implements BeanFactoryAware {
     private void setUpBeans(ConfigurableBeanFactory configurableBeanFactory, List<UrlHealthIndicator.ExternalLink> list) throws MalformedURLException {
         int linkIndex = 0;
         for (UrlHealthIndicator.ExternalLink link : list) {
-            addNewUrlHealthIndicator(("link" + (++linkIndex)),configurableBeanFactory, link);
+            addNewUrlHealthIndicator(("link" + (++linkIndex)), configurableBeanFactory, link);
         }
     }
 

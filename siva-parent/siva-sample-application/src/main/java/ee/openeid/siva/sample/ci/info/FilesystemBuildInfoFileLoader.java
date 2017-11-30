@@ -49,7 +49,7 @@ public class FilesystemBuildInfoFileLoader implements BuildInfoFileLoader {
     @Override
     public Observable<BuildInfo> loadBuildInfo() throws IOException {
         byte[] yamlFile = loadYamlFile();
-        return Observable.just(mapToBuildInfo(yamlFile)) ;
+        return Observable.just(mapToBuildInfo(yamlFile));
     }
 
     private static BuildInfo mapToBuildInfo(byte[] yamlFile) throws IOException {

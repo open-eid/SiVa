@@ -19,22 +19,20 @@ package ee.openeid.siva.sample.siva;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.StringReader;
 import java.io.StringWriter;
 
-public class XMLTransformer {
-
+final class XMLTransformer {
     private static final Logger LOGGER = LoggerFactory.getLogger(XMLTransformer.class);
     private static final String LINE_SEPARATOR = System.lineSeparator();
 
-    public static String formatXML(String xml) {
+    private XMLTransformer() {
+    }
+
+    static String formatXML(String xml) {
         Source xmlInput = new StreamSource(new StringReader(xml));
         StreamResult xmlOutput = new StreamResult(new StringWriter());
 

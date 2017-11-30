@@ -32,7 +32,7 @@ import static ee.openeid.siva.webapp.request.validation.annotations.ValidReportT
 @AcceptValues(value = AcceptedValue.REPORT_TYPE, message = MESSAGE)
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy={})
+@Constraint(validatedBy = {})
 public @interface ValidReportType {
 
     String MESSAGE = "{validation.error.message.reportType}";

@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy=ValidDataFileFilenameConstraintValidator.class)
+@Constraint(validatedBy = ValidDataFileFilenameConstraintValidator.class)
 public @interface ValidDataFileFilename {
 
     String message() default "{validation.error.message.dataFile.filename}";

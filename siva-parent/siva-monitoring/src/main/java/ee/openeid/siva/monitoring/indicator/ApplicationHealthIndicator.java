@@ -31,21 +31,17 @@ import java.time.format.DateTimeParseException;
 
 public class ApplicationHealthIndicator implements HealthIndicator {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationHealthIndicator.class);
-
     public static final String MANIFEST_PARAM_NAME = "SiVa-Webapp-Name";
     public static final String MANIFEST_PARAM_VERSION = "SiVa-Webapp-Version";
     public static final String MANIFEST_PARAM_BUILD_TIME = "SiVa-Webapp-Build-Time";
-
     public static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     public static final String NOT_AVAILABLE = "N/A";
-
     public static final String RESPONSE_PARAM_WEBAPP_NAME = "webappName";
     public static final String RESPONSE_PARAM_VERSION = "version";
     public static final String RESPONSE_PARAM_BUILD_TIME = "buildTime";
     public static final String RESPONSE_PARAM_START_TIME = "startTime";
     public static final String RESPONSE_PARAM_CURRENT_TIME = "currentTime";
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationHealthIndicator.class);
     private ZonedDateTime instanceStarted = null;
     private ZonedDateTime built = null;
     private String name = null;
@@ -56,19 +52,44 @@ public class ApplicationHealthIndicator implements HealthIndicator {
         setIndicators();
     }
 
+    protected static ZonedDateTime convertUtcToLocal(final String buildTime) {
+        if (buildTime == null)
+            return null;
+
+        LocalDateTime date = null;
+        try {
+            date = LocalDateTime.parse(buildTime, DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT));
+        } catch (DateTimeParseException e) {
+            LOGGER.error("Could not parse the build time! ", e);
+            return null;
+        }
+        ZonedDateTime dateTime = date.atZone(ZoneId.of("UTC"));
+        dateTime.toInstant();
+        return dateTime.withZoneSameInstant(ZoneId.systemDefault());
+    }
+
+    protected static String getFormattedTime(final ZonedDateTime zonedDateTime) {
+        if (zonedDateTime == null)
+            return null;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT);
+        return zonedDateTime.format(formatter);
+    }
+
     @Override
     public Health health() {
         return Health.up()
-                .withDetail(RESPONSE_PARAM_WEBAPP_NAME,  formatValue(name))
-                .withDetail(RESPONSE_PARAM_VERSION,  formatValue(version))
-                .withDetail(RESPONSE_PARAM_BUILD_TIME,  formatValue(getFormattedTime(built)))
-                .withDetail(RESPONSE_PARAM_START_TIME,  formatValue(getFormattedTime(instanceStarted)))
+                .withDetail(RESPONSE_PARAM_WEBAPP_NAME, formatValue(name))
+                .withDetail(RESPONSE_PARAM_VERSION, formatValue(version))
+                .withDetail(RESPONSE_PARAM_BUILD_TIME, formatValue(getFormattedTime(built)))
+                .withDetail(RESPONSE_PARAM_START_TIME, formatValue(getFormattedTime(instanceStarted)))
                 .withDetail(RESPONSE_PARAM_CURRENT_TIME, formatValue(getFormattedTime(ZonedDateTime.now())))
                 .build();
     }
 
     private void registerManifests(final ServletContext servletContext) {
-        try { Manifests.DEFAULT.append(new ServletMfs(servletContext)); } catch (Exception e) {
+        try {
+            Manifests.DEFAULT.append(new ServletMfs(servletContext));
+        } catch (Exception e) {
             LOGGER.error("Failed to set up " + e.getMessage(), e);
         }
     }
@@ -96,28 +117,5 @@ public class ApplicationHealthIndicator implements HealthIndicator {
             LOGGER.warn("Failed to fetch parameter '" + parameterName + "' from manifest file! Either you are not running the application as a jar/war package or there is a problem with the build configuration. " + e.getMessage());
             return null;
         }
-    }
-
-    protected static ZonedDateTime convertUtcToLocal(final String buildTime) {
-        if (buildTime == null)
-            return null;
-
-        LocalDateTime date = null;
-        try {
-            date = LocalDateTime.parse(buildTime, DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT));
-        } catch (DateTimeParseException e) {
-            LOGGER.error("Could not parse the build time! ", e);
-            return null;
-        }
-        ZonedDateTime dateTime = date.atZone(ZoneId.of("UTC"));
-        dateTime.toInstant();
-        return dateTime.withZoneSameInstant(ZoneId.systemDefault());
-    }
-
-    protected static String getFormattedTime(final ZonedDateTime zonedDateTime) {
-        if (zonedDateTime == null)
-            return null;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT);
-        return zonedDateTime.format(formatter);
     }
 }

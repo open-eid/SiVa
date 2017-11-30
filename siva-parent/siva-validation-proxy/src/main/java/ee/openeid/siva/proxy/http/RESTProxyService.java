@@ -18,7 +18,6 @@ package ee.openeid.siva.proxy.http;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Reports;
-import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

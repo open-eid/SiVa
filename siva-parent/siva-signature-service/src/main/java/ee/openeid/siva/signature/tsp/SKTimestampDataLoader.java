@@ -30,11 +30,11 @@ import java.net.URLConnection;
 
 public class SKTimestampDataLoader extends NativeHTTPDataLoader {
 
-    private static final Logger log = LoggerFactory.getLogger(SKTimestampDataLoader.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SKTimestampDataLoader.class);
 
     @Override
     public byte[] post(String url, byte[] content) {
-        log.info("Getting timestamp from " + url);
+        LOGGER.info("Getting timestamp from " + url);
         OutputStream out = null;
         InputStream inputStream = null;
         byte[] result;

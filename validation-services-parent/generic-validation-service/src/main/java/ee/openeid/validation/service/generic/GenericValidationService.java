@@ -169,13 +169,13 @@ public class GenericValidationService implements ValidationService {
         return certificateVerifier.getTrustedCertSource().getCertificatePool().getNumberOfCertificates();
     }
 
-    private DSSDocument createDssDocument(final ValidationDocument ValidationDocument) {
-        if (ValidationDocument == null) {
+    private DSSDocument createDssDocument(final ValidationDocument validationDocument) {
+        if (validationDocument == null) {
             return null;
         }
-        final InMemoryDocument dssDocument = new InMemoryDocument(ValidationDocument.getBytes());
-        dssDocument.setName(ValidationDocument.getName());
-        dssDocument.setMimeType(MimeType.fromFileName(ValidationDocument.getName()));
+        final InMemoryDocument dssDocument = new InMemoryDocument(validationDocument.getBytes());
+        dssDocument.setName(validationDocument.getName());
+        dssDocument.setMimeType(MimeType.fromFileName(validationDocument.getName()));
 
         return dssDocument;
     }

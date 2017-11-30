@@ -35,11 +35,11 @@ import java.net.URI;
 
 public class SkOcspDataLoader extends OCSPDataLoader {
 
-    private static final Logger log = LoggerFactory.getLogger(SkOcspDataLoader.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SkOcspDataLoader.class);
 
     @Override
     public byte[] post(final String url, final byte[] content) throws DSSException {
-        log.info("Getting OCSP response from " + url);
+        LOGGER.info("Getting OCSP response from " + url);
 
         HttpPost httpRequest = null;
         HttpResponse httpResponse = null;

@@ -100,13 +100,13 @@ public class AsiceWithXadesSignatureService implements SignatureService {
         return properties;
     }
 
-    public void setProperties(SignatureServiceConfigurationProperties properties) {
-        this.properties = properties;
+    public void setProperties(SignatureServiceConfigurationProperties signatureServiceConfigurationProperties) {
+        properties = signatureServiceConfigurationProperties;
     }
 
-    private AbstractSignatureTokenConnection getSignatureToken(SignatureServiceConfigurationProperties properties) {
-        Pkcs11Properties pkcs11Properties = properties.getPkcs11();
-        Pkcs12Properties pkcs12Properties = properties.getPkcs12();
+    private AbstractSignatureTokenConnection getSignatureToken(SignatureServiceConfigurationProperties configurationProperties) {
+        Pkcs11Properties pkcs11Properties = configurationProperties.getPkcs11();
+        Pkcs12Properties pkcs12Properties = configurationProperties.getPkcs12();
         if (pkcs11Properties != null) {
             return new Pkcs11SignatureToken(pkcs11Properties.getPath(), pkcs11Properties.getPassword().toCharArray(), pkcs11Properties.getSlotIndex());
         } else if (pkcs12Properties != null) {

@@ -27,4 +27,4 @@ public class SignatureServiceConfigurationProperties {
     private String ocspUrl;
     private Pkcs11Properties pkcs11;
     private Pkcs12Properties pkcs12;
-} 
+}

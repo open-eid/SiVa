@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
 @NotBlank
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy=ValidBase64ConstraintValidator.class)
+@Constraint(validatedBy = ValidBase64ConstraintValidator.class)
 public @interface ValidBase64String {
 
     String message() default "{validation.error.message.base64}";

@@ -35,7 +35,7 @@ public class UrlHealthIndicator extends AbstractHealthIndicator {
     @Autowired
     private RestTemplate restTemplate;
 
-    public UrlHealthIndicator() {}
+    public UrlHealthIndicator() { }
 
     @Override
     protected void doHealthCheck(Health.Builder builder) throws Exception {
@@ -74,10 +74,10 @@ public class UrlHealthIndicator extends AbstractHealthIndicator {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class HealthStatus{
+    public static class HealthStatus {
         private String status;
 
-        public HealthStatus() {}
+        public HealthStatus() { }
 
         public HealthStatus(String status) {
             this.status = status;

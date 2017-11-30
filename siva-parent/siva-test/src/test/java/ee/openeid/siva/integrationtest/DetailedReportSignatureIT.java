@@ -32,7 +32,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.config.EncoderConfig.encoderConfig;
 import static ee.openeid.siva.integrationtest.TestData.*;
 import static org.hamcrest.Matchers.*;
@@ -598,7 +597,7 @@ public class DetailedReportSignatureIT extends SiVaRestTests{
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("document",validationReportSignature);
         jsonObject.put("filename","filename.pdf");
-        Response reportSignatureValidation = given()
+        Response reportSignatureValidation = RestAssured.given()
                 .contentType(ContentType.JSON)
                 .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
                 .body(jsonObject.toString())
@@ -624,7 +623,7 @@ public class DetailedReportSignatureIT extends SiVaRestTests{
     }
 
     private Response validateRequestForDetailedReport(String request, String validationUrl){
-        return given()
+        return RestAssured.given()
                 .contentType(ContentType.JSON)
                 .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
                 .body(request)

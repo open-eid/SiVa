@@ -27,4 +27,4 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("siva.report")
 public class ReportConfigurationProperties {
     private boolean reportSignatureEnabled = false;
-} 
+}

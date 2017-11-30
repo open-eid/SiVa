@@ -208,7 +208,6 @@ public class DDOCValidationReportBuilder {
     @SuppressWarnings("unchecked")
     private SignatureValidationData.Indication getIndication(Signature signature) {
         if (containsErrors(signature.validate())) {
-            // TODO: Should we always return 'INDETERMINATE' in this case or are there cases when we should give here 'TOTAL_FAILED'?
             return SignatureValidationData.Indication.INDETERMINATE;
         } else if (containsErrors(signature.verify(signedDoc, true, true))) {
             return SignatureValidationData.Indication.TOTAL_FAILED;

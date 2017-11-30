@@ -18,12 +18,14 @@ package ee.openeid.siva.sample.siva;
 
 import ee.openeid.siva.sample.cache.UploadedFile;
 import ee.openeid.siva.sample.test.utils.TestFileUtils;
+import org.assertj.core.api.Assertions;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.BDDMockito;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,9 +39,7 @@ import rx.Observable;
 
 import java.io.IOException;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
@@ -99,19 +99,19 @@ public class SivaJSONValidationServiceClientTest {
     @Test
     public void givenRestServiceIsUnreachableReturnsGenericSystemError() throws Exception {
         final UploadedFile file = TestFileUtils.generateUploadFile(testingFolder, "testing.bdoc", "simple file");
-        given(restTemplate.postForObject(anyString(), any(ValidationRequest.class), any()))
+        BDDMockito.given(restTemplate.postForObject(anyString(), any(ValidationRequest.class), any()))
                 .willThrow(new ResourceAccessException("Failed to connect to SiVa REST"));
 
         Observable<String> result = validationService.validateDocument("", "", file);
         verify(restTemplate).postForObject(anyString(), validationRequestCaptor.capture(), any());
 
-        assertThat(result.toBlocking().first()).contains("errorCode");
-        assertThat(result.toBlocking().first()).contains("errorMessage");
+        Assertions.assertThat(result.toBlocking().first()).contains("errorCode");
+        Assertions.assertThat(result.toBlocking().first()).contains("errorMessage");
     }
 
     private String mockServiceResponse() {
         final String mockResponse = "{\"jsonValidationResult\": \"TOTAL-PASSED\"}";
-        given(restTemplate.postForObject(anyString(), any(ValidationRequest.class), any()))
+        BDDMockito.given(restTemplate.postForObject(anyString(), any(ValidationRequest.class), any()))
                 .willReturn(mockResponse);
 
         return mockResponse;

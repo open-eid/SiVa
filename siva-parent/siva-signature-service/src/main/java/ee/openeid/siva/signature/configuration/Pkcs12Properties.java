@@ -22,4 +22,4 @@ import lombok.Data;
 public class Pkcs12Properties {
     private String path;
     private String password;
-} 
+}

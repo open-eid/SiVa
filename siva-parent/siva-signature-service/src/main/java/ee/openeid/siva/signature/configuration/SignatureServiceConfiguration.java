@@ -23,4 +23,4 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties({SignatureServiceConfigurationProperties.class})
 public class SignatureServiceConfiguration {
 
-} 
+}

@@ -23,4 +23,4 @@ public class Pkcs11Properties {
     private String path;
     private String password;
     private int slotIndex;
-} 
+}

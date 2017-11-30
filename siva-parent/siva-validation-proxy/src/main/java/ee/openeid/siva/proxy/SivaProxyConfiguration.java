@@ -21,6 +21,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan("ee.openeid")
-public class SivaProxyConfiguration {}
+public class SivaProxyConfiguration { }
 
 

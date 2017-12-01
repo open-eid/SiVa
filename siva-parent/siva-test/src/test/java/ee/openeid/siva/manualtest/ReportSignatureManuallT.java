@@ -74,6 +74,20 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
     }
 
+
+    /**
+     * TestCaseID: Detailed-Report-Signatures-2
+     *
+     * TestType: Manual
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
+     *
+     * Title: Validate detailed report signature when SignatureLevel XAdES_BASELINE_LTA signed with RSA key.
+     *
+     * Expected Result: validationReportSignature exists in report
+     *
+     * File: hellopades-lt-sha256-rsa2048.pdf
+     */
     @Ignore
     @Test
     public void validateDetailedReportRsaSignatureXadesBaselineLTA() {
@@ -106,6 +120,19 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
         assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signatures.signatureLevel"), equalTo("QESIG"));
     }
 
+    /**
+     * TestCaseID: Detailed-Report-Signatures-3
+     *
+     * TestType: Manual
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
+     *
+     * Title: Validate detailed report signature when SignatureLevel XAdES_BASELINE_LT signed with RSA key.
+     *
+     * Expected Result: validationReportSignature exists in report
+     *
+     * File: hellopades-lt-sha256-rsa2048.pdf
+     */
     @Ignore
     @Test
     public void validateDetailedReportRsaSignatureXadesBaselineLT() {
@@ -138,6 +165,19 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
         assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signatures.signatureLevel"), equalTo("QESIG"));
     }
 
+    /**
+     * TestCaseID: Detailed-Report-Signatures-4
+     *
+     * TestType: Manual
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
+     *
+     * Title: Validate detailed report signature when SignatureLevel XAdES_BASELINE_T signed with RSA key.
+     *
+     * Expected Result: validationReportSignature exists in report
+     *
+     * File: hellopades-lt-sha256-rsa2048.pdf
+     */
     @Ignore
     @Test
     public void validateDetailedReportRsaSignatureXadesBaselineT() {
@@ -169,6 +209,19 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
 
     }
 
+    /**
+     * TestCaseID: Detailed-Report-Signatures-5
+     *
+     * TestType: Manual
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
+     *
+     * Title: Validate detailed report signature when SignatureLevel XAdES_BASELINE_B signed with RSA key.
+     *
+     * Expected Result: validationReportSignature exists in report
+     *
+     * File: hellopades-lt-sha256-rsa2048.pdf
+     */
     @Ignore
     @Test
     public void validateDetailedReportRsaSignatureXadesBaselineB() {
@@ -199,6 +252,20 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
         assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signatures.signatureFormat[0]"), equalTo("XAdES_BASELINE_B"));
     }
 
+
+    /**
+     * TestCaseID: Detailed-Report-Signatures-6
+     *
+     * TestType: Manual
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
+     *
+     * Title: Validate detailed report signature when SignatureLevel XAdES_BASELINE_LTA and signed with ECC key.
+     *
+     * Expected Result: validationReportSignature exists in report
+     *
+     * File: hellopades-lt-sha256-rsa2048.pdf
+     */
     @Ignore
     @Test
     public void validateDetailedReportEccSignatureXadesBaselineLTA() {
@@ -231,6 +298,19 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
         assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signatures.signatureLevel"), equalTo("QESIG"));
     }
 
+    /**
+     * TestCaseID: Detailed-Report-Signatures-7
+     *
+     * TestType: Manual
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
+     *
+     * Title: Validate detailed report signature when SignatureLevel XAdES_BASELINE_LT and signed with ECC key.
+     *
+     * Expected Result: validationReportSignature exists in report
+     *
+     * File: hellopades-lt-sha256-rsa2048.pdf
+     */
     @Ignore
     @Test
     public void validateDetailedReportEccSignatureXadesBaselineLT() {
@@ -263,6 +343,19 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
         assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signatures.signatureLevel"), equalTo("QESIG"));
     }
 
+    /**
+     * TestCaseID: Detailed-Report-Signatures-8
+     *
+     * TestType: Manual
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
+     *
+     * Title: Validate detailed report signature when SignatureLevel XAdES_BASELINE_T and signed with ECC key.
+     *
+     * Expected Result: validationReportSignature exists in report
+     *
+     * File: hellopades-lt-sha256-rsa2048.pdf
+     */
     @Ignore
     @Test
     public void validateDetailedReportEccSignatureXadesBaselineT() {
@@ -293,6 +386,19 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
         assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signatures.signatureFormat[0]"), equalTo("XAdES_BASELINE_T"));
     }
 
+    /**
+     * TestCaseID: Detailed-Report-Signatures-9
+     *
+     * TestType: Manual
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
+     *
+     * Title: Validate detailed report signature when SignatureLevel XAdES_BASELINE_B and signed with ECC key.
+     *
+     * Expected Result: validationReportSignature exists in report
+     *
+     * File: hellopades-lt-sha256-rsa2048.pdf
+     */
     @Ignore
     @Test
     public void validateDetailedReportEccSignatureXadesBaselineB() {
@@ -323,12 +429,25 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
         assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signatures.signatureFormat[0]"), equalTo("XAdES_BASELINE_B"));
     }
 
-    @Ignore
+    /**
+     * TestCaseID: Detailed-Report-Signatures-10
+     *
+     * TestType: Manual
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
+     *
+     * Title: Validate detailed report signature when configuration parameter OcspUrl empty
+     *
+     * Expected Result: No signature
+     *
+     * File: hellopades-lt-sha256-rsa2048.pdf
+     */
+
     @Test
     public void validateDetailedReportSignatureOcspUrlValueEmpty() {
         signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_LT");
         signatureServiceConfigurationProperties.setTspUrl("http://demo.sk.ee/tsa");
-        signatureServiceConfigurationProperties.setOcspUrl(null);
+        signatureServiceConfigurationProperties.setOcspUrl(" ");
         signatureServiceConfigurationProperties.getPkcs12().setPath("src/test/resources/test.p12");
         signatureServiceConfigurationProperties.getPkcs12().setPassword("password");
         String filename = "hellopades-lt-sha256-rsa2048.pdf";
@@ -336,7 +455,19 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
         response =  validateRequestForDetailedReport(request,VALIDATION_ENDPOINT);
     }
 
-    @Ignore
+    /**
+     * TestCaseID: Detailed-Report-Signatures-11
+     *
+     * TestType: Manual
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
+     *
+     * Title: Validate detailed report signature when configuration parameter TspUrl empty
+     *
+     * Expected Result: No signature
+     *
+     * File: hellopades-lt-sha256-rsa2048.pdf
+     */
     @Test
     public void validateDetailedReportSignatureTspUrlValueEmpty() {
         signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_LT");
@@ -349,6 +480,19 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
         response =  validateRequestForDetailedReport(request,VALIDATION_ENDPOINT);
     }
 
+    /**
+     * TestCaseID: Detailed-Report-Signatures-12
+     *
+     * TestType: Manual
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
+     *
+     * Title: Validate detailed report signature when configuration parameter Pkcs11 wrong value
+     *
+     * Expected Result: Error message
+     *
+     * File: hellopades-lt-sha256-rsa2048.pdf
+     */
     @Ignore
     @Test
     public void validateDetailedReportSignaturePkcs11WrongCert() {
@@ -379,7 +523,20 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
         assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.validSignaturesCount"), equalTo("1"));
     }
 
-    @Ignore
+    /**
+     * TestCaseID: Detailed-Report-Signatures-13
+     *
+     * TestType: Manual
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
+     *
+     * Title: Validate detailed report signature when configuration parameter SignatureLevel empty
+     *
+     * Expected Result: No Signature
+     *
+     * File: hellopades-lt-sha256-rsa2048.pdf
+     */
+
     @Test
     public void validateDetailedReportSignatureLevelEmptyValue() {
         signatureServiceConfigurationProperties.setSignatureLevel(" ");
@@ -392,10 +549,22 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
         response =  validateRequestForDetailedReport(request,VALIDATION_ENDPOINT);
     }
 
-
-    //Testitud ja töötab RSA sertifikaatidega id-kaardiga. Ei tööta ECC kaardiga.
-    //Installida OpenSC
-    //slotIndex: 1 /Pin1 ja slotIndex: 2/Pin2
+    /**
+     * TestCaseID: Detailed-Report-Signatures-14
+     *
+     * TestType: Manual
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
+     *
+     * Title: Validate detailed report signature when using pks11 to sign
+     *
+     * Expected Result: Signature exists
+     *
+     * File: hellopades-lt-sha256-rsa2048.pdf
+     */
+    /*Testitud ja töötab RSA sertifikaatidega id-kaardiga. Ei tööta ECC kaardiga.
+    Installida OpenSC
+    slotIndex: 1 /Pin1 ja slotIndex: 2/Pin2*/
     @Ignore
     @Test
     public void validateDetailedReportSignatureLevelPkcs11() {
@@ -407,35 +576,18 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
         response =  validateRequestForDetailedReport(request,VALIDATION_ENDPOINT);
     }
 
-    @Ignore
-    @Test
-    public void validateDetailedReportRsaSignatureXadesBaselineLTASoap() {
-        signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_LTA");
-        signatureServiceConfigurationProperties.setTspUrl("http://demo.sk.ee/tsa");
-        signatureServiceConfigurationProperties.setOcspUrl("http://demo.sk.ee/ocsp");
-        signatureServiceConfigurationProperties.getPkcs12().setPath("src/test/resources/test.p12");
-        signatureServiceConfigurationProperties.getPkcs12().setPassword("password");
-        Document report = extractValidateDocumentResponseDom(post(validationRequestForDocumentReportType("hellopades-lt-sha256-rsa2048.pdf", "Detailed")).andReturn().body().asString());
-        String signedReport = (getValidateDocumentResponseFromDom(report).getValidationReportSignature());
-        Document reportSignatureValidation  = extractValidateDocumentResponseDom(post(createXMLValidationRequestWithReportType(signedReport, "hellopades-lt-sha256-rsa2048.pdf", "Detailed")).andReturn().body().asString());
-        Assert.assertThat(getValidateDocumentResponseFromDom(reportSignatureValidation).getValidationReportSignature(), not(isEmptyOrNullString()));
+    protected String validationRequestFor(String file, String signaturePolicy, String reportType) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("document", Base64.encodeBase64String(readFileFromTestResources(file)));
+        jsonObject.put("filename", file);
+        if (signaturePolicy != null) {
+            jsonObject.put("signaturePolicy", signaturePolicy);
+        }
+        if (reportType != null) {
+            jsonObject.put("reportType", reportType);
+        }
+        return jsonObject.toString();
     }
-
-    @Ignore
-    @Test
-    public void validateDetailedReportRsaSignatureXadesBaselineLTSoap() {
-        signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_LT");
-        signatureServiceConfigurationProperties.setTspUrl("http://demo.sk.ee/tsa");
-        signatureServiceConfigurationProperties.setOcspUrl("http://demo.sk.ee/ocsp");
-        signatureServiceConfigurationProperties.getPkcs12().setPath("src/test/resources/test.p12");
-        signatureServiceConfigurationProperties.getPkcs12().setPassword("password");
-        Document report = extractValidateDocumentResponseDom(post(validationRequestForDocumentReportType("hellopades-lt-sha256-rsa2048.pdf", "Detailed")).andReturn().body().asString());
-        String signedReport = (getValidateDocumentResponseFromDom(report).getValidationReportSignature());
-        Document reportSignatureValidation  = extractValidateDocumentResponseDom(post(createXMLValidationRequestWithReportType(signedReport, "hellopades-lt-sha256-rsa2048.pdf", "Detailed")).andReturn().body().asString());
-        Assert.assertThat(getValidateDocumentResponseFromDom(reportSignatureValidation).getValidationReportSignature(), not(isEmptyOrNullString()));
-    }
-
-
 
     private Response validateRequestForDetailedReport(String request, String validationUrl){
         return given()

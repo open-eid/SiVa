@@ -1,16 +1,19 @@
-package ee.openeid.siva.integrationtest;
+package ee.openeid.siva.manualtest;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
+import ee.openeid.siva.integrationtest.SiVaRestTests;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+import ee.openeid.siva.signature.configuration.SignatureServiceConfigurationProperties;
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,11 +23,12 @@ import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.config.EncoderConfig.encoderConfig;
 import static ee.openeid.siva.integrationtest.TestData.*;
 import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 @Category(IntegrationTest.class)
 
-public class DetailedReportSignatureIT extends SiVaRestTests{
+public class DetailedReportValidationManualIT extends SiVaRestTests {
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "pdf/signature_cryptographic_algorithm_test_files/";
     private static final String VALIDATION_ENDPOINT = "/validate";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
@@ -35,14 +39,27 @@ public class DetailedReportSignatureIT extends SiVaRestTests{
         this.testFilesDirectory = testFilesDirectory;
     }
 
-    @Value("${local.server.port}")
-    protected int serverPort;
+    @Autowired
+    private SignatureServiceConfigurationProperties signatureServiceConfigurationProperties;
 
     @Before
     public void DirectoryBackToDefault() {
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
     }
 
+    /**
+     * TestCaseID: Detailed-Report-Validation-1
+     *
+     * TestType: Manual
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
+     *
+     * Title: ValidationConclusion element
+     *
+     * Expected Result: Detailed report includes validationConclusion element
+     *
+     * File: ValidLiveSignature.asice
+     */
     @Ignore
     @Test
     public void detailedReportAssertValidValidationConclusionAsicE() {
@@ -74,6 +91,19 @@ public class DetailedReportSignatureIT extends SiVaRestTests{
         assertThat(response.jsonPath().getString(validationConclusion + ".signatures.info.bestSignatureTime[0]"), equalTo("2016-10-11T09:36:10Z"));
     }
 
+    /**
+     * TestCaseID: Detailed-Report-Validation-2
+     *
+     * TestType: Manual
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
+     *
+     * Title: QmatrixBlock element
+     *
+     * Expected Result: Detailed report includes QmatrixBlock element and its values
+     *
+     * File: pades-baseline-lta-live-aj.pdf
+     */
     @Ignore
     @Test
     public  void detailedReportAssertValidationProtsessQmatrixBlock(){
@@ -164,6 +194,20 @@ public class DetailedReportSignatureIT extends SiVaRestTests{
         assertThat(response.jsonPath().getString(validationProcess + ".qmatrixBlock.tlanalysis.conclusion[1].indication"), equalTo(VALID_INDICATION_VALUE_PASSED));
         assertThat(response.jsonPath().getString(validationProcess + ".qmatrixBlock.tlanalysis.countryCode[1]"), equalTo("EE"));
     }
+
+    /**
+     * TestCaseID: Detailed-Report-Validation-3
+     *
+     * TestType: Manual
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
+     *
+     * Title: Signatures element
+     *
+     * Expected Result: Detailed report includes signatures element and its sub-elements and its values
+     *
+     * File: hellopades-lt-sha256-ec256.pdf
+     */
     @Ignore
     @Test
     public  void detailedReportForPdfValidateSignaturesElement() {
@@ -238,11 +282,24 @@ public class DetailedReportSignatureIT extends SiVaRestTests{
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessArchivalData.constraint[0].status[0]"), equalTo(VALID_VALIDATION_PROCESS_STATUS_2));
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessArchivalData.conclusion[0].indication"), equalTo(VALID_INDICATION_VALUE_PASSED));
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessArchivalData.conclusion[0].errors"), nullValue());
-
     }
+
+    /**
+     * TestCaseID: Detailed-Report-Validation-4
+     *
+     * TestType: Manual
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
+     *
+     * Title: basicBuildingBlocks element
+     *
+     * Expected Result: Detailed report includes basicBuildingBlocks element and its sub-elements and its values
+     *
+     * File: pades-baseline-lta-live-aj.pdf
+     */
     @Ignore
     @Test
-    public  void detailedReportForPdfAssertBasicBuildingBlocksTypTimestamp() {
+    public  void detailedReportForPdfAssertBasicBuildingBlocksTypeTimestamp() {
         String DEFAULT_TEST_FILES_DIRECTORY = "pdf/baseline_profile_test_files/";
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
         String validationReport = "validationReport.";
@@ -298,9 +355,23 @@ public class DetailedReportSignatureIT extends SiVaRestTests{
         assertThat(response.jsonPath().getString(validationProcess + ".basicBuildingBlocks.id[0]"), notNullValue());
         assertThat(response.jsonPath().getString(validationProcess + ".basicBuildingBlocks.type[0]"), equalTo("TIMESTAMP"));
     }
+
+    /**
+     * TestCaseID: Detailed-Report-Validation-5
+     *
+     * TestType: Manual
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
+     *
+     * Title: BasicBuildingBlocks element
+     *
+     * Expected Result: Detailed report includes basicBuildingBlocks element and its sub-elements and its values
+     *
+     * File: pades-baseline-lta-live-aj.pdf
+     */
     @Ignore
     @Test
-    public  void detailedReportForPdfAssertBasicBuildingBlocksTypRevocation() {
+    public  void detailedReportForPdfAssertBasicBuildingBlocksTypeRevocation() {
         String DEFAULT_TEST_FILES_DIRECTORY = "pdf/baseline_profile_test_files/";
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
         String validationReport = "validationReport.";
@@ -366,6 +437,21 @@ public class DetailedReportSignatureIT extends SiVaRestTests{
         assertThat(response.jsonPath().getString(validationProcess + ".basicBuildingBlocks.id[1]"), notNullValue());
         assertThat(response.jsonPath().getString(validationProcess + ".basicBuildingBlocks.type[1]"), equalTo("REVOCATION"));
     }
+
+
+    /**
+     * TestCaseID: Detailed-Report-Validation-6
+     *
+     * TestType: Manual
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
+     *
+     * Title: BasicBuildingBlocks element
+     *
+     * Expected Result: Detailed report includes basicBuildingBlocks element and its sub-elements and its values
+     *
+     * File: pades-baseline-lta-live-aj.pdf
+     */
     @Ignore
     @Test
     public  void detailedReportForPdfAssertBasicBuildingBlocksTypeSignature() {
@@ -510,6 +596,20 @@ public class DetailedReportSignatureIT extends SiVaRestTests{
         assertThat(response.jsonPath().getString(validationProcess + ".basicBuildingBlocks.id[3]"), notNullValue());
         assertThat(response.jsonPath().getString(validationProcess + ".basicBuildingBlocks.type[3]"), equalTo("SIGNATURE"));
     }
+
+    /**
+     * TestCaseID: Detailed-Report-Validation-7
+     *
+     * TestType: Manual
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
+     *
+     * Title: Wrong signature value
+     *
+     * Expected Result: Detailed report includes wrong signature value
+     *
+     * File: TS-02_23634_TS_wrong_SignatureValue.asice
+     */
     @Ignore
     @Test
     public  void detailedReportWrongSignatureValueAsice() {
@@ -553,9 +653,23 @@ public class DetailedReportSignatureIT extends SiVaRestTests{
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessLongTermData.conclusion[0].errors[0].nameId"), equalTo(VALID_VALIDATION_PROCESS_ERROR_NAMEID_8));
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessLongTermData.conclusion[0].errors[0].value"), equalTo(VALID_VALIDATION_PROCESS_ERROR_VALUE_9));
     }
+
+    /**
+     * TestCaseID: Detailed-Report-Validation-8
+     *
+     * TestType: Manual
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
+     *
+     * Title: Wrong data file in manifest
+     *
+     * Expected Result:
+     *
+     * File: WrongDataFileInManifestAsics.asics
+     */
     @Ignore
     @Test
-    public  void detailedReportForAsicsWronDataFileInManifestAsics() {
+    public  void detailedReportForAsicsWrongDataFileInManifestAsics() {
         String DEFAULT_TEST_FILES_DIRECTORY = "asics/";
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
         String validationReport = "validationReport.";
@@ -573,31 +687,54 @@ public class DetailedReportSignatureIT extends SiVaRestTests{
         assertThat(response.jsonPath().getString(validationConclusion + ".validSignaturesCount"), equalTo("1"));
     }
 
+    /**
+     * TestCaseID: Detailed-Report-Validation-9
+     *
+     * TestType: Manual
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
+     *
+     * Title: Validate detailed report file hash if ReportSignatureEnabled value true
+     *
+     * Expected Result: fileHashInHex calculated
+     *
+     * File: hellopades-lt-sha256-rsa2048.pdf
+     */
+    @Ignore
     @Test
-    public void validateDetailedReportSignature() {
+    public void validateFileHashInDetailedReportReportSignatureEnabledTrue() {
         String filename = "hellopades-lt-sha256-rsa2048.pdf";
         String request = detailedReportRequest(filename,VALID_SIGNATURE_POLICY_4);
         response =  validateRequestForDetailedReport(request,VALIDATION_ENDPOINT);
-        String validationReportSignature = response.jsonPath().getString("validationReportSignature");
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("document",validationReportSignature);
-        jsonObject.put("filename","filename.pdf");
-        Response reportSignatureValidation = given()
-                .contentType(ContentType.JSON)
-                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
-                .body(jsonObject.toString())
-                .when()
-                .post(VALIDATION_ENDPOINT)
-                .then()
-                .log()
-                .all()
-                .extract()
-                .response();
-        assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signaturesCount"), equalTo("1"));
-        assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.validSignaturesCount"), equalTo("1"));
-        assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signatures.signatureFormat[0]"), equalTo("XAdES_BASELINE_LT"));
+        assertThat(response.jsonPath().getString("validationReport.validationConclusion.validatedDocument.filename"), equalTo("hellopades-lt-sha256-rsa2048.pdf"));
+        assertThat(response.jsonPath().getString("validationReport.validationConclusion.validatedDocument.fileHashInHex"), notNullValue() );
+        assertThat(response.jsonPath().getString("validationReport.validationConclusion.validatedDocument.hashAlgo"), equalTo("SHA-256"));
+        assertThat(response.jsonPath().getString("validationReportSignature"), notNullValue());
     }
 
+    /**
+     * TestCaseID: Detailed-Report-Validation-10
+     *
+     * TestType: Manual
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
+     *
+     * Title: Validate detailed report file hash if ReportSignatureEnabled value false
+     *
+     * Expected Result: fileHashInHex no calculated
+     *
+     * File: hellopades-lt-sha256-rsa2048.pdf
+     */
+    @Ignore
+    @Test
+    public void validateFileHashInDetailedReportReportSignatureEnabledFalse() {
+        String filename = "hellopades-lt-sha256-rsa2048.pdf";
+        String request = detailedReportRequest(filename,VALID_SIGNATURE_POLICY_4);
+        response =  validateRequestForDetailedReport(request,VALIDATION_ENDPOINT);
+        assertThat(response.jsonPath().getString("validationReport.validationConclusion.validatedDocument.filename"), equalTo(filename));
+        assertThat(response.jsonPath().getString("validationReport.validationConclusion.validatedDocument.fileHashInHex"), nullValue() );
+        assertThat(response.jsonPath().getString("validationReport.validationConclusion.validatedDocument.hashAlgo"), nullValue());
+    }
 
     private String currentDateTime(String timeZone, String timeFormat){
         final Date currentTime = new Date();

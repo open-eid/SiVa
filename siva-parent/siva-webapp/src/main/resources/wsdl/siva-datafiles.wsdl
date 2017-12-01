@@ -5,7 +5,7 @@
     <wsdl:types>
         <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://soap.webapp.siva.openeid.ee/"
                    targetNamespace="http://soap.webapp.siva.openeid.ee/">
-            <xs:import namespace="http://x-road.eu/xsd/xroad.xsd" schemaLocation="http://x-road.eu/xsd/xroad.xsd"/>
+            <xs:import namespace="http://x-road.eu/xsd/xroad.xsd" schemaLocation="xroad.xsd"/>
             <xs:element name="GetDocumentDataFiles" type="tns:GetDocumentDataFiles"/>
             <xs:element name="GetDocumentDataFilesResponse" type="tns:GetDocumentDataFilesResponse"/>
             <xs:element name="DataFilesReport" type="tns:DataFilesReport"/>

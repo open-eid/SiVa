@@ -280,6 +280,7 @@ public class DdocValidationPassIT extends SiVaRestTests{
     public void ddocWithWarningShouldPass() {
         post(validationRequestFor("18912.ddoc"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
                 .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S0"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
                 .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
@@ -316,6 +317,7 @@ public class DdocValidationPassIT extends SiVaRestTests{
     public void ddocV1_0HashcodeShouldPass() {
         post(validationRequestFor("SK-XML1_0_hashcode.ddoc"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("SK_XML_1.0"))
                 .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S0"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("SK_XML_1.0"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is(""))
@@ -354,6 +356,7 @@ public class DdocValidationPassIT extends SiVaRestTests{
     public void ddocV1_1HashcodeShouldPass() {
         post(validationRequestFor("DIGIDOC-XML1.1_hashcode.ddoc"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.1_hashcode"))
                 .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S0"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.1"))
                 .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("KESKEL,URMO,38002240232"))
@@ -389,6 +392,7 @@ public class DdocValidationPassIT extends SiVaRestTests{
     public void ddocV1_2HashcodeShouldPass() {
         post(validationRequestFor("DIGIDOC-XML1.2_hashcode.ddoc"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.2_hashcode"))
                 .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S0"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.2"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.isEmptyOrNullString())
@@ -426,6 +430,7 @@ public class DdocValidationPassIT extends SiVaRestTests{
     public void ddocV1_3HashcodeShouldPass() {
         post(validationRequestFor("DIGIDOC-XML1.3_hashcode.ddoc"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3_hashcode"))
                 .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S0"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.isEmptyOrNullString())

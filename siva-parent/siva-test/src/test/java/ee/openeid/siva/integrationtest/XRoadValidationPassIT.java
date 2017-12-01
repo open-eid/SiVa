@@ -48,6 +48,7 @@ public class XRoadValidationPassIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
         post(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-simple.asice", "xroad", VALID_SIGNATURE_POLICY_3))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
@@ -73,6 +74,7 @@ public class XRoadValidationPassIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-batchsignature.asice"));
         post(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-batchsignature.asice", "xroad", VALID_SIGNATURE_POLICY_3))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E_batchsignature"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
@@ -98,6 +100,7 @@ public class XRoadValidationPassIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-attachment.asice"));
         post(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-attachment.asice", "xroad", VALID_SIGNATURE_POLICY_3))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E_batchsignature"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())

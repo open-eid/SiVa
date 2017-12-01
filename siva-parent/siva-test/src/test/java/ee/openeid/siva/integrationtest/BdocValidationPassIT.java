@@ -95,9 +95,10 @@ public class BdocValidationPassIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("bdoc_weak_warning_sha1.bdoc"))
                 .then()
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("validSignaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is(""))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
 
     }
 
@@ -119,6 +120,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("EE_SER-AEX-B-LT-V-30.asice",null, null))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
     }
@@ -159,6 +161,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("EE_SER-AEX-B-LT-V-49.asice", null, null))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
@@ -182,6 +185,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("ValidLiveSignature.asice", null, null))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
@@ -205,6 +209,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("EE_SER-AEX-B-LTA-V-24.asice", null, null))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LTA"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
@@ -228,6 +233,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("EE_SER-AEX-B-LT-V-2.asice", null, null))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
@@ -251,6 +257,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("IB-4270_TS_ESTEID-SK 2015  SK OCSP RESPONDER 2011.asice", null, null))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -275,6 +282,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("EE_SER-AEX-B-LT-V-28.asice", null, null))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QES"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -299,6 +307,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("BDOC2.1.bdoc"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -323,6 +332,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("Test_id_aa.asice",null, null))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -347,6 +357,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("Šužlikud sõid ühe õuna ära.bdoc"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -373,6 +384,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDD4j("BDOC2.1_content_as_sce.sce", null, null))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -398,6 +410,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("ASICE_TS_LTA_content_as_sce.sce", null, null))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LTA"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -423,6 +436,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("Nonconventionalcharacters.asice", null, null))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -451,6 +465,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("EE_SER-AEX-B-LT-V-34.asice", null, null))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.validationWarnings[1].content", Matchers.is("Container contains a file named unsigned.txt which is not found in the signature file"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
@@ -476,6 +491,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("testECCDemo.bdoc", null, null))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -503,6 +519,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestForDD4j("Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice", null, null))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))

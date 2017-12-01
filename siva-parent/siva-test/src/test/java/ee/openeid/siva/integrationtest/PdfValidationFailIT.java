@@ -51,6 +51,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
     public void signaturesMadeWithExpiredSigningCertificatesAreInvalid() {
         post(validationRequestFor("hellopades-lt-rsa1024-sha1-expired.pdf"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("INDETERMINATE_QES"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
@@ -79,6 +80,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
     public void documentSignedWithRevokedCertificateShouldFail() {
         post(validationRequestFor( "pades_lt_revoked.pdf", VALID_SIGNATURE_POLICY_3, null))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("INDETERMINATE_QESIG"))
                 .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("NURM,AARE,38211015222"))
@@ -108,6 +110,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
     public void signingCertificateWithoutNonRepudiationKeyUsageAttributeShouldFail() {
         post(validationRequestFor( "hellopades-pades-lt-sha256-auth.pdf"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
                 .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
@@ -137,6 +140,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
     public void documentSignedWithExpiredRsa2048CertificateShouldFail() {
         post(validationRequestFor( "hellopades-lt-sha256-rsa2048-expired.pdf"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
@@ -166,6 +170,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
     public void documentSignedWithExpiredSha256CertificateShouldFail() {
         post(validationRequestFor("hellopades-lt-sha256-rsa1024-expired2.pdf"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
@@ -189,6 +194,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
         setTestFilesDirectory("pdf/signature_revocation_value_test_files/");
         post(validationRequestFor("hellopades-lt-sha256-ocsp-28h.pdf"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
@@ -212,6 +218,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
         setTestFilesDirectory("pdf/signature_revocation_value_test_files/");
         post(validationRequestFor("pades-lt-CRL-taken-days-later.pdf"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("The revocation information is not considered as 'fresh'."))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))

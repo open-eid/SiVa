@@ -150,6 +150,7 @@ public class AsicsValidationPassIT extends SiVaRestTests {
     public void textInsideValidAsics() {
         post(validationRequestFor("TXTinsideAsics.asics"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-S"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].signedTime", Matchers.is("2017-08-25T09:56:33Z"))

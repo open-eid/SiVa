@@ -6,7 +6,7 @@
     <wsdl:types>
         <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://soap.webapp.siva.openeid.ee/"
                    targetNamespace="http://soap.webapp.siva.openeid.ee/">
-            <xs:import namespace="http://x-road.eu/xsd/xroad.xsd" schemaLocation="http://x-road.eu/xsd/xroad.xsd"/>
+            <xs:import namespace="http://x-road.eu/xsd/xroad.xsd" schemaLocation="xroad.xsd"/>
             <xs:import namespace="http://dss.esig.europa.eu/validation/detailed-report"
                        schemaLocation="DetailedReport.xsd"/>
             <xs:element name="ValidateDocument" type="tns:ValidateDocument"/>

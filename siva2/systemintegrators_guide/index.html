@@ -786,13 +786,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#faq" title="FAQ" class="md-nav__link">
-    FAQ
-  </a>
-  
-</li>
-      
       
       
     </ul>
@@ -1092,13 +1085,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#faq" title="FAQ" class="md-nav__link">
-    FAQ
-  </a>
-  
-</li>
-      
       
       
     </ul>
@@ -1189,19 +1175,19 @@ The last lines of build output should look very similar to below image:</p>
 <p>SiVa project compiles <strong>3 fat executable JAR</strong> files that you can run after successfully building the
 project by issuing below commands:</p>
 <p><strong>First start the Siva webapp</strong></p>
-<div class="codehilite"><pre><span></span>./siva-parent/siva-webapp/target/siva-webapp-2.0.3-SNAPSHOT.jar
+<div class="codehilite"><pre><span></span>./siva-parent/siva-webapp/target/siva-webapp-3.0.0-SNAPSHOT.jar
 </pre></div>
 
 
 <p><strong>Second we need to start X-road validation webapp</strong></p>
-<div class="codehilite"><pre><span></span>./validation-services-parent/xroad-validation-service/target/xroad-validation-service-2.0.3-SNAPSHOT.jar
+<div class="codehilite"><pre><span></span>./validation-services-parent/xroad-validation-service/target/xroad-validation-service-3.0.0-SNAPSHOT.jar
 </pre></div>
 
 
 <p>The SiVa webapp by default runs on port <strong>8080</strong> and XRoad validation service starts up on port <strong>8081</strong>.
 Easiest way to test out validation is run SiVa demo application.</p>
 <p><strong>Start the Demo webapp</strong></p>
-<div class="codehilite"><pre><span></span>./siva-parent/siva-sample-application/target/siva-sample-application-2.0.3-SNAPSHOT.jar
+<div class="codehilite"><pre><span></span>./siva-parent/siva-sample-application/target/siva-sample-application-3.0.0-SNAPSHOT.jar
 </pre></div>
 
 
@@ -1237,14 +1223,14 @@ single JAR file. It makes a lot easier to deploy it into servers.</p>
 
 
 <p>Save and close the <code>siva-webapp.service</code> file.
-Next we need to move <code>siva-webapp-2.0.3-SNAPSHOT.jar</code> into newly created <code>/var/apps</code> directory and rename to
+Next we need to move <code>siva-webapp-3.0.0-SNAPSHOT.jar</code> into newly created <code>/var/apps</code> directory and rename to
 JAR file to <code>siva-webapp.jar</code>. match</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The copied JAR filename must match option <code>ExecStart</code> in  <code>siva-webapp.service</code> file</p>
 </div>
 <div class="codehilite"><pre><span></span>sudo mkdir /var/apps
-sudo cp siva-parent/siva-webapp/target/executable/siva-webapp-2.0.3-SNAPSHOT.jar /var/apps/siva-webapp.jar
+sudo cp siva-parent/siva-webapp/target/executable/siva-webapp-3.0.0-SNAPSHOT.jar /var/apps/siva-webapp.jar
 </pre></div>
 
 
@@ -1310,7 +1296,7 @@ the http connector parameter <code>maxPostSize</code> should be configured with 
 <p><strong>NOTE</strong> The script will skip running the integration tests when building WAR files</p>
 </blockquote>
 <p>Final steps would be copying built WAR file into Tomcat <code>webapps</code> directory and starting the servlet container.</p>
-<div class="codehilite"><pre><span></span>cp siva-parent/siva-webapp/target/siva-webapp-2.0.3-SNAPSHOT.war apache-tomcat-7.0.70/webapps
+<div class="codehilite"><pre><span></span>cp siva-parent/siva-webapp/target/siva-webapp-3.0.0-SNAPSHOT.war apache-tomcat-7.0.70/webapps
 ./apache-tomcat-7.0.77/bin/catalina.sh run
 </pre></div>
 
@@ -1338,19 +1324,19 @@ and started correctly on our server.</p>
 
 
 <p><strong>Step 2</strong>. Download a sample JSON request file.</p>
-<div class="codehilite"><pre><span></span>http --download https://raw.githubusercontent.com/open-eid/SiVa/develop/build-helpers/sample-requests/bdoc_pass.json
+<div class="codehilite"><pre><span></span>http --download https://raw.githubusercontent.com/open-eid/SiVa/develop/build-helpers/sample-requests/bdocPass.json
 </pre></div>
 
 
 <p><strong>Step 3</strong>. After successful download issue below command in same directory where you downloaded the file using
 the command below.</p>
-<div class="codehilite"><pre><span></span>http POST http://10.211.55.9:8080/validate &lt; bdoc_pass.json
+<div class="codehilite"><pre><span></span>http POST http://localhost:8080/validate &lt; bdocPass.json
 </pre></div>
 
 
 <p><strong>Step 4</strong>. Verify the output. The output of previous command should look like below screenshot. Look for <code>signatureCount</code> and
 <code>validSignatureCount</code> they <strong>must</strong> be equal.</p>
-<p><img alt="HTTPIE output validation" src="../../../img/siva/siva-output.png" /></p>
+<p><img alt="HTTPIE output validation" src="../../img/siva/siva-output.png" /></p>
 <h2 id="logging">Logging</h2>
 <p>By default, logging works on the INFO level and logs are directed to the system console only. Logging functionality is handled by the SLF4J logging facade and on top of the Logback framework. As a result, logging can be configured via the standard Logback configuration file through Spring boot. Additional logging appenders can be added. Consult <a href="http://logback.qos.ch/documentation.html">logback documentation</a> for more details on log file structure.</p>
 <p>For example, adding application.properties to classpath with the <strong>logging.config</strong> property</p>
@@ -1468,18 +1454,22 @@ endpoints.health.links<span class="o">[</span><span class="m">0</span><span clas
 <p>The external link configuration must be explicitly set when the monitoring service on the target machine is configured to run on a different port as the target service itself(ie using the  <code>management.port</code> option in configuration) .</p>
 </div>
 <h2 id="validation-report-signature">Validation Report Signature</h2>
-<p>SiVa provdes the ability to sign the validation report. The idea of supplementing the validation report with a validation report signature is to prove the authority's authenticity and integrity over the validation.</p>
+<p>SiVa provides the ability to sign the validation report. The idea of supplementing the validation report with a validation report signature is to prove the authority's authenticity and integrity over the validation.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Note that validation report signature is disabled by default</p>
+<p>Signing of validation report is disabled by default</p>
 </div>
 <p>To enable it, use the following configuration parameter:</p>
 <div class="codehilite"><pre><span></span>siva.report.reportSignatureEnabled<span class="o">=</span><span class="nb">true</span>
 </pre></div>
 
 
-<p>When validation report signature is enabled, only detailed validation reports will be signed and simple reports will be ignored in this regard.
+<p>When validation report signature is enabled, only detailed validation reports will be signed, simple reports will not be signed.
 The validation report's digital signature is composed out of response's <code>validationReport</code> object. The target format of the signature is ASiC-E (signature level is configurable). The ASiC-E container contents are encoded into Base64 and put on the same level int the response as the validation report itself.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+</div>
+<p>Enabling the validation report signing will affect the performance of the service.</p>
 <p>Example structure of the response containing report signature:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;validationReport&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -1506,7 +1496,7 @@ The validation report's digital signature is composed out of response's <code>va
 <tbody>
 <tr>
 <td><strong>siva.report.reportSignatureEnabled</strong></td>
-<td>Enables singing the validation report. Validation report will only be signed when requesting detailed report.  <ul><li>Default: <strong>false</strong></li></ul></td>
+<td>Enables signing of the validation report. Validation report will only be signed when requesting detailed report.  <ul><li>Default: <strong>false</strong></li></ul></td>
 </tr>
 <tr>
 <td><strong>siva.signatureService.signatureLevel</strong></td>
@@ -1936,11 +1926,6 @@ siva.ddoc.signaturePolicy.defaultPolicy= POLv1
 </tr>
 </tbody>
 </table>
-<h2 id="faq">FAQ</h2>
-<hr />
-<p>Q: SiVa webapp API-s require that you specify the document type? Is it possible to detect the container/file type automatically based on the provided file.</p>
-<p>A: There is a demo webapp that provides a reference solution. See <code>ee.openeid.siva.sample.siva.ValidationRequestUtils</code> for reference.</p>
-<hr />
                 
                   
                 

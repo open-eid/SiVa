@@ -22,6 +22,7 @@ import com.jayway.restassured.response.Response;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.signature.configuration.SignatureServiceConfigurationProperties;
 import org.json.JSONObject;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +68,7 @@ public class ReportSignatureIT extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: Detailed-Report-Signature-3
+     * TestCaseID: Detailed-Report-Signature-2
      *
      * TestType: Auto
      *
@@ -163,6 +164,7 @@ public class ReportSignatureIT extends SiVaRestTests {
      *
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
+    @Ignore
     @Test
     public void whenRequestingSimpleReport_andreportSignatureEnabledFalse_fileHashInHex_NotInReport() {
         post(validationRequestFor("hellopades-pades-lt-sha256-sign.pdf", null, "Simple"))

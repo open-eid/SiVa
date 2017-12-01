@@ -93,6 +93,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
     public void asiceDifferentCertificateCountries() {
         post(validationRequestFor("EE_SER-AEX-B-LT-V-30.asice"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
@@ -116,6 +117,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
     public void asiceBaselineLtProfileValidSignature() {
         post(validationRequestFor("EE_SER-AEX-B-LT-V-49.asice"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
@@ -139,6 +141,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
     public void asiceBaselineLtaProfileValidSignature() {
         post(validationRequestFor("EE_SER-AEX-B-LTA-V-24.asice"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LTA"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
@@ -162,6 +165,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
     public void asiceWithEccSha256ValidSignature() {
         post(validationRequestFor("EE_SER-AEX-B-LT-V-2.asice"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
@@ -185,6 +189,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
     public void asiceSk2015CertificateChainValidSignature() {
         post(validationRequestFor("IB-4270_TS_ESTEID-SK 2015  SK OCSP RESPONDER 2011.asice"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -209,6 +214,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
     public void asiceKlass3Sk2010CertificateChainValidSignature() {
         post(validationRequestFor("EE_SER-AEX-B-LT-V-28.asice"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QES"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -233,6 +239,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
     public void asiceWithSceFileExtensionShouldPass() {
         post(validationRequestFor("ASICE_TS_LTA_content_as_sce.sce"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LTA"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
@@ -258,6 +265,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
     public void asiceWithSpecialCharactersInDataFileShouldPass() {
         post(validationRequestFor("Nonconventionalcharacters.asice"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -286,6 +294,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
     public void asiceUnsignedDataFiles() {
         post(validationRequestFor("EE_SER-AEX-B-LT-V-34.asice"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("All files are not signed!"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
@@ -312,6 +321,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestFor("Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice"))
                 .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))

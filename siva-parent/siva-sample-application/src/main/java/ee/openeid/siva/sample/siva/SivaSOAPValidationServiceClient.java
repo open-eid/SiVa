@@ -28,7 +28,7 @@ import java.io.IOException;
 
 @Service(value = SivaServiceType.SOAP_SERVICE)
 public class SivaSOAPValidationServiceClient implements ValidationService {
-    static final String LINE_SEPARATOR = System.lineSeparator();
+    private static final String LINE_SEPARATOR = System.lineSeparator();
     private static final String EMPTY_STRING = "";
     private SivaRESTWebServiceConfigurationProperties properties;
     private RestTemplate restTemplate;
@@ -46,7 +46,7 @@ public class SivaSOAPValidationServiceClient implements ValidationService {
         return Observable.just(XMLTransformer.formatXML(restTemplate.postForObject(fullUrl, requestBody, String.class)));
     }
 
-     static String createXMLValidationRequest(String base64Document, FileType fileType, String filename, String report, String policy) {
+     private static String createXMLValidationRequest(String base64Document, FileType fileType, String filename, String report, String policy) {
         String documentType = getSoapDocumentTypeRow(fileType);
         String reportType = getSoapReportTypeRow(report);
         String policyType = getSoapPolicyTypeRow(policy);

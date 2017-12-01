@@ -27,12 +27,12 @@ import javax.xml.validation.Validator;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class PolicySchemaValidator {
+public final class PolicySchemaValidator {
 
-    private static final Logger log = LoggerFactory.getLogger(PolicySchemaValidator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PolicySchemaValidator.class);
     private static final String XSD_PATH = "/policy.xsd";
 
-    private PolicySchemaValidator() {}
+    private PolicySchemaValidator() { }
 
     public static void validate(InputStream xmlToValidate) {
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -42,7 +42,7 @@ public class PolicySchemaValidator {
             Validator validator = schemaFactory.newSchema(xsdSource).newValidator();
             validator.validate(xmlSource);
         } catch (SAXException | IOException e) {
-            log.error("Not a valid policy", e);
+            LOGGER.error("Not a valid policy", e);
             throw new PolicyValidationException(e);
         }
     }

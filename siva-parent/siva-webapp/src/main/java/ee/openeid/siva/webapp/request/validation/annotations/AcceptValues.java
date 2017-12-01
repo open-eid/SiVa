@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.ANNOTATION_TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy=AcceptValuesConstraintValidator.class)
+@Constraint(validatedBy = AcceptValuesConstraintValidator.class)
 public @interface AcceptValues {
 
     AcceptedValue value();

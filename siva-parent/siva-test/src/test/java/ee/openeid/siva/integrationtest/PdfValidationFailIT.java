@@ -17,21 +17,11 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
-import ee.openeid.siva.validation.document.report.SimpleReport;
-import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.http.ContentType;
-
-import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.config.EncoderConfig.encoderConfig;
-
-
 
 @Category(IntegrationTest.class)
 public class PdfValidationFailIT extends SiVaRestTests {
@@ -200,6 +190,30 @@ public class PdfValidationFailIT extends SiVaRestTests {
         post(validationRequestFor("hellopades-lt-sha256-ocsp-28h.pdf"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+    }
+
+    /**
+     * TestCaseID: PDF-ValidationFail-8
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     *
+     * Title: CRL is out of thisUpdate and nextUpdate range
+     *
+     * Expected Result: Validation should fail
+     *
+     * File: pades-lt-CRL-taken-days-later.pdf
+     */
+    @Test
+    public void crlTaken24hAfterTsShouldFail() {
+        setTestFilesDirectory("pdf/signature_revocation_value_test_files/");
+        post(validationRequestFor("pades-lt-CRL-taken-days-later.pdf"))
+                .then()
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("The revocation information is not considered as 'fresh'."))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }

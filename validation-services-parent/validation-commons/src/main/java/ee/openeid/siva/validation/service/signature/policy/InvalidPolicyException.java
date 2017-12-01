@@ -25,6 +25,6 @@ public class InvalidPolicyException extends RuntimeException {
     }
 
     public InvalidPolicyException(String policyName, Set<String> availablePolicies) {
-        this("Invalid signature policy: " + policyName + "; Available abstractPolicies: " + availablePolicies );
+        this("Invalid signature policy: " + policyName + "; Available abstractPolicies: " + availablePolicies);
     }
 }

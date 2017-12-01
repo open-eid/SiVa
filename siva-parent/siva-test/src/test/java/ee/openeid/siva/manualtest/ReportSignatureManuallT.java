@@ -1,6 +1,23 @@
+/*
+ * Copyright 2016 Riigi Infosüsteemide Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
+
 package ee.openeid.siva.manualtest;
 
 import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.config.EncoderConfig;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import ee.openeid.siva.SivaWebApplication;
@@ -8,8 +25,12 @@ import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.signature.configuration.SignatureServiceConfigurationProperties;
 import ee.openeid.siva.soaptest.SiVaSoapTests;
 import org.apache.commons.codec.binary.Base64;
+import org.hamcrest.Matchers;
 import org.json.JSONObject;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +48,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.config.EncoderConfig.encoderConfig;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
-import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -105,7 +123,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
         jsonObject.put("filename","filename.pdf");
         Response reportSignatureValidation = given()
                 .contentType(ContentType.JSON)
-                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+                .config(RestAssured.config().encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8")))
                 .body(jsonObject.toString())
                 .when()
                 .post(VALIDATION_ENDPOINT)
@@ -150,7 +168,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
         jsonObject.put("filename","filename.pdf");
         Response reportSignatureValidation = given()
                 .contentType(ContentType.JSON)
-                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+                .config(RestAssured.config().encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8")))
                 .body(jsonObject.toString())
                 .when()
                 .post(VALIDATION_ENDPOINT)
@@ -195,7 +213,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
         jsonObject.put("filename","filename.pdf");
         Response reportSignatureValidation = given()
                 .contentType(ContentType.JSON)
-                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+                .config(RestAssured.config().encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8")))
                 .body(jsonObject.toString())
                 .when()
                 .post(VALIDATION_ENDPOINT)
@@ -239,7 +257,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
         jsonObject.put("filename","filename.pdf");
         Response reportSignatureValidation = given()
                 .contentType(ContentType.JSON)
-                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+                .config(RestAssured.config().encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8")))
                 .body(jsonObject.toString())
                 .when()
                 .post(VALIDATION_ENDPOINT)
@@ -283,7 +301,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
         jsonObject.put("filename","filename.pdf");
         Response reportSignatureValidation = given()
                 .contentType(ContentType.JSON)
-                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+                .config(RestAssured.config().encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8")))
                 .body(jsonObject.toString())
                 .when()
                 .post(VALIDATION_ENDPOINT)
@@ -328,7 +346,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
         jsonObject.put("filename","filename.pdf");
         Response reportSignatureValidation = given()
                 .contentType(ContentType.JSON)
-                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+                .config(RestAssured.config().encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8")))
                 .body(jsonObject.toString())
                 .when()
                 .post(VALIDATION_ENDPOINT)
@@ -373,7 +391,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
         jsonObject.put("filename","filename.pdf");
         Response reportSignatureValidation = given()
                 .contentType(ContentType.JSON)
-                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+                .config(RestAssured.config().encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8")))
                 .body(jsonObject.toString())
                 .when()
                 .post(VALIDATION_ENDPOINT)
@@ -416,7 +434,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
         jsonObject.put("filename","filename.pdf");
         Response reportSignatureValidation = given()
                 .contentType(ContentType.JSON)
-                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+                .config(RestAssured.config().encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8")))
                 .body(jsonObject.toString())
                 .when()
                 .post(VALIDATION_ENDPOINT)
@@ -510,7 +528,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
         jsonObject.put("filename","filename.pdf");
         Response reportSignatureValidation = given()
                 .contentType(ContentType.JSON)
-                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+                .config(RestAssured.config().encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8")))
                 .body(jsonObject.toString())
                 .when()
                 .post(VALIDATION_ENDPOINT)
@@ -576,23 +594,10 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
         response =  validateRequestForDetailedReport(request,VALIDATION_ENDPOINT);
     }
 
-    protected String validationRequestFor(String file, String signaturePolicy, String reportType) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("document", Base64.encodeBase64String(readFileFromTestResources(file)));
-        jsonObject.put("filename", file);
-        if (signaturePolicy != null) {
-            jsonObject.put("signaturePolicy", signaturePolicy);
-        }
-        if (reportType != null) {
-            jsonObject.put("reportType", reportType);
-        }
-        return jsonObject.toString();
-    }
-
     private Response validateRequestForDetailedReport(String request, String validationUrl){
         return given()
                 .contentType(ContentType.JSON)
-                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+                .config(RestAssured.config().encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8")))
                 .body(request)
                 .when()
                 .post(validationUrl)

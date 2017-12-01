@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016 Riigi Infosüsteemide Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
+
 package ee.openeid.siva.signature;
 
 import ee.openeid.siva.signature.configuration.Pkcs11Properties;
@@ -84,13 +100,13 @@ public class AsiceWithXadesSignatureService implements SignatureService {
         return properties;
     }
 
-    public void setProperties(SignatureServiceConfigurationProperties properties) {
-        this.properties = properties;
+    public void setProperties(SignatureServiceConfigurationProperties signatureServiceConfigurationProperties) {
+        properties = signatureServiceConfigurationProperties;
     }
 
-    private AbstractSignatureTokenConnection getSignatureToken(SignatureServiceConfigurationProperties properties) {
-        Pkcs11Properties pkcs11Properties = properties.getPkcs11();
-        Pkcs12Properties pkcs12Properties = properties.getPkcs12();
+    private AbstractSignatureTokenConnection getSignatureToken(SignatureServiceConfigurationProperties configurationProperties) {
+        Pkcs11Properties pkcs11Properties = configurationProperties.getPkcs11();
+        Pkcs12Properties pkcs12Properties = configurationProperties.getPkcs12();
         if (pkcs11Properties != null) {
             return new Pkcs11SignatureToken(pkcs11Properties.getPath(), pkcs11Properties.getPassword().toCharArray(), pkcs11Properties.getSlotIndex());
         } else if (pkcs12Properties != null) {

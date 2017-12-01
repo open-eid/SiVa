@@ -19,7 +19,6 @@ package ee.openeid.siva.proxy;
 import ee.openeid.siva.proxy.http.RESTProxyService;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Reports;
-import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

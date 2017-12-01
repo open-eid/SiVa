@@ -35,7 +35,7 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
 public class SoapRequestDataFilesInterceptor extends AbstractSoapInterceptor {
-
+    private static final int HTTP_ERROR_CODE = 400;
     private ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
 
     SoapInterceptor saajIn = new SAAJInInterceptor();
@@ -86,7 +86,7 @@ public class SoapRequestDataFilesInterceptor extends AbstractSoapInterceptor {
     private void throwFault(String message) {
         Fault fault = new Fault(new Exception(message));
         fault.setFaultCode(new QName("Client"));
-        fault.setStatusCode(400);
+        fault.setStatusCode(HTTP_ERROR_CODE);
         throw fault;
     }
 

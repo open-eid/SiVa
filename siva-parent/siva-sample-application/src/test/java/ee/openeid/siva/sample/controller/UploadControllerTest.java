@@ -44,21 +44,16 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(UploadController.class)
@@ -128,13 +123,13 @@ public class UploadControllerTest {
                 "bdoc content".getBytes()
         );
 
-        mockMvc.perform(fileUpload("/upload").file(uploadFile)
+        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/upload").file(uploadFile)
                 .param("policy", "")
                 .param("encodedFilename", "ranodom.bdoc")
                 .param("returnDataFiles", "false")
                 .param("report", ""))
-                .andExpect(status().is(200))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
+                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8));
     }
 
     @Test
@@ -149,12 +144,12 @@ public class UploadControllerTest {
                 "bdoc content".getBytes()
         );
 
-        mockMvc.perform(fileUpload("/upload").file(uploadFile)
+        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/upload").file(uploadFile)
                 .param("policy", "")
                 .param("encodedFilename", "ranodom.bdoc")
                 .param("returnDataFiles", "false")
                 .param("report", ""))
-                .andExpect(status().is(200));
+                .andExpect(MockMvcResultMatchers.status().is(200));
     }
 
     @Test
@@ -166,12 +161,12 @@ public class UploadControllerTest {
                 "".getBytes()
         );
 
-        mockMvc.perform(fileUpload("/upload").file(uploadFile)
+        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/upload").file(uploadFile)
                 .param("policy", "")
                 .param("encodedFilename", "ranodom.bdoc")
                 .param("returnDataFiles", "false")
                 .param("report", ""))
-                .andExpect(status().is(200));
+                .andExpect(MockMvcResultMatchers.status().is(200));
     }
 
     @Test
@@ -184,12 +179,12 @@ public class UploadControllerTest {
                 "bdoc content".getBytes()
         );
 
-        mockMvc.perform(fileUpload("/upload").file(uploadFile)
+        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/upload").file(uploadFile)
                 .param("policy", "")
                 .param("encodedFilename", "ranodom.bdoc")
                 .param("returnDataFiles", "false")
                 .param("report", ""))
-                .andExpect(status().is(200));
+                .andExpect(MockMvcResultMatchers.status().is(200));
 
         verify(mockAppender).doAppend(captorLoggingEvent.capture());
         LoggingEvent loggingEvent = captorLoggingEvent.getValue();

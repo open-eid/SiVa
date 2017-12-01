@@ -31,7 +31,7 @@ import static ee.openeid.siva.webapp.request.validation.annotations.ValidDocumen
 @AcceptValues(value = AcceptedValue.DOCUMENT, message = MESSAGE)
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy={})
+@Constraint(validatedBy = {})
 public @interface ValidDocumentType {
 
     String MESSAGE = "{validation.error.message.documentType}";

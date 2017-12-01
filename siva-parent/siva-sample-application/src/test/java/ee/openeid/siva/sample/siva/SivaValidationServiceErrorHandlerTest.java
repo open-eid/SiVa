@@ -21,6 +21,7 @@ import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.Appender;
+import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +38,6 @@ import org.springframework.web.client.ResponseErrorHandler;
 
 import java.io.IOException;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -94,8 +94,8 @@ public class SivaValidationServiceErrorHandlerTest {
 
         final LoggingEvent loggingEvent = captorLoggingEvent.getValue();
 
-        assertThat(loggingEvent.getLevel()).isEqualTo(Level.ERROR);
-        assertThat(loggingEvent.getFormattedMessage()).contains("400 Bad Request");
+        Assertions.assertThat(loggingEvent.getLevel()).isEqualTo(Level.ERROR);
+        Assertions.assertThat(loggingEvent.getFormattedMessage()).contains("400 Bad Request");
     }
 
     private ClientHttpResponse createResponse(HttpStatus status) throws IOException {

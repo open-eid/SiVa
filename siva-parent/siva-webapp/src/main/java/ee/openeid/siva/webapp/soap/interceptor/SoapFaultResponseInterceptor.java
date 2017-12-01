@@ -31,7 +31,7 @@ import javax.xml.bind.UnmarshalException;
 import javax.xml.namespace.QName;
 
 public class SoapFaultResponseInterceptor extends AbstractSoapInterceptor {
-
+    private static final int HTTP_OK_CODE = 200;
     private static final String DOCUMENT_FORMAT_NOT_RECOGNIZED = "Document format not recognized/handled";
 
     public SoapFaultResponseInterceptor() {
@@ -50,7 +50,7 @@ public class SoapFaultResponseInterceptor extends AbstractSoapInterceptor {
             return;
         }
 
-        f.setStatusCode(200);
+        f.setStatusCode(HTTP_OK_CODE);
         if (isClientException(cause)) {
             f.setFaultCode(new QName("Client"));
         }

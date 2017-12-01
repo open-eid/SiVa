@@ -37,7 +37,11 @@ import javax.xml.soap.SOAPMessage;
 import java.util.regex.Pattern;
 
 public class SoapRequestValidationInterceptor extends AbstractSoapInterceptor {
-    SoapInterceptor saajIn = new SAAJInInterceptor();
+    private static final int ERROR_CODE = 400;
+    private static final int MAX_FILENAME_LENGTH = 260;
+    private static final int MAX_POLICY_LENGTH = 100;
+
+    private SoapInterceptor saajIn = new SAAJInInterceptor();
     private ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
 
     public SoapRequestValidationInterceptor() {
@@ -75,7 +79,7 @@ public class SoapRequestValidationInterceptor extends AbstractSoapInterceptor {
     private void validateFilenameElement(SOAPBody body) {
         String filenameValue = getElementValueFromBody(body, "Filename");
         Pattern pattern = Pattern.compile(NotNullValidFilenamePattern.PATTERN);
-        if (StringUtils.isBlank(filenameValue) || !pattern.matcher(filenameValue).matches() || filenameValue.length() > 260 || filenameValue.length() < 1) {
+        if (StringUtils.isBlank(filenameValue) || !pattern.matcher(filenameValue).matches() || filenameValue.length() > MAX_FILENAME_LENGTH || filenameValue.length() < 1) {
             throwFault(messageSource.getMessage("validation.error.message.filename", null, null));
         }
 
@@ -92,7 +96,7 @@ public class SoapRequestValidationInterceptor extends AbstractSoapInterceptor {
         String signaturePolicyValue = getElementValueFromBody(body, "SignaturePolicy");
 
         Pattern pattern = Pattern.compile(ValidSignaturePolicyPattern.PATTERN);
-        if (signaturePolicyValue!=null && (!pattern.matcher(signaturePolicyValue).matches() || signaturePolicyValue.length() > 100 || signaturePolicyValue.length() < 1)) {
+        if (signaturePolicyValue != null && (!pattern.matcher(signaturePolicyValue).matches() || signaturePolicyValue.length() > MAX_POLICY_LENGTH || signaturePolicyValue.length() < 1)) {
             throwFault(messageSource.getMessage("validation.error.message.signaturePolicy", null, null));
         }
 
@@ -121,7 +125,7 @@ public class SoapRequestValidationInterceptor extends AbstractSoapInterceptor {
     private void throwFault(String message) {
         Fault fault = new Fault(new Exception(message));
         fault.setFaultCode(new QName("Client"));
-        fault.setStatusCode(400);
+        fault.setStatusCode(ERROR_CODE);
         throw fault;
     }
 

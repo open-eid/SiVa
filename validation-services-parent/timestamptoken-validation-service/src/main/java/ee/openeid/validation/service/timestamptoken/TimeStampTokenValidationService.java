@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016 Riigi Infosüsteemide Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
+
 package ee.openeid.validation.service.timestamptoken;
 
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
@@ -46,6 +62,8 @@ public class TimeStampTokenValidationService implements ValidationService {
     private static final String META_INF_FOLDER = "META-INF/";
     private static final String MIME_TYPE = "mimetype";
     private static final String SIGNATURE_FILE_EXTENSION_P7S = "SIGNATURE.P7S";
+    private static final String EVIDENCE_RECORD_FILE_EXTENSION_ERS = "EVIDENCERECORD.ERS";
+    private static final String EVIDENCE_RECORD_FILE_EXTENSION_XML = "EVIDENCERECORD.XML";
     private static final String SIGNATURE_FILE_EXTENSION_XML = "SIGNATURES.XML";
     private SignaturePolicyService<ValidationPolicy> signaturePolicyService;
     private ReportConfigurationProperties reportConfigurationProperties;
@@ -91,12 +109,18 @@ public class TimeStampTokenValidationService implements ValidationService {
 
         long signatureFileCount = documents.stream()
                 .filter(d -> d.getName().startsWith(META_INF_FOLDER))
-                .filter(d -> d.getName().toUpperCase().endsWith(SIGNATURE_FILE_EXTENSION_P7S)
-                        || d.getName().toUpperCase().endsWith(SIGNATURE_FILE_EXTENSION_XML)).count();
+                .filter(d -> getFileFromFullPath(d.getName().toUpperCase()).equals(SIGNATURE_FILE_EXTENSION_P7S)
+                        || getFileFromFullPath(d.getName().toUpperCase()).equals(SIGNATURE_FILE_EXTENSION_XML)
+                        || getFileFromFullPath(d.getName().toUpperCase()).equals(EVIDENCE_RECORD_FILE_EXTENSION_ERS)
+                        || getFileFromFullPath(d.getName().toUpperCase()).equals(EVIDENCE_RECORD_FILE_EXTENSION_XML)).count();
 
         if (dataFileCount != 1 || timeStampCount != 1 || signatureFileCount > 0) {
             throw new DocumentRequirementsException();
         }
+    }
+
+    private String getFileFromFullPath(String path) {
+        return path.substring(path.lastIndexOf("/") + 1);
     }
 
     private TimeStampToken getTimeStamp(List<InMemoryDocument> documents) {

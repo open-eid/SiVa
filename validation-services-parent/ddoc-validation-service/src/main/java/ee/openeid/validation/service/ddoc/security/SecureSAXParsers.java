@@ -24,9 +24,12 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-public class SecureSAXParsers {
+public final class SecureSAXParsers {
 
     private static SAXParserFactory factory = null;
+
+    private SecureSAXParsers() {
+    }
 
     public static SAXParser createParser() throws ParserConfigurationException, SAXException {
         return getFactory().newSAXParser();

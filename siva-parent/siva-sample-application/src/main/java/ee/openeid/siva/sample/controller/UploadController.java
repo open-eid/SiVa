@@ -35,22 +35,23 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
-import static ee.openeid.siva.sample.siva.ValidationReportUtils.getOverallValidationResult;
-import static ee.openeid.siva.sample.siva.ValidationReportUtils.getValidateFilename;
-import static ee.openeid.siva.sample.siva.ValidationReportUtils.getValidationWarnings;
-import static ee.openeid.siva.sample.siva.ValidationReportUtils.handleMissingJSON;
-import static ee.openeid.siva.sample.siva.ValidationReportUtils.isJSONValid;
+import static ee.openeid.siva.sample.siva.ValidationReportUtils.*;
+
 
 @Controller
 class UploadController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UploadController.class);
     private static final String START_PAGE_VIEW_NAME = "index";
     private static final long SECOND_IN_MILLISECONDS = 1000L;
-
+    private static final int JSON_INDENT_FACTOR = 4;
     private ValidationTaskRunner validationTaskRunner;
     private DataFilesTaskRunner dataFilesTaskRunner;
     private UploadFileCacheService fileUploadService;
     private GoogleAnalyticsProperties googleAnalyticsProperties;
+
+    private static ValidationResponse validationResponse(Model model) {
+        return (ValidationResponse) model.asMap().get("validationResponse");
+    }
 
     @RequestMapping("/")
     public String startPage(final Model model) {
@@ -113,10 +114,6 @@ class UploadController {
         return dataFilesTaskRunner.getDataFilesResult(ResultType.SOAP);
     }
 
-    private static ValidationResponse validationResponse(Model model) {
-        return (ValidationResponse) model.asMap().get("validationResponse");
-    }
-
     private void setModelFlashAttributes(Model model) throws JsonProcessingException {
         String jsonValidationResult = getJsonValidationResult();
         String soapValidationResult = getSoapValidationResult();
@@ -126,13 +123,13 @@ class UploadController {
         response.setOverAllValidationResult(getOverallValidationResult(jsonValidationResult));
         response.setValidationWarnings(getValidationWarnings(jsonValidationResult));
         final String output = isJSONValid(jsonValidationResult) ? jsonValidationResult : handleMissingJSON();
-        response.setJsonValidationResult(new JSONObject(output).toString(4));
+        response.setJsonValidationResult(new JSONObject(output).toString(JSON_INDENT_FACTOR));
         response.setSoapValidationResult(soapValidationResult);
 
         String jsonDataFilesResult = getJsonDataFilesResult();
         String soapDataFilesResult = getSoapDataFilesResult();
 
-        response.setJsonDataFilesResult(jsonDataFilesResult != null ? new JSONObject(jsonDataFilesResult).toString(4) : null);
+        response.setJsonDataFilesResult(jsonDataFilesResult != null ? new JSONObject(jsonDataFilesResult).toString(JSON_INDENT_FACTOR) : null);
         response.setSoapDataFilesResult(soapDataFilesResult);
 
         model.addAttribute(response);

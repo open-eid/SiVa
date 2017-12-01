@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016 Riigi Infosüsteemide Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
+
 package ee.openeid.siva.signature.ocsp;
 
 import eu.europa.esig.dss.DSSException;
@@ -10,12 +26,7 @@ import org.bouncycastle.asn1.DEROctetString;
 import org.bouncycastle.asn1.ocsp.OCSPObjectIdentifiers;
 import org.bouncycastle.asn1.x509.Extension;
 import org.bouncycastle.asn1.x509.Extensions;
-import org.bouncycastle.cert.ocsp.BasicOCSPResp;
-import org.bouncycastle.cert.ocsp.CertificateID;
-import org.bouncycastle.cert.ocsp.OCSPException;
-import org.bouncycastle.cert.ocsp.OCSPReqBuilder;
-import org.bouncycastle.cert.ocsp.OCSPResp;
-import org.bouncycastle.cert.ocsp.SingleResp;
+import org.bouncycastle.cert.ocsp.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,8 +36,9 @@ import java.util.Date;
 
 public class SkOcspSource implements OCSPSource {
 
-    private static final Logger log = LoggerFactory.getLogger(SkOcspSource.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SkOcspSource.class);
 
+    private static final int NONCE_LENGTH = 20;
     /**
      * The data loader used to retrieve the OCSP response.
      */
@@ -37,13 +49,13 @@ public class SkOcspSource implements OCSPSource {
     public SkOcspSource(String url) {
         dataLoader = new SkOcspDataLoader();
         this.url = url;
-        log.debug("Initialized SK Online OCSP source");
+        LOGGER.debug("Initialized SK Online OCSP source");
     }
 
     private byte[] buildOCSPRequest(final CertificateToken signCert, final CertificateToken issuerCert, Extension nonceExtension) throws
             DSSException {
         try {
-            log.debug("Building OCSP request");
+            LOGGER.debug("Building OCSP request");
             final CertificateID certId = DSSRevocationUtils.getOCSPCertificateID(signCert, issuerCert);
             final OCSPReqBuilder ocspReqBuilder = new OCSPReqBuilder();
             ocspReqBuilder.addRequest(certId);
@@ -57,18 +69,18 @@ public class SkOcspSource implements OCSPSource {
 
     @Override
     public OCSPToken getOCSPToken(CertificateToken certificateToken, CertificateToken issuerCertificateToken) {
-        log.debug("Getting OCSP token");
+        LOGGER.debug("Getting OCSP token");
         if (dataLoader == null) {
             throw new RuntimeException("Data loader is null");
         }
         try {
             final String dssIdAsString = certificateToken.getDSSIdAsString();
-            if (log.isTraceEnabled()) {
-                log.trace("--> OnlineOCSPSource queried for " + dssIdAsString);
+            if (LOGGER.isTraceEnabled()) {
+                LOGGER.trace("--> OnlineOCSPSource queried for " + dssIdAsString);
             }
 
             final String ocspUri = url;
-            log.debug("Getting OCSP token from URI: " + ocspUri);
+            LOGGER.debug("Getting OCSP token from URI: " + ocspUri);
             if (ocspUri == null) {
                 return null;
             }
@@ -79,8 +91,8 @@ public class SkOcspSource implements OCSPSource {
 
             final OCSPResp ocspResp = new OCSPResp(ocspRespBytes);
             BasicOCSPResp basicOCSPResp = (BasicOCSPResp) ocspResp.getResponseObject();
-            if(basicOCSPResp == null) {
-                log.error("OCSP response is empty");
+            if (basicOCSPResp == null) {
+                LOGGER.error("OCSP response is empty");
                 return null;
             }
 
@@ -112,7 +124,7 @@ public class SkOcspSource implements OCSPSource {
                 return ocspToken;
             }
         } catch (OCSPException e) {
-            log.error("OCSP error: " + e.getMessage(), e);
+            LOGGER.error("OCSP error: " + e.getMessage(), e);
         } catch (IOException e) {
             throw new DSSException(e);
         }
@@ -137,7 +149,7 @@ public class SkOcspSource implements OCSPSource {
 
     private byte[] generateRandomNonce() {
         SecureRandom random = new SecureRandom();
-        byte[] nonceBytes = new byte[20];
+        byte[] nonceBytes = new byte[NONCE_LENGTH];
         random.nextBytes(nonceBytes);
         return nonceBytes;
     }
@@ -147,7 +159,9 @@ public class SkOcspSource implements OCSPSource {
     }
 
     public static class InvalidOcspNonceException extends RuntimeException {
-        public InvalidOcspNonceException(String message) { super(message); }
+        public InvalidOcspNonceException(String message) {
+            super(message);
+        }
     }
 
 }

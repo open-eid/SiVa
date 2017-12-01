@@ -37,12 +37,14 @@ import ee.openeid.validation.service.generic.GenericValidationService;
 import ee.openeid.validation.service.generic.configuration.GenericSignaturePolicyProperties;
 import ee.openeid.validation.service.timestamptoken.TimeStampTokenValidationService;
 import ee.openeid.validation.service.timestamptoken.configuration.TimeStampTokenSignaturePolicyProperties;
+import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -54,9 +56,7 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
@@ -101,19 +101,19 @@ public class ValidationProxyTest {
         validationConclusion.setValidSignaturesCount(1);
         Reports reports = new Reports(new SimpleReport(validationConclusion), null);
 
-        given(restProxyService.validate(any(ValidationDocument.class))).willReturn(reports);
+        BDDMockito.given(restProxyService.validate(any(ValidationDocument.class))).willReturn(reports);
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.XROAD);
 
         SimpleReport validationReport = validationProxy.validate(proxyDocument);
         verify(restProxyService).validate(any(ValidationDocument.class));
 
-        assertThat(validationReport.getValidationConclusion().getValidSignaturesCount()).isEqualTo(1);
-        assertThat(validationReport.getValidationConclusion().getSignaturesCount()).isEqualTo(1);
+        Assertions.assertThat(validationReport.getValidationConclusion().getValidSignaturesCount()).isEqualTo(1);
+        Assertions.assertThat(validationReport.getValidationConclusion().getSignaturesCount()).isEqualTo(1);
     }
 
     @Test
     public void applicationContextHasNoBeanWithGivenNameThrowsException() throws Exception {
-        given(applicationContext.getBean(anyString())).willThrow(new NoSuchBeanDefinitionException("Bean not loaded"));
+        BDDMockito.given(applicationContext.getBean(anyString())).willThrow(new NoSuchBeanDefinitionException("Bean not loaded"));
 
         exception.expect(ValidatonServiceNotFoundException.class);
         exception.expectMessage("genericValidationService not found");
@@ -160,7 +160,7 @@ public class ValidationProxyTest {
         proxyDocument.setBytes(buildValidationDocument("timestamptoken-ddoc.asics"));
         SimpleReport report = validationProxy.validate(proxyDocument);
         TimeStampTokenValidationData timeStampTokenValidationData = report.getValidationConclusion().getTimeStampTokens().get(0);
-        Assert.assertEquals(TimeStampTokenValidationData.Indication.TOTAL_PASSED, timeStampTokenValidationData.getIndication());
+        assertEquals(TimeStampTokenValidationData.Indication.TOTAL_PASSED, timeStampTokenValidationData.getIndication());
         assertSimpleReport(report);
     }
 
@@ -174,7 +174,7 @@ public class ValidationProxyTest {
         proxyDocument.setBytes(buildValidationDocument("timestamptoken-ddoc.zip"));
         SimpleReport report = validationProxy.validate(proxyDocument);
         TimeStampTokenValidationData timeStampTokenValidationData = report.getValidationConclusion().getTimeStampTokens().get(0);
-        Assert.assertEquals(TimeStampTokenValidationData.Indication.TOTAL_PASSED, timeStampTokenValidationData.getIndication());
+        assertEquals(TimeStampTokenValidationData.Indication.TOTAL_PASSED, timeStampTokenValidationData.getIndication());
         assertSimpleReport(report);
     }
 
@@ -188,7 +188,7 @@ public class ValidationProxyTest {
         proxyDocument.setBytes(buildValidationDocument("timestamptoken-ddoc.asics"));
         SimpleReport report = validationProxy.validate(proxyDocument);
         TimeStampTokenValidationData timeStampTokenValidationData = report.getValidationConclusion().getTimeStampTokens().get(0);
-        Assert.assertEquals(TimeStampTokenValidationData.Indication.TOTAL_PASSED, timeStampTokenValidationData.getIndication());
+        assertEquals(TimeStampTokenValidationData.Indication.TOTAL_PASSED, timeStampTokenValidationData.getIndication());
         assertSimpleReport(report);
     }
 
@@ -200,7 +200,7 @@ public class ValidationProxyTest {
         proxyDocument.setBytes(buildValidationDocument("TXTinsideAsics.asics"));
         SimpleReport report = validationProxy.validate(proxyDocument);
         TimeStampTokenValidationData timeStampTokenValidationData = report.getValidationConclusion().getTimeStampTokens().get(0);
-        Assert.assertEquals(TimeStampTokenValidationData.Indication.TOTAL_PASSED, timeStampTokenValidationData.getIndication());
+        assertEquals(TimeStampTokenValidationData.Indication.TOTAL_PASSED, timeStampTokenValidationData.getIndication());
     }
 
     @Test

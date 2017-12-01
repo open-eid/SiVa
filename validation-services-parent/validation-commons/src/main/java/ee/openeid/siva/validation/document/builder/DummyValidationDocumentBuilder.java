@@ -31,7 +31,7 @@ import java.nio.file.Paths;
  * Use for testing purposes only
  */
 @TestOnly
-public class DummyValidationDocumentBuilder {
+public final class DummyValidationDocumentBuilder {
     private static final Logger LOGGER = LoggerFactory.getLogger(DummyValidationDocumentBuilder.class);
 
     private ValidationDocument validationDocument;

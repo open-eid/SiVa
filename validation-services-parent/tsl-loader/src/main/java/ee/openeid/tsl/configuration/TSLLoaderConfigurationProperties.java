@@ -29,5 +29,5 @@ public class TSLLoaderConfigurationProperties {
     private String url = "https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml";
     private String code = "EU";
     private String schedulerCron = "0 0 3 * * ?";
-    private List<String> trustedTerritories =   Arrays.asList("AT", "BE", "BG", "CY", "CZ","DE","DK", "EE", "ES", "FI", "FR", "GR", "HU","HR","IE", "IS", "IT", "LT", "LU", "LV", "LI", "MT","NO","NL", "PL", "PT", "RO", "SE", "SI", "SK", "UK");
+    private List<String> trustedTerritories =   Arrays.asList("AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "GR", "HU", "HR", "IE", "IS", "IT", "LT", "LU", "LV", "LI", "MT", "NO", "NL", "PL", "PT", "RO", "SE", "SI", "SK", "UK");
 }

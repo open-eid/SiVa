@@ -81,13 +81,13 @@ project by issuing below commands:
 **First start the Siva webapp**
 
 ```bash
-./siva-parent/siva-webapp/target/siva-webapp-2.0.3-SNAPSHOT.jar
+./siva-parent/siva-webapp/target/siva-webapp-3.0.0-SNAPSHOT.jar
 ```
 
 **Second we need to start X-road validation webapp**
 
 ```bash
-./validation-services-parent/xroad-validation-service/target/xroad-validation-service-2.0.3-SNAPSHOT.jar
+./validation-services-parent/xroad-validation-service/target/xroad-validation-service-3.0.0-SNAPSHOT.jar
 ```
 
 The SiVa webapp by default runs on port **8080** and XRoad validation service starts up on port **8081**.
@@ -96,7 +96,7 @@ Easiest way to test out validation is run SiVa demo application.
 **Start the Demo webapp**
 
 ```bash
-./siva-parent/siva-sample-application/target/siva-sample-application-2.0.3-SNAPSHOT.jar
+./siva-parent/siva-sample-application/target/siva-sample-application-3.0.0-SNAPSHOT.jar
 ```
 
 Now point Your browser to URL: <http://localhost:9000>
@@ -136,7 +136,7 @@ WantedBy=multi-user.target
 ```
 
 Save and close the `siva-webapp.service` file.
-Next we need to move `siva-webapp-2.0.3-SNAPSHOT.jar` into newly created `/var/apps` directory and rename to
+Next we need to move `siva-webapp-3.0.0-SNAPSHOT.jar` into newly created `/var/apps` directory and rename to
 JAR file to `siva-webapp.jar`. match
 
 !!! note
@@ -144,7 +144,7 @@ JAR file to `siva-webapp.jar`. match
 
 ```bash
 sudo mkdir /var/apps
-sudo cp siva-parent/siva-webapp/target/executable/siva-webapp-2.0.3-SNAPSHOT.jar /var/apps/siva-webapp.jar
+sudo cp siva-parent/siva-webapp/target/executable/siva-webapp-3.0.0-SNAPSHOT.jar /var/apps/siva-webapp.jar
 ```
 
 Next we need to copy the `siva-webapp.service` file into `/lib/systemd/system` directory.
@@ -219,7 +219,7 @@ Now we should build the WAR file. We have created helper script with all the cor
 Final steps would be copying built WAR file into Tomcat `webapps` directory and starting the servlet container.
 
 ```bash
-cp siva-parent/siva-webapp/target/siva-webapp-2.0.3-SNAPSHOT.war apache-tomcat-7.0.70/webapps
+cp siva-parent/siva-webapp/target/siva-webapp-3.0.0-SNAPSHOT.war apache-tomcat-7.0.70/webapps
 ./apache-tomcat-7.0.77/bin/catalina.sh run
 ```
 
@@ -254,20 +254,20 @@ pip install httpie
 **Step 2**. Download a sample JSON request file.
 
 ```bash
-http --download https://raw.githubusercontent.com/open-eid/SiVa/develop/build-helpers/sample-requests/bdoc_pass.json
+http --download https://raw.githubusercontent.com/open-eid/SiVa/develop/build-helpers/sample-requests/bdocPass.json
 ```
 
 **Step 3**. After successful download issue below command in same directory where you downloaded the file using
 the command below.
 
 ```bash
-http POST http://10.211.55.9:8080/validate < bdoc_pass.json
+http POST http://localhost:8080/validate < bdocPass.json
 ```
 **Step 4**. Verify the output. The output of previous command should look like below screenshot. Look for `signatureCount` and
 `validSignatureCount` they **must** be equal.
 
 
-![HTTPIE output validation](../../img/siva/siva-output.png)
+![HTTPIE output validation](../img/siva/siva-output.png)
 
 
 ## Logging
@@ -347,19 +347,21 @@ endpoints.health.links[0].timeout=1000
 
 ## Validation Report Signature
 
-SiVa provdes the ability to sign the validation report. The idea of supplementing the validation report with a validation report signature is to prove the authority's authenticity and integrity over the validation.
+SiVa provides the ability to sign the validation report. The idea of supplementing the validation report with a validation report signature is to prove the authority's authenticity and integrity over the validation.
 
 !!! note
-    Note that validation report signature is disabled by default
+    Signing of validation report is disabled by default
 
 To enable it, use the following configuration parameter:
 ```bash
 siva.report.reportSignatureEnabled=true
 ```
 
-When validation report signature is enabled, only detailed validation reports will be signed and simple reports will be ignored in this regard.
+When validation report signature is enabled, only detailed validation reports will be signed, simple reports will not be signed.
 The validation report's digital signature is composed out of response's `validationReport` object. The target format of the signature is ASiC-E (signature level is configurable). The ASiC-E container contents are encoded into Base64 and put on the same level int the response as the validation report itself.
 
+!!! note
+Enabling the validation report signing will affect the performance of the service.
 
 Example structure of the response containing report signature:
 
@@ -381,7 +383,7 @@ Report signature configuration parameters:
 
 Property | Description |
 | -------- | ----------- |
-|**siva.report.reportSignatureEnabled**| Enables singing the validation report. Validation report will only be signed when requesting detailed report.  <ul><li>Default: **false**</li></ul> |
+|**siva.report.reportSignatureEnabled**| Enables signing of the validation report. Validation report will only be signed when requesting detailed report.  <ul><li>Default: **false**</li></ul> |
 |**siva.signatureService.signatureLevel**| The level of the validation report signature. <br> **Example values:** <br> * XAdES_BASELINE_B <br> * XAdES_BASELINE_T <br> * XAdES_BASELINE_LT <br> * XAdES_BASELINE_LTA |
 |**siva.signatureService.tspUrl**| URL of the timestamp provider. <br> Only needed when the configured signature level is at least XAdES_BASELINE_T |
 |**siva.signatureService.ocspUrl**| URL of the OCSP provider. <br> Only needed when the configured signature level is at least XAdES_BASELINE_LT |
@@ -586,12 +588,3 @@ siva.ddoc.signaturePolicy.defaultPolicy= POLv1
 |**siva.service.jsonServicePath**| Service path in Siva webapp to access the REST/JSON API<ul><li>Default: **/validate**</li></ul> |
 |**siva.service.soapServicePath**| Service path in Siva webapp to access the SOAP API <ul><li>Default: **/soap/validationWebService/validateDocument**</li></ul> |
 
-
-## FAQ
-
----------------------------------------------------
-Q: SiVa webapp API-s require that you specify the document type? Is it possible to detect the container/file type automatically based on the provided file.
-
-A: There is a demo webapp that provides a reference solution. See `ee.openeid.siva.sample.siva.ValidationRequestUtils` for reference.
-
----------------------------------------------------

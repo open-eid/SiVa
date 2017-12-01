@@ -1,6 +1,6 @@
 The deployment view of the architecture describes the various physical nodes in the most typical configuration for SiVa service provider.
 
-![SiVa Deployment view](../../img/siva/uml_siva_deployment_diagram.png)
+![SiVa Deployment view](../img/siva/uml_siva_deployment_diagram.png)
 
 ### Nodes
 

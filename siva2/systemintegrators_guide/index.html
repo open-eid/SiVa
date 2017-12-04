@@ -1114,8 +1114,8 @@ The following is for system integrators who need to set-up, configure, manage, a
 <li>Minimum 2 GB of RAM. Recommended at least 4 GB of RAM</li>
 <li>Minimum 1 processor core</li>
 <li>Open internet connection</li>
-<li>1GB of free disk space</li>
-<li>Supported operating system is Ubuntu 14.04 LTS</li>
+<li>2GB of free disk space</li>
+<li>Supported operating system is Ubuntu 16.04 LTS</li>
 </ul>
 <h2 id="building">Building</h2>
 <h3 id="building-siva-webapps-on-ubuntu-1604">Building SiVa webapps on Ubuntu 16.04</h3>
@@ -1146,26 +1146,30 @@ required dependencies</p>
 The last lines of build output should look very similar to below image:</p>
 <div class="codehilite"><pre><span></span>[INFO] Reactor Summary:
 [INFO]
-[INFO] SiVa Digitally signed documents validation service . SUCCESS [ 25.258 s]
-[INFO] validation-services-parent ......................... SUCCESS [  0.479 s]
-[INFO] validation-commons ................................. SUCCESS [01:45 min]
-[INFO] tsl-loader ......................................... SUCCESS [ 16.507 s]
-[INFO] PDF Validation Service ............................. SUCCESS [ 42.263 s]
-[INFO] BDOC Validation Service ............................ SUCCESS [ 58.864 s]
-[INFO] DDOC Validation Service ............................ SUCCESS [  9.929 s]
-[INFO] xroad-validation-service ........................... SUCCESS [  5.664 s]
-[INFO] SIVa webapp and other core modules ................. SUCCESS [  0.315 s]
-[INFO] SiVa validation service proxy ...................... SUCCESS [ 43.098 s]
-[INFO] siva-webapp ........................................ SUCCESS [04:06 min]
-[INFO] SiVa Sample Web application ........................ SUCCESS [04:31 min]
-[INFO] SiVa Web Service integration tests ................. SUCCESS [03:41 min]
-[INFO] siva-distribution .................................. SUCCESS [ 56.941 s]
+[INFO] SiVa Digitally signed documents validation service . SUCCESS [  1.632 s]
+[INFO] validation-services-parent ......................... SUCCESS [  0.897 s]
+[INFO] validation-commons ................................. SUCCESS [ 12.321 s]
+[INFO] tsl-loader ......................................... SUCCESS [  6.917 s]
+[INFO] Generic Validation Service ......................... SUCCESS [ 27.919 s]
+[INFO] TimeStampToken Validation Service .................. SUCCESS [  7.046 s]
+[INFO] BDOC Validation Service ............................ SUCCESS [ 50.087 s]
+[INFO] DDOC Validation Service ............................ SUCCESS [ 16.712 s]
+[INFO] SiVa webapp and other core modules ................. SUCCESS [  0.653 s]
+[INFO] siva-monitoring .................................... SUCCESS [  9.736 s]
+[INFO] xroad-validation-service ........................... SUCCESS [ 19.761 s]
+[INFO] siva-statistics .................................... SUCCESS [ 13.734 s]
+[INFO] SiVa validation service proxy ...................... SUCCESS [ 11.509 s]
+[INFO] SiVa signature service ............................. SUCCESS [  6.869 s]
+[INFO] siva-webapp ........................................ SUCCESS [ 27.608 s]
+[INFO] SiVa Sample Web application ........................ SUCCESS [ 38.585 s]
+[INFO] SiVa Web Service integration tests ................. SUCCESS [03:53 min]
+[INFO] siva-distribution .................................. SUCCESS [ 10.818 s]
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time: 18:30 min
-[INFO] Finished at: 2016-07-22T13:40:31+00:00
-[INFO] Final Memory: 80M/250M
+[INFO] Total time: 08:18 min
+[INFO] Finished at: 2017-12-04T13:49:48+02:00
+[INFO] Final Memory: 113M/903M
 [INFO] ------------------------------------------------------------------------
 </pre></div>
 
@@ -1175,19 +1179,19 @@ The last lines of build output should look very similar to below image:</p>
 <p>SiVa project compiles <strong>3 fat executable JAR</strong> files that you can run after successfully building the
 project by issuing below commands:</p>
 <p><strong>First start the Siva webapp</strong></p>
-<div class="codehilite"><pre><span></span>./siva-parent/siva-webapp/target/siva-webapp-3.0.0-SNAPSHOT.jar
+<div class="codehilite"><pre><span></span>./siva-parent/siva-webapp/target/siva-webapp-3.0.0.jar
 </pre></div>
 
 
 <p><strong>Second we need to start X-road validation webapp</strong></p>
-<div class="codehilite"><pre><span></span>./validation-services-parent/xroad-validation-service/target/xroad-validation-service-3.0.0-SNAPSHOT.jar
+<div class="codehilite"><pre><span></span>./validation-services-parent/xroad-validation-service/target/xroad-validation-service-3.0.0.jar
 </pre></div>
 
 
 <p>The SiVa webapp by default runs on port <strong>8080</strong> and XRoad validation service starts up on port <strong>8081</strong>.
 Easiest way to test out validation is run SiVa demo application.</p>
 <p><strong>Start the Demo webapp</strong></p>
-<div class="codehilite"><pre><span></span>./siva-parent/siva-sample-application/target/siva-sample-application-3.0.0-SNAPSHOT.jar
+<div class="codehilite"><pre><span></span>./siva-parent/siva-sample-application/target/siva-sample-application-3.0.0.jar
 </pre></div>
 
 
@@ -1223,14 +1227,14 @@ single JAR file. It makes a lot easier to deploy it into servers.</p>
 
 
 <p>Save and close the <code>siva-webapp.service</code> file.
-Next we need to move <code>siva-webapp-3.0.0-SNAPSHOT.jar</code> into newly created <code>/var/apps</code> directory and rename to
+Next we need to move <code>siva-webapp-3.0.0.jar</code> into newly created <code>/var/apps</code> directory and rename to
 JAR file to <code>siva-webapp.jar</code>. match</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The copied JAR filename must match option <code>ExecStart</code> in  <code>siva-webapp.service</code> file</p>
 </div>
 <div class="codehilite"><pre><span></span>sudo mkdir /var/apps
-sudo cp siva-parent/siva-webapp/target/executable/siva-webapp-3.0.0-SNAPSHOT.jar /var/apps/siva-webapp.jar
+sudo cp siva-parent/siva-webapp/target/executable/siva-webapp-3.0.0.jar /var/apps/siva-webapp.jar
 </pre></div>
 
 
@@ -1277,13 +1281,13 @@ conflicts.</p>
 the http connector parameter <code>maxPostSize</code> should be configured with the desired limit.</p>
 <p><strong>NOTE 4</strong>: The war file must be deployed to Tomcat ROOT.</p>
 </blockquote>
-<p>First we need to download Tomcat web servlet container as of the writing latest version available in version 7 branch is 7.0.77. We will download it with <code>wget</code></p>
-<div class="codehilite"><pre><span></span>wget http://www-eu.apache.org/dist/tomcat/tomcat-7/v7.0.70/bin/apache-tomcat-7.0.70.tar.gz
+<p>First we need to download Tomcat web servlet container as of the writing latest version available in version 8 branch is 8.5.24. We will download it with <code>wget</code></p>
+<div class="codehilite"><pre><span></span>wget http://www-eu.apache.org/dist/tomcat/tomcat-8/v8.5.24/bin/apache-tomcat-8.5.24.tar.gz
 </pre></div>
 
 
 <p>Unpack it somewhere:</p>
-<div class="codehilite"><pre><span></span>tar xf apache-tomcat-7.0.70.tar.gz
+<div class="codehilite"><pre><span></span>tar xf apache-tomcat-8.5.24.tar.gz
 </pre></div>
 
 
@@ -1296,7 +1300,7 @@ the http connector parameter <code>maxPostSize</code> should be configured with 
 <p><strong>NOTE</strong> The script will skip running the integration tests when building WAR files</p>
 </blockquote>
 <p>Final steps would be copying built WAR file into Tomcat <code>webapps</code> directory and starting the servlet container.</p>
-<div class="codehilite"><pre><span></span>cp siva-parent/siva-webapp/target/siva-webapp-3.0.0-SNAPSHOT.war apache-tomcat-7.0.70/webapps
+<div class="codehilite"><pre><span></span>cp siva-parent/siva-webapp/target/siva-webapp-3.0.0.war apache-tomcat-8.5.24/webapps
 ./apache-tomcat-7.0.77/bin/catalina.sh run
 </pre></div>
 
@@ -1334,9 +1338,9 @@ the command below.</p>
 </pre></div>
 
 
-<p><strong>Step 4</strong>. Verify the output. The output of previous command should look like below screenshot. Look for <code>signatureCount</code> and
-<code>validSignatureCount</code> they <strong>must</strong> be equal.</p>
-<p><img alt="HTTPIE output validation" src="../../img/siva/siva-output.png" /></p>
+<p><strong>Step 4</strong>. Verify the output. The output of previous command should have similar data as below screenshot. Look for <code>signatureCount</code> and
+<code>validSignatureCount</code>, they <strong>must</strong> be equal.</p>
+<p><img alt="HTTPIE output validation" src="../../img/siva/siva2-output.png" /></p>
 <h2 id="logging">Logging</h2>
 <p>By default, logging works on the INFO level and logs are directed to the system console only. Logging functionality is handled by the SLF4J logging facade and on top of the Logback framework. As a result, logging can be configured via the standard Logback configuration file through Spring boot. Additional logging appenders can be added. Consult <a href="http://logback.qos.ch/documentation.html">logback documentation</a> for more details on log file structure.</p>
 <p>For example, adding application.properties to classpath with the <strong>logging.config</strong> property</p>
@@ -1360,7 +1364,7 @@ the command below.</p>
 </tr>
 <tr>
 <td>Container type</td>
-<td>Container type ( text value that identifies the signature type of the incoming document: ASiC-E, XAdES, PAdES or ASiC-E (BatchSignature) )</td>
+<td>Container type ( text value that identifies the signature type of the incoming document: ASiC-E, XAdES, ASiC-S or ASiC-E (BatchSignature) )</td>
 </tr>
 <tr>
 <td>Siva User ID</td>
@@ -1468,8 +1472,8 @@ endpoints.health.links<span class="o">[</span><span class="m">0</span><span clas
 The validation report's digital signature is composed out of response's <code>validationReport</code> object. The target format of the signature is ASiC-E (signature level is configurable). The ASiC-E container contents are encoded into Base64 and put on the same level int the response as the validation report itself.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-</div>
 <p>Enabling the validation report signing will affect the performance of the service.</p>
+</div>
 <p>Example structure of the response containing report signature:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;validationReport&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -1601,7 +1605,7 @@ Default configuration parameters can be overridden by providing custom applicati
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>TSL is currently used only by PDF and BDOC validators</p>
+<p>TSL is currently used only by Generic and BDOC validators</p>
 </div>
 <ul>
 <li>Forward to custom X-road webapp instance</li>
@@ -1698,17 +1702,17 @@ Default configuration parameters can be overridden by providing custom applicati
 </tbody>
 </table>
 <p>By default, the following configuration is used</p>
-<div class="codehilite"><pre><span></span>siva.bdoc.signaturePolicy.policies[0].name=POLv1
+<div class="codehilite"><pre><span></span>siva.bdoc.signaturePolicy.policies[0].name=POLv3
 siva.bdoc.signaturePolicy.policies[0].description=Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.
-siva.bdoc.signaturePolicy.policies[0].url=http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv1
+siva.bdoc.signaturePolicy.policies[0].url=http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#POLv3
 siva.bdoc.signaturePolicy.policies[0].constraintPath=bdoc_constraint_no_type.xml
 
-siva.bdoc.signaturePolicy.policies[1].name=POLv2
+siva.bdoc.signaturePolicy.policies[1].name=POLv4
 siva.bdoc.signaturePolicy.policies[1].description=Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result.
-siva.bdoc.signaturePolicy.policies[1].url=http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv2
+siva.bdoc.signaturePolicy.policies[1].url=http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#POLv4
 siva.bdoc.signaturePolicy.policies[1].constraintPath=bdoc_constraint_qes.xml
 
-siva.bdoc.signaturePolicy.defaultPolicy=POLv1
+siva.bdoc.signaturePolicy.defaultPolicy=POLv4
 </pre></div>
 
 
@@ -1717,7 +1721,7 @@ siva.bdoc.signaturePolicy.defaultPolicy=POLv1
 <p>Default policy configuration is lost when policy detail properties (name, description, url or constraintPath) are overridden or new custom policies added in custom configuration files (in this case, the existing default policies must be redefined in configuration files explicitly)</p>
 </div>
 <ul>
-<li>PadES validation - customize validation policies</li>
+<li>Generic validation - customize validation policies</li>
 </ul>
 <table>
 <thead>
@@ -1728,39 +1732,39 @@ siva.bdoc.signaturePolicy.defaultPolicy=POLv1
 </thead>
 <tbody>
 <tr>
-<td><strong>siva.pdf.signaturePolicy.defaultPolicy</strong></td>
+<td><strong>siva.europe.signaturePolicy.defaultPolicy</strong></td>
 <td>Selected default policy name <ul><li>Default: <strong>N/A</strong></li></ul></td>
 </tr>
 <tr>
-<td><strong>siva.pdf.signaturePolicy.policies[index].name</strong></td>
+<td><strong>siva.europe.signaturePolicy.policies[index].name</strong></td>
 <td>Policy name <ul><li>Default: <strong>N/A</strong></li></ul></td>
 </tr>
 <tr>
-<td><strong>siva.pdf.signaturePolicy.policies[index].description</strong></td>
+<td><strong>siva.europe.signaturePolicy.policies[index].description</strong></td>
 <td>Policy description <ul><li>Default: <strong>N/A</strong></li></ul></td>
 </tr>
 <tr>
-<td><strong>siva.pdf.signaturePolicy.policies[index].constraintPath</strong></td>
+<td><strong>siva.europe.signaturePolicy.policies[index].constraintPath</strong></td>
 <td>Constraint XML file path for the policy. An absolute path or a reference to a resource on the classpath<ul><li>Default: <strong>N/A</strong></li></ul></td>
 </tr>
 <tr>
-<td><strong>siva.pdf.signaturePolicy.policies[index].url</strong></td>
+<td><strong>siva.europe.signaturePolicy.policies[index].url</strong></td>
 <td>Policy URL <ul><li>Default: <strong>N/A</strong></li></ul></td>
 </tr>
 </tbody>
 </table>
 <p>By default, the following configuration is used</p>
-<div class="codehilite"><pre><span></span>siva.pdf.signaturePolicy.policies[0].name=POLv1
-siva.pdf.signaturePolicy.policies[0].description=Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.
-siva.pdf.signaturePolicy.policies[0].url=http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv1
-siva.pdf.signaturePolicy.policies[0].constraintPath=pdf_constraint_no_type.xml
+<div class="codehilite"><pre><span></span>siva.europe.signaturePolicy.policies[0].name=POLv3
+siva.europe.signaturePolicy.policies[0].description=Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.
+siva.europe.signaturePolicy.policies[0].url=http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#POLv3
+siva.europe.signaturePolicy.policies[0].constraintPath=generic_constraint_ades.xml
 
-siva.pdf.signaturePolicy.policies[1].name=POLv2
-siva.pdf.signaturePolicy.policies[1].description=Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result.
-siva.pdf.signaturePolicy.policies[1].url=http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv2
-siva.pdf.signaturePolicy.policies[1].constraintPath=pdf_constraint_qes.xml
+siva.europe.signaturePolicy.policies[1].name=POLv4
+siva.europe.signaturePolicy.policies[1].description=Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result.
+siva.europe.signaturePolicy.policies[1].url=http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#POLv4
+siva.europe.signaturePolicy.policies[1].constraintPath=generic_constraint_qes.xml
 
-siva.pdf.signaturePolicy.defaultPolicy=POLv1
+siva.europe.signaturePolicy.defaultPolicy=POLv4
 </pre></div>
 
 
@@ -1817,17 +1821,17 @@ siva.pdf.signaturePolicy.defaultPolicy=POLv1
 </tbody>
 </table>
 <p>By default, the following configuration is used</p>
-<div class="codehilite"><pre><span></span>siva.ddoc.signaturePolicy.policies[0].name=POLv1
+<div class="codehilite"><pre><span></span>siva.ddoc.signaturePolicy.policies[0].name=POLv3
 siva.ddoc.signaturePolicy.policies[0].description=Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.
-siva.ddoc.signaturePolicy.policies[0].url=http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv1
-siva.ddoc.signaturePolicy.policies[0].constraintPath=pdf_constraint_no_type.xml
+siva.ddoc.signaturePolicy.policies[0].url=http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#POLv3
+siva.ddoc.signaturePolicy.policies[0].constraintPath=ddoc_constraint_no_type.xml
 
-siva.ddoc.signaturePolicy.policies[1].name=POLv2
+siva.ddoc.signaturePolicy.policies[1].name=POLv4
 siva.ddoc.signaturePolicy.policies[1].description=Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result.
-siva.ddoc.signaturePolicy.policies[1].url=http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv2
-siva.ddoc.signaturePolicy.policies[1].constraintPath=pdf_constraint_qes.xml
+siva.ddoc.signaturePolicy.policies[1].url=http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#POLv4
+siva.ddoc.signaturePolicy.policies[1].constraintPath=ddoc_constraint_qes.xml
 
-siva.ddoc.signaturePolicy.defaultPolicy=POLv1
+siva.ddoc.signaturePolicy.defaultPolicy=POLv4
 </pre></div>
 
 
@@ -1861,34 +1865,34 @@ siva.ddoc.signaturePolicy.defaultPolicy=POLv1
 </thead>
 <tbody>
 <tr>
-<td><strong>siva.ddoc.signaturePolicy.defaultPolicy</strong></td>
+<td><strong>siva.xroad.signaturePolicy.defaultPolicy</strong></td>
 <td>Selected default policy name <ul><li>Default: <strong>N/A</strong></li></ul></td>
 </tr>
 <tr>
-<td><strong>siva.ddoc.signaturePolicy.policies[index].name</strong></td>
+<td><strong>siva.xroad.signaturePolicy.policies[index].name</strong></td>
 <td>Policy name <ul><li>Default: <strong>N/A</strong></li></ul></td>
 </tr>
 <tr>
-<td><strong>siva.ddoc.signaturePolicy.policies[index].description</strong></td>
+<td><strong>siva.xroad.signaturePolicy.policies[index].description</strong></td>
 <td>Policy description <ul><li>Default: <strong>N/A</strong></li></ul></td>
 </tr>
 <tr>
-<td><strong>siva.ddoc.signaturePolicy.policies[index].constraintPath</strong></td>
+<td><strong>siva.xroad.signaturePolicy.policies[index].constraintPath</strong></td>
 <td>Constraint XML file path for the policy. An absolute path or a reference to a resource on the classpath<ul><li>Default: <strong>N/A</strong></li></ul></td>
 </tr>
 <tr>
-<td><strong>siva.ddoc.signaturePolicy.policies[index].url</strong></td>
+<td><strong>siva.xroad.signaturePolicy.policies[index].url</strong></td>
 <td>Policy URL <ul><li>Default: <strong>N/A</strong></li></ul></td>
 </tr>
 </tbody>
 </table>
 <p>By default, the following configuration is used</p>
-<div class="codehilite"><pre><span></span>siva.ddoc.signaturePolicy.policies[0].name=POLv1
-siva.ddoc.signaturePolicy.policies[0].description=Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.
-siva.ddoc.signaturePolicy.policies[0].url=http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv1
-siva.ddoc.signaturePolicy.policies[0].constraintPath=pdf_constraint_no_type.xml
+<div class="codehilite"><pre><span></span>siva.xroad.signaturePolicy.policies[0].name=POLv3
+siva.xroad.signaturePolicy.policies[0].description=Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.
+siva.xroad.signaturePolicy.policies[0].url=http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#POLv3
+siva.xroad.signaturePolicy.policies[0].constraintPath=xroad_constraint_no_type.xml
 
-siva.ddoc.signaturePolicy.defaultPolicy= POLv1
+siva.xroad.signaturePolicy.defaultPolicy= POLv3
 </pre></div>
 
 
@@ -1898,7 +1902,7 @@ siva.ddoc.signaturePolicy.defaultPolicy= POLv1
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>By default, X-road validation currently supports only POLv1</p>
+<p>By default, X-road validation currently supports only POLv3</p>
 </div>
 <h3 id="demo-webapp-parameters">Demo webapp parameters</h3>
 <ul>

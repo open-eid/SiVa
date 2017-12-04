@@ -42,7 +42,7 @@
         <project.encoding>UTF-8</project.encoding>
         <language.level>1.8</language.level>
         <spring.boot.version>1.5.8.RELEASE</spring.boot.version>
-        <dss.version>5.0.d4j.4</dss.version>
+        <dss.version>5.0.d4j.5</dss.version>
         <cxf.version>3.1.13</cxf.version>
         <junit.version>4.12</junit.version>
         <mockito.version>2.10.0</mockito.version>

@@ -157,7 +157,7 @@
 
                     <!-- Algorithms with ~ 256 bit strength: -->
                     <Algo Date="2035-02-24">SHA512</Algo>
-                    <Algo Date="2035-02-24">ECDSA512</Algo>
+                    <Algo Date="2035-02-24">ECDSA521</Algo>
                 </AlgoExpirationDate>
             </Cryptographic>
         </BasicSignatureConstraints>

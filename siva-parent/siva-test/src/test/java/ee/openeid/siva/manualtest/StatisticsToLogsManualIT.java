@@ -65,7 +65,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     Expected result:
 {
    "stats": {
-      "type" : "ASiC_E",
+      "type" : "ASiC-E",
       "usrId" : "XAuthTest",
       "dur": 1334, <- Can vary, verify that its present
       "sigCt": 2,
@@ -101,7 +101,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     Expected result:
 {
    "stats": {
-      "type" : "ASiC_E",
+      "type" : "ASiC-E",
       "usrId" : "XAuthTest",
       "dur": 1334, <- Can vary, verify that its present
       "sigCt": 1,
@@ -160,7 +160,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     Expected result:
 {
    "stats": {
-      "type" : "ASiC_E",
+      "type" : "ASiC-E",
       "usrId" : "XAuthTest",
       "dur": 1334, <- Can vary, verify that its present
       "sigCt": 3,
@@ -332,17 +332,21 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     /*
     Expected result:
 {
-   "stats": {
-      "type" : "PAdES",
-      "usrId" : "XAuthTest",
-      "dur": 1334, <- Can vary, verify that its present
-      "sigCt": 2,
-      "vSigCt": 2,
-      "sigRslt": [
-         {"i":"TOTAL-PASSED", "cc":"EE", "sf" : "PAdES_BASELINE_LT"},
-         {"i":"TOTAL-PASSED", "cc":"EE", "sf" : "PAdES_BASELINE_LT"}
-      ]
-   }
+  "stats" : {
+    "usrId" : "XAuthTest",
+    "dur" : 685,
+    "sigCt" : 2,
+    "vSigCt" : 2,
+    "sigRslt" : [ {
+      "i" : "TOTAL-PASSED",
+      "cc" : "EE",
+      "sf" : "PAdES_BASELINE_LT"
+    }, {
+      "i" : "TOTAL-PASSED",
+      "cc" : "EE",
+      "sf" : "PAdES_BASELINE_LT"
+    } ]
+  }
 }        */
     }
 
@@ -367,19 +371,23 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
                 .then()
                 .statusCode(HttpStatus.OK.value());
     /*
-    Expected result:
-{
-   "stats": {
-      "type" : "PAdES",
-      "usrId" : "XAuthTest",
-      "dur": 1334, <- Can vary, verify that its present
-      "sigCt": 2,
-      "vSigCt": 0,
-      "sigRslt": [
-         { "i" : "TOTAL-PASSED", "cc":"EE", "sf" : "PAdES_BASELINE_LTA"},
-         { "i" : "TOTAL-FAILED",  "si" : "HASH_FAILURE", "cc" : "EE", "sf" : "PAdES_BASELINE_LTA"}
-      ]
-   }
+  {
+  "stats" : {
+    "usrId" : "XAuthTest",
+    "dur" : 687,
+    "sigCt" : 2,
+    "vSigCt" : 1,
+    "sigRslt" : [ {
+      "i" : "TOTAL-PASSED",
+      "cc" : "EE",
+      "sf" : "PAdES_BASELINE_LTA"
+    }, {
+      "i" : "TOTAL-FAILED",
+      "si" : "HASH_FAILURE",
+      "cc" : "EE",
+      "sf" : "PAdES_BASELINE_LTA"
+    } ]
+  }
 }        */
     }
 
@@ -407,17 +415,17 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     /*
     Expected result:
 {
-   "stats": {
-      "type" : "PAdES",
-      "usrId" : "XAuthTest",
-      "dur": 1334, <- Can vary, verify that its present
-      "sigCt": 2,
-      "vSigCt": 0,
-      "sigRslt": [
-         { "i" : "TOTAL-FAILED", "cc" : "BE", "sf" : "PAdES_BASELINE_B"},
-         { "i" : "TOTAL-FAILED", "cc" : "BE", "sf" : "PAdES_BASELINE_B"}
-      ]
-   }
+  "stats" : {
+    "usrId" : "XAuthTest",
+    "dur" : 830,
+    "sigCt" : 2,
+    "vSigCt" : 0,
+    "sigRslt" : [ {
+      "i" : "TOTAL-FAILED", "cc" : "BE", "sf" : "PAdES_BASELINE_B"
+    }, {
+      "i" : "TOTAL-FAILED", "cc" : "BE", "sf" : "PAdES_BASELINE_B"
+    } ]
+  }
 }        */
     }
 
@@ -481,7 +489,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     Expected result:
 {
    "stats": {
-      "type" : "ASiC_E",
+      "type" : "ASiC-E",
       "usrId" : "XAuthTest",
       "dur": 134, <- Can vary, verify that its present
       "sigCt": 1,
@@ -515,6 +523,68 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
+    }
+
+    /**
+     * TestCaseID: Asics-Statistics-Log-1
+     *
+     * TestType: Manual
+     *
+     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf
+     *
+     * Title: ASiCs valid container is validated
+     *
+     * Expected Result: Correct data is shown in the log with correct structure
+     *
+     * File: ValidBDOCinsideAsics.asics
+     */
+    @Test
+    public void asicsWithValidSignatures() {
+        setTestFilesDirectory("asics/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("ValidBDOCinsideAsics.asics"));
+        post(validationRequestWithValidKeys(encodedString, "ValidBDOCinsideAsics.asics", "POLv4"))
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+       /*
+        stats" : {
+        "type" : "ASiC-S",
+                "usrId" : "N/A",
+                "dur" : 1566,
+                "sigCt" : 2,
+                "vSigCt" : 2,
+                "sigRslt" : [ {
+            "i" : "TOTAL-PASSED",
+                    "cc" : "EE",
+                    "sf" : "XAdES_BASELINE_LT_TM"
+        }, {
+            "i" : "TOTAL-PASSED",
+                    "cc" : "EE",
+                    "sf" : "XAdES_BASELINE_LT_TM"
+        } ]
+    }
+}     */
+    }
+
+    /**
+     * TestCaseID: Asics-Statistics-Log-3
+     *
+     * TestType: Manual
+     *
+     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf
+     *
+     * Title: asics invalid container is validated
+     *
+     * Expected Result: No message in statistics as the container is not validated
+     *
+     * File: TwoDataFilesAsics.asics
+     */
+    @Test
+    public void asicWithErrorResponse() {
+        setTestFilesDirectory("asics/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("TwoDataFilesAsics.asics"));
+        post(validationRequestWithValidKeys(encodedString, "TwoDataFilesAsics.asics", "POLv4"))
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @Override

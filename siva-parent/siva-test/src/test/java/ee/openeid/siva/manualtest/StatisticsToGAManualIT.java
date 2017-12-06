@@ -17,6 +17,8 @@
 package ee.openeid.siva.manualtest;
 
 import ee.openeid.siva.integrationtest.SiVaRestTests;
+import ee.openeid.siva.statistics.googleanalytics.GoogleAnalyticsMeasurementProtocolClient;
+import ee.openeid.siva.statistics.googleanalytics.configuration.properties.GoogleAnalyticsMeasurementProtocolProperties;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
@@ -32,7 +34,8 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
     }
 
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
-
+    private GoogleAnalyticsMeasurementProtocolClient gaClient = new GoogleAnalyticsMeasurementProtocolClient();
+    private GoogleAnalyticsMeasurementProtocolProperties properties = new GoogleAnalyticsMeasurementProtocolProperties();
     public void setTestFilesDirectory(String testFilesDirectory) {
         this.testFilesDirectory = testFilesDirectory;
     }
@@ -63,7 +66,7 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades_lt_two_valid_sig.pdf"));
         postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "pades_lt_two_valid_sig.pdf", "POLv3"), "XAuthTest")
-                .then()
+                .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
 
@@ -233,6 +236,34 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
         ).getValidationReport();
         assertAllSignaturesAreInvalid(report);
     }
+
+
+    /**
+     * TestCaseID: Xauth-Statistics-GA-1
+     *
+     * TestType: Manual
+     *
+     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf
+     *
+     * Title: Pdf valid container is validated with x-authenticated-user set in header
+     *
+     * Expected Result: x-authenticated-user value is shown in GA
+     *
+     * File: pades_lt_two_valid_sig.pdf
+     */
+    @Test
+    public void test() {
+        properties.setEnabled(true);
+        properties.setUrl("http://www.google-analytics.com/batch");
+        properties.setDataSourceName("event");
+        properties.setTrackingId("UA-110514470-1");
+        setTestFilesDirectory("pdf/baseline_profile_test_files/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades_lt_two_valid_sig.pdf"));
+        postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "pades_lt_two_valid_sig.pdf", "POLv3"), "XAuthTest")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
+
 
     @Override
     protected String getTestFilesDirectory() {

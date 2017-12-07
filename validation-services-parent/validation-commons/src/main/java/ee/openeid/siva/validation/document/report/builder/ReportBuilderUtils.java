@@ -44,6 +44,7 @@ public final class ReportBuilderUtils {
     private static final String QES_POLICY = "POLv4";
     private static final String SIGNATURE_LEVEL_ERROR = "Signature/seal level do not meet the minimal level required by applied policy";
     private static final String SIGNATURE_LEVEL_WARNING = "The signature is not in the Qualified Electronic Signature level";
+    public static final String FORMAT_NOT_FOUND = "The expected format is not found! Expected minimal format LT";
 
     public static String emptyWhenNull(String value) {
         return value != null ? value : valueNotPresent();

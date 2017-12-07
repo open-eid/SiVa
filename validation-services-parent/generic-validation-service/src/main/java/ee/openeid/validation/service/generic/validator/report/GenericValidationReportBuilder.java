@@ -39,6 +39,9 @@ import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUt
 
 public class GenericValidationReportBuilder {
 
+    private static final String SIGNATURE_FORMAT_ALLOWED = "LT";
+    private static final String SIGNATURE_FORMAT_NOT_ALLOWED = "B";
+
     private eu.europa.esig.dss.validation.reports.Reports dssReports;
     private ValidationDocument validationDocument;
     private ConstraintDefinedPolicy validationPolicy;
@@ -97,7 +100,7 @@ public class GenericValidationReportBuilder {
     private SignatureValidationData buildSignatureValidationData(String signatureId) {
         SignatureValidationData signatureValidationData = new SignatureValidationData();
         signatureValidationData.setId(signatureId);
-        signatureValidationData.setSignatureFormat(changeSignatureFormat(dssReports.getSimpleReport().getSignatureFormat(signatureId)));
+        signatureValidationData.setSignatureFormat(changeSignatureFormat(dssReports.getSimpleReport().getSignatureFormat(signatureId), signatureId));
         signatureValidationData.setSignatureLevel(dssReports.getSimpleReport().getSignatureQualification(signatureId).name());
         signatureValidationData.setSignedBy(parseSignedBy(signatureId));
         signatureValidationData.setClaimedSigningTime(parseClaimedSigningTime(signatureId));
@@ -112,9 +115,14 @@ public class GenericValidationReportBuilder {
         return signatureValidationData;
     }
 
-    private String changeSignatureFormat(String signatureFormat) {
-        return signatureFormat.replace("-", "_");
+    private String changeSignatureFormat(String signatureFormat, String signatureId) {
+        String modifiedSignatureFormat = signatureFormat;
+        if (dssReports.getSimpleReport().getErrors(signatureId).contains(FORMAT_NOT_FOUND))
+            modifiedSignatureFormat = modifiedSignatureFormat.replace(SIGNATURE_FORMAT_ALLOWED, SIGNATURE_FORMAT_NOT_ALLOWED);
+        modifiedSignatureFormat = modifiedSignatureFormat.replace("-", "_");
+        return modifiedSignatureFormat;
     }
+
 
     private Info parseSignatureInfo(String signatureId) {
         List<TimestampWrapper> timeStamps = dssReports.getDiagnosticData().getSignatureById(signatureId).getTimestampList();

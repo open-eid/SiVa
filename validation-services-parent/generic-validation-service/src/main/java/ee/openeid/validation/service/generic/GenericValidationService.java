@@ -37,6 +37,7 @@ import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
+import eu.europa.esig.dss.validation.policy.rules.Indication;
 import eu.europa.esig.dss.validation.reports.wrapper.CertificateWrapper;
 import eu.europa.esig.dss.validation.reports.wrapper.DiagnosticData;
 import eu.europa.esig.dss.validation.reports.wrapper.SignatureWrapper;
@@ -52,6 +53,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.FORMAT_NOT_FOUND;
 import static org.apache.commons.lang3.time.DateUtils.addMilliseconds;
 
 @Service
@@ -97,6 +99,7 @@ public class GenericValidationService implements ValidationService {
             final eu.europa.esig.dss.validation.reports.Reports reports;
             reports = validator.validateDocument(policy.getConstraintDataStream());
             validateRevocationFreshness(reports);
+            validateBestSignatureTime(reports);
 
             if (LOGGER.isInfoEnabled()) {
                 LOGGER.info(
@@ -121,6 +124,15 @@ public class GenericValidationService implements ValidationService {
         } catch (Exception e) {
             endExceptionally(e);
             throw new ValidationServiceException(getClass().getSimpleName(), e);
+        }
+    }
+
+    private void validateBestSignatureTime(eu.europa.esig.dss.validation.reports.Reports reports) {
+        for (String id : reports.getSimpleReport().getSignatureIdList()) {
+            if (Indication.TOTAL_PASSED == reports.getSimpleReport().getIndication(id)
+                    && reports.getDiagnosticData().getSignatureById(id).getTimestampList().isEmpty()) {
+                reports.getSimpleReport().getErrors(id).add(FORMAT_NOT_FOUND);
+            }
         }
     }
 

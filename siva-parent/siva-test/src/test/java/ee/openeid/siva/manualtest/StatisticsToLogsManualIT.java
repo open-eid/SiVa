@@ -20,6 +20,7 @@ import ee.openeid.siva.integrationtest.SiVaRestTests;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
@@ -286,6 +287,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      * File: Belgia_kandeavaldus_LIV.ddoc
      */
     @Test
+    @Ignore("SIVARIA2-126")
     public void ddocWithSignaturesFromDifferentCountries() {
         setTestFilesDirectory("ddoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Belgia_kandeavaldus_LIV.ddoc"));

@@ -34,6 +34,7 @@ import ee.sk.digidoc.factory.DigiDocFactory;
 import ee.sk.utils.ConfigManager;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -266,6 +267,7 @@ public class DDOCServiceTest {
     }
 
     @Test
+    @Ignore("SIVARIA2-126")
     public void reportShouldHaveHashcodeSingnatureFormSuffixWhenValidatingDdocHashcode10Format() throws Exception {
         SimpleReport report = validationService.validateDocument(buildValidationDocument(DDOC_1_0_HASHCODE)).getSimpleReport();
         assertEquals("DIGIDOC_XML_1.0_hashcode", report.getValidationConclusion().getSignatureForm());

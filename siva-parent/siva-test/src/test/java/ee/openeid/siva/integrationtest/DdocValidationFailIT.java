@@ -20,6 +20,7 @@ import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
@@ -54,6 +55,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * File: test1-ddoc-revoked.ddoc
      */
     @Test
+    @Ignore("SIVARIA2-126")
     public void ddocInvalidSignature() {
         assertAllSignaturesAreInvalid(postForReport("test1-ddoc-revoked.ddoc"));
     }
@@ -223,6 +225,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * File: Belgia_kandeavaldus_LIV.ddoc
      */
     @Test
+    @Ignore("SIVARIA2-126")
     public void ddocSignersCertNotTrusted() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("Belgia_kandeavaldus_LIV.ddoc"))
@@ -247,6 +250,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * File: Tundmatu_OCSP_responder.ddoc
      */
     @Test
+    @Ignore("SIVARIA2-126")
     public void ddocOCSPNotTrusted() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("Tundmatu_OCSP_responder.ddoc"))
@@ -271,6 +275,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * File: lisatud_andmefail.ddoc
      */
     @Test
+    @Ignore("SIVARIA2-126")
     public void ddocNonSignedFile() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("lisatud_andmefail.ddoc"))
@@ -319,6 +324,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * File: OCSP nonce vale.ddoc
      */
     @Test
+    @Ignore("SIVARIA2-126")
     public void ddocWrongOcspNonce() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("OCSP nonce vale.ddoc"))

@@ -47,7 +47,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.Security;
 import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class DDOCValidationService implements ValidationService {
@@ -65,8 +64,8 @@ public class DDOCValidationService implements ValidationService {
         synchronized (lock) {
             final File file = File.createTempFile("siva-ddoc-jdigidoc-", ".cfg");
             try (
-                InputStream inputStream = getClass().getResourceAsStream(properties.getJdigidocConfigurationFile());
-                OutputStream outputStream = new FileOutputStream(file)
+                    InputStream inputStream = getClass().getResourceAsStream(properties.getJdigidocConfigurationFile());
+                    OutputStream outputStream = new FileOutputStream(file)
             ) {
                 LOGGER.info("Copying DDOC configuration file: {}", file.getAbsolutePath());
                 LOGGER.info("jdigidoc.cfg original path: {}", getClass().getResource(properties.getJdigidocConfigurationFile()));
@@ -98,14 +97,16 @@ public class DDOCValidationService implements ValidationService {
             LOGGER.info("DDOC hashcode support in validation is: {}", ConfigManager.instance().getProperty("DATAFILE_HASHCODE_MODE"));
             try {
                 DigiDocFactory digiDocFactory = ConfigManager.instance().getDigiDocFactory();
-                List<DigiDocException> signedDocInitializationErrors = new ArrayList<>();
+                ArrayList signedDocInitializationErrors = new ArrayList<>();
                 signedDoc = digiDocFactory.readSignedDocFromStreamOfType(new ByteArrayInputStream(validationDocument.getBytes()), false, signedDocInitializationErrors);
-                if (signedDoc == null) {
+                if (signedDoc == null || hasNonWarningErrs(signedDoc, signedDocInitializationErrors) || hasNonWarningErrs(signedDoc, validateContainer(signedDoc))) {
                     throw new MalformedDocumentException();
                 }
 
                 DDOCValidationReportBuilder reportBuilder = new DDOCValidationReportBuilder(signedDoc, validationDocument, policy, reportConfigurationProperties.isReportSignatureEnabled());
                 return reportBuilder.build();
+            } catch (MalformedDocumentException e) {
+                throw e;
             } catch (Exception e) {
                 LOGGER.warn("Unexpected exception when validating DDOC document: " + e.getMessage(), e);
                 throw new ValidationServiceException(getClass().getSimpleName(), e);
@@ -115,6 +116,33 @@ public class DDOCValidationService implements ValidationService {
                 }
             }
         }
+    }
+
+    private boolean isWarning(DigiDocException ex, SignedDoc signedDoc) {
+        return ex != null &&
+                (ex.getCode() == DigiDocException.ERR_DF_INV_HASH_GOOD_ALT_HASH ||
+                        ex.getCode() == DigiDocException.ERR_OLD_VER ||
+                        ex.getCode() == DigiDocException.ERR_TEST_SIGNATURE ||
+                        ex.getCode() == DigiDocException.WARN_WEAK_DIGEST ||
+                        ex.getCode() == DigiDocException.ERR_CERT_REVOKED ||
+                        (ex.getCode() == DigiDocException.ERR_ISSUER_XMLNS && !signedDoc.getFormat().equals(SignedDoc.FORMAT_SK_XML)));
+    }
+
+    private boolean hasNonWarningErrs(SignedDoc signedDoc, ArrayList errors) {
+        for (Object error : errors) {
+            if (error instanceof DigiDocException) {
+                DigiDocException ex = (DigiDocException) error;
+                if (!isWarning(ex, signedDoc)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    private ArrayList validateContainer(SignedDoc signedDoc) {
+        return signedDoc.validate(true);
     }
 
     @Autowired

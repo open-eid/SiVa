@@ -266,7 +266,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * <p>
      * File: TS-05_23634_TS_unknown_TSA.asice
      */
-    @Ignore //TODO: needs investigation why the only available TS is ignored but signatureFormat is still shown as LT
+    @Ignore //TODO: DIVARIA2-125
     @Test
     public void asiceNotTrustedTsaCert() {
         post(validationRequestFor("TS-05_23634_TS_unknown_TSA.asice", null, null))
@@ -621,13 +621,13 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * <p>
      * Expected Result: The document should fail the validation
      * <p>
-     * File: 23154_test1-old-sig-sigat-OK-prodat-NOK-1.bdoc
+     * File:
      */
-    @Ignore //TODO: after certificate expiration check is done
+    @Ignore //TODO: test file is needed where certificate expiration end is before the OCSP produced at time
     @Test
     public void asiceCertificateValidityOutOfOcspRange() {
         setTestFilesDirectory("bdoc/live/timemark/");
-        post(validationRequestForDSS("23154_test1-old-sig-sigat-OK-prodat-NOK-1.bdoc", null, null))
+        post(validationRequestForDSS("", null, null))
                 .then()
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))

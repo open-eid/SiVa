@@ -40,7 +40,8 @@ public class DdocValidationPassIT extends SiVaRestTests{
      *
      * File: SK-XML1.0.ddoc
      */
-    @Test @Ignore //TODO:  https://github.com/open-eid/SiVa/issues/11
+    @Ignore //TODO:  https://github.com/open-eid/SiVa/issues/11
+    @Test
     public void ddocValidMultipleSignaturesV1_0() {
         assertAllSignaturesAreValid(postForReport("SK-XML1.0.ddoc"));
     }

@@ -315,7 +315,6 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      * <p>
      * File: Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice
      */
-    @Ignore //TODO: SIVARIA2-115
     @Test
     public void asiceEccSignatureShouldPass() {
         setTestFilesDirectory("bdoc/test/timestamp/");

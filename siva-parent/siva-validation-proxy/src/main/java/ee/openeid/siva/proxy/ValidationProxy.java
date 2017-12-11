@@ -24,10 +24,10 @@ import ee.openeid.siva.proxy.http.RESTProxyService;
 import ee.openeid.siva.statistics.StatisticsService;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.validation.service.ddoc.report.DDOCValidationReportBuilder;
 import ee.openeid.validation.service.timestamptoken.TimeStampTokenValidationService;
-import eu.europa.esig.dss.DSSException;
 import eu.europa.esig.dss.InMemoryDocument;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -83,8 +83,8 @@ public class ValidationProxy {
                 try {
                     dataFileReport = chooseReport(dataFileValidationService.validateDocument(createValidationDocument(dataFileProxyDocument)), proxyDocument.getReportType());
                     removeUnnecessaryWarning(dataFileReport.getValidationConclusion());
-                } catch (DSSException e) {
-                    if (!DOCUMENT_FORMAT_NOT_RECOGNIZED.equalsIgnoreCase(e.getMessage())) {
+                } catch (MalformedDocumentException e) {
+                    if (e.getCause() == null || !DOCUMENT_FORMAT_NOT_RECOGNIZED.equalsIgnoreCase(e.getCause().getMessage())) {
                         throw e;
                     }
                 }

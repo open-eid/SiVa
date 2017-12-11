@@ -883,8 +883,8 @@ public class ValidationRequestIT extends SiVaRestTests {
         String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
         post(validationRequestWithValidKeys(encodedString, "some_pdf.pdf", "POLv3"))
                 .then()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .body("message", Matchers.containsString("Document format not recognized/handled"));
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].message", Matchers.containsString("Document malformed or not matching documentType"));
     }
 
     /**

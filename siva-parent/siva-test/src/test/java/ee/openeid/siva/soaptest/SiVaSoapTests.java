@@ -41,12 +41,11 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
     protected static final String CLIENT_FAULT = "soap:Client";
 
     protected static final String DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE = "Document malformed or not matching documentType";
-    protected static final String DOCUMENT_FORMAT_NOT_RECOGNIZED = "Document format not recognized/handled";
+    protected static final String DOCUMENT_MALFORMED = "Document malformed or not matching documentType";
     protected static final String DOCUMENT_NOT_BASE64 = "Document is not encoded in a valid base64 string";
     protected static final String INVALID_FILENAME = "Invalid filename";
     protected static final String INVALID_SIGNATURE_POLICY = "Invalid signature policy";
     protected static final String INVALID_DOCUMENT_TYPE = "Invalid document type";
-    protected static final String INVALID_DOCUMENT_TYPE_DDOC = "Invalid document type. Can only return data files for DDOC type containers.";
     protected static final String INVALID_DATA_FILE_FILENAME = "Invalid file name. Can only return data files for DDOC type containers.";
 
     protected static String createXMLValidationRequest(String base64Document, String filename) {

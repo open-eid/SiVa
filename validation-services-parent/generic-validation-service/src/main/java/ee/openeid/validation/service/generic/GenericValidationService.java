@@ -118,9 +118,12 @@ public class GenericValidationService implements ValidationService {
                     reportConfigurationProperties.isReportSignatureEnabled()
             );
             return reportBuilder.build();
-        } catch (MalformedDocumentException | InvalidPolicyException | DSSException e) {
+        } catch (InvalidPolicyException e) {
             endExceptionally(e);
             throw e;
+        } catch (MalformedDocumentException | DSSException e) {
+            endExceptionally(e);
+            throw new MalformedDocumentException(e);
         } catch (Exception e) {
             endExceptionally(e);
             throw new ValidationServiceException(getClass().getSimpleName(), e);

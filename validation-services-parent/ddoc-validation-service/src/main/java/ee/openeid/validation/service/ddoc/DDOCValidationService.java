@@ -125,6 +125,7 @@ public class DDOCValidationService implements ValidationService {
                         ex.getCode() == DigiDocException.ERR_TEST_SIGNATURE ||
                         ex.getCode() == DigiDocException.WARN_WEAK_DIGEST ||
                         ex.getCode() == DigiDocException.ERR_CERT_REVOKED ||
+                        ex.getCode() == DigiDocException.ERR_CERT_UNKNOWN ||
                         (ex.getCode() == DigiDocException.ERR_ISSUER_XMLNS && !signedDoc.getFormat().equals(SignedDoc.FORMAT_SK_XML)));
     }
 

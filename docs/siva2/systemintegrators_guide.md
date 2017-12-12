@@ -525,12 +525,62 @@ siva.europe.signaturePolicy.defaultPolicy=POLv4
 | -------- | ----------- |
 |**siva.ddoc.jdigidocConfigurationFile**| Path to JDigidoc configuration file. Determines the Jdigidoc configuration parameters (see [JDigidoc manual](https://github.com/open-eid/jdigidoc/blob/master/doc/SK-JDD-PRG-GUIDE.pdf) for details.<ul><li>Default: **/siva-jdigidoc.cfg**</li></ul>|
 
+Customizing DDOC validation policies:
+
+| Property | Description |
+| -------- | ----------- |
+|**siva.ddoc.signaturePolicy.defaultPolicy**| Selected default policy name <ul><li>Default: **N/A**</li></ul>|
+|**siva.ddoc.signaturePolicy.policies[index].name**| Policy name <ul><li>Default: **N/A**</li></ul>|
+|**siva.ddoc.signaturePolicy.policies[index].description**| Policy description <ul><li>Default: **N/A**</li></ul>|
+|**siva.ddoc.signaturePolicy.policies[index].constraintPath**| Constraint XML file path for the policy. An absolute path or a reference to a resource on the classpath<ul><li>Default: **N/A**</li></ul>|
+|**siva.ddoc.signaturePolicy.policies[index].url**| Policy URL <ul><li>Default: **N/A**</li></ul>|
+
+By default, the following configuration is used
+```text
+siva.ddoc.signaturePolicy.policies[0].name=POLv3
+siva.ddoc.signaturePolicy.policies[0].description=Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.
+siva.ddoc.signaturePolicy.policies[0].url=http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#POLv3
+siva.ddoc.signaturePolicy.policies[0].constraintPath=ddoc_constraint_no_type.xml
+
+siva.ddoc.signaturePolicy.policies[1].name=POLv4
+siva.ddoc.signaturePolicy.policies[1].description=Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result.
+siva.ddoc.signaturePolicy.policies[1].url=http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#POLv4
+siva.ddoc.signaturePolicy.policies[1].constraintPath=ddoc_constraint_qes.xml
+
+siva.ddoc.signaturePolicy.defaultPolicy=POLv4
+```
+!!! note
+    Default policy configuration is lost when policy detail properties (name, description, url or constraintPath) are overridden or new custom policies added in custom configuration files (in this case, the existing default policies must be redefined in configuration files explicitly)
+
 * X-road validation
 
 | Property | Description |
 | -------- | ----------- |
 |**siva.xroad.validation.service.configurationDirectoryPath**| Directory that contains the certs of approved CA's, TSA's and list of members <ul><li>Default: **/verificationconf**</li></ul> |
 
+
+| Property | Description |
+| -------- | ----------- |
+|**siva.xroad.signaturePolicy.defaultPolicy**| Selected default policy name <ul><li>Default: **N/A**</li></ul>|
+|**siva.xroad.signaturePolicy.policies[index].name**| Policy name <ul><li>Default: **N/A**</li></ul>|
+|**siva.xroad.signaturePolicy.policies[index].description**| Policy description <ul><li>Default: **N/A**</li></ul>|
+|**siva.xroad.signaturePolicy.policies[index].constraintPath**| Constraint XML file path for the policy. An absolute path or a reference to a resource on the classpath<ul><li>Default: **N/A**</li></ul>|
+|**siva.xroad.signaturePolicy.policies[index].url**| Policy URL <ul><li>Default: **N/A**</li></ul>|
+
+By default, the following configuration is used
+```text
+siva.xroad.signaturePolicy.policies[0].name=POLv3
+siva.xroad.signaturePolicy.policies[0].description=Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.
+siva.xroad.signaturePolicy.policies[0].url=http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#POLv3
+siva.xroad.signaturePolicy.policies[0].constraintPath=xroad_constraint_no_type.xml
+
+siva.xroad.signaturePolicy.defaultPolicy= POLv3
+```
+
+!!! note
+    Default policy configuration is lost when policy detail properties (name, description, url or constraintPath) are overridden or new custom policies added in custom configuration files (in this case, the existing default policies must be redefined in configuration files explicitly)
+!!! note
+    By default, X-road validation currently supports only POLv3
    
 ### Demo webapp parameters
 

@@ -64,8 +64,10 @@ public class ValidationExceptionHandler {
 
     @ExceptionHandler(ValidationServiceException.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-    public String handleValidationServiceException(ValidationServiceException e) {
-        return getMessage("validation.service.error.message");
+    public RequestValidationError handleValidationServiceException(ValidationServiceException e) {
+        RequestValidationError requestValidationError = new RequestValidationError();
+        requestValidationError.addFieldError("document", getMessage("validation.service.error.message"));
+        return requestValidationError;
     }
 
     @ExceptionHandler(InvalidPolicyException.class)

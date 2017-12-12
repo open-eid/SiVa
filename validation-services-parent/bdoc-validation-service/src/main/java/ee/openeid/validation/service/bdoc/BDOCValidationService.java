@@ -20,6 +20,7 @@ import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
+import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.validation.service.bdoc.report.BDOCValidationReportBuilder;
 import ee.openeid.validation.service.bdoc.signature.policy.BDOCConfigurationService;
@@ -62,13 +63,15 @@ public class BDOCValidationService implements ValidationService {
         try {
             ValidationResult validationResult = container.validate();
             return new BDOCValidationReportBuilder(container, validationDocument, policyConfiguration.getPolicy(), validationResult.getContainerErrors(), reportConfigurationProperties.isReportSignatureEnabled()).build();
+        } catch (DigiDoc4JException e) {
+            throw new MalformedDocumentException(e);
         } catch (Exception e) {
             if (isXRoadContainer(container)) {
                 LOGGER.error("XROAD container passed to BDOC validator", e);
                 throw new MalformedDocumentException(e);
             }
             LOGGER.error("An error occurred when validating document " + validationDocument.getName(), e);
-            throw e;
+            throw new ValidationServiceException(getClass().getSimpleName(), e);
         }
     }
 

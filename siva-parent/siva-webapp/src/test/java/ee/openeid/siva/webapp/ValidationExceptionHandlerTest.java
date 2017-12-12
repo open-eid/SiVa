@@ -244,7 +244,7 @@ public class ValidationExceptionHandlerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        Assert.assertEquals(content, "Unfortunately there was an error validating your document");
+        Assert.assertEquals(content, "{\"requestErrors\":[{\"key\":\"document\",\"message\":\"Unfortunately there was an error validating your document\"}]}");
     }
 
     @SuppressWarnings("unchecked")
@@ -258,7 +258,7 @@ public class ValidationExceptionHandlerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        Assert.assertEquals(content, "Unfortunately there was an error validating your document");
+        Assert.assertEquals(content, "{\"requestErrors\":[{\"key\":\"document\",\"message\":\"Unfortunately there was an error validating your document\"}]}");
     }
 
     private JSONObject request() {

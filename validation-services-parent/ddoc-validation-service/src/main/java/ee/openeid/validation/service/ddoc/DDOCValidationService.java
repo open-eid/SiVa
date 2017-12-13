@@ -29,6 +29,7 @@ import ee.openeid.validation.service.ddoc.report.DDOCValidationReportBuilder;
 import ee.sk.digidoc.DigiDocException;
 import ee.sk.digidoc.SignedDoc;
 import ee.sk.digidoc.factory.DigiDocFactory;
+import ee.sk.digidoc.factory.SignatureInputStream;
 import ee.sk.utils.ConfigManager;
 import org.apache.commons.io.IOUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -98,7 +99,7 @@ public class DDOCValidationService implements ValidationService {
             try {
                 DigiDocFactory digiDocFactory = ConfigManager.instance().getDigiDocFactory();
                 ArrayList signedDocInitializationErrors = new ArrayList<>();
-                signedDoc = digiDocFactory.readSignedDocFromStreamOfType(new ByteArrayInputStream(validationDocument.getBytes()), false, signedDocInitializationErrors);
+                signedDoc = digiDocFactory.readSignedDocFromStreamOfType(new SignatureInputStream(new ByteArrayInputStream(validationDocument.getBytes())), false, signedDocInitializationErrors);
                 if (signedDoc == null || hasNonWarningErrs(signedDoc, signedDocInitializationErrors) || hasNonWarningErrs(signedDoc, validateContainer(signedDoc))) {
                     throw new MalformedDocumentException();
                 }

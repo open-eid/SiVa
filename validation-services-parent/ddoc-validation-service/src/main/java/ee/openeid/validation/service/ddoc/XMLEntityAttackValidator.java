@@ -18,6 +18,7 @@ package ee.openeid.validation.service.ddoc;
 
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.validation.service.ddoc.security.SecureSAXParsers;
+import ee.sk.digidoc.factory.SignatureInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -28,6 +29,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 @ConfigurationProperties(prefix = "siva.ddoc.xmlEntityAttack")
 public class XMLEntityAttackValidator {
@@ -37,10 +39,15 @@ public class XMLEntityAttackValidator {
     protected void validateAgainstXMLEntityAttacks(byte[] xmlContent) {
         try {
             SAXParser saxParser = SecureSAXParsers.createParser();
-            saxParser.getXMLReader().parse(new InputSource(new ByteArrayInputStream(xmlContent)));
+            InputStream inputStream =  new SignatureInputStream(new ByteArrayInputStream(xmlContent));
+
+            saxParser.getXMLReader().parse(new InputSource(inputStream));
         } catch (ParserConfigurationException | SAXException | IOException e) {
             LOGGER.error("Exception when validation document against XML entity attacks: " + e.getMessage(), e);
             throw new MalformedDocumentException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
+
 }

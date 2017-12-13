@@ -1659,7 +1659,7 @@
 <td>Signature. SignatureLevel</td>
 <td>-</td>
 <td>String</td>
-<td>Legal level of the signature, according to Regulation (EU) No 910/2014. <br> - Indication whether the signature is Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES). <br> - In case of DIGIDOC-XML 1.0..1.3 formats, value is missing as the signature level is not checked by the JDigiDoc base library that is used for validation. However, the signatures can be indirectly regarded as QES level signatures, see also <a href="../../siva/appendix/validation_policy">SiVa Validation Policy</a></td>
+<td>Legal level of the signature, according to Regulation (EU) No 910/2014. <br> - <strong>Possible values on positive validation result:</strong><br> QESIG <br> QESEAL <br> QES <br> ADESIG_QC <br> ADESEAL_QC <br> ADES_QC <br> ADESIG <br> ADESEAL <br> ADES <br> - <strong>Possible values on indeterminate validation result:</strong><br> prefix INDETERMINATE is added to the level described in positive result. For example  INDETERMINATE_QESIG <br> - <strong>Possible values on negative validation result:</strong><br> NOT_ADES_QC_QSCD <br> NOT_ADES_QC <br> NOT_ADES <br> NA <br> - In case of DIGIDOC-XML 1.0..1.3 formats, value is missing as the signature level is not checked by the JDigiDoc base library that is used for validation. However, the signatures can be indirectly regarded as QES level signatures, see also <a href="../../siva2/appendix/validation_policy">SiVa Validation Policy</a><br> - In case of XROAD ASICE containers the value is missing as the asicverifier base library do not check the signature level.</td>
 </tr>
 <tr>
 <td>signatures[0].signedBy</td>

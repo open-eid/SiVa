@@ -164,7 +164,7 @@ public class ReportSignatureIT extends SiVaRestTests {
      *
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
-    @Ignore
+    @Ignore //This test should be ran manually after configuring the report signature feature
     @Test
     public void whenRequestingSimpleReport_andreportSignatureEnabledFalse_fileHashInHex_NotInReport() {
         post(validationRequestFor("hellopades-pades-lt-sha256-sign.pdf", null, "Simple"))

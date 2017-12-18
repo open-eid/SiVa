@@ -228,7 +228,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("Belgia_kandeavaldus_LIV.ddoc"))
                 .then()
-                .body("requestErrors.message", Matchers.is("Document malformed or not matching documentType"));
+                .body("requestErrors[0].message", Matchers.is("Document malformed or not matching documentType"));
     }
 
     /**
@@ -318,7 +318,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("OCSP nonce vale.ddoc"))
                 .then()
-                .body("requestErrors.message", Matchers.is("Document malformed or not matching documentType"));
+                .body("requestErrors[0].message", Matchers.is("Document malformed or not matching documentType"));
     }
 
     /**
@@ -381,12 +381,10 @@ public class DdocValidationFailIT extends SiVaRestTests{
     @Test
     public void ddocNoFilesInContainer() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("KS-02_tyhi.ddoc"));
-        post(validationRequestWithValidKeys(encodedString, "KS-02_tyhi.ddoc",""))
+        post(validationRequestFor("KS-02_tyhi.ddoc"))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("requestErrors.message", Matchers.hasItem(MAY_NOT_BE_EMPTY))
-                .body("requestErrors.message", Matchers.hasItem(INVALID_BASE_64));
+                .body("requestErrors", Matchers.hasSize(2));
     }
 
     /**

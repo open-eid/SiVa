@@ -566,8 +566,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
         post(validationRequestFor("KS-02_tyhi.bdoc"))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("requestErrors.message", Matchers.hasItem(MAY_NOT_BE_EMPTY))
-                .body("requestErrors.message", Matchers.hasItem(INVALID_BASE_64));
+                .body("requestErrors", Matchers.hasSize(2));
     }
 
     /**

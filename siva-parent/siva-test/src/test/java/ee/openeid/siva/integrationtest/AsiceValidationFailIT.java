@@ -554,8 +554,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
         post(validationRequestForDSS("KS-02_tyhi.bdoc", null, null))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("requestErrors.message", Matchers.hasItem(MAY_NOT_BE_EMPTY))
-                .body("requestErrors.message", Matchers.hasItem(INVALID_BASE_64));
+                .body("requestErrors", Matchers.hasSize(2));
     }
 
     /**

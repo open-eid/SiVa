@@ -72,8 +72,7 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      *
      * File: hellopades-lt-sha1.pdf
      */
-    @Test @Ignore //TODO: remove ignore after pull request merged (https://github.com/open-eid/sd-dss/pull/3) and digidoc4j maven repository updated
-    //TODO new file needed. not sha1 certificate used.
+    @Test
     public void documentSignedWithSha1CertificateShouldFail() {
         String filename = "hellopades-lt-sha1.pdf";
         String encodedString = Base64.encodeBase64String(readFileFromTestResources(filename));
@@ -167,14 +166,12 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      *
      * File: hellopades-lt-sha256-rsa1023.pdf
      */
-    @Test @Ignore //TODO Bug fixed in DSS version 5.1. https://ec.europa.eu/cefdigital/tracker/browse/DSS-1145
-    //TODO new file needed.
-    public void documentSignedWithRsa1023AlgoShouldPass() {
-        String filename = "hellopades-lt-sha256-rsa1023.pdf";
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources(filename));
-        post(validationRequestWithValidKeys(encodedString, filename, ""))
-                .then().body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT")).log().all();
-
+    @Ignore //TODO Bug fixed in DSS version 5.1. https://ec.europa.eu/cefdigital/tracker/browse/DSS-1145
+    @Test
+    public void documentSignedWithRsa1023AlgoShouldFail() {
+        post(validationRequestFor("hellopades-lt-sha256-rsa1023.pdf"))
+                .then().
+                body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT")); //Specific assertions needs to be added
     }
 
     /**
@@ -191,12 +188,8 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      * File: hellopades-lt-sha256-rsa2047.pdf
      */
     @Test
-    @Ignore //TODO new file needed. not rsa2047
-
     public void documentSignedWithRsa2047AlgoShouldPass() {
-        String filename = "hellopades-lt-sha256-rsa2047.pdf";
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources(filename));
-        post(validationRequestWithValidKeys(encodedString, filename, ""))
+        post(validationRequestFor("hellopades-lt-sha256-rsa2047.pdf"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))

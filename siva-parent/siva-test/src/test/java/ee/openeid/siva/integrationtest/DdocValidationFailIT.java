@@ -55,7 +55,6 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * File: test1-ddoc-revoked.ddoc
      */
     @Test
-    @Ignore("SIVARIA2-126")
     public void ddocInvalidSignature() {
         assertAllSignaturesAreInvalid(postForReport("test1-ddoc-revoked.ddoc"));
     }
@@ -225,15 +224,11 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * File: Belgia_kandeavaldus_LIV.ddoc
      */
     @Test
-    @Ignore("SIVARIA2-126")
     public void ddocSignersCertNotTrusted() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("Belgia_kandeavaldus_LIV.ddoc"))
                 .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationReport.validationConclusion.signatures[1].errors.content", Matchers.hasItems("Signers cert not trusted, missing CA cert!"))
-                .body("validationReport.validationConclusion.signatures[1].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
+                .body("requestErrors[0].message", Matchers.is("Document malformed or not matching documentType"));
     }
 
     /**
@@ -250,15 +245,11 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * File: Tundmatu_OCSP_responder.ddoc
      */
     @Test
-    @Ignore("SIVARIA2-126")
     public void ddocOCSPNotTrusted() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("Tundmatu_OCSP_responder.ddoc"))
                 .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors[2].content", Matchers.containsString("No certificate for responder: 'byName: CN=Belgium OCSP Responder"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .body("requestErrors[0].message", Matchers.is("Document malformed or not matching documentType"));
     }
 
     /**
@@ -275,7 +266,6 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * File: lisatud_andmefail.ddoc
      */
     @Test
-    @Ignore("SIVARIA2-126")
     public void ddocNonSignedFile() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("lisatud_andmefail.ddoc"))
@@ -324,15 +314,11 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * File: OCSP nonce vale.ddoc
      */
     @Test
-    @Ignore("SIVARIA2-126")
     public void ddocWrongOcspNonce() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("OCSP nonce vale.ddoc"))
                 .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Notarys digest doesn't match!"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .body("requestErrors[0].message", Matchers.is("Document malformed or not matching documentType"));
     }
 
     /**

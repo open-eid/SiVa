@@ -266,7 +266,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * <p>
      * File: TS-05_23634_TS_unknown_TSA.asice
      */
-    @Ignore //TODO: DIVARIA2-125
+    @Ignore //TODO: https://ec.europa.eu/cefdigital/tracker/browse/DSS-1221
     @Test
     public void asiceNotTrustedTsaCert() {
         post(validationRequestFor("TS-05_23634_TS_unknown_TSA.asice", null, null))
@@ -602,7 +602,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
         post(validationRequestFor("TS-06_23634_TS_missing_OCSP.asice", null, null))
                 .then()
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT")) //TODO: Shouldnt it return XAdES_BASELINE_T instead?
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("TRY_LATER"))
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("No revocation data for the certificate"))

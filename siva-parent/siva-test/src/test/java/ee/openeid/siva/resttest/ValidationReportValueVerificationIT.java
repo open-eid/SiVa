@@ -126,30 +126,29 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
      * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
      */
     @Test
-    @Ignore("Unknown reason")
     public void bdocCorrectValuesArePresentValidLtSignatureAdesWarning() {
         setTestFilesDirectory("bdoc/test/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
-                .body("signatures[0].id", Matchers.is("S0"))
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("signatures[0].signatureLevel", Matchers.is("QES"))
-                .body("signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors", Matchers.hasSize(0))
-                .body("signatures[0].signatureScopes[0].name", Matchers.is("build.xml"))
-                .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
-                .body("signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
-                .body("signatures[0].claimedSigningTime", Matchers.is("2014-07-11T14:10:07Z"))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
-                .body("signatures[0].info.bestSignatureTime", Matchers.is("2011-10-15T14:59:35Z"))
-                .body("signatureForm", Matchers.is("ASiC-E"))
-                .body("filename", Matchers.is("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc"))
-                .body("validSignaturesCount", Matchers.is(1))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S0"))
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QES"))
+                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("build.xml"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
+                .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2014-07-11T14:10:07Z"))
+                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The certificate is not for eSig at signing time!"))
+                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2011-10-15T14:59:35Z"))
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
+                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -163,32 +162,32 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
      *
      * Expected Result: All required elements are present and meet the expected values.
      *
-     * File: 23200_weakdigest-wrong-nonce.asice
+     * File: testAdesQCInvalid.asice
      */
     @Test
-    @Ignore //TODO: https://github.com/open-eid/SiVa/issues/24
     public void bdocCorrectValuesArePresentInvalidLtSignatureAdesqc() {
-        setTestFilesDirectory("bdoc/test/timemark/");
-        post(validationRequestFor("23200_weakdigest-wrong-nonce.asice"))
+        setTestFilesDirectory("bdoc/live/timestamp/");
+        post(validationRequestFor("testAdesQCInvalid.asice"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
-                .body("signatures[0].id", Matchers.is("S0"))
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("signatures[0].signatureLevel", Matchers.is("AdESqc"))
-                .body("signatures[0].signedBy", Matchers.is("ŽAIKOVSKI,IGOR,37101010021"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors[0].content", Matchers.is("Nonce is invalid"))
-                .body("signatures[0].signatureScopes[0].name", Matchers.is("test.txt"))
-                .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
-                .body("signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
-                .body("signatures[0].claimedSigningTime", Matchers.is("2013-10-24T13:12:36Z"))
-                .body("signatures[0].warnings[0].content", Matchers.is("The certificate is not supported by SSCD!"))
-                .body("signatures[0].info.bestSignatureTime", Matchers.is("2013-10-24T13:14:50Z"))
-                .body("signatureForm", Matchers.is("ASiC-E"))
-                .body("filename", Matchers.is("23200_weakdigest-wrong-nonce.asice"))
-                .body("validSignaturesCount", Matchers.is(0))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S1510667783001"))
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC"))
+                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("NURM,AARE,PNOEE-38211015222"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
+                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("The reference data object(s) is not intact!"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("test.pdf"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
+                .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2017-11-14T13:56:23Z"))
+                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The signature/seal is not created by a QSCD!"))
+                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The signature/seal is not a valid AdES!"))
+                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2017-11-14T13:56:34Z"))
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
+                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("testAdesQCInvalid.asice"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -242,30 +241,26 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
      * File: SS-4_teadmataCA.4.asice
      */
     @Test
-    @Ignore("Unknown reason")
     public void bdocAllElementsArePresentIndeterminateSignature() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("SS-4_teadmataCA.4.asice"));
-        post(validationRequestWithValidKeys(encodedString, "SS-4_teadmataCA.4.asice", VALID_SIGNATURE_POLICY_3))
+        post(validationRequestFor("SS-4_teadmataCA.4.asice", VALID_SIGNATURE_POLICY_3, "simple"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
-                .body("signatures[0].id", Matchers.is("S0"))
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("signatures[0].signatureLevel", Matchers.is("AdES"))
-                .body("signatures[0].signedBy", Matchers.is("signer1"))
-                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
-                .body("signatures[0].errors[0].content", Matchers.is("The certificate path is not trusted!"))
-                .body("signatures[0].errors[1].content", Matchers.is("The certificate chain for signature is not trusted, there is no trusted anchor."))
-                .body("signatures[0].signatureScopes[0].name", Matchers.is("test1.txt"))
-                .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
-                .body("signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
-                .body("signatures[0].claimedSigningTime", Matchers.is("2013-10-11T08:15:47Z"))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
-                .body("signatures[0].info.bestSignatureTime", Matchers.is("2013-10-11T08:15:47Z"))
-                .body("signatureForm", Matchers.is("ASiC-E"))
-                .body("filename", Matchers.is("SS-4_teadmataCA.4.asice"))
-                .body("validSignaturesCount", Matchers.is(0))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S0"))
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("NA"))
+                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("signer1"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
+                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("The certificate path is not trusted!"))
+                .body("validationReport.validationConclusion.signatures[0].errors[1].content", Matchers.is("The certificate chain for signature is not trusted, there is no trusted anchor."))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("test1.txt"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
+                .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2013-10-11T08:15:47Z"))
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
+                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("SS-4_teadmataCA.4.asice"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -382,29 +377,28 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
      * File: hellopades-lt-b.pdf
      */
     @Test
-    @Ignore("Unknown reason")
     public void pdfAllElementsArePresentInvalidSignature() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         post(validationRequestFor("hellopades-lt-b.pdf"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
-                .body("signatures[1].id", Matchers.is("id-74acbd70b729fd9bd372ae39ecb3ba688f6be35189324449a69368e9f2fe61ca"))
-                .body("signatures[1].signatureFormat", Matchers.is("PAdES-BASELINE-B"))
-                .body("signatures[1].signatureLevel", Matchers.is("QES"))
-                .body("signatures[1].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
-                .body("signatures[1].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[1].subIndication", Matchers.is(""))
-                .body("signatures[1].errors[0].content", Matchers.is("The expected format is not found!"))
-                .body("signatures[1].signatureScopes[0].name", Matchers.is("Full PDF"))
-                .body("signatures[1].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
-                .body("signatures[1].signatureScopes[0].content", Matchers.is("Full document"))
-                .body("signatures[1].claimedSigningTime", Matchers.is("2015-08-23T05:10:15Z"))
-                .body("signatures[1].warnings", Matchers.hasSize(0))
-                .body("signatures[1].info.bestSignatureTime", Matchers.is(""))
-                .body("signatureForm", Matchers.is("PAdES"))
-                .body("filename", Matchers.is("hellopades-lt-b.pdf"))
-                .body("validSignaturesCount", Matchers.is(1))
-                .body("signaturesCount", Matchers.is(2));
+                .body("validationReport.validationConclusion.signatures[1].id", Matchers.is("id-74acbd70b729fd9bd372ae39ecb3ba688f6be35189324449a69368e9f2fe61ca"))
+                .body("validationReport.validationConclusion.signatures[1].signatureFormat", Matchers.is("PAdES_BASELINE_B"))
+                .body("validationReport.validationConclusion.signatures[1].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
+                .body("validationReport.validationConclusion.signatures[1].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
+                .body("validationReport.validationConclusion.signatures[1].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[1].subIndication", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[1].errors[0].content", Matchers.is("The expected format is not found!"))
+                .body("validationReport.validationConclusion.signatures[1].signatureScopes[0].name", Matchers.is("Full PDF"))
+                .body("validationReport.validationConclusion.signatures[1].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
+                .body("validationReport.validationConclusion.signatures[1].signatureScopes[0].content", Matchers.is("Full document"))
+                .body("validationReport.validationConclusion.signatures[1].claimedSigningTime", Matchers.is("2015-08-23T05:10:15Z"))
+                .body("validationReport.validationConclusion.signatures[1].warnings[0].content", Matchers.is("The signature/seal is not a valid AdES!"))
+                .body("validationReport.validationConclusion.signatures[1].info.bestSignatureTime", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatureForm", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("hellopades-lt-b.pdf"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2));
     }
 
     /**
@@ -421,29 +415,28 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
      * File: hellopades-lt-rsa1024-sha1-expired.pdf
      */
     @Test
-    @Ignore("Unknown reason")
     public void pdfAllElementsArePresentIndeterminateSignature() {
         setTestFilesDirectory("pdf/signing_certifacte_test_files/");
         post(validationRequestFor("hellopades-lt-rsa1024-sha1-expired.pdf"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
-                .body("signatures[0].id", Matchers.is("id-cbcdd80dbccaf1f0d536ada0e425d7bb780e552845d04b66868301a5cf0ed8ba"))
-                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
-                .body("signatures[0].signatureLevel", Matchers.is("QES"))
-                .body("signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
-                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("signatures[0].subIndication", Matchers.is("TRY_LATER"))
-                .body("signatures[0].errors.content", Matchers.hasItem("No revocation data for the certificate"))
-                .body("signatures[0].signatureScopes[0].name", Matchers.is("PDF previous version #1"))
-                .body("signatures[0].signatureScopes[0].scope", Matchers.is("PdfByteRangeSignatureScope"))
-                .body("signatures[0].signatureScopes[0].content", Matchers.is("The document byte range: [0, 14153, 52047, 491]"))
-                .body("signatures[0].claimedSigningTime", Matchers.is("2012-01-24T11:08:15Z"))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
-                .body("signatures[0].info.bestSignatureTime", Matchers.is("2015-08-24T10:08:25Z"))
-                .body("signatureForm", Matchers.is("PAdES"))
-                .body("filename", Matchers.is("hellopades-lt-rsa1024-sha1-expired.pdf"))
-                .body("validSignaturesCount", Matchers.is(0))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("id-cbcdd80dbccaf1f0d536ada0e425d7bb780e552845d04b66868301a5cf0ed8ba"))
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("INDETERMINATE_QES"))
+                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("TRY_LATER"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("No revocation data for the certificate"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("PDF previous version #1"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("PdfByteRangeSignatureScope"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("The document byte range: [0, 14153, 52047, 491]"))
+                .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2012-01-24T11:08:15Z"))
+                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.hasSize(2))
+                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2015-08-24T10:08:25Z"))
+                .body("validationReport.validationConclusion.signatureForm", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("hellopades-lt-rsa1024-sha1-expired.pdf"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -485,28 +478,27 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
      *
      * File: DIGIDOC-XML1.3.ddoc
      */
-    @Ignore("What should we do with signatureFormat?")
     @Test
     public void ddocAllElementsArePresentValidSignature() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("DIGIDOC-XML1.3.ddoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"))
-                .body("signatures[0].id", Matchers.is("S0"))
-                .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("signatures[0].signatureLevel", Matchers.is(""))
-                .body("signatures[0].signedBy", Matchers.is("LUKIN,LIISA,47710110274"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
-                .body("signatures[0].signatureScopes[0].name", Matchers.is("Glitter-rock-4_gallery.jpg"))
-                .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
-                .body("signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
-                .body("signatures[0].claimedSigningTime", Matchers.is("2012-10-03T07:46:31Z"))
-                .body("signatures[0].warnings", Matchers.isEmptyOrNullString())
-                .body("signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("filename", Matchers.is("DIGIDOC-XML1.3.ddoc"))
-                .body("validSignaturesCount", Matchers.is(1))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S0"))
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("LUKIN,LIISA,47710110274"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("Glitter-rock-4_gallery.jpg"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
+                .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2012-10-03T07:46:31Z"))
+                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("DIGIDOC-XML1.3.ddoc"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -522,69 +514,28 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
      *
      * File: test1-ddoc-revoked.ddoc
      */
-    @Ignore("What should we do with signatureLevel?")
     @Test
     public void ddocAllElementsArePresentInvalidSignature() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("test1-ddoc-revoked.ddoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"))
-                .body("signatures[0].id", Matchers.is("S0"))
-                .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("signatures[0].signatureLevel", Matchers.is(""))
-                .body("signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors[0].content", Matchers.is("70ee.sk.digidoc.DigiDocException; nested exception is: \n\tERROR: 117 - No certificate for responder: 'byName: C=EE,O=AS Sertifitseerimiskeskus,OU=OCSP,CN=TEST of SK OCSP RESPONDER 2011,E=pki@sk.ee' found in local certificate store!"))
-                .body("signatures[0].signatureScopes[0].name", Matchers.is("build.xml"))
-                .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
-                .body("signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
-                .body("signatures[0].claimedSigningTime", Matchers.is("2013-05-17T12:15:08Z"))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
-                .body("signatures[0].info.bestSignatureTime", Matchers.is(""))
-                .body("signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("filename", Matchers.is("test1-ddoc-revoked.ddoc"))
-                .body("validSignaturesCount", Matchers.is(0))
-                .body("signaturesCount", Matchers.is(1));
-    }
-
-    /**
-     * TestCaseID: Ddoc-ValidationReportVerification-3
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#validation-response-interface
-     *
-     * Title: JSON structure has all elements (ddoc indeterminate status)
-     *
-     * Expected Result: All required elements are present according to SimpleReportSchema.json
-     *
-     * File: test1-ddoc-unknown.ddoc
-     */
-    @Test
-    @Ignore //TODO: https://github.com/open-eid/SiVa/issues/15
-    public void ddocAllElementsArePresentIndeterminateSignature() {
-        setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestFor("Belgia_kandeavaldus_LIV.ddoc"))
-                .then()
-                .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"))
-                .body("signatures[0].id", Matchers.is("S0"))
-                .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("signatures[0].signatureLevel", Matchers.is(""))
-                .body("signatures[0].signedBy", Matchers.is(""))
-                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors[0].content", Matchers.is(""))
-                .body("signatures[0].signatureScopes[0].name", Matchers.is(""))
-                .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
-                .body("signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
-                .body("signatures[0].claimedSigningTime", Matchers.is(""))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
-                .body("signatures[0].info.bestSignatureTime", Matchers.is(""))
-                .body("signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("filename", Matchers.is("test1-ddoc-unknown.ddoc"))
-                .body("validSignaturesCount", Matchers.is(0))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S0"))
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("70ee.sk.digidoc.DigiDocException; nested exception is: \n\tERROR: 117 - No certificate for responder: 'byName: C=EE,O=AS Sertifitseerimiskeskus,OU=OCSP,CN=TEST of SK OCSP RESPONDER 2011,E=pki@sk.ee' found in local certificate store!"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("build.xml"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
+                .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2013-05-17T12:15:08Z"))
+                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("test1-ddoc-revoked.ddoc"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -600,28 +551,27 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
      *
      * File: ns6t3cp7.ddoc
      */
-    @Ignore("What should we do with signatureFormat?")
     @Test
     public void ddocOptionalWarningElementIsPresent() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("ns6t3cp7.ddoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"))
-                .body("signatures[0].id", Matchers.is("S0"))
-                .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("signatures[0].signedBy", Matchers.is("SIILBEK,JANNO,38003260232"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
-                .body("signatures[0].signatureScopes[0].name", Matchers.is("xxx.docx"))
-                .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
-                .body("signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
-                .body("signatures[0].claimedSigningTime", Matchers.is("2012-09-17T14:28:01Z"))
-                .body("signatures[0].warnings[0].content", Matchers.is("Bad digest for DataFile: D0 alternate digest matches!"))
-                .body("signatures[0].info.bestSignatureTime", Matchers.is(""))
-                .body("signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("filename", Matchers.is("ns6t3cp7.ddoc"))
-                .body("validSignaturesCount", Matchers.is(1))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S0"))
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("SIILBEK,JANNO,38003260232"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("xxx.docx"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
+                .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2012-09-17T14:28:01Z"))
+                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("Bad digest for DataFile: D0 alternate digest matches!"))
+                .body("validationReport.validationConclusion.signatures[0].info", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("ns6t3cp7.ddoc"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -670,23 +620,23 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
         post(validationRequestFor("SK-XML1.0.ddoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"))
-                .body("signatures[0].id", Matchers.is("S0"))
-                .body("signatures[0].signatureFormat", Matchers.is("SK_XML_1.0"))
-                .body("signatures[0].signatureLevel", Matchers.is(""))
-                .body("signatures[0].signedBy", Matchers.is("ANSIP,ANDRUS,35610012722"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors", Matchers.hasSize(0))
-                .body("signatures[0].signatureScopes[0].name", Matchers.is("Tartu ja Tallinna koostooleping.doc"))
-                .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
-                .body("signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
-                .body("signatures[0].claimedSigningTime", Matchers.is("2002-10-07T12:10:19Z"))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
-                .body("signatures[0].info.bestSignatureTime", Matchers.is(""))
-                .body("signatureForm", Matchers.is("DIGIDOC_XML_1.0"))
-                .body("filename", Matchers.is("SK-XML1.0.ddoc"))
-                .body("validSignaturesCount", Matchers.is(2))
-                .body("signaturesCount", Matchers.is(2));
+                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S0"))
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("SK_XML_1.0"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is(""))
+                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("ANSIP,ANDRUS,35610012722"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is(""))
+                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.hasSize(0))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("Tartu ja Tallinna koostooleping.doc"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is(""))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
+                .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2002-10-07T12:10:19Z"))
+                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.hasSize(0))
+                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is(""))
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.0"))
+                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("SK-XML1.0.ddoc"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(2))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2));
     }
 
     /**
@@ -702,27 +652,26 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
      *
      * File: Igasugust1.1.ddoc
      */
-    @Ignore("What should we do with signatureFormat?")
     @Test
     public void ddocCorrectValuesArePresentV1_1() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("igasugust1.1.ddoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"))
-                .body("signatures[0].id", Matchers.is("S0"))
-                .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.1"))
-                .body("signatures[0].signedBy", Matchers.is("SOONSEIN,SIMMO,38508134916"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
-                .body("signatures[0].signatureScopes[1].name", Matchers.is("Testilood20070320.doc"))
-                .body("signatures[0].signatureScopes[1].scope", Matchers.is("FullSignatureScope"))
-                .body("signatures[0].signatureScopes[1].content", Matchers.is("Full document"))
-                .body("signatures[0].claimedSigningTime", Matchers.is("2009-06-01T10:42:19Z"))
-                .body("signatures[0].warnings", Matchers.isEmptyOrNullString())
-                .body("signatureForm", Matchers.is("DIGIDOC_XML_1.1"))
-                .body("filename", Matchers.is("igasugust1.1.ddoc"))
-                .body("validSignaturesCount", Matchers.is(3))
-                .body("signaturesCount", Matchers.is(3));
+                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S0"))
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.1"))
+                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("SOONSEIN,SIMMO,38508134916"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[1].name", Matchers.is("Testilood20070320.doc"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[1].scope", Matchers.is("FullSignatureScope"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[1].content", Matchers.is("Full document"))
+                .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2009-06-01T10:42:19Z"))
+                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.1"))
+                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("igasugust1.1.ddoc"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(3))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(3));
     }
 
     /**
@@ -738,27 +687,26 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
      *
      * File: Igasugust1.2.ddoc
      */
-    @Ignore("What should we do with signatureFormat?")
     @Test
     public void ddocCorrectValuesArePresentV1_2() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("igasugust1.2.ddoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"))
-                .body("signatures[0].id", Matchers.is("S0"))
-                .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.2"))
-                .body("signatures[0].signedBy", Matchers.is("SOONSEIN,SIMMO,38508134916"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
-                .body("signatures[0].signatureScopes[1].name", Matchers.is("Testilood20070320.doc"))
-                .body("signatures[0].signatureScopes[1].scope", Matchers.is("FullSignatureScope"))
-                .body("signatures[0].signatureScopes[1].content", Matchers.is("Full document"))
-                .body("signatures[0].claimedSigningTime", Matchers.is("2009-06-01T10:45:44Z"))
-                .body("signatures[0].warnings", Matchers.isEmptyOrNullString())
-                .body("signatureForm", Matchers.is("DIGIDOC_XML_1.2"))
-                .body("filename", Matchers.is("igasugust1.2.ddoc"))
-                .body("validSignaturesCount", Matchers.is(3))
-                .body("signaturesCount", Matchers.is(3));
+                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S0"))
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.2"))
+                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("SOONSEIN,SIMMO,38508134916"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[1].name", Matchers.is("Testilood20070320.doc"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[1].scope", Matchers.is("FullSignatureScope"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[1].content", Matchers.is("Full document"))
+                .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2009-06-01T10:45:44Z"))
+                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.2"))
+                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("igasugust1.2.ddoc"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(3))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(3));
     }
 
     /**
@@ -774,27 +722,26 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
      *
      * File: Igasugust1.3.ddoc
      */
-    @Ignore("What should we do with signatureFormat?")
     @Test
     public void ddocCorrectValuesArePresentV1_3() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("igasugust1.3.ddoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"))
-                .body("signatures[0].id", Matchers.is("S0"))
-                .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("signatures[0].signedBy", Matchers.is("SOONSEIN,SIMMO,38508134916"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
-                .body("signatures[0].signatureScopes[1].name", Matchers.is("Testilood20070320.doc"))
-                .body("signatures[0].signatureScopes[1].scope", Matchers.is("FullSignatureScope"))
-                .body("signatures[0].signatureScopes[1].content", Matchers.is("Full document"))
-                .body("signatures[0].claimedSigningTime", Matchers.is("2009-06-01T10:46:37Z"))
-                .body("signatures[0].warnings", Matchers.isEmptyOrNullString())
-                .body("signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("filename", Matchers.is("igasugust1.3.ddoc"))
-                .body("validSignaturesCount", Matchers.is(3))
-                .body("signaturesCount", Matchers.is(3));
+                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S0"))
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("SOONSEIN,SIMMO,38508134916"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[1].name", Matchers.is("Testilood20070320.doc"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[1].scope", Matchers.is("FullSignatureScope"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[1].content", Matchers.is("Full document"))
+                .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2009-06-01T10:46:37Z"))
+                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("igasugust1.3.ddoc"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(3))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(3));
     }
 
     /**
@@ -810,25 +757,24 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
      *
      * File: xroad-simple.asice
      */
-    @Ignore("What should we do with signatureLevel?")
     @Test
     public void xroadAllElementsArePresentValidSimpleSignature() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        post(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-simple.asice", "xroad", ""))
+        post(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-simple.asice", "xroad", "POLv3"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaXroad.json"))
-                .body("signatures[0].id", Matchers.is("signature"))
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("signatures[0].signedBy", Matchers.is("Riigi Infosüsteemi Amet"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
-                .body("signatures[0].warnings", Matchers.isEmptyOrNullString())
-                .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-04-27T12:15:42Z"))
-                .body("signatureForm", Matchers.is("ASiC-E"))
-                .body("filename", Matchers.is("xroad-simple.asice"))
-                .body("validSignaturesCount", Matchers.is(1))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("signature"))
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("Riigi Infosüsteemi Amet"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2016-04-27T12:15:42Z"))
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
+                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("xroad-simple.asice"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -844,31 +790,30 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
      *
      * File: xroad-batchsignature.asice
      */
-    @Ignore("What should we do with signatureLevel?")
     @Test
     public void xroadAllElementsArePresentValidBatchSignature() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-batchsignature.asice"));
-        post(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-batchsignature.asice", "xroad", ""))
+        post(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-batchsignature.asice", "xroad", "POLv3"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaXroad.json"))
-                .body("signatures[0].id", Matchers.is("signature"))
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
-                .body("signatures[0].signatureLevel", Matchers.is(""))
-                .body("signatures[0].signedBy", Matchers.is("Riigi Infosüsteemi Amet"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].subIndication", Matchers.is(""))
-                .body("signatures[0].errors", Matchers.hasSize(0))
-                .body("signatures[0].signatureScopes[0].name", Matchers.is(""))
-                .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
-                .body("signatures[0].signatureScopes[0].content", Matchers.is(""))
-                .body("signatures[0].claimedSigningTime", Matchers.is(""))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
-                .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-04-27T12:26:53Z"))
-                .body("signatureForm", Matchers.is("ASiC-E_batchsignature"))
-                .body("filename", Matchers.is("xroad-batchsignature.asice"))
-                .body("validSignaturesCount", Matchers.is(1))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("signature"))
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("Riigi Infosüsteemi Amet"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2016-04-27T12:26:53Z"))
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E_batchsignature"))
+                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("xroad-batchsignature.asice"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -884,26 +829,25 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
      *
      * File: xroad-attachment.asice
      */
-    @Ignore("What should we do with signatureLevel?")
     @Test
     public void xroadAllElementsArePresentValidAttachmentSignature() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-attachment.asice"));
-        post(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-attachment.asice", "xroad", ""))
+        post(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-attachment.asice", "xroad", "POLv3"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaXroad.json"))
-                .body("signatures[0].id", Matchers.is("signature"))
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
-                .body("signatures[0].signatureLevel", Matchers.is(""))
-                .body("signatures[0].signedBy", Matchers.is("Riigi Infosüsteemi Amet"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].errors", Matchers.hasSize(0))
-                .body("signatures[0].warnings", Matchers.hasSize(0))
-                .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-04-27T12:30:10Z"))
-                .body("signatureForm", Matchers.is("ASiC-E_batchsignature"))
-                .body("filename", Matchers.is("xroad-attachment.asice"))
-                .body("validSignaturesCount", Matchers.is(1))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("signature"))
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("Riigi Infosüsteemi Amet"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2016-04-27T12:30:10Z"))
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E_batchsignature"))
+                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("xroad-attachment.asice"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -919,30 +863,29 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
      *
      * File: xroad-attachment.asice
      */
-    @Ignore("What should we do with signatureLevel?")
     @Test
     public void xroadAllElementsArePresentInvalidSignature() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("invalid-digest.asice"));
-        post(validationRequestWithDocumentTypeValidKeys(encodedString, "invalid-digest.asice", "xroad", ""))
+        post(validationRequestWithDocumentTypeValidKeys(encodedString, "invalid-digest.asice", "xroad", "POLv3"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaXroad.json"))
-                .body("signatures[0].id", Matchers.is("signature"))
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("signatures[0].signatureLevel", Matchers.is(""))
-                .body("signatures[0].signedBy", Matchers.is(""))
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].errors.content", Matchers.hasItem("MissingHeaderField: Required field 'protocolVersion' is missing"))
-                .body("signatures[0].signatureScopes[0].name", Matchers.is(""))
-                .body("signatures[0].signatureScopes[0].scope", Matchers.is(""))
-                .body("signatures[0].signatureScopes[0].content", Matchers.is(""))
-                .body("signatures[0].claimedSigningTime", Matchers.is(""))
-                .body("signatures[0].warnings", Matchers.isEmptyOrNullString())
-                .body("signatures[0].info.bestSignatureTime", Matchers.is(""))
-                .body("signatureForm", Matchers.is("ASiC-E"))
-                .body("filename", Matchers.is("invalid-digest.asice"))
-                .body("validSignaturesCount", Matchers.is(0))
-                .body("signaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("signature"))
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("MissingHeaderField: Required field 'protocolVersion' is missing"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
+                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("invalid-digest.asice"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     @Override

@@ -512,30 +512,30 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
      *
      * Expected Result: All required elements are present according to SimpleReportSchema.json
      *
-     * File: test1-ddoc-revoked.ddoc
+     * File: multipleInvalidSignatures.ddoc
      */
     @Test
     public void ddocAllElementsArePresentInvalidSignature() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestFor("test1-ddoc-revoked.ddoc"))
+        post(validationRequestFor("multipleInvalidSignatures.ddoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"))
                 .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S0"))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.1"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.isEmptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
+                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("SOONSEIN,SIMMO,38508134916"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.isEmptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("70ee.sk.digidoc.DigiDocException; nested exception is: \n\tERROR: 117 - No certificate for responder: 'byName: C=EE,O=AS Sertifitseerimiskeskus,OU=OCSP,CN=TEST of SK OCSP RESPONDER 2011,E=pki@sk.ee' found in local certificate store!"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("build.xml"))
+                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.hasSize(2))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("DigiDocService_spec_1_110_est.pdf"))
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
-                .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2013-05-17T12:15:08Z"))
+                .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2009-06-01T10:42:19Z"))
                 .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("test1-ddoc-revoked.ddoc"))
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.1"))
+                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("multipleInvalidSignatures.ddoc"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(3));
     }
 
     /**

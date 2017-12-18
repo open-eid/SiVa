@@ -52,11 +52,11 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * Expected Result: The document should fail the validation
      *
-     * File: test1-ddoc-revoked.ddoc
+     * File: AndmefailiAtribuudidMuudetud.ddoc
      */
     @Test
     public void ddocInvalidSignature() {
-        assertAllSignaturesAreInvalid(postForReport("test1-ddoc-revoked.ddoc"));
+        assertAllSignaturesAreInvalid(postForReport("AndmefailiAtribuudidMuudetud.ddoc"));
     }
 
     /**
@@ -228,7 +228,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("Belgia_kandeavaldus_LIV.ddoc"))
                 .then()
-                .body("requestErrors[0].message", Matchers.is("Document malformed or not matching documentType"));
+                .body("requestErrors.message", Matchers.is("Document malformed or not matching documentType"));
     }
 
     /**
@@ -268,7 +268,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
     @Test
     public void ddocNonSignedFile() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestFor("lisatud_andmefail.ddoc"))
+        post(validationRequestFor("DIGIDOC-XML1.3_lisatud_andmefail.ddoc"))
                 .then()
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Missing Reference for file: testfail2.txt"))
@@ -318,7 +318,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("OCSP nonce vale.ddoc"))
                 .then()
-                .body("requestErrors[0].message", Matchers.is("Document malformed or not matching documentType"));
+                .body("requestErrors.message", Matchers.is("Document malformed or not matching documentType"));
     }
 
     /**

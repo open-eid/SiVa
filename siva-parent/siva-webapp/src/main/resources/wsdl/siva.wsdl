@@ -90,7 +90,7 @@
                     <xs:element name="Indication" type="tns:Indication"/>
                     <xs:element name="SignedBy" type="xs:string"/>
                     <xs:element name="SignedTime" type="xs:string"/>
-                    <xs:element name="Errors">
+                    <xs:element name="Errors" minOccurs="0">
                         <xs:complexType>
                             <xs:sequence>
                                 <xs:element maxOccurs="unbounded" minOccurs="0" name="Error" type="tns:Error"/>

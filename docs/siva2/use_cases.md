@@ -9,10 +9,11 @@ User of SiVa system provides digitally signed document file in form of
 Base64 encoded string. The validation of file and validation policy
 is handled by validation services underlying libraries.
 
-* In case of PDF file or ASIC-S containers with XAdES and CAdES signatures it will be DSS
-* In case of ASIC-S containers with TimeStampToken it will be Valdiation Services
-* For BDOC and DDOC files we will use DigiDoc4J or when required jDigiDoc
-* And for X-Road signatures we will use X-road signature validation utility
+* In case of DDOC containers with XAdES and CAdES signatures it will be Ddoc Validation Service
+* In case of BDOC containers with XAdES and CAdES signatures it will be Bdoc Validation Service
+* In case of X-ROAD containers with XAdES and CAdES signatures it will be Xroad Validation Service
+* In case of ASIC-S containers with XAdES and CAdES signatures it will be Timestamptoken Validation Service
+* In case of other containers with XAdES and CAdES signatures it will be Generic Validation Service
 
 We will log following failure cases:
 When file upload fails (request started but was not completed successfully)
@@ -46,7 +47,7 @@ as input source.
 
 Validation of SOAP request XML is done in the SiVa web application module.
 Document validation process is described in detail in [Digitally signed document validation process](#digitally-signed-document-validation-process)
-Validation report output id described in [Interface description](/siva/v2/interfaces)
+Validation report output id described in [Interface description](../siva2/interfaces)
 
 ## TSL loading use case
 

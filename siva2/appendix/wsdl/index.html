@@ -34,7 +34,7 @@
     
     
       
-        <title>Appendix 3 - WSDL of SOAP Interface - SiVa - Validation Service Documentation</title>
+        <title>Appendix 3 - WSDL/XSD of SOAP Interface - SiVa - Validation Service Documentation</title>
       
     
     
@@ -94,7 +94,7 @@
                 </span>
               
             
-            Appendix 3 - WSDL of SOAP Interface
+            Appendix 3 - WSDL/XSD of SOAP Interface
           
         </span>
       </div>
@@ -472,11 +472,11 @@
     
     
       <label class="md-nav__link md-nav__link--active" for="toc">
-        Appendix 3 - WSDL of SOAP Interface
+        Appendix 3 - WSDL/XSD of SOAP Interface
       </label>
     
-    <a href="./" title="Appendix 3 - WSDL of SOAP Interface" class="md-nav__link md-nav__link--active">
-      Appendix 3 - WSDL of SOAP Interface
+    <a href="./" title="Appendix 3 - WSDL/XSD of SOAP Interface" class="md-nav__link md-nav__link--active">
+      Appendix 3 - WSDL/XSD of SOAP Interface
     </a>
     
       
@@ -497,6 +497,13 @@
         <li class="md-nav__item">
   <a href="#data-files-web-service-wsdl" title="Data files web service wsdl" class="md-nav__link">
     Data files web service wsdl
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dss-detailed-report-xsd" title="DSS detailed report XSD" class="md-nav__link">
+    DSS detailed report XSD
   </a>
   
 </li>
@@ -847,6 +854,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#dss-detailed-report-xsd" title="DSS detailed report XSD" class="md-nav__link">
+    DSS detailed report XSD
+  </a>
+  
+</li>
+      
       
       
     </ul>
@@ -864,126 +878,187 @@
                   <a href="https://github.com/open-eid/SiVa/edit/master/docs/siva2/appendix/wsdl.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
-                  <h1>Appendix 3 - WSDL of SOAP Interface</h1>
+                  <h1>Appendix 3 - WSDL/XSD of SOAP Interface</h1>
                 
                 <!--# WSDL of SOAP interface-->
 
-<p>See also <a href="../../../siva/v2/interfaces">Interfaces</a> for more information about the SOAP interfaces.</p>
+<p>See also <a href="../../../siva2/interfaces">Interfaces</a> for more information about the SOAP interfaces.</p>
 <h2 id="validation-web-service-wsdl">Validation web service wsdl</h2>
-<div class="codehilite"><pre><span></span><span class="nt">&lt;wsdl:definitions</span> <span class="na">xmlns:xs=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns:xrd=</span><span class="s">&quot;http://x-road.eu/xsd/xroad.xsd&quot;</span> <span class="na">xmlns:wsdl=</span><span class="s">&quot;http://schemas.xmlsoap.org/wsdl/&quot;</span> <span class="na">xmlns:tns=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://schemas.xmlsoap.org/wsdl/soap/&quot;</span> <span class="na">name=</span><span class="s">&quot;SignatureValidationService&quot;</span> <span class="na">targetNamespace=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span><span class="nt">&gt;</span>
+<div class="codehilite"><pre><span></span><span class="nt">&lt;wsdl:definitions</span> <span class="na">xmlns:wsdl=</span><span class="s">&quot;http://schemas.xmlsoap.org/wsdl/&quot;</span> <span class="na">xmlns:tns=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span>
+                  <span class="na">xmlns:xs=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://schemas.xmlsoap.org/wsdl/soap/&quot;</span>
+                  <span class="na">xmlns:xrd=</span><span class="s">&quot;http://x-road.eu/xsd/xroad.xsd&quot;</span> <span class="na">targetNamespace=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span>
+                  <span class="na">xmlns:external=</span><span class="s">&quot;http://dss.esig.europa.eu/validation/detailed-report&quot;</span>
+                  <span class="na">name=</span><span class="s">&quot;SignatureValidationService&quot;</span><span class="nt">&gt;</span>
     <span class="nt">&lt;wsdl:types&gt;</span>
-        <span class="nt">&lt;xs:schema</span> <span class="na">xmlns:xs=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns:xrd=</span><span class="s">&quot;http://x-road.eu/xsd/xroad.xsd&quot;</span> <span class="na">xmlns:wsdl=</span><span class="s">&quot;http://schemas.xmlsoap.org/wsdl/&quot;</span> <span class="na">xmlns:tns=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://schemas.xmlsoap.org/wsdl/soap/&quot;</span> <span class="na">targetNamespace=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span><span class="nt">&gt;</span>
-            <span class="nt">&lt;xs:import</span> <span class="na">namespace=</span><span class="s">&quot;http://x-road.eu/xsd/xroad.xsd&quot;</span> <span class="na">schemaLocation=</span><span class="s">&quot;http://x-road.eu/xsd/xroad.xsd&quot;</span><span class="nt">/&gt;</span>
-            <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;ValidateDocument&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:validateDocument&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;xs:schema</span> <span class="na">xmlns:xs=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns:tns=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span>
+                   <span class="na">targetNamespace=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;xs:import</span> <span class="na">namespace=</span><span class="s">&quot;http://x-road.eu/xsd/xroad.xsd&quot;</span> <span class="na">schemaLocation=</span><span class="s">&quot;xroad.xsd&quot;</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:import</span> <span class="na">namespace=</span><span class="s">&quot;http://dss.esig.europa.eu/validation/detailed-report&quot;</span>
+                       <span class="na">schemaLocation=</span><span class="s">&quot;DetailedReport.xsd&quot;</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;ValidateDocument&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:ValidateDocument&quot;</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;ValidationRequest&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:SoapValidationRequest&quot;</span><span class="nt">/&gt;</span>
             <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;ValidateDocumentResponse&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:ValidateDocumentResponse&quot;</span><span class="nt">/&gt;</span>
-            <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;ValidationReport&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:simpleReport&quot;</span><span class="nt">/&gt;</span>
-            <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;ValidationRequest&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:soapValidationRequest&quot;</span><span class="nt">/&gt;</span>
-            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;validateDocument&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;ValidationReport&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:ValidationReport&quot;</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;ValidationProcess&quot;</span> <span class="na">substitutionGroup=</span><span class="s">&quot;external:DetailedReport&quot;</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;ValidationConclusion&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:ValidationConclusion&quot;</span><span class="nt">/&gt;</span>
+
+            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;ValidateDocument&quot;</span><span class="nt">&gt;</span>
                 <span class="nt">&lt;xs:sequence&gt;</span>
                     <span class="nt">&lt;xs:element</span> <span class="na">ref=</span><span class="s">&quot;tns:ValidationRequest&quot;</span><span class="nt">/&gt;</span>
                 <span class="nt">&lt;/xs:sequence&gt;</span>
             <span class="nt">&lt;/xs:complexType&gt;</span>
-            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;soapValidationRequest&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;SoapValidationRequest&quot;</span><span class="nt">&gt;</span>
                 <span class="nt">&lt;xs:sequence&gt;</span>
                     <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Document&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
                     <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Filename&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
-                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;DocumentType&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:documentType&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">maxOccurs=</span><span class="s">&quot;1&quot;</span> <span class="na">name=</span><span class="s">&quot;ReportType&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">maxOccurs=</span><span class="s">&quot;1&quot;</span> <span class="na">name=</span><span class="s">&quot;DocumentType&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:DocumentType&quot;</span><span class="nt">/&gt;</span>
                     <span class="nt">&lt;xs:element</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">name=</span><span class="s">&quot;SignaturePolicy&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
                 <span class="nt">&lt;/xs:sequence&gt;</span>
             <span class="nt">&lt;/xs:complexType&gt;</span>
             <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;ValidateDocumentResponse&quot;</span><span class="nt">&gt;</span>
                 <span class="nt">&lt;xs:sequence&gt;</span>
-                    <span class="nt">&lt;xs:element</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">ref=</span><span class="s">&quot;tns:ValidationReport&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">minOccurs=</span><span class="s">&quot;1&quot;</span> <span class="na">ref=</span><span class="s">&quot;tns:ValidationReport&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">name=</span><span class="s">&quot;ValidationReportSignature&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
                 <span class="nt">&lt;/xs:sequence&gt;</span>
             <span class="nt">&lt;/xs:complexType&gt;</span>
-            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;simpleReport&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;ValidationReport&quot;</span><span class="nt">&gt;</span>
                 <span class="nt">&lt;xs:sequence&gt;</span>
-                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Policy&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:policy&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">minOccurs=</span><span class="s">&quot;1&quot;</span> <span class="na">ref=</span><span class="s">&quot;tns:ValidationConclusion&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">ref=</span><span class="s">&quot;tns:ValidationProcess&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;/xs:sequence&gt;</span>
+            <span class="nt">&lt;/xs:complexType&gt;</span>
+            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;ValidationConclusion&quot;</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;xs:sequence&gt;</span>
+
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Policy&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:Policy&quot;</span><span class="nt">/&gt;</span>
                     <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;ValidationTime&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
-                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;DocumentName&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
-                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;SignatureForm&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
-                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Signatures&quot;</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;ValidatedDocument&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:ValidatedDocumentData&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;ValidationLevel&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;ValidationWarnings&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span><span class="nt">&gt;</span>
                         <span class="nt">&lt;xs:complexType&gt;</span>
                             <span class="nt">&lt;xs:sequence&gt;</span>
-                                <span class="nt">&lt;xs:element</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">name=</span><span class="s">&quot;Signature&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:signatureValidationData&quot;</span><span class="nt">/&gt;</span>
+                                <span class="nt">&lt;xs:element</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">name=</span><span class="s">&quot;ValidationWarning&quot;</span>
+                                            <span class="na">type=</span><span class="s">&quot;tns:ValidationWarning&quot;</span><span class="nt">/&gt;</span>
                             <span class="nt">&lt;/xs:sequence&gt;</span>
                         <span class="nt">&lt;/xs:complexType&gt;</span>
                     <span class="nt">&lt;/xs:element&gt;</span>
-                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;ValidSignaturesCount&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:int&quot;</span><span class="nt">/&gt;</span>
-                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;SignaturesCount&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:int&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;SignatureForm&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Signatures&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span><span class="nt">&gt;</span>
+                        <span class="nt">&lt;xs:complexType&gt;</span>
+                            <span class="nt">&lt;xs:sequence&gt;</span>
+                                <span class="nt">&lt;xs:element</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">name=</span><span class="s">&quot;Signature&quot;</span>
+                                            <span class="na">type=</span><span class="s">&quot;tns:SignatureValidationData&quot;</span><span class="nt">/&gt;</span>
+                            <span class="nt">&lt;/xs:sequence&gt;</span>
+                        <span class="nt">&lt;/xs:complexType&gt;</span>
+                    <span class="nt">&lt;/xs:element&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;TimeStampTokens&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span><span class="nt">&gt;</span>
+                        <span class="nt">&lt;xs:complexType&gt;</span>
+                            <span class="nt">&lt;xs:sequence&gt;</span>
+                                <span class="nt">&lt;xs:element</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span> <span class="na">name=</span><span class="s">&quot;TimeStampToken&quot;</span>
+                                            <span class="na">type=</span><span class="s">&quot;tns:TimeStampTokenData&quot;</span><span class="nt">/&gt;</span>
+                            <span class="nt">&lt;/xs:sequence&gt;</span>
+                        <span class="nt">&lt;/xs:complexType&gt;</span>
+                    <span class="nt">&lt;/xs:element&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;ValidSignaturesCount&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:int&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;SignaturesCount&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:int&quot;</span><span class="nt">/&gt;</span>
                 <span class="nt">&lt;/xs:sequence&gt;</span>
             <span class="nt">&lt;/xs:complexType&gt;</span>
-            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;policy&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;Policy&quot;</span><span class="nt">&gt;</span>
                 <span class="nt">&lt;xs:sequence&gt;</span>
                     <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;PolicyDescription&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
                     <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;PolicyName&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
                     <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;PolicyUrl&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
                 <span class="nt">&lt;/xs:sequence&gt;</span>
             <span class="nt">&lt;/xs:complexType&gt;</span>
-            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;signatureValidationData&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;TimeStampTokenData&quot;</span><span class="nt">&gt;</span>
                 <span class="nt">&lt;xs:sequence&gt;</span>
-                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Id&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
-                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;SignatureFormat&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
-                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;SignatureLevel&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Indication&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:Indication&quot;</span><span class="nt">/&gt;</span>
                     <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;SignedBy&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
-                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Indication&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:indication&quot;</span><span class="nt">/&gt;</span>
-                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;SubIndication&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
-                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Errors&quot;</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;SignedTime&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Errors&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span><span class="nt">&gt;</span>
                         <span class="nt">&lt;xs:complexType&gt;</span>
                             <span class="nt">&lt;xs:sequence&gt;</span>
-                                <span class="nt">&lt;xs:element</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">name=</span><span class="s">&quot;Error&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:error&quot;</span><span class="nt">/&gt;</span>
+                                <span class="nt">&lt;xs:element</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">name=</span><span class="s">&quot;Error&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:Error&quot;</span><span class="nt">/&gt;</span>
                             <span class="nt">&lt;/xs:sequence&gt;</span>
                         <span class="nt">&lt;/xs:complexType&gt;</span>
                     <span class="nt">&lt;/xs:element&gt;</span>
-                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;SignatureScopes&quot;</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;/xs:sequence&gt;</span>
+            <span class="nt">&lt;/xs:complexType&gt;</span>
+            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;ValidatedDocumentData&quot;</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;xs:sequence&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Filename&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;FileHashInHex&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;HashAlgo&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;/xs:sequence&gt;</span>
+            <span class="nt">&lt;/xs:complexType&gt;</span>
+
+            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;SignatureValidationData&quot;</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;xs:sequence&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Id&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;SignatureFormat&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;SignatureLevel&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;SignedBy&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Indication&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:Indication&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;SubIndication&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Errors&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span><span class="nt">&gt;</span>
                         <span class="nt">&lt;xs:complexType&gt;</span>
                             <span class="nt">&lt;xs:sequence&gt;</span>
-                                <span class="nt">&lt;xs:element</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span> <span class="na">name=</span><span class="s">&quot;SignatureScope&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:signatureScope&quot;</span><span class="nt">/&gt;</span>
+                                <span class="nt">&lt;xs:element</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">name=</span><span class="s">&quot;Error&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:Error&quot;</span><span class="nt">/&gt;</span>
+                            <span class="nt">&lt;/xs:sequence&gt;</span>
+                        <span class="nt">&lt;/xs:complexType&gt;</span>
+                    <span class="nt">&lt;/xs:element&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;SignatureScopes&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span><span class="nt">&gt;</span>
+                        <span class="nt">&lt;xs:complexType&gt;</span>
+                            <span class="nt">&lt;xs:sequence&gt;</span>
+                                <span class="nt">&lt;xs:element</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span> <span class="na">name=</span><span class="s">&quot;SignatureScope&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:SignatureScope&quot;</span><span class="nt">/&gt;</span>
                             <span class="nt">&lt;/xs:sequence&gt;</span>
                         <span class="nt">&lt;/xs:complexType&gt;</span>
                     <span class="nt">&lt;/xs:element&gt;</span>
                     <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;ClaimedSigningTime&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
-                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Warnings&quot;</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Warnings&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span><span class="nt">&gt;</span>
                         <span class="nt">&lt;xs:complexType&gt;</span>
                             <span class="nt">&lt;xs:sequence&gt;</span>
-                                <span class="nt">&lt;xs:element</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">name=</span><span class="s">&quot;Warning&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:warning&quot;</span><span class="nt">/&gt;</span>
+                                <span class="nt">&lt;xs:element</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">name=</span><span class="s">&quot;Warning&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:Warning&quot;</span><span class="nt">/&gt;</span>
                             <span class="nt">&lt;/xs:sequence&gt;</span>
                         <span class="nt">&lt;/xs:complexType&gt;</span>
                     <span class="nt">&lt;/xs:element&gt;</span>
-                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Info&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:info&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Info&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:Info&quot;</span><span class="nt">/&gt;</span>
                 <span class="nt">&lt;/xs:sequence&gt;</span>
             <span class="nt">&lt;/xs:complexType&gt;</span>
-            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;error&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;Error&quot;</span><span class="nt">&gt;</span>
                 <span class="nt">&lt;xs:sequence&gt;</span>
                     <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Content&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
                 <span class="nt">&lt;/xs:sequence&gt;</span>
             <span class="nt">&lt;/xs:complexType&gt;</span>
-            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;signatureScope&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;ValidationWarning&quot;</span><span class="nt">&gt;</span>
                 <span class="nt">&lt;xs:sequence&gt;</span>
-                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Name&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
-                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Scope&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
                     <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Content&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
                 <span class="nt">&lt;/xs:sequence&gt;</span>
             <span class="nt">&lt;/xs:complexType&gt;</span>
-            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;warning&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;SignatureScope&quot;</span><span class="nt">&gt;</span>
                 <span class="nt">&lt;xs:sequence&gt;</span>
-                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Description&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Name&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Scope&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Content&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
                 <span class="nt">&lt;/xs:sequence&gt;</span>
             <span class="nt">&lt;/xs:complexType&gt;</span>
-            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;info&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;Warning&quot;</span><span class="nt">&gt;</span>
                 <span class="nt">&lt;xs:sequence&gt;</span>
-                    <span class="nt">&lt;xs:element</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">name=</span><span class="s">&quot;bestSignatureTime&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Content&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
                 <span class="nt">&lt;/xs:sequence&gt;</span>
             <span class="nt">&lt;/xs:complexType&gt;</span>
-            <span class="nt">&lt;xs:simpleType</span> <span class="na">name=</span><span class="s">&quot;documentType&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;Info&quot;</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;xs:sequence&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">name=</span><span class="s">&quot;BestSignatureTime&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;/xs:sequence&gt;</span>
+            <span class="nt">&lt;/xs:complexType&gt;</span>
+            <span class="nt">&lt;xs:simpleType</span> <span class="na">name=</span><span class="s">&quot;DocumentType&quot;</span><span class="nt">&gt;</span>
                 <span class="nt">&lt;xs:restriction</span> <span class="na">base=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">&gt;</span>
-                    <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;PDF&quot;</span><span class="nt">/&gt;</span>
                     <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;XROAD&quot;</span><span class="nt">/&gt;</span>
-                    <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;BDOC&quot;</span><span class="nt">/&gt;</span>
-                    <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;DDOC&quot;</span><span class="nt">/&gt;</span>
                 <span class="nt">&lt;/xs:restriction&gt;</span>
             <span class="nt">&lt;/xs:simpleType&gt;</span>
-            <span class="nt">&lt;xs:simpleType</span> <span class="na">name=</span><span class="s">&quot;indication&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;xs:simpleType</span> <span class="na">name=</span><span class="s">&quot;Indication&quot;</span><span class="nt">&gt;</span>
                 <span class="nt">&lt;xs:restriction</span> <span class="na">base=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">&gt;</span>
                     <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;TOTAL-PASSED&quot;</span><span class="nt">/&gt;</span>
                     <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;TOTAL-FAILED&quot;</span><span class="nt">/&gt;</span>
@@ -995,16 +1070,16 @@
     <span class="nt">&lt;wsdl:message</span> <span class="na">name=</span><span class="s">&quot;ValidateDocument&quot;</span><span class="nt">&gt;</span>
         <span class="nt">&lt;wsdl:part</span> <span class="na">element=</span><span class="s">&quot;tns:ValidateDocument&quot;</span> <span class="na">name=</span><span class="s">&quot;parameters&quot;</span><span class="nt">/&gt;</span>
     <span class="nt">&lt;/wsdl:message&gt;</span>
-    <span class="nt">&lt;wsdl:message</span> <span class="na">name=</span><span class="s">&quot;requestHeader&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;wsdl:part</span> <span class="na">element=</span><span class="s">&quot;xrd:client&quot;</span> <span class="na">name=</span><span class="s">&quot;client&quot;</span><span class="nt">/&gt;</span>
-        <span class="nt">&lt;wsdl:part</span> <span class="na">element=</span><span class="s">&quot;xrd:service&quot;</span> <span class="na">name=</span><span class="s">&quot;service&quot;</span><span class="nt">/&gt;</span>
-        <span class="nt">&lt;wsdl:part</span> <span class="na">element=</span><span class="s">&quot;xrd:id&quot;</span> <span class="na">name=</span><span class="s">&quot;id&quot;</span><span class="nt">/&gt;</span>
-        <span class="nt">&lt;wsdl:part</span> <span class="na">element=</span><span class="s">&quot;xrd:userId&quot;</span> <span class="na">name=</span><span class="s">&quot;userId&quot;</span><span class="nt">/&gt;</span>
-        <span class="nt">&lt;wsdl:part</span> <span class="na">element=</span><span class="s">&quot;xrd:issue&quot;</span> <span class="na">name=</span><span class="s">&quot;issue&quot;</span><span class="nt">/&gt;</span>
-        <span class="nt">&lt;wsdl:part</span> <span class="na">element=</span><span class="s">&quot;xrd:protocolVersion&quot;</span> <span class="na">name=</span><span class="s">&quot;protocolVersion&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;/wsdl:message&gt;</span>
     <span class="nt">&lt;wsdl:message</span> <span class="na">name=</span><span class="s">&quot;ValidateDocumentResponse&quot;</span><span class="nt">&gt;</span>
         <span class="nt">&lt;wsdl:part</span> <span class="na">element=</span><span class="s">&quot;tns:ValidateDocumentResponse&quot;</span> <span class="na">name=</span><span class="s">&quot;parameters&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/wsdl:message&gt;</span>
+    <span class="nt">&lt;wsdl:message</span> <span class="na">name=</span><span class="s">&quot;requestHeader&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;wsdl:part</span> <span class="na">name=</span><span class="s">&quot;client&quot;</span> <span class="na">element=</span><span class="s">&quot;xrd:client&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;wsdl:part</span> <span class="na">name=</span><span class="s">&quot;service&quot;</span> <span class="na">element=</span><span class="s">&quot;xrd:service&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;wsdl:part</span> <span class="na">name=</span><span class="s">&quot;id&quot;</span> <span class="na">element=</span><span class="s">&quot;xrd:id&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;wsdl:part</span> <span class="na">name=</span><span class="s">&quot;userId&quot;</span> <span class="na">element=</span><span class="s">&quot;xrd:userId&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;wsdl:part</span> <span class="na">name=</span><span class="s">&quot;issue&quot;</span> <span class="na">element=</span><span class="s">&quot;xrd:issue&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;wsdl:part</span> <span class="na">name=</span><span class="s">&quot;protocolVersion&quot;</span> <span class="na">element=</span><span class="s">&quot;xrd:protocolVersion&quot;</span><span class="nt">/&gt;</span>
     <span class="nt">&lt;/wsdl:message&gt;</span>
     <span class="nt">&lt;wsdl:portType</span> <span class="na">name=</span><span class="s">&quot;ValidationWebService&quot;</span><span class="nt">&gt;</span>
         <span class="nt">&lt;wsdl:operation</span> <span class="na">name=</span><span class="s">&quot;ValidateDocument&quot;</span><span class="nt">&gt;</span>
@@ -1036,25 +1111,8 @@
             <span class="nt">&lt;/wsdl:output&gt;</span>
         <span class="nt">&lt;/wsdl:operation&gt;</span>
     <span class="nt">&lt;/wsdl:binding&gt;</span>
-    <span class="nt">&lt;wsdl:binding</span> <span class="na">name=</span><span class="s">&quot;ValidationWebServiceSoapBinding&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:ValidationWebService&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;soap:binding</span> <span class="na">style=</span><span class="s">&quot;document&quot;</span> <span class="na">transport=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/http&quot;</span><span class="nt">/&gt;</span>
-        <span class="nt">&lt;wsdl:operation</span> <span class="na">name=</span><span class="s">&quot;ValidateDocument&quot;</span><span class="nt">&gt;</span>
-            <span class="nt">&lt;soap:operation</span> <span class="na">soapAction=</span><span class="s">&quot;&quot;</span> <span class="na">style=</span><span class="s">&quot;document&quot;</span><span class="nt">/&gt;</span>
-            <span class="nt">&lt;wsdl:input</span> <span class="na">name=</span><span class="s">&quot;ValidateDocument&quot;</span><span class="nt">&gt;</span>
-                <span class="nt">&lt;soap:body</span> <span class="na">use=</span><span class="s">&quot;literal&quot;</span><span class="nt">/&gt;</span>
-            <span class="nt">&lt;/wsdl:input&gt;</span>
-            <span class="nt">&lt;wsdl:output</span> <span class="na">name=</span><span class="s">&quot;ValidateDocumentResponse&quot;</span><span class="nt">&gt;</span>
-                <span class="nt">&lt;soap:body</span> <span class="na">use=</span><span class="s">&quot;literal&quot;</span><span class="nt">/&gt;</span>
-            <span class="nt">&lt;/wsdl:output&gt;</span>
-        <span class="nt">&lt;/wsdl:operation&gt;</span>
-    <span class="nt">&lt;/wsdl:binding&gt;</span>
     <span class="nt">&lt;wsdl:service</span> <span class="na">name=</span><span class="s">&quot;SignatureValidationService&quot;</span><span class="nt">&gt;</span>
         <span class="nt">&lt;wsdl:port</span> <span class="na">binding=</span><span class="s">&quot;tns:SignatureValidationServiceSoapBinding&quot;</span> <span class="na">name=</span><span class="s">&quot;ValidationWebServiceImplPort&quot;</span><span class="nt">&gt;</span>
-            <span class="nt">&lt;soap:address</span> <span class="na">location=</span><span class="s">&quot;http://localhost:8080/soap/validationWebService&quot;</span><span class="nt">/&gt;</span>
-        <span class="nt">&lt;/wsdl:port&gt;</span>
-    <span class="nt">&lt;/wsdl:service&gt;</span>
-    <span class="nt">&lt;wsdl:service</span> <span class="na">name=</span><span class="s">&quot;ValidationWebServiceService&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;wsdl:port</span> <span class="na">binding=</span><span class="s">&quot;tns:ValidationWebServiceSoapBinding&quot;</span> <span class="na">name=</span><span class="s">&quot;ValidationWebServicePort&quot;</span><span class="nt">&gt;</span>
             <span class="nt">&lt;soap:address</span> <span class="na">location=</span><span class="s">&quot;http://localhost:8080/soap/validationWebService&quot;</span><span class="nt">/&gt;</span>
         <span class="nt">&lt;/wsdl:port&gt;</span>
     <span class="nt">&lt;/wsdl:service&gt;</span>
@@ -1063,56 +1121,55 @@
 
 
 <h2 id="data-files-web-service-wsdl">Data files web service wsdl</h2>
-<div class="codehilite"><pre><span></span><span class="nt">&lt;wsdl:definitions</span> <span class="na">xmlns:xs=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns:xrd=</span><span class="s">&quot;http://x-road.eu/xsd/xroad.xsd&quot;</span>
-                  <span class="na">xmlns:wsdl=</span><span class="s">&quot;http://schemas.xmlsoap.org/wsdl/&quot;</span> <span class="na">xmlns:tns=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span>
-                  <span class="na">xmlns:soap=</span><span class="s">&quot;http://schemas.xmlsoap.org/wsdl/soap/&quot;</span> <span class="na">name=</span><span class="s">&quot;DataFilesService&quot;</span>
-                  <span class="na">targetNamespace=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span><span class="nt">&gt;</span>
+<div class="codehilite"><pre><span></span><span class="nt">&lt;wsdl:definitions</span> <span class="na">xmlns:wsdl=</span><span class="s">&quot;http://schemas.xmlsoap.org/wsdl/&quot;</span> <span class="na">xmlns:tns=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span>
+                  <span class="na">xmlns:xs=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://schemas.xmlsoap.org/wsdl/soap/&quot;</span>
+                  <span class="na">xmlns:xrd=</span><span class="s">&quot;http://x-road.eu/xsd/xroad.xsd&quot;</span> <span class="na">targetNamespace=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span>
+                  <span class="na">name=</span><span class="s">&quot;DataFilesService&quot;</span><span class="nt">&gt;</span>
     <span class="nt">&lt;wsdl:types&gt;</span>
-        <span class="nt">&lt;xs:schema</span> <span class="na">xmlns:xs=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns:xrd=</span><span class="s">&quot;http://x-road.eu/xsd/xroad.xsd&quot;</span>
-                   <span class="na">xmlns:wsdl=</span><span class="s">&quot;http://schemas.xmlsoap.org/wsdl/&quot;</span> <span class="na">xmlns:tns=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span>
-                   <span class="na">xmlns:soap=</span><span class="s">&quot;http://schemas.xmlsoap.org/wsdl/soap/&quot;</span>
+        <span class="nt">&lt;xs:schema</span> <span class="na">xmlns:xs=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns:tns=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span>
                    <span class="na">targetNamespace=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span><span class="nt">&gt;</span>
-            <span class="nt">&lt;xs:import</span> <span class="na">namespace=</span><span class="s">&quot;http://x-road.eu/xsd/xroad.xsd&quot;</span> <span class="na">schemaLocation=</span><span class="s">&quot;http://x-road.eu/xsd/xroad.xsd&quot;</span><span class="nt">/&gt;</span>
-            <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;GetDocumentDataFiles&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:getDocumentDataFiles&quot;</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:import</span> <span class="na">namespace=</span><span class="s">&quot;http://x-road.eu/xsd/xroad.xsd&quot;</span> <span class="na">schemaLocation=</span><span class="s">&quot;xroad.xsd&quot;</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;GetDocumentDataFiles&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:GetDocumentDataFiles&quot;</span><span class="nt">/&gt;</span>
             <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;GetDocumentDataFilesResponse&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:GetDocumentDataFilesResponse&quot;</span><span class="nt">/&gt;</span>
-            <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;DataFilesReport&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:dataFilesReport&quot;</span><span class="nt">/&gt;</span>
-            <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;DataFilesRequest&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:soapDataFilesRequest&quot;</span><span class="nt">/&gt;</span>
-            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;getDocumentDataFiles&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;DataFilesReport&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:DataFilesReport&quot;</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;DataFilesRequest&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:SoapDataFilesRequest&quot;</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;GetDocumentDataFiles&quot;</span><span class="nt">&gt;</span>
                 <span class="nt">&lt;xs:sequence&gt;</span>
                     <span class="nt">&lt;xs:element</span> <span class="na">ref=</span><span class="s">&quot;tns:DataFilesRequest&quot;</span><span class="nt">/&gt;</span>
                 <span class="nt">&lt;/xs:sequence&gt;</span>
             <span class="nt">&lt;/xs:complexType&gt;</span>
-            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;soapDataFilesRequest&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;SoapDataFilesRequest&quot;</span><span class="nt">&gt;</span>
                 <span class="nt">&lt;xs:sequence&gt;</span>
                     <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Document&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
-                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;DocumentType&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:documentType&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">maxOccurs=</span><span class="s">&quot;1&quot;</span> <span class="na">name=</span><span class="s">&quot;Filename&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
                 <span class="nt">&lt;/xs:sequence&gt;</span>
             <span class="nt">&lt;/xs:complexType&gt;</span>
+
             <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;GetDocumentDataFilesResponse&quot;</span><span class="nt">&gt;</span>
                 <span class="nt">&lt;xs:sequence&gt;</span>
                     <span class="nt">&lt;xs:element</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">ref=</span><span class="s">&quot;tns:DataFilesReport&quot;</span><span class="nt">/&gt;</span>
                 <span class="nt">&lt;/xs:sequence&gt;</span>
             <span class="nt">&lt;/xs:complexType&gt;</span>
-            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;dataFilesReport&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;DataFilesReport&quot;</span><span class="nt">&gt;</span>
                 <span class="nt">&lt;xs:sequence&gt;</span>
                     <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;DataFiles&quot;</span><span class="nt">&gt;</span>
                         <span class="nt">&lt;xs:complexType&gt;</span>
                             <span class="nt">&lt;xs:sequence&gt;</span>
-                                <span class="nt">&lt;xs:element</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">name=</span><span class="s">&quot;DataFile&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:dataFile&quot;</span><span class="nt">/&gt;</span>
+                                <span class="nt">&lt;xs:element</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">name=</span><span class="s">&quot;DataFile&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:DataFile&quot;</span><span class="nt">/&gt;</span>
                             <span class="nt">&lt;/xs:sequence&gt;</span>
                         <span class="nt">&lt;/xs:complexType&gt;</span>
                     <span class="nt">&lt;/xs:element&gt;</span>
                 <span class="nt">&lt;/xs:sequence&gt;</span>
             <span class="nt">&lt;/xs:complexType&gt;</span>
-            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;dataFile&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;DataFile&quot;</span><span class="nt">&gt;</span>
                 <span class="nt">&lt;xs:sequence&gt;</span>
                     <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Base64&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
-                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;FileName&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Filename&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
                     <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;MimeType&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">/&gt;</span>
                     <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;Size&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:long&quot;</span><span class="nt">/&gt;</span>
                 <span class="nt">&lt;/xs:sequence&gt;</span>
             <span class="nt">&lt;/xs:complexType&gt;</span>
-            <span class="nt">&lt;xs:simpleType</span> <span class="na">name=</span><span class="s">&quot;documentType&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;xs:simpleType</span> <span class="na">name=</span><span class="s">&quot;DocumentType&quot;</span><span class="nt">&gt;</span>
                 <span class="nt">&lt;xs:restriction</span> <span class="na">base=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">&gt;</span>
                     <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;PDF&quot;</span><span class="nt">/&gt;</span>
                     <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;XROAD&quot;</span><span class="nt">/&gt;</span>
@@ -1122,38 +1179,26 @@
             <span class="nt">&lt;/xs:simpleType&gt;</span>
         <span class="nt">&lt;/xs:schema&gt;</span>
     <span class="nt">&lt;/wsdl:types&gt;</span>
+    <span class="nt">&lt;wsdl:message</span> <span class="na">name=</span><span class="s">&quot;GetDocumentDataFiles&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;wsdl:part</span> <span class="na">element=</span><span class="s">&quot;tns:GetDocumentDataFiles&quot;</span> <span class="na">name=</span><span class="s">&quot;parameters&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/wsdl:message&gt;</span>
     <span class="nt">&lt;wsdl:message</span> <span class="na">name=</span><span class="s">&quot;GetDocumentDataFilesResponse&quot;</span><span class="nt">&gt;</span>
         <span class="nt">&lt;wsdl:part</span> <span class="na">element=</span><span class="s">&quot;tns:GetDocumentDataFilesResponse&quot;</span> <span class="na">name=</span><span class="s">&quot;parameters&quot;</span><span class="nt">/&gt;</span>
     <span class="nt">&lt;/wsdl:message&gt;</span>
     <span class="nt">&lt;wsdl:message</span> <span class="na">name=</span><span class="s">&quot;requestHeader&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;wsdl:part</span> <span class="na">element=</span><span class="s">&quot;xrd:client&quot;</span> <span class="na">name=</span><span class="s">&quot;client&quot;</span><span class="nt">/&gt;</span>
-        <span class="nt">&lt;wsdl:part</span> <span class="na">element=</span><span class="s">&quot;xrd:service&quot;</span> <span class="na">name=</span><span class="s">&quot;service&quot;</span><span class="nt">/&gt;</span>
-        <span class="nt">&lt;wsdl:part</span> <span class="na">element=</span><span class="s">&quot;xrd:id&quot;</span> <span class="na">name=</span><span class="s">&quot;id&quot;</span><span class="nt">/&gt;</span>
-        <span class="nt">&lt;wsdl:part</span> <span class="na">element=</span><span class="s">&quot;xrd:userId&quot;</span> <span class="na">name=</span><span class="s">&quot;userId&quot;</span><span class="nt">/&gt;</span>
-        <span class="nt">&lt;wsdl:part</span> <span class="na">element=</span><span class="s">&quot;xrd:issue&quot;</span> <span class="na">name=</span><span class="s">&quot;issue&quot;</span><span class="nt">/&gt;</span>
-        <span class="nt">&lt;wsdl:part</span> <span class="na">element=</span><span class="s">&quot;xrd:protocolVersion&quot;</span> <span class="na">name=</span><span class="s">&quot;protocolVersion&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;wsdl:part</span> <span class="na">name=</span><span class="s">&quot;client&quot;</span> <span class="na">element=</span><span class="s">&quot;xrd:client&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;wsdl:part</span> <span class="na">name=</span><span class="s">&quot;service&quot;</span> <span class="na">element=</span><span class="s">&quot;xrd:service&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;wsdl:part</span> <span class="na">name=</span><span class="s">&quot;id&quot;</span> <span class="na">element=</span><span class="s">&quot;xrd:id&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;wsdl:part</span> <span class="na">name=</span><span class="s">&quot;userId&quot;</span> <span class="na">element=</span><span class="s">&quot;xrd:userId&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;wsdl:part</span> <span class="na">name=</span><span class="s">&quot;issue&quot;</span> <span class="na">element=</span><span class="s">&quot;xrd:issue&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;wsdl:part</span> <span class="na">name=</span><span class="s">&quot;protocolVersion&quot;</span> <span class="na">element=</span><span class="s">&quot;xrd:protocolVersion&quot;</span><span class="nt">/&gt;</span>
     <span class="nt">&lt;/wsdl:message&gt;</span>
-    <span class="nt">&lt;wsdl:message</span> <span class="na">name=</span><span class="s">&quot;GetDocumentDataFiles&quot;</span><span class="nt">/&gt;</span>
     <span class="nt">&lt;wsdl:portType</span> <span class="na">name=</span><span class="s">&quot;DataFilesWebService&quot;</span><span class="nt">&gt;</span>
         <span class="nt">&lt;wsdl:operation</span> <span class="na">name=</span><span class="s">&quot;GetDocumentDataFiles&quot;</span><span class="nt">&gt;</span>
-            <span class="nt">&lt;wsdl:input</span> <span class="na">message=</span><span class="s">&quot;tns:GetDocumentDataFiles&quot;</span> <span class="na">name=</span><span class="s">&quot;GetDocumentDataFiles&quot;</span><span class="nt">&gt;</span>
-            <span class="nt">&lt;/wsdl:input&gt;</span>
-            <span class="nt">&lt;wsdl:output</span> <span class="na">message=</span><span class="s">&quot;tns:GetDocumentDataFilesResponse&quot;</span> <span class="na">name=</span><span class="s">&quot;GetDocumentDataFilesResponse&quot;</span><span class="nt">&gt;</span>
-            <span class="nt">&lt;/wsdl:output&gt;</span>
+            <span class="nt">&lt;wsdl:input</span> <span class="na">message=</span><span class="s">&quot;tns:GetDocumentDataFiles&quot;</span> <span class="na">name=</span><span class="s">&quot;GetDocumentDataFiles&quot;</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;wsdl:output</span> <span class="na">message=</span><span class="s">&quot;tns:GetDocumentDataFilesResponse&quot;</span> <span class="na">name=</span><span class="s">&quot;GetDocumentDataFilesResponse&quot;</span><span class="nt">/&gt;</span>
         <span class="nt">&lt;/wsdl:operation&gt;</span>
     <span class="nt">&lt;/wsdl:portType&gt;</span>
-    <span class="nt">&lt;wsdl:binding</span> <span class="na">name=</span><span class="s">&quot;DataFilesWebServiceSoapBinding&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:DataFilesWebService&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;soap:binding</span> <span class="na">style=</span><span class="s">&quot;document&quot;</span> <span class="na">transport=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/http&quot;</span><span class="nt">/&gt;</span>
-        <span class="nt">&lt;wsdl:operation</span> <span class="na">name=</span><span class="s">&quot;GetDocumentDataFiles&quot;</span><span class="nt">&gt;</span>
-            <span class="nt">&lt;soap:operation</span> <span class="na">soapAction=</span><span class="s">&quot;&quot;</span> <span class="na">style=</span><span class="s">&quot;document&quot;</span><span class="nt">/&gt;</span>
-            <span class="nt">&lt;wsdl:input</span> <span class="na">name=</span><span class="s">&quot;GetDocumentDataFiles&quot;</span><span class="nt">&gt;</span>
-                <span class="nt">&lt;soap:body</span> <span class="na">use=</span><span class="s">&quot;literal&quot;</span><span class="nt">/&gt;</span>
-            <span class="nt">&lt;/wsdl:input&gt;</span>
-            <span class="nt">&lt;wsdl:output</span> <span class="na">name=</span><span class="s">&quot;GetDocumentDataFilesResponse&quot;</span><span class="nt">&gt;</span>
-                <span class="nt">&lt;soap:body</span> <span class="na">use=</span><span class="s">&quot;literal&quot;</span><span class="nt">/&gt;</span>
-            <span class="nt">&lt;/wsdl:output&gt;</span>
-        <span class="nt">&lt;/wsdl:operation&gt;</span>
-    <span class="nt">&lt;/wsdl:binding&gt;</span>
     <span class="nt">&lt;wsdl:binding</span> <span class="na">name=</span><span class="s">&quot;DataFilesServiceSoapBinding&quot;</span> <span class="na">type=</span><span class="s">&quot;tns:DataFilesWebService&quot;</span><span class="nt">&gt;</span>
         <span class="nt">&lt;soap:binding</span> <span class="na">style=</span><span class="s">&quot;document&quot;</span> <span class="na">transport=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/http&quot;</span><span class="nt">/&gt;</span>
         <span class="nt">&lt;wsdl:operation</span> <span class="na">name=</span><span class="s">&quot;GetDocumentDataFiles&quot;</span><span class="nt">&gt;</span>
@@ -1178,17 +1223,305 @@
             <span class="nt">&lt;/wsdl:output&gt;</span>
         <span class="nt">&lt;/wsdl:operation&gt;</span>
     <span class="nt">&lt;/wsdl:binding&gt;</span>
-    <span class="nt">&lt;wsdl:service</span> <span class="na">name=</span><span class="s">&quot;DataFilesWebServiceService&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;wsdl:port</span> <span class="na">binding=</span><span class="s">&quot;tns:DataFilesWebServiceSoapBinding&quot;</span> <span class="na">name=</span><span class="s">&quot;DataFilesWebServicePort&quot;</span><span class="nt">&gt;</span>
-            <span class="nt">&lt;soap:address</span> <span class="na">location=</span><span class="s">&quot;http://localhost:8080/soap/dataFilesWebService/getDocumentDataFiles&quot;</span><span class="nt">/&gt;</span>
-        <span class="nt">&lt;/wsdl:port&gt;</span>
-    <span class="nt">&lt;/wsdl:service&gt;</span>
     <span class="nt">&lt;wsdl:service</span> <span class="na">name=</span><span class="s">&quot;DataFilesWebService&quot;</span><span class="nt">&gt;</span>
         <span class="nt">&lt;wsdl:port</span> <span class="na">binding=</span><span class="s">&quot;tns:DataFilesServiceSoapBinding&quot;</span> <span class="na">name=</span><span class="s">&quot;DataFilesWebServiceImplPort&quot;</span><span class="nt">&gt;</span>
             <span class="nt">&lt;soap:address</span> <span class="na">location=</span><span class="s">&quot;http://localhost:8080/soap/dataFilesWebService&quot;</span><span class="nt">/&gt;</span>
         <span class="nt">&lt;/wsdl:port&gt;</span>
     <span class="nt">&lt;/wsdl:service&gt;</span>
 <span class="nt">&lt;/wsdl:definitions&gt;</span>
+</pre></div>
+
+
+<h2 id="dss-detailed-report-xsd">DSS detailed report XSD</h2>
+<div class="codehilite"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;xs:schema</span> <span class="na">attributeFormDefault=</span><span class="s">&quot;unqualified&quot;</span> <span class="na">elementFormDefault=</span><span class="s">&quot;qualified&quot;</span>
+           <span class="na">targetNamespace=</span><span class="s">&quot;http://dss.esig.europa.eu/validation/detailed-report&quot;</span>
+           <span class="na">xmlns=</span><span class="s">&quot;http://dss.esig.europa.eu/validation/detailed-report&quot;</span>
+           <span class="na">xmlns:xs=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;DetailedReport&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:complexType&gt;</span>
+            <span class="nt">&lt;xs:sequence&gt;</span>
+                <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;Signature&quot;</span> <span class="na">name=</span><span class="s">&quot;Signatures&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span> <span class="nt">/&gt;</span>
+                <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;BasicBuildingBlocks&quot;</span> <span class="na">name=</span><span class="s">&quot;BasicBuildingBlocks&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span> <span class="nt">/&gt;</span>
+                <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;QMatrixBlock&quot;</span> <span class="na">name=</span><span class="s">&quot;QMatrixBlock&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;/xs:sequence&gt;</span>
+        <span class="nt">&lt;/xs:complexType&gt;</span>
+    <span class="nt">&lt;/xs:element&gt;</span>
+
+    <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;Signature&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:sequence&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;ValidationProcessBasicSignatures&quot;</span> <span class="na">name=</span><span class="s">&quot;ValidationProcessBasicSignatures&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;ValidationProcessTimestamps&quot;</span> <span class="na">name=</span><span class="s">&quot;ValidationProcessTimestamps&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;ValidationProcessLongTermData&quot;</span> <span class="na">name=</span><span class="s">&quot;ValidationProcessLongTermData&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;ValidationProcessArchivalData&quot;</span> <span class="na">name=</span><span class="s">&quot;ValidationProcessArchivalData&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:sequence&gt;</span>
+        <span class="nt">&lt;xs:attribute</span> <span class="na">name=</span><span class="s">&quot;Id&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span> <span class="na">use=</span><span class="s">&quot;required&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;xs:attribute</span> <span class="na">name=</span><span class="s">&quot;Type&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span> <span class="na">use=</span><span class="s">&quot;optional&quot;</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/xs:complexType&gt;</span>
+
+    <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;BasicBuildingBlocks&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:sequence&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;FC&quot;</span> <span class="na">name=</span><span class="s">&quot;FC&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;ISC&quot;</span> <span class="na">name=</span><span class="s">&quot;ISC&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;VCI&quot;</span> <span class="na">name=</span><span class="s">&quot;VCI&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;CV&quot;</span>  <span class="na">name=</span><span class="s">&quot;CV&quot;</span>  <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;SAV&quot;</span> <span class="na">name=</span><span class="s">&quot;SAV&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;XCV&quot;</span> <span class="na">name=</span><span class="s">&quot;XCV&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;PSV&quot;</span> <span class="na">name=</span><span class="s">&quot;PSV&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;PCV&quot;</span> <span class="na">name=</span><span class="s">&quot;PCV&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;VTS&quot;</span> <span class="na">name=</span><span class="s">&quot;VTS&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;Conclusion&quot;</span> <span class="na">name=</span><span class="s">&quot;Conclusion&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:sequence&gt;</span>
+        <span class="nt">&lt;xs:attribute</span> <span class="na">name=</span><span class="s">&quot;Id&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span> <span class="na">use=</span><span class="s">&quot;required&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;xs:attribute</span> <span class="na">name=</span><span class="s">&quot;Type&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span> <span class="na">use=</span><span class="s">&quot;required&quot;</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/xs:complexType&gt;</span>
+
+    <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;QMatrixBlock&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:sequence&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;TLAnalysis&quot;</span> <span class="na">name=</span><span class="s">&quot;TLAnalysis&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;SignatureAnalysis&quot;</span> <span class="na">name=</span><span class="s">&quot;SignatureAnalysis&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:sequence&gt;</span>
+    <span class="nt">&lt;/xs:complexType&gt;</span>
+
+    <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;TLAnalysis&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:complexContent&gt;</span>
+            <span class="nt">&lt;xs:extension</span> <span class="na">base=</span><span class="s">&quot;ConstraintsConclusion&quot;</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;xs:attribute</span> <span class="na">name=</span><span class="s">&quot;CountryCode&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span> <span class="na">use=</span><span class="s">&quot;required&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;/xs:extension&gt;</span>
+        <span class="nt">&lt;/xs:complexContent&gt;</span>
+    <span class="nt">&lt;/xs:complexType&gt;</span>
+
+    <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;SignatureAnalysis&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:complexContent&gt;</span>
+            <span class="nt">&lt;xs:extension</span> <span class="na">base=</span><span class="s">&quot;ConstraintsConclusion&quot;</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;xs:attribute</span> <span class="na">name=</span><span class="s">&quot;Id&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span> <span class="na">use=</span><span class="s">&quot;required&quot;</span> <span class="nt">/&gt;</span>
+                <span class="nt">&lt;xs:attribute</span> <span class="na">name=</span><span class="s">&quot;SignatureQualification&quot;</span> <span class="na">type=</span><span class="s">&quot;SignatureQualification&quot;</span> <span class="na">use=</span><span class="s">&quot;optional&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;/xs:extension&gt;</span>
+        <span class="nt">&lt;/xs:complexContent&gt;</span>
+    <span class="nt">&lt;/xs:complexType&gt;</span>
+
+    <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;ConstraintsConclusion&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:sequence&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;Constraint&quot;</span> <span class="na">name=</span><span class="s">&quot;Constraint&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;Conclusion&quot;</span> <span class="na">name=</span><span class="s">&quot;Conclusion&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:sequence&gt;</span>
+    <span class="nt">&lt;/xs:complexType&gt;</span>
+
+    <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;ValidationProcessBasicSignatures&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:complexContent&gt;</span>
+            <span class="nt">&lt;xs:extension</span> <span class="na">base=</span><span class="s">&quot;ConstraintsConclusion&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:complexContent&gt;</span>
+    <span class="nt">&lt;/xs:complexType&gt;</span>
+
+    <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;ValidationProcessTimestamps&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:complexContent&gt;</span>
+            <span class="nt">&lt;xs:extension</span> <span class="na">base=</span><span class="s">&quot;ConstraintsConclusion&quot;</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;xs:attribute</span> <span class="na">name=</span><span class="s">&quot;Id&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span> <span class="na">use=</span><span class="s">&quot;required&quot;</span> <span class="nt">/&gt;</span>
+                <span class="nt">&lt;xs:attribute</span> <span class="na">name=</span><span class="s">&quot;Type&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span> <span class="na">use=</span><span class="s">&quot;required&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;/xs:extension&gt;</span>
+        <span class="nt">&lt;/xs:complexContent&gt;</span>
+    <span class="nt">&lt;/xs:complexType&gt;</span>
+
+    <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;ValidationProcessLongTermData&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:complexContent&gt;</span>
+            <span class="nt">&lt;xs:extension</span> <span class="na">base=</span><span class="s">&quot;ConstraintsConclusion&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:complexContent&gt;</span>
+    <span class="nt">&lt;/xs:complexType&gt;</span>
+
+    <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;ValidationProcessArchivalData&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:complexContent&gt;</span>
+            <span class="nt">&lt;xs:extension</span> <span class="na">base=</span><span class="s">&quot;ConstraintsConclusion&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:complexContent&gt;</span>
+    <span class="nt">&lt;/xs:complexType&gt;</span>
+
+    <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;FC&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:complexContent&gt;</span>
+            <span class="nt">&lt;xs:extension</span> <span class="na">base=</span><span class="s">&quot;ConstraintsConclusion&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:complexContent&gt;</span>
+    <span class="nt">&lt;/xs:complexType&gt;</span>
+    <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;ISC&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:complexContent&gt;</span>
+            <span class="nt">&lt;xs:extension</span> <span class="na">base=</span><span class="s">&quot;ConstraintsConclusion&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:complexContent&gt;</span>
+    <span class="nt">&lt;/xs:complexType&gt;</span>
+    <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;VCI&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:complexContent&gt;</span>
+            <span class="nt">&lt;xs:extension</span> <span class="na">base=</span><span class="s">&quot;ConstraintsConclusion&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:complexContent&gt;</span>
+    <span class="nt">&lt;/xs:complexType&gt;</span>
+    <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;RFC&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:complexContent&gt;</span>
+            <span class="nt">&lt;xs:extension</span> <span class="na">base=</span><span class="s">&quot;ConstraintsConclusion&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:complexContent&gt;</span>
+    <span class="nt">&lt;/xs:complexType&gt;</span>
+    <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;CV&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:complexContent&gt;</span>
+            <span class="nt">&lt;xs:extension</span> <span class="na">base=</span><span class="s">&quot;ConstraintsConclusion&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:complexContent&gt;</span>
+    <span class="nt">&lt;/xs:complexType&gt;</span>
+    <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;SAV&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:complexContent&gt;</span>
+            <span class="nt">&lt;xs:extension</span> <span class="na">base=</span><span class="s">&quot;ConstraintsConclusion&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:complexContent&gt;</span>
+    <span class="nt">&lt;/xs:complexType&gt;</span>
+    <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;XCV&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:complexContent&gt;</span>
+            <span class="nt">&lt;xs:extension</span> <span class="na">base=</span><span class="s">&quot;ConstraintsConclusion&quot;</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;xs:sequence&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;SubXCV&quot;</span> <span class="na">type=</span><span class="s">&quot;SubXCV&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span> <span class="nt">/&gt;</span>
+                <span class="nt">&lt;/xs:sequence&gt;</span>
+            <span class="nt">&lt;/xs:extension&gt;</span>
+        <span class="nt">&lt;/xs:complexContent&gt;</span>
+    <span class="nt">&lt;/xs:complexType&gt;</span>
+    <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;SubXCV&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:complexContent&gt;</span>
+            <span class="nt">&lt;xs:extension</span> <span class="na">base=</span><span class="s">&quot;ConstraintsConclusion&quot;</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;xs:sequence&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;RFC&quot;</span> <span class="na">type=</span><span class="s">&quot;RFC&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="nt">/&gt;</span>
+                <span class="nt">&lt;/xs:sequence&gt;</span>
+                <span class="nt">&lt;xs:attribute</span> <span class="na">name=</span><span class="s">&quot;Id&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span> <span class="na">use=</span><span class="s">&quot;required&quot;</span> <span class="nt">/&gt;</span>
+                <span class="nt">&lt;xs:attribute</span> <span class="na">name=</span><span class="s">&quot;TrustAnchor&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:boolean&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;/xs:extension&gt;</span>
+        <span class="nt">&lt;/xs:complexContent&gt;</span>
+    <span class="nt">&lt;/xs:complexType&gt;</span>
+    <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;VTS&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:complexContent&gt;</span>
+            <span class="nt">&lt;xs:extension</span> <span class="na">base=</span><span class="s">&quot;ConstraintsConclusion&quot;</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;xs:sequence&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;ControlTime&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:dateTime&quot;</span> <span class="nt">/&gt;</span>
+                <span class="nt">&lt;/xs:sequence&gt;</span>
+            <span class="nt">&lt;/xs:extension&gt;</span>
+        <span class="nt">&lt;/xs:complexContent&gt;</span>
+    <span class="nt">&lt;/xs:complexType&gt;</span>
+    <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;PCV&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:complexContent&gt;</span>
+            <span class="nt">&lt;xs:extension</span> <span class="na">base=</span><span class="s">&quot;ConstraintsConclusion&quot;</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;xs:sequence&gt;</span>
+                    <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;ControlTime&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:dateTime&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="nt">/&gt;</span>
+                <span class="nt">&lt;/xs:sequence&gt;</span>
+            <span class="nt">&lt;/xs:extension&gt;</span>
+        <span class="nt">&lt;/xs:complexContent&gt;</span>
+    <span class="nt">&lt;/xs:complexType&gt;</span>
+    <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;PSV&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:complexContent&gt;</span>
+            <span class="nt">&lt;xs:extension</span> <span class="na">base=</span><span class="s">&quot;ConstraintsConclusion&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:complexContent&gt;</span>
+    <span class="nt">&lt;/xs:complexType&gt;</span>
+    <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;ERV&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:complexContent&gt;</span>
+            <span class="nt">&lt;xs:extension</span> <span class="na">base=</span><span class="s">&quot;ConstraintsConclusion&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:complexContent&gt;</span>
+    <span class="nt">&lt;/xs:complexType&gt;</span>
+
+    <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;Constraint&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:sequence&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;Name&quot;</span> <span class="na">name=</span><span class="s">&quot;Name&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;Status&quot;</span> <span class="na">name=</span><span class="s">&quot;Status&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;Name&quot;</span> <span class="na">name=</span><span class="s">&quot;Error&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;Name&quot;</span> <span class="na">name=</span><span class="s">&quot;Warning&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;Name&quot;</span> <span class="na">name=</span><span class="s">&quot;Info&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span> <span class="na">name=</span><span class="s">&quot;AdditionalInfo&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:sequence&gt;</span>
+        <span class="nt">&lt;xs:attribute</span> <span class="na">name=</span><span class="s">&quot;Id&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span> <span class="na">use=</span><span class="s">&quot;optional&quot;</span> <span class="nt">/&gt;</span> <span class="c">&lt;!-- In case of constraint with a BBB --&gt;</span>
+    <span class="nt">&lt;/xs:complexType&gt;</span>
+
+    <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;Conclusion&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:sequence&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;Indication&quot;</span> <span class="na">name=</span><span class="s">&quot;Indication&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;SubIndication&quot;</span> <span class="na">name=</span><span class="s">&quot;SubIndication&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;Name&quot;</span> <span class="na">name=</span><span class="s">&quot;Errors&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;Name&quot;</span> <span class="na">name=</span><span class="s">&quot;Warnings&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:element</span> <span class="na">type=</span><span class="s">&quot;Name&quot;</span> <span class="na">name=</span><span class="s">&quot;Infos&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:sequence&gt;</span>
+    <span class="nt">&lt;/xs:complexType&gt;</span>
+
+    <span class="nt">&lt;xs:complexType</span> <span class="na">name=</span><span class="s">&quot;Name&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:simpleContent&gt;</span>
+            <span class="nt">&lt;xs:extension</span> <span class="na">base=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;xs:attribute</span> <span class="na">name=</span><span class="s">&quot;NameId&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;/xs:extension&gt;</span>
+        <span class="nt">&lt;/xs:simpleContent&gt;</span>
+    <span class="nt">&lt;/xs:complexType&gt;</span>
+
+    <span class="nt">&lt;xs:simpleType</span> <span class="na">name=</span><span class="s">&quot;Status&quot;</span> <span class="na">final=</span><span class="s">&quot;restriction&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:restriction</span> <span class="na">base=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;OK&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;NOT OK&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;IGNORED&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;INFORMATION&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;WARNING&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:restriction&gt;</span>
+    <span class="nt">&lt;/xs:simpleType&gt;</span>
+
+    <span class="nt">&lt;xs:simpleType</span> <span class="na">name=</span><span class="s">&quot;Indication&quot;</span> <span class="na">final=</span><span class="s">&quot;restriction&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:restriction</span> <span class="na">base=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;PASSED&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;INDETERMINATE&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;FAILED&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:restriction&gt;</span>
+    <span class="nt">&lt;/xs:simpleType&gt;</span>
+
+    <span class="nt">&lt;xs:simpleType</span> <span class="na">name=</span><span class="s">&quot;SubIndication&quot;</span> <span class="na">final=</span><span class="s">&quot;restriction&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:restriction</span> <span class="na">base=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;NO_SIGNING_CERTIFICATE_FOUND&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;FORMAT_FAILURE&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;SIGNATURE_POLICY_NOT_AVAILABLE&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;POLICY_PROCESSING_ERROR&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;OUT_OF_BOUNDS_NO_POE&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;NO_CERTIFICATE_CHAIN_FOUND&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;TRY_LATER&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;REVOKED_NO_POE&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;REVOKED_CA_NO_POE&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;CHAIN_CONSTRAINTS_FAILURE&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;CRYPTO_CONSTRAINTS_FAILURE&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;CRYPTO_CONSTRAINTS_FAILURE_NO_POE&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;SIGNED_DATA_NOT_FOUND&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;HASH_FAILURE&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;SIG_CRYPTO_FAILURE&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;SIG_CONSTRAINTS_FAILURE&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;NOT_YET_VALID&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;TIMESTAMP_ORDER_FAILURE&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;REVOKED&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;EXPIRED&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;NO_POE&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;CERTIFICATE_CHAIN_GENERAL_FAILURE&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;UNEXPECTED_ERROR&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:restriction&gt;</span>
+    <span class="nt">&lt;/xs:simpleType&gt;</span>
+
+    <span class="nt">&lt;xs:simpleType</span> <span class="na">name=</span><span class="s">&quot;SignatureQualification&quot;</span> <span class="na">final=</span><span class="s">&quot;restriction&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;xs:restriction</span> <span class="na">base=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">&gt;</span>
+
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;QESig&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;QESeal&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;QES?&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;AdESig-QC&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;AdESeal-QC&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;AdES?-QC&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;AdESig&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;AdESeal&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;AdES?&quot;</span> <span class="nt">/&gt;</span>
+
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;Indeterminate QESig&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;Indeterminate QESeal&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;Indeterminate QES?&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;Indeterminate AdESig-QC&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;Indeterminate AdESeal-QC&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;Indeterminate AdES?-QC&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;Indeterminate AdESig&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;Indeterminate AdESeal&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;Indeterminate AdES?&quot;</span> <span class="nt">/&gt;</span>
+
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;Not AdES but QC with QSCD&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;Not AdES but QC&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;Not AdES&quot;</span> <span class="nt">/&gt;</span>
+
+            <span class="nt">&lt;xs:enumeration</span> <span class="na">value=</span><span class="s">&quot;N/A&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/xs:restriction&gt;</span>
+    <span class="nt">&lt;/xs:simpleType&gt;</span>
+
+<span class="nt">&lt;/xs:schema&gt;</span>
 </pre></div>
                 
                   

@@ -55,6 +55,6 @@ pages:
       - 9.8. APPENDICES:
             - Appendix 1 - Validation Policy: siva2/appendix/validation_policy.md
             - Appendix 2 - Test Case Descriptions: siva2/appendix/test_cases.md
-            - Appendix 3 - WSDL of SOAP Interface : siva2/appendix/wsdl.md
+            - Appendix 3 - WSDL/XSD of SOAP Interface : siva2/appendix/wsdl.md
             - Appendix 4 - Known Issues : siva2/appendix/known_issues.md
 

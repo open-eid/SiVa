@@ -147,7 +147,7 @@ public class DocumentFormatIT extends SiVaRestTests {
     public void xadesDocumentShouldPass() {
         SimpleReport report = postForReport("signatures0.xml");
         assertAllSignaturesAreInvalid(report);
-        assertEquals("XAdES_BASELINE_LT_TM", report.getValidationConclusion().getSignatures().get(0).getSignatureFormat());
+        assertEquals("XAdES_BASELINE_LT", report.getValidationConclusion().getSignatures().get(0).getSignatureFormat());
     }
 
     /**

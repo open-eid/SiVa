@@ -21,8 +21,8 @@ Main purpose of this documentation is to give overview what SiVa is, how it is b
 Below list will give You an overview of what each section of the
 SiVa architecture document will cover:
 
-* [**Definitions**](siva/definitions) - defines and explines most common concepts used in SiVa documentation
-* [**Overview**](siva/overview) - gives overview what SiVa is and
+* [**Definitions**](siva2/definitions) - defines and explines most common concepts used in SiVa documentation
+* [**Overview**](siva2/overview) - gives overview what SiVa is and
   it's main features.
 * [**Structure and activities**](siva2/structure_and_activities) - gives overview of
   main SiVa subsystems and and and base validation Java libraries

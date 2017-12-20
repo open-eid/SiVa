@@ -9,18 +9,16 @@ User of SiVa system provides digitally signed document file in form of
 Base64 encoded string. The validation of file and validation policy
 is handled by validation services underlying libraries.
 
-* In case of DDOC containers with XAdES and CAdES signatures it will be Ddoc Validation Service
-* In case of BDOC containers with XAdES and CAdES signatures it will be Bdoc Validation Service
-* In case of X-ROAD containers with XAdES and CAdES signatures it will be Xroad Validation Service
-* In case of ASIC-S containers with XAdES and CAdES signatures it will be Timestamptoken Validation Service
-* In case of other containers with XAdES and CAdES signatures it will be Generic Validation Service
+* In case of DDOC containers with XAdES signatures it will be Ddoc Validation Service
+* In case of BDOC containers with XAdES signatures it will be Bdoc Validation Service
+* In case of X-ROAD ASIC-E containers with XAdES signatures it will be Xroad Validation Service
+* In case of ASIC-S containers with TimeStampToken it will be Timestamptoken Validation Service
+* In case of other containers or with XAdES, CAdES and PAdES signatures it will be Generic Validation Service
 
-We will log following failure cases:
-When file upload fails (request started but was not completed successfully)
-When request validation (JSON or SOAP) fails
-When user authentication fails - **not shown in diagram above**
-When signature validation fails – **not shown in diagram above**
-When increasing of request count fails – **not shown in diagram above**
+We will log following failure cases:<br>
+When file upload fails (request started but was not completed successfully)<br>
+When request validation (JSON or SOAP) fails<br>
+When signature validation fails<br>
 
 ## Certificate loading process
 

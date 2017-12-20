@@ -1,7 +1,7 @@
 The following chapter depicts SiVa software on a component diagram.
 Note that not all of the external base libraries are included in the component model to avoid duplicity with other documentation. Only relevant base libraries and dependencies are listed and described in the documentation. Information about additional and transitive dependencies of the respective validation service components can be found via the references provided.
 
-![SiVa component diagram](../../img/siva/siva_component_diagram.png)
+![SiVa component diagram](../../img/siva/siva2_component_diagram.png)
 
 ## System components
 ### Siva webapp

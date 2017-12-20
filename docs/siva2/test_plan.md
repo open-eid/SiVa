@@ -53,7 +53,7 @@ The testing of the SiVa web service is divided into sections based on the softwa
   * PDF signature validation
   * X-Road ASIC-E signature validation
 
-The goal is to focus testing on functionalities implemented in SiVa web service application. Functionalities provided by [Validation libraries](../siva2/overview/#validation-libraries) are not explicitly tested.
+The goal is to focus testing on functionalities implemented in SiVa web service application. Functionalities provided by [Validation libraries](../siva2/overview/#Validation-libraries) are not explicitly tested.
 
 In addition SiVa Sample Application is tested. These tests are carried out manually.
 
@@ -78,7 +78,7 @@ In all of the negative cases correctness of returned error message is checked.
 
 Specific test cases and input files can be found in:
 
-  * [ValidationRequestIT.java](../siva2/appendix/test_cases/#validationrequestit)
+  * [ValidationRequestIT.java](../siva2/appendix/test_cases/#validationrequestitjava)
   * [DocumentFormatIT.java](../siva2/appendix/test_cases/#documentformatitjava)
 
 ### Get Data Files request tests
@@ -216,6 +216,7 @@ The testing of BDOC container signatures consists of following main cases:
   * Containers with valid signature(s) are validated
   * Containers with invalid signature(s) or no signature are validated
   * Containers sizes near maximum are validated
+  * Containers with baseline LT, LTA, T and B profiles
 
 Specific test cases and input files can be found in:
 
@@ -260,6 +261,8 @@ The testing of PDF signatures consists of following main cases:
   * Containers with serial and parallel signatures are validated
   * Containers with different signature cryptocaphic algorithms are validated
   * Containers with OCSP values inside and outside bounds are validated
+  * Containers with baseline LT, LTA, T and B profiles
+  
 
 Specific test cases and input files can be found in:
 

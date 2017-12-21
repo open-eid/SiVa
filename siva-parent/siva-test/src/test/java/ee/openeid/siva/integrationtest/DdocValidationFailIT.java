@@ -46,7 +46,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
      * Title: Ddoc with single invalid signature
      *
@@ -64,7 +64,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
      * Title: Ddoc with multiple invalid signatures
      *
@@ -82,7 +82,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
      * Title: Ddoc with multiple signatures both valid and invalid
      *
@@ -100,7 +100,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
      * Title: Ddoc with no signatures
      *
@@ -119,7 +119,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
      * Title: Ddoc signature value has been changed (SignatureValue does not correspond to the SignedInfo block)
      *
@@ -143,7 +143,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
      * Title: Ddoc Data file(s) don't match the hash values in Reference elements
      *
@@ -167,7 +167,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
      * Title: Ddoc Baseline-BES file, no OCSP response
      *
@@ -191,7 +191,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
      * Title: Ddoc no non-repudiation key usage value in the certificate
      *
@@ -215,7 +215,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
      * Title: Ddoc Signer's certificate is not trusted
      *
@@ -236,7 +236,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
      * Title: Ddoc OCSP certificate is not trusted
      *
@@ -257,7 +257,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
      * Title: Ddoc has unsigned data files in the container
      *
@@ -281,7 +281,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
      * Title: Ddoc signed data file has been removed from the container
      *
@@ -305,7 +305,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
      * Title: Ddoc wrong nonce
      *
@@ -326,7 +326,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/
      *
      * Title: Ddoc with XML Entity expansion attack
      *
@@ -348,7 +348,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/
      *
      * Title: Ddoc with XML server side request forgery attack
      *
@@ -370,7 +370,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
      * Title: Ddoc no files in container
      *
@@ -392,7 +392,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
      * Title: Ddoc XML namespace error in container
      *

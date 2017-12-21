@@ -45,7 +45,7 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title: Input empty values
      *
@@ -68,7 +68,7 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title: Input empty body
      *
@@ -96,7 +96,7 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title: Element DocumentType is removed from the body
      *
@@ -122,7 +122,7 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title: Element Document is removed from the body
      *
@@ -148,7 +148,7 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title: Element DocumentType is duplicated in the body with different value
      *
@@ -174,7 +174,7 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title: Additional element Filename is added to  the body
      *
@@ -210,7 +210,7 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title: Value for element Document was changed
      *
@@ -237,7 +237,7 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title:  DocumentType was changed to BDOC when actual is DDOC
      *
@@ -262,7 +262,7 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title:  DocumentType was changed to PDF when actual is DDOC
      *
@@ -287,7 +287,7 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title:  DocumentType was changed to XROAD when actual is DDOC
      *
@@ -312,7 +312,7 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title:  DocumentType was changed to unsupported format JPG when actual is DDOC
      *
@@ -337,7 +337,7 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title:  DocumentType was changed to DDOC when actual is PDF
      *
@@ -362,7 +362,7 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title:  DocumentType was changed to DDOC when actual is BDOC
      *

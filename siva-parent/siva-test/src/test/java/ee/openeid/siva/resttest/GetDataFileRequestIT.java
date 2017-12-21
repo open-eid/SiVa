@@ -50,7 +50,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title: Input empty values
      *
@@ -71,7 +71,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title: Totally empty request body is sent
      *
@@ -92,7 +92,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title: Order of elements is changed in request
      *
@@ -116,7 +116,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title: Additional elements are added
      *
@@ -140,7 +140,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title: Mandatory element 'documentType' is duplicated, duplicated element with bdoc value
      *
@@ -160,7 +160,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title: Mandatory element 'document' is deleted
      *
@@ -182,7 +182,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title: Low case for document type is used
      *
@@ -207,7 +207,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title: Document Type is changed in request to BDOC, actual is DDOC
      *
@@ -226,7 +226,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title: Document Type is changed in request to PDF, actual is DDOC
      *
@@ -245,7 +245,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title: Document Type is changed in request to unsupported format (JPG), actual is DDOC
      *
@@ -264,7 +264,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title: Document Type is changed in request to XROAD format, actual is DDOC
      *
@@ -283,7 +283,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title: Document Type is changed in request to DDOC format, actual is BDOC
      *
@@ -303,7 +303,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title: Document Type is changed in request to DDOC format, actual is PDF
      *
@@ -323,7 +323,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title: For Unsupported format Document Type is changed in request to DDOC format, actual is PNG
      *

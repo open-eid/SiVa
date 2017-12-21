@@ -30,13 +30,11 @@ import ee.openeid.siva.validation.service.signature.policy.properties.Validation
 import ee.openeid.validation.service.ddoc.configuration.DDOCSignaturePolicyProperties;
 import ee.openeid.validation.service.ddoc.configuration.DDOCValidationServiceProperties;
 import ee.sk.digidoc.DigiDocException;
+import ee.sk.digidoc.SignedDoc;
 import ee.sk.digidoc.factory.DigiDocFactory;
 import ee.sk.utils.ConfigManager;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -51,9 +49,11 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
-import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.*;
+import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.ADES_POLICY;
+import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.QES_POLICY;
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.*;
@@ -304,6 +304,20 @@ public class DDOCServiceTest {
     }
 
     @Test
+    public void digiDocExceptionIsError() throws Exception {
+        ArrayList errors = getJdigiDocExceptionArrayList(DigiDocException.ERR_READ_CERT);
+        boolean hasErrors = validationService.hasNonWarningErrs(getSampleSignedDoc(), errors);
+        Assert.assertTrue(hasErrors);
+    }
+
+    @Test
+    public void weakDigestIsWarning() throws DigiDocException {
+        ArrayList errors = getJdigiDocExceptionArrayList(DigiDocException.WARN_WEAK_DIGEST);
+        boolean hasErrors = validationService.hasNonWarningErrs(getSampleSignedDoc(), errors);
+        Assert.assertFalse(hasErrors);
+    }
+
+    @Test
     public void whenNonExistingPolicyIsGivenThenValidatorShouldThrowException() throws Exception {
         expectedException.expect(InvalidPolicyException.class);
         validateWithPolicy("non-existing-policy");
@@ -333,6 +347,19 @@ public class DDOCServiceTest {
 
         expectedException.expect(ValidationServiceException.class);
         validationServiceSpy.validateDocument(validationDocument);
+    }
+
+    private ArrayList getJdigiDocExceptionArrayList(int exceptionCode) {
+        ArrayList errors = new ArrayList<>();
+        DigiDocException exception = new DigiDocException(exceptionCode, "", new RuntimeException());
+        errors.add(exception);
+        return errors;
+    }
+
+    private SignedDoc getSampleSignedDoc() throws DigiDocException {
+        SignedDoc signedDoc = new SignedDoc();
+        signedDoc.setFormat("DIGIDOC-XML");
+        return signedDoc;
     }
 
     private SimpleReport validateWithPolicy(String policyName) throws Exception {

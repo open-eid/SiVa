@@ -41,7 +41,7 @@ public class SivaSOAPDataFilesServiceClient implements DataFilesService {
             throw new IOException("File not found");
         }
         String requestBody = createXMLDataFilesRequest(file.getEncodedFile(), file.getFilename());
-        return Observable.just(XMLTransformer.formatXML(restTemplate.postForObject(properties.getSoapDataFilesServicePath(), requestBody, String.class)));
+        return Observable.just(XMLTransformer.formatXML(restTemplate.postForObject(properties.getServiceHost() + properties.getSoapDataFilesServicePath(), requestBody, String.class)));
     }
 
     private static String createXMLDataFilesRequest(String base64Document, String filename) {

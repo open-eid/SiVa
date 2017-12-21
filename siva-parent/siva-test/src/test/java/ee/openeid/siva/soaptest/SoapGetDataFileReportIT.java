@@ -48,7 +48,7 @@ public class SoapGetDataFileReportIT extends SiVaSoapTests  {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-response-interface
      *
      * Title: Verification of values in Validation Report, checks for  File name, Base64, Mimetype and Size
      *
@@ -72,7 +72,7 @@ public class SoapGetDataFileReportIT extends SiVaSoapTests  {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-response-interface
      *
      * Title: Verification of values in Validation Report xml v1.1, checks for  File name, Base64, Mimetype and Size
      *
@@ -98,7 +98,7 @@ public class SoapGetDataFileReportIT extends SiVaSoapTests  {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-response-interface
      *
      * Title: Verification of values in Validation Report xml v1.2, checks for  File name, Base64, Mimetype and Size
      *
@@ -124,7 +124,7 @@ public class SoapGetDataFileReportIT extends SiVaSoapTests  {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-response-interface
      *
      * Title: Verification of values in Validation Report for container with a number of files, checks for  File name, Base64, Mimetype and Size for each file
      *

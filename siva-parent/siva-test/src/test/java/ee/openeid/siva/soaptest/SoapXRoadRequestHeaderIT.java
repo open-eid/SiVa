@@ -47,7 +47,7 @@ public class SoapXRoadRequestHeaderIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
      *
      * Title: Soap headers are returned in response
      *
@@ -116,7 +116,7 @@ public class SoapXRoadRequestHeaderIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
      *
      * Title: Soap headers are returned in correct order
      *
@@ -185,7 +185,7 @@ public class SoapXRoadRequestHeaderIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/interface_description/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
      *
      * Title: Soap headers are returned in error response
      *
@@ -253,7 +253,7 @@ public class SoapXRoadRequestHeaderIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title: Soap headers are returned in response for Get Data Files
      *
@@ -321,7 +321,7 @@ public class SoapXRoadRequestHeaderIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title: Soap headers are returned in correct order for Get Data Files
      *
@@ -390,7 +390,7 @@ public class SoapXRoadRequestHeaderIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva/v2/interfaces/#data-files-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface
      *
      * Title: Soap headers are returned in error response for Get Data Files
      *

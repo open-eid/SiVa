@@ -133,7 +133,8 @@ public class SoapGetDataFileReportIT extends SiVaSoapTests  {
      * File: igasugust1.3.ddoc
      *
      **/
-    @Test @Ignore// Run this test manually as it fails in Travis because of big response data
+    @Ignore //TODO: Run this test manually as it fails in Travis because of big response data
+    @Test
     public void soapGetDataFilesFromDdocManyFilesCorrectValuesArePresent(){
         setTestFilesDirectory("ddoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));

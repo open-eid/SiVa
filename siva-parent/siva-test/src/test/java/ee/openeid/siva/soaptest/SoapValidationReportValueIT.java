@@ -121,7 +121,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      */
     @Test
-    @Ignore // New testfile needed
+    @Ignore //TODO: New testfile needed
     public void SoapBdocCorrectValuesArePresentValidLtSignatureAdes() {
         setTestFilesDirectory("bdoc/test/timemark/");
         Document report = extractReportDom(post(validationRequestForDocument("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc")).andReturn().body().asString());
@@ -152,7 +152,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      * File: testAdesQC.bdoc
      *
      */
-    @Ignore //Testfile needed
+    @Ignore //TODO: Testfile needed
     @Test
     public void SoapBdocCorrectValuesArePresentValidLtSignatureAdesqc() {
         setTestFilesDirectory("bdoc/live/timemark/");

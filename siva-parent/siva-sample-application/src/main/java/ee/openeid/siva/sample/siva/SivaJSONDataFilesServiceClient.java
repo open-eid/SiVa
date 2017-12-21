@@ -49,7 +49,7 @@ public class SivaJSONDataFilesServiceClient implements DataFilesService {
         dataFilesRequest.setFilename(file.getFilename());
         try {
             restTemplate.setErrorHandler(errorHandler);
-            return Observable.just(restTemplate.postForObject(properties.getJsonDataFilesServicePath(), dataFilesRequest, String.class));
+            return Observable.just(restTemplate.postForObject(properties.getServiceHost() + properties.getJsonDataFilesServicePath(), dataFilesRequest, String.class));
         } catch (ResourceAccessException ce) {
             String errorMessage = "Connection to web service failed. Make sure You have configured SiVa web service correctly";
             return Observable.just(new ObjectMapper().writer().writeValueAsString(new ServiceError(GENERIC_ERROR_CODE, errorMessage)));

@@ -591,4 +591,6 @@ siva.xroad.signaturePolicy.defaultPolicy= POLv3
 |**siva.service.serviceHost**| An HTTP URL link to the Siva webapp <ul><li>Default: **http://localhost:8080**</li></ul> |
 |**siva.service.jsonServicePath**| Service path in Siva webapp to access the REST/JSON API<ul><li>Default: **/validate**</li></ul> |
 |**siva.service.soapServicePath**| Service path in Siva webapp to access the SOAP API <ul><li>Default: **/soap/validationWebService/validateDocument**</li></ul> |
+|**siva.service.jsonDataFilesServicePath**| Data file service path in Siva webapp to access the REST/JSON API<ul><li>Default: **/getDataFiles**</li></ul> |
+|**siva.service.soapDataFilesServicePath**| Data file service path in Siva webapp to access the SOAP API <ul><li>Default: **/soap/dataFilesWebService/getDocumentDataFiles**</li></ul> |
 

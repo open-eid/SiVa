@@ -1576,6 +1576,10 @@ Default configuration parameters can be overridden by providing custom applicati
 <td>Sets the LOTL code in DSS <ul><li>Default: <strong>EU</strong></li></ul></td>
 </tr>
 <tr>
+<td><strong>siva.tsl.loader.trustedTerritories</strong></td>
+<td>Sets the trusted territories by countries <ul><li>Default: <strong>"AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "GR", "HU", "HR", "IE", "IS", "IT", "LT", "LU", "LV", "LI", "MT", "NO", "NL", "PL", "PT", "RO", "SE", "SI", "SK", "UK"</strong></li></ul></td>
+</tr>
+<tr>
 <td><strong>siva.tsl.loader.schedulerCron</strong></td>
 <td>A string in a <a href="http://www.manpagez.com/man/5/crontab/">Crontab expression format</a> that defines the interval at which the TSL renewal process is started. The default is 03:00 every day (local time) <ul><li>Default: <strong>0 0 3 * * ?</strong></li></ul></td>
 </tr>
@@ -1921,6 +1925,14 @@ siva.xroad.signaturePolicy.defaultPolicy= POLv3
 <tr>
 <td><strong>siva.service.soapServicePath</strong></td>
 <td>Service path in Siva webapp to access the SOAP API <ul><li>Default: <strong>/soap/validationWebService/validateDocument</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.service.jsonDataFilesServicePath</strong></td>
+<td>Data file service path in Siva webapp to access the REST/JSON API<ul><li>Default: <strong>/getDataFiles</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.service.soapDataFilesServicePath</strong></td>
+<td>Data file service path in Siva webapp to access the SOAP API <ul><li>Default: <strong>/soap/dataFilesWebService/getDocumentDataFiles</strong></li></ul></td>
 </tr>
 </tbody>
 </table>

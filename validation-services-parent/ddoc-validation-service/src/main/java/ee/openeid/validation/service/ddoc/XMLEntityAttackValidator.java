@@ -39,14 +39,12 @@ public class XMLEntityAttackValidator {
     protected void validateAgainstXMLEntityAttacks(byte[] xmlContent) {
         try {
             SAXParser saxParser = SecureSAXParsers.createParser();
-            InputStream inputStream =  new SignatureInputStream(new ByteArrayInputStream(xmlContent));
+            InputStream inputStream = new SignatureInputStream(new ByteArrayInputStream(xmlContent));
 
             saxParser.getXMLReader().parse(new InputSource(inputStream));
         } catch (ParserConfigurationException | SAXException | IOException e) {
             LOGGER.error("Exception when validation document against XML entity attacks: " + e.getMessage(), e);
             throw new MalformedDocumentException(e);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

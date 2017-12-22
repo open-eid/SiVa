@@ -135,7 +135,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
      *
      * File: hellopades-lt-sha256-rsa2048-expired.pdf
      */
-    @Ignore //Needs new test file
+    @Ignore //TODO: Needs new test file
     @Test
     public void documentSignedWithExpiredRsa2048CertificateShouldFail() {
         post(validationRequestFor( "hellopades-lt-sha256-rsa2048-expired.pdf"))

@@ -7,7 +7,7 @@ Test_cases.write("Test Case Descriptions\n")
 Test_cases.write("==================\n")
 Test_cases.write("\n## Introduction\n")
 Test_cases.write("This document gives overview of the test cases. This page is partially generated using a script, more info about the script can be found in [SiVa GitHub](https://github.com/open-eid/SiVa/tree/master/test-helpers).\n\n")
-Test_cases.write("The structure and elements of test case is described in [QA Strategy](http://open-eid.github.io/SiVa/siva/qa_strategy/#testing) document.\n")
+Test_cases.write("The structure and elements of test case is described in [QA Strategy](http://open-eid.github.io/SiVa/siva2/qa_strategy/#testing) document.\n")
 Test_cases.write("All the files used in the tests can be found in [SiVa GitHub](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/resources).\n")
 
 new_file = 1
@@ -44,7 +44,7 @@ for root, dirs, filenames in os.walk(source_in_dir):
             elif '* File:' in a_line:
                 Test_cases.write("  "+a_line.lstrip().rstrip()+"\n\n")
             elif '@Ignore' in a_line:
-                Test_cases.write("  **Attention! This test is disabled: "+a_line[25:].rstrip()+"\n\n")
+                Test_cases.write("  **Attention! This test is disabled: "+a_line[20:].rstrip()+"\n\n")
         a_file.close()
 Test_cases.close()
             

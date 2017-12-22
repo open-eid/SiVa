@@ -130,7 +130,7 @@ public class DDOCValidationService implements ValidationService {
                         (ex.getCode() == DigiDocException.ERR_ISSUER_XMLNS && !signedDoc.getFormat().equals(SignedDoc.FORMAT_SK_XML)));
     }
 
-    private boolean hasNonWarningErrs(SignedDoc signedDoc, ArrayList errors) {
+    boolean hasNonWarningErrs(SignedDoc signedDoc, ArrayList errors) {
         for (Object error : errors) {
             if (error instanceof DigiDocException) {
                 DigiDocException ex = (DigiDocException) error;

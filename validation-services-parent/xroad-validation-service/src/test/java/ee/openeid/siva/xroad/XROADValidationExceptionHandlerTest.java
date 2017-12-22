@@ -34,14 +34,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = MessageSourceAutoConfiguration.class)
@@ -63,17 +63,17 @@ public class XROADValidationExceptionHandlerTest {
         validationController.setValidationService(validationService);
         XROADValidationExceptionHandler validationExceptionHandler = new XROADValidationExceptionHandler();
         validationExceptionHandler.setMessageSource(messageSource);
-        mockMvc = standaloneSetup(validationController).setControllerAdvice(validationExceptionHandler).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(validationController).setControllerAdvice(validationExceptionHandler).build();
     }
 
     @SuppressWarnings("unchecked")
     @Test
     public void testMalformedDocumentExceptionOnValidationExceptionHandler() throws Exception {
         when(validationService.validateDocument(any(ValidationDocument.class))).thenThrow(MalformedDocumentException.class);
-        MvcResult result = mockMvc.perform(post("/xroad-validation")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/xroad-validation")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mockRequest().toString().getBytes()))
-                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andReturn();
         String content = result.getResponse().getContentAsString();
         assertEquals("{\"key\":\"document\",\"message\":\"Document malformed or not matching documentType\"}", content);
@@ -83,10 +83,10 @@ public class XROADValidationExceptionHandlerTest {
     @Test
     public void testInvalidPolicyExceptionOnValidationExceptionHandler() throws Exception {
         when(validationService.validateDocument(any(ValidationDocument.class))).thenThrow(new InvalidPolicyException("some message"));
-        MvcResult result = mockMvc.perform(post("/xroad-validation")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/xroad-validation")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mockRequest().toString().getBytes()))
-                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andReturn();
         String content = result.getResponse().getContentAsString();
         assertEquals("{\"key\":\"signaturePolicy\",\"message\":\"some message\"}", content);
@@ -96,10 +96,10 @@ public class XROADValidationExceptionHandlerTest {
     @Test
     public void testValidationServiceExceptionOnValidationExceptionHandler() throws Exception {
         when(validationService.validateDocument(any(ValidationDocument.class))).thenThrow(ValidationServiceException.class);
-        MvcResult result = mockMvc.perform(post("/xroad-validation")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/xroad-validation")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mockRequest().toString().getBytes()))
-                .andExpect(status().isInternalServerError())
+                .andExpect(MockMvcResultMatchers.status().isInternalServerError())
                 .andReturn();
         String content = result.getResponse().getContentAsString();
         assertEquals("{\"message\":\"Unfortunately there was an error validating your document\"}", content);

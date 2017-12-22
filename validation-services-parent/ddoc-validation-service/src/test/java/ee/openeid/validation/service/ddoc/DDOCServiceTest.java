@@ -25,6 +25,7 @@ import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
+import ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource;
 import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.validation.service.ddoc.configuration.DDOCSignaturePolicyProperties;
@@ -52,8 +53,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.ADES_POLICY;
-import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.QES_POLICY;
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.*;
@@ -282,25 +281,25 @@ public class DDOCServiceTest {
     @Test
     public void validationReportShouldContainDefaultPolicyWhenPolicyIsNotExplicitlyGiven() throws Exception {
         Policy policy = validateWithPolicy("").getValidationConclusion().getPolicy();
-        assertEquals(QES_POLICY.getName(), policy.getPolicyName());
-        assertEquals(QES_POLICY.getDescription(), policy.getPolicyDescription());
-        assertEquals(QES_POLICY.getUrl(), policy.getPolicyUrl());
+        assertEquals(PredefinedValidationPolicySource.QES_POLICY.getName(), policy.getPolicyName());
+        assertEquals(PredefinedValidationPolicySource.QES_POLICY.getDescription(), policy.getPolicyDescription());
+        assertEquals(PredefinedValidationPolicySource.QES_POLICY.getUrl(), policy.getPolicyUrl());
     }
 
     @Test
     public void validationReportShouldContainAdesPolicyWhenAdesPolicyIsGivenToValidator() throws Exception {
         Policy policy = validateWithPolicy("POLv3").getValidationConclusion().getPolicy();
-        assertEquals(ADES_POLICY.getName(), policy.getPolicyName());
-        assertEquals(ADES_POLICY.getDescription(), policy.getPolicyDescription());
-        assertEquals(ADES_POLICY.getUrl(), policy.getPolicyUrl());
+        assertEquals(PredefinedValidationPolicySource.ADES_POLICY.getName(), policy.getPolicyName());
+        assertEquals(PredefinedValidationPolicySource.ADES_POLICY.getDescription(), policy.getPolicyDescription());
+        assertEquals(PredefinedValidationPolicySource.ADES_POLICY.getUrl(), policy.getPolicyUrl());
     }
 
     @Test
     public void validationReportShouldContainQESPolicyWhenQESPolicyIsGivenToValidator() throws Exception {
         Policy policy = validateWithPolicy("POLv4").getValidationConclusion().getPolicy();
-        assertEquals(QES_POLICY.getName(), policy.getPolicyName());
-        assertEquals(QES_POLICY.getDescription(), policy.getPolicyDescription());
-        assertEquals(QES_POLICY.getUrl(), policy.getPolicyUrl());
+        assertEquals(PredefinedValidationPolicySource.QES_POLICY.getName(), policy.getPolicyName());
+        assertEquals(PredefinedValidationPolicySource.QES_POLICY.getDescription(), policy.getPolicyDescription());
+        assertEquals(PredefinedValidationPolicySource.QES_POLICY.getUrl(), policy.getPolicyUrl());
     }
 
     @Test

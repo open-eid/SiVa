@@ -29,9 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.config.EncoderConfig.encoderConfig;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 @Category(IntegrationTest.class)
@@ -39,13 +37,13 @@ public class ReportSignatureIT extends SiVaRestTests {
 
     private static final String TEST_FILES_DIRECTORY = "document_format_test_files/";
     private static final String VALIDATION_ENDPOINT = "/validate";
+    @Autowired
+    private SignatureServiceConfigurationProperties signatureServiceConfigurationProperties;
+
     @Override
     protected String getTestFilesDirectory() {
         return TEST_FILES_DIRECTORY;
     }
-
-    @Autowired
-    private SignatureServiceConfigurationProperties signatureServiceConfigurationProperties;
 
     /**
      * TestCaseID: Detailed-Report-Signature-1
@@ -108,12 +106,12 @@ public class ReportSignatureIT extends SiVaRestTests {
         signatureServiceConfigurationProperties.getPkcs12().setPath("src/test/resources/test.p12");
         signatureServiceConfigurationProperties.getPkcs12().setPassword("password");
         String filename = "hellopades-pades-lt-sha256-sign.pdf";
-        String request = validationRequestFor(filename,VALID_SIGNATURE_POLICY_4, "Detailed");
+        String request = validationRequestFor(filename, VALID_SIGNATURE_POLICY_4, "Detailed");
         Response response = validateRequestForDetailedReport(request, VALIDATION_ENDPOINT);
         String validationReportSignature = response.jsonPath().getString("validationReportSignature");
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("document",validationReportSignature);
-        jsonObject.put("filename","filename.pdf");
+        jsonObject.put("document", validationReportSignature);
+        jsonObject.put("filename", "filename.pdf");
         Response reportSignatureValidation = given()
                 .contentType(ContentType.JSON)
                 .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
@@ -172,7 +170,7 @@ public class ReportSignatureIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.validatedDocument.fileHashInHex", isEmptyOrNullString());
     }
 
-    private Response validateRequestForDetailedReport(String request, String validationUrl){
+    private Response validateRequestForDetailedReport(String request, String validationUrl) {
         return given()
                 .contentType(ContentType.JSON)
                 .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))

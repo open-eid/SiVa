@@ -37,7 +37,6 @@ import java.util.TimeZone;
 import static com.jayway.restassured.config.EncoderConfig.encoderConfig;
 import static ee.openeid.siva.integrationtest.TestData.*;
 import static org.hamcrest.Matchers.*;
-import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 @Category(IntegrationTest.class)

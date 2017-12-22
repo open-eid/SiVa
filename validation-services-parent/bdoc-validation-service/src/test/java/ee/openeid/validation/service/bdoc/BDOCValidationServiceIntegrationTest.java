@@ -22,6 +22,7 @@ import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
+import ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource;
 import ee.openeid.tsl.CustomCertificatesLoader;
 import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.TSLValidationJobFactory;
@@ -48,13 +49,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.ADES_POLICY;
-import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.QES_POLICY;
 import static ee.openeid.validation.service.bdoc.BDOCTestUtils.*;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.junit.Assert.*;
 
@@ -82,18 +78,14 @@ public class BDOCValidationServiceIntegrationTest {
     private static String POL_V4 = "POLv4";
 
     private static String DOCUMENT_MALFORMED_MESSAGE = "Document malformed or not matching documentType";
-
-    @Autowired
-    private BDOCValidationService bdocValidationService;
-
-    @Autowired
-    private BDOCConfigurationService configurationService;
-
-    @Autowired
-    private ReportConfigurationProperties reportConfigurationProperties;
-
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
+    @Autowired
+    private BDOCValidationService bdocValidationService;
+    @Autowired
+    private BDOCConfigurationService configurationService;
+    @Autowired
+    private ReportConfigurationProperties reportConfigurationProperties;
 
     @Test
     public void vShouldHaveValidationWarnings() throws Exception {
@@ -262,25 +254,25 @@ public class BDOCValidationServiceIntegrationTest {
     @Test
     public void validationReportShouldContainDefaultPolicyWhenPolicyIsNotExplicitlyGiven() throws Exception {
         Policy policy = validateWithPolicy("").getValidationConclusion().getPolicy();
-        assertEquals(QES_POLICY.getName(), policy.getPolicyName());
-        assertEquals(QES_POLICY.getDescription(), policy.getPolicyDescription());
-        assertEquals(QES_POLICY.getUrl(), policy.getPolicyUrl());
+        assertEquals(PredefinedValidationPolicySource.QES_POLICY.getName(), policy.getPolicyName());
+        assertEquals(PredefinedValidationPolicySource.QES_POLICY.getDescription(), policy.getPolicyDescription());
+        assertEquals(PredefinedValidationPolicySource.QES_POLICY.getUrl(), policy.getPolicyUrl());
     }
 
     @Test
     public void validationReportShouldContainAdesPolicyWhenAdesPolicyIsGivenToValidator() throws Exception {
         Policy policy = validateWithPolicy(POL_V3).getValidationConclusion().getPolicy();
-        assertEquals(ADES_POLICY.getName(), policy.getPolicyName());
-        assertEquals(ADES_POLICY.getDescription(), policy.getPolicyDescription());
-        assertEquals(ADES_POLICY.getUrl(), policy.getPolicyUrl());
+        assertEquals(PredefinedValidationPolicySource.ADES_POLICY.getName(), policy.getPolicyName());
+        assertEquals(PredefinedValidationPolicySource.ADES_POLICY.getDescription(), policy.getPolicyDescription());
+        assertEquals(PredefinedValidationPolicySource.ADES_POLICY.getUrl(), policy.getPolicyUrl());
     }
 
     @Test
     public void validationReportShouldContainQESPolicyWhenQESPolicyIsGivenToValidator() throws Exception {
         Policy policy = validateWithPolicy(POL_V4).getValidationConclusion().getPolicy();
-        assertEquals(QES_POLICY.getName(), policy.getPolicyName());
-        assertEquals(QES_POLICY.getDescription(), policy.getPolicyDescription());
-        assertEquals(QES_POLICY.getUrl(), policy.getPolicyUrl());
+        assertEquals(PredefinedValidationPolicySource.QES_POLICY.getName(), policy.getPolicyName());
+        assertEquals(PredefinedValidationPolicySource.QES_POLICY.getDescription(), policy.getPolicyDescription());
+        assertEquals(PredefinedValidationPolicySource.QES_POLICY.getUrl(), policy.getPolicyUrl());
     }
 
     @Test

@@ -32,6 +32,7 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,6 @@ import java.io.IOException;
 
 import static ee.openeid.siva.sample.siva.SivaSOAPValidationServiceClient.LINE_SEPARATOR;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -95,7 +95,7 @@ public class SivaSOAPValidationServiceClientTest {
         Observable<String> validatedDocument = validationService.validateDocument("", "", uploadedFile);
         assertThat(validatedDocument.toBlocking().first()).isEqualTo(response);
 
-        verify(restTemplate).postForObject(anyString(), validationRequestCaptor.capture(), any());
+        verify(restTemplate).postForObject(Matchers.anyString(), validationRequestCaptor.capture(), Matchers.any());
         assertThat(validationRequestCaptor.getValue()).contains("<Filename>hello.bdoc</Filename>");
 
     }
@@ -142,7 +142,7 @@ public class SivaSOAPValidationServiceClientTest {
     }
 
     private void serverMockResponse(String response) {
-        when(restTemplate.postForObject(anyString(), anyString(), anyObject()))
+        when(restTemplate.postForObject(Matchers.anyString(), Matchers.anyString(), Matchers.anyObject()))
                 .thenReturn(response);
     }
 }

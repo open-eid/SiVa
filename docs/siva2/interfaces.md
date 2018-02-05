@@ -555,7 +555,7 @@ Data files request parameters for JSON and SOAP interfaces are described in the 
 
 ```json
 {
-  "filename":"DDOC",
+  "filename":"sample.ddoc",
   "document":"PD94bWwgdmVyc2lvbj0iMS4...."
 }
 ```
@@ -570,7 +570,7 @@ Data files request parameters for JSON and SOAP interfaces are described in the 
     <soap:GetDocumentDataFiles>
       <soap:DataFilesRequest>
         <Document>PD94bWwgdmVyc2lvbj0iMS4wI...</Document>
-        <Filename>DDOC</Filename>
+        <Filename>sample.ddoc</Filename>
       </soap:DataFilesRequest>
     </soap:GetDocumentDataFiles>
   </soapenv:Body>

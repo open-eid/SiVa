@@ -2207,17 +2207,17 @@
 <td>Base64 encoded string of digitally signed DDOC document</td>
 </tr>
 <tr>
-<td>documentType</td>
-<td>DocumentType</td>
+<td>filename</td>
+<td>Filename</td>
 <td>+</td>
 <td>String</td>
-<td>Format of the digitally signed document. <br> <strong>Possible values:</strong> <br> DDOC - for documents in <a href="http://id.ee/public/DigiDoc_format_1.3.pdf">DIGIDOC-XML</a> format, supported versions are DIGIDOC-XML 1.0 (also known as SK-XML 1.0) to DIGIDOC-XML 1.3. Currently only DDOC file format is supported for this operation</td>
+<td>File name of the digitally signed document (i.e. sample.ddoc), max length 255 characters. Currently only DDOC file format is supported for this operation</td>
 </tr>
 </tbody>
 </table>
 <h3 id="sample-json-request">Sample JSON request</h3>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;documentType&quot;</span><span class="p">:</span><span class="s2">&quot;DDOC&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;filename&quot;</span><span class="p">:</span><span class="s2">&quot;DDOC&quot;</span><span class="p">,</span>
   <span class="nt">&quot;document&quot;</span><span class="p">:</span><span class="s2">&quot;PD94bWwgdmVyc2lvbj0iMS4....&quot;</span>
 <span class="p">}</span>
 </pre></div>
@@ -2230,7 +2230,7 @@
     <span class="nt">&lt;soap:GetDocumentDataFiles&gt;</span>
       <span class="nt">&lt;soap:DataFilesRequest&gt;</span>
         <span class="nt">&lt;Document&gt;</span>PD94bWwgdmVyc2lvbj0iMS4wI...<span class="nt">&lt;/Document&gt;</span>
-        <span class="nt">&lt;DocumentType&gt;</span>DDOC<span class="nt">&lt;/DocumentType&gt;</span>
+        <span class="nt">&lt;Filename&gt;</span>DDOC<span class="nt">&lt;/Filename&gt;</span>
       <span class="nt">&lt;/soap:DataFilesRequest&gt;</span>
     <span class="nt">&lt;/soap:GetDocumentDataFiles&gt;</span>
   <span class="nt">&lt;/soapenv:Body&gt;</span>

@@ -342,7 +342,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .then()
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The difference between the OCSP response time and the signature time stamp is too large"))
+                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("The difference between the OCSP response time and the signature timestamp is too large"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
@@ -540,11 +540,9 @@ public class BdocValidationFailIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDD4j("KS-21_fileeemaldatud.4.asice", null, null))
                 .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIGNED_DATA_NOT_FOUND"))
-                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("The reference data object(s) is not found!"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
+                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
     /**

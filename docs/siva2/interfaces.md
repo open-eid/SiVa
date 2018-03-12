@@ -501,6 +501,7 @@ General structure of validation response.
 ```
 
 ### Sample JSON response (error situation)
+In case of error (when validation report is not returned) status code 400 is returned together with following message body:
 
 ```json
 {"requestErrors": [{
@@ -629,6 +630,7 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
 ```
 
 ### Sample JSON response (error situation)
+In case of error (when datafiles are not returned) status code 400 is returned together with following message body:
 
 ```json
 {"requestErrors": [{

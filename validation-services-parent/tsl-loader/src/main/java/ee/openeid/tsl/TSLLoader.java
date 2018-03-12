@@ -54,7 +54,7 @@ public class TSLLoader {
         tslValidationJob.setRepository(tslRepository);
         tslValidationJob.setLotlUrl(configurationProperties.getUrl());
         tslValidationJob.setLotlCode(configurationProperties.getCode());
-        tslValidationJob.setDssKeyStore(keyStoreCertificateSource);
+        tslValidationJob.setOjContentKeyStore(keyStoreCertificateSource);
         tslValidationJob.setFilterTerritories(configurationProperties.getTrustedTerritories());
         tslValidationJob.setCheckLOTLSignature(true);
         tslValidationJob.setCheckTSLSignatures(true);

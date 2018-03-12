@@ -501,6 +501,7 @@ General structure of validation response.
 ```
 
 ### Sample JSON response (error situation)
+In case of error (when validation report is not returned) status code 400 is returned together with following message body:
 
 ```json
 {"requestErrors": [{
@@ -549,13 +550,13 @@ Data files request parameters for JSON and SOAP interfaces are described in the 
 | JSON parameter | SOAP parameter | Mandatory | JSON data type | Description |
 |----------------|----------------|-----------|----------------|-------------|
 | document | Document | + |  String | Base64 encoded string of digitally signed DDOC document |
-| documentType | DocumentType | + |  String | Format of the digitally signed document. <br> **Possible values:** <br> DDOC - for documents in [DIGIDOC-XML](http://id.ee/public/DigiDoc_format_1.3.pdf) format, supported versions are DIGIDOC-XML 1.0 (also known as SK-XML 1.0) to DIGIDOC-XML 1.3. Currently only DDOC file format is supported for this operation|
+| filename | Filename | + |  String | File name of the digitally signed document (i.e. sample.ddoc), max length 255 characters. Currently only DDOC file format is supported for this operation|
 
 ### Sample JSON request
 
 ```json
 {
-  "documentType":"DDOC",
+  "filename":"sample.ddoc",
   "document":"PD94bWwgdmVyc2lvbj0iMS4...."
 }
 ```
@@ -570,7 +571,7 @@ Data files request parameters for JSON and SOAP interfaces are described in the 
     <soap:GetDocumentDataFiles>
       <soap:DataFilesRequest>
         <Document>PD94bWwgdmVyc2lvbj0iMS4wI...</Document>
-        <DocumentType>DDOC</DocumentType>
+        <Filename>sample.ddoc</Filename>
       </soap:DataFilesRequest>
     </soap:GetDocumentDataFiles>
   </soapenv:Body>
@@ -629,6 +630,7 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
 ```
 
 ### Sample JSON response (error situation)
+In case of error (when datafiles are not returned) status code 400 is returned together with following message body:
 
 ```json
 {"requestErrors": [{

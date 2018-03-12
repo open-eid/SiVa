@@ -21,7 +21,7 @@ import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.digidoc4j.TSLCertificateSource;
-import org.digidoc4j.impl.bdoc.tsl.TSLCertificateSourceImpl;
+import org.digidoc4j.impl.asic.tsl.TSLCertificateSourceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

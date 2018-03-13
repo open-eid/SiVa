@@ -2150,6 +2150,7 @@
 
 
 <h3 id="sample-json-response-error-situation">Sample JSON response (error situation)</h3>
+<p>In case of error (when validation report is not returned) status code 400 is returned together with following message body:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span><span class="nt">&quot;requestErrors&quot;</span><span class="p">:</span> <span class="p">[{</span>
     <span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Document malformed or not matching documentType&quot;</span><span class="p">,</span>
     <span class="nt">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;document&quot;</span>
@@ -2330,6 +2331,7 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
 
 
 <h3 id="sample-json-response-error-situation_1">Sample JSON response (error situation)</h3>
+<p>In case of error (when datafiles are not returned) status code 400 is returned together with following message body:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span><span class="nt">&quot;requestErrors&quot;</span><span class="p">:</span> <span class="p">[{</span>
     <span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid document type. Can only return data files for DDOC type containers.&quot;</span><span class="p">,</span>
     <span class="nt">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;documentType&quot;</span>

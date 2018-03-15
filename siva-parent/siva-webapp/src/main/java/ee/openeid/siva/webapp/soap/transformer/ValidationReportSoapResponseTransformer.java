@@ -22,9 +22,11 @@ import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
 import ee.openeid.siva.validation.document.report.ValidatedDocument;
 import ee.openeid.siva.webapp.soap.Error;
 import ee.openeid.siva.webapp.soap.*;
+
 import org.springframework.stereotype.Component;
 
 import javax.xml.bind.*;
+
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.List;
@@ -68,7 +70,7 @@ public class ValidationReportSoapResponseTransformer {
         responseValidationConclusion.setSignatureForm(validationConclusion.getSignatureForm());
         responseValidationConclusion.setPolicy(toSoapResponsePolicy(validationConclusion.getPolicy()));
         responseValidationConclusion.setValidationLevel(validationConclusion.getValidationLevel());
-        responseValidationConclusion.setValidatedDocument(toSoapValidatedDocument(validationConclusion.getValidatedDocument()));
+        responseValidationConclusion.setValidatedDocument(this.toSoapValidatedDocument(validationConclusion.getValidatedDocument()));
         responseValidationConclusion.setSignaturesCount(validationConclusion.getSignaturesCount());
         if (validationConclusion.getSignatures() != null)
             responseValidationConclusion.setSignatures(toSoapResponseSignatures(validationConclusion.getSignatures()));
@@ -125,8 +127,8 @@ public class ValidationReportSoapResponseTransformer {
     private ValidationConclusion.ValidationWarnings toSoapResponseValidationWarnings(List<ee.openeid.siva.validation.document.report.ValidationWarning> validationWarnings) {
         ValidationConclusion.ValidationWarnings responseValidationWarnings = new ValidationConclusion.ValidationWarnings();
         validationWarnings.stream()
-                .map(this::mapValidationWarning)
-                .forEach(validationWarning -> responseValidationWarnings.getValidationWarning().add(validationWarning));
+            .map(this::mapValidationWarning)
+            .forEach(validationWarning -> responseValidationWarnings.getValidationWarning().add(validationWarning));
         return responseValidationWarnings;
     }
 
@@ -140,8 +142,8 @@ public class ValidationReportSoapResponseTransformer {
         ValidationConclusion.TimeStampTokens responseTimeStamps = new ValidationConclusion.TimeStampTokens();
 
         timeStampTokenValidationDataList.stream()
-                .map(this::getTimeStampTokenData)
-                .forEach(tst -> responseTimeStamps.getTimeStampToken().add(tst));
+            .map(this::getTimeStampTokenData)
+            .forEach(tst -> responseTimeStamps.getTimeStampToken().add(tst));
         return responseTimeStamps;
     }
 

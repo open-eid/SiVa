@@ -20,16 +20,19 @@ In the following subsections, the SiVa validation request and response interface
 
 ```
 POST https://<server url>/validate
+POST https://<server url>/digestvalidate
 ```
 
 ** SOAP Endpoint **
 ```
 POST https://<server url>/soap/validationWebService/validateDocument
+POST https://<server url>/soap/validationWebService/validateDigestDocument
 ```
 
 ** SOAP WSDL **
 ```
 POST https://<server url>/soap/validationWebService/validateDocument?wsdl
+POST https://<server url>/soap/validationWebService/validateDigestDocument?wsdl
 ```
 
 ### Validation request parameters
@@ -79,6 +82,80 @@ Validation request parameters for JSON and SOAP interfaces are described in the 
         <ReportType>Detailed</ReportType>
       </ns2:ValidationRequest>
     </ns2:ValidateDocument>
+  </soap:Body>
+</soap:Envelope>
+```
+
+### Digest validation request parameters
+
+Digest validation request parameters for JSON and SOAP interfaces are described in the table below. Data types of SOAP parameters are defined in the [SiVa WSDL document](/siva/appendix/wsdl).
+
+| JSON parameter | SOAP parameter | Mandatory | JSON data type | Description |
+|----------------|----------------|-----------|-------------|----------------|
+| filename | Filename | + |  String |File name of the digitally signed document (i.e. sample.bdoc) |
+| content | Content | + |  List of DigestDocuments | List of files from digitally signed document to be validated |
+| content[0] | DigestDocument | + |  Object | Data of file from digitally signed document to be validated |
+| content[0].filename | DigestDocument.FileName | + |  String | The filename of file from digitally signed document to be validated |
+| content[0].digestalgorithm | DigestDocument.DigestAlgorithm | + |  String | The identifier of digest algorithm used for calculation of file's digest |
+| content[0].digest | DigestDocument.Digest | + |  String | The corresponding base 64 encoded digest value of file |
+| signatures | Signatures | + |  List of Signatures | List of signature files from digitally signed document to be validated |
+| signatures[0] | Signature | + |  Object | Data of signature from digitally signed document to be validated |
+| signatures[0].filename | Signature.FileName | + |  String | The filename of signature file |
+| signatures[0].content | Signature.Content | + |  String | The corresponding base 64 encoded content of file |
+| timestamptokens | TimeStampTokens | - |  List of TimeStampTokens | List of timestamp token files from digitally signed document to be validated |
+| timestamptokens[0] | TimeStampToken | + |  Object | Data of timestamp token from digitally signed document to be validated |
+| timestamptokens[0].filename | TimeStampToken.FileName | + |  String | The filename of timestamp token file |
+| timestamptokens[0].content | TimeStampToken.Content | + |  String | The corresponding base 64 encoded content of file |
+| signaturepolicy | SignaturePolicy | - |  String | Can be used to change the default signature validation policy that is used by the service. <br> See also [SiVa Validation Policy](/siva/appendix/validation_policy) for more information. <br> **Possible values:** <br> * POLv1 - the default policy. Signatures with all legal levels are accepted (i.e. QES, AdES and AdESqc, according to Regulation (EU) No 910/2014.) <br> * POLv2 - only signatures with QES legal level (according to Regulation (EU) No 910/2014) are accepted. |
+| reportType | ReportType | - | String | Can be used to change the default returned report type. <br>**Possible values:** <br> Simple - default report type. Returns overall validation result (validationConclusion block)<br> Detailed -  returns detailed information about the signatures and their validation results (validationConclusion, validationProcess and validationReportSignature. Two later ones are optionally present). |
+
+### Sample JSON request
+
+```json
+{
+  "filename": "sample.asice",
+  "content": [
+    {
+      "filename": "sample.xml",
+      "digestalgorithm": "SHA256",
+      "digest": "kcDHOZjwZhVfuDhuhCeCERRmYpTH4Jj4RmfVVi31Q9g="
+    } 
+  ],
+  "signatures": [
+    {
+      "filename": "signatures0.xml",
+      "content": "PD94bWwgdmVyc2lvbj0iMS..."
+    }
+  ],
+  "signaturepolicy": "POLv4"
+}
+```
+
+### Sample SOAP request
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <ns2:ValidateDigestDocument xmlns:ns2="http://soap.webapp.siva.openeid.ee/">
+      <ns2:ValidationRequest>
+        <Filename>sample.asice</Filename>
+        <Content>
+          <DigestDocument>
+            <FileName>sample.xml</FileName>
+            <DigestAlgorithm>SHA256</DigestAlgorithm>
+            <Digest>kcDHOZjwZhVfuDhuhCeCERRmYpTH4Jj4RmfVVi31Q9g=</Digest>
+          </DigestDocument>
+        </Content>
+        <Signatures>
+          <Signature>
+            <FileName>signatures0.xml</FileName>
+            <Content>PD94bWwgdmVyc2lvbj0iMS...</Content>
+          </Signature>
+        </Signatures>
+        <SignaturePolicy>POLv4</SignaturePolicy>
+      </ns2:ValidationRequest>
+    </ns2:ValidateDigestDocument>
   </soap:Body>
 </soap:Envelope>
 ```

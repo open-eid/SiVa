@@ -19,7 +19,7 @@ package ee.openeid.siva.proxy.document;
 import lombok.Data;
 
 @Data
-public class ProxyDocument {
+public class ProxyDocument implements Document {
 
     private byte[] bytes;
 
@@ -30,4 +30,5 @@ public class ProxyDocument {
     private String signaturePolicy;
 
     private ReportType reportType;
+
 }

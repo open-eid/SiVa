@@ -20,13 +20,20 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import ee.openeid.siva.monitoring.configuration.MonitoringConfiguration;
 import ee.openeid.siva.monitoring.indicator.UrlHealthIndicator;
 import ee.openeid.siva.proxy.configuration.ProxyConfigurationProperties;
+//import ee.openeid.siva.webapp.soap.DataFilesWebService;
+//import ee.openeid.siva.webapp.soap.ValidationWebService;
+//import ee.openeid.siva.webapp.soap.impl.DataFilesWebServiceImpl;
+//import ee.openeid.siva.webapp.soap.impl.ValidationWebServiceImpl;
+//import ee.openeid.siva.webapp.soap.interceptor.ReportSignatureInterceptor;
+//import ee.openeid.siva.webapp.soap.interceptor.SoapResponseHeaderInterceptor;
+import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.webapp.soap.DataFilesWebService;
 import ee.openeid.siva.webapp.soap.ValidationWebService;
 import ee.openeid.siva.webapp.soap.impl.DataFilesWebServiceImpl;
 import ee.openeid.siva.webapp.soap.impl.ValidationWebServiceImpl;
 import ee.openeid.siva.webapp.soap.interceptor.ReportSignatureInterceptor;
 import ee.openeid.siva.webapp.soap.interceptor.SoapResponseHeaderInterceptor;
-import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
+
 import org.apache.cxf.Bus;
 import org.apache.cxf.binding.soap.interceptor.AbstractSoapInterceptor;
 import org.apache.cxf.binding.soap.saaj.SAAJOutInterceptor;
@@ -93,13 +100,11 @@ public class ServletConfiguration extends MonitoringConfiguration {
     public Endpoint endpoint(SpringBus springBus, ValidationWebService validationWebService) {
         EndpointImpl endpoint = new EndpointImpl(springBus, validationWebService);
         endpoint.setWsdlLocation("wsdl/siva.wsdl");
-
         List<AbstractSoapInterceptor> outInterceptors = new ArrayList<>();
         outInterceptors.add(new SoapResponseHeaderInterceptor());
         outInterceptors.add(new SAAJOutInterceptor());
         outInterceptors.add(reportSignatureInterceptor);
         endpoint.getOutInterceptors().addAll(outInterceptors);
-
         endpoint.publish(ENDPOINT);
         return endpoint;
     }

@@ -16,19 +16,21 @@
 
 package ee.openeid.siva.webapp.soap.impl;
 
-import ee.openeid.siva.proxy.ValidationProxy;
-import ee.openeid.siva.validation.document.report.SimpleReport;
-import ee.openeid.siva.webapp.soap.SoapValidationRequest;
-import ee.openeid.siva.webapp.soap.ValidationReport;
-import ee.openeid.siva.webapp.soap.ValidationWebService;
-import ee.openeid.siva.webapp.soap.transformer.ValidationReportSoapResponseTransformer;
-import ee.openeid.siva.webapp.soap.transformer.SoapValidationRequestToProxyDocumentTransformer;
+import javax.xml.ws.Holder;
+
 import org.apache.cxf.annotations.SchemaValidation;
 import org.apache.cxf.interceptor.InInterceptors;
 import org.apache.cxf.interceptor.OutFaultInterceptors;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.xml.ws.Holder;
+import ee.openeid.siva.proxy.ValidationProxy;
+import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.webapp.soap.SoapDigestValidationRequest;
+import ee.openeid.siva.webapp.soap.SoapValidationRequest;
+import ee.openeid.siva.webapp.soap.ValidationReport;
+import ee.openeid.siva.webapp.soap.ValidationWebService;
+import ee.openeid.siva.webapp.soap.transformer.SoapValidationRequestToProxyDocumentTransformer;
+import ee.openeid.siva.webapp.soap.transformer.ValidationReportSoapResponseTransformer;
 
 @InInterceptors(interceptors = {"ee.openeid.siva.webapp.soap.interceptor.SoapRequestValidationInterceptor"})
 @OutFaultInterceptors(interceptors = {"ee.openeid.siva.webapp.soap.interceptor.SoapFaultResponseInterceptor", "ee.openeid.siva.webapp.soap.interceptor.SoapResponseHeaderInterceptor"})
@@ -46,6 +48,16 @@ public class ValidationWebServiceImpl implements ValidationWebService {
         validationReport.value = responseValidationReport;
     }
 
+    @Override
+    public void validateDigestDocument(SoapDigestValidationRequest digestValidationRequest, Holder<ValidationReport> validationReport, Holder<String> validationReportSignature) {
+        SimpleReport simpleReport = this.validationProxy.validate(this.requestTransformer.transform(digestValidationRequest),
+            this.requestTransformer.transformToDetachedDocuments(digestValidationRequest),
+            this.requestTransformer.transformToSignatureDocuments(digestValidationRequest),
+            this.requestTransformer.transformToTimeStampTokenDocuments(digestValidationRequest) );
+        ValidationReport responseValidationReport = this.responseTransformer.toSoapResponse(simpleReport);
+        validationReport.value = responseValidationReport;
+    }
+
     @Autowired
     public void setValidationProxy(ValidationProxy validationProxy) {
         this.validationProxy = validationProxy;
@@ -60,6 +72,5 @@ public class ValidationWebServiceImpl implements ValidationWebService {
     public void setResponseTransformer(ValidationReportSoapResponseTransformer responseTransformer) {
         this.responseTransformer = responseTransformer;
     }
-
 
 }

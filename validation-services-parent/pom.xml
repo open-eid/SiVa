@@ -28,6 +28,7 @@
     <modules>
         <module>validation-commons</module>
         <module>generic-validation-service</module>
+        <module>digest-validation-service</module>
         <module>timestamptoken-validation-service</module>
         <module>bdoc-validation-service</module>
         <module>ddoc-validation-service</module>

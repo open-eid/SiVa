@@ -89,6 +89,11 @@
             <groupId>ee.openid.siva</groupId>
             <artifactId>siva-statistics</artifactId>
         </dependency>
+        <dependency>
+            <groupId>ee.openid.siva</groupId>
+            <artifactId>digest-validation-service</artifactId>
+            <version>3.0.0</version>
+        </dependency>
 
     </dependencies>
 

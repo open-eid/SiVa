@@ -16,10 +16,8 @@
 
 package ee.openeid.siva.webapp;
 
-import ee.openeid.siva.proxy.ValidationProxy;
-import ee.openeid.siva.webapp.request.JSONValidationRequest;
-import ee.openeid.siva.webapp.response.ValidationResponse;
-import ee.openeid.siva.webapp.transformer.ValidationRequestToProxyDocumentTransformer;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,7 +25,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import ee.openeid.siva.proxy.ValidationProxy;
+import ee.openeid.siva.proxy.document.ProxyDocument;
+import ee.openeid.siva.proxy.document.ReportType;
+import ee.openeid.siva.webapp.request.JSONValidationRequest;
+import ee.openeid.siva.webapp.request.ValidateHashCodePayload;
+import ee.openeid.siva.webapp.response.ValidationResponse;
+import ee.openeid.siva.webapp.transformer.ValidationRequestToProxyDocumentTransformer;
 
 @RestController
 public class ValidationController {
@@ -37,7 +41,13 @@ public class ValidationController {
 
     @RequestMapping(value = "/validate", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public ValidationResponse validate(@Valid @RequestBody JSONValidationRequest validationRequest) {
-        return new ValidationResponse(validationProxy.validate(transformer.transform(validationRequest)));
+        return new ValidationResponse(this.validationProxy.validate(this.transformer.transform(validationRequest)));
+    }
+
+    @RequestMapping(value = "/validateDigest", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    public ValidationResponse validateHashCode(@Valid @RequestBody ValidateHashCodePayload payload) {
+        return new ValidationResponse(this.validationProxy.validate(this.toProxyDocument(payload), payload.toDocumentList(),
+            payload.toSignatureDocumentList(), payload.toTimeStampTokenList()));
     }
 
     @Autowired
@@ -48,6 +58,19 @@ public class ValidationController {
     @Autowired
     public void setTransformer(ValidationRequestToProxyDocumentTransformer transformer) {
         this.transformer = transformer;
+    }
+
+    private ProxyDocument toProxyDocument(ValidateHashCodePayload payload) {
+        ProxyDocument proxyDocument = new ProxyDocument();
+        proxyDocument.setName(payload.getContainerFileName());
+        proxyDocument.setBytes(new byte[0]);
+        if (payload.getReportType() != null) {
+            proxyDocument.setReportType(ReportType.valueOf(payload.getReportType()));
+        } else {
+            proxyDocument.setReportType(ReportType.SIMPLE);
+        }
+        proxyDocument.setSignaturePolicy(payload.getSignaturePolicy());
+        return proxyDocument;
     }
 
 }

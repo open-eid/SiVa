@@ -18,6 +18,7 @@ package ee.openeid.siva.validation.document.report;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -29,17 +30,17 @@ public class ValidationConclusion {
 
     private String signatureForm;
 
-    private List<ValidationWarning> validationWarnings;
+    private List<ValidationWarning> validationWarnings = new ArrayList<>();
 
     private ValidatedDocument validatedDocument;
 
     private String validationLevel;
 
-    private List<SignatureValidationData> signatures;
+    private List<SignatureValidationData> signatures = new ArrayList<>();
 
     private Integer validSignaturesCount = 0;
 
     private Integer signaturesCount = 0;
 
-    private List<TimeStampTokenValidationData> timeStampTokens;
+    private List<TimeStampTokenValidationData> timeStampTokens = new ArrayList<>();
 }

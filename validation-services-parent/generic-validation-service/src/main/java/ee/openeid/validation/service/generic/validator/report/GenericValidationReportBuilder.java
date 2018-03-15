@@ -16,9 +16,31 @@
 
 package ee.openeid.validation.service.generic.validator.report;
 
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.FORMAT_NOT_FOUND;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.getValidationTime;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.processSignatureIndications;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.valueNotKnown;
+
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
+
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.validation.document.report.DetailedReport;
 import ee.openeid.siva.validation.document.report.Error;
+import ee.openeid.siva.validation.document.report.Info;
+import ee.openeid.siva.validation.document.report.Reports;
+import ee.openeid.siva.validation.document.report.SignatureScope;
+import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
+import ee.openeid.siva.validation.document.report.Warning;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import eu.europa.esig.dss.jaxb.diagnostic.XmlSignatureScope;
@@ -27,26 +49,17 @@ import eu.europa.esig.dss.validation.policy.rules.Indication;
 import eu.europa.esig.dss.validation.policy.rules.SubIndication;
 import eu.europa.esig.dss.validation.reports.wrapper.CertificateWrapper;
 import eu.europa.esig.dss.validation.reports.wrapper.TimestampWrapper;
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.*;
 
 public class GenericValidationReportBuilder {
 
     private static final String SIGNATURE_FORMAT_ALLOWED = "LT";
     private static final String SIGNATURE_FORMAT_NOT_ALLOWED = "B";
 
-    private eu.europa.esig.dss.validation.reports.Reports dssReports;
-    private ValidationDocument validationDocument;
-    private ConstraintDefinedPolicy validationPolicy;
-    private ValidationLevel validationLevel;
-    private boolean isReportSignatureEnabled;
+    protected eu.europa.esig.dss.validation.reports.Reports dssReports;
+    protected ValidationDocument validationDocument;
+    protected ConstraintDefinedPolicy validationPolicy;
+    protected ValidationLevel validationLevel;
+    protected boolean isReportSignatureEnabled;
 
     public GenericValidationReportBuilder(eu.europa.esig.dss.validation.reports.Reports dssReports, ValidationLevel validationLevel, ValidationDocument validationDocument, ConstraintDefinedPolicy policy, boolean isReportSignatureEnabled) {
         this.dssReports = dssReports;
@@ -59,15 +72,13 @@ public class GenericValidationReportBuilder {
     public Reports build() {
         ValidationConclusion validationConclusion = getValidationConclusion();
         processSignatureIndications(validationConclusion, validationPolicy.getName());
-
         SimpleReport simpleReport = new SimpleReport(validationConclusion);
         validationConclusion.setValidationLevel(validationLevel.name());
         DetailedReport detailedReport = new DetailedReport(validationConclusion, dssReports.getDetailedReportJaxb());
-
         return new Reports(simpleReport, detailedReport);
     }
 
-    private ValidationConclusion getValidationConclusion() {
+    protected ValidationConclusion getValidationConclusion() {
         ValidationConclusion validationConclusion = new ValidationConclusion();
         validationConclusion.setPolicy(createReportPolicy(validationPolicy));
         validationConclusion.setValidationTime(getValidationTime());
@@ -77,18 +88,18 @@ public class GenericValidationReportBuilder {
         validationConclusion.setSignaturesCount(validationConclusion.getSignatures().size());
         validationConclusion.setValidatedDocument(ReportBuilderUtils.createValidatedDocument(isReportSignatureEnabled, validationDocument.getName(), validationDocument.getBytes()));
         validationConclusion.setValidSignaturesCount(validationConclusion.getSignatures()
-                .stream()
-                .filter(vd -> StringUtils.equals(vd.getIndication(), SignatureValidationData.Indication.TOTAL_PASSED.toString()))
-                .collect(Collectors.toList())
-                .size());
+            .stream()
+            .filter(vd -> StringUtils.equals(vd.getIndication(), SignatureValidationData.Indication.TOTAL_PASSED.toString()))
+            .collect(Collectors.toList())
+            .size());
         return validationConclusion;
     }
 
     private List<SignatureValidationData> buildSignatureValidationDataList() {
         return dssReports.getSimpleReport().getSignatureIdList()
-                .stream()
-                .map(this::buildSignatureValidationData)
-                .collect(Collectors.toList());
+            .stream()
+            .map(this::buildSignatureValidationData)
+            .collect(Collectors.toList());
     }
 
     private String getContainerType() {
@@ -111,11 +122,10 @@ public class GenericValidationReportBuilder {
         signatureValidationData.setCountryCode(getCountryCode());
         signatureValidationData.setIndication(parseIndication(signatureId, signatureValidationData.getErrors()));
         signatureValidationData.setSubIndication(parseSubIndication(signatureId, signatureValidationData.getErrors()));
-
         return signatureValidationData;
     }
 
-    private String changeSignatureFormat(String signatureFormat, String signatureId) {
+    protected String changeSignatureFormat(String signatureFormat, String signatureId) {
         String modifiedSignatureFormat = signatureFormat;
         if (dssReports.getSimpleReport().getErrors(signatureId).contains(FORMAT_NOT_FOUND))
             modifiedSignatureFormat = modifiedSignatureFormat.replace(SIGNATURE_FORMAT_ALLOWED, SIGNATURE_FORMAT_NOT_ALLOWED);
@@ -134,9 +144,9 @@ public class GenericValidationReportBuilder {
 
     private List<Error> parseSignatureErrors(String signatureId) {
         return dssReports.getSimpleReport().getErrors(signatureId)
-                .stream()
-                .map(this::mapDssError)
-                .collect(Collectors.toList());
+            .stream()
+            .map(this::mapDssError)
+            .collect(Collectors.toList());
     }
 
     private Error mapDssError(String dssError) {
@@ -147,9 +157,9 @@ public class GenericValidationReportBuilder {
 
     private List<Warning> parseSignatureWarnings(String signatureId) {
         return dssReports.getSimpleReport().getWarnings(signatureId)
-                .stream()
-                .map(this::mapDssWarning)
-                .collect(Collectors.toList());
+            .stream()
+            .map(this::mapDssWarning)
+            .collect(Collectors.toList());
     }
 
     private Warning mapDssWarning(String dssWarning) {
@@ -160,9 +170,9 @@ public class GenericValidationReportBuilder {
 
     private List<SignatureScope> parseSignatureScopes(String signatureId) {
         return dssReports.getDiagnosticData().getSignatureById(signatureId).getSignatureScopes()
-                .stream()
-                .map(this::parseSignatureScope)
-                .collect(Collectors.toList());
+            .stream()
+            .map(this::parseSignatureScope)
+            .collect(Collectors.toList());
     }
 
     private SignatureScope parseSignatureScope(XmlSignatureScope dssSignatureScope) {
@@ -206,9 +216,9 @@ public class GenericValidationReportBuilder {
     private String getCountryCode() {
         String signingCertId = dssReports.getDiagnosticData().getSigningCertificateId();
         Optional<String> countryCode = dssReports.getDiagnosticData().getUsedCertificates().stream()
-                .filter(cert -> cert.getId().equals(signingCertId))
-                .map(CertificateWrapper::getCountryName)
-                .findFirst();
+            .filter(cert -> cert.getId().equals(signingCertId))
+            .map(CertificateWrapper::getCountryName)
+            .findFirst();
         return countryCode.orElse(null);
     }
 }

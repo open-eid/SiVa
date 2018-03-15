@@ -16,9 +16,24 @@
 
 package ee.openeid.siva.validation.service;
 
+import java.util.List;
+
+import org.apache.commons.lang3.NotImplementedException;
+
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Reports;
+import eu.europa.esig.dss.DSSDocument;
+import eu.europa.esig.dss.DSSException;
+import eu.europa.esig.dss.DigestDocument;
 
 public interface ValidationService {
-    Reports validateDocument(ValidationDocument wsDocument);
+
+    default Reports validateDocument(ValidationDocument validationDocument) {
+        throw new NotImplementedException("Not implemented");
+    }
+
+    default Reports validateDocuments(ValidationDocument validationDocument, List<DigestDocument> digestDocuments, DSSDocument signatureDocument) throws DSSException {
+        throw new NotImplementedException("Not implemented");
+    }
+
 }

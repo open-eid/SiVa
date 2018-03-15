@@ -7,6 +7,7 @@ API to validate following file types:
  * BDOC containers with `TimeMark` and `TimeStamp` signatures
  * Digitally signed PDF files
  * X-Road security server ASiCE signature containers
+ * Given signature files when data about digest of signed datafiles is presented
 
 Architecture document main purpose is to give overview what SiVa is.
 Give an overview of it's internal processes and provide information

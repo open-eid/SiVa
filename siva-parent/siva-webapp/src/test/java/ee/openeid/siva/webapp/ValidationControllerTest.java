@@ -16,25 +16,28 @@
 
 package ee.openeid.siva.webapp;
 
-import ee.openeid.siva.proxy.ValidationProxy;
-import ee.openeid.siva.proxy.document.ProxyDocument;
-import ee.openeid.siva.validation.document.report.SimpleReport;
-import ee.openeid.siva.webapp.request.ValidationRequest;
-import ee.openeid.siva.webapp.transformer.ValidationRequestToProxyDocumentTransformer;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
+
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
+import ee.openeid.siva.proxy.ValidationProxy;
+import ee.openeid.siva.proxy.document.ProxyDocument;
+import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.webapp.request.ValidationRequest;
+import ee.openeid.siva.webapp.transformer.ValidationRequestToProxyDocumentTransformer;
+import ee.openeid.validation.service.generic.DigestValidationService;
 
 public class ValidationControllerTest {
 
-    private ValidationProxySpy validationProxyServiceSpy = new ValidationProxySpy();
+    private ValidationProxySpy validationProxyServiceSpy = new ValidationProxySpy(mock(DigestValidationService.class));
     private ValidationRequestToProxyDocumentTransformerSpy transformerSpy = new ValidationRequestToProxyDocumentTransformerSpy();
 
     private MockMvc mockMvc;
@@ -60,25 +63,25 @@ public class ValidationControllerTest {
     @Test
     public void requestWithInvalidDocumentTypeReturnsErroneousResponse() throws Exception {
         mockMvc.perform(post("/validate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestWithInvalidDocumentType().toString().getBytes()))
-                .andExpect(status().isBadRequest());
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestWithInvalidDocumentType().toString().getBytes()))
+            .andExpect(status().isBadRequest());
     }
 
     @Test
     public void requestWithNonBase64EncodedDocumentReturnsErroneousResponse() throws Exception {
         mockMvc.perform(post("/validate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestWithInvalidDocumentEncoding().toString().getBytes()))
-                .andExpect(status().isBadRequest());
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestWithInvalidDocumentEncoding().toString().getBytes()))
+            .andExpect(status().isBadRequest());
     }
 
     @Test
     public void requestWithEmptyDocumentReturnsErroneousResponse() throws Exception {
         mockMvc.perform(post("/validate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestWithEmptyDocument().toString().getBytes()))
-                .andExpect(status().isBadRequest());
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestWithEmptyDocument().toString().getBytes()))
+            .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -88,27 +91,27 @@ public class ValidationControllerTest {
         jsonObject.put("documentType", "BDOC");
         jsonObject.put("Document", "QVNE");
         String responseContent = mockMvc.perform(post("/validate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonObject.toString().getBytes()))
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(jsonObject.toString().getBytes()))
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
         System.out.println(responseContent);
     }
 
     @Test
     public void requestWithEmptyFilenameReturnsErroneousResponse() throws Exception {
         mockMvc.perform(post("/validate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestWithFilename("").toString().getBytes()))
-                .andExpect(status().isBadRequest());
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestWithFilename("").toString().getBytes()))
+            .andExpect(status().isBadRequest());
     }
 
     @Test
     public void requestWithUnusualButLegalCharacterInFilenameShouldBeValid() throws Exception {
         mockMvc.perform(post("/validate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestWithFilename("üõäöžš.pdf").toString().getBytes()));
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestWithFilename("üõäöžš.pdf").toString().getBytes()));
         assertEquals("üõäöžš.pdf", transformerSpy.validationRequest.getFilename());
     }
 
@@ -160,17 +163,17 @@ public class ValidationControllerTest {
     @Test
     public void requestWithMultipleErrorsReturnsAllErrorsInResponse() throws Exception {
         mockMvc.perform(post("/validate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(invalidRequest().toString().getBytes()))
-                .andExpect(status().isBadRequest());
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(invalidRequest().toString().getBytes()))
+            .andExpect(status().isBadRequest());
     }
 
     @Test
     public void aRequestWithNoRequiredKeysReturnsAllErrorsForEachMissingKey() throws Exception {
         mockMvc.perform(post("/validate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new JSONObject().toString().getBytes()))
-                .andExpect(status().isBadRequest());
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(new JSONObject().toString().getBytes()))
+            .andExpect(status().isBadRequest());
     }
 
     private String filenameWithIllegalCharacter(String illegalCharacter) {
@@ -179,9 +182,9 @@ public class ValidationControllerTest {
 
     private void testIllegalFilename(String filename) throws Exception {
         mockMvc.perform(post("/validate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestWithFilename(filename).toString().getBytes()))
-                .andExpect(status().isBadRequest());
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestWithFilename(filename).toString().getBytes()))
+            .andExpect(status().isBadRequest());
     }
 
     private JSONObject validRequest() {
@@ -227,6 +230,10 @@ public class ValidationControllerTest {
     private class ValidationProxySpy extends ValidationProxy {
 
         private ProxyDocument document;
+
+        public ValidationProxySpy(DigestValidationService digestValidationService) {
+            super(digestValidationService);
+        }
 
         @Override
         public SimpleReport validate(ProxyDocument document) {

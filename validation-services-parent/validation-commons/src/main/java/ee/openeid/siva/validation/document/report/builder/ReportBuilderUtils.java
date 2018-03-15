@@ -30,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.TimeZone;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -70,6 +71,16 @@ public final class ReportBuilderUtils {
         reportPolicy.setPolicyDescription(validationPolicy.getDescription());
         reportPolicy.setPolicyUrl(validationPolicy.getUrl());
         return reportPolicy;
+    }
+
+    public static ValidatedDocument createValidatedDocument(boolean reportSignatureEnabled, String filename, String base64EncodedDigest) {
+        ValidatedDocument validatedDocument = new ValidatedDocument();
+        if (reportSignatureEnabled) {
+            validatedDocument.setFileHashInHex(Hex.toHexString(Base64.getDecoder().decode(base64EncodedDigest)).toUpperCase());
+            validatedDocument.setHashAlgo(DIGEST_ALGO);
+        }
+        validatedDocument.setFilename(filename);
+        return validatedDocument;
     }
 
     public static ValidatedDocument createValidatedDocument(boolean reportSignatureEnabled, String filename, byte[] document) {

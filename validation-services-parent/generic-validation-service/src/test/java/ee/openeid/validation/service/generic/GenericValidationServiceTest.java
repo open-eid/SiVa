@@ -16,14 +16,6 @@
 
 package ee.openeid.validation.service.generic;
 
-import eu.europa.esig.dss.jaxb.diagnostic.*;
-import eu.europa.esig.dss.validation.reports.Reports;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.runners.MockitoJUnitRunner;
-
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneId;
@@ -31,6 +23,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import eu.europa.esig.dss.jaxb.diagnostic.DiagnosticData;
+import eu.europa.esig.dss.jaxb.diagnostic.XmlCertificate;
+import eu.europa.esig.dss.jaxb.diagnostic.XmlRevocation;
+import eu.europa.esig.dss.jaxb.diagnostic.XmlSignature;
+import eu.europa.esig.dss.jaxb.diagnostic.XmlSigningCertificate;
+import eu.europa.esig.dss.jaxb.diagnostic.XmlTimestamp;
+import eu.europa.esig.dss.validation.reports.Reports;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GenericValidationServiceTest {

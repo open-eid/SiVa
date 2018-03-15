@@ -29,6 +29,7 @@ import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPBody;
@@ -70,9 +71,12 @@ public class SoapRequestValidationInterceptor extends AbstractSoapInterceptor {
     }
 
     private void validateDocumentElement(SOAPBody body) {
-        String documentValue = getElementValueFromBody(body, "Document");
-        if (StringUtils.isBlank(documentValue) || !Base64.isBase64(documentValue)) {
-            throwFault(messageSource.getMessage("validation.error.message.base64", null, null));
+        NodeList elements = body.getElementsByTagName("soap:ValidationRequest");
+        if (elements != null && elements.getLength() > 0) {
+            String documentValue = this.getElementValueFromBody(body, "Document");
+            if (StringUtils.isBlank(documentValue) || !Base64.isBase64(documentValue)) {
+                this.throwFault(this.messageSource.getMessage("validation.error.message.base64", null, null));
+            }
         }
     }
 

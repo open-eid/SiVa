@@ -16,27 +16,20 @@
 
 package ee.openeid.siva.proxy;
 
-import ee.openeid.siva.proxy.document.DocumentType;
-import ee.openeid.siva.proxy.document.ProxyDocument;
-import ee.openeid.siva.proxy.exception.ValidatonServiceNotFoundException;
-import ee.openeid.siva.proxy.http.RESTProxyService;
-import ee.openeid.siva.statistics.StatisticsService;
-import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
-import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.report.Error;
-import ee.openeid.siva.validation.document.report.*;
-import ee.openeid.siva.validation.exception.DocumentRequirementsException;
-import ee.openeid.siva.validation.service.ValidationService;
-import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
-import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
-import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
-import ee.openeid.validation.service.bdoc.BDOCValidationService;
-import ee.openeid.validation.service.ddoc.DDOCValidationService;
-import ee.openeid.validation.service.ddoc.report.DDOCValidationReportBuilder;
-import ee.openeid.validation.service.generic.GenericValidationService;
-import ee.openeid.validation.service.generic.configuration.GenericSignaturePolicyProperties;
-import ee.openeid.validation.service.timestamptoken.TimeStampTokenValidationService;
-import ee.openeid.validation.service.timestamptoken.configuration.TimeStampTokenSignaturePolicyProperties;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.List;
+
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Before;
@@ -49,17 +42,36 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import ee.openeid.siva.proxy.document.DocumentType;
+import ee.openeid.siva.proxy.document.ProxyDocument;
+import ee.openeid.siva.proxy.exception.ValidatonServiceNotFoundException;
+import ee.openeid.siva.proxy.http.RESTProxyService;
+import ee.openeid.siva.statistics.StatisticsService;
+import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
+import ee.openeid.siva.validation.document.ValidationDocument;
+import ee.openeid.siva.validation.document.report.Error;
+import ee.openeid.siva.validation.document.report.Info;
+import ee.openeid.siva.validation.document.report.Policy;
+import ee.openeid.siva.validation.document.report.Reports;
+import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
+import ee.openeid.siva.validation.document.report.ValidatedDocument;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
+import ee.openeid.siva.validation.document.report.ValidationWarning;
+import ee.openeid.siva.validation.exception.DocumentRequirementsException;
+import ee.openeid.siva.validation.service.ValidationService;
+import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
+import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
+import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
+import ee.openeid.validation.service.bdoc.BDOCValidationService;
+import ee.openeid.validation.service.ddoc.DDOCValidationService;
+import ee.openeid.validation.service.ddoc.report.DDOCValidationReportBuilder;
+import ee.openeid.validation.service.generic.DigestValidationService;
+import ee.openeid.validation.service.generic.GenericValidationService;
+import ee.openeid.validation.service.generic.configuration.GenericSignaturePolicyProperties;
+import ee.openeid.validation.service.timestamptoken.TimeStampTokenValidationService;
+import ee.openeid.validation.service.timestamptoken.configuration.TimeStampTokenSignaturePolicyProperties;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ValidationProxyTest {
@@ -80,7 +92,7 @@ public class ValidationProxyTest {
 
     @Before
     public void setUp() {
-        validationProxy = new ValidationProxy();
+        validationProxy = new ValidationProxy(mock(DigestValidationService.class));
 
         applicationContext = mock(ApplicationContext.class);
         validationProxy.setApplicationContext(applicationContext);
@@ -239,7 +251,7 @@ public class ValidationProxyTest {
         validationWarning.setContent(DDOCValidationReportBuilder.DDOC_TIMESTAMP_WARNING);
         validationConclusion.setValidationWarnings(Collections.singletonList(validationWarning));
         validationProxy.removeUnnecessaryWarning(validationConclusion);
-        Assert.assertTrue( validationConclusion.getValidationWarnings().isEmpty());
+        Assert.assertTrue(validationConclusion.getValidationWarnings().isEmpty());
     }
 
 

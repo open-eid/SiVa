@@ -61,10 +61,12 @@ public class StatisticsService {
     private SimpleValidationReport createValidationResult(long validationDurationInNanos, ValidationConclusion report) {
         SimpleValidationReport simpleValidationReport = new SimpleValidationReport();
         simpleValidationReport.setDuration(TimeUnit.NANOSECONDS.toMillis(validationDurationInNanos));
-        simpleValidationReport.setSignatureCount(report.getSignaturesCount());
-        simpleValidationReport.setValidSignatureCount(report.getValidSignaturesCount());
-        simpleValidationReport.setSimpleSignatureReports(createSimpleSignatureReports(report));
-        simpleValidationReport.setContainerType(transformToContainerTypeOrEmpty(report.getSignatureForm()));
+        if(report != null) {
+            simpleValidationReport.setSignatureCount(report.getSignaturesCount());
+            simpleValidationReport.setValidSignatureCount(report.getValidSignaturesCount());
+            simpleValidationReport.setSimpleSignatureReports(createSimpleSignatureReports(report));
+            simpleValidationReport.setContainerType(transformToContainerTypeOrEmpty(report.getSignatureForm()));
+        }
         simpleValidationReport.setUserIdentifier(getUserIdentifier());
         return simpleValidationReport;
     }

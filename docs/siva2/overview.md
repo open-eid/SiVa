@@ -49,7 +49,9 @@ generated ASiCe files. For more information on this utility visit [GitHub](https
 
 ## Main features of SiVa validation service:
 
-- SOAP and REST/JSON API to validate signatures.
+- SOAP and REST/JSON API to validate signatures:
+  - validation of signatures when there is given signed container with datafiles;
+  - validation of signatures when there is given only signature data and the digests of datafiles.
 - SOAP and REST/JSON API to retrieve data files from DDOC containers.
 - SOAP API is compadible with X-Road v6.
 - Signing of validation report.

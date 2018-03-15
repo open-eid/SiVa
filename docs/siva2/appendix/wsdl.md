@@ -5,27 +5,38 @@ See also [Interfaces](/siva2/interfaces) for more information about the SOAP int
 ## Validation web service wsdl
 
 ```xml
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://soap.webapp.siva.openeid.ee/"
-                  xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-                  xmlns:xrd="http://x-road.eu/xsd/xroad.xsd" targetNamespace="http://soap.webapp.siva.openeid.ee/"
-                  xmlns:external="http://dss.esig.europa.eu/validation/detailed-report"
-                  name="SignatureValidationService">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+                  xmlns:tns="http://soap.webapp.siva.openeid.ee/" 
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+                  xmlns:xrd="http://x-road.eu/xsd/xroad.xsd" 
+                  xmlns:external="http://dss.esig.europa.eu/validation/detailed-report" 
+                  xmlns:ns="http://x-road.eu/xsd/identifiers" 
+                  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" 
+                  name="SignatureValidationService" 
+                  targetNamespace="http://soap.webapp.siva.openeid.ee/">
     <wsdl:types>
-        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://soap.webapp.siva.openeid.ee/"
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+                   xmlns:tns="http://soap.webapp.siva.openeid.ee/" 
                    targetNamespace="http://soap.webapp.siva.openeid.ee/">
             <xs:import namespace="http://x-road.eu/xsd/xroad.xsd" schemaLocation="xroad.xsd"/>
-            <xs:import namespace="http://dss.esig.europa.eu/validation/detailed-report"
-                       schemaLocation="DetailedReport.xsd"/>
+            <xs:import namespace="http://dss.esig.europa.eu/validation/detailed-report" schemaLocation="DetailedReport.xsd"/>
             <xs:element name="ValidateDocument" type="tns:ValidateDocument"/>
+            <xs:element name="ValidateDigestDocument" type="tns:ValidateDigestDocument"/>
             <xs:element name="ValidationRequest" type="tns:SoapValidationRequest"/>
+            <xs:element name="DigestValidationRequest" type="tns:SoapDigestValidationRequest"/>
             <xs:element name="ValidateDocumentResponse" type="tns:ValidateDocumentResponse"/>
             <xs:element name="ValidationReport" type="tns:ValidationReport"/>
             <xs:element name="ValidationProcess" substitutionGroup="external:DetailedReport"/>
             <xs:element name="ValidationConclusion" type="tns:ValidationConclusion"/>
-
             <xs:complexType name="ValidateDocument">
                 <xs:sequence>
                     <xs:element ref="tns:ValidationRequest"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ValidateDigestDocument">
+                <xs:sequence>
+                    <xs:element ref="tns:DigestValidationRequest"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="SoapValidationRequest">
@@ -35,6 +46,47 @@ See also [Interfaces](/siva2/interfaces) for more information about the SOAP int
                     <xs:element minOccurs="0" maxOccurs="1" name="ReportType" type="xs:string"/>
                     <xs:element minOccurs="0" maxOccurs="1" name="DocumentType" type="tns:DocumentType"/>
                     <xs:element minOccurs="0" name="SignaturePolicy" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="SoapDigestValidationRequest">
+                <xs:sequence>
+                    <xs:element name="Filename" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="ReportType" type="xs:string"/>
+                    <xs:element minOccurs="0" name="SignaturePolicy" type="xs:string"/>
+                    <xs:element name="Content">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element maxOccurs="unbounded" minOccurs="1" name="DigestDocument" type="tns:DigestDocument"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Signatures">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element maxOccurs="unbounded" minOccurs="1" name="Signature" type="tns:SignatureDocument"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="TimeStampTokens" minOccurs="0">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element maxOccurs="unbounded" minOccurs="1" name="TimeStampToken" type="tns:SignatureDocument"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="DigestDocument">
+                <xs:sequence>
+                    <xs:element name="Filename" type="xs:string"/>
+                    <xs:element name="DigestAlgorithm" type="xs:string"/>
+                    <xs:element name="Digest" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="SignatureDocument">
+                <xs:sequence>
+                    <xs:element name="Filename" type="xs:string"/>
+                    <xs:element name="Content" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="ValidateDocumentResponse">
@@ -51,7 +103,6 @@ See also [Interfaces](/siva2/interfaces) for more information about the SOAP int
             </xs:complexType>
             <xs:complexType name="ValidationConclusion">
                 <xs:sequence>
-
                     <xs:element name="Policy" type="tns:Policy"/>
                     <xs:element name="ValidationTime" type="xs:string"/>
                     <xs:element name="ValidatedDocument" type="tns:ValidatedDocumentData"/>
@@ -59,8 +110,7 @@ See also [Interfaces](/siva2/interfaces) for more information about the SOAP int
                     <xs:element name="ValidationWarnings" minOccurs="0">
                         <xs:complexType>
                             <xs:sequence>
-                                <xs:element maxOccurs="unbounded" minOccurs="0" name="ValidationWarning"
-                                            type="tns:ValidationWarning"/>
+                                <xs:element maxOccurs="unbounded" minOccurs="0" name="ValidationWarning" type="tns:ValidationWarning"/>
                             </xs:sequence>
                         </xs:complexType>
                     </xs:element>
@@ -68,16 +118,14 @@ See also [Interfaces](/siva2/interfaces) for more information about the SOAP int
                     <xs:element name="Signatures" minOccurs="0">
                         <xs:complexType>
                             <xs:sequence>
-                                <xs:element maxOccurs="unbounded" minOccurs="0" name="Signature"
-                                            type="tns:SignatureValidationData"/>
+                                <xs:element maxOccurs="unbounded" minOccurs="0" name="Signature" type="tns:SignatureValidationData"/>
                             </xs:sequence>
                         </xs:complexType>
                     </xs:element>
                     <xs:element name="TimeStampTokens" minOccurs="0">
                         <xs:complexType>
                             <xs:sequence>
-                                <xs:element minOccurs="0" maxOccurs="unbounded" name="TimeStampToken"
-                                            type="tns:TimeStampTokenData"/>
+                                <xs:element minOccurs="0" maxOccurs="unbounded" name="TimeStampToken" type="tns:TimeStampTokenData"/>
                             </xs:sequence>
                         </xs:complexType>
                     </xs:element>
@@ -113,7 +161,6 @@ See also [Interfaces](/siva2/interfaces) for more information about the SOAP int
                     <xs:element name="HashAlgo" minOccurs="0" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
-
             <xs:complexType name="SignatureValidationData">
                 <xs:sequence>
                     <xs:element name="Id" type="xs:string"/>
@@ -189,10 +236,10 @@ See also [Interfaces](/siva2/interfaces) for more information about the SOAP int
         </xs:schema>
     </wsdl:types>
     <wsdl:message name="ValidateDocument">
-        <wsdl:part element="tns:ValidateDocument" name="parameters"/>
+        <wsdl:part name="parameters" element="tns:ValidateDocument"/>
     </wsdl:message>
     <wsdl:message name="ValidateDocumentResponse">
-        <wsdl:part element="tns:ValidateDocumentResponse" name="parameters"/>
+        <wsdl:part name="parameters" element="tns:ValidateDocumentResponse"/>
     </wsdl:message>
     <wsdl:message name="requestHeader">
         <wsdl:part name="client" element="xrd:client"/>
@@ -202,10 +249,17 @@ See also [Interfaces](/siva2/interfaces) for more information about the SOAP int
         <wsdl:part name="issue" element="xrd:issue"/>
         <wsdl:part name="protocolVersion" element="xrd:protocolVersion"/>
     </wsdl:message>
+    <wsdl:message name="ValidateDigestDocument">
+        <wsdl:part name="parameters" element="tns:ValidateDigestDocument"/>
+    </wsdl:message>
     <wsdl:portType name="ValidationWebService">
         <wsdl:operation name="ValidateDocument">
-            <wsdl:input message="tns:ValidateDocument" name="ValidateDocument"/>
-            <wsdl:output message="tns:ValidateDocumentResponse" name="ValidateDocumentResponse"/>
+            <wsdl:input name="ValidateDocument" message="tns:ValidateDocument"/>
+            <wsdl:output name="ValidateDocumentResponse" message="tns:ValidateDocumentResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="ValidateDigestDocument">
+            <wsdl:input name="ValidateDigestDocument" message="tns:ValidateDigestDocument"/>
+            <wsdl:output name="ValidateDocumentResponse" message="tns:ValidateDocumentResponse"/>
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="SignatureValidationServiceSoapBinding" type="tns:ValidationWebService">
@@ -231,14 +285,34 @@ See also [Interfaces](/siva2/interfaces) for more information about the SOAP int
                 <soap:header message="tns:requestHeader" part="protocolVersion" use="literal"/>
             </wsdl:output>
         </wsdl:operation>
+        <wsdl:operation name="ValidateDigestDocument">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input  name="ValidateDigestDocument">
+                <soap:body use="literal"/>
+                <soap:header message="tns:requestHeader" part="client" use="literal"/>
+                <soap:header message="tns:requestHeader" part="service" use="literal"/>
+                <soap:header message="tns:requestHeader" part="id" use="literal"/>
+                <soap:header message="tns:requestHeader" part="userId" use="literal"/>
+                <soap:header message="tns:requestHeader" part="issue" use="literal"/>
+                <soap:header message="tns:requestHeader" part="protocolVersion" use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="ValidateDocumentResponse">
+                <soap:body use="literal"/>
+                <soap:header message="tns:requestHeader" part="client" use="literal"/>
+                <soap:header message="tns:requestHeader" part="service" use="literal"/>
+                <soap:header message="tns:requestHeader" part="id" use="literal"/>
+                <soap:header message="tns:requestHeader" part="userId" use="literal"/>
+                <soap:header message="tns:requestHeader" part="issue" use="literal"/>
+                <soap:header message="tns:requestHeader" part="protocolVersion" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
     </wsdl:binding>
     <wsdl:service name="SignatureValidationService">
-        <wsdl:port binding="tns:SignatureValidationServiceSoapBinding" name="ValidationWebServiceImplPort">
+        <wsdl:port name="ValidationWebServiceImplPort" binding="tns:SignatureValidationServiceSoapBinding">
             <soap:address location="http://localhost:8080/soap/validationWebService"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>
-
 ```
 
 ## Data files web service wsdl

@@ -199,7 +199,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
-                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_NOT_BASE64));
+                .body("Envelope.Body.Fault.faultstring", Matchers.is(INVALID_FILENAME));
     }
 
     /**

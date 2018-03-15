@@ -26,7 +26,7 @@ import eu.europa.esig.dss.validation.policy.rules.SubIndication;
 import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.*;
 import org.digidoc4j.exceptions.DigiDoc4JException;
-import org.digidoc4j.impl.bdoc.BDocSignature;
+import org.digidoc4j.impl.asic.asice.AsicESignature;
 import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
@@ -127,7 +127,7 @@ public class BDOCValidationReportBuilder {
         List<String> dataFilenames = container.getDataFiles().stream().map(DataFile::getName).collect(Collectors.toList());
         return container.getSignatures()
                 .stream()
-                .map(signature -> createValidationWarning(signature, getUnsignedFiles((BDocSignature) signature, dataFilenames)))
+                .map(signature -> createValidationWarning(signature, getUnsignedFiles((AsicESignature) signature, dataFilenames)))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
@@ -142,7 +142,7 @@ public class BDOCValidationReportBuilder {
         return createValidationWarning(content);
     }
 
-    private List<String> getUnsignedFiles(BDocSignature bDocSignature, List<String> dataFilenames) {
+    private List<String> getUnsignedFiles(AsicESignature bDocSignature, List<String> dataFilenames) {
         List<String> uris = bDocSignature.getOrigin().getReferences()
                 .stream()
                 .map(reference -> decodeUriIfPossible(reference.getURI()))
@@ -160,7 +160,7 @@ public class BDOCValidationReportBuilder {
 
     private SignatureValidationData createSignatureValidationData(Signature signature, List<String> dataFilenames) {
         SignatureValidationData signatureValidationData = new SignatureValidationData();
-        BDocSignature bDocSignature = (BDocSignature) signature;
+        AsicESignature bDocSignature = (AsicESignature) signature;
 
 
         signatureValidationData.setId(bDocSignature.getId());
@@ -183,16 +183,16 @@ public class BDOCValidationReportBuilder {
         return subjectName.replaceAll("^\"|\"$", "");
     }
 
-    private String getSignatureLevel(BDocSignature bDocSignature) {
+    private String getSignatureLevel(AsicESignature bDocSignature) {
         SignatureQualification signatureLevel = getDssSimpleReport(bDocSignature).getSignatureQualification(bDocSignature.getId());
         return signatureLevel != null ? signatureLevel.name() : "";
     }
 
-    private eu.europa.esig.dss.validation.reports.SimpleReport getDssSimpleReport(BDocSignature bDocSignature) {
+    private eu.europa.esig.dss.validation.reports.SimpleReport getDssSimpleReport(AsicESignature bDocSignature) {
         return bDocSignature.getDssValidationReport().getReport().getSimpleReport();
     }
 
-    private SignatureValidationData.Indication getIndication(BDocSignature bDocSignature) {
+    private SignatureValidationData.Indication getIndication(AsicESignature bDocSignature) {
         SignatureValidationResult validationResult = bDocSignature.validateSignature();
         if (validationResult.isValid()) {
             return SignatureValidationData.Indication.TOTAL_PASSED;
@@ -203,7 +203,7 @@ public class BDOCValidationReportBuilder {
         }
     }
 
-    private String getSubIndication(BDocSignature bDocSignature) {
+    private String getSubIndication(AsicESignature bDocSignature) {
         if (getIndication(bDocSignature) == SignatureValidationData.Indication.TOTAL_PASSED) {
             return "";
         }
@@ -211,7 +211,7 @@ public class BDOCValidationReportBuilder {
         return subindication != null ? subindication.name() : "";
     }
 
-    private Info getInfo(BDocSignature bDocSignature) {
+    private Info getInfo(AsicESignature bDocSignature) {
         Info info = new Info();
         Date trustedTime = bDocSignature.getTrustedSigningTime();
         if (trustedTime != null) {
@@ -222,7 +222,7 @@ public class BDOCValidationReportBuilder {
         return info;
     }
 
-    private List<Warning> getWarnings(BDocSignature bDocSignature) {
+    private List<Warning> getWarnings(AsicESignature bDocSignature) {
         return bDocSignature.validateSignature().getWarnings()
                 .stream()
                 .map(BDOCValidationReportBuilder::mapDigidoc4JWarning)
@@ -230,7 +230,7 @@ public class BDOCValidationReportBuilder {
 
     }
 
-    private List<SignatureScope> getSignatureScopes(BDocSignature bDocSignature, List<String> dataFilenames) {
+    private List<SignatureScope> getSignatureScopes(AsicESignature bDocSignature, List<String> dataFilenames) {
         return bDocSignature.getOrigin().getReferences()
                 .stream()
                 .map(r -> decodeUriIfPossible(r.getURI()))
@@ -248,7 +248,7 @@ public class BDOCValidationReportBuilder {
         }
     }
 
-    private List<Error> getErrors(BDocSignature bDocSignature) {
+    private List<Error> getErrors(AsicESignature bDocSignature) {
         return bDocSignature.validateSignature().getErrors()
                 .stream()
                 .map(BDOCValidationReportBuilder::mapDigidoc4JException)
@@ -259,7 +259,7 @@ public class BDOCValidationReportBuilder {
         return XADES_FORMAT_PREFIX + profile.name();
     }
 
-    private String getCountryCode(BDocSignature bDocSignature) {
+    private String getCountryCode(AsicESignature bDocSignature) {
         return bDocSignature.getSigningCertificate().getSubjectName(X509Cert.SubjectName.C);
     }
 

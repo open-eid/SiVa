@@ -184,7 +184,7 @@ Legend:
 	* In case of basic signature (BASELINE_B) - the trusted signing time value cannot be determined as there is no Proof-of-Existence of the signature.
 
 
-### BDOC container spceific requirements
+### BDOC container specific requirements
 The BDOC container must conform with [BDOC 2.1](http://id.ee/public/bdoc-spec212-eng.pdf) standard.
 1.	File extension
 	* ".bdoc" file extension is supported during signature validation.
@@ -195,12 +195,12 @@ The BDOC container must conform with [BDOC 2.1](http://id.ee/public/bdoc-spec212
 6. Only relative file paths are supported, for example "META-INF/signatures.xml" and "document.txt" instead of "/META-INF/signatures.xml" and "/document.txt".
 7. "META-INF/manifest.xml" file shall be conformant to OASIS Open Document Format version [1.0](http://docs.oasis-open.org/office/v1.0/OpenDocument-v1.0-os.pdf) or [1.2](http://docs.oasis-open.org/office/v1.2/OpenDocument-v1.2-part3.pdf).
 
-### ASICE container spceific requirements
+### ASICE container specific requirements
 The ASICE container must conform with [ETSI EN 319 162-1](http://www.etsi.org/deliver/etsi_en/319100_319199/31916201/01.01.01_60/en_31916201v010101p.pdf) standard.
 1. Warning is returned when signatures in the container do not sign all of the data files.
 2. Manifest file must be present.
 
-### ASICS container spceific requirements
+### ASICS container specific requirements
 The service supports both signature and Time Stamp Token (TST) based ASIC-S containers. Evidence record based containers are not supported. The ASIC-S container must conform with [ETSI EN 319 162-1](http://www.etsi.org/deliver/etsi_en/319100_319199/31916201/01.01.01_60/en_31916201v010101p.pdf) and [ETSI EN 319 162-2](http://www.etsi.org/deliver/etsi_en/319100_319199/31916202/01.01.01_60/en_31916202v010101p.pdf) standards.
 
 1. Manifest file can not be present in case of signature based ASIC-S containers.

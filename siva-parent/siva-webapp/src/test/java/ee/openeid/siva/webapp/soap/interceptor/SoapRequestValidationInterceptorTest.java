@@ -57,6 +57,8 @@ public class SoapRequestValidationInterceptorTest {
     @Mock
     private SOAPBody body;
     @Mock
+    private Node validationRequestNode;
+    @Mock
     private Node filenameNode;
     @Mock
     private Node documentNode;
@@ -64,6 +66,7 @@ public class SoapRequestValidationInterceptorTest {
     private Node documentTypeNode;
     @Mock
     private Node policyNode;
+    private NodeList validationRequestNodeList;
     private NodeList filenameNodeList;
     private NodeList documentNodeList;
     private NodeList documentTypeNodeList;
@@ -147,10 +150,15 @@ public class SoapRequestValidationInterceptorTest {
         doReturn(envelope).when(soapPart).getEnvelope();
         doReturn(soapPart).when(soapMessage).getSOAPPart();
         doReturn(soapMessage).when(message).getContent(SOAPMessage.class);
+        mockValidationRequestNode();
         mockFilenameNode(filename);
         mockDocumentNode(document);
         mockDocumentTypeNode(documentType);
         mockPolicyNode(policy);
+    }
+
+    private void mockValidationRequestNode() {
+        this.mockNode(validationRequestNode, validationRequestNodeList, "soap:ValidationRequest", null);
     }
 
     private void mockDocumentNode(String document) {

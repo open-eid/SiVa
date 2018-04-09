@@ -16,13 +16,17 @@
 
 package ee.openeid.validation.service.bdoc.report;
 
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.*;
+import static org.digidoc4j.X509Cert.SubjectName.CN;
+import eu.europa.esig.dss.validation.SignatureQualification;
+import eu.europa.esig.dss.validation.policy.rules.SubIndication;
+
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
-import eu.europa.esig.dss.validation.SignatureQualification;
-import eu.europa.esig.dss.validation.policy.rules.SubIndication;
+
 import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.*;
 import org.digidoc4j.exceptions.DigiDoc4JException;
@@ -35,9 +39,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.*;
-import static org.digidoc4j.X509Cert.SubjectName.CN;
 
 public class BDOCValidationReportBuilder {
 
@@ -189,11 +190,11 @@ public class BDOCValidationReportBuilder {
     }
 
     private eu.europa.esig.dss.validation.reports.SimpleReport getDssSimpleReport(AsicESignature bDocSignature) {
-        return bDocSignature.getDssValidationReport().getReport().getSimpleReport();
+        return bDocSignature.getDssValidationReport().getReports().getSimpleReport();
     }
 
     private SignatureValidationData.Indication getIndication(AsicESignature bDocSignature) {
-        SignatureValidationResult validationResult = bDocSignature.validateSignature();
+        ValidationResult validationResult = bDocSignature.validateSignature();
         if (validationResult.isValid()) {
             return SignatureValidationData.Indication.TOTAL_PASSED;
         } else if (REPORT_INDICATION_INDETERMINATE.equals(getDssSimpleReport(bDocSignature).getIndication(bDocSignature.getId()).name())) {

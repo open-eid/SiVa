@@ -16,6 +16,8 @@
 
 package ee.openeid.validation.service.bdoc;
 
+import eu.europa.esig.dss.DSSException;
+
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Reports;
@@ -25,7 +27,7 @@ import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.validation.service.bdoc.report.BDOCValidationReportBuilder;
 import ee.openeid.validation.service.bdoc.signature.policy.BDOCConfigurationService;
 import ee.openeid.validation.service.bdoc.signature.policy.PolicyConfigurationWrapper;
-import eu.europa.esig.dss.DSSException;
+
 import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.Configuration;
 import org.digidoc4j.Container;
@@ -62,7 +64,7 @@ public class BDOCValidationService implements ValidationService {
         verifyContainerTypeNotDDOC(container.getType());
         try {
             ValidationResult validationResult = container.validate();
-            return new BDOCValidationReportBuilder(container, validationDocument, policyConfiguration.getPolicy(), validationResult.getContainerErrors(), reportConfigurationProperties.isReportSignatureEnabled()).build();
+            return new BDOCValidationReportBuilder(container, validationDocument, policyConfiguration.getPolicy(), validationResult.getErrors(), reportConfigurationProperties.isReportSignatureEnabled()).build();
         } catch (DigiDoc4JException e) {
             throw new MalformedDocumentException(e);
         } catch (Exception e) {

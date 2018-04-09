@@ -406,14 +406,14 @@ public class CustomCertificatesLoader {
         return serviceInfo;
     }
 
-    private CriteriaListCondition createNonRepudiationCriteriaListCondition() {
-        CriteriaListCondition condition = new CriteriaListCondition(MatchingCriteriaIndicator.all);
+    private CompositeCondition createNonRepudiationCriteriaListCondition() {
+        CompositeCondition condition = new CompositeCondition(MatchingCriteriaIndicator.all);
         condition.addChild(new KeyUsageCondition(KeyUsageBit.nonRepudiation, true));
         return condition;
     }
 
-    private CriteriaListCondition createDigitalSignatureOrNonRepudiationListCondition() {
-        CriteriaListCondition condition = new CriteriaListCondition(MatchingCriteriaIndicator.atLeastOne);
+    private CompositeCondition createDigitalSignatureOrNonRepudiationListCondition() {
+        CompositeCondition condition = new CompositeCondition(MatchingCriteriaIndicator.atLeastOne);
         condition.addChild(new KeyUsageCondition(KeyUsageBit.digitalSignature, true));
         condition.addChild(new KeyUsageCondition(KeyUsageBit.nonRepudiation, true));
         return condition;
@@ -433,7 +433,7 @@ public class CustomCertificatesLoader {
     }
 
     private ServiceInfoStatus createUnderSupervisionStatus(String status, CertificateToken certToken, String type, Map<String, List<Condition>> qualifiersAndConditions) {
-        return new ServiceInfoStatus(type, status, qualifiersAndConditions, null, null, certToken.getCertificate().getNotBefore(), null);
+        return new ServiceInfoStatus(type, status, qualifiersAndConditions, null, null, certToken.getCertificate().getNotBefore(), null, null);
     }
 
     @Autowired

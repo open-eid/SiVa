@@ -16,12 +16,14 @@
 
 package ee.openeid.tsl;
 
-import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
 import eu.europa.esig.dss.client.http.commons.CommonsDataLoader;
 import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.tsl.service.TSLRepository;
 import eu.europa.esig.dss.tsl.service.TSLValidationJob;
 import eu.europa.esig.dss.x509.KeyStoreCertificateSource;
+
+import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +57,8 @@ public class TSLLoader {
         tslValidationJob.setLotlUrl(configurationProperties.getUrl());
         tslValidationJob.setLotlCode(configurationProperties.getCode());
         tslValidationJob.setOjContentKeyStore(keyStoreCertificateSource);
+        tslValidationJob.setOjUrl(configurationProperties.getOjUrl());
+        tslValidationJob.setLotlRootSchemeInfoUri(configurationProperties.getLotlRootSchemeInfoUri());
         tslValidationJob.setFilterTerritories(configurationProperties.getTrustedTerritories());
         tslValidationJob.setCheckLOTLSignature(true);
         tslValidationJob.setCheckTSLSignatures(true);

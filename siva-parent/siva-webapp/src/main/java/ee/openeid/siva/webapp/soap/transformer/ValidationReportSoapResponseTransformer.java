@@ -107,7 +107,7 @@ public class ValidationReportSoapResponseTransformer {
 
     private ee.openeid.siva.webapp.soap.DetailedReport transformDetailReport(eu.europa.esig.dss.validation.detailed_report.DetailedReport euDetailReport) {
         ee.openeid.siva.webapp.soap.DetailedReport detailedReport = new ee.openeid.siva.webapp.soap.DetailedReport();
-        detailedReport.setQMatrixBlock(euDetailReport.getQMatrixBlock());
+        detailedReport.getTLAnalysis().addAll(euDetailReport.getTLAnalysis());
         detailedReport.getSignatures().addAll(euDetailReport.getSignatures());
         detailedReport.getBasicBuildingBlocks().addAll(euDetailReport.getBasicBuildingBlocks());
         return detailedReport;

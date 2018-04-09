@@ -133,10 +133,10 @@
                 </AcceptableDigestAlgo>
                 <AlgoExpirationDate Format="yyyy-MM-dd">
                     <!-- Algorithms under 112 bit strength: -->
-                    <Algo Date="2018-02-24">SHA1</Algo>
-                    <Algo Date="2018-02-24">RSA1023</Algo>
-                    <Algo Date="2018-02-24">RSA1024</Algo>
-                    <Algo Date="2018-02-24">RSA1536</Algo>
+                    <Algo Date="2019-02-24">SHA1</Algo>
+                    <Algo Date="2019-02-24">RSA1023</Algo>
+                    <Algo Date="2019-02-24">RSA1024</Algo>
+                    <Algo Date="2019-02-24">RSA1536</Algo>
 
                     <!-- Algorithms with ~ 112 bit strength: -->
                     <Algo Date="2025-02-24">SHA224</Algo>

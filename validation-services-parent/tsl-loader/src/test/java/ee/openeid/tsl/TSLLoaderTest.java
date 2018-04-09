@@ -16,10 +16,13 @@
 
 package ee.openeid.tsl;
 
-import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
+import static org.mockito.Mockito.*;
 import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.tsl.service.TSLValidationJob;
 import eu.europa.esig.dss.x509.KeyStoreCertificateSource;
+
+import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,13 +33,13 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.Mockito.*;
-
 @RunWith(MockitoJUnitRunner.class)
 public class TSLLoaderTest {
 
     private static final String TSL_URL = "url";
     private static final String TSL_CODE = "CO";
+    private static final String TSL_OJ_URL = "ojUrl";
+    private static final String TSL_INFO_URL = "infoUrl";
 
     private static final List<String> DEFAULT_TRUSTED_TERRITORIES =  Arrays.asList(/*AT*/ "BE", "BG", "CY", "CZ","DE","DK", "EE", "ES", "FI", "FR", "GR", "HU","HR","IE", "IS", "IT", "LT", "LU", "LV", "LI", "MT","NO","NL", "PL", "PT", "RO", "SE", "SI", "SK", "UK");
     @Mock
@@ -72,6 +75,8 @@ public class TSLLoaderTest {
         TSLLoaderConfigurationProperties props = new TSLLoaderConfigurationProperties();
         props.setUrl(url);
         props.setCode(code);
+        props.setOjUrl(TSL_OJ_URL);
+        props.setLotlRootSchemeInfoUri(TSL_INFO_URL);
         props.setLoadFromCache(loadFromCache);
         props.setTrustedTerritories(DEFAULT_TRUSTED_TERRITORIES);
         return props;

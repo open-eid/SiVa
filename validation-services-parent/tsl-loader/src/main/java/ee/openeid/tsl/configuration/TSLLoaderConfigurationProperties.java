@@ -27,6 +27,8 @@ import java.util.List;
 public class TSLLoaderConfigurationProperties {
     private boolean loadFromCache = false;
     private String url = "https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml";
+    private String ojUrl = "http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=uriserv:OJ.C_.2016.233.01.0001.01.ENG";
+    private String lotlRootSchemeInfoUri = "https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl.html";
     private String code = "EU";
     private String schedulerCron = "0 0 3 * * ?";
     private List<String> trustedTerritories =   Arrays.asList("AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "GR", "HU", "HR", "IE", "IS", "IT", "LT", "LU", "LV", "LI", "MT", "NO", "NL", "PL", "PT", "RO", "SE", "SI", "SK", "UK");

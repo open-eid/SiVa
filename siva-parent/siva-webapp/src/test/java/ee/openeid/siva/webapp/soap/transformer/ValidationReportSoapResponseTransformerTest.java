@@ -16,14 +16,15 @@
 
 package ee.openeid.siva.webapp.soap.transformer;
 
+import eu.europa.esig.dss.jaxb.detailedreport.XmlTLAnalysis;
+
 import ee.openeid.siva.validation.document.report.DetailedReport;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
 import ee.openeid.siva.validation.document.report.ValidatedDocument;
 import ee.openeid.siva.webapp.soap.ValidationConclusion;
 import ee.openeid.siva.webapp.soap.ValidationReport;
-import eu.europa.esig.dss.jaxb.detailedreport.XmlQMatrixBlock;
-import eu.europa.esig.dss.jaxb.detailedreport.XmlTLAnalysis;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -83,7 +84,7 @@ public class ValidationReportSoapResponseTransformerTest {
         DetailedReport detailedReport = new DetailedReport(validationConclusion, validationProcess);
         detailedReport.setValidationProcess(createMockedValidationProcess());
         ValidationReport responseValidationReport = transformer.toSoapResponse(detailedReport);
-        Assert.assertEquals("EE", responseValidationReport.getValidationProcess().getQMatrixBlock().getTLAnalysis().get(0).getCountryCode());
+        Assert.assertEquals("EE", responseValidationReport.getValidationProcess().getTLAnalysis().get(0).getCountryCode());
     }
 
     @Test
@@ -98,11 +99,9 @@ public class ValidationReportSoapResponseTransformerTest {
 
     private eu.europa.esig.dss.jaxb.detailedreport.DetailedReport createMockedValidationProcess() {
         eu.europa.esig.dss.jaxb.detailedreport.DetailedReport euDetailedReport = new eu.europa.esig.dss.jaxb.detailedreport.DetailedReport();
-        XmlQMatrixBlock xmlQMatrixBlock = new XmlQMatrixBlock();
         XmlTLAnalysis xmlTLAnalysis = new XmlTLAnalysis();
         xmlTLAnalysis.setCountryCode("EE");
-        xmlQMatrixBlock.getTLAnalysis().add(xmlTLAnalysis);
-        euDetailedReport.setQMatrixBlock(xmlQMatrixBlock);
+        euDetailedReport.getTLAnalysis().add(xmlTLAnalysis);
         return euDetailedReport;
     }
 

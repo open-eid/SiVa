@@ -89,16 +89,15 @@ public class BDOCValidationServiceIntegrationTest {
     private ReportConfigurationProperties reportConfigurationProperties;
 
     @Test
-    @Ignore("5.2 version failure")
     public void vShouldHaveValidationWarnings() throws Exception {
         SimpleReport validationResult = bdocValidationService.validateDocument(buildValidationDocument(BDOC_TEST_FILE_UNSIGNED)).getSimpleReport();
         List<ValidationWarning> validationWarnings = validationResult.getValidationConclusion().getValidationWarnings();
         assertThat(validationWarnings, hasSize(5));
         assertThat(validationWarnings, containsInAnyOrder(
                 hasProperty("content", is("Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml")),
-                hasProperty("content", is("Manifest file has an entry for file document_3.xml with mimetype application/octet-stream but the signature file for signature S0 does not have an entry for this file")),
-                hasProperty("content", is("Manifest file has an entry for file document_3.xml with mimetype application/octet-stream but the signature file for signature S1 does not have an entry for this file")),
-                hasProperty("content", is("Container contains a file named document_3.xml which is not found in the signature file")),
+                hasProperty("content", is("Manifest file has an entry for file <document_3.xml> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file")),
+                hasProperty("content", is("Manifest file has an entry for file <document_3.xml> with mimetype <application/octet-stream> but the signature file for signature S1 does not have an entry for this file")),
+                hasProperty("content", is("Container contains a file named <document_3.xml> which is not found in the signature file")),
                 hasProperty("content", is("Signature PUDOV,VADIM,39101013724 has unsigned files: document_3.xml"))
         ));
     }

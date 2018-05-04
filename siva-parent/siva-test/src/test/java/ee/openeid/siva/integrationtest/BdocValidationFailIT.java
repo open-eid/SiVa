@@ -28,7 +28,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
-@Ignore("5.2 version failure")
 @Category(IntegrationTest.class)
 public class BdocValidationFailIT extends SiVaRestTests {
 
@@ -63,7 +62,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
         SimpleReport report = postForReport("IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc");
         assertAllSignaturesAreInvalid(report);
         assertEquals("The signature is not intact!", report.getValidationConclusion().getSignatures().get(0).getErrors().get(0).getContent());
-        assertEquals(2, report.getValidationConclusion().getSignatures().get(0).getErrors().size());
+        assertEquals(3, report.getValidationConclusion().getSignatures().get(0).getErrors().size());
     }
 
     /**
@@ -141,6 +140,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: 23147_weak-warning-sha1-invalid-mimetype-in-manifest.bdoc
      */
     @Test
+    @Ignore("https://jira.ria.ee/browse/DD4J-161")
     public void bdocMalformedBdocWithInvalidMimetypeInManifest() {
         post(validationRequestFor("23147_weak-warning-sha1-invalid-mimetype-in-manifest.bdoc"))
                 .then()
@@ -164,6 +164,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: EE_SER-AEX-B-LT-V-33.bdoc
      */
     @Test
+    @Ignore("https://jira.ria.ee/browse/DD4J-161")
     public void bdocInvalidMimeTypeChars() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-V-33.bdoc"))
@@ -368,7 +369,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .then()
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file test.txt with mimetype application/binary but the signature file for signature S0 indicates the mimetype is application/octet-stream"))
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file <test.txt> with mimetype <application/binary> but the signature file for signature S0 indicates the mimetype is <application/octet-stream>"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
     }
 
@@ -589,7 +590,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .then()
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("Nonce is invalid"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("OCSP nonce is invalid"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
@@ -664,7 +665,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .then()
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("Nonce is invalid"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("OCSP nonce is invalid"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 

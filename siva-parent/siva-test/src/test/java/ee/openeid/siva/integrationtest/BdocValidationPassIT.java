@@ -24,7 +24,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-@Ignore("5.2 version failure")
+
 @Category(IntegrationTest.class)
 public class BdocValidationPassIT extends SiVaRestTests {
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "bdoc/live/timemark/";
@@ -467,7 +467,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
                 .then()
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.validationWarnings[1].content", Matchers.is("Container contains a file named unsigned.txt which is not found in the signature file"))
+                .body("validationReport.validationConclusion.validationWarnings[1].content", Matchers.is("Container contains a file named <unsigned.txt> which is not found in the signature file"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
 
     }

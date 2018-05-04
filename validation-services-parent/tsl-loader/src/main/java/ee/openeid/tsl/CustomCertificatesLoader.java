@@ -16,11 +16,11 @@
 
 package ee.openeid.tsl;
 
-
 import eu.europa.esig.dss.DSSUtils;
 import eu.europa.esig.dss.tsl.*;
 import eu.europa.esig.dss.util.TimeDependentValues;
 import eu.europa.esig.dss.x509.CertificateToken;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +28,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Component
 @Profile("test")
@@ -189,7 +189,6 @@ public class CustomCertificatesLoader {
                         "26x1lOcCk0KRBr/mBk9gaC0TxmYhuum99V5+fM5sJ6WwFRS1ruLyt1piQiATIRVe\n" +
                         "pcPZlmxrjmZcfQ+dp1jWj3cS7pJ9mCZsr5H74U3K");
 
-        tlCertSource.addCertificate(certToken, getCAServiceInfo(GRANTED, certToken, "Nortal NQSK16 Test Cert Signing"));
         tlCertSource.addCertificate(certToken, getCAServiceInfo(UNDER_SUPERVISION, certToken, "Nortal NQSK16 Test Cert Signing"));
 
         // TEST of KLASS3-SK 2010
@@ -432,8 +431,19 @@ public class CustomCertificatesLoader {
         return new TimeDependentValues(Collections.singletonList(createUnderSupervisionStatus(status, certToken, type, qualifiersAndConditions)));
     }
 
+    private Date getServiceInfoStartDate(){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        String dateInString = "31-08-2013";
+
+        try {
+            return sdf.parse(dateInString);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
     private ServiceInfoStatus createUnderSupervisionStatus(String status, CertificateToken certToken, String type, Map<String, List<Condition>> qualifiersAndConditions) {
-        return new ServiceInfoStatus(type, status, qualifiersAndConditions, null, null, certToken.getCertificate().getNotBefore(), null, null);
+        Date startDate = getServiceInfoStartDate();
+        return new ServiceInfoStatus(type, status, qualifiersAndConditions, null, null, certToken.getCertificate().getNotBefore(), startDate, null);
     }
 
     @Autowired

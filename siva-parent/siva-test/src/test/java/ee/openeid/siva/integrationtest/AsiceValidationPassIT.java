@@ -17,14 +17,15 @@
 package ee.openeid.siva.integrationtest;
 
 import com.jayway.restassured.RestAssured;
+
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-@Ignore("5.2 version failure")
+
 @Category(IntegrationTest.class)
 public class AsiceValidationPassIT extends SiVaRestTests {
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "bdoc/live/timestamp/";

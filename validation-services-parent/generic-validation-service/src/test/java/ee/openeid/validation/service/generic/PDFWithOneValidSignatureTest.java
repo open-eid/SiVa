@@ -63,13 +63,12 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
         assertEquals("2015-07-09T07:00:55Z", signature.getInfo().getBestSignatureTime());
     }
 
-    @Ignore("5.2 version failure")
     @Test
     public void validatedSignatureShouldHaveCorrectId() throws Exception {
         SimpleReport report = validationService.validateDocument(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
         SignatureValidationData signature = report.getValidationConclusion().getSignatures().get(0);
-        assertEquals("id-65dc6b043effc2542519162d271ad4f9780e552845d04b66868301a5cf0ed8ba", signature.getId());
+        assertEquals("id-fe200b3af631ca520be9b0511d176e6a780e552845d04b66868301a5cf0ed8ba", signature.getId());
     }
 
     @Test

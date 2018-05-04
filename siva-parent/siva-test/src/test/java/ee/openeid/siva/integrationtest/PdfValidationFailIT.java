@@ -23,7 +23,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-@Ignore("5.2 version failure")
+
 @Category(IntegrationTest.class)
 public class PdfValidationFailIT extends SiVaRestTests {
 
@@ -42,7 +42,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
      *
      * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      *
-     * Title: The PDF-file has been signed with expired certificate (PAdES Baseline LT)
+     * Title: The PDF-file has been signed with expired certificate (PAdES Baseline T)
      *
      * Expected Result: Document signed with certificate that is expired should fail.
      *
@@ -53,12 +53,11 @@ public class PdfValidationFailIT extends SiVaRestTests {
         post(validationRequestFor("hellopades-lt-rsa1024-sha1-expired.pdf"))
                 .then()
                 .body("validationReport.validationConclusion.signatureForm", Matchers.isEmptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("INDETERMINATE_QES"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("TRY_LATER"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("No revocation data for the certificate"))
-                .body("validationReport.validationConclusion.signatures[0].warnings.content[0]", Matchers.is("The signature/seal is an INDETERMINATE AdES!"))
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_T"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("The expected format is not found!"))
+                .body("validationReport.validationConclusion.signatures[0].warnings.content[0]", Matchers.is("The signature/seal is not a valid AdES!"))
                 .body("validationReport.validationConclusion.signatures[0].warnings.content[1]", Matchers.is("The certificate is not for eSig at signing time!"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));

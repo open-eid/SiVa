@@ -32,14 +32,13 @@ import org.hamcrest.Matchers;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.Map;
-@Ignore("5.2 version failure")
+
 @Category(IntegrationTest.class)
 public class ValidationRequestIT extends SiVaRestTests {
 
@@ -687,7 +686,7 @@ public class ValidationRequestIT extends SiVaRestTests {
 
         post(jsonObject.toString())
                 .then()
-                .body("validationReport.validationProcess.qmatrixBlock.signatureAnalysis[0].signatureQualification", equalTo("QESIG"))
+                .body("validationReport.validationProcess.signatures[0].validationSignatureQualification.signatureQualification", equalTo("QESIG"))
                 .body("validationReport.validationConclusion.validSignaturesCount", equalTo(1));
     }
 

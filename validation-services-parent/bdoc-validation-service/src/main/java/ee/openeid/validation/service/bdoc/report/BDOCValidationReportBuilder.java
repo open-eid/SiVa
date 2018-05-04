@@ -120,6 +120,7 @@ public class BDOCValidationReportBuilder {
 
     private List<ValidationWarning> containerValidationWarnings() {
         List<ValidationWarning> validationWarnings = containerErrors.stream().map(e -> createValidationWarning(e.getMessage())).collect(Collectors.toList());
+        validationWarnings.removeIf(s->container.getSignatures().stream().anyMatch(sig-> getErrors((AsicESignature)sig).stream().anyMatch(err->err.getContent().equals(s.getContent()))));
         validationWarnings.addAll(getValidationWarningsForUnsignedDataFiles());
         return validationWarnings;
     }

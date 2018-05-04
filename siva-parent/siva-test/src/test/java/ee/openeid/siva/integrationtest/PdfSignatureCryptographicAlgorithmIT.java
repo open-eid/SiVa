@@ -23,7 +23,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-@Ignore("5.2 version failure")
+
 @Category(IntegrationTest.class)
 public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
 

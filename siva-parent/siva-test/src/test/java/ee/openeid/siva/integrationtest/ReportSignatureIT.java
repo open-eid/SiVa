@@ -33,7 +33,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.beans.factory.annotation.Autowired;
-@Ignore("5.2 version failure")
+
 @Category(IntegrationTest.class)
 public class ReportSignatureIT extends SiVaRestTests {
 

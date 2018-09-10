@@ -16,18 +16,27 @@
 
 package ee.openeid.siva.webapp;
 
+import ee.openeid.siva.proxy.HashcodeValidationProxy;
 import ee.openeid.siva.proxy.ValidationProxy;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.webapp.request.Datafile;
 import ee.openeid.siva.webapp.request.ValidationRequest;
+import ee.openeid.siva.webapp.request.ValidationWithHashRequest;
 import ee.openeid.siva.webapp.transformer.ValidationRequestToProxyDocumentTransformer;
+import ee.openeid.siva.webapp.transformer.ValidationWithHashRequestToProxyDocumentTransformer;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
@@ -35,7 +44,9 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 public class ValidationControllerTest {
 
     private ValidationProxySpy validationProxyServiceSpy = new ValidationProxySpy();
+    private HashcodeValidationProxySpy hashcodeValidationProxySpy = new HashcodeValidationProxySpy();
     private ValidationRequestToProxyDocumentTransformerSpy transformerSpy = new ValidationRequestToProxyDocumentTransformerSpy();
+    private ValidationWithHashRequestToProxyDocumentTransformerSpy hashRequestTransformerSpy = new ValidationWithHashRequestToProxyDocumentTransformerSpy();
 
     private MockMvc mockMvc;
 
@@ -44,7 +55,75 @@ public class ValidationControllerTest {
         ValidationController validationController = new ValidationController();
         validationController.setValidationProxy(validationProxyServiceSpy);
         validationController.setTransformer(transformerSpy);
+        validationController.setHashRequestTransformer(hashRequestTransformerSpy);
+        validationController.setHashcodeValidationProxy(hashcodeValidationProxySpy);
         mockMvc = standaloneSetup(validationController).build();
+    }
+
+    @Test
+    public void requestWithEmptySignature() throws Exception {
+        JSONObject request = withHashRequest("QVNE", "", createValidDatafiles());
+
+        mockMvc.perform(post("/validateWithHash")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request.toString().getBytes()))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void requestWithInvalidSignatureFilename() throws Exception {
+        JSONObject request = withHashRequest("QVNE", "test.pdf", createValidDatafiles());
+
+        mockMvc.perform(post("/validateWithHash")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request.toString().getBytes()))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void validHashJsonIsCorrectlyMappedToPOJO() throws Exception {
+        Datafile datafile1 = createDatafile("test-name-1", "test-hash-1", "SHA256");
+        Datafile datafile2 = createDatafile("test-name-2", "test-hash-2", "SHA512");
+        JSONObject request = withHashRequest("QVNE", "filename.xml", createDatafiles(datafile1, datafile2));
+
+        mockMvc.perform(post("/validateWithHash")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request.toString().getBytes())
+        );
+        assertEquals("filename.xml", hashRequestTransformerSpy.validateWithHashRequest.getFilename());
+        assertEquals("QVNE", hashRequestTransformerSpy.validateWithHashRequest.getSignature());
+        assertNotNull(hashRequestTransformerSpy.validateWithHashRequest.getDatafiles());
+        assertFalse(hashRequestTransformerSpy.validateWithHashRequest.getDatafiles().isEmpty());
+        assertEquals(2, hashRequestTransformerSpy.validateWithHashRequest.getDatafiles().size());
+    }
+
+    @Test
+    public void hashRequestWithNonBase64EncodedSignatureReturnsErroneousResponse() throws Exception {
+        JSONObject request = withHashRequest("ÖÕ::žšPQ;ÜÜ", "test.xml", createValidDatafiles());
+        mockMvc.perform(post("/validateWithHash")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request.toString().getBytes()))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void hashRequestWithInvalidHashAlgoReturnsErroneousResponse() throws Exception {
+        List<Datafile> datafiles = createDatafiles(createDatafile("test", "test-hash-1", "invalid"));
+        JSONObject request = withHashRequest("test", "test.xml", datafiles);
+        mockMvc.perform(post("/validateWithHash")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request.toString().getBytes()))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void hashRequestWithNonBase64EncodedHashReturnsErroneousResponse() throws Exception {
+        List<Datafile> datafiles = createDatafiles(createDatafile("test", "ÖÕ::žšPQ;ÜÜ", "SHA256"));
+        JSONObject request = withHashRequest("test", "test.xml", datafiles);
+        mockMvc.perform(post("/validateWithHash")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request.toString().getBytes()))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -235,6 +314,25 @@ public class ValidationControllerTest {
         }
     }
 
+    private class HashcodeValidationProxySpy extends HashcodeValidationProxy {
+
+        @Override
+        public SimpleReport validate(ProxyDocument document) {
+            return null;
+        }
+    }
+
+    private class ValidationWithHashRequestToProxyDocumentTransformerSpy extends ValidationWithHashRequestToProxyDocumentTransformer {
+
+        private ValidationWithHashRequest validateWithHashRequest;
+
+        @Override
+        public ProxyDocument transform(ValidationWithHashRequest validateWithHashRequest) {
+            this.validateWithHashRequest = validateWithHashRequest;
+            return super.transform(validateWithHashRequest);
+        }
+    }
+
     private class ValidationRequestToProxyDocumentTransformerSpy extends ValidationRequestToProxyDocumentTransformer {
 
         private ValidationRequest validationRequest;
@@ -244,5 +342,29 @@ public class ValidationControllerTest {
             this.validationRequest = validationRequest;
             return super.transform(validationRequest);
         }
+    }
+
+    private JSONObject withHashRequest(String signature, String filename, List<Datafile> datafiles) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("signature", signature);
+        jsonObject.put("filename", filename);
+        jsonObject.put("datafiles", datafiles);
+        return jsonObject;
+    }
+
+    private List<Datafile> createValidDatafiles() {
+        return createDatafiles(createDatafile("test", "test-hash-1", "SHA256"));
+    }
+
+    private List<Datafile> createDatafiles(Datafile... datafiles) {
+        return Arrays.asList(datafiles);
+    }
+
+    private Datafile createDatafile(String filename, String hash, String hashAlgo) {
+        Datafile datafile = new Datafile();
+        datafile.setFilename(filename);
+        datafile.setHash(hash);
+        datafile.setHashAlgo(hashAlgo);
+        return datafile;
     }
 }

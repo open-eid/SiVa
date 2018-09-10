@@ -18,6 +18,8 @@ package ee.openeid.siva.proxy.document;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class ProxyDocument {
 
@@ -30,4 +32,6 @@ public class ProxyDocument {
     private String signaturePolicy;
 
     private ReportType reportType;
+
+    private List<Datafile> datafiles;
 }

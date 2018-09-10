@@ -86,18 +86,12 @@ public class GenericValidationService implements ValidationService {
             if (validationDocument == null) {
                 throw new ValidationServiceException(getClass().getSimpleName(), new Exception("No request document found"));
             }
+            SignedDocumentValidator validator = createValidatorFromDocument(validationDocument);
 
-            final DSSDocument dssDocument = createDssDocument(validationDocument);
             final ConstraintDefinedPolicy policy = signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy());
-            SignedDocumentValidator validator = SignedDocumentValidator.fromDocument(dssDocument);
 
-            CommonCertificateVerifier certificateVerifier = new CommonCertificateVerifier(trustedListsCertificateSource,
-                    new AlwaysFailingCRLSource(), new AlwaysFailingOCSPSource(), new CommonsDataLoader());
-            LOGGER.info("Certificate pool size: {}", getCertificatePoolSize(certificateVerifier));
-            validator.setCertificateVerifier(certificateVerifier);
-            validator.setValidationLevel(VALIDATION_LEVEL);
-            final eu.europa.esig.dss.validation.reports.Reports reports;
-            reports = validator.validateDocument(policy.getConstraintDataStream());
+            final eu.europa.esig.dss.validation.reports.Reports reports =  validator.validateDocument(policy.getConstraintDataStream());
+
             validateRevocationFreshness(reports);
             validateBestSignatureTime(reports);
 
@@ -130,7 +124,20 @@ public class GenericValidationService implements ValidationService {
         }
     }
 
-    private void validateBestSignatureTime(eu.europa.esig.dss.validation.reports.Reports reports) {
+    protected SignedDocumentValidator createValidatorFromDocument(final ValidationDocument validationDocument) {
+        final DSSDocument dssDocument = createDssDocument(validationDocument);
+        SignedDocumentValidator validator = SignedDocumentValidator.fromDocument(dssDocument);
+
+        CommonCertificateVerifier certificateVerifier = new CommonCertificateVerifier(trustedListsCertificateSource,
+                new AlwaysFailingCRLSource(), new AlwaysFailingOCSPSource(), new CommonsDataLoader());
+        LOGGER.info("Certificate pool size: {}", getCertificatePoolSize(certificateVerifier));
+        validator.setCertificateVerifier(certificateVerifier);
+        validator.setValidationLevel(VALIDATION_LEVEL);
+
+        return validator;
+    }
+
+    protected void validateBestSignatureTime(eu.europa.esig.dss.validation.reports.Reports reports) {
         for (String id : reports.getSimpleReport().getSignatureIdList()) {
             if (Indication.TOTAL_PASSED == reports.getSimpleReport().getIndication(id)
                     && reports.getDiagnosticData().getSignatureById(id).getTimestampList().isEmpty()) {

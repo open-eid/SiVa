@@ -18,6 +18,8 @@ package ee.openeid.siva.validation.document;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class ValidationDocument {
 
@@ -29,6 +31,6 @@ public class ValidationDocument {
 
     private String dataBase64Encoded;
 
-
+    private List<Datafile> datafiles;
 
 }

@@ -14,6 +14,10 @@ API to validate following file types:
  * ETSI standard based ASiCE and ASiCS containers
  * ETSI standard based XAdES, CAdES and PAdES signatures
 
+ In addition SiVa provides JSON API to validate:
+
+  * ETSI standard based XAdES signatures with datafiles in hashcode form
+
 Main purpose of this documentation is to give overview what SiVa is, how it is built and provide information for deploying the service and integrating with the service.
 
 ## SiVa architecture document sections overview

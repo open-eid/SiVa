@@ -48,7 +48,7 @@ import java.util.zip.ZipInputStream;
 @Service
 public class ValidationProxy {
     private static final Logger LOGGER = LoggerFactory.getLogger(ValidationProxy.class);
-    private static final String SERVICE_BEAN_NAME_POSTFIX = "ValidationService";
+    protected static final String SERVICE_BEAN_NAME_POSTFIX = "ValidationService";
     private static final String GENERIC_SERVICE = "generic";
     private static final String ASICS_EXTENSION = "ASICS";
     private static final String SCS_FILE_TYPE = "SCS";
@@ -144,7 +144,7 @@ public class ValidationProxy {
         throw new IllegalArgumentException("Invalid document");
     }
 
-    private String constructValidatorName(ProxyDocument proxyDocument) {
+    protected String constructValidatorName(ProxyDocument proxyDocument) {
         String filename = proxyDocument.getName();
         String extension = FilenameUtils.getExtension(filename).toUpperCase();
         if (!StringUtils.isNotBlank(extension)) {
@@ -202,7 +202,7 @@ public class ValidationProxy {
         }
     }
 
-    private ValidationDocument createValidationDocument(ProxyDocument proxyDocument) {
+    protected ValidationDocument createValidationDocument(ProxyDocument proxyDocument) {
         ValidationDocument validationDocument = new ValidationDocument();
         validationDocument.setName(proxyDocument.getName());
         validationDocument.setBytes(proxyDocument.getBytes());

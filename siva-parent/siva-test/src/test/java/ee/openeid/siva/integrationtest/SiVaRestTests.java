@@ -21,12 +21,16 @@ import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.webapp.request.Datafile;
 import ee.openeid.siva.webapp.response.ValidationResponse;
+import ee.openeid.siva.webapp.soap.DataFile;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FilenameUtils;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.config.EncoderConfig.encoderConfig;
@@ -50,6 +54,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
     protected static final String REPORT_TYPE = "reportType";
 
     private static final String VALIDATION_ENDPOINT = "/validate";
+    private static final String HASH_ENDPOINT = "/validateWithHash";
     private static final String DATA_FILES_ENDPOINT = "/getDataFiles";
     private static final String MONITORING_ENDPOINT = "/monitoring/health";
     private static final boolean PRINT_RESPONSE = false;
@@ -83,6 +88,18 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
                 .contentType(ContentType.JSON)
                 .when()
                 .post(DATA_FILES_ENDPOINT);
+    }
+
+    protected Response postForXadesHashcode(String request) {
+        return given()
+                .log().headers()
+                .log().method()
+                .log().path()
+                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+                .body(request)
+                .contentType(ContentType.JSON)
+                .when()
+                .post(HASH_ENDPOINT);
     }
 
     protected Response getMonitoring() {
@@ -179,6 +196,22 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("document", Base64.encodeBase64String(readFileFromTestResources(file)));
         jsonObject.put("filename", filename);
+        return jsonObject.toString();
+    }
+
+    protected String validationRequestHashcode(String signature, String filename, String signaturePolicy, String reportType, String dataFile, String hashAlgo, String hash) {
+        List<Datafile> list = new ArrayList<>();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("signature", Base64.encodeBase64String(readFileFromTestResources(signature)));
+        jsonObject.put("filename", filename);
+        jsonObject.put("signaturePolicy", signaturePolicy);
+        jsonObject.put("reportType", reportType);
+        Datafile dataFileObject = new Datafile();
+        dataFileObject.setHash(hash);
+        dataFileObject.setHashAlgo(hashAlgo);
+        dataFileObject.setFilename(dataFile);
+        list.add(dataFileObject);
+        jsonObject.put("datafiles", list);
         return jsonObject.toString();
     }
 

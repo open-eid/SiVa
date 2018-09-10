@@ -16,10 +16,14 @@
 
 package ee.openeid.siva.webapp;
 
+import ee.openeid.siva.proxy.HashcodeValidationProxy;
 import ee.openeid.siva.proxy.ValidationProxy;
+import ee.openeid.siva.proxy.document.ProxyDocument;
+import ee.openeid.siva.webapp.request.JSONValidateWithHashRequest;
 import ee.openeid.siva.webapp.request.JSONValidationRequest;
 import ee.openeid.siva.webapp.response.ValidationResponse;
 import ee.openeid.siva.webapp.transformer.ValidationRequestToProxyDocumentTransformer;
+import ee.openeid.siva.webapp.transformer.ValidationWithHashRequestToProxyDocumentTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,11 +37,19 @@ import javax.validation.Valid;
 public class ValidationController {
 
     private ValidationProxy validationProxy;
+    private HashcodeValidationProxy hashcodeValidationProxy;
     private ValidationRequestToProxyDocumentTransformer transformer;
+    private ValidationWithHashRequestToProxyDocumentTransformer hashRequestTransformer;
 
     @RequestMapping(value = "/validate", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public ValidationResponse validate(@Valid @RequestBody JSONValidationRequest validationRequest) {
         return new ValidationResponse(validationProxy.validate(transformer.transform(validationRequest)));
+    }
+
+    @RequestMapping(value = "/validateWithHash", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    public ValidationResponse validate(@Valid @RequestBody JSONValidateWithHashRequest validationWithHashRequest) {
+        ProxyDocument proxyDocument = hashRequestTransformer.transform(validationWithHashRequest);
+        return new ValidationResponse(hashcodeValidationProxy.validate(proxyDocument));
     }
 
     @Autowired
@@ -50,4 +62,13 @@ public class ValidationController {
         this.transformer = transformer;
     }
 
+    @Autowired
+    public void setHashRequestTransformer(ValidationWithHashRequestToProxyDocumentTransformer hashRequestTransformer) {
+        this.hashRequestTransformer = hashRequestTransformer;
+    }
+
+    @Autowired
+    public void setHashcodeValidationProxy(HashcodeValidationProxy hashcodeValidationProxy) {
+        this.hashcodeValidationProxy = hashcodeValidationProxy;
+    }
 }

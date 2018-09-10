@@ -18,6 +18,7 @@ package ee.openeid.siva.webapp.request.validation;
 
 import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.proxy.document.ReportType;
+import eu.europa.esig.dss.DigestAlgorithm;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -34,6 +35,11 @@ public enum AcceptedValue {
         @Override
         public List<String> getAcceptedValues() {
             return Arrays.stream(ReportType.values()).map(Enum::name).collect(Collectors.toList());
+        }
+    }, HASH_ALGO {
+        @Override
+        public List<String> getAcceptedValues() {
+            return Arrays.stream(DigestAlgorithm.values()).map(Enum::name).collect(Collectors.toList());
         }
     };
 

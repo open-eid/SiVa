@@ -200,4 +200,11 @@ public class TestData {
     public static final String UNDER_SUPERVISION = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/undersupervision";
     public static final String TSA_QTST = "http://uri.etsi.org/TrstSvc/Svctype/TSA/QTST";
     public static final String GRANTED = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/granted";
+
+    public static final String TEST_HASH = "IucjUcbRo9Rke0bZLiHcwiIiplP9pSrSPr7LKln1EiI=";
+    public static final String TEST_HASH2 = "47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=";
+    public static final String TEST_HASHALGO = "SHA256";
+    public static final String TEST_FILENAME = "test.pdf";
+    public static final String TEST_FILENAME2 = "Proov (2).txt";
+
 }

@@ -83,6 +83,64 @@ Validation request parameters for JSON and SOAP interfaces are described in the 
 </soap:Envelope>
 ```
 
+## Validation request interface for hashcode
+
+Hashcode XAdES validation is supported only in **REST JSON** interface.
+
+** REST JSON Endpoint **
+
+```
+POST https://<server url>/validateWithHash
+```
+
+### Validation request parameters
+
+Validation request parameters for JSON interface are described in the table below.
+
+| JSON parameter | Mandatory | JSON data type | Description |
+|----------------|----------------|-----------|-------------|
+| signature | + |  String | Base64 encoded string of XAdES document to be validated |
+| filename | + |  String | File name of the XAdES document (i.e. signature0.xml). |
+| signaturePolicy | - |  String | Can be used to change the default signature validation policy that is used by the service. <br> See also [SiVa Validation Policy](/siva2/appendix/validation_policy) for more detailed information on given policy constraints.<br>**Possible values:** <br> POLv3 - signatures with all legal levels are accepted (i.e. QES, AdESqc and AdES, according to Regulation (EU) No 910/2014.) <br> POLv4 - the default policy. Accepted signatures depend on their type (i.e. signature, seal or unknown) and legal level (i.e. QES, AdESqc and Ades) |
+| reportType | - | String | Can be used to change the default returned report type. <br>**Possible values:** <br> Simple - default report type. Returns overall validation result (validationConclusion block)<br> Detailed -  returns detailed information about the signatures and their validation results (validationConclusion, validationProcess and validationReportSignature. Two later ones are optionally present). |
+| datafiles | + |  Array | Array containing the information for datafiles that signature is covering |
+| datafiles.filename | + |  String | Name of hashed data file. |
+| datafiles.hashAlgo | + |  String | Hash algorithm used for hashing the data file. Accepted values are dependant of validation policy |
+| datafiles.hash | + |  String | Datafile hash in Base64 encoded format. |
+
+### Sample JSON request with mandatory parameters
+
+```json
+{
+  "signature": "PD94bWwgdmVyc2lvbj0iMS4...."
+  "filename": "signature0.xml",
+  "datafiles": [{
+    "filename": "test.pdf",
+    "hashAlgo": "SHA256",
+    "hash": "IucjUcbRo9Rke0bZLiHcwiIiplP9pSrSPr7LKln1EiI="
+  }]
+}
+```
+### Sample JSON request with all parameters and multiple datafiles
+
+```json
+{
+  "signature":"sample.asice",
+  "filename":"PD94bWwgdmVyc2lvbj0iMS4....",
+  "signaturePolicy":"POLv3",
+  "reportType":"Detailed",
+  "datafiles": [{
+      "filename": "test.pdf",
+      "hashAlgo": "SHA256",
+      "hash": "IucjUcbRo9Rke0bZLiHcwiIiplP9pSrSPr7LKln1EiI="
+      },
+      {
+      "filename": "test2.pdf",
+      "hashAlgo": "SHA256",
+      "hash": "IucjUcbRo9Rke0bZLiHc23SSasw9pSrSPr7LKln1EiI="
+  }]
+}
+```
 
 ## Validation response interface
 The signature validation report (i.e. the validation response) for JSON and SOAP interfaces depends on what type of validation report was requested.  Data types of SOAP parameters are defined in the [SiVa WSDL document](/siva2/appendix/wsdl).

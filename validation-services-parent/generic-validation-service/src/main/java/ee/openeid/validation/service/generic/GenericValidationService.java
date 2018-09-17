@@ -117,7 +117,7 @@ public class GenericValidationService implements ValidationService {
             throw e;
         } catch (MalformedDocumentException | DSSException e) {
             endExceptionally(e);
-            throw new MalformedDocumentException(e);
+            throw constructMalformedDocumentException(e);
         } catch (Exception e) {
             endExceptionally(e);
             throw new ValidationServiceException(getClass().getSimpleName(), e);
@@ -200,6 +200,10 @@ public class GenericValidationService implements ValidationService {
         dssDocument.setMimeType(MimeType.fromFileName(validationDocument.getName()));
 
         return dssDocument;
+    }
+
+    protected RuntimeException constructMalformedDocumentException(RuntimeException cause) {
+        return new MalformedDocumentException(cause);
     }
 
     private void endExceptionally(Exception e) {

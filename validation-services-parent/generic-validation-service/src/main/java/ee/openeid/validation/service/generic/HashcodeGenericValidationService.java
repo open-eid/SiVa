@@ -2,6 +2,7 @@ package ee.openeid.validation.service.generic;
 
 import ee.openeid.siva.validation.document.Datafile;
 import ee.openeid.siva.validation.document.ValidationDocument;
+import ee.openeid.siva.validation.exception.MalformedSignatureFileException;
 import eu.europa.esig.dss.DSSDocument;
 import eu.europa.esig.dss.DigestAlgorithm;
 import eu.europa.esig.dss.DigestDocument;
@@ -28,6 +29,11 @@ public class HashcodeGenericValidationService extends GenericValidationService {
         //Do nothing
     }
 
+    @Override
+    protected RuntimeException constructMalformedDocumentException(RuntimeException cause) {
+        return new MalformedSignatureFileException(cause, "Signature file malformed");
+    }
+
     private List<DSSDocument> createDetachedContents(final List<Datafile> datafiles) {
         return datafiles.stream()
                 .map(this::createDigestDocument)
@@ -38,7 +44,7 @@ public class HashcodeGenericValidationService extends GenericValidationService {
         DigestDocument digestDocument = new DigestDocument();
         digestDocument.setName(datafile.getFilename());
 
-        DigestAlgorithm digestAlgorithm = DigestAlgorithm.valueOf(datafile.getHashAlgo());
+        DigestAlgorithm digestAlgorithm = DigestAlgorithm.valueOf(datafile.getHashAlgo().toUpperCase());
         digestDocument.addDigest(digestAlgorithm, datafile.getHash());
 
         return digestDocument;

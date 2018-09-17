@@ -21,92 +21,51 @@ import ee.openeid.siva.webapp.request.validation.annotations.ValidSignaturePolic
 import ee.openeid.siva.webapp.soap.DocumentType;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.cxf.binding.soap.SoapMessage;
-import org.apache.cxf.binding.soap.interceptor.AbstractSoapInterceptor;
-import org.apache.cxf.binding.soap.interceptor.SoapInterceptor;
-import org.apache.cxf.binding.soap.saaj.SAAJInInterceptor;
-import org.apache.cxf.interceptor.Fault;
-import org.apache.cxf.phase.Phase;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.w3c.dom.Node;
 
-import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPMessage;
 import java.util.regex.Pattern;
 
-public class SoapRequestValidationInterceptor extends AbstractSoapInterceptor {
-    private static final int ERROR_CODE = 400;
-    private static final int MAX_FILENAME_LENGTH = 260;
+public class SoapRequestValidationInterceptor extends AbstractRequestValidationInterceptor {
+
     private static final int MAX_POLICY_LENGTH = 100;
-
-    private SoapInterceptor saajIn = new SAAJInInterceptor();
-    private ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-
-    public SoapRequestValidationInterceptor() {
-        super(Phase.POST_PROTOCOL);
-        messageSource.setBasename("ValidationMessages");
-    }
+    private static final int MAX_FILENAME_LENGTH = 260;
+    private static final Pattern FILENAME_PATTERN = Pattern.compile(NotNullValidFilenamePattern.PATTERN);
+    private static final Pattern SIGNATURE_POLICY_PATTERN = Pattern.compile(ValidSignaturePolicyPattern.PATTERN);
 
     @Override
-    public void handleMessage(SoapMessage message) {
-        saajIn.handleMessage(message);
-        SOAPMessage soapMessage = message.getContent(SOAPMessage.class);
-        try {
-            if (soapMessage == null) {
-                throw new SOAPException();
-            }
-            SOAPBody body = soapMessage.getSOAPPart().getEnvelope().getBody();
-
-            validateDocumentElement(body);
-            validateFilenameElement(body);
-            validateDocumentTypeElement(body);
-            validateSignaturePolicyElement(body);
-
-        } catch (SOAPException e) {
-            throwFault(messageSource.getMessage("validation.error.message.invalidRequest", null, null));
-        }
+    void validateRequestBody(SOAPBody body) {
+        validateDocumentElement(body);
+        validateFilenameElement(body);
+        validateDocumentTypeElement(body);
+        validateSignaturePolicyElement(body);
     }
 
     private void validateDocumentElement(SOAPBody body) {
         String documentValue = getElementValueFromBody(body, "Document");
         if (StringUtils.isBlank(documentValue) || !Base64.isBase64(documentValue)) {
-            throwFault(messageSource.getMessage("validation.error.message.base64", null, null));
+            throwFault(errorMessage("validation.error.message.base64"));
         }
     }
 
     private void validateFilenameElement(SOAPBody body) {
         String filenameValue = getElementValueFromBody(body, "Filename");
-        Pattern pattern = Pattern.compile(NotNullValidFilenamePattern.PATTERN);
-        if (StringUtils.isBlank(filenameValue) || !pattern.matcher(filenameValue).matches() || filenameValue.length() > MAX_FILENAME_LENGTH || filenameValue.length() < 1) {
-            throwFault(messageSource.getMessage("validation.error.message.filename", null, null));
+        if (StringUtils.isBlank(filenameValue) || !FILENAME_PATTERN.matcher(filenameValue).matches() || filenameValue.length() > MAX_FILENAME_LENGTH || filenameValue.length() < 1) {
+            throwFault(errorMessage("validation.error.message.filename"));
         }
-
     }
 
     private void validateDocumentTypeElement(SOAPBody body) {
         String documentValue = getElementValueFromBody(body, "DocumentType");
         if (!isValidDocumentType(documentValue)) {
-            throwFault(messageSource.getMessage("validation.error.message.documentType", null, null));
+            throwFault(errorMessage("validation.error.message.documentType"));
         }
     }
 
     private void validateSignaturePolicyElement(SOAPBody body) {
         String signaturePolicyValue = getElementValueFromBody(body, "SignaturePolicy");
-
-        Pattern pattern = Pattern.compile(ValidSignaturePolicyPattern.PATTERN);
-        if (signaturePolicyValue != null && (!pattern.matcher(signaturePolicyValue).matches() || signaturePolicyValue.length() > MAX_POLICY_LENGTH || signaturePolicyValue.length() < 1)) {
-            throwFault(messageSource.getMessage("validation.error.message.signaturePolicy", null, null));
+        if (signaturePolicyValue != null && (!SIGNATURE_POLICY_PATTERN.matcher(signaturePolicyValue).matches() || signaturePolicyValue.length() > MAX_POLICY_LENGTH || signaturePolicyValue.length() < 1)) {
+            throwFault(errorMessage("validation.error.message.signaturePolicy"));
         }
-
-    }
-
-    private String getElementValueFromBody(SOAPBody body, String elementName) {
-        Node elementNode = body.getElementsByTagName(elementName).item(0);
-        if (elementNode == null)
-            return null;
-        return elementNode.getNodeValue() == null ? elementNode.getTextContent() : elementNode.getNodeValue();
     }
 
     private boolean isValidDocumentType(String inputDocumentType) {
@@ -120,13 +79,4 @@ public class SoapRequestValidationInterceptor extends AbstractSoapInterceptor {
         }
         return false;
     }
-
-
-    private void throwFault(String message) {
-        Fault fault = new Fault(new Exception(message));
-        fault.setFaultCode(new QName("Client"));
-        fault.setStatusCode(ERROR_CODE);
-        throw fault;
-    }
-
 }

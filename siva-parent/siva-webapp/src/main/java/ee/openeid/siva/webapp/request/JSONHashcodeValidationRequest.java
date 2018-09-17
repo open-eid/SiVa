@@ -12,10 +12,10 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
-public class JSONValidateWithHashRequest implements ValidationWithHashRequest {
+public class JSONHashcodeValidationRequest implements HashcodeValidationRequest {
 
-    @ValidBase64String
-    private String signature;
+    @ValidBase64String(message = "{validation.error.message.signatureFile.invalidBase64}")
+    private String signatureFile;
 
     @ValidSignatureFilename
     private String filename;

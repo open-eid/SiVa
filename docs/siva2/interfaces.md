@@ -90,7 +90,17 @@ Hashcode XAdES validation is supported only in **REST JSON** interface.
 ** REST JSON Endpoint **
 
 ```
-POST https://<server url>/validateWithHash
+POST https://<server url>/validateHashcode
+```
+
+** SOAP Endpoint **
+```
+POST https://<server url>/soap/hashcodeValidationWebService/validateHashcode
+```
+
+** SOAP WSDL **
+```
+POST https://<server url>/soap/hashcodeValidationWebService?wsdl
 ```
 
 ### Validation request parameters
@@ -99,7 +109,7 @@ Validation request parameters for JSON interface are described in the table belo
 
 | JSON parameter | Mandatory | JSON data type | Description |
 |----------------|----------------|-----------|-------------|
-| signature | + |  String | Base64 encoded string of XAdES document to be validated |
+| signatureFile | + |  String | Base64 encoded string of XAdES document to be validated |
 | filename | + |  String | File name of the XAdES document (i.e. signature0.xml). |
 | signaturePolicy | - |  String | Can be used to change the default signature validation policy that is used by the service. <br> See also [SiVa Validation Policy](/siva2/appendix/validation_policy) for more detailed information on given policy constraints.<br>**Possible values:** <br> POLv3 - signatures with all legal levels are accepted (i.e. QES, AdESqc and AdES, according to Regulation (EU) No 910/2014.) <br> POLv4 - the default policy. Accepted signatures depend on their type (i.e. signature, seal or unknown) and legal level (i.e. QES, AdESqc and Ades) |
 | reportType | - | String | Can be used to change the default returned report type. <br>**Possible values:** <br> Simple - default report type. Returns overall validation result (validationConclusion block)<br> Detailed -  returns detailed information about the signatures and their validation results (validationConclusion, validationProcess and validationReportSignature. Two later ones are optionally present). |
@@ -112,7 +122,7 @@ Validation request parameters for JSON interface are described in the table belo
 
 ```json
 {
-  "signature": "PD94bWwgdmVyc2lvbj0iMS4...."
+  "signatureFile": "PD94bWwgdmVyc2lvbj0iMS4...."
   "filename": "signature0.xml",
   "datafiles": [{
     "filename": "test.pdf",
@@ -125,7 +135,7 @@ Validation request parameters for JSON interface are described in the table belo
 
 ```json
 {
-  "signature":"sample.asice",
+  "signatureFile":"sample.asice",
   "filename":"PD94bWwgdmVyc2lvbj0iMS4....",
   "signaturePolicy":"POLv3",
   "reportType":"Detailed",
@@ -140,6 +150,61 @@ Validation request parameters for JSON interface are described in the table belo
       "hash": "IucjUcbRo9Rke0bZLiHc23SSasw9pSrSPr7LKln1EiI="
   }]
 }
+```
+
+### Sample SOAP request with mandatory parameters
+
+```xml
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap="http://soap.webapp.siva.openeid.ee/">
+   <soapenv:Body>
+      <soap:HashcodeValidationDocument>
+         <soap:HashcodeValidationRequest>
+            <SignatureFile>PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGlu...</SignatureFile>
+            <Filename>signature.xml</Filename>
+            <DataFiles>
+               <DataFile>
+                  <Filename>test.pdf</Filename>
+                  <HashAlgo>SHA256</HashAlgo>
+                  <Hash>IucjUcbRo9Rke0bZLiHcwiIiplP9pSrSPr7LKln1EiI=</Hash>
+               </DataFile>
+            </DataFiles>
+         </soap:HashcodeValidationRequest>
+      </soap:HashcodeValidationDocument>
+   </soapenv:Body>
+</soapenv:Envelope>
+```
+### Sample SOAP request with all parameters and multiple datafiles
+
+```xml
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap="http://soap.webapp.siva.openeid.ee/">
+   <soapenv:Body>
+      <soap:HashcodeValidationDocument>
+         <soap:HashcodeValidationRequest>
+            <SignatureFile>PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGlu...</SignatureFile>
+            <Filename>signature.xml</Filename>
+            <ReportType>Simple</ReportType>
+            <SignaturePolicy>POLv4</SignaturePolicy>
+            <DataFiles>
+               <DataFile>
+                  <Filename>test.pdf</Filename>
+                  <HashAlgo>SHA256</HashAlgo>
+                  <Hash>IucjUcbRo9Rke0bZLiHcwiIiplP9pSrSPr7LKln1EiI=</Hash>
+               </DataFile>
+               <DataFile>
+                  <Filename>test2.pdf</Filename>
+                  <HashAlgo>SHA256</HashAlgo>
+                  <Hash>IucjUcbRo9Rke0bZLiHcwiIiplP9pSrSPr7LKln1EiI=</Hash>
+               </DataFile>
+               <DataFile>
+                  <Filename>test3.pdf</Filename>
+                  <HashAlgo>SHA256</HashAlgo>
+                  <Hash>IucjUcbRo9Rke0bZLiHcwiIiplP9pSrSPr7LKln1EiI=</Hash>
+               </DataFile>
+            </DataFiles>
+         </soap:HashcodeValidationRequest>
+      </soap:HashcodeValidationDocument>
+   </soapenv:Body>
+</soapenv:Envelope>
 ```
 
 ## Validation response interface

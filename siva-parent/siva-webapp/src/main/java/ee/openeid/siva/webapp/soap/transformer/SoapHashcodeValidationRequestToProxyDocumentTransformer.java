@@ -3,7 +3,8 @@ package ee.openeid.siva.webapp.soap.transformer;
 import ee.openeid.siva.proxy.document.Datafile;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.document.ReportType;
-import ee.openeid.siva.webapp.request.ValidationWithHashRequest;
+import ee.openeid.siva.webapp.soap.HashDataFile;
+import ee.openeid.siva.webapp.soap.SoapHashcodeValidationRequest;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
@@ -12,30 +13,30 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class SoapValidationWithHashRequestToProxyDocumentTransformer {
+public class SoapHashcodeValidationRequestToProxyDocumentTransformer {
 
-    public ProxyDocument transform(ValidationWithHashRequest validationWithHashRequest) {
+    public ProxyDocument transform(SoapHashcodeValidationRequest validationRequest) {
         ProxyDocument proxyDocument = new ProxyDocument();
 
-        proxyDocument.setName(validationWithHashRequest.getFilename());
+        proxyDocument.setName(validationRequest.getFilename());
 
-        proxyDocument.setBytes(Base64.decodeBase64(validationWithHashRequest.getSignatureFile()));
+        proxyDocument.setBytes(Base64.decodeBase64(validationRequest.getSignatureFile()));
 
-        if (validationWithHashRequest.getReportType() != null) {
-            proxyDocument.setReportType(ReportType.reportTypeFromString(validationWithHashRequest.getReportType()));
+        if (validationRequest.getReportType() != null) {
+            proxyDocument.setReportType(ReportType.reportTypeFromString(validationRequest.getReportType().name()));
         } else {
             proxyDocument.setReportType(ReportType.SIMPLE);
         }
 
-        proxyDocument.setSignaturePolicy(validationWithHashRequest.getSignaturePolicy());
+        proxyDocument.setSignaturePolicy(validationRequest.getSignaturePolicy());
 
-        List<Datafile> datafiles = mapRequestDatafilesToProxyDocument(validationWithHashRequest.getDatafiles());
+        List<Datafile> datafiles = mapRequestDatafilesToProxyDocument(validationRequest.getDataFiles().getDataFile());
         proxyDocument.setDatafiles(datafiles);
 
         return proxyDocument;
     }
 
-    private List<Datafile> mapRequestDatafilesToProxyDocument(List<ee.openeid.siva.webapp.request.Datafile> requestDatafiles) {
+    private List<Datafile> mapRequestDatafilesToProxyDocument(List<HashDataFile> requestDatafiles) {
         if (requestDatafiles == null || requestDatafiles.isEmpty()) {
             return Collections.emptyList();
         }
@@ -44,11 +45,11 @@ public class SoapValidationWithHashRequestToProxyDocumentTransformer {
                 .collect(Collectors.toList());
     }
 
-    private Datafile mapRequestDatafileToProxyDatafile(ee.openeid.siva.webapp.request.Datafile requestDatafile) {
+    private Datafile mapRequestDatafileToProxyDatafile(HashDataFile requestDatafile) {
         Datafile proxyDatafile = new Datafile();
         proxyDatafile.setFilename(requestDatafile.getFilename());
         proxyDatafile.setHash(requestDatafile.getHash());
-        proxyDatafile.setHashAlgo(requestDatafile.getHashAlgo());
+        proxyDatafile.setHashAlgo(requestDatafile.getHashAlgo().value());
         return proxyDatafile;
     }
 }

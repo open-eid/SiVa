@@ -16,12 +16,12 @@
 
 package ee.openeid.siva.webapp.soap.impl;
 
-import ee.openeid.siva.proxy.ValidationProxy;
+import ee.openeid.siva.proxy.HashcodeValidationProxy;
 import ee.openeid.siva.validation.document.report.SimpleReport;
-import ee.openeid.siva.webapp.soap.SoapValidationRequest;
+import ee.openeid.siva.webapp.soap.HashcodeValidationWebService;
+import ee.openeid.siva.webapp.soap.SoapHashcodeValidationRequest;
 import ee.openeid.siva.webapp.soap.ValidationReport;
-import ee.openeid.siva.webapp.soap.ValidationWebService;
-import ee.openeid.siva.webapp.soap.transformer.SoapValidationRequestToProxyDocumentTransformer;
+import ee.openeid.siva.webapp.soap.transformer.SoapHashcodeValidationRequestToProxyDocumentTransformer;
 import ee.openeid.siva.webapp.soap.transformer.ValidationReportSoapResponseTransformer;
 import org.apache.cxf.annotations.SchemaValidation;
 import org.apache.cxf.interceptor.OutFaultInterceptors;
@@ -31,27 +31,26 @@ import javax.xml.ws.Holder;
 
 @OutFaultInterceptors(interceptors = {"ee.openeid.siva.webapp.soap.interceptor.SoapFaultResponseInterceptor", "ee.openeid.siva.webapp.soap.interceptor.SoapResponseHeaderInterceptor"})
 @SchemaValidation(type = SchemaValidation.SchemaValidationType.IN)
-public class ValidationWebServiceImpl implements ValidationWebService {
+public class HashcodeValidationWebServiceImpl implements HashcodeValidationWebService {
 
-    private ValidationProxy validationProxy;
-    private SoapValidationRequestToProxyDocumentTransformer requestTransformer;
+    private HashcodeValidationProxy hashcodeValidationProxy;
+    private SoapHashcodeValidationRequestToProxyDocumentTransformer hashRequestTransformer;
     private ValidationReportSoapResponseTransformer responseTransformer;
 
     @Override
-    public void validateDocument(SoapValidationRequest validationRequest, Holder<ValidationReport> validationReport, Holder<String> validationReportSignature) {
-        SimpleReport simpleReport = validationProxy.validate(requestTransformer.transform(validationRequest));
-        ValidationReport responseValidationReport = responseTransformer.toSoapResponse(simpleReport);
-        validationReport.value = responseValidationReport;
+    public void hashcodeValidationDocument(SoapHashcodeValidationRequest validationRequest, Holder<ValidationReport> validationReport, Holder<String> validationReportSignature) {
+        SimpleReport simpleReport = hashcodeValidationProxy.validate(hashRequestTransformer.transform(validationRequest));
+        validationReport.value = responseTransformer.toSoapResponse(simpleReport);
     }
 
     @Autowired
-    public void setValidationProxy(ValidationProxy validationProxy) {
-        this.validationProxy = validationProxy;
+    public void setHashcodeValidationProxy(HashcodeValidationProxy hashcodeValidationProxy) {
+        this.hashcodeValidationProxy = hashcodeValidationProxy;
     }
 
     @Autowired
-    public void setRequestTransformer(SoapValidationRequestToProxyDocumentTransformer requestTransformer) {
-        this.requestTransformer = requestTransformer;
+    public void setHashRequestTransformer(SoapHashcodeValidationRequestToProxyDocumentTransformer hashRequestTransformer) {
+        this.hashRequestTransformer = hashRequestTransformer;
     }
 
     @Autowired

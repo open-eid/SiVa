@@ -42,7 +42,7 @@ public enum ReportType {
                 .findAny();
 
         if (!reportType.isPresent()) {
-            throw new UnsupportedTypeException("type = " + type + " is unsupported");
+            throw new UnsupportedTypeException("ReportType of type '" + type + "' is not supported");
         }
         return reportType.get();
     }

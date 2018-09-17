@@ -20,6 +20,7 @@ import ee.openeid.siva.proxy.http.RESTValidationProxyException;
 import ee.openeid.siva.proxy.http.RESTValidationProxyRequestException;
 import ee.openeid.siva.validation.exception.DocumentRequirementsException;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
+import ee.openeid.siva.validation.exception.MalformedSignatureFileException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import ee.openeid.siva.webapp.response.erroneus.RequestValidationError;
@@ -54,6 +55,15 @@ public class ValidationExceptionHandler {
         requestValidationError.addFieldError("document", getMessage("validation.error.message.document.malformed"));
         return requestValidationError;
     }
+
+    @ExceptionHandler(MalformedSignatureFileException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public RequestValidationError handleMalformedSignatureFileException(MalformedSignatureFileException e) {
+        RequestValidationError requestValidationError = new RequestValidationError();
+        requestValidationError.addFieldError("signatureFile", getMessage("validation.error.message.signatureFile.malformed"));
+        return requestValidationError;
+    }
+
     @ExceptionHandler(DocumentRequirementsException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public RequestValidationError handleDocumentRequirementsException(DocumentRequirementsException e) {

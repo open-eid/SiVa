@@ -2,9 +2,9 @@ package ee.openeid.siva.webapp.request;
 
 import java.util.List;
 
-public interface ValidationWithHashRequest {
+public interface HashcodeValidationRequest {
 
-    String getSignature();
+    String getSignatureFile();
 
     String getFilename();
 

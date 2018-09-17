@@ -3,7 +3,7 @@ package ee.openeid.siva.webapp.transformer;
 import ee.openeid.siva.proxy.document.Datafile;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.document.ReportType;
-import ee.openeid.siva.webapp.request.ValidationWithHashRequest;
+import ee.openeid.siva.webapp.request.HashcodeValidationRequest;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
@@ -12,24 +12,24 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class ValidationWithHashRequestToProxyDocumentTransformer {
+public class HashcodeValidationRequestToProxyDocumentTransformer {
 
-    public ProxyDocument transform(ValidationWithHashRequest validationWithHashRequest) {
+    public ProxyDocument transform(HashcodeValidationRequest hashcodeValidationRequest) {
         ProxyDocument proxyDocument = new ProxyDocument();
 
-        proxyDocument.setName(validationWithHashRequest.getFilename());
+        proxyDocument.setName(hashcodeValidationRequest.getFilename());
 
-        proxyDocument.setBytes(Base64.decodeBase64(validationWithHashRequest.getSignature()));
+        proxyDocument.setBytes(Base64.decodeBase64(hashcodeValidationRequest.getSignatureFile()));
 
-        if (validationWithHashRequest.getReportType() != null) {
-            proxyDocument.setReportType(ReportType.reportTypeFromString(validationWithHashRequest.getReportType()));
+        if (hashcodeValidationRequest.getReportType() != null) {
+            proxyDocument.setReportType(ReportType.reportTypeFromString(hashcodeValidationRequest.getReportType()));
         } else {
             proxyDocument.setReportType(ReportType.SIMPLE);
         }
 
-        proxyDocument.setSignaturePolicy(validationWithHashRequest.getSignaturePolicy());
+        proxyDocument.setSignaturePolicy(hashcodeValidationRequest.getSignaturePolicy());
 
-        List<Datafile> datafiles = mapRequestDatafilesToProxyDocument(validationWithHashRequest.getDatafiles());
+        List<Datafile> datafiles = mapRequestDatafilesToProxyDocument(hashcodeValidationRequest.getDatafiles());
         proxyDocument.setDatafiles(datafiles);
 
         return proxyDocument;

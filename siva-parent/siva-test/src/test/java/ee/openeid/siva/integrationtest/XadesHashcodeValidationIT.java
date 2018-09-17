@@ -17,7 +17,6 @@
 package ee.openeid.siva.integrationtest;
 
 import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.response.Response;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -25,7 +24,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import static ee.openeid.siva.integrationtest.TestData.*;
+import static ee.openeid.siva.integrationtest.TestData.MOCK_XADES_DATAFILE_FILENAME;
+import static ee.openeid.siva.integrationtest.TestData.MOCK_XADES_DATAFILE_FILENAME2;
+import static ee.openeid.siva.integrationtest.TestData.MOCK_XADES_DATAFILE_HASH;
+import static ee.openeid.siva.integrationtest.TestData.MOCK_XADES_DATAFILE_HASH2;
+import static ee.openeid.siva.integrationtest.TestData.MOCK_XADES_DATAFILE_HASH_ALGO;
 
 @Category(IntegrationTest.class)
 public class XadesHashcodeValidationIT extends SiVaRestTests {
@@ -57,7 +60,7 @@ public class XadesHashcodeValidationIT extends SiVaRestTests {
      */
     @Test
     public void validXadesWithHashcodeFromAsice() {
-        postForXadesHashcode(validationRequestHashcode("hashAsiceXades.xml", "signature0.xml", "POLv4", "Simple", TEST_FILENAME, TEST_HASHALGO, TEST_HASH)).then().
+        postHashcodeValidation(validationRequestHashcode("hashAsiceXades.xml", "signature0.xml", "POLv4", "Simple", MOCK_XADES_DATAFILE_FILENAME, MOCK_XADES_DATAFILE_HASH_ALGO, MOCK_XADES_DATAFILE_HASH)).then().
                 body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
     }
 
@@ -76,7 +79,7 @@ public class XadesHashcodeValidationIT extends SiVaRestTests {
      */
     @Test
     public void validXadesWithHashcodeFromBdoc() {
-        postForXadesHashcode(validationRequestHashcode("hashBdocXades.xml", "signature0.xml", "POLv4", "Simple", TEST_FILENAME2, TEST_HASHALGO, TEST_HASH2)).then().
+        postHashcodeValidation(validationRequestHashcode("hashBdocXades.xml", "signature0.xml", "POLv4", "Simple", MOCK_XADES_DATAFILE_FILENAME2, MOCK_XADES_DATAFILE_HASH_ALGO, MOCK_XADES_DATAFILE_HASH2)).then().
                 body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
     }
 

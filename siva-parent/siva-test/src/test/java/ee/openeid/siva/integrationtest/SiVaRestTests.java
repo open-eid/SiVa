@@ -23,38 +23,24 @@ import com.jayway.restassured.response.Response;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.webapp.request.Datafile;
 import ee.openeid.siva.webapp.response.ValidationResponse;
-import ee.openeid.siva.webapp.soap.DataFile;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FilenameUtils;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.config.EncoderConfig.encoderConfig;
 
 public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
 
-    protected static final String DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE = "Document malformed or not matching documentType";
-    protected static final String INVALID_DOCUMENT_TYPE = "Invalid document type";
-    protected static final String INVALID_DOCUMENT_TYPE_DDOC = "Invalid document type. Can only return data files for DDOC type containers.";
-    protected static final String INVALID_DATA_FILE_FILENAME = "Invalid filename. Can only return data files for DDOC type containers.";
-    protected static final String INVALID_FILENAME = "Invalid filename";
-    protected static final String INVALID_FILENAME_SIZE = "size must be between 1 and 260";
-    protected static final String INVALID_POLICY_SIZE = "size must be between 1 and 100";
-    protected static final String INVALID_REPORT_TYPE = "Invalid report type";
-    protected static final String MAY_NOT_BE_EMPTY = "may not be empty";
-    protected static final String INVALID_BASE_64 = "Document is not encoded in a valid base64 string";
-    protected static final String DOCUMENT_TYPE = "documentType";
-    protected static final String FILENAME = "filename";
-    protected static final String DOCUMENT = "document";
-    protected static final String SIGNATURE_POLICY = "signaturePolicy";
-    protected static final String REPORT_TYPE = "reportType";
-
     private static final String VALIDATION_ENDPOINT = "/validate";
-    private static final String HASH_ENDPOINT = "/validateWithHash";
+    private static final String HASHCODE_VALIDATION_ENDPOINT = "/validateHashcode";
     private static final String DATA_FILES_ENDPOINT = "/getDataFiles";
     private static final String MONITORING_ENDPOINT = "/monitoring/health";
     private static final boolean PRINT_RESPONSE = false;
@@ -90,16 +76,17 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
                 .post(DATA_FILES_ENDPOINT);
     }
 
-    protected Response postForXadesHashcode(String request) {
+    protected Response postHashcodeValidation(String request) {
         return given()
                 .log().headers()
                 .log().method()
                 .log().path()
                 .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
                 .body(request)
+                .log().body()
                 .contentType(ContentType.JSON)
                 .when()
-                .post(HASH_ENDPOINT);
+                .post(HASHCODE_VALIDATION_ENDPOINT);
     }
 
     protected Response getMonitoring() {
@@ -202,16 +189,16 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
     protected String validationRequestHashcode(String signature, String filename, String signaturePolicy, String reportType, String dataFile, String hashAlgo, String hash) {
         List<Datafile> list = new ArrayList<>();
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("signature", Base64.encodeBase64String(readFileFromTestResources(signature)));
-        jsonObject.put("filename", filename);
-        jsonObject.put("signaturePolicy", signaturePolicy);
-        jsonObject.put("reportType", reportType);
+        jsonObject.put(SIGNATURE_FILE, Base64.encodeBase64String(readFileFromTestResources(signature)));
+        jsonObject.put(FILENAME, filename);
+        jsonObject.put(SIGNATURE_POLICY, signaturePolicy);
+        jsonObject.put(REPORT_TYPE, reportType);
         Datafile dataFileObject = new Datafile();
         dataFileObject.setHash(hash);
         dataFileObject.setHashAlgo(hashAlgo);
         dataFileObject.setFilename(dataFile);
         list.add(dataFileObject);
-        jsonObject.put("datafiles", list);
+        jsonObject.put(DATAFILES, list);
         return jsonObject.toString();
     }
 
@@ -258,5 +245,13 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    protected String currentDateTime(String timeZone, String timeFormat){
+        final Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(timeFormat);
+
+        sdf.setTimeZone(TimeZone.getTimeZone(timeZone));
+        return sdf.format(currentTime);
     }
 }

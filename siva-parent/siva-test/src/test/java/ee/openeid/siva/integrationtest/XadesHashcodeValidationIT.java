@@ -29,6 +29,7 @@ import static ee.openeid.siva.integrationtest.TestData.MOCK_XADES_DATAFILE_FILEN
 import static ee.openeid.siva.integrationtest.TestData.MOCK_XADES_DATAFILE_HASH;
 import static ee.openeid.siva.integrationtest.TestData.MOCK_XADES_DATAFILE_HASH2;
 import static ee.openeid.siva.integrationtest.TestData.MOCK_XADES_DATAFILE_HASH_ALGO;
+import static ee.openeid.siva.integrationtest.TestData.MOCK_XADES_SIGNATURE_FILE;
 
 @Category(IntegrationTest.class)
 public class XadesHashcodeValidationIT extends SiVaRestTests {
@@ -60,7 +61,7 @@ public class XadesHashcodeValidationIT extends SiVaRestTests {
      */
     @Test
     public void validXadesWithHashcodeFromAsice() {
-        postHashcodeValidation(validationRequestHashcode("hashAsiceXades.xml", "signature0.xml", "POLv4", "Simple", MOCK_XADES_DATAFILE_FILENAME, MOCK_XADES_DATAFILE_HASH_ALGO, MOCK_XADES_DATAFILE_HASH)).then().
+        postHashcodeValidation(validationRequestHashcode(MOCK_XADES_SIGNATURE_FILE, "signature0.xml", "POLv4", "Simple", MOCK_XADES_DATAFILE_FILENAME, MOCK_XADES_DATAFILE_HASH_ALGO, MOCK_XADES_DATAFILE_HASH)).then().
                 body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
     }
 

@@ -68,6 +68,20 @@
             </roles>
         </developer>
         <developer>
+            <id>siimsuu1</id>
+            <name>Siim Suu</name>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>JorgenHeinsoo</id>
+            <name>Jorgen Heinsoo</name>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
             <id>naare</id>
             <name>Aare Nurm</name>
             <roles>

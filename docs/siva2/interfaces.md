@@ -85,7 +85,7 @@ Validation request parameters for JSON and SOAP interfaces are described in the 
 
 ## Validation request interface for hashcode
 
-Hashcode XAdES validation is supported only in **REST JSON** interface.
+Hashcode XAdES validation is supported for **REST JSON** and **SOAP** interfaces.
 
 ** REST JSON Endpoint **
 
@@ -95,7 +95,7 @@ POST https://<server url>/validateHashcode
 
 ** SOAP Endpoint **
 ```
-POST https://<server url>/soap/hashcodeValidationWebService/validateHashcode
+POST https://<server url>/soap/hashcodeValidationWebService
 ```
 
 ** SOAP WSDL **
@@ -110,7 +110,7 @@ Validation request parameters for JSON interface are described in the table belo
 | JSON parameter | Mandatory | JSON data type | Description |
 |----------------|----------------|-----------|-------------|
 | signatureFile | + |  String | Base64 encoded string of XAdES document to be validated |
-| filename | + |  String | File name of the XAdES document (i.e. signature0.xml). |
+| filename | + |  String | File name of the XAdES document (i.e. signature0.xml). Only XML files supported. |
 | signaturePolicy | - |  String | Can be used to change the default signature validation policy that is used by the service. <br> See also [SiVa Validation Policy](/siva2/appendix/validation_policy) for more detailed information on given policy constraints.<br>**Possible values:** <br> POLv3 - signatures with all legal levels are accepted (i.e. QES, AdESqc and AdES, according to Regulation (EU) No 910/2014.) <br> POLv4 - the default policy. Accepted signatures depend on their type (i.e. signature, seal or unknown) and legal level (i.e. QES, AdESqc and Ades) |
 | reportType | - | String | Can be used to change the default returned report type. <br>**Possible values:** <br> Simple - default report type. Returns overall validation result (validationConclusion block)<br> Detailed -  returns detailed information about the signatures and their validation results (validationConclusion, validationProcess and validationReportSignature. Two later ones are optionally present). |
 | datafiles | + |  Array | Array containing the information for datafiles that signature is covering |

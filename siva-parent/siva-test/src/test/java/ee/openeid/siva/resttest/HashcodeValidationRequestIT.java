@@ -40,11 +40,11 @@ import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
 
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
@@ -496,8 +496,8 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         assertSimpleReportWithSignature(response, request);
         response
                 .body("validationReport.validationProcess.signatures", hasSize(1))
-                .body("validationReport.validationProcess.signatures[0].validationProcessBasicSignatures.conclusion.indication", equalTo(TestData.VALID_INDICATION_VALUE_PASSED))
-//                .body("validationReport.validationProcess.signatures[0].validationProcessTimestamps.conclusion.indication", is(TestData.VALID_INDICATION_VALUE_PASSED))
+                .body("validationReport.validationProcess.signatures[0].validationProcessBasicSignatures.conclusion.indication", is(TestData.VALID_INDICATION_VALUE_PASSED))
+                .body("validationReport.validationProcess.signatures[0].validationProcessTimestamps.conclusion.indication", hasItem(TestData.VALID_INDICATION_VALUE_PASSED))
                 .body("validationReport.validationProcess.signatures[0].validationProcessLongTermData.conclusion.indication", is(TestData.VALID_INDICATION_VALUE_PASSED))
                 .body("validationReport.validationProcess.signatures[0].validationProcessArchivalData.conclusion.indication", is(TestData.VALID_INDICATION_VALUE_PASSED))
 

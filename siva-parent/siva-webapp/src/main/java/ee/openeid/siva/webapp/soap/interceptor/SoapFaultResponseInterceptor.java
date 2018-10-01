@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2018 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -19,6 +19,7 @@ package ee.openeid.siva.webapp.soap.interceptor;
 import ee.openeid.siva.proxy.http.RESTValidationProxyRequestException;
 import ee.openeid.siva.validation.exception.DocumentRequirementsException;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
+import ee.openeid.siva.validation.exception.MalformedSignatureFileException;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import eu.europa.esig.dss.DSSException;
 import org.apache.cxf.binding.soap.SoapMessage;
@@ -57,7 +58,11 @@ public class SoapFaultResponseInterceptor extends AbstractSoapInterceptor {
     }
 
     private boolean isClientException(Throwable t) {
-        if (t instanceof MalformedDocumentException || t instanceof DocumentRequirementsException || t instanceof InvalidPolicyException || t instanceof UnmarshalException) {
+        if (t instanceof MalformedDocumentException ||
+                t instanceof MalformedSignatureFileException ||
+                t instanceof DocumentRequirementsException ||
+                t instanceof InvalidPolicyException ||
+                t instanceof UnmarshalException) {
             return true;
         } else if (t instanceof RESTValidationProxyRequestException) {
             RESTValidationProxyRequestException restProxyException = (RESTValidationProxyRequestException) t;

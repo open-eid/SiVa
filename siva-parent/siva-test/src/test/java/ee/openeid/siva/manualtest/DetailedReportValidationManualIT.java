@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2018 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -29,14 +29,12 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
-
 import static com.jayway.restassured.config.EncoderConfig.encoderConfig;
 import static ee.openeid.siva.integrationtest.TestData.*;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertThat;
 
 @Category(IntegrationTest.class)
@@ -96,7 +94,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
         assertThat(response.jsonPath().getString(validationConclusion + ".signatures.signatureFormat[0]"), equalTo(VALID_VALIDATION_CONCLUSION_SIGNATURE_FORMAT_XADES_LT));
         assertThat(response.jsonPath().getString(validationConclusion + ".signatures.signatureLevel[0]"), equalTo(VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_1));
         assertThat(response.jsonPath().getString(validationConclusion + ".signatures.signedBy[0]"), equalTo("NURM,AARE,38211015222"));
-        assertThat(response.jsonPath().getString(validationConclusion + ".signatures.indication[0]"), equalTo(VALID_VALIDATION_PROCESS_SUB_INDICATION_5));
+        assertThat(response.jsonPath().getString(validationConclusion + ".signatures.indication[0]"), equalTo(VALID_INDICATION_TOTAL_PASSED));
         assertThat(response.jsonPath().getString(validationConclusion + ".signatures.signatureScopes[0].name[0]"), equalTo("Tresting.txt"));
         assertThat(response.jsonPath().getString(validationConclusion + ".signatures.signatureScopes[0].scope[0]"), equalTo(VALID_SIGNATURE_SCOPE_VALUE_1));
         assertThat(response.jsonPath().getString(validationConclusion + ".signatures.signatureScopes[0].content[0]"), equalTo(VALID_SIGNATURE_SCOPE_CONTENT_1));
@@ -747,14 +745,6 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
         assertThat(response.jsonPath().getString("validationReport.validationConclusion.validatedDocument.filename"), equalTo(filename));
         assertThat(response.jsonPath().getString("validationReport.validationConclusion.validatedDocument.fileHashInHex"), nullValue() );
         assertThat(response.jsonPath().getString("validationReport.validationConclusion.validatedDocument.hashAlgo"), nullValue());
-    }
-
-    private String currentDateTime(String timeZone, String timeFormat){
-        final Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(timeFormat);
-
-        sdf.setTimeZone(TimeZone.getTimeZone(timeZone));
-        return sdf.format(currentTime);
     }
 
     private Response validateRequestForDetailedReport(String request, String validationUrl){

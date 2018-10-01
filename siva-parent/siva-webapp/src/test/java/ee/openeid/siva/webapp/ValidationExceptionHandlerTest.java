@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2018 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -17,15 +17,20 @@
 package ee.openeid.siva.webapp;
 
 import ee.openeid.siva.proxy.DataFilesProxy;
+import ee.openeid.siva.proxy.HashcodeValidationProxy;
 import ee.openeid.siva.proxy.ValidationProxy;
 import ee.openeid.siva.proxy.document.ProxyDocument;
+import ee.openeid.siva.proxy.document.ReportType;
 import ee.openeid.siva.proxy.http.RESTValidationProxyException;
 import ee.openeid.siva.proxy.http.RESTValidationProxyRequestException;
 import ee.openeid.siva.validation.exception.DocumentRequirementsException;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
+import ee.openeid.siva.validation.exception.MalformedSignatureFileException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
+import ee.openeid.siva.webapp.request.Datafile;
 import ee.openeid.siva.webapp.transformer.DataFilesRequestToProxyDocumentTransformer;
+import ee.openeid.siva.webapp.transformer.HashcodeValidationRequestToProxyDocumentTransformer;
 import ee.openeid.siva.webapp.transformer.ValidationRequestToProxyDocumentTransformer;
 import org.assertj.core.api.Assertions;
 import org.json.JSONObject;
@@ -46,7 +51,11 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.hamcrest.Matchers.*;
+import java.util.Arrays;
+
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -56,11 +65,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 public class ValidationExceptionHandlerTest {
 
     private static final String VALIDATE_URL_TEMPLATE = "/validate";
+    private static final String HASHCODE_VALIDATION_URL_TEMPLATE = "/validateHashcode";
     private static final String GET_DATA_FILES_URL_TEMPLATE = "/getDataFiles";
     private ValidationController validationController;
     private DataFilesController dataFilesController;
     private ValidationProxy validationProxy;
     private DataFilesProxy dataFilesProxy;
+    private HashcodeValidationProxy hashcodeValidationProxy;
     private MockMvc mockMvc;
     private MockMvc mockMvcDataFiles;
     @Autowired
@@ -72,9 +83,13 @@ public class ValidationExceptionHandlerTest {
         dataFilesController = new DataFilesController();
         validationProxy = Mockito.mock(ValidationProxy.class);
         dataFilesProxy = Mockito.mock(DataFilesProxy.class);
+        hashcodeValidationProxy = Mockito.mock(HashcodeValidationProxy.class);
+
         validationController.setValidationProxy(validationProxy);
-        dataFilesController.setDataFilesProxy(dataFilesProxy);
         validationController.setTransformer(new ValidationRequestToProxyDocumentTransformer());
+        validationController.setHashcodeValidationProxy(hashcodeValidationProxy);
+        validationController.setHashRequestTransformer(new HashcodeValidationRequestToProxyDocumentTransformer());
+        dataFilesController.setDataFilesProxy(dataFilesProxy);
         dataFilesController.setDataFilesTransformer(new DataFilesRequestToProxyDocumentTransformer());
 
         ValidationExceptionHandler validationExceptionHandler = new ValidationExceptionHandler();
@@ -261,6 +276,20 @@ public class ValidationExceptionHandlerTest {
         Assert.assertEquals(content, "{\"requestErrors\":[{\"key\":\"document\",\"message\":\"Unfortunately there was an error validating your document\"}]}");
     }
 
+    @Test
+    public void testHashcodeValidationMalformedSignatureFileExceptionHandler() throws Exception {
+        when(hashcodeValidationProxy.validate(any())).thenThrow(MalformedSignatureFileException.class);
+        mockMvc.perform(post(HASHCODE_VALIDATION_URL_TEMPLATE)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestWithInvalidFormatSignatureFile().toString().getBytes()))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors", hasSize(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].key", is("signatureFile")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].message", containsString("Signature file malformed")))
+                .andReturn();
+    }
+
     private JSONObject request() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("document", "dGVzdA0K");
@@ -291,4 +320,19 @@ public class ValidationExceptionHandlerTest {
         return jsonObject;
     }
 
+    private JSONObject requestWithInvalidFormatSignatureFile() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("signatureFile", "NOT_XML_FORMATTED_FILE_CONTENT");
+        jsonObject.put("filename", "signature0.xml");
+        jsonObject.put("reportType", ReportType.SIMPLE);
+        jsonObject.put("signaturePolicy", "POLv3");
+
+        Datafile datafile = new Datafile();
+        datafile.setFilename("test");
+        datafile.setHash("test-hash-1");
+        datafile.setHashAlgo("SHA256");
+
+        jsonObject.put("datafiles", Arrays.asList(datafile));
+        return jsonObject;
+    }
 }

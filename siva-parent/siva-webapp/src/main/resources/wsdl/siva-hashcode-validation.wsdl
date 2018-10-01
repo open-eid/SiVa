@@ -1,0 +1,303 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:tns="http://soap.webapp.siva.openeid.ee/"
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
+                  xmlns:external="http://dss.esig.europa.eu/validation/detailed-report"
+                  targetNamespace="http://soap.webapp.siva.openeid.ee/"
+                  name="SignatureHashcodeValidationService">
+
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://soap.webapp.siva.openeid.ee/"
+                   targetNamespace="http://soap.webapp.siva.openeid.ee/">
+
+            <xs:import namespace="http://x-road.eu/xsd/xroad.xsd" schemaLocation="xroad.xsd"/>
+            <xs:import namespace="http://dss.esig.europa.eu/validation/detailed-report" schemaLocation="DetailedReport.xsd"/>
+
+            <xs:element name="ValidationReport" type="tns:ValidationReport"/>
+            <xs:element name="ValidationProcess" substitutionGroup="external:DetailedReport"/>
+            <xs:element name="ValidationConclusion" type="tns:ValidationConclusion"/>
+
+            <xs:element name="HashcodeValidationDocument" type="tns:HashcodeValidationDocument"/>
+            <xs:element name="HashcodeValidationRequest" type="tns:SoapHashcodeValidationRequest"/>
+            <xs:element name="HashcodeValidationResponse" type="tns:ValidateDocumentResponse"/>
+
+            <xs:complexType name="HashcodeValidationDocument">
+                <xs:sequence>
+                    <xs:element ref="tns:HashcodeValidationRequest"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="SoapHashcodeValidationRequest">
+                <xs:sequence>
+                    <xs:element name="SignatureFile" type="tns:NotEmptyString"/>
+                    <xs:element name="Filename" type="tns:Filename"/>
+                    <xs:element minOccurs="0" name="ReportType" type="tns:ReportType" default="SIMPLE"/>
+                    <xs:element minOccurs="0" name="SignaturePolicy" type="tns:SignaturePolicy" default="POLv4"/>
+                    <xs:element name="DataFiles">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element maxOccurs="unbounded" name="DataFile" type="tns:HashDataFile"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="HashDataFile">
+                <xs:sequence>
+                    <xs:element name="Filename" type="tns:Filename"/>
+                    <xs:element name="HashAlgo" type="tns:HashAlgorithm"/>
+                    <xs:element name="Hash" type="tns:NotEmptyString"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:simpleType name="NotEmptyString">
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"/>
+                    <xs:pattern value="\S+"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="Filename">
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"/>
+                    <xs:maxLength value="260"/>
+                    <xs:pattern value="[^\s*&amp;%&quot;\\:?]+"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="ReportType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="SIMPLE" />
+                    <xs:enumeration value="DETAILED" />
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="SignaturePolicy">
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"/>
+                    <xs:maxLength value="100"/>
+                    <xs:pattern value="[A-Za-z0-9_ -]*"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="HashAlgorithm">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="SHA1" />
+                    <xs:enumeration value="SHA224" />
+                    <xs:enumeration value="SHA256" />
+                    <xs:enumeration value="SHA384" />
+                    <xs:enumeration value="SHA512" />
+                    <xs:enumeration value="RIPEMD160" />
+                    <xs:enumeration value="MD2" />
+                    <xs:enumeration value="MD5" />
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:complexType name="ValidateDocumentResponse">
+                <xs:sequence>
+                    <xs:element minOccurs="1" ref="tns:ValidationReport"/>
+                    <xs:element minOccurs="0" name="ValidationReportSignature" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ValidationReport">
+                <xs:sequence>
+                    <xs:element minOccurs="1" ref="tns:ValidationConclusion"/>
+                    <xs:element minOccurs="0" ref="tns:ValidationProcess"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ValidationConclusion">
+                <xs:sequence>
+
+                    <xs:element name="Policy" type="tns:Policy"/>
+                    <xs:element name="ValidationTime" type="xs:string"/>
+                    <xs:element name="ValidatedDocument" type="tns:ValidatedDocumentData"/>
+                    <xs:element name="ValidationLevel" minOccurs="0" type="xs:string"/>
+                    <xs:element name="ValidationWarnings" minOccurs="0">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element maxOccurs="unbounded" minOccurs="0" name="ValidationWarning"
+                                            type="tns:ValidationWarning"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="SignatureForm" minOccurs="0" type="xs:string"/>
+                    <xs:element name="Signatures" minOccurs="0">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element maxOccurs="unbounded" minOccurs="0" name="Signature"
+                                            type="tns:SignatureValidationData"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="TimeStampTokens" minOccurs="0">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element minOccurs="0" maxOccurs="unbounded" name="TimeStampToken"
+                                            type="tns:TimeStampTokenData"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="ValidSignaturesCount" minOccurs="0" type="xs:int"/>
+                    <xs:element name="SignaturesCount" minOccurs="0" type="xs:int"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="Policy">
+                <xs:sequence>
+                    <xs:element name="PolicyDescription" type="xs:string"/>
+                    <xs:element name="PolicyName" type="xs:string"/>
+                    <xs:element name="PolicyUrl" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="TimeStampTokenData">
+                <xs:sequence>
+                    <xs:element name="Indication" type="tns:Indication"/>
+                    <xs:element name="SignedBy" type="xs:string"/>
+                    <xs:element name="SignedTime" type="xs:string"/>
+                    <xs:element name="Errors" minOccurs="0">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element maxOccurs="unbounded" minOccurs="0" name="Error" type="tns:Error"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ValidatedDocumentData">
+                <xs:sequence>
+                    <xs:element name="Filename" type="xs:string"/>
+                    <xs:element name="FileHashInHex" minOccurs="0" type="xs:string"/>
+                    <xs:element name="HashAlgo" minOccurs="0" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="SignatureValidationData">
+                <xs:sequence>
+                    <xs:element name="Id" type="xs:string"/>
+                    <xs:element name="SignatureFormat" type="xs:string"/>
+                    <xs:element name="SignatureLevel" minOccurs="0" type="xs:string"/>
+                    <xs:element name="SignedBy" type="xs:string"/>
+                    <xs:element name="Indication" type="tns:Indication"/>
+                    <xs:element name="SubIndication" minOccurs="0" type="xs:string"/>
+                    <xs:element name="Errors" minOccurs="0">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element maxOccurs="unbounded" minOccurs="0" name="Error" type="tns:Error"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="SignatureScopes" minOccurs="0">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element maxOccurs="unbounded" name="SignatureScope" type="tns:SignatureScope"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="ClaimedSigningTime" type="xs:string"/>
+                    <xs:element name="Warnings" minOccurs="0">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element maxOccurs="unbounded" minOccurs="0" name="Warning" type="tns:Warning"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Info" minOccurs="0" type="tns:Info"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="Error">
+                <xs:sequence>
+                    <xs:element name="Content" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ValidationWarning">
+                <xs:sequence>
+                    <xs:element name="Content" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="SignatureScope">
+                <xs:sequence>
+                    <xs:element name="Name" minOccurs="0" type="xs:string"/>
+                    <xs:element name="Scope" minOccurs="0" type="xs:string"/>
+                    <xs:element name="Content" minOccurs="0" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="Warning">
+                <xs:sequence>
+                    <xs:element name="Content" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="Info">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="BestSignatureTime" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:simpleType name="DocumentType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="XROAD"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType name="Indication">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="TOTAL-PASSED"/>
+                    <xs:enumeration value="TOTAL-FAILED"/>
+                    <xs:enumeration value="INDETERMINATE"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:schema>
+    </wsdl:types>
+
+    <wsdl:message name="HashcodeValidationDocument">
+        <wsdl:part element="tns:HashcodeValidationDocument" name="parameters"/>
+    </wsdl:message>
+    <wsdl:message name="HashcodeValidationResponse">
+        <wsdl:part element="tns:HashcodeValidationResponse" name="parameters"/>
+    </wsdl:message>
+    <wsdl:message name="requestHeader">
+        <wsdl:part name="client" element="xrd:client"/>
+        <wsdl:part name="service" element="xrd:service"/>
+        <wsdl:part name="id" element="xrd:id"/>
+        <wsdl:part name="userId" element="xrd:userId"/>
+        <wsdl:part name="issue" element="xrd:issue"/>
+        <wsdl:part name="protocolVersion" element="xrd:protocolVersion"/>
+    </wsdl:message>
+
+    <wsdl:portType name="HashcodeValidationWebService">
+        <wsdl:operation name="HashcodeValidationDocument">
+            <wsdl:input message="tns:HashcodeValidationDocument" name="HashcodeValidationDocument"/>
+            <wsdl:output message="tns:HashcodeValidationResponse" name="HashcodeValidationResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="SignatureHashcodeValidationServiceSoapBinding" type="tns:HashcodeValidationWebService">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="HashcodeValidationDocument">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="HashcodeValidationDocument">
+                <soap:body use="literal"/>
+                <soap:header message="tns:requestHeader" part="client" use="literal"/>
+                <soap:header message="tns:requestHeader" part="service" use="literal"/>
+                <soap:header message="tns:requestHeader" part="id" use="literal"/>
+                <soap:header message="tns:requestHeader" part="userId" use="literal"/>
+                <soap:header message="tns:requestHeader" part="issue" use="literal"/>
+                <soap:header message="tns:requestHeader" part="protocolVersion" use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="HashcodeValidationResponse">
+                <soap:body use="literal"/>
+                <soap:header message="tns:requestHeader" part="client" use="literal"/>
+                <soap:header message="tns:requestHeader" part="service" use="literal"/>
+                <soap:header message="tns:requestHeader" part="id" use="literal"/>
+                <soap:header message="tns:requestHeader" part="userId" use="literal"/>
+                <soap:header message="tns:requestHeader" part="issue" use="literal"/>
+                <soap:header message="tns:requestHeader" part="protocolVersion" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="SignatureHashcodeValidationService">
+        <wsdl:port binding="tns:SignatureHashcodeValidationServiceSoapBinding" name="HashcodeValidationWebServiceImplPort">
+            <soap:address location="http://localhost:8080/soap/hashcodeValidationWebService"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

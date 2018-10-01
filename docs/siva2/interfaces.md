@@ -83,6 +83,129 @@ Validation request parameters for JSON and SOAP interfaces are described in the 
 </soap:Envelope>
 ```
 
+## Validation request interface for hashcode
+
+Hashcode XAdES validation is supported for **REST JSON** and **SOAP** interfaces.
+
+** REST JSON Endpoint **
+
+```
+POST https://<server url>/validateHashcode
+```
+
+** SOAP Endpoint **
+```
+POST https://<server url>/soap/hashcodeValidationWebService
+```
+
+** SOAP WSDL **
+```
+POST https://<server url>/soap/hashcodeValidationWebService?wsdl
+```
+
+### Validation request parameters
+
+Validation request parameters for JSON interface are described in the table below.
+
+| JSON parameter | Mandatory | JSON data type | Description |
+|----------------|----------------|-----------|-------------|
+| signatureFile | + |  String | Base64 encoded string of XAdES document to be validated |
+| filename | + |  String | File name of the XAdES document (i.e. signature0.xml). Only XML files supported. |
+| signaturePolicy | - |  String | Can be used to change the default signature validation policy that is used by the service. <br> See also [SiVa Validation Policy](/siva2/appendix/validation_policy) for more detailed information on given policy constraints.<br>**Possible values:** <br> POLv3 - signatures with all legal levels are accepted (i.e. QES, AdESqc and AdES, according to Regulation (EU) No 910/2014.) <br> POLv4 - the default policy. Accepted signatures depend on their type (i.e. signature, seal or unknown) and legal level (i.e. QES, AdESqc and Ades) |
+| reportType | - | String | Can be used to change the default returned report type. <br>**Possible values:** <br> Simple - default report type. Returns overall validation result (validationConclusion block)<br> Detailed -  returns detailed information about the signatures and their validation results (validationConclusion, validationProcess and validationReportSignature. Two later ones are optionally present). |
+| datafiles | + |  Array | Array containing the information for datafiles that signature is covering |
+| datafiles.filename | + |  String | Name of hashed data file. |
+| datafiles.hashAlgo | + |  String | Hash algorithm used for hashing the data file. Accepted values are dependant of validation policy |
+| datafiles.hash | + |  String | Datafile hash in Base64 encoded format. |
+
+### Sample JSON request with mandatory parameters
+
+```json
+{
+  "signatureFile": "PD94bWwgdmVyc2lvbj0iMS4...."
+  "filename": "signature0.xml",
+  "datafiles": [{
+    "filename": "test.pdf",
+    "hashAlgo": "SHA256",
+    "hash": "IucjUcbRo9Rke0bZLiHcwiIiplP9pSrSPr7LKln1EiI="
+  }]
+}
+```
+### Sample JSON request with all parameters and multiple datafiles
+
+```json
+{
+  "signatureFile":"sample.asice",
+  "filename":"PD94bWwgdmVyc2lvbj0iMS4....",
+  "signaturePolicy":"POLv3",
+  "reportType":"Detailed",
+  "datafiles": [{
+      "filename": "test.pdf",
+      "hashAlgo": "SHA256",
+      "hash": "IucjUcbRo9Rke0bZLiHcwiIiplP9pSrSPr7LKln1EiI="
+      },
+      {
+      "filename": "test2.pdf",
+      "hashAlgo": "SHA256",
+      "hash": "IucjUcbRo9Rke0bZLiHc23SSasw9pSrSPr7LKln1EiI="
+  }]
+}
+```
+
+### Sample SOAP request with mandatory parameters
+
+```xml
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap="http://soap.webapp.siva.openeid.ee/">
+   <soapenv:Body>
+      <soap:HashcodeValidationDocument>
+         <soap:HashcodeValidationRequest>
+            <SignatureFile>PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGlu...</SignatureFile>
+            <Filename>signature.xml</Filename>
+            <DataFiles>
+               <DataFile>
+                  <Filename>test.pdf</Filename>
+                  <HashAlgo>SHA256</HashAlgo>
+                  <Hash>IucjUcbRo9Rke0bZLiHcwiIiplP9pSrSPr7LKln1EiI=</Hash>
+               </DataFile>
+            </DataFiles>
+         </soap:HashcodeValidationRequest>
+      </soap:HashcodeValidationDocument>
+   </soapenv:Body>
+</soapenv:Envelope>
+```
+### Sample SOAP request with all parameters and multiple datafiles
+
+```xml
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap="http://soap.webapp.siva.openeid.ee/">
+   <soapenv:Body>
+      <soap:HashcodeValidationDocument>
+         <soap:HashcodeValidationRequest>
+            <SignatureFile>PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGlu...</SignatureFile>
+            <Filename>signature.xml</Filename>
+            <ReportType>Simple</ReportType>
+            <SignaturePolicy>POLv4</SignaturePolicy>
+            <DataFiles>
+               <DataFile>
+                  <Filename>test.pdf</Filename>
+                  <HashAlgo>SHA256</HashAlgo>
+                  <Hash>IucjUcbRo9Rke0bZLiHcwiIiplP9pSrSPr7LKln1EiI=</Hash>
+               </DataFile>
+               <DataFile>
+                  <Filename>test2.pdf</Filename>
+                  <HashAlgo>SHA256</HashAlgo>
+                  <Hash>IucjUcbRo9Rke0bZLiHcwiIiplP9pSrSPr7LKln1EiI=</Hash>
+               </DataFile>
+               <DataFile>
+                  <Filename>test3.pdf</Filename>
+                  <HashAlgo>SHA256</HashAlgo>
+                  <Hash>IucjUcbRo9Rke0bZLiHcwiIiplP9pSrSPr7LKln1EiI=</Hash>
+               </DataFile>
+            </DataFiles>
+         </soap:HashcodeValidationRequest>
+      </soap:HashcodeValidationDocument>
+   </soapenv:Body>
+</soapenv:Envelope>
+```
 
 ## Validation response interface
 The signature validation report (i.e. the validation response) for JSON and SOAP interfaces depends on what type of validation report was requested.  Data types of SOAP parameters are defined in the [SiVa WSDL document](/siva2/appendix/wsdl).
@@ -691,7 +814,7 @@ Sample response:
     "health":{
       "status":"UP",
       "webappName":"siva-sample-application",
-      "version":"2.0.3-SNAPSHOT",
+      "version":"3.1.0",
       "buildTime":"2016-10-21T15:56:21Z",
       "startTime":"2016-10-21T15:57:48Z",
       "currentTime":"2016-10-21T15:58:39Z"

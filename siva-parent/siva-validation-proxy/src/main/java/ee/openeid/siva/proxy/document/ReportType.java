@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2018 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -42,7 +42,7 @@ public enum ReportType {
                 .findAny();
 
         if (!reportType.isPresent()) {
-            throw new UnsupportedTypeException("type = " + type + " is unsupported");
+            throw new UnsupportedTypeException("ReportType of type '" + type + "' is not supported");
         }
         return reportType.get();
     }

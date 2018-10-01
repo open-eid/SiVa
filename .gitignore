@@ -25,3 +25,4 @@ upload-dir
 apache-tomcat-*
 site
 
+*.patch

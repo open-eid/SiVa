@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2018 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -21,16 +21,14 @@ import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.webapp.soap.SoapValidationRequest;
 import ee.openeid.siva.webapp.soap.ValidationReport;
 import ee.openeid.siva.webapp.soap.ValidationWebService;
-import ee.openeid.siva.webapp.soap.transformer.ValidationReportSoapResponseTransformer;
 import ee.openeid.siva.webapp.soap.transformer.SoapValidationRequestToProxyDocumentTransformer;
+import ee.openeid.siva.webapp.soap.transformer.ValidationReportSoapResponseTransformer;
 import org.apache.cxf.annotations.SchemaValidation;
-import org.apache.cxf.interceptor.InInterceptors;
 import org.apache.cxf.interceptor.OutFaultInterceptors;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.xml.ws.Holder;
 
-@InInterceptors(interceptors = {"ee.openeid.siva.webapp.soap.interceptor.SoapRequestValidationInterceptor"})
 @OutFaultInterceptors(interceptors = {"ee.openeid.siva.webapp.soap.interceptor.SoapFaultResponseInterceptor", "ee.openeid.siva.webapp.soap.interceptor.SoapResponseHeaderInterceptor"})
 @SchemaValidation(type = SchemaValidation.SchemaValidationType.IN)
 public class ValidationWebServiceImpl implements ValidationWebService {
@@ -60,6 +58,4 @@ public class ValidationWebServiceImpl implements ValidationWebService {
     public void setResponseTransformer(ValidationReportSoapResponseTransformer responseTransformer) {
         this.responseTransformer = responseTransformer;
     }
-
-
 }

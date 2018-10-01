@@ -1,0 +1,664 @@
+/*
+ * Copyright 2018 Riigi Infosüsteemide Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
+
+package ee.openeid.siva.resttest;
+
+import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.response.ValidatableResponse;
+import ee.openeid.siva.integrationtest.SiVaRestTests;
+import ee.openeid.siva.integrationtest.TestData;
+import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+import ee.openeid.siva.proxy.document.ReportType;
+import ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource;
+import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
+import ee.openeid.siva.webapp.request.Datafile;
+import ee.openeid.siva.webapp.request.JSONHashcodeValidationRequest;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.hamcrest.Matchers;
+import org.json.JSONObject;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.springframework.http.HttpStatus;
+
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.startsWith;
+
+@Category(IntegrationTest.class)
+public class HashcodeValidationRequestIT extends SiVaRestTests {
+
+    private static final String DEFAULT_TEST_FILES_DIRECTORY = "document_format_test_files/";
+    private static final String VALIDATION_CONCLUSION_PREFIX = "validationReport.validationConclusion.";
+    private static final String SIGNATURE_FILENAME_SUFFIX = ".xml";
+
+    private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
+    private String currentDateTime;
+
+    @BeforeClass
+    public static void oneTimeSetUp() {
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+    }
+
+    public static String getFailMessageForKey(String key) {
+        return key + " error or corresponding message was not in the response";
+    }
+
+    @Before
+    public void DirectoryBackToDefault() {
+        setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
+        currentDateTime = currentDateTime("GMT", "yyyy-MM-dd'T'HH:mm");
+    }
+
+    @Test
+    public void okHashcodeValidationWithSimpleReport() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertSimpleReportWithSignature(response, request);
+    }
+
+    @Test
+    public void okHashcodeValidationWithDetailedReport() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setReportType(ReportType.DETAILED.getValue());
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertDetailedReportWithSignature(response, request);
+    }
+
+    @Test
+    public void signatureFileMissing() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setSignatureFile(null);
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(SIGNATURE_FILE, MAY_NOT_BE_EMPTY),
+                new RequestError(SIGNATURE_FILE, SIGNATURE_FILE_NOT_BASE64_ENCODED)
+        );
+    }
+
+    @Test
+    public void signatureFileEmpty() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setSignatureFile("");
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(SIGNATURE_FILE, MAY_NOT_BE_EMPTY),
+                new RequestError(SIGNATURE_FILE, SIGNATURE_FILE_NOT_BASE64_ENCODED)
+        );
+    }
+
+    @Test
+    public void signatureFileNotBase64Encoded() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setSignatureFile("NOT.BASE64.ENCODED.VALUE");
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(SIGNATURE_FILE, SIGNATURE_FILE_NOT_BASE64_ENCODED)
+        );
+    }
+
+    @Test
+    public void signatureFileContentWithoutSignature() {
+        String randomXmlFileWithoutSignature = "PD94bWwgdmVyc2lvbj0nMS4wJyAgZW5jb2Rpbmc9J1VURi04JyA/Pg0KPHRlc3Q+DQoJPGRhdGE+DQoJCTxzb21ldGhpbmc+c29tZSBkYXRhPC9zb21ldGhpbmc+DQoJPC9kYXRhPg0KPC90ZXN0Pg0K";
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setSignatureFile(randomXmlFileWithoutSignature);
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertSimpleReportWithoutSignature(response, request);
+    }
+
+    @Test
+    public void signatureFileContentNotXML() {
+        String notXmlFormattedContent = Base64.encodeBase64String("NOT_XML_FORMATTED_FILE_CONTENT".getBytes(StandardCharsets.UTF_8));
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setSignatureFile(notXmlFormattedContent);
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(SIGNATURE_FILE, SIGNATURE_FILE_MALFORMED)
+        );
+    }
+
+    @Test
+    public void filenameMissing() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setFilename(null);
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(FILENAME, MAY_NOT_BE_EMPTY),
+                new RequestError(FILENAME, INVALID_FILENAME),
+                new RequestError(FILENAME, INVALID_FILENAME_EXTENSION)
+        );
+    }
+
+    @Test
+    public void filenameEmpty() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setFilename("");
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(FILENAME, INVALID_FILENAME_SIZE),
+                new RequestError(FILENAME, INVALID_FILENAME_EXTENSION),
+                new RequestError(FILENAME, INVALID_FILENAME),
+                new RequestError(FILENAME, MAY_NOT_BE_EMPTY)
+        );
+    }
+
+    @Test
+    public void filenameEmptyWhitespace() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setFilename(" ");
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(FILENAME, INVALID_FILENAME_EXTENSION),
+                new RequestError(FILENAME, MAY_NOT_BE_EMPTY)
+        );
+    }
+
+
+    @Test
+    public void filenameTooLong() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setFilename(StringUtils.repeat('a', 260 + 1 - SIGNATURE_FILENAME_SUFFIX.length()) + SIGNATURE_FILENAME_SUFFIX);
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(FILENAME, INVALID_FILENAME_SIZE));
+    }
+
+    @Test
+    public void filenameInvalidFormat() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setFilename("*:?!");
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(FILENAME, INVALID_FILENAME_EXTENSION),
+                new RequestError(FILENAME, INVALID_FILENAME)
+        );
+    }
+
+    @Test
+    public void filenameInvalidExtension() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setFilename("signature.pdf");
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(FILENAME, INVALID_FILENAME_EXTENSION)
+        );
+    }
+
+    @Test
+    public void reportTypeMissing_defaultsToSimple() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setReportType(null);
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertSimpleReportWithSignature(response, request);
+    }
+
+    @Test
+    public void reportTypeCaseInsensitive() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setReportType("SiMpLe");
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertSimpleReportWithSignature(response, request);
+    }
+
+    @Test
+    public void reportTypeInvalid() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setReportType("INVALID_REPORT_TYPE");
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(REPORT_TYPE, INVALID_REPORT_TYPE));
+    }
+
+    @Test
+    public void signaturePolicyMissing_defaultsToPOLv4() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setSignaturePolicy(null);
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request))
+                .then()
+                .body(VALIDATION_CONCLUSION_PREFIX + "policy.policyName", equalTo(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2));
+
+        assertSimpleReportWithSignature(response, request);
+    }
+
+    @Test
+    public void signaturePolicyInvalid() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setSignaturePolicy("POLv2");
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(SIGNATURE_POLICY, "Invalid signature policy: " + request.getSignaturePolicy() + "; Available abstractPolicies: [POLv3, POLv4]"));
+    }
+
+    @Test
+    public void signaturePolicyInvalidFormat() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setSignaturePolicy("POLv2.*");
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(SIGNATURE_POLICY, INVALID_SIGNATURE_POLICY));
+    }
+
+    @Test
+    public void signaturePolicyEmpty() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setSignaturePolicy("");
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(SIGNATURE_POLICY, INVALID_POLICY_SIZE));
+    }
+    
+    @Test
+    public void signaturePolicyTooLong() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setSignaturePolicy(StringUtils.repeat('a', 101));
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(SIGNATURE_POLICY, INVALID_POLICY_SIZE)
+        );
+    }
+
+    @Test
+    public void dataFilesMissing() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setDatafiles(null);
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(DATAFILES, MAY_NOT_BE_EMPTY),
+                new RequestError(DATAFILES, MAY_NOT_BE_NULL)
+        );
+    }
+
+    @Test
+    public void dataFilesEmpty() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setDatafiles(new ArrayList<>());
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(DATAFILES, MAY_NOT_BE_EMPTY),
+                new RequestError(DATAFILES, MAY_NOT_BE_NULL)
+        );
+    }
+
+    @Test
+    public void dataFileFilenameMissing() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.getDatafiles().get(0).setFilename(null);
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(DATAFILES_FILENAME, INVALID_FILENAME),
+                new RequestError(DATAFILES_FILENAME, MAY_NOT_BE_EMPTY)
+        );
+    }
+
+    @Test
+    public void dataFileFilenameEmpty() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.getDatafiles().get(0).setFilename("");
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(DATAFILES_FILENAME, INVALID_FILENAME),
+                new RequestError(DATAFILES_FILENAME, INVALID_FILENAME_SIZE),
+                new RequestError(DATAFILES_FILENAME, MAY_NOT_BE_EMPTY)
+        );
+    }
+
+    @Test
+    public void dataFileFilenameTooLong() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.getDatafiles().get(0).setFilename(StringUtils.repeat('a', 261));
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(DATAFILES_FILENAME, INVALID_FILENAME_SIZE)
+        );
+    }
+
+    @Test
+    public void dataFileFilenameInvalidFormat() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.getDatafiles().get(0).setFilename("*:?!");
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(DATAFILES_FILENAME, INVALID_FILENAME)
+        );
+    }
+
+    @Test
+    public void dataFileHashAlgorithmInvalid() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.getDatafiles().get(0).setHashAlgo("INVALID_HASH_ALGORITHM");
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(DATAFILES_HASH_ALGO, INVALID_HASH_ALGO)
+        );
+    }
+
+    @Test
+    public void dataFileHashAlgorithmCaseInsensitive() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.getDatafiles().get(0).setHashAlgo("sha256");
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertSimpleReportWithSignature(response, request);
+    }
+
+    @Test
+    public void dataFileHashAlgorithmDoesNotMatchWithSignatureDataFileHashAlgorithm() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.getDatafiles().get(0).setHashAlgo("SHA512");
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertValidationConclusion(response, request);
+        assertSignatureDataNotFound(response);
+    }
+
+    @Test
+    public void dataFileHashMissing() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.getDatafiles().get(0).setHash(null);
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(DATAFILES_HASH, MAY_NOT_BE_EMPTY),
+                new RequestError(DATAFILES_HASH, INVALID_BASE_64)
+        );
+    }
+
+    @Test
+    public void dataFileHashEmpty() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.getDatafiles().get(0).setHash("");
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(DATAFILES_HASH, MAY_NOT_BE_EMPTY),
+                new RequestError(DATAFILES_HASH, INVALID_BASE_64)
+        );
+    }
+
+    @Test
+    public void dataFileHashNotBase64Encoded() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.getDatafiles().get(0).setHash("NOT.BASE64.ENCODED.VALUE");
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(DATAFILES_HASH, INVALID_BASE_64)
+        );
+    }
+
+    @Test
+    public void multipleDataFiles_firstDataFileIncorrect_secondDataFileCorrect() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+
+        Datafile invalidDataFile = new Datafile();
+        invalidDataFile.setHash(Base64.encodeBase64String("INVALID_SIGNATURE_DIGEST".getBytes(StandardCharsets.UTF_8)));
+        invalidDataFile.setHashAlgo(TestData.MOCK_XADES_DATAFILE_HASH_ALGO);
+        invalidDataFile.setFilename("INVALID_FILE");
+
+        Datafile validDataFile = new Datafile();
+        validDataFile.setHash(TestData.MOCK_XADES_DATAFILE_HASH);
+        validDataFile.setHashAlgo(TestData.MOCK_XADES_DATAFILE_HASH_ALGO);
+        validDataFile.setFilename(TestData.MOCK_XADES_DATAFILE_FILENAME);
+
+        request.setDatafiles(Arrays.asList(
+                invalidDataFile,
+                validDataFile)
+        );
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertSimpleReportWithSignature(response, request);
+    }
+
+    @Test
+    public void dataFileHashDoesNotMatchWithSignatureFile_totalFailedHashFailure() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.getDatafiles().get(0).setHash(Base64.encodeBase64String("INVALID_SIGNATURE_DIGEST".getBytes(StandardCharsets.UTF_8)));
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertValidationConclusion(response, request);
+        assertSignatureHashFailure(response);
+    }
+
+    @Test
+    public void dataFileHashCorrectButFilenameDoesNotMatchWithSignatureFile() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.getDatafiles().get(0).setFilename("INVALID_FILE_NAME.pdf");
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertValidationConclusion(response, request);
+        assertSignatureDataNotFound(response);
+    }
+
+    private void assertErrorResponse(ValidatableResponse response, RequestError... requestErrors) {
+        response
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors", hasSize(requestErrors.length));
+
+        for (RequestError requestError : requestErrors) {
+            response.body("requestErrors.findAll { requestError -> " +
+                    "requestError.key == '" + requestError.getKey() + "' && " +
+                    "requestError.message=='" + requestError.getMessage() + "' }", hasSize(1));
+        }
+    }
+
+    private void assertDetailedReportWithSignature(ValidatableResponse response, JSONHashcodeValidationRequest request) {
+        assertSimpleReportWithSignature(response, request);
+        response
+                .body("validationReport.validationProcess.signatures", hasSize(1))
+                .body("validationReport.validationProcess.signatures[0].validationProcessBasicSignatures.conclusion.indication", is(TestData.VALID_INDICATION_VALUE_PASSED))
+                .body("validationReport.validationProcess.signatures[0].validationProcessTimestamps.conclusion.indication", hasItem(TestData.VALID_INDICATION_VALUE_PASSED))
+                .body("validationReport.validationProcess.signatures[0].validationProcessLongTermData.conclusion.indication", is(TestData.VALID_INDICATION_VALUE_PASSED))
+                .body("validationReport.validationProcess.signatures[0].validationProcessArchivalData.conclusion.indication", is(TestData.VALID_INDICATION_VALUE_PASSED))
+
+                .body("validationReport.validationProcess.tlanalysis", hasSize(2))
+                .body("validationReport.validationProcess.tlanalysis[0].countryCode", is("EU"))
+                .body("validationReport.validationProcess.tlanalysis[0].conclusion.indication", is(TestData.VALID_INDICATION_VALUE_PASSED))
+                .body("validationReport.validationProcess.tlanalysis[1].countryCode", is("EE"))
+                .body("validationReport.validationProcess.tlanalysis[1].conclusion.indication", is(TestData.VALID_INDICATION_VALUE_PASSED));
+    }
+
+    private void assertSimpleReportWithSignature(ValidatableResponse response, JSONHashcodeValidationRequest request) {
+        assertValidationConclusion(response, request);
+        assertSignatureTotalPassed(response);
+    }
+
+    private void assertSimpleReportWithoutSignature(ValidatableResponse response, JSONHashcodeValidationRequest request) {
+        assertValidationConclusion(response, request);
+        response
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures", isEmptyOrNullString())
+                .body(VALIDATION_CONCLUSION_PREFIX + "validSignaturesCount", is(0))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signaturesCount", is(0));
+    }
+
+    private void assertValidationConclusion(ValidatableResponse response, JSONHashcodeValidationRequest request) {
+        response.statusCode(HttpStatus.OK.value())
+                .body(VALIDATION_CONCLUSION_PREFIX + "validationTime", startsWith(currentDateTime))
+                .body(VALIDATION_CONCLUSION_PREFIX + "validatedDocument.filename", equalTo(request.getFilename()))
+                .body(VALIDATION_CONCLUSION_PREFIX + "validationLevel", is(TestData.VALID_VALIDATION_LEVEL_ARCHIVAL_DATA));
+
+        ValidationPolicy signaturePolicy;
+        if (request.getSignaturePolicy() == null) {
+            signaturePolicy = determineValidationPolicy(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2);
+        } else {
+            signaturePolicy = determineValidationPolicy(request.getSignaturePolicy());
+        }
+
+        response
+                .body(VALIDATION_CONCLUSION_PREFIX + "policy.policyDescription", equalTo(signaturePolicy.getDescription()))
+                .body(VALIDATION_CONCLUSION_PREFIX + "policy.policyName", equalTo(signaturePolicy.getName()))
+                .body(VALIDATION_CONCLUSION_PREFIX + "policy.policyUrl", equalTo(signaturePolicy.getUrl()));
+    }
+
+    private ValidationPolicy determineValidationPolicy(String signaturePolicy) {
+        if (TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_1.equals(signaturePolicy)) {
+            return PredefinedValidationPolicySource.ADES_POLICY;
+        } else if (TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2.equals(signaturePolicy)) {
+            return PredefinedValidationPolicySource.QES_POLICY;
+        } else {
+            throw new IllegalArgumentException("Unknown validation policy '" + signaturePolicy + "'");
+        }
+    }
+
+    private void assertSignatureTotalPassed(ValidatableResponse response) {
+        response
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures", hasSize(1))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].id", is(TestData.MOCK_XADES_SIGNATURE_ID))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureFormat", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_FORMAT_XADES_LT))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureLevel", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_ADESIG_QC))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signedBy", is(TestData.MOCK_XADES_SIGNATURE_SIGNER))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].indication", is(TestData.VALID_INDICATION_TOTAL_PASSED))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes", hasSize(1))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].name", is(TestData.MOCK_XADES_DATAFILE_FILENAME))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].scope", is(TestData.VALID_SIGNATURE_SCOPE_VALUE_1))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].content", is(TestData.VALID_SIGNATURE_SCOPE_CONTENT_1))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].claimedSigningTime", is(TestData.MOCK_XADES_SIGNATURE_CLAIMED_SIGNING_TIME))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].info.bestSignatureTime", is(TestData.MOCK_XADES_SIGNATURE_BEST_SIGNATURE_TIME))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body(VALIDATION_CONCLUSION_PREFIX + "validSignaturesCount", is(1))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signaturesCount", is(1));
+    }
+
+    private void assertSignatureDataNotFound(ValidatableResponse response) {
+        response
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures", hasSize(1))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].id", is(TestData.MOCK_XADES_SIGNATURE_ID))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureFormat", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_FORMAT_XADES_LT))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureLevel", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_INDETERMINATE_ADESIG_QC))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signedBy", is(TestData.MOCK_XADES_SIGNATURE_SIGNER))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].indication", is(TestData.VALID_INDICATION_VALUE_INDETERMINATE))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].subIndication", is(TestData.SUB_INDICATION_SIGNED_DATA_NOT_FOUND))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes", hasSize(1))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].name", is(TestData.MOCK_XADES_DATAFILE_FILENAME))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].scope", is(TestData.VALID_SIGNATURE_SCOPE_VALUE_1))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].content", is(TestData.VALID_SIGNATURE_SCOPE_CONTENT_1))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].claimedSigningTime", is(TestData.MOCK_XADES_SIGNATURE_CLAIMED_SIGNING_TIME))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].info.bestSignatureTime", is(TestData.MOCK_XADES_SIGNATURE_BEST_SIGNATURE_TIME))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].errors", hasSize(1))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].errors[0].content" , is("The reference data object(s) is not found!"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "validSignaturesCount", is(0))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signaturesCount", is(1));
+    }
+
+    private void assertSignatureHashFailure(ValidatableResponse response) {
+        response
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures", hasSize(1))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].id", is(TestData.MOCK_XADES_SIGNATURE_ID))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureFormat", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_FORMAT_XADES_LT))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureLevel", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_NOT_ADES_QC))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signedBy", is(TestData.MOCK_XADES_SIGNATURE_SIGNER))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].indication", is(TestData.VALID_INDICATION_TOTAL_FAILED))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].subIndication", is(TestData.SUB_INDICATION_HASH_FAILURE))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes", hasSize(1))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].name", is(TestData.MOCK_XADES_DATAFILE_FILENAME))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].scope", is(TestData.VALID_SIGNATURE_SCOPE_VALUE_1))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].content", is(TestData.VALID_SIGNATURE_SCOPE_CONTENT_1))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].claimedSigningTime", is(TestData.MOCK_XADES_SIGNATURE_CLAIMED_SIGNING_TIME))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].info.bestSignatureTime", is(TestData.MOCK_XADES_SIGNATURE_BEST_SIGNATURE_TIME))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].errors", hasSize(1))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].errors[0].content" , is("The reference data object(s) is not intact!"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "validSignaturesCount", is(0))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signaturesCount", is(1));
+    }
+
+    private JSONHashcodeValidationRequest validRequestBody() {
+        JSONHashcodeValidationRequest request = new JSONHashcodeValidationRequest();
+        request.setSignatureFile(Base64.encodeBase64String(readFileFromTestResources(TestData.MOCK_XADES_SIGNATURE_FILE)));
+        request.setFilename(TestData.MOCK_XADES_SIGNATURE_FILE_NAME);
+        request.setReportType(ReportType.SIMPLE.getValue());
+        request.setSignaturePolicy(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_1);
+
+        Datafile datafile = new Datafile();
+        datafile.setHash(TestData.MOCK_XADES_DATAFILE_HASH);
+        datafile.setHashAlgo(TestData.MOCK_XADES_DATAFILE_HASH_ALGO);
+        datafile.setFilename(TestData.MOCK_XADES_DATAFILE_FILENAME);
+        request.setDatafiles(Arrays.asList(datafile));
+        return request;
+    }
+
+    private String toRequest(JSONHashcodeValidationRequest request) {
+        JSONObject jsonObject = new JSONObject();
+        if (request.getSignatureFile() != null) {
+            jsonObject.put(SIGNATURE_FILE, request.getSignatureFile());
+        }
+        if (request.getFilename() != null) {
+            jsonObject.put(FILENAME, request.getFilename());
+        }
+        if (request.getSignaturePolicy() != null) {
+            jsonObject.put(SIGNATURE_POLICY, request.getSignaturePolicy());
+        }
+        if (request.getReportType() != null) {
+            jsonObject.put(REPORT_TYPE, request.getReportType());
+        }
+        if (CollectionUtils.isNotEmpty(request.getDatafiles())) {
+            jsonObject.put(DATAFILES, request.getDatafiles());
+        }
+        return jsonObject.toString();
+    }
+
+    @Override
+    protected String getTestFilesDirectory() {
+        return testFilesDirectory;
+    }
+
+    public void setTestFilesDirectory(String testFilesDirectory) {
+        this.testFilesDirectory = testFilesDirectory;
+    }
+
+    @Data
+    @AllArgsConstructor
+    private static class RequestError {
+        private String key;
+        private String message;
+    }
+}

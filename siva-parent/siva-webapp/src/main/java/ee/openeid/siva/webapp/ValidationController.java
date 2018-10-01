@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2018 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -16,9 +16,13 @@
 
 package ee.openeid.siva.webapp;
 
+import ee.openeid.siva.proxy.HashcodeValidationProxy;
 import ee.openeid.siva.proxy.ValidationProxy;
+import ee.openeid.siva.proxy.document.ProxyDocument;
+import ee.openeid.siva.webapp.request.JSONHashcodeValidationRequest;
 import ee.openeid.siva.webapp.request.JSONValidationRequest;
 import ee.openeid.siva.webapp.response.ValidationResponse;
+import ee.openeid.siva.webapp.transformer.HashcodeValidationRequestToProxyDocumentTransformer;
 import ee.openeid.siva.webapp.transformer.ValidationRequestToProxyDocumentTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -34,10 +38,18 @@ public class ValidationController {
 
     private ValidationProxy validationProxy;
     private ValidationRequestToProxyDocumentTransformer transformer;
+    private HashcodeValidationProxy hashcodeValidationProxy;
+    private HashcodeValidationRequestToProxyDocumentTransformer hashRequestTransformer;
 
     @RequestMapping(value = "/validate", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public ValidationResponse validate(@Valid @RequestBody JSONValidationRequest validationRequest) {
         return new ValidationResponse(validationProxy.validate(transformer.transform(validationRequest)));
+    }
+
+    @RequestMapping(value = "/validateHashcode", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    public ValidationResponse validateHashcode(@Valid @RequestBody JSONHashcodeValidationRequest validationRequest) {
+        ProxyDocument proxyDocument = hashRequestTransformer.transform(validationRequest);
+        return new ValidationResponse(hashcodeValidationProxy.validate(proxyDocument));
     }
 
     @Autowired
@@ -50,4 +62,13 @@ public class ValidationController {
         this.transformer = transformer;
     }
 
+    @Autowired
+    public void setHashRequestTransformer(HashcodeValidationRequestToProxyDocumentTransformer hashRequestTransformer) {
+        this.hashRequestTransformer = hashRequestTransformer;
+    }
+
+    @Autowired
+    public void setHashcodeValidationProxy(HashcodeValidationProxy hashcodeValidationProxy) {
+        this.hashcodeValidationProxy = hashcodeValidationProxy;
+    }
 }

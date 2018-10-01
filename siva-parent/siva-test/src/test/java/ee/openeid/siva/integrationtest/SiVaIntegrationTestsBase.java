@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2018 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -20,8 +20,10 @@ import com.jayway.restassured.RestAssured;
 import ee.openeid.siva.SivaWebApplication;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.proxy.document.DocumentType;
-import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.webapp.request.validation.annotations.ValidSignatureFilename;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -50,12 +52,40 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @TestPropertySource(locations="classpath:application-test.yml")
 public abstract class SiVaIntegrationTestsBase {
 
+    protected static final String DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE = "Document malformed or not matching documentType";
+    protected static final String INVALID_DOCUMENT_TYPE = "Invalid document type";
+    protected static final String INVALID_DOCUMENT_TYPE_DDOC = "Invalid document type. Can only return data files for DDOC type containers.";
+    protected static final String INVALID_DATA_FILE_FILENAME = "Invalid filename. Can only return data files for DDOC type containers.";
+    protected static final String INVALID_FILENAME = "Invalid filename";
+    protected static final String INVALID_FILENAME_SIZE = "size must be between 1 and 260";
+    protected static final String INVALID_POLICY_SIZE = "size must be between 1 and 100";
+    protected static final String INVALID_REPORT_TYPE = "Invalid report type";
+    protected static final String INVALID_HASH_ALGO = "Invalid hash algorithm";
+    protected static final String MAY_NOT_BE_EMPTY = "may not be empty";
+    protected static final String MAY_NOT_BE_NULL = "may not be null";
+    protected static final String INVALID_BASE_64 = "Document is not encoded in a valid base64 string";
+    protected static final String SIGNATURE_FILE_NOT_BASE64_ENCODED = "Signature file is not valid base64 encoded string";
+    protected static final String SIGNATURE_FILE_MALFORMED = "Signature file malformed";
+    protected static final String INVALID_FILENAME_FORMAT = "Invalid filename format";
+    protected static final String INVALID_FILENAME_EXTENSION = "Invalid filename extension. Only xml files accepted.";
+    protected static final String INVALID_SIGNATURE_POLICY = "Invalid signature policy";
+    protected static final String INVALID_DATAFILE_FILENAME_FORMAT = "Invalid datafile filename format";
+
+    protected static final String DOCUMENT_TYPE = "documentType";
+    protected static final String FILENAME = "filename";
+    protected static final String DOCUMENT = "document";
+    protected static final String SIGNATURE_POLICY = "signaturePolicy";
+    protected static final String REPORT_TYPE = "reportType";
+    protected static final String SIGNATURE_FILE = "signatureFile";
+    protected static final String DATAFILES = "datafiles";
+    protected static final String DATAFILES_FILENAME = "datafiles[0].filename";
+    protected static final String DATAFILES_HASH = "datafiles[0].hash";
+    protected static final String DATAFILES_HASH_ALGO = "datafiles[0].hashAlgo";
+
     private static final String PROJECT_SUBMODULE_NAME =  "siva-test";
 
     protected static final String VALID_SIGNATURE_POLICY_3 = "POLv3";
     protected static final String VALID_SIGNATURE_POLICY_4 = "POLv4";
-
-    protected static final String INVALID_SIGNATURE_POLICY = "POLv1";
 
     protected static final String SMALL_CASE_VALID_SIGNATURE_POLICY_3 = "polv3";
     protected static final String SMALL_CASE_VALID_SIGNATURE_POLICY_4 = "polv4";
@@ -77,7 +107,6 @@ public abstract class SiVaIntegrationTestsBase {
 
     protected static final String POLICY_3_URL = "http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv3";
     protected static final String POLICY_4_URL = "http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv4";
-
 
     @Value("${local.server.port}")
     protected int serverPort;

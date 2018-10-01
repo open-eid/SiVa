@@ -22,7 +22,7 @@
 
     <groupId>ee.openid.siva</groupId>
     <artifactId>siva</artifactId>
-    <version>3.0.1</version>
+    <version>3.1.0</version>
     <packaging>pom</packaging>
     <name>SiVa Digitally signed documents validation service</name>
     <url>https://github.com/open-eid/SiVa</url>
@@ -63,6 +63,20 @@
         <developer>
             <id>priitr</id>
             <name>Priit Reiser</name>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>siimsuu1</id>
+            <name>Siim Suu</name>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>JorgenHeinsoo</id>
+            <name>Jorgen Heinsoo</name>
             <roles>
                 <role>developer</role>
             </roles>

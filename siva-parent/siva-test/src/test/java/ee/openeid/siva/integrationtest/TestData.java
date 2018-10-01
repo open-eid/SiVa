@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2018 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -39,10 +39,15 @@ public class TestData {
 
     public static final String VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_1 = "QESIG";
     public static final String VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_2 = "NOT_ADES_QC_QSCD";
+    public static final String VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_ADESIG_QC = "ADESIG_QC";
+    public static final String VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_NOT_ADES_QC = "NOT_ADES_QC";
+    public static final String VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_INDETERMINATE_ADESIG_QC = "INDETERMINATE_ADESIG_QC";
 
     public static final String VALID_INDICATION_VALUE_PASSED = "PASSED";
     public static final String VALID_INDICATION_VALUE_FAILED = "FAILED";
     public static final String VALID_INDICATION_VALUE_INDETERMINATE= "INDETERMINATE";
+    public static final String VALID_INDICATION_TOTAL_FAILED = "TOTAL-FAILED";
+    public static final String VALID_INDICATION_TOTAL_PASSED = "TOTAL-PASSED";
 
     public static final String VALID_SIGNATURE_FORM_1 = "ASiC-E";
     public static final String VALID_SIGNATURE_FORM_2 = "ASiC-S";
@@ -190,14 +195,31 @@ public class TestData {
     public static final String VALID_VALIDATION_PROCESS_SUB_INDICATION_2 = "TRY_LATER";
     public static final String VALID_VALIDATION_PROCESS_SUB_INDICATION_3 = "SIG_CRYPTO_FAILURE";
     public static final String VALID_VALIDATION_PROCESS_SUB_INDICATION_4 = "SIG_CONSTRAINTS_FAILURE";
-    public static final String VALID_VALIDATION_PROCESS_SUB_INDICATION_5 = "TOTAL-PASSED";
+
+    public static final String SUB_INDICATION_HASH_FAILURE = "HASH_FAILURE";
+    public static final String SUB_INDICATION_SIGNED_DATA_NOT_FOUND = "SIGNED_DATA_NOT_FOUND";
 
     public static final String VALID_VALIDATION_PROCESS_SIGNATUREQUALIFICATION = "NOT_ADES_QC_QSCD";
     public static final String VALID_VALIDATION_PROCESS_SIGNATUREQUALIFICATION_2 = "QESIG";
+
+    public static final String VALID_VALIDATION_LEVEL_ARCHIVAL_DATA = "ARCHIVAL_DATA";
 
     public static final String CA_QC = "http://uri.etsi.org/TrstSvc/Svctype/CA/QC";
     public static final String OCSP_QC = "http://uri.etsi.org/TrstSvc/Svctype/Certstatus/OCSP/QC";
     public static final String UNDER_SUPERVISION = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/undersupervision";
     public static final String TSA_QTST = "http://uri.etsi.org/TrstSvc/Svctype/TSA/QTST";
     public static final String GRANTED = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/granted";
+
+    public static final String MOCK_XADES_SIGNATURE_FILE = "hashAsiceXades.xml";
+    public static final String MOCK_XADES_SIGNATURE_FILE_NAME = "VALID_FILENAME+#$!}[]()-_.,;€ˇ~^'äöõü§@.xml";
+    public static final String MOCK_XADES_SIGNATURE_ID = "S1510667783001";
+    public static final String MOCK_XADES_SIGNATURE_SIGNER = "NURM,AARE,PNOEE-38211015222";
+    public static final String MOCK_XADES_SIGNATURE_CLAIMED_SIGNING_TIME = "2017-11-14T13:56:23Z";
+    public static final String MOCK_XADES_SIGNATURE_BEST_SIGNATURE_TIME = "2017-11-14T13:56:34Z";
+    public static final String MOCK_XADES_DATAFILE_HASH = "IucjUcbRo9Rke0bZLiHcwiIiplP9pSrSPr7LKln1EiI=";
+    public static final String MOCK_XADES_DATAFILE_HASH2 = "47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=";
+    public static final String MOCK_XADES_DATAFILE_HASH_ALGO = "SHA256";
+    public static final String MOCK_XADES_DATAFILE_FILENAME = "test.pdf";
+    public static final String MOCK_XADES_DATAFILE_FILENAME2 = "Proov (2).txt";
+
 }

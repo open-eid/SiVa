@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2018 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -86,18 +86,12 @@ public class GenericValidationService implements ValidationService {
             if (validationDocument == null) {
                 throw new ValidationServiceException(getClass().getSimpleName(), new Exception("No request document found"));
             }
+            SignedDocumentValidator validator = createValidatorFromDocument(validationDocument);
 
-            final DSSDocument dssDocument = createDssDocument(validationDocument);
             final ConstraintDefinedPolicy policy = signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy());
-            SignedDocumentValidator validator = SignedDocumentValidator.fromDocument(dssDocument);
 
-            CommonCertificateVerifier certificateVerifier = new CommonCertificateVerifier(trustedListsCertificateSource,
-                    new AlwaysFailingCRLSource(), new AlwaysFailingOCSPSource(), new CommonsDataLoader());
-            LOGGER.info("Certificate pool size: {}", getCertificatePoolSize(certificateVerifier));
-            validator.setCertificateVerifier(certificateVerifier);
-            validator.setValidationLevel(VALIDATION_LEVEL);
-            final eu.europa.esig.dss.validation.reports.Reports reports;
-            reports = validator.validateDocument(policy.getConstraintDataStream());
+            final eu.europa.esig.dss.validation.reports.Reports reports =  validator.validateDocument(policy.getConstraintDataStream());
+
             validateRevocationFreshness(reports);
             validateBestSignatureTime(reports);
 
@@ -123,14 +117,27 @@ public class GenericValidationService implements ValidationService {
             throw e;
         } catch (MalformedDocumentException | DSSException e) {
             endExceptionally(e);
-            throw new MalformedDocumentException(e);
+            throw constructMalformedDocumentException(e);
         } catch (Exception e) {
             endExceptionally(e);
             throw new ValidationServiceException(getClass().getSimpleName(), e);
         }
     }
 
-    private void validateBestSignatureTime(eu.europa.esig.dss.validation.reports.Reports reports) {
+    protected SignedDocumentValidator createValidatorFromDocument(final ValidationDocument validationDocument) {
+        final DSSDocument dssDocument = createDssDocument(validationDocument);
+        SignedDocumentValidator validator = SignedDocumentValidator.fromDocument(dssDocument);
+
+        CommonCertificateVerifier certificateVerifier = new CommonCertificateVerifier(trustedListsCertificateSource,
+                new AlwaysFailingCRLSource(), new AlwaysFailingOCSPSource(), new CommonsDataLoader());
+        LOGGER.info("Certificate pool size: {}", getCertificatePoolSize(certificateVerifier));
+        validator.setCertificateVerifier(certificateVerifier);
+        validator.setValidationLevel(VALIDATION_LEVEL);
+
+        return validator;
+    }
+
+    protected void validateBestSignatureTime(eu.europa.esig.dss.validation.reports.Reports reports) {
         for (String id : reports.getSimpleReport().getSignatureIdList()) {
             if (Indication.TOTAL_PASSED == reports.getSimpleReport().getIndication(id)
                     && reports.getDiagnosticData().getSignatureById(id).getTimestampList().isEmpty()) {
@@ -193,6 +200,10 @@ public class GenericValidationService implements ValidationService {
         dssDocument.setMimeType(MimeType.fromFileName(validationDocument.getName()));
 
         return dssDocument;
+    }
+
+    protected RuntimeException constructMalformedDocumentException(RuntimeException cause) {
+        return new MalformedDocumentException(cause);
     }
 
     private void endExceptionally(Exception e) {

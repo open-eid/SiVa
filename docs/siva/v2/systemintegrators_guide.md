@@ -81,13 +81,13 @@ project by issuing below commands:
 **First start the Siva webapp**
 
 ```bash
-./siva-parent/siva-webapp/target/siva-webapp-2.0.3-SNAPSHOT.jar
+./siva-parent/siva-webapp/target/siva-webapp-3.1.0.jar
 ```
 
 **Second we need to start X-road validation webapp**
 
 ```bash
-./validation-services-parent/xroad-validation-service/target/xroad-validation-service-2.0.3-SNAPSHOT.jar
+./validation-services-parent/xroad-validation-service/target/xroad-validation-service-3.1.0.jar
 ```
 
 The SiVa webapp by default runs on port **8080** and XRoad validation service starts up on port **8081**.
@@ -96,7 +96,7 @@ Easiest way to test out validation is run SiVa demo application.
 **Start the Demo webapp**
 
 ```bash
-./siva-parent/siva-sample-application/target/siva-sample-application-2.0.3-SNAPSHOT.jar
+./siva-parent/siva-sample-application/target/siva-sample-application-3.1.0.jar
 ```
 
 Now point Your browser to URL: <http://localhost:9000>
@@ -136,7 +136,7 @@ WantedBy=multi-user.target
 ```
 
 Save and close the `siva-webapp.service` file.
-Next we need to move `siva-webapp-2.0.3-SNAPSHOT.jar` into newly created `/var/apps` directory and rename to
+Next we need to move `siva-webapp-3.1.0.jar` into newly created `/var/apps` directory and rename to
 JAR file to `siva-webapp.jar`. match
 
 !!! note
@@ -144,7 +144,7 @@ JAR file to `siva-webapp.jar`. match
 
 ```bash
 sudo mkdir /var/apps
-sudo cp siva-parent/siva-webapp/target/executable/siva-webapp-2.0.3-SNAPSHOT.jar /var/apps/siva-webapp.jar
+sudo cp siva-parent/siva-webapp/target/executable/siva-webapp-3.1.0.jar /var/apps/siva-webapp.jar
 ```
 
 Next we need to copy the `siva-webapp.service` file into `/lib/systemd/system` directory.
@@ -219,7 +219,7 @@ Now we should build the WAR file. We have created helper script with all the cor
 Final steps would be copying built WAR file into Tomcat `webapps` directory and starting the servlet container.
 
 ```bash
-cp siva-parent/siva-webapp/target/siva-webapp-2.0.3-SNAPSHOT.war apache-tomcat-7.0.70/webapps
+cp siva-parent/siva-webapp/target/siva-webapp-3.1.0.war apache-tomcat-7.0.70/webapps
 ./apache-tomcat-7.0.77/bin/catalina.sh run
 ```
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2018 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -20,13 +20,17 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import ee.openeid.siva.monitoring.configuration.MonitoringConfiguration;
 import ee.openeid.siva.monitoring.indicator.UrlHealthIndicator;
 import ee.openeid.siva.proxy.configuration.ProxyConfigurationProperties;
+import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.webapp.soap.DataFilesWebService;
+import ee.openeid.siva.webapp.soap.HashcodeValidationWebService;
 import ee.openeid.siva.webapp.soap.ValidationWebService;
 import ee.openeid.siva.webapp.soap.impl.DataFilesWebServiceImpl;
+import ee.openeid.siva.webapp.soap.impl.HashcodeValidationWebServiceImpl;
 import ee.openeid.siva.webapp.soap.impl.ValidationWebServiceImpl;
 import ee.openeid.siva.webapp.soap.interceptor.ReportSignatureInterceptor;
+import ee.openeid.siva.webapp.soap.interceptor.SoapRequestHashcodeValidationInterceptor;
+import ee.openeid.siva.webapp.soap.interceptor.SoapRequestValidationInterceptor;
 import ee.openeid.siva.webapp.soap.interceptor.SoapResponseHeaderInterceptor;
-import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import org.apache.cxf.Bus;
 import org.apache.cxf.binding.soap.interceptor.AbstractSoapInterceptor;
 import org.apache.cxf.binding.soap.saaj.SAAJOutInterceptor;
@@ -50,7 +54,8 @@ import java.util.List;
 @SpringBootConfiguration
 @EnableConfigurationProperties({ReportConfigurationProperties.class, ProxyConfigurationProperties.class})
 public class ServletConfiguration extends MonitoringConfiguration {
-    private static final String ENDPOINT = "/validationWebService";
+    private static final String VALIDATION_WEB_SERVICE_ENDPOINT = "/validationWebService";
+    private static final String HASHCODE_VALIDATION_WEB_SERVICE_ENDPOINT = "/hashcodeValidationWebService";
     private static final String DATAFILES_ENDPOINT = "/dataFilesWebService";
     private static final String URL_MAPPING = "/soap/*";
 
@@ -83,6 +88,11 @@ public class ServletConfiguration extends MonitoringConfiguration {
     }
 
     @Bean
+    public HashcodeValidationWebService hashcodeValidationWebService() {
+        return new HashcodeValidationWebServiceImpl();
+    }
+
+    @Bean
     public Jackson2ObjectMapperBuilder objectMapperBuilder() {
         Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
         builder.serializationInclusion(JsonInclude.Include.NON_EMPTY);
@@ -90,17 +100,26 @@ public class ServletConfiguration extends MonitoringConfiguration {
     }
 
     @Bean
-    public Endpoint endpoint(SpringBus springBus, ValidationWebService validationWebService) {
+    public Endpoint validationEndpoint(SpringBus springBus, ValidationWebService validationWebService) {
         EndpointImpl endpoint = new EndpointImpl(springBus, validationWebService);
         endpoint.setWsdlLocation("wsdl/siva.wsdl");
 
-        List<AbstractSoapInterceptor> outInterceptors = new ArrayList<>();
-        outInterceptors.add(new SoapResponseHeaderInterceptor());
-        outInterceptors.add(new SAAJOutInterceptor());
-        outInterceptors.add(reportSignatureInterceptor);
-        endpoint.getOutInterceptors().addAll(outInterceptors);
+        endpoint.getOutInterceptors().addAll(commonEndpointOutInterceptors());
+        endpoint.getInInterceptors().add(new SoapRequestValidationInterceptor());
 
-        endpoint.publish(ENDPOINT);
+        endpoint.publish(VALIDATION_WEB_SERVICE_ENDPOINT);
+        return endpoint;
+    }
+
+    @Bean
+    public Endpoint hashcodeValidationEndpoint(SpringBus springBus, HashcodeValidationWebService validationWebService) {
+        EndpointImpl endpoint = new EndpointImpl(springBus, validationWebService);
+        endpoint.setWsdlLocation("wsdl/siva-hashcode-validation.wsdl");
+
+        endpoint.getOutInterceptors().addAll(commonEndpointOutInterceptors());
+        endpoint.getInInterceptors().add(new SoapRequestHashcodeValidationInterceptor());
+
+        endpoint.publish(HASHCODE_VALIDATION_WEB_SERVICE_ENDPOINT);
         return endpoint;
     }
 
@@ -126,5 +145,13 @@ public class ServletConfiguration extends MonitoringConfiguration {
         return new ArrayList<UrlHealthIndicator.ExternalLink>() {{
             add(new UrlHealthIndicator.ExternalLink("xRoadService", proxyProperties.getXroadUrl() + DEFAULT_MONITORING_ENDPOINT, DEFAULT_TIMEOUT));
         }};
+    }
+
+    private List<AbstractSoapInterceptor> commonEndpointOutInterceptors() {
+        List<AbstractSoapInterceptor> outInterceptors = new ArrayList<>();
+        outInterceptors.add(new SoapResponseHeaderInterceptor());
+        outInterceptors.add(new SAAJOutInterceptor());
+        outInterceptors.add(reportSignatureInterceptor);
+        return outInterceptors;
     }
 }

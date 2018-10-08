@@ -534,6 +534,8 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Expected Result: document malformed error should be returned
   * File: 23147_weak-warning-sha1-invalid-mimetype-in-manifest.bdoc
 
+  **Attention! This test is disabled: /jira.ria.ee/browse/DD4J-161")
+
 
 **TestCaseID: Bdoc-ValidationFail-6**
 
@@ -542,6 +544,8 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Title: Asice with wrong slash character ('\') in data file mime-type value
   * Expected Result: The document should fail the validation
   * File: EE_SER-AEX-B-LT-V-33.bdoc
+
+  **Attention! This test is disabled: /jira.ria.ee/browse/DD4J-161")
 
 
 **TestCaseID: Bdoc-ValidationFail-7**
@@ -1501,6 +1505,8 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Expected Result: The document should pass the validation without warning.
   * File:2f_all_signed.bdoc
 
+  **Attention! This test is disabled: 
+
 
 ## LargeFileIT.java
 [Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/LargeFileIT.java)
@@ -1726,7 +1732,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
   * TestType: Automated
   * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
-  * Title: The PDF-file has been signed with expired certificate (PAdES Baseline LT)
+  * Title: The PDF-file has been signed with expired certificate (PAdES Baseline T)
   * Expected Result: Document signed with certificate that is expired should fail.
   * File: hellopades-lt-rsa1024-sha1-expired.pdf
 
@@ -2257,6 +2263,77 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Title: The PDF-file with included CRL
   * Expected Result: Signatures are valid according to policy
   * File: PadesProfileLtWithCrl.pdf
+
+
+## XadesHashcodeValidationFailIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/XadesHashcodeValidationFailIT.java)
+
+
+**TestCaseID: Xades-Hashcode-Validation-Fail-1**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Title: Data file hash algorithm do not match signature hash algorithm
+  * Expected Result: Validation fails
+  * File: Valid_XAdES_LT_TM.xml
+
+
+**TestCaseID: Xades-Hashcode-Validation-Fail-2**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Hashes do not match
+  * Expected Result: Validation fails
+  * File: Valid_XAdES_LT_TM.xml
+
+
+**TestCaseID: Xades-Hashcode-Validation-Fail-3**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Wrong data file name is used
+  * Expected Result: Validation report is returned
+  * File: Valid_XAdES_LT_TM.xml
+
+
+**TestCaseID: Xades-Hashcode-Validation-Fail-4**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Invalid signature in XAdES
+  * Expected Result: Validation report is returned
+  * File: Valid_XAdES_LT_TM.xml
+
+
+## XadesHashcodeValidationPassIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/XadesHashcodeValidationPassIT.java)
+
+
+**TestCaseID: Xades-Hashcode-Validation-Pass-1**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Title: XAdES extracted from ASICE
+  * Expected Result: The document should pass the validation
+  * File: Valid_XAdES_LT_TS.xml
+
+
+**TestCaseID: Xades-Hashcode-Validation-Pass-2**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Title: XAdES extracted from BDOC
+  * Expected Result: The document should pass the validation
+  * File: Valid_XAdES_LT_TM.xml
+
+
+**TestCaseID: Xades-Hashcode-Validation-Pass-3**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Title: XAdES extracted from BDOC
+  * Expected Result: The document should pass the validation
+  * File: Valid_XADES_LT_TS_multiple_datafiles.xml
 
 
 ## XRoadValidationFailIT.java
@@ -2929,6 +3006,307 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * File: Picture.png
 
 
+## HashcodeValidationRequestIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/resttest/HashcodeValidationRequestIT.java)
+
+
+**TestCaseID: Get-Hascode-Validation-Request-1**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Input correct values for simple report
+  * Expected Result: Simple report is returned
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-2**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Input correct values for detailed report
+  * Expected Result: Detailed report is returned
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-3**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Input missing signature file
+  * Expected Result: Error is returned
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-4**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Input missing signature file
+  * Expected Result: Error is returned
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-5**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Input incorrect signature file
+  * Expected Result: Error is returned
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-6**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Input file without signature
+  * Expected Result: Validation report is returned
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-7**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Not correct file type
+  * Expected Result: Error is returned
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-8**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Input missing filename
+  * Expected Result: Error is returned
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-9**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Input empty filename
+  * Expected Result: Error is returned
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-10**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Input whitespace filename
+  * Expected Result: Error is returned
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-11**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Input too long filename
+  * Expected Result: Error is returned
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-12**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Input invalid format filename
+  * Expected Result: Error is returned
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-13**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Input wrong file type in filename
+  * Expected Result: Error is returned
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-14**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Report type missing
+  * Expected Result: Default is used
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-15**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Report type case sensitivity
+  * Expected Result: Report type is case insensitive
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-16**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Report type is invalid
+  * Expected Result: Error is returned
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-17**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Signature policy missing
+  * Expected Result: Default is used
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-18**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Signature policy is invalid
+  * Expected Result: Error is returned
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-19**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Incorrect signature policy format
+  * Expected Result: Error is returned
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-20**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Signature policy is empty
+  * Expected Result: Error is returned
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-21**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Signature policy too long
+  * Expected Result: Error is returned
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-22**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Data file missing
+  * Expected Result: Error is returned
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-23**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Empty data files list
+  * Expected Result: Error is returned
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-24**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Data file filename missing
+  * Expected Result: Error is returned
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-25**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Data file filename empty
+  * Expected Result: Error is returned
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-26**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Data file filename too long
+  * Expected Result: Error is returned
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-27**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Data file filename invalid format
+  * Expected Result: Error is returned
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-28**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Data file invalid hash algorithm
+  * Expected Result: Error is returned
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-29**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Data file hash algorithm case sensitivity
+  * Expected Result: Validation report is returned
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-30**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Data file hash missing
+  * Expected Result: Error is returned
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-31**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Data file hash empty
+  * Expected Result: Error is returned
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-32**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Data file hash wrong format
+  * Expected Result: Error is returned
+  * File: hashAsiceXades.xml
+
+
+**TestCaseID: Hascode-Validation-Request-33**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Title: Excess data files are ignored
+  * Expected Result: Validation report is returned
+  * File: hashAsiceXades.xml
+
+
 ## ValidationReportValueVerificationIT.java
 [Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/resttest/ValidationReportValueVerificationIT.java)
 
@@ -3376,7 +3754,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * TestType: Automated
   * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
   * Title: ReportType parameter is missing
-  * Expected Result: Simple report is returned as default
+  * Expected Result: Simple report is returned
   * File: TS-11_23634_TS_2_timestamps.asice
 
 
@@ -3385,7 +3763,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * TestType: Automated
   * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
   * Title: ReportType parameter is missing
-  * Expected Result: Simple report is returned as default
+  * Expected Result: Simple report is returned
   * File: TS-11_23634_TS_2_timestamps.asice
 
 
@@ -4197,7 +4575,6 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Title: Soap headers are returned in error response for Get Data Files
   * Expected Result: Same headers are in response as in request
   * File: not relevant
-
 
 
 [//]: # (Manually generated test cases start here. Do NOT overwrite with autogenerated test cases!)

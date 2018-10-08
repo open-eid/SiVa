@@ -5,6 +5,7 @@ In this section the SiVa external interfaces are described. For information of i
 SiVa service provides **REST JSON** and **SOAP** interfaces that enable the service users to:
 
 * Request validation of signatures in a digitally signed document (i.e. signature container like BDOC,ASiC-E/PDF/...);
+* Request validation of signature with providing data file hashes.
 * Receive a response with the validation result of all the signatures in the document.
 * Request datafiles inside of DDOC container
 * Receive datafiles from DDOC container
@@ -39,7 +40,7 @@ Validation request parameters for JSON and SOAP interfaces are described in the 
 | JSON parameter | SOAP parameter | Mandatory | JSON data type | Description |
 |----------------|----------------|-----------|-------------|----------------|
 | document | Document | + |  String | Base64 encoded string of digitally signed document to be validated |
-| filename | Filename | + |  String |File name of the digitally signed document (i.e. sample.bdoc), max length 255 characters. |
+| filename | Filename | + |  String | File name of the digitally signed document (i.e. sample.bdoc), max length 255 characters. |
 | documentType | DocumentType | - |  String | If not present document type is determined automatically based on the file extension used in the filename. This parameter is necessary to differentiate XROAD ASIC-E containers from standard ASIC-E containers. <br> **Possible values:** <br> XROAD - for documents created in the [X-Road](https://www.ria.ee/en/x-road.html) information system, see also [specification document](https://cyber.ee/uploads/2013/05/T-4-23-Profile-for-High-Performance-Digital-Signatures1.pdf) of the signature format. |
 | signaturePolicy | SignaturePolicy | - |  String | Can be used to change the default signature validation policy that is used by the service. <br> See also [SiVa Validation Policy](/siva2/appendix/validation_policy) for more detailed information on given policy constraints.<br>**Possible values:** <br> POLv3 - signatures with all legal levels are accepted (i.e. QES, AdESqc and AdES, according to Regulation (EU) No 910/2014.) <br> POLv4 - the default policy. Accepted signatures depend on their type (i.e. signature, seal or unknown) and legal level (i.e. QES, AdESqc and Ades) |
 | reportType | ReportType | - | String | Can be used to change the default returned report type. <br>**Possible values:** <br> Simple - default report type. Returns overall validation result (validationConclusion block)<br> Detailed -  returns detailed information about the signatures and their validation results (validationConclusion, validationProcess and validationReportSignature. Two later ones are optionally present). |
@@ -107,16 +108,17 @@ POST https://<server url>/soap/hashcodeValidationWebService?wsdl
 
 Validation request parameters for JSON interface are described in the table below.
 
-| JSON parameter | Mandatory | JSON data type | Description |
-|----------------|----------------|-----------|-------------|
-| signatureFile | + |  String | Base64 encoded string of XAdES document to be validated |
-| filename | + |  String | File name of the XAdES document (i.e. signature0.xml). Only XML files supported. |
-| signaturePolicy | - |  String | Can be used to change the default signature validation policy that is used by the service. <br> See also [SiVa Validation Policy](/siva2/appendix/validation_policy) for more detailed information on given policy constraints.<br>**Possible values:** <br> POLv3 - signatures with all legal levels are accepted (i.e. QES, AdESqc and AdES, according to Regulation (EU) No 910/2014.) <br> POLv4 - the default policy. Accepted signatures depend on their type (i.e. signature, seal or unknown) and legal level (i.e. QES, AdESqc and Ades) |
-| reportType | - | String | Can be used to change the default returned report type. <br>**Possible values:** <br> Simple - default report type. Returns overall validation result (validationConclusion block)<br> Detailed -  returns detailed information about the signatures and their validation results (validationConclusion, validationProcess and validationReportSignature. Two later ones are optionally present). |
-| datafiles | + |  Array | Array containing the information for datafiles that signature is covering |
-| datafiles.filename | + |  String | Name of hashed data file. |
-| datafiles.hashAlgo | + |  String | Hash algorithm used for hashing the data file. Accepted values are dependant of validation policy |
-| datafiles.hash | + |  String | Datafile hash in Base64 encoded format. |
+| JSON parameter | SOAP parameter | Mandatory | JSON data type | Description |
+|----------------|----------------|-----------|----------------|-------------|
+| signatureFile | SignatureFile | + |  String | Base64 encoded string of XAdES document to be validated |
+| filename | Filename | + |  String | File name of the XAdES document (i.e. signature0.xml). Only XML files supported. |
+| signaturePolicy | SignaturePolicy | - |  String | Can be used to change the default signature validation policy that is used by the service. <br> See also [SiVa Validation Policy](/siva2/appendix/validation_policy) for more detailed information on given policy constraints.<br>**Possible values:** <br> POLv3 - signatures with all legal levels are accepted (i.e. QES, AdESqc and AdES, according to Regulation (EU) No 910/2014.) <br> POLv4 - the default policy. Accepted signatures depend on their type (i.e. signature, seal or unknown) and legal level (i.e. QES, AdESqc and Ades) |
+| reportType | ReportType | - | String | Can be used to change the default returned report type. <br>**Possible values:** <br> Simple - default report type. Returns overall validation result (validationConclusion block)<br> Detailed -  returns detailed information about the signatures and their validation results (validationConclusion, validationProcess and validationReportSignature. Two later ones are optionally present). |
+| datafiles | DataFiles | + |  Array | Array containing the information for datafiles that signature is covering |
+| datafiles[0] | DataFile | + | Object | Object containing data file information |
+| datafiles.filename | Filename | + |  String | File name of the hashed data file, max length 255 characters. |
+| datafiles.hashAlgo | HashAlgo | + |  String | Hash algorithm used for hashing the data file (must match with algorithm in signature file). Accepted values are dependant of validation policy |
+| datafiles.hash | Hash | + |  String | Data file hash in Base64 encoded format. |
 
 ### Sample JSON request with mandatory parameters
 

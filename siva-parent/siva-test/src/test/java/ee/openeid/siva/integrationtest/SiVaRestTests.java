@@ -26,7 +26,14 @@ import ee.openeid.siva.webapp.response.ValidationResponse;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FilenameUtils;
 import org.json.JSONObject;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -198,6 +205,33 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         dataFileObject.setHashAlgo(hashAlgo);
         dataFileObject.setFilename(dataFile);
         list.add(dataFileObject);
+        jsonObject.put(DATAFILES, list);
+        return jsonObject.toString();
+    }
+
+    protected String validationRequestHashcodeReadFromFile(String signature, String signaturePolicy, String reportType) throws ParserConfigurationException, IOException, SAXException {
+        List<Datafile> list = new ArrayList<>();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(SIGNATURE_FILE, Base64.encodeBase64String(readFileFromTestResources(signature)));
+        jsonObject.put(FILENAME, signature);
+        jsonObject.put(SIGNATURE_POLICY, signaturePolicy);
+        jsonObject.put(REPORT_TYPE, reportType);
+
+        String testFilesBase = getProjectBaseDirectory() + "src/test/resources/" + getTestFilesDirectory() + signature;
+
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document document = builder.parse(new File(testFilesBase));
+        document.getDocumentElement().normalize();
+        NodeList nList = document.getElementsByTagName("ds:Reference");
+
+        for(int k=0; k<nList.getLength()-1; k++) {
+            Datafile dataFileObject = new Datafile();
+            dataFileObject.setHash(nList.item(k).getChildNodes().item(1).getFirstChild().getNodeValue());
+            dataFileObject.setHashAlgo("SHA256");
+            dataFileObject.setFilename(nList.item(k).getAttributes().getNamedItem("URI").getNodeValue());
+            list.add(dataFileObject);
+        }
         jsonObject.put(DATAFILES, list);
         return jsonObject.toString();
     }

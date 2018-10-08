@@ -645,7 +645,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * Title: ReportType parameter is missing
      *
-     * Expected Result: Simple report is returned as default
+     * Expected Result: Simple report is returned
      *
      * File: TS-11_23634_TS_2_timestamps.asice
      */
@@ -672,7 +672,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * Title: ReportType parameter is missing
      *
-     * Expected Result: Simple report is returned as default
+     * Expected Result: Simple report is returned
      *
      * File: TS-11_23634_TS_2_timestamps.asice
      */

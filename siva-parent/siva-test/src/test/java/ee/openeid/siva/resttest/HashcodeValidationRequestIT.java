@@ -75,6 +75,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         currentDateTime = currentDateTime("GMT", "yyyy-MM-dd'T'HH:mm");
     }
 
+    /**
+     * TestCaseID: Get-Hascode-Validation-Request-1
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Input correct values for simple report
+     *
+     * Expected Result: Simple report is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void okHashcodeValidationWithSimpleReport() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -82,6 +95,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         assertSimpleReportWithSignature(response, request);
     }
 
+    /**
+     * TestCaseID: Hascode-Validation-Request-2
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Input correct values for detailed report
+     *
+     * Expected Result: Detailed report is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void okHashcodeValidationWithDetailedReport() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -90,6 +116,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         assertDetailedReportWithSignature(response, request);
     }
 
+    /**
+     * TestCaseID: Hascode-Validation-Request-3
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Input missing signature file
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void signatureFileMissing() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -102,6 +141,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         );
     }
 
+    /**
+     * TestCaseID: Hascode-Validation-Request-4
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Input missing signature file
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void signatureFileEmpty() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -114,6 +166,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         );
     }
 
+    /**
+     * TestCaseID: Hascode-Validation-Request-5
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Input incorrect signature file
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void signatureFileNotBase64Encoded() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -125,6 +190,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         );
     }
 
+    /**
+     * TestCaseID: Hascode-Validation-Request-6
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Input file without signature
+     *
+     * Expected Result: Validation report is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void signatureFileContentWithoutSignature() {
         String randomXmlFileWithoutSignature = "PD94bWwgdmVyc2lvbj0nMS4wJyAgZW5jb2Rpbmc9J1VURi04JyA/Pg0KPHRlc3Q+DQoJPGRhdGE+DQoJCTxzb21ldGhpbmc+c29tZSBkYXRhPC9zb21ldGhpbmc+DQoJPC9kYXRhPg0KPC90ZXN0Pg0K";
@@ -135,6 +213,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         assertSimpleReportWithoutSignature(response, request);
     }
 
+    /**
+     * TestCaseID: Hascode-Validation-Request-7
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Not correct file type
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void signatureFileContentNotXML() {
         String notXmlFormattedContent = Base64.encodeBase64String("NOT_XML_FORMATTED_FILE_CONTENT".getBytes(StandardCharsets.UTF_8));
@@ -147,6 +238,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         );
     }
 
+    /**
+     * TestCaseID: Hascode-Validation-Request-8
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Input missing filename
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void filenameMissing() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -160,6 +264,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         );
     }
 
+    /**
+     * TestCaseID: Hascode-Validation-Request-9
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Input empty filename
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void filenameEmpty() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -174,6 +291,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         );
     }
 
+    /**
+     * TestCaseID: Hascode-Validation-Request-10
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Input whitespace filename
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void filenameEmptyWhitespace() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -186,7 +316,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         );
     }
 
-
+    /**
+     * TestCaseID: Hascode-Validation-Request-11
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Input too long filename
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void filenameTooLong() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -197,6 +339,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
                 new RequestError(FILENAME, INVALID_FILENAME_SIZE));
     }
 
+    /**
+     * TestCaseID: Hascode-Validation-Request-12
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Input invalid format filename
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void filenameInvalidFormat() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -209,6 +364,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         );
     }
 
+    /**
+     * TestCaseID: Hascode-Validation-Request-13
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Input wrong file type in filename
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void filenameInvalidExtension() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -220,6 +388,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         );
     }
 
+    /**
+     * TestCaseID: Hascode-Validation-Request-14
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Report type missing
+     *
+     * Expected Result: Default is used
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void reportTypeMissing_defaultsToSimple() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -229,6 +410,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         assertSimpleReportWithSignature(response, request);
     }
 
+    /**
+     * TestCaseID: Hascode-Validation-Request-15
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Report type case sensitivity
+     *
+     * Expected Result: Report type is case insensitive
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void reportTypeCaseInsensitive() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -238,6 +432,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         assertSimpleReportWithSignature(response, request);
     }
 
+    /**
+     * TestCaseID: Hascode-Validation-Request-16
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Report type is invalid
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void reportTypeInvalid() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -248,6 +455,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
                 new RequestError(REPORT_TYPE, INVALID_REPORT_TYPE));
     }
 
+    /**
+     * TestCaseID: Hascode-Validation-Request-17
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Signature policy missing
+     *
+     * Expected Result: Default is used
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void signaturePolicyMissing_defaultsToPOLv4() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -260,6 +480,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         assertSimpleReportWithSignature(response, request);
     }
 
+    /**
+     * TestCaseID: Hascode-Validation-Request-18
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Signature policy is invalid
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void signaturePolicyInvalid() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -270,6 +503,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
                 new RequestError(SIGNATURE_POLICY, "Invalid signature policy: " + request.getSignaturePolicy() + "; Available abstractPolicies: [POLv3, POLv4]"));
     }
 
+    /**
+     * TestCaseID: Hascode-Validation-Request-19
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Incorrect signature policy format
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void signaturePolicyInvalidFormat() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -280,6 +526,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
                 new RequestError(SIGNATURE_POLICY, INVALID_SIGNATURE_POLICY));
     }
 
+    /**
+     * TestCaseID: Hascode-Validation-Request-20
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Signature policy is empty
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void signaturePolicyEmpty() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -289,7 +548,20 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         assertErrorResponse(response,
                 new RequestError(SIGNATURE_POLICY, INVALID_POLICY_SIZE));
     }
-    
+
+    /**
+     * TestCaseID: Hascode-Validation-Request-21
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Signature policy too long
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void signaturePolicyTooLong() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -301,6 +573,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         );
     }
 
+    /**
+     * TestCaseID: Hascode-Validation-Request-22
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Data file missing
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void dataFilesMissing() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -313,6 +598,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         );
     }
 
+    /**
+     * TestCaseID: Hascode-Validation-Request-23
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Empty data files list
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void dataFilesEmpty() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -325,6 +623,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         );
     }
 
+    /**
+     * TestCaseID: Hascode-Validation-Request-24
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Data file filename missing
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void dataFileFilenameMissing() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -337,6 +648,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         );
     }
 
+    /**
+     * TestCaseID: Hascode-Validation-Request-25
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Data file filename empty
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void dataFileFilenameEmpty() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -350,6 +674,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         );
     }
 
+    /**
+     * TestCaseID: Hascode-Validation-Request-26
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Data file filename too long
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void dataFileFilenameTooLong() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -361,6 +698,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         );
     }
 
+    /**
+     * TestCaseID: Hascode-Validation-Request-27
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Data file filename invalid format
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void dataFileFilenameInvalidFormat() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -372,6 +722,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         );
     }
 
+    /**
+     * TestCaseID: Hascode-Validation-Request-28
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Data file invalid hash algorithm
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void dataFileHashAlgorithmInvalid() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -383,6 +746,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         );
     }
 
+    /**
+     * TestCaseID: Hascode-Validation-Request-29
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Data file hash algorithm case sensitivity
+     *
+     * Expected Result: Validation report is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void dataFileHashAlgorithmCaseInsensitive() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -392,16 +768,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         assertSimpleReportWithSignature(response, request);
     }
 
-    @Test
-    public void dataFileHashAlgorithmDoesNotMatchWithSignatureDataFileHashAlgorithm() {
-        JSONHashcodeValidationRequest request = validRequestBody();
-        request.getDatafiles().get(0).setHashAlgo("SHA512");
-
-        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
-        assertValidationConclusion(response, request);
-        assertSignatureDataNotFound(response);
-    }
-
+    /**
+     * TestCaseID: Hascode-Validation-Request-30
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Data file hash missing
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void dataFileHashMissing() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -414,6 +793,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         );
     }
 
+    /**
+     * TestCaseID: Hascode-Validation-Request-31
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Data file hash empty
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void dataFileHashEmpty() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -426,6 +818,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         );
     }
 
+    /**
+     * TestCaseID: Hascode-Validation-Request-32
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Data file hash wrong format
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void dataFileHashNotBase64Encoded() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -437,6 +842,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         );
     }
 
+    /**
+     * TestCaseID: Hascode-Validation-Request-33
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Excess data files are ignored
+     *
+     * Expected Result: Validation report is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
     @Test
     public void multipleDataFiles_firstDataFileIncorrect_secondDataFileCorrect() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -458,26 +876,6 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertSimpleReportWithSignature(response, request);
-    }
-
-    @Test
-    public void dataFileHashDoesNotMatchWithSignatureFile_totalFailedHashFailure() {
-        JSONHashcodeValidationRequest request = validRequestBody();
-        request.getDatafiles().get(0).setHash(Base64.encodeBase64String("INVALID_SIGNATURE_DIGEST".getBytes(StandardCharsets.UTF_8)));
-
-        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
-        assertValidationConclusion(response, request);
-        assertSignatureHashFailure(response);
-    }
-
-    @Test
-    public void dataFileHashCorrectButFilenameDoesNotMatchWithSignatureFile() {
-        JSONHashcodeValidationRequest request = validRequestBody();
-        request.getDatafiles().get(0).setFilename("INVALID_FILE_NAME.pdf");
-
-        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
-        assertValidationConclusion(response, request);
-        assertSignatureDataNotFound(response);
     }
 
     private void assertErrorResponse(ValidatableResponse response, RequestError... requestErrors) {

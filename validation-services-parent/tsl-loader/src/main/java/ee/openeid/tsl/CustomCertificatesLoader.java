@@ -85,6 +85,74 @@ public class CustomCertificatesLoader {
 
         tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "TEST of EE Certification Centre Root CA"));
 
+        // TEST of EE-GovCA2018
+        certToken = DSSUtils.loadCertificateFromBase64EncodedString(
+                "MIIFLDCCBI2gAwIBAgIQImvqKVwtGyZbh+ecdKPc7zAKBggqhkjOPQQDBDBiMQsw\n" +
+                        "CQYDVQQGEwJFRTEbMBkGA1UECgwSU0sgSUQgU29sdXRpb25zIEFTMRcwFQYDVQRh\n" +
+                        "DA5OVFJFRS0xMDc0NzAxMzEdMBsGA1UEAwwUVEVTVCBvZiBFRS1Hb3ZDQTIwMTgw\n" +
+                        "HhcNMTgwODMwMTI0ODI4WhcNMzMwODMwMTI0ODI4WjBiMQswCQYDVQQGEwJFRTEb\n" +
+                        "MBkGA1UECgwSU0sgSUQgU29sdXRpb25zIEFTMRcwFQYDVQRhDA5OVFJFRS0xMDc0\n" +
+                        "NzAxMzEdMBsGA1UEAwwUVEVTVCBvZiBFRS1Hb3ZDQTIwMTgwgZswEAYHKoZIzj0C\n" +
+                        "AQYFK4EEACMDgYYABABZN0DFpEKsj3SzsySoR/bcwAUoLc+S2HrvHY0xIDkFFTtU\n" +
+                        "QXfjxXyexNIx+ALe2IYJZLTl0T79C5by4/mO/5H7UgCxZZCRKtdcKqSGYJOVpT0X\n" +
+                        "oA51yX8eBk8aPVrTcwABcBhU6nTNGEoNXfeS7mrZB6Gs3eFxEVdejIEjNObWVFYM\n" +
+                        "bqOCAuAwggLcMBIGA1UdEwEB/wQIMAYBAf8CAQEwDgYDVR0PAQH/BAQDAgEGMDQG\n" +
+                        "A1UdJQEB/wQqMCgGCCsGAQUFBwMJBggrBgEFBQcDAgYIKwYBBQUHAwQGCCsGAQUF\n" +
+                        "BwMBMB0GA1UdDgQWBBR/DHDY9OWPAXfux20pKbn0yfxqwDAfBgNVHSMEGDAWgBR/\n" +
+                        "DHDY9OWPAXfux20pKbn0yfxqwDCCAiQGA1UdIASCAhswggIXMAgGBgQAj3oBAjAJ\n" +
+                        "BgcEAIvsQAECMDIGCysGAQQBg5EhAQIBMCMwIQYIKwYBBQUHAgEWFWh0dHBzOi8v\n" +
+                        "d3d3LnNrLmVlL0NQUzANBgsrBgEEAYORIQECAjANBgsrBgEEAYORfwECATANBgsr\n" +
+                        "BgEEAYORIQECBTANBgsrBgEEAYORIQECBjANBgsrBgEEAYORIQECBzANBgsrBgEE\n" +
+                        "AYORIQECAzANBgsrBgEEAYORIQECBDANBgsrBgEEAYORIQECCDANBgsrBgEEAYOR\n" +
+                        "IQECCTANBgsrBgEEAYORIQECCjANBgsrBgEEAYORIQECCzANBgsrBgEEAYORIQEC\n" +
+                        "DDANBgsrBgEEAYORIQECDTANBgsrBgEEAYORIQECDjANBgsrBgEEAYORIQECDzAN\n" +
+                        "BgsrBgEEAYORIQECEDANBgsrBgEEAYORIQECETANBgsrBgEEAYORIQECEjANBgsr\n" +
+                        "BgEEAYORIQECEzANBgsrBgEEAYORIQECFDANBgsrBgEEAYORfwECAjANBgsrBgEE\n" +
+                        "AYORfwECAzANBgsrBgEEAYORfwECBDANBgsrBgEEAYORfwECBTANBgsrBgEEAYOR\n" +
+                        "fwECBjBVBgorBgEEAYORIQoBMEcwIQYIKwYBBQUHAgEWFWh0dHBzOi8vd3d3LnNr\n" +
+                        "LmVlL0NQUzAiBggrBgEFBQcCAjAWGhRURVNUIG9mIEVFLUdvdkNBMjAxODAYBggr\n" +
+                        "BgEFBQcBAwQMMAowCAYGBACORgEBMAoGCCqGSM49BAMEA4GMADCBiAJCAeTjfRrM\n" +
+                        "t+4ecVYozAfdpTjCikf332XcuRkuJ6fbLqqMm7C3v/d5ebyOqvDG6wWAp8Z0GZA5\n" +
+                        "ONIvS2rm8kJ7HR5tAkIAoFn7n5ZW62dXMmPk+LReR1hUyTpxrxC31QjqvMqM2AbM\n" +
+                        "8luw0f/AaC5qsEdwKrKT+p1xvnjSyIVfcMiu6Q3T2EE=");
+
+        tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "TEST of EE-GovCA2018"));
+
+        // TEST of ESTEID2018
+        certToken = DSSUtils.loadCertificateFromBase64EncodedString(
+                "MIIFfDCCBN2gAwIBAgIQNhjzSfd2UEpbkO14EY4ORTAKBggqhkjOPQQDBDBiMQsw\n" +
+                        "CQYDVQQGEwJFRTEbMBkGA1UECgwSU0sgSUQgU29sdXRpb25zIEFTMRcwFQYDVQRh\n" +
+                        "DA5OVFJFRS0xMDc0NzAxMzEdMBsGA1UEAwwUVEVTVCBvZiBFRS1Hb3ZDQTIwMTgw\n" +
+                        "HhcNMTgwOTA2MDkwMzUyWhcNMzMwODMwMTI0ODI4WjBgMQswCQYDVQQGEwJFRTEb\n" +
+                        "MBkGA1UECgwSU0sgSUQgU29sdXRpb25zIEFTMRcwFQYDVQRhDA5OVFJFRS0xMDc0\n" +
+                        "NzAxMzEbMBkGA1UEAwwSVEVTVCBvZiBFU1RFSUQyMDE4MIGbMBAGByqGSM49AgEG\n" +
+                        "BSuBBAAjA4GGAAQBxYug4cEqwmIj+3TVaUlhfxCV9FQgfuglC2/0Ux1Ieqw11mDj\n" +
+                        "NvnGJhkWxaLbWJi7QtthMG5R104l7Np7lBevrBgBDtfgja9e3MLTQkY+cFS+UQxj\n" +
+                        "t9ZihTUJVsR7lowYlaGEiqqsGbEhlwfu27Xsm8b2rhSiTOvNdjTtG57NnwVAX+ij\n" +
+                        "ggMyMIIDLjAfBgNVHSMEGDAWgBR/DHDY9OWPAXfux20pKbn0yfxqwDAdBgNVHQ4E\n" +
+                        "FgQUwISZKcROnzsCNPaZ4QpWAAgpPnswDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB\n" +
+                        "/wQIMAYBAf8CAQAwggHNBgNVHSAEggHEMIIBwDAIBgYEAI96AQIwCQYHBACL7EAB\n" +
+                        "AjAyBgsrBgEEAYORIQECATAjMCEGCCsGAQUFBwIBFhVodHRwczovL3d3dy5zay5l\n" +
+                        "ZS9DUFMwDQYLKwYBBAGDkSEBAgIwDQYLKwYBBAGDkX8BAgEwDQYLKwYBBAGDkSEB\n" +
+                        "AgUwDQYLKwYBBAGDkSEBAgYwDQYLKwYBBAGDkSEBAgcwDQYLKwYBBAGDkSEBAgMw\n" +
+                        "DQYLKwYBBAGDkSEBAgQwDQYLKwYBBAGDkSEBAggwDQYLKwYBBAGDkSEBAgkwDQYL\n" +
+                        "KwYBBAGDkSEBAgowDQYLKwYBBAGDkSEBAgswDQYLKwYBBAGDkSEBAgwwDQYLKwYB\n" +
+                        "BAGDkSEBAg0wDQYLKwYBBAGDkSEBAg4wDQYLKwYBBAGDkSEBAg8wDQYLKwYBBAGD\n" +
+                        "kSEBAhAwDQYLKwYBBAGDkSEBAhEwDQYLKwYBBAGDkSEBAhIwDQYLKwYBBAGDkSEB\n" +
+                        "AhMwDQYLKwYBBAGDkSEBAhQwDQYLKwYBBAGDkX8BAgIwDQYLKwYBBAGDkX8BAgMw\n" +
+                        "DQYLKwYBBAGDkX8BAgQwDQYLKwYBBAGDkX8BAgUwDQYLKwYBBAGDkX8BAgYwKgYD\n" +
+                        "VR0lAQH/BCAwHgYIKwYBBQUHAwkGCCsGAQUFBwMCBggrBgEFBQcDBDB3BggrBgEF\n" +
+                        "BQcBAQRrMGkwLgYIKwYBBQUHMAGGImh0dHA6Ly9haWEuZGVtby5zay5lZS9lZS1n\n" +
+                        "b3ZjYTIwMTgwNwYIKwYBBQUHMAKGK2h0dHA6Ly9jLnNrLmVlL1Rlc3Rfb2ZfRUUt\n" +
+                        "R292Q0EyMDE4LmRlci5jcnQwGAYIKwYBBQUHAQMEDDAKMAgGBgQAjkYBATA4BgNV\n" +
+                        "HR8EMTAvMC2gK6AphidodHRwOi8vYy5zay5lZS9UZXN0X29mX0VFLUdvdkNBMjAx\n" +
+                        "OC5jcmwwCgYIKoZIzj0EAwQDgYwAMIGIAkIBIF+LqytyaV4o5wUSm30VysB8LdWt\n" +
+                        "oOrzNq2QhB6tGv4slg5z+CR58e60eRFqNxT7eccA/HgoPWs0B1Z+L067qtUCQgCB\n" +
+                        "8OP0kHx/j1t7htN2CXjpSjGFZw5TTI4s1eGyTbe0UJRBXEkUKfFbZVmzGPFPprwU\n" +
+                        "dSPi8PpO7+xGBYlFHA4z+Q==");
+
+        tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "TEST of ESTEID2018"));
+
         // TEST of ESTEID-SK 2011
         certToken = DSSUtils.loadCertificateFromBase64EncodedString(
                 "MIIEuzCCA6OgAwIBAgIQSxRID7FoIaNNdNhBeucLvDANBgkqhkiG9w0BAQUF" +

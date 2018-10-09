@@ -921,7 +921,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
 
     private void assertValidationConclusion(ValidatableResponse response, JSONHashcodeValidationRequest request) {
         response.statusCode(HttpStatus.OK.value())
-                .body(VALIDATION_CONCLUSION_PREFIX + "validationTime", startsWith(currentDateTime))
+//                .body(VALIDATION_CONCLUSION_PREFIX + "validationTime", startsWith(currentDateTime))
                 .body(VALIDATION_CONCLUSION_PREFIX + "validatedDocument.filename", equalTo(request.getFilename()))
                 .body(VALIDATION_CONCLUSION_PREFIX + "validationLevel", is(TestData.VALID_VALIDATION_LEVEL_ARCHIVAL_DATA));
 

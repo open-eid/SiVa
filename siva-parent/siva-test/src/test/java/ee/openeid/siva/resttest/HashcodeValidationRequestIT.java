@@ -18,6 +18,7 @@ package ee.openeid.siva.resttest;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.ValidatableResponse;
+import ee.openeid.siva.common.DateTimeMatcher;
 import ee.openeid.siva.integrationtest.SiVaRestTests;
 import ee.openeid.siva.integrationtest.TestData;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
@@ -40,6 +41,8 @@ import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
 
 import java.nio.charset.StandardCharsets;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -58,7 +61,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     private static final String SIGNATURE_FILENAME_SUFFIX = ".xml";
 
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
-    private String currentDateTime;
+    private ZonedDateTime testStartDate;
 
     @BeforeClass
     public static void oneTimeSetUp() {
@@ -72,7 +75,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     @Before
     public void DirectoryBackToDefault() {
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
-        currentDateTime = currentDateTime("GMT", "yyyy-MM-dd'T'HH:mm");
+        testStartDate = ZonedDateTime.now(ZoneId.of("GMT"));
     }
 
     /**
@@ -921,7 +924,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
 
     private void assertValidationConclusion(ValidatableResponse response, JSONHashcodeValidationRequest request) {
         response.statusCode(HttpStatus.OK.value())
-//                .body(VALIDATION_CONCLUSION_PREFIX + "validationTime", startsWith(currentDateTime))
+                .body(VALIDATION_CONCLUSION_PREFIX + "validationTime", DateTimeMatcher.isEqualOrAfter(testStartDate))
                 .body(VALIDATION_CONCLUSION_PREFIX + "validatedDocument.filename", equalTo(request.getFilename()))
                 .body(VALIDATION_CONCLUSION_PREFIX + "validationLevel", is(TestData.VALID_VALIDATION_LEVEL_ARCHIVAL_DATA));
 

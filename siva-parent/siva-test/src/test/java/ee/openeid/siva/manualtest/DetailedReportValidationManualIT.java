@@ -18,6 +18,7 @@ package ee.openeid.siva.manualtest;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
+import ee.openeid.siva.common.DateTimeMatcher;
 import ee.openeid.siva.integrationtest.SiVaRestTests;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.signature.configuration.SignatureServiceConfigurationProperties;
@@ -28,6 +29,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 import static com.jayway.restassured.config.EncoderConfig.encoderConfig;
 import static ee.openeid.siva.integrationtest.TestData.*;
@@ -80,13 +84,13 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
         String validationConclusion = validationReport + "validationConclusion";
         String filename = "ValidLiveSignature.asice";
         String request = detailedReportRequest(filename,VALID_SIGNATURE_POLICY_4);
-        String currentDateGMT = currentDateTime("GMT", "yyyy-MM-dd'T'HH:mm");
+        ZonedDateTime testStartDate = ZonedDateTime.now(ZoneId.of("GMT"));
         response =  validateRequestForDetailedReport(request,VALIDATION_ENDPOINT);
         assertThat(response.jsonPath().getString(validationConclusion + ".policy.policyDescription"), equalTo(POLICY_4_DESCRIPTION));
         assertThat(response.jsonPath().getString(validationConclusion + ".policy.policyName"), equalTo(VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2));
         assertThat(response.jsonPath().getString(validationConclusion + ".policy.policyUrl"), equalTo(POLICY_4_URL));
         assertThat(response.jsonPath().getString(validationConclusion + ".signatureForm"), equalTo(VALID_SIGNATURE_FORM_1));
-        assertThat(response.jsonPath().getString(validationConclusion + ".validationTime"), startsWith(currentDateGMT));
+        assertThat(response.jsonPath().getString(validationConclusion + ".validationTime"), DateTimeMatcher.isEqualOrAfter(testStartDate));
         assertThat(response.jsonPath().getString(validationConclusion + ".signaturesCount"), equalTo("1"));
         assertThat(response.jsonPath().getString(validationConclusion + ".validSignaturesCount"), equalTo("1"));
         assertThat(response.jsonPath().getString(validationConclusion + ".signatures"), notNullValue());
@@ -687,13 +691,13 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
         String validationConclusion = validationReport + "validationConclusion";
         String filename = "WrongDataFileInManifestAsics.asics";
         String request = detailedReportRequest(filename, VALID_SIGNATURE_POLICY_4);
-        String currentDateGMT = currentDateTime("GMT", "yyyy-MM-dd'T'HH:mm");
+        ZonedDateTime testStartDate = ZonedDateTime.now(ZoneId.of("GMT"));
         response = validateRequestForDetailedReport(request, VALIDATION_ENDPOINT);
         assertThat(response.jsonPath().getString(validationConclusion + ".policy.policyDescription"), equalTo(POLICY_4_DESCRIPTION));
         assertThat(response.jsonPath().getString(validationConclusion + ".policy.policyName"), equalTo(VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2));
         assertThat(response.jsonPath().getString(validationConclusion + ".policy.policyUrl"), equalTo(POLICY_4_URL));
         assertThat(response.jsonPath().getString(validationConclusion + ".signatureForm"), equalTo(VALID_SIGNATURE_FORM_2));
-        assertThat(response.jsonPath().getString(validationConclusion + ".validationTime"), startsWith(currentDateGMT));
+        assertThat(response.jsonPath().getString(validationConclusion + ".validationTime"), DateTimeMatcher.isEqualOrAfter(testStartDate));
         assertThat(response.jsonPath().getString(validationConclusion + ".signaturesCount"), equalTo("1"));
         assertThat(response.jsonPath().getString(validationConclusion + ".validSignaturesCount"), equalTo("1"));
     }

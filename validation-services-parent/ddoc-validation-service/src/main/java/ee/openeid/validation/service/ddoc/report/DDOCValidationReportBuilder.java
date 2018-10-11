@@ -16,6 +16,9 @@
 
 package ee.openeid.validation.service.ddoc.report;
 
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.*;
+import static org.cryptacular.util.CertUtil.subjectCN;
+
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.document.report.Error;
@@ -23,16 +26,12 @@ import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.siva.validation.util.CertUtil;
 import ee.sk.digidoc.*;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.getValidationTime;
-import static org.cryptacular.util.CertUtil.subjectCN;
 
 public class DDOCValidationReportBuilder {
 
@@ -117,13 +116,22 @@ public class DDOCValidationReportBuilder {
         ErrorsAndWarningsWrapper wrapper = getErrorsAndWarnings(signature);
         signatureValidationData.setErrors(wrapper.errors);
         signatureValidationData.setWarnings(wrapper.warnings);
-
+        signatureValidationData.setInfo(getInfo(signature));
         signatureValidationData.setSignatureScopes(getSignatureScopes());
         signatureValidationData.setClaimedSigningTime(getDateFormatterWithGMTZone().format(signature.getSignedProperties().getSigningTime()));
         signatureValidationData.setIndication(getIndication(signature));
 
         signatureValidationData.setCountryCode(CertUtil.getCountryCode(signature.getKeyInfo().getSignersCertificate()));
         return signatureValidationData;
+    }
+
+    private Info getInfo(Signature signature) {
+        Info info = new Info();
+        Date trustedTime = signature.getSignatureProducedAtTime();
+        if (trustedTime != null) {
+            info.setBestSignatureTime(ReportBuilderUtils.getDateFormatterWithGMTZone().format(trustedTime));
+        }
+        return info;
     }
 
     private String getCertificateCN(KeyInfo keyInfo) {

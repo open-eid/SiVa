@@ -567,7 +567,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
                 .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2012-09-17T14:28:01Z"))
                 .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("Bad digest for DataFile: D0 alternate digest matches!"))
-                .body("validationReport.validationConclusion.signatures[0].info", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2012-09-17T14:28:12Z"))
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
                 .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("ns6t3cp7.ddoc"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))

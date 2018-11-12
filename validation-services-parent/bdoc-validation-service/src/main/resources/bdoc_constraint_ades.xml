@@ -25,7 +25,6 @@
         <PolicyHashMatch Level="INFORM"/>
         <AcceptableFormats Level="FAIL">
             <Id>XAdES-BASELINE-LT</Id>
-            <Id>XAdES-BASELINE-LT-TM</Id>
             <Id>XAdES-BASELINE-LTA</Id>
         </AcceptableFormats>
         <BasicSignatureConstraints>

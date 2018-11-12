@@ -16,7 +16,13 @@
 
 package ee.openeid.validation.service.ddoc;
 
+import static org.junit.Assert.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.*;
+import static org.powermock.api.mockito.PowerMockito.*;
+
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.DataFilesDocument;
 import ee.openeid.siva.validation.document.ValidationDocument;
@@ -34,6 +40,7 @@ import ee.sk.digidoc.DigiDocException;
 import ee.sk.digidoc.SignedDoc;
 import ee.sk.digidoc.factory.DigiDocFactory;
 import ee.sk.utils.ConfigManager;
+
 import org.apache.commons.lang3.StringUtils;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
@@ -52,11 +59,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.*;
-import static org.powermock.api.mockito.PowerMockito.*;
 
 @RunWith(PowerMockRunner.class)
 @PowerMockIgnore("javax.security.*")
@@ -220,6 +222,7 @@ public class DDOCServiceTest {
         assertTrue(sig1.getSignatureScopes().size() == 1);
         SignatureScope scope = sig1.getSignatureScopes().get(0);
         assertEquals("Šužlikud sõid ühe õuna ära.txt", scope.getName());
+        assertEquals("2005-02-11T16:23:43Z", sig1.getInfo().getBestSignatureTime());
         assertEquals("Full document", scope.getContent());
         assertEquals("FullSignatureScope", scope.getScope());
         assertEquals("2005-02-11T16:23:21Z", sig1.getClaimedSigningTime());
@@ -245,6 +248,7 @@ public class DDOCServiceTest {
         assertEquals("Šužlikud sõid ühe õuna ära.txt", scope.getName());
         assertEquals("Full document", scope.getContent());
         assertEquals("FullSignatureScope", scope.getScope());
+        assertEquals("2009-02-13T09:22:58Z", sig2.getInfo().getBestSignatureTime());
         assertEquals("2009-02-13T09:22:49Z", sig2.getClaimedSigningTime());
     }
 

@@ -17,6 +17,7 @@
 package ee.openeid.siva.soaptest;
 
 import com.jayway.restassured.response.ValidatableResponse;
+import ee.openeid.siva.common.DateTimeMatcher;
 import ee.openeid.siva.integrationtest.TestData;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.proxy.document.ReportType;
@@ -28,12 +29,13 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
 
 import java.nio.charset.StandardCharsets;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -41,7 +43,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
-import static org.hamcrest.Matchers.startsWith;
 
 @Category(IntegrationTest.class)
 public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
@@ -50,12 +51,12 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
     private static final String SIGNATURE_FILENAME_SUFFIX = ".xml";
     private static final String VALIDATION_CONCLUSION_PREFIX = "Envelope.Body.HashcodeValidationResponse.ValidationReport.ValidationConclusion.";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
-    private String currentDateTime;
+    private ZonedDateTime testStartDate;
 
     @Before
     public void DirectoryBackToDefault() {
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
-        currentDateTime = currentDateTime("GMT", "yyyy-MM-dd'T'HH:mm");
+        testStartDate = ZonedDateTime.now(ZoneId.of("GMT"));
     }
 
     @Test
@@ -458,7 +459,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
 
     private void assertValidationConclusion(ValidatableResponse response, JSONHashcodeValidationRequest request) {
         response.statusCode(HttpStatus.OK.value())
-    //            .body(VALIDATION_CONCLUSION_PREFIX + "ValidationTime", startsWith(currentDateTime))
+                .body(VALIDATION_CONCLUSION_PREFIX + "ValidationTime", DateTimeMatcher.isEqualOrAfter(testStartDate))
                 .body(VALIDATION_CONCLUSION_PREFIX + "ValidatedDocument.Filename", equalTo(request.getFilename()))
                 .body(VALIDATION_CONCLUSION_PREFIX + "ValidationLevel", is(TestData.VALID_VALIDATION_LEVEL_ARCHIVAL_DATA));
 

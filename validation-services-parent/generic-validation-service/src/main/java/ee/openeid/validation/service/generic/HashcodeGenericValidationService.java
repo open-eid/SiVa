@@ -23,7 +23,6 @@ import eu.europa.esig.dss.DSSDocument;
 import eu.europa.esig.dss.DigestAlgorithm;
 import eu.europa.esig.dss.DigestDocument;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
-import eu.europa.esig.dss.validation.reports.Reports;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,11 +37,6 @@ public class HashcodeGenericValidationService extends GenericValidationService {
         List<DSSDocument> detachedContents = createDetachedContents(validationDocument.getDatafiles());
         validator.setDetachedContents(detachedContents);
         return validator;
-    }
-
-    @Override
-    protected void validateBestSignatureTime(final Reports reports) {
-        //Do nothing
     }
 
     @Override

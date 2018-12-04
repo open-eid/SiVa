@@ -17,13 +17,8 @@
 package ee.openeid.siva.integrationtest;
 
 import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.response.ValidatableResponse;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
-import ee.openeid.siva.webapp.request.Datafile;
-import ee.openeid.siva.webapp.request.JSONHashcodeValidationRequest;
-import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -32,16 +27,6 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-
-import static ee.openeid.siva.integrationtest.TestData.MOCK_XADES_DATAFILE_FILENAME;
-import static ee.openeid.siva.integrationtest.TestData.MOCK_XADES_DATAFILE_FILENAME2;
-import static ee.openeid.siva.integrationtest.TestData.MOCK_XADES_DATAFILE_HASH;
-import static ee.openeid.siva.integrationtest.TestData.MOCK_XADES_DATAFILE_HASH2;
-import static ee.openeid.siva.integrationtest.TestData.MOCK_XADES_DATAFILE_HASH_ALGO;
-import static ee.openeid.siva.integrationtest.TestData.MOCK_XADES_SIGNATURE_FILE;
 
 @Category(IntegrationTest.class)
 public class XadesHashcodeValidationPassIT extends SiVaRestTests {
@@ -79,6 +64,7 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2014-10-31T14:08:19Z"))
                 .body("validationReport.validationConclusion.validatedDocument.fileHashInHex", Matchers.is("F9FD100BD985DF062E954A42FD292CA095F614329CFC179D01F5D318C47DC50A"));
     }
 
@@ -99,10 +85,11 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
     public void validXadesWithHashcodeFromBdoc() {
         postHashcodeValidation(validationRequestHashcode("Valid_XAdES_LT_TM.xml","Valid_XAdES_LT_TM.xml", null, null, "lama.jpg", "SHA256", "jmQGVaxq5Qb+hZNIQC1FPcRUd+YInHtlTg/ImAh5wQY="))
                 .then()
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2013-11-25T13:16:59Z"))
                 .body("validationReport.validationConclusion.validatedDocument.fileHashInHex", Matchers.is("0A8CE9855F20AF4E519AD3A2E89F24472C60C09726066CCE00292DEFD091F64D"));
     }
 

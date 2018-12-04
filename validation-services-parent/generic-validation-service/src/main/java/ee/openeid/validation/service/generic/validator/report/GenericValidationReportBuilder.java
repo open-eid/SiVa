@@ -17,8 +17,8 @@
 package ee.openeid.validation.service.generic.validator.report;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.document.report.Error;
+import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import eu.europa.esig.dss.jaxb.diagnostic.XmlSignatureScope;
@@ -26,6 +26,8 @@ import eu.europa.esig.dss.validation.executor.ValidationLevel;
 import eu.europa.esig.dss.validation.policy.rules.Indication;
 import eu.europa.esig.dss.validation.policy.rules.SubIndication;
 import eu.europa.esig.dss.validation.reports.wrapper.CertificateWrapper;
+import eu.europa.esig.dss.validation.reports.wrapper.RevocationWrapper;
+import eu.europa.esig.dss.validation.reports.wrapper.SignatureWrapper;
 import eu.europa.esig.dss.validation.reports.wrapper.TimestampWrapper;
 import org.apache.commons.lang3.StringUtils;
 
@@ -39,8 +41,10 @@ import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUt
 
 public class GenericValidationReportBuilder {
 
-    private static final String SIGNATURE_FORMAT_ALLOWED = "LT";
-    private static final String SIGNATURE_FORMAT_NOT_ALLOWED = "B";
+    private static final String TS_SIGNATURE_FORMAT = "LT";
+    private static final String BASELINE_SIGNATURE_FORMAT = "B";
+    private static final String TM_SIGNATURE_FORMAT = "LT_TM";
+    private static final String TM_POLICY_OID = "1.3.6.1.4.1.10015.1000.3.2.1";
 
     private eu.europa.esig.dss.validation.reports.Reports dssReports;
     private ValidationDocument validationDocument;
@@ -100,14 +104,14 @@ public class GenericValidationReportBuilder {
     private SignatureValidationData buildSignatureValidationData(String signatureId) {
         SignatureValidationData signatureValidationData = new SignatureValidationData();
         signatureValidationData.setId(signatureId);
-        signatureValidationData.setSignatureFormat(changeSignatureFormat(dssReports.getSimpleReport().getSignatureFormat(signatureId), signatureId));
+        signatureValidationData.setSignatureFormat(changeAndValidateSignatureFormat(dssReports.getSimpleReport().getSignatureFormat(signatureId), signatureId));
         signatureValidationData.setSignatureLevel(dssReports.getSimpleReport().getSignatureQualification(signatureId).name());
         signatureValidationData.setSignedBy(parseSignedBy(signatureId));
         signatureValidationData.setClaimedSigningTime(parseClaimedSigningTime(signatureId));
         signatureValidationData.setSignatureScopes(parseSignatureScopes(signatureId));
         signatureValidationData.setErrors(parseSignatureErrors(signatureId));
         signatureValidationData.setWarnings(parseSignatureWarnings(signatureId));
-        signatureValidationData.setInfo(parseSignatureInfo(signatureId));
+        signatureValidationData.setInfo(parseSignatureInfo(signatureValidationData.getSignatureFormat(), signatureId));
         signatureValidationData.setCountryCode(getCountryCode());
         signatureValidationData.setIndication(parseIndication(signatureId, signatureValidationData.getErrors()));
         signatureValidationData.setSubIndication(parseSubIndication(signatureId, signatureValidationData.getErrors()));
@@ -115,23 +119,43 @@ public class GenericValidationReportBuilder {
         return signatureValidationData;
     }
 
-    private String changeSignatureFormat(String signatureFormat, String signatureId) {
-        String modifiedSignatureFormat = signatureFormat;
-        if (dssReports.getSimpleReport().getErrors(signatureId).contains(FORMAT_NOT_FOUND))
-            modifiedSignatureFormat = modifiedSignatureFormat.replace(SIGNATURE_FORMAT_ALLOWED, SIGNATURE_FORMAT_NOT_ALLOWED);
-        modifiedSignatureFormat = modifiedSignatureFormat.replace("-", "_");
-        return modifiedSignatureFormat;
+    private String changeAndValidateSignatureFormat(String signatureFormat, String signatureId) {
+        if (TM_POLICY_OID.equals(dssReports.getDiagnosticData().getSignatureById(signatureId).getPolicyId())) {
+           signatureFormat = signatureFormat.replace(TS_SIGNATURE_FORMAT, TM_SIGNATURE_FORMAT);
+        }
+        if (isInvalidFormat(signatureFormat, signatureId)) {
+            signatureFormat = signatureFormat.replace(TS_SIGNATURE_FORMAT, BASELINE_SIGNATURE_FORMAT);
+            dssReports.getSimpleReport().getErrors(signatureId).add(FORMAT_NOT_FOUND);
+        }
+        signatureFormat = signatureFormat.replace("-", "_");
+        return signatureFormat;
     }
 
+    private boolean isInvalidFormat(String signatureFormat, String signatureId) {
+      return Indication.TOTAL_PASSED == dssReports.getSimpleReport().getIndication(signatureId)
+              && dssReports.getDiagnosticData().getSignatureById(signatureId).getTimestampList().isEmpty()
+              && !signatureFormat.contains(TM_SIGNATURE_FORMAT);
+    }
 
-    private Info parseSignatureInfo(String signatureId) {
-        List<TimestampWrapper> timeStamps = dssReports.getDiagnosticData().getSignatureById(signatureId).getTimestampList();
-        Date bestSignatureTime = timeStamps.isEmpty() ? null : timeStamps.get(0).getProductionTime();
+    private Info parseSignatureInfo(String signatureFormat, String signatureId) {
+        Date bestSignatureTime = getBestSignatureTime(signatureFormat, signatureId);
         Info info = new Info();
         info.setBestSignatureTime(bestSignatureTime == null ? "" : ReportBuilderUtils.getDateFormatterWithGMTZone().format(bestSignatureTime));
         return info;
     }
 
+    private Date getBestSignatureTime(String signatureFormat, String signatureId) {
+        SignatureWrapper signature = dssReports.getDiagnosticData().getSignatureById(signatureId);
+        if (signatureFormat.contains(TM_SIGNATURE_FORMAT)) {
+            for (RevocationWrapper revocationData: dssReports.getDiagnosticData().getAllRevocationData()) {
+                return revocationData.getProductionDate();
+            }
+        } else {
+            List<TimestampWrapper> timeStamps = signature.getTimestampList();
+            return timeStamps.isEmpty() ? null : timeStamps.get(0).getProductionTime();
+        }
+        return null;
+    }
     private List<Error> parseSignatureErrors(String signatureId) {
         return dssReports.getSimpleReport().getErrors(signatureId)
                 .stream()

@@ -18,6 +18,7 @@ package ee.openeid.validation.service.generic.report;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Reports;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.validation.service.generic.validator.report.GenericValidationReportBuilder;
@@ -37,14 +38,24 @@ public class GenericValidationReportBuilderTest {
 
     @Test
     public void totalPassedIndicationReportBuild() {
-        Reports reports = new GenericValidationReportBuilder(getDssReports(), ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
+        Reports reports = new GenericValidationReportBuilder(getDssReports(""), ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
+        ValidationConclusion validationConclusion = reports.getSimpleReport().getValidationConclusion();
+        Assert.assertEquals(new Integer(1), validationConclusion.getValidSignaturesCount());
+        Assert.assertEquals("TOTAL-PASSED", validationConclusion.getSignatures().get(0).getIndication());
+        Assert.assertEquals("XAdES_BASELINE_LT", validationConclusion.getSignatures().get(0).getSignatureFormat());
+    }
+
+    @Test
+    public void totalPassedIndicationTimeMarkReportBuild(){
+        Reports reports = new GenericValidationReportBuilder(getDssReports("1.3.6.1.4.1.10015.1000.3.2.1"), ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
         Assert.assertEquals(new Integer(1), reports.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
         Assert.assertEquals("TOTAL-PASSED", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getIndication());
+        Assert.assertEquals("XAdES_BASELINE_LT_TM", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getSignatureFormat());
     }
 
     @Test
     public void totalFailedIndicationReportBuild() {
-        eu.europa.esig.dss.validation.reports.Reports dssReports = getDssReports();
+        eu.europa.esig.dss.validation.reports.Reports dssReports = getDssReports("");
         dssReports.getSimpleReportJaxb().getSignature().get(0).setIndication(Indication.TOTAL_FAILED);
         dssReports.getSimpleReportJaxb().getSignature().get(0).getErrors().add("Something is wrong");
         Reports reports = new GenericValidationReportBuilder(dssReports, ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
@@ -55,7 +66,7 @@ public class GenericValidationReportBuilderTest {
 
     @Test
     public void indeterminateIndicationReportBuild() {
-        eu.europa.esig.dss.validation.reports.Reports dssReports = getDssReports();
+        eu.europa.esig.dss.validation.reports.Reports dssReports = getDssReports("");
         dssReports.getSimpleReportJaxb().getSignature().get(0).setIndication(Indication.INDETERMINATE);
         Reports reports = new GenericValidationReportBuilder(dssReports, ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
         Assert.assertEquals(new Integer(0), reports.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
@@ -77,11 +88,11 @@ public class GenericValidationReportBuilderTest {
         return new ConstraintDefinedPolicy(validationPolicy);
     }
 
-    private eu.europa.esig.dss.validation.reports.Reports getDssReports() {
-        return new eu.europa.esig.dss.validation.reports.Reports(getDiagnosticDataJaxb(), null, getSimpleReport());
+    private eu.europa.esig.dss.validation.reports.Reports getDssReports(String policyId) {
+        return new eu.europa.esig.dss.validation.reports.Reports(getDiagnosticDataJaxb(policyId), null, getSimpleReport());
     }
 
-    private DiagnosticData getDiagnosticDataJaxb() {
+    private DiagnosticData getDiagnosticDataJaxb(String policyId) {
         DiagnosticData diagnosticData = new DiagnosticData();
         XmlContainerInfo xmlContainerInfo = new XmlContainerInfo();
         xmlContainerInfo.setContainerType("ASIC-E");
@@ -90,6 +101,10 @@ public class GenericValidationReportBuilderTest {
         XmlSignatureScope xmlSignatureScope = new XmlSignatureScope();
         xmlSignature.setSignatureScopes(Collections.singletonList(xmlSignatureScope));
         xmlSignature.setId("SIG-id");
+        xmlSignature.setTimestamps(Collections.singletonList(new XmlTimestamp()));
+        XmlPolicy xmlPolicy = new XmlPolicy();
+        xmlPolicy.setId(policyId);
+        xmlSignature.setPolicy(xmlPolicy);
         diagnosticData.setSignatures(Collections.singletonList(xmlSignature));
         return diagnosticData;
     }

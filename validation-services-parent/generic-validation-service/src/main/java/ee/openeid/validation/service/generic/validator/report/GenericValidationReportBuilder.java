@@ -41,9 +41,10 @@ import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUt
 
 public class GenericValidationReportBuilder {
 
-    private static final String TS_SIGNATURE_FORMAT = "LT";
-    private static final String BASELINE_SIGNATURE_FORMAT = "B";
-    private static final String TM_SIGNATURE_FORMAT = "LT_TM";
+    private static final String LT_SIGNATURE_FORMAT_SUFFIX = "LT";
+    private static final String BASELINE_SIGNATURE_FORMAT_SUFFIX = "B";
+    private static final String LT_TM_XAdES_SIGNATURE_FORMAT = "XAdES_BASELINE_LT_TM";
+    private static final String LT_XAdES_SIGNATURE_FORMAT = "XAdES-BASELINE-LT";
     private static final String TM_POLICY_OID = "1.3.6.1.4.1.10015.1000.3.2.1";
 
     private eu.europa.esig.dss.validation.reports.Reports dssReports;
@@ -121,10 +122,10 @@ public class GenericValidationReportBuilder {
 
     private String changeAndValidateSignatureFormat(String signatureFormat, String signatureId) {
         if (TM_POLICY_OID.equals(dssReports.getDiagnosticData().getSignatureById(signatureId).getPolicyId())) {
-           signatureFormat = signatureFormat.replace(TS_SIGNATURE_FORMAT, TM_SIGNATURE_FORMAT);
+           signatureFormat = signatureFormat.replace(LT_XAdES_SIGNATURE_FORMAT, LT_TM_XAdES_SIGNATURE_FORMAT);
         }
         if (isInvalidFormat(signatureFormat, signatureId)) {
-            signatureFormat = signatureFormat.replace(TS_SIGNATURE_FORMAT, BASELINE_SIGNATURE_FORMAT);
+            signatureFormat = signatureFormat.replace(LT_SIGNATURE_FORMAT_SUFFIX, BASELINE_SIGNATURE_FORMAT_SUFFIX);
             dssReports.getSimpleReport().getErrors(signatureId).add(FORMAT_NOT_FOUND);
         }
         signatureFormat = signatureFormat.replace("-", "_");
@@ -134,7 +135,7 @@ public class GenericValidationReportBuilder {
     private boolean isInvalidFormat(String signatureFormat, String signatureId) {
       return Indication.TOTAL_PASSED == dssReports.getSimpleReport().getIndication(signatureId)
               && dssReports.getDiagnosticData().getSignatureById(signatureId).getTimestampList().isEmpty()
-              && !signatureFormat.contains(TM_SIGNATURE_FORMAT);
+              && !signatureFormat.equals(LT_TM_XAdES_SIGNATURE_FORMAT);
     }
 
     private Info parseSignatureInfo(String signatureFormat, String signatureId) {
@@ -146,7 +147,7 @@ public class GenericValidationReportBuilder {
 
     private Date getBestSignatureTime(String signatureFormat, String signatureId) {
         SignatureWrapper signature = dssReports.getDiagnosticData().getSignatureById(signatureId);
-        if (signatureFormat.contains(TM_SIGNATURE_FORMAT)) {
+        if (signatureFormat.equals(LT_TM_XAdES_SIGNATURE_FORMAT)) {
             for (RevocationWrapper revocationData: dssReports.getDiagnosticData().getAllRevocationData()) {
                 return revocationData.getProductionDate();
             }

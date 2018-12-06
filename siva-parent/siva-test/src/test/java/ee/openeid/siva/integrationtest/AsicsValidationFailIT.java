@@ -165,7 +165,8 @@ public class AsicsValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("AsicsTSTsignatureModified.asics"))
                 .body("validationReport.validationConclusion.validatedDocument.fileHashInHex", Matchers.is("D37CA39742DABC04B6A57797DF94DEE8AB2F06E0833ABD1DC6EAF8CD07E22C7C"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.timeStampTokens[0].error[0].content", Matchers.is("Signature not intact"));
+                .body("validationReport.validationConclusion.timeStampTokens[0].error[0].content", Matchers.is("Signature not intact"))
+                .body("validationReport.validationConclusion.timeStampTokens[0].signedTime", Matchers.is("2017-08-10T12:40:40Z"));
     }
 
     /**

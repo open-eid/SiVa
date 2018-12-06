@@ -112,6 +112,7 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2018-10-08T06:21:08Z"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
                 .body("validationReport.validationConclusion.validatedDocument.fileHashInHex", Matchers.is("A0D7AA6CFDA7F1A5E07223107B75F81E786F1A5869EED8F8BD1001845BA91FBA"));

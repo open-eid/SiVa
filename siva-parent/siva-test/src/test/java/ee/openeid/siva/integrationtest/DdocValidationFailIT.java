@@ -134,6 +134,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
                 .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.containsString("Invalid signature value!"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2012-09-19T06:28:55Z"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 

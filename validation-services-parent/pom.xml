@@ -36,12 +36,7 @@
     </modules>
 
     <properties>
-        <project.encoding>UTF-8</project.encoding>
-        <language.level>1.8</language.level>
-        <dss.version>5.2.d4j.3</dss.version>
-        <spring.boot.version>1.5.8.RELEASE</spring.boot.version>
         <digidoc4j.version>2.1.0</digidoc4j.version>
-        <powermock.version>1.7.3</powermock.version>
     </properties>
 
     <dependencyManagement>

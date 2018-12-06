@@ -39,14 +39,9 @@
     </modules>
 
     <properties>
-        <project.encoding>UTF-8</project.encoding>
-        <language.level>1.8</language.level>
-        <spring.boot.version>1.5.18.RELEASE</spring.boot.version>
-        <dss.version>5.2.d4j.3</dss.version>
         <cxf.version>3.1.13</cxf.version>
         <junit.version>4.12</junit.version>
         <mockito.version>2.10.0</mockito.version>
-        <powermock.version>1.7.3</powermock.version>
     </properties>
 
     <dependencyManagement>

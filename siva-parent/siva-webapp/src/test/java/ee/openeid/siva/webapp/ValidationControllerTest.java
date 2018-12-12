@@ -113,51 +113,6 @@ public class ValidationControllerTest {
     }
 
     @Test
-    public void requestWithForwardSlashInFilenameReturnsErroneousResponse() throws Exception {
-        testIllegalFilename(filenameWithIllegalCharacter("/"));
-    }
-
-    @Test
-    public void requestWithBackslashInFilenameReturnsErroneousResponse() throws Exception {
-        testIllegalFilename(filenameWithIllegalCharacter("\\"));
-    }
-
-    @Test
-    public void requestWithNulTerminatorInFilenameReturnsErroneousResponse() throws Exception {
-        testIllegalFilename(filenameWithIllegalCharacter("\\0"));
-    }
-
-    @Test
-    public void requestWithQuotesInFilenameReturnsErroneousResponse() throws Exception {
-        testIllegalFilename(filenameWithIllegalCharacter("\""));
-    }
-
-    @Test
-    public void requestWithStarInFilenameReturnsErroneousResponse() throws Exception {
-        testIllegalFilename(filenameWithIllegalCharacter("*"));
-    }
-
-    @Test
-    public void requestWithColonInFilenameReturnsErroneousResponse() throws Exception {
-        testIllegalFilename(filenameWithIllegalCharacter(":"));
-    }
-
-    @Test
-    public void requestWithQuestionmarkInFilenameReturnsErroneousResponse() throws Exception {
-        testIllegalFilename(filenameWithIllegalCharacter("?"));
-    }
-
-    @Test
-    public void requestWithPercentSymbolInFilenameReturnsErroneousResponse() throws Exception {
-        testIllegalFilename(filenameWithIllegalCharacter("%"));
-    }
-
-    @Test
-    public void requestWithAndSymbolInFilenameReturnsErroneousResponse() throws Exception {
-        testIllegalFilename(filenameWithIllegalCharacter("&"));
-    }
-
-    @Test
     public void requestWithMultipleErrorsReturnsAllErrorsInResponse() throws Exception {
         mockMvc.perform(post("/validate")
                 .contentType(MediaType.APPLICATION_JSON)

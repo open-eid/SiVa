@@ -39,10 +39,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.*;
 
 @Category(IntegrationTest.class)
 public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
@@ -128,7 +125,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
 
         ValidatableResponse response = postHashcodeValidation(request).then();
         assertClientFault(response,
-                "Unmarshalling Error: cvc-complex-type.2.4.a: Invalid content was found starting with element 'ReportType'. One of '{Filename}' is expected. ");
+                "Invalid filename format");
     }
 
     @Test
@@ -138,7 +135,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
 
         ValidatableResponse response = postHashcodeValidation(request).then();
         assertClientFault(response,
-                "Unmarshalling Error: cvc-pattern-valid: Value '' is not facet-valid with respect to pattern '[^\\s*&%\"\\\\:?]+' for type 'Filename'. ");
+                "Invalid filename format");
     }
 
     @Test
@@ -148,7 +145,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
 
         ValidatableResponse response = postHashcodeValidation(request).then();
         assertClientFault(response,
-                "Unmarshalling Error: cvc-pattern-valid: Value ' ' is not facet-valid with respect to pattern '[^\\s*&%\"\\\\:?]+' for type 'Filename'. ");
+                "Invalid filename format");
     }
 
     @Test
@@ -159,16 +156,6 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
         ValidatableResponse response = postHashcodeValidation(request).then();
         assertClientFault(response,
                 "Unmarshalling Error: cvc-maxLength-valid: Value 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.xml' with length = '261' is not facet-valid with respect to maxLength '260' for type 'Filename'. ");
-    }
-
-    @Test
-    public void filenameInvalidFormat() {
-        JSONHashcodeValidationRequest request = validRequestBody();
-        request.setFilename("*:?!.xml");
-
-        ValidatableResponse response = postHashcodeValidation(request).then();
-        assertClientFault(response,
-                "Unmarshalling Error: cvc-pattern-valid: Value '*:?!.xml' is not facet-valid with respect to pattern '[^\\s*&%\"\\\\:?]+' for type 'Filename'. ");
     }
 
     @Test
@@ -286,7 +273,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
 
         ValidatableResponse response = postHashcodeValidation(request).then();
         assertClientFault(response,
-                "Unmarshalling Error: cvc-pattern-valid: Value '' is not facet-valid with respect to pattern '[^\\s*&%\"\\\\:?]+' for type 'Filename'. ");
+                "Invalid datafile filename format");
     }
 
     @Test
@@ -296,7 +283,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
 
         ValidatableResponse response = postHashcodeValidation(request).then();
         assertClientFault(response,
-                "Unmarshalling Error: cvc-pattern-valid: Value ' ' is not facet-valid with respect to pattern '[^\\s*&%\"\\\\:?]+' for type 'Filename'. ");
+                "Invalid datafile filename format");
     }
 
     @Test
@@ -307,16 +294,6 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
         ValidatableResponse response = postHashcodeValidation(request).then();
         assertClientFault(response,
                 "Unmarshalling Error: cvc-maxLength-valid: Value 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' with length = '261' is not facet-valid with respect to maxLength '260' for type 'Filename'. ");
-    }
-
-    @Test
-    public void dataFileFilenameInvalidFormat() {
-        JSONHashcodeValidationRequest request = validRequestBody();
-        request.getDatafiles().get(0).setFilename("*:?!");
-
-        ValidatableResponse response = postHashcodeValidation(request).then();
-        assertClientFault(response,
-                "Unmarshalling Error: cvc-pattern-valid: Value '*:?!' is not facet-valid with respect to pattern '[^\\s*&%\"\\\\:?]+' for type 'Filename'. ");
     }
 
     @Test
@@ -430,9 +407,9 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
                         "</soapenv:Envelope>";
         postHashcodeValidation(emptyRequestBody)
                 .then()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .body("Envelope.Body.Fault.faultcode", is(SERVER_FAULT))
-                .body("Envelope.Body.Fault.faultstring", is("No binding operation info while invoking unknown method with params unknown."));
+                .statusCode(HttpStatus.OK.value())
+                .body("Envelope.Body.Fault.faultcode", is(CLIENT_FAULT))
+                .body("Envelope.Body.Fault.faultstring", is("Invalid filename format"));
     }
 
     private void assertDetailedReportWithSignature(ValidatableResponse response, JSONHashcodeValidationRequest request) {

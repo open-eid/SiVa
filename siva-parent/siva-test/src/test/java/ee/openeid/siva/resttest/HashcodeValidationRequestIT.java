@@ -46,12 +46,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
-import static org.hamcrest.Matchers.startsWith;
+import static org.hamcrest.Matchers.*;
 
 @Category(IntegrationTest.class)
 public class HashcodeValidationRequestIT extends SiVaRestTests {
@@ -289,7 +284,6 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         assertErrorResponse(response,
                 new RequestError(FILENAME, INVALID_FILENAME_SIZE),
                 new RequestError(FILENAME, INVALID_FILENAME_EXTENSION),
-                new RequestError(FILENAME, INVALID_FILENAME),
                 new RequestError(FILENAME, MAY_NOT_BE_EMPTY)
         );
     }
@@ -362,8 +356,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertErrorResponse(response,
-                new RequestError(FILENAME, INVALID_FILENAME_EXTENSION),
-                new RequestError(FILENAME, INVALID_FILENAME)
+                new RequestError(FILENAME, INVALID_FILENAME_EXTENSION)
         );
     }
 
@@ -671,7 +664,6 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertErrorResponse(response,
-                new RequestError(DATAFILES_FILENAME, INVALID_FILENAME),
                 new RequestError(DATAFILES_FILENAME, INVALID_FILENAME_SIZE),
                 new RequestError(DATAFILES_FILENAME, MAY_NOT_BE_EMPTY)
         );
@@ -701,29 +693,6 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         );
     }
 
-    /**
-     * TestCaseID: Hascode-Validation-Request-27
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
-     *
-     * Title: Data file filename invalid format
-     *
-     * Expected Result: Error is returned
-     *
-     * File: hashAsiceXades.xml
-     **/
-    @Test
-    public void dataFileFilenameInvalidFormat() {
-        JSONHashcodeValidationRequest request = validRequestBody();
-        request.getDatafiles().get(0).setFilename("*:?!");
-
-        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
-        assertErrorResponse(response,
-                new RequestError(DATAFILES_FILENAME, INVALID_FILENAME)
-        );
-    }
 
     /**
      * TestCaseID: Hascode-Validation-Request-28

@@ -16,16 +16,9 @@
 
 package ee.openeid.siva.resttest;
 
-import static com.jayway.restassured.path.json.JsonPath.from;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
-import static org.junit.Assert.assertTrue;
-
 import com.jayway.restassured.RestAssured;
-
 import ee.openeid.siva.integrationtest.SiVaRestTests;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;
@@ -38,6 +31,11 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.Map;
+
+import static com.jayway.restassured.path.json.JsonPath.from;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.junit.Assert.assertTrue;
 
 @Category(IntegrationTest.class)
 public class ValidationRequestIT extends SiVaRestTests {
@@ -157,7 +155,6 @@ public class ValidationRequestIT extends SiVaRestTests {
 
         assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(json, FILENAME, MAY_NOT_BE_EMPTY) == 1);
         assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(json, DOCUMENT, MAY_NOT_BE_EMPTY) == 1);
-        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(json, FILENAME, INVALID_FILENAME) == 1);
         assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(json, DOCUMENT, INVALID_BASE_64) == 1);
     }
 
@@ -262,7 +259,6 @@ public class ValidationRequestIT extends SiVaRestTests {
         String json = post(jsonObject.toString()).thenReturn().body().asString();
 
         assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(json, FILENAME, MAY_NOT_BE_EMPTY) == 1);
-        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(json, FILENAME, INVALID_FILENAME) == 1);
     }
 
     /**
@@ -372,28 +368,6 @@ public class ValidationRequestIT extends SiVaRestTests {
         post(validationRequestWithValidKeys(encodedString, "Valid IDCard Mob ID_signatures .bDoC", null))
                 .then()
                 .body("validationReport.validationConclusion.validSignaturesCount", equalTo(2));
-    }
-
-    /**
-     * TestCaseID: ValidationRequest-Parameters-14
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
-     *
-     * Title: Request has invalid character in filename
-     *
-     * Expected Result: Correct error code is returned
-     *
-     * File: Valid_IDCard_MobID_signatures.bdoc
-     */
-    @Test
-    public void validationRequestInvalidFilename() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestWithValidKeys(encodedString, "*.exe", "POLv3"))
-                .then()
-                .body("requestErrors[0].key", Matchers.is(FILENAME))
-                .body("requestErrors[0].message", Matchers.containsString(INVALID_FILENAME));
     }
 
     /**
@@ -741,11 +715,9 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .statusCode(HttpStatus.BAD_REQUEST.value())
 
                 .body("requestErrors[0].key", Matchers.is(FILENAME))
-                .body("requestErrors[0].message", Matchers.isOneOf(INVALID_FILENAME, INVALID_FILENAME_SIZE, MAY_NOT_BE_EMPTY))
+                .body("requestErrors[0].message", Matchers.isOneOf(INVALID_FILENAME_SIZE, MAY_NOT_BE_EMPTY))
                 .body("requestErrors[1].key", Matchers.is(FILENAME))
-                .body("requestErrors[1].message", Matchers.isOneOf(INVALID_FILENAME, INVALID_FILENAME_SIZE, MAY_NOT_BE_EMPTY))
-                .body("requestErrors[2].key", Matchers.is(FILENAME))
-                .body("requestErrors[2].message", Matchers.isOneOf(INVALID_FILENAME, INVALID_FILENAME_SIZE, MAY_NOT_BE_EMPTY));
+                .body("requestErrors[1].message", Matchers.isOneOf(INVALID_FILENAME_SIZE, MAY_NOT_BE_EMPTY));
 
 
     }

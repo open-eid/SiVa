@@ -88,13 +88,6 @@ public class SoapRequestValidationInterceptorTest {
     }
 
     @Test
-    public void whenFilenameIsInvalidThenFaultIsThrownWithInvalidFilenameMessage() throws SOAPException {
-        mockSoapMessage("*:?!", "AABBBAA", "BDOC", "AA");
-        Fault soapFault = handleMessageInInterceptor(message);
-        assertFaultWithExpectedMessage(soapFault, INVALID_FILENAME);
-    }
-
-    @Test
     public void whenDocumentIsInvalidThenFaultIsThrownWithInvalidDocumentMessage() throws SOAPException {
         mockSoapMessage("filename", "ÖÄÜ", "BDOC", "AA");
         Fault soapFault = handleMessageInInterceptor(message);

@@ -21,7 +21,6 @@ import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.binding.soap.interceptor.SoapInterceptor;
 import org.apache.cxf.interceptor.Fault;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -30,22 +29,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPEnvelope;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPMessage;
-import javax.xml.soap.SOAPPart;
+import javax.xml.soap.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SoapRequestHashcodeValidationInterceptorTest {
@@ -54,8 +42,10 @@ public class SoapRequestHashcodeValidationInterceptorTest {
     private static final String EXPECTED_FAULT_CODE = "Client";
     private static final String INVALID_REQUEST_MESSAGE = "Invalid request";
     private static final String SIGNATURE_FILE_INVALID_BASE64_ERROR_MESSAGE = "Signature file is not valid base64 encoded string";
-    private static final String FILENAME_INVALID_FORMAT_ERROR_MESSAGE = "Invalid filename format";
+    private static final String SIGNATURE_FILE_INVALID_FORMAT_ERROR_MESSAGE = "Invalid filename format";
+    private static final String FILENAME_INVALID_FORMAT_ERROR_MESSAGE = "Invalid datafile filename format";
     private static final String FILENAME_INVALID_EXTENSION_ERROR_MESSAGE = "Invalid filename extension. Only xml files accepted.";
+    private static final String INVALID_HASH_ALGORITHM = "Invalid hash algorithm";
 
     @Mock
     private SoapMessage message;
@@ -90,6 +80,9 @@ public class SoapRequestHashcodeValidationInterceptorTest {
     @Before
     public void setUp() throws SOAPException {
         doNothing().when(mockSaajIn).handleMessage(any());
+        mockDataFileChildNode(dataFilesFilenameNode, "test.txt");
+        mockDataFileChildNode(dataFilesHashAlgoNode, "SHA256");
+        mockDataFileChildNode(dataFilesHashNode, "dGVzdA==");
         mockValidSoapMessage();
     }
 
@@ -145,14 +138,14 @@ public class SoapRequestHashcodeValidationInterceptorTest {
     public void whenSignatureFilenameNull_thenNotValidated() {
         mockSignatureFilenameNode(null);
         Fault soapFault = handleMessageInInterceptor(message);
-        assertNull(soapFault);
+        assertFaultWithExpectedMessage(soapFault, SIGNATURE_FILE_INVALID_FORMAT_ERROR_MESSAGE);
     }
 
     @Test
     public void whenSignatureFilenameEmpty_thenNotValidated() {
         mockSignatureFilenameNode("");
         Fault soapFault = handleMessageInInterceptor(message);
-        assertNull(soapFault);
+        assertFaultWithExpectedMessage(soapFault, SIGNATURE_FILE_INVALID_FORMAT_ERROR_MESSAGE);
     }
 
     @Test
@@ -174,6 +167,20 @@ public class SoapRequestHashcodeValidationInterceptorTest {
     }
 
     @Test
+    public void dataFileHashAlgoIsEmpty(){
+        mockDataFileChildNode(dataFilesHashAlgoNode, "");
+        Fault soapFault = handleMessageInInterceptor(message);
+        assertFaultWithExpectedMessage(soapFault, INVALID_HASH_ALGORITHM);
+    }
+
+    @Test
+    public void dataFileHashAlgoIsNull(){
+        mockDataFileChildNode(dataFilesHashAlgoNode, null);
+        Fault soapFault = handleMessageInInterceptor(message);
+        assertFaultWithExpectedMessage(soapFault, INVALID_HASH_ALGORITHM);
+    }
+
+    @Test
     public void dataFileFilenameFormatIsNotValidated() {
         mockDataFileChildNode(dataFilesFilenameNode, "FILENAME_WITH_INVALID_ELEMENTS_&*:%.xml");
         Fault soapFault = handleMessageInInterceptor(message);
@@ -184,14 +191,14 @@ public class SoapRequestHashcodeValidationInterceptorTest {
     public void whenDataFileFilenameNull_thenNotValidated() {
         mockDataFileChildNode(dataFilesFilenameNode, null);
         Fault soapFault = handleMessageInInterceptor(message);
-        assertNull(soapFault);
+        assertFaultWithExpectedMessage(soapFault, FILENAME_INVALID_FORMAT_ERROR_MESSAGE);
     }
 
     @Test
     public void whenDataFileFilenameEmpty_thenNotValidated() {
         mockDataFileChildNode(dataFilesFilenameNode, "");
         Fault soapFault = handleMessageInInterceptor(message);
-        assertNull(soapFault);
+        assertFaultWithExpectedMessage(soapFault, FILENAME_INVALID_FORMAT_ERROR_MESSAGE);
     }
 
     @Test

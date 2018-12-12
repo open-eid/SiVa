@@ -64,7 +64,6 @@
                 <xs:restriction base="xs:string">
                     <xs:minLength value="1"/>
                     <xs:maxLength value="260"/>
-                    <xs:pattern value="[^\s*&amp;%&quot;\\:?]+"/>
                 </xs:restriction>
             </xs:simpleType>
 

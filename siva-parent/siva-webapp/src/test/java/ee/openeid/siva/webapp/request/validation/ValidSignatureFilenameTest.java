@@ -49,19 +49,19 @@ public class ValidSignatureFilenameTest {
 
     @Test
     public void invalidFilename() {
-        invalidSignatureFilename("", INVALID_FILENAME, INVALID_SIZE, INVALID_FILENAME_EXTENSION, MAY_NOT_BE_EMTPY);
+        invalidSignatureFilename("", INVALID_SIZE, INVALID_FILENAME_EXTENSION, MAY_NOT_BE_EMTPY);
         invalidSignatureFilename(" ", INVALID_FILENAME_EXTENSION, MAY_NOT_BE_EMTPY);
         invalidSignatureFilename(null, INVALID_FILENAME, INVALID_FILENAME_EXTENSION, MAY_NOT_BE_EMTPY);
         invalidSignatureFilename(StringUtils.repeat('a', 261), INVALID_FILENAME_EXTENSION, INVALID_SIZE);
 
-        invalidSignatureFilename("%", INVALID_FILENAME, INVALID_FILENAME_EXTENSION);
-        invalidSignatureFilename("&", INVALID_FILENAME, INVALID_FILENAME_EXTENSION);
-        invalidSignatureFilename("\\", INVALID_FILENAME, INVALID_FILENAME_EXTENSION);
-        invalidSignatureFilename("/", INVALID_FILENAME, INVALID_FILENAME_EXTENSION);
-        invalidSignatureFilename("\"", INVALID_FILENAME, INVALID_FILENAME_EXTENSION);
-        invalidSignatureFilename(":", INVALID_FILENAME, INVALID_FILENAME_EXTENSION);
-        invalidSignatureFilename("?", INVALID_FILENAME, INVALID_FILENAME_EXTENSION);
-        invalidSignatureFilename("*", INVALID_FILENAME, INVALID_FILENAME_EXTENSION);
+        invalidSignatureFilename("%", INVALID_FILENAME_EXTENSION);
+        invalidSignatureFilename("&", INVALID_FILENAME_EXTENSION);
+        invalidSignatureFilename("\\", INVALID_FILENAME_EXTENSION);
+        invalidSignatureFilename("/", INVALID_FILENAME_EXTENSION);
+        invalidSignatureFilename("\"", INVALID_FILENAME_EXTENSION);
+        invalidSignatureFilename(":", INVALID_FILENAME_EXTENSION);
+        invalidSignatureFilename("?", INVALID_FILENAME_EXTENSION);
+        invalidSignatureFilename("*", INVALID_FILENAME_EXTENSION);
 
         invalidSignatureFilename("something", INVALID_FILENAME_EXTENSION);
         invalidSignatureFilename("something.", INVALID_FILENAME_EXTENSION);
@@ -69,8 +69,6 @@ public class ValidSignatureFilenameTest {
         invalidSignatureFilename("something.bdoc", INVALID_FILENAME_EXTENSION);
         invalidSignatureFilename("something.ddoc", INVALID_FILENAME_EXTENSION);
         invalidSignatureFilename("something.asice", INVALID_FILENAME_EXTENSION);
-
-        invalidSignatureFilename("&.xml", INVALID_FILENAME);
 
     }
 

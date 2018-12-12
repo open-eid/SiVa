@@ -16,7 +16,6 @@
 
 package ee.openeid.siva.webapp.soap.interceptor;
 
-import ee.openeid.siva.webapp.request.validation.annotations.NotNullValidFilenamePattern;
 import ee.openeid.siva.webapp.request.validation.annotations.ValidSignaturePolicyPattern;
 import ee.openeid.siva.webapp.soap.DocumentType;
 import org.apache.commons.codec.binary.Base64;
@@ -29,7 +28,6 @@ public class SoapRequestValidationInterceptor extends AbstractRequestValidationI
 
     private static final int MAX_POLICY_LENGTH = 100;
     private static final int MAX_FILENAME_LENGTH = 260;
-    private static final Pattern FILENAME_PATTERN = Pattern.compile(NotNullValidFilenamePattern.PATTERN);
     private static final Pattern SIGNATURE_POLICY_PATTERN = Pattern.compile(ValidSignaturePolicyPattern.PATTERN);
 
     @Override
@@ -49,7 +47,7 @@ public class SoapRequestValidationInterceptor extends AbstractRequestValidationI
 
     private void validateFilenameElement(SOAPBody body) {
         String filenameValue = getElementValueFromBody(body, "Filename");
-        if (StringUtils.isBlank(filenameValue) || !FILENAME_PATTERN.matcher(filenameValue).matches() || filenameValue.length() > MAX_FILENAME_LENGTH || filenameValue.length() < 1) {
+        if (StringUtils.isBlank(filenameValue) || filenameValue.length() > MAX_FILENAME_LENGTH || filenameValue.length() < 1) {
             throwFault(errorMessage("validation.error.message.filename"));
         }
     }

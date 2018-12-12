@@ -31,7 +31,6 @@ public class SoapRequestHashcodeValidationInterceptor extends AbstractRequestVal
         validateSignatureFile(body);
         validateSignatureFilename(body);
         validateDataFiles(body);
-
         overrideReportType(body);
     }
 
@@ -44,7 +43,9 @@ public class SoapRequestHashcodeValidationInterceptor extends AbstractRequestVal
 
     private void validateSignatureFilename(SOAPBody body) {
         String filename = getElementValueFromBody(body, "Filename", "HashcodeValidationRequest");
-        if (StringUtils.isNotBlank(filename) && !hasValidExtension(filename)) {
+        if (StringUtils.isBlank(filename)) {
+            throwFault(errorMessage("validation.error.message.filename.format"));
+        } else if (!hasValidExtension(filename)) {
             throwFault(errorMessage("validation.error.message.signatureExtension"));
         }
     }
@@ -72,14 +73,13 @@ public class SoapRequestHashcodeValidationInterceptor extends AbstractRequestVal
             Node node = dataFileNodes.item(i);
             if (1 == node.getNodeType()) {
                 String localName = node.getLocalName();
-                String textContent = node.getTextContent();
-                if (StringUtils.isBlank(textContent)) {
-                    continue;
-                }
                 if (localName.equals("HashAlgo")) {
+                    validateDataFileHashAlgo(node.getTextContent());
                     overrideDataFileHashAlgorithm(node);
                 } else if (localName.equals("Hash")) {
                     validateDataFileHash(node.getTextContent());
+                } else if (localName.equals("Filename")){
+                    validateDataFileName(node.getTextContent());
                 }
             }
         }
@@ -90,6 +90,19 @@ public class SoapRequestHashcodeValidationInterceptor extends AbstractRequestVal
             throwFault(errorMessage("validation.error.message.base64"));
         }
     }
+
+    private void validateDataFileName(String filename) {
+        if (StringUtils.isBlank(filename)) {
+            throwFault(errorMessage("validation.error.message.dataFile.filename.format"));
+        }
+    }
+
+    private void validateDataFileHashAlgo(String hashAlgo) {
+        if (StringUtils.isBlank(hashAlgo)) {
+            throwFault(errorMessage("validation.error.message.hashAlgo"));
+        }
+    }
+
 
     /*
         Override ReportType value to upper-case to make the parameter case-insensitive.

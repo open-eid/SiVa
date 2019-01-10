@@ -16,8 +16,6 @@
 
 package ee.openeid.validation.service.timemark;
 
-import eu.europa.esig.dss.DSSException;
-
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Reports;
@@ -25,10 +23,11 @@ import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.validation.service.timemark.configuration.DDOCValidationServiceProperties;
-import ee.openeid.validation.service.timemark.report.TimemarkContainerValidationReportBuilder;
+import ee.openeid.validation.service.timemark.report.AsicContainerValidationReportBuilder;
+import ee.openeid.validation.service.timemark.report.DDOCContainerValidationReportBuilder;
 import ee.openeid.validation.service.timemark.signature.policy.BDOCConfigurationService;
 import ee.openeid.validation.service.timemark.signature.policy.PolicyConfigurationWrapper;
-
+import eu.europa.esig.dss.DSSException;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.Configuration;
@@ -36,6 +35,7 @@ import org.digidoc4j.Container;
 import org.digidoc4j.ContainerBuilder;
 import org.digidoc4j.ValidationResult;
 import org.digidoc4j.exceptions.DigiDoc4JException;
+import org.digidoc4j.impl.ddoc.DDocContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +72,11 @@ public class TimemarkContainerValidationService implements ValidationService {
 
         try {
             ValidationResult validationResult = container.validate();
-            return new TimemarkContainerValidationReportBuilder(container, validationDocument, policyConfiguration.getPolicy(), validationResult.getErrors(), reportConfigurationProperties.isReportSignatureEnabled()).build();
+            if (container instanceof DDocContainer) {
+                return new DDOCContainerValidationReportBuilder(container, validationDocument, policyConfiguration.getPolicy(), validationResult.getErrors(), reportConfigurationProperties.isReportSignatureEnabled()).build();
+            } else {
+                return new AsicContainerValidationReportBuilder(container, validationDocument, policyConfiguration.getPolicy(), validationResult.getErrors(), reportConfigurationProperties.isReportSignatureEnabled()).build();
+            }
         } catch (DigiDoc4JException e) {
             throw new MalformedDocumentException(e);
         } catch (Exception e) {

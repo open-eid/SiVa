@@ -23,43 +23,36 @@ import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import eu.europa.esig.dss.validation.SignatureQualification;
 import eu.europa.esig.dss.validation.policy.rules.SubIndication;
-
 import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.*;
 import org.digidoc4j.exceptions.DigiDoc4JException;
 import org.digidoc4j.impl.asic.asice.AsicESignature;
 import org.digidoc4j.impl.ddoc.DDocContainer;
-import org.digidoc4j.impl.ddoc.DDocFacade;
-import org.digidoc4j.impl.ddoc.DDocSignature;
 import org.slf4j.LoggerFactory;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.*;
 import static org.digidoc4j.X509Cert.SubjectName.CN;
 
-public class TimemarkContainerValidationReportBuilder {
+public abstract class TimemarkContainerValidationReportBuilder {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(TimemarkContainerValidationReportBuilder.class);
+    protected static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(TimemarkContainerValidationReportBuilder.class);
 
-    private static final String FULL_SIGNATURE_SCOPE = "FullSignatureScope";
-    private static final String FULL_DOCUMENT = "Full document";
-    private static final String XADES_FORMAT_PREFIX = "XAdES_BASELINE_";
+    protected static final String FULL_SIGNATURE_SCOPE = "FullSignatureScope";
+    protected static final String FULL_DOCUMENT = "Full document";
+    protected static final String XADES_FORMAT_PREFIX = "XAdES_BASELINE_";
     private static final String REPORT_INDICATION_INDETERMINATE = "INDETERMINATE";
-    private static final String BDOC_SIGNATURE_FORM = "ASiC-E";
-    private static final String DDOC_SIGNATURE_FORM_PREFIX = "DIGIDOC_XML_";
-    private static final String DDOC_HASHCODE_SIGNATURE_FORM_SUFFIX = "_hashcode";
-    private static final String HASHCODE_CONTENT_TYPE = "HASHCODE";
+    protected static final String BDOC_SIGNATURE_FORM = "ASiC-E";
+    protected static final String DDOC_SIGNATURE_FORM_PREFIX = "DIGIDOC_XML_";
+    protected static final String DDOC_HASHCODE_SIGNATURE_FORM_SUFFIX = "_hashcode";
+    protected static final String HASHCODE_CONTENT_TYPE = "HASHCODE";
     public static final String DDOC_TIMESTAMP_WARNING = "Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa";
 
 
-    private Container container;
+    Container container;
     private ValidationDocument validationDocument;
     private ValidationPolicy validationPolicy;
     private List<DigiDoc4JException> containerErrors;
@@ -73,7 +66,7 @@ public class TimemarkContainerValidationReportBuilder {
         this.isReportSignatureEnabled = isReportSignatureEnabled;
     }
 
-    private static ValidationWarning createValidationWarning(String content) {
+    static ValidationWarning createValidationWarning(String content) {
         ValidationWarning validationWarning = new ValidationWarning();
         validationWarning.setContent(emptyWhenNull(content));
         return validationWarning;
@@ -83,14 +76,6 @@ public class TimemarkContainerValidationReportBuilder {
         Warning warning = new Warning();
         warning.setContent(emptyWhenNull(digiDoc4JException.getMessage()));
         return warning;
-    }
-
-    private static SignatureScope createFullSignatureScopeForDataFile(String filename) {
-        SignatureScope signatureScope = new SignatureScope();
-        signatureScope.setName(filename);
-        signatureScope.setScope(FULL_SIGNATURE_SCOPE);
-        signatureScope.setContent(FULL_DOCUMENT);
-        return signatureScope;
     }
 
     private static Error mapDigidoc4JException(DigiDoc4JException digiDoc4JException) {
@@ -135,41 +120,8 @@ public class TimemarkContainerValidationReportBuilder {
         return validationWarnings;
     }
 
-    private List<ValidationWarning> getValidationWarningsForUnsignedDataFiles() {
-        if (!(container instanceof DDocContainer)) {
-            List<String> dataFilenames = container.getDataFiles().stream().map(DataFile:: getName).collect(Collectors.toList());
-            return container.getSignatures()
-                    .stream()
-                    .map(signature -> createValidationWarning(signature, getUnsignedFiles((AsicESignature) signature, dataFilenames)))
-                    .filter(Objects :: nonNull)
-                    .collect(Collectors.toList());
-        }
-        return new ArrayList<>();
-    }
-
-    private ValidationWarning createValidationWarning(Signature signature, List<String> unsignedFiles) {
-        if (unsignedFiles.isEmpty()) {
-            return null;
-        }
-        String signedBy = removeQuotes(signature.getSigningCertificate().getSubjectName(CN));
-        String commaSeparated = unsignedFiles.stream().collect(Collectors.joining(", "));
-        String content = String.format("Signature %s has unsigned files: %s", signedBy, commaSeparated);
-        return createValidationWarning(content);
-    }
-
-    private List<String> getUnsignedFiles(AsicESignature bDocSignature, List<String> dataFilenames) {
-        List<String> uris = bDocSignature.getOrigin().getReferences()
-                .stream()
-                .map(reference -> decodeUriIfPossible(reference.getURI()))
-                .filter(dataFilenames :: contains)
-                .collect(Collectors.toList());
-        return dataFilenames.stream()
-                .filter(df -> !uris.contains(df))
-                .collect(Collectors.toList());
-    }
-
     private List<SignatureValidationData> createSignaturesForReport(Container container) {
-        List<String> dataFilenames = container.getDataFiles().stream().map(DataFile :: getName).collect(Collectors.toList());
+        List<String> dataFilenames = container.getDataFiles().stream().map(DataFile::getName).collect(Collectors.toList());
         return container.getSignatures().stream().map(sig -> createSignatureValidationData(sig, dataFilenames)).collect(Collectors.toList());
     }
 
@@ -192,7 +144,7 @@ public class TimemarkContainerValidationReportBuilder {
         return signatureValidationData;
     }
 
-    private String removeQuotes(String subjectName) {
+    String removeQuotes(String subjectName) {
         return subjectName.replaceAll("^\"|\"$", "");
     }
 
@@ -244,89 +196,24 @@ public class TimemarkContainerValidationReportBuilder {
     private List<Warning> getWarnings(Signature signature) {
         return signature.validateSignature().getWarnings()
                 .stream()
-                .map(TimemarkContainerValidationReportBuilder:: mapDigidoc4JWarning)
+                .map(TimemarkContainerValidationReportBuilder::mapDigidoc4JWarning)
                 .collect(Collectors.toList());
-
-    }
-
-    private List<SignatureScope> getSignatureScopes(Signature signature, List<String> dataFilenames) {
-        if (signature instanceof DDocSignature) {
-            return dataFilenames
-                    .stream()
-                    .map(this :: mapDataFile)
-                    .collect(Collectors.toList());
-        } else {
-            AsicESignature bDocSignature = (AsicESignature) signature;
-            return bDocSignature.getOrigin().getReferences()
-                    .stream()
-                    .map(r -> decodeUriIfPossible(r.getURI()))
-                    .filter(dataFilenames :: contains) //filters out Signed Properties
-                    .map(TimemarkContainerValidationReportBuilder:: createFullSignatureScopeForDataFile)
-                    .collect(Collectors.toList());
-        }
-
-    }
-
-    private SignatureScope mapDataFile(String filename) {
-        SignatureScope signatureScope = new SignatureScope();
-        signatureScope.setName(filename);
-        signatureScope.setContent(FULL_DOCUMENT);
-        signatureScope.setScope(FULL_SIGNATURE_SCOPE);
-        return signatureScope;
-    }
-
-    private String decodeUriIfPossible(String uri) {
-        try {
-            return URLDecoder.decode(uri, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            LOGGER.warn("datafile " + uri + " has unsupported encoding", e);
-            return uri;
-        }
     }
 
     private List<Error> getErrors(Signature signature) {
         return signature.validateSignature().getErrors()
                 .stream()
-                .map(TimemarkContainerValidationReportBuilder:: mapDigidoc4JException)
+                .map(TimemarkContainerValidationReportBuilder::mapDigidoc4JException)
                 .collect(Collectors.toList());
-    }
-
-    private String getSignatureFormat(SignatureProfile profile) {
-        if (container instanceof DDocContainer) {
-            DDocFacade dDocFacade = ((DDocContainer) container).getDDoc4JFacade();
-            return dDocFacade.getFormat().replaceAll("-", "_") + "_" + dDocFacade.getVersion();
-        }
-        return XADES_FORMAT_PREFIX + profile.toString();
-    }
-
-    private String getSignatureForm() {
-        if (container instanceof DDocContainer) {
-            return getDigidocXmlSignatureForm();
-        }
-        return BDOC_SIGNATURE_FORM;
-    }
-
-    private String getDigidocXmlSignatureForm() {
-        return DDOC_SIGNATURE_FORM_PREFIX + ((DDocContainer) container).getDDoc4JFacade().getVersion() + getSignatureFormSuffix();
-    }
-
-    private String getSignatureFormSuffix() {
-        return isHashcodeForm() ? DDOC_HASHCODE_SIGNATURE_FORM_SUFFIX : StringUtils.EMPTY;
-    }
-
-    private boolean isHashcodeForm() {
-        DDocFacade ddocFacade = ((DDocContainer) container).getDDoc4JFacade();
-        return ddocFacade.getDataFiles().stream().anyMatch(dataFile -> {
-                    if (dataFile instanceof DigestDataFile) {
-                        return HASHCODE_CONTENT_TYPE.equals(((DigestDataFile) dataFile).getContentType());
-                    }
-                    return false;
-                }
-        );
     }
 
     private String getCountryCode(Signature signature) {
         return signature.getSigningCertificate().getSubjectName(X509Cert.SubjectName.C);
     }
+
+    abstract List<ValidationWarning> getValidationWarningsForUnsignedDataFiles();
+    abstract List<SignatureScope> getSignatureScopes(Signature signature, List<String> dataFilenames);
+    abstract String getSignatureForm();
+    abstract String getSignatureFormat(SignatureProfile profile);
 
 }

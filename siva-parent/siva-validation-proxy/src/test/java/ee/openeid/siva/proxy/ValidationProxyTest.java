@@ -30,11 +30,9 @@ import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
-import ee.openeid.validation.service.bdoc.BDOCValidationService;
-import ee.openeid.validation.service.ddoc.DDOCValidationService;
-import ee.openeid.validation.service.ddoc.report.DDOCValidationReportBuilder;
 import ee.openeid.validation.service.generic.GenericValidationService;
 import ee.openeid.validation.service.generic.configuration.GenericSignaturePolicyProperties;
+import ee.openeid.validation.service.timemark.report.TimemarkContainerValidationReportBuilder;
 import ee.openeid.validation.service.timestamptoken.TimeStampTokenValidationService;
 import ee.openeid.validation.service.timestamptoken.configuration.TimeStampTokenSignaturePolicyProperties;
 import org.assertj.core.api.Assertions;
@@ -61,10 +59,16 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
+//import ee.openeid.validation.service.ddoc.report.DDOCValidationReportBuilder;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ValidationProxyTest {
     private static final String DEFAULT_DOCUMENT_NAME = "document.";
     private static final String TEST_FILES_LOCATION = "test-files/";
+    private static final String TIMEMARK_CONTAINER_VALIDATION_SERVICE_BEAN = "timemarkContainerValidationService";
+    private static final String TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN = "timeStampTokenValidationService";
+    private static final String GENERIC_VALIDATION_SERVICE_BEAN = "genericValidationService";
+
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
@@ -125,7 +129,7 @@ public class ValidationProxyTest {
 
     @Test
     public void proxyDocumentWithBDOCDocumentTypeShouldReturnValidationReport() throws Exception {
-        when(applicationContext.getBean(BDOCValidationService.class.getSimpleName())).thenReturn(validationServiceSpy);
+        when(applicationContext.getBean(TIMEMARK_CONTAINER_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceSpy);
 
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.BDOC);
         SimpleReport report = validationProxy.validate(proxyDocument);
@@ -134,7 +138,7 @@ public class ValidationProxyTest {
 
     @Test
     public void proxyDocumentWithPDFDocumentTypeShouldReturnValidationReport() throws Exception {
-        when(applicationContext.getBean("genericValidationService")).thenReturn(validationServiceSpy);
+        when(applicationContext.getBean(GENERIC_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceSpy);
 
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.PDF);
         SimpleReport report = validationProxy.validate(proxyDocument);
@@ -143,7 +147,7 @@ public class ValidationProxyTest {
 
     @Test
     public void proxyDocumentWithDDOCDocumentTypeShouldReturnValidationReport() throws Exception {
-        when(applicationContext.getBean(DDOCValidationService.class.getSimpleName())).thenReturn(validationServiceSpy);
+        when(applicationContext.getBean(TIMEMARK_CONTAINER_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceSpy);
 
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.DDOC);
         SimpleReport report = validationProxy.validate(proxyDocument);
@@ -153,8 +157,8 @@ public class ValidationProxyTest {
     @Test
     public void proxyDocumentWithAsicsExtensionShouldReturnValidationReport() throws Exception {
 
-        when(applicationContext.getBean("timeStampTokenValidationService")).thenReturn(getTimeStampValidationService());
-        when(applicationContext.getBean(DDOCValidationService.class.getSimpleName())).thenReturn(validationServiceSpy);
+        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(getTimeStampValidationService());
+        when(applicationContext.getBean(TIMEMARK_CONTAINER_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceSpy);
 
         ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
         proxyDocument.setBytes(buildValidationDocument("timestamptoken-ddoc.asics"));
@@ -167,8 +171,8 @@ public class ValidationProxyTest {
     @Test
     public void proxyDocumentWithZipExtensionShouldReturnValidationReport() throws Exception {
 
-        when(applicationContext.getBean("timeStampTokenValidationService")).thenReturn(getTimeStampValidationService());
-        when(applicationContext.getBean(DDOCValidationService.class.getSimpleName())).thenReturn(validationServiceSpy);
+        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(getTimeStampValidationService());
+        when(applicationContext.getBean(TIMEMARK_CONTAINER_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceSpy);
 
         ProxyDocument proxyDocument = mockProxyDocumentWithExtension("zip");
         proxyDocument.setBytes(buildValidationDocument("timestamptoken-ddoc.zip"));
@@ -181,8 +185,8 @@ public class ValidationProxyTest {
     @Test
     public void proxyDocumentWithScsExtensionShouldReturnValidationReport() throws Exception {
 
-        when(applicationContext.getBean("timeStampTokenValidationService")).thenReturn(getTimeStampValidationService());
-        when(applicationContext.getBean(DDOCValidationService.class.getSimpleName())).thenReturn(validationServiceSpy);
+        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(getTimeStampValidationService());
+        when(applicationContext.getBean(TIMEMARK_CONTAINER_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceSpy);
 
         ProxyDocument proxyDocument = mockProxyDocumentWithExtension("scs");
         proxyDocument.setBytes(buildValidationDocument("timestamptoken-ddoc.asics"));
@@ -194,8 +198,8 @@ public class ValidationProxyTest {
 
     @Test
     public void proxyDocumentAsicsWithRandomDataFile() throws Exception {
-        when(applicationContext.getBean("timeStampTokenValidationService")).thenReturn(getTimeStampValidationService());
-        when(applicationContext.getBean("genericValidationService")).thenReturn(getGenericValidationService());
+        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(getTimeStampValidationService());
+        when(applicationContext.getBean(GENERIC_VALIDATION_SERVICE_BEAN)).thenReturn(getGenericValidationService());
         ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
         proxyDocument.setBytes(buildValidationDocument("TXTinsideAsics.asics"));
         SimpleReport report = validationProxy.validate(proxyDocument);
@@ -206,7 +210,7 @@ public class ValidationProxyTest {
     @Test
     public void proxyDocumentAsicsWithTwoDataFiles() throws Exception {
         exception.expect(DocumentRequirementsException.class);
-        when(applicationContext.getBean("timeStampTokenValidationService")).thenReturn(getTimeStampValidationService());
+        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(getTimeStampValidationService());
         ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
         proxyDocument.setBytes(buildValidationDocument("TwoDataFilesAsics.asics"));
         validationProxy.validate(proxyDocument);
@@ -214,8 +218,8 @@ public class ValidationProxyTest {
 
     @Test
     public void proxyDocumentAsicsWithDifferentMimeType() throws Exception {
-        when(applicationContext.getBean("timeStampTokenValidationService")).thenReturn(getTimeStampValidationService());
-        when(applicationContext.getBean("genericValidationService")).thenReturn(validationServiceSpy);
+        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(getTimeStampValidationService());
+        when(applicationContext.getBean(GENERIC_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceSpy);
         ProxyDocument proxyDocument = mockProxyDocumentWithExtension("zip");
         proxyDocument.setBytes(buildValidationDocument("timestamptoken-different-mimetype.zip"));
         SimpleReport report = validationProxy.validate(proxyDocument);
@@ -224,8 +228,8 @@ public class ValidationProxyTest {
 
     @Test
     public void proxyDocumentAsicsNoTeraWarning() throws Exception {
-        when(applicationContext.getBean("timeStampTokenValidationService")).thenReturn(getTimeStampValidationService());
-        when(applicationContext.getBean(DDOCValidationService.class.getSimpleName())).thenReturn(validationServiceSpy);
+        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(getTimeStampValidationService());
+        when(applicationContext.getBean(TIMEMARK_CONTAINER_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceSpy);
         ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
         proxyDocument.setBytes(buildValidationDocument("timestamptoken-ddoc.asics"));
         SimpleReport report = validationProxy.validate(proxyDocument);
@@ -236,7 +240,7 @@ public class ValidationProxyTest {
     public void removeUnnecessaryWarningsFromValidationConclusion() throws Exception {
         ValidationConclusion validationConclusion = new ValidationConclusion();
         ValidationWarning validationWarning = new ValidationWarning();
-        validationWarning.setContent(DDOCValidationReportBuilder.DDOC_TIMESTAMP_WARNING);
+        validationWarning.setContent(TimemarkContainerValidationReportBuilder.DDOC_TIMESTAMP_WARNING);
         validationConclusion.setValidationWarnings(Collections.singletonList(validationWarning));
         validationProxy.removeUnnecessaryWarning(validationConclusion);
         Assert.assertTrue( validationConclusion.getValidationWarnings().isEmpty());

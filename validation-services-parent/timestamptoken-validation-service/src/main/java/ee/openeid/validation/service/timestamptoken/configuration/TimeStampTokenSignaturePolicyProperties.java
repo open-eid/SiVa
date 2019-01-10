@@ -18,9 +18,9 @@ package ee.openeid.validation.service.timestamptoken.configuration;
 
 import ee.openeid.siva.validation.service.signature.policy.properties.SignaturePolicyProperties;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -29,13 +29,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-
 import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.ADES_POLICY;
-
 import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.QES_POLICY;
 
-@Getter @Setter
-@EqualsAndHashCode(callSuper = true)
+
+@Getter
+@Setter
+@ConfigurationProperties(prefix = "siva.timestamp.signaturePolicy")
 public class TimeStampTokenSignaturePolicyProperties extends SignaturePolicyProperties<ValidationPolicy> {
 
     private String defaultPolicy;

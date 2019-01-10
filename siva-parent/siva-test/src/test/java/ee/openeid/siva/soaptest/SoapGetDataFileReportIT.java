@@ -15,15 +15,16 @@
  */
 package ee.openeid.siva.soaptest;
 
+import static org.junit.Assert.assertEquals;
+
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.w3c.dom.Document;
-
-import static org.junit.Assert.assertEquals;
 
 @Category(IntegrationTest.class)
 public class SoapGetDataFileReportIT extends SiVaSoapTests  {
@@ -62,7 +63,7 @@ public class SoapGetDataFileReportIT extends SiVaSoapTests  {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("ddoc_1_3.xml.ddoc"));
         Document report = extractDataFilesReportDom(postDataFiles(createXMLValidationRequestForDataFiles(encodedString, "test.DDOC")).andReturn().body().asString());
         assertEquals("File name should match expected","test2007.txt" ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(0).getFilename());
-        assertEquals("Base64 should match expected","dGVzdA==\n\n" ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(0).getBase64());
+        assertEquals("Base64 should match expected","dGVzdA==" ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(0).getBase64());
         assertEquals("Mimetype should match expected","text/plain" ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(0).getMimeType());
         assertEquals("Size should match expected",4 ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(0).getSize());
     }
@@ -116,7 +117,7 @@ public class SoapGetDataFileReportIT extends SiVaSoapTests  {
         assertEquals("File name should match expected","RO219559508.pdf" ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(0).getFilename());
         assertEquals("Base64 should match expected","JVBERi0xLjMKJeLjz9MKMSAwIG9iajw8L1Byb2R1Y2VyKGh0bWxkb2M" ,begginingBase64);
         assertEquals("Mimetype should match expected","text/text" ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(0).getMimeType());
-        assertEquals("Size should match expected",5252 ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(0).getSize());
+        assertEquals("Size should match expected",3938 ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(0).getSize());
     }
     /**
      *

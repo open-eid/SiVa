@@ -16,11 +16,8 @@
 
 package ee.openeid.siva.integrationtest;
 
-import static org.junit.Assert.assertEquals;
-
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.validation.document.report.SimpleReport;
-
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -28,6 +25,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
+
+import static org.junit.Assert.assertEquals;
 @Category(IntegrationTest.class)
 public class BdocValidationFailIT extends SiVaRestTests {
 
@@ -95,12 +94,12 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * Expected Result: The document should fail the validation
      * <p>
-     * File: BdocMultipleSignaturesMixedWithValidAndInvalid.bdoc
+     * File: 3f_2s_1partly_signed.bdoc
      */
     @Test
     public void bdocInvalidAndValidMultipleSignatures() {
-        setTestFilesDirectory("bdoc/test/timemark/");
-        assertSomeSignaturesAreValid(postForReport("BdocMultipleSignaturesMixedWithValidAndInvalid.bdoc"), 3);
+        setTestFilesDirectory("document_validation_test_files/bdoc/");
+        assertSomeSignaturesAreValid(postForReport("3f_2s_1partly_signed.bdoc"), 1);
     }
 
     /**
@@ -370,9 +369,10 @@ public class BdocValidationFailIT extends SiVaRestTests {
         post(validationRequestFor("23613_TM_wrong-manifest-mimetype.bdoc"))
                 .then()
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("OCSP Responder does not meet TM requirements"))
                 .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file <test.txt> with mimetype <application/binary> but the signature file for signature S0 indicates the mimetype is <application/octet-stream>"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**

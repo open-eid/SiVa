@@ -26,7 +26,7 @@ import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.ValidationService;
-import ee.openeid.validation.service.ddoc.report.DDOCValidationReportBuilder;
+import ee.openeid.validation.service.timemark.report.TimemarkContainerValidationReportBuilder;
 import ee.openeid.validation.service.timestamptoken.TimeStampTokenValidationService;
 import eu.europa.esig.dss.InMemoryDocument;
 import org.apache.commons.io.FilenameUtils;
@@ -54,6 +54,7 @@ public class ValidationProxy {
     private static final String SCS_FILE_TYPE = "SCS";
     private static final String ZIP_FILE_TYPE = "ZIP";
     private static final String TIMESTAMP_EXTENSION = ".TST";
+    private static final String TIMEMARK_CONTAINER_SERVICE = "timemarkContainer";
     private static final String TIMESTAMP_TOKEN_SERVICE = "timeStampToken";
     private static final String MIME_TYPE_FILE_NAME = "mimetype";
     private static final String ASICS_MIME_TYPE = "application/vnd.etsi.asic-s+zip";
@@ -100,7 +101,7 @@ public class ValidationProxy {
         if (warnings == null || warnings.isEmpty())
             return;
         List<ValidationWarning> newList = new ArrayList<>(warnings);
-        newList.removeIf(s -> DDOCValidationReportBuilder.DDOC_TIMESTAMP_WARNING.equals(s.getContent()));
+        newList.removeIf(s -> TimemarkContainerValidationReportBuilder.DDOC_TIMESTAMP_WARNING.equals(s.getContent()));
         validationConclusion.setValidationWarnings(newList);
     }
 
@@ -151,7 +152,8 @@ public class ValidationProxy {
             throw new IllegalArgumentException("Invalid file format:" + filename);
         }
         if (DocumentType.DDOC.name().equals(extension) || DocumentType.BDOC.name().equals(extension)) {
-            return extension + SERVICE_BEAN_NAME_POSTFIX;
+            return TIMEMARK_CONTAINER_SERVICE + SERVICE_BEAN_NAME_POSTFIX;
+
         } else if (extension.equals(ASICS_EXTENSION) || extension.equals(SCS_FILE_TYPE) || extension.equals(ZIP_FILE_TYPE)) {
             return decideAsicsValidatorService(proxyDocument.getBytes(), extension);
         }

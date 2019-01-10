@@ -649,29 +649,6 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
     }
 
     /**
-     * TestCaseID: Soap-BdocValidationRequest-4
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
-     *
-     * Title: Mismatch in documentType and actual document (bdoc and ddoc)
-     *
-     * Expected Result: Error is returned
-     *
-     * File: igasugust1.3.ddoc
-     */
-    @Test
-    public void soapBdocValidationRequestNotMatchingDocumentTypeAndActualFileDdoc() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
-        post(validationRequestForDocumentExtended(encodedString, "igasugust1.3.bdoc", null, "POLv3"))
-                .then()
-                .statusCode(HttpStatus.OK.value())
-                .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
-                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
-    }
-
-    /**
      * TestCaseID: Soap-BdocValidationRequest-5
      *
      * TestType: Automated

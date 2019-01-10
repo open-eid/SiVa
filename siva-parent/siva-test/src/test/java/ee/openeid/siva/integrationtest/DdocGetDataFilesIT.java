@@ -82,7 +82,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
                 .then()
                 .body("dataFiles[0].filename", Matchers.is("testfail.txt"))
                 .body("dataFiles[0].mimeType", Matchers.is("text/plain"))
-                .body("dataFiles[0].base64", Matchers.is("T2xlbiB0ZXN0IGZhaWwu\n"))
+                .body("dataFiles[0].base64", Matchers.is("T2xlbiB0ZXN0IGZhaWwu"))
                 .body("dataFiles[0].size", Matchers.is(15));
     }
 
@@ -133,7 +133,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
                 .body("dataFiles[0].filename", Matchers.is("RO219559508.pdf"))
                 .body("dataFiles[0].mimeType", Matchers.is("text/text"))
                 .body("dataFiles[0].base64", Matchers.startsWith("JVBERi0xLjMKJeLjz9MKMSAwIG9iajw8L1Byb2R1Y2VyKGh0bWxkb2MgMS44LjIzIENvcHlyaWdodCAxOTk3LTIwMDI"))
-                .body("dataFiles[0].size", Matchers.is(5252));
+                .body("dataFiles[0].size", Matchers.is(3938));
     }
 
     /**
@@ -223,7 +223,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
                 .body("dataFiles[3].size", Matchers.is(7427))
                 .body("dataFiles[4].filename", Matchers.is("4.txt"))
                 .body("dataFiles[4].mimeType", Matchers.is("text/plain"))
-                .body("dataFiles[4].base64", Matchers.startsWith("/GtzZmFpbA==\n"))
+                .body("dataFiles[4].base64", Matchers.startsWith("/GtzZmFpbA=="))
                 .body("dataFiles[4].size", Matchers.is(7))
                 .body("dataFiles[5].filename", Matchers.is("kolm.doc"))
                 .body("dataFiles[5].mimeType", Matchers.is("application/msword"))
@@ -239,7 +239,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
                 .body("dataFiles[7].size", Matchers.is(24064))
                 .body("dataFiles[8].filename", Matchers.is("kõõs.txt"))
                 .body("dataFiles[8].mimeType", Matchers.is("text/plain"))
-                .body("dataFiles[8].base64", Matchers.is("bfZoaGho\n"))
+                .body("dataFiles[8].base64", Matchers.is("bfZoaGho"))
                 .body("dataFiles[8].size", Matchers.is(6))
                 .body("dataFiles[9].filename", Matchers.is("yks.doc"))
                 .body("dataFiles[9].mimeType", Matchers.is("application/msword"))
@@ -251,7 +251,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
                 .body("dataFiles[10].size", Matchers.is(414))
                 .body("dataFiles[11].filename", Matchers.is("NsPdf.PDF"))
                 .body("dataFiles[11].mimeType", Matchers.is("application/pdf"))
-                .body("dataFiles[11].base64", Matchers.startsWith("JVBERi0xLjMKJeTjz9IKNSAwIG9iago8PC9MZW5ndGggNiAwIFIKL0ZpbHRlci9G\nbGF0ZURlY29"))
+                .body("dataFiles[11].base64", Matchers.startsWith("JVBERi0xLjMKJeTjz9IKNSAwIG9iago8PC9MZW5ndGggNiAwIFIKL0ZpbHRlci9GbGF0ZURlY29"))
                 .body("dataFiles[11].size", Matchers.is(2783));
     }
 

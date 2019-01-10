@@ -16,13 +16,19 @@
 
 package ee.openeid.siva.proxy;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
+
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.exception.DataFilesServiceNotFoundException;
 import ee.openeid.siva.validation.document.DataFilesDocument;
 import ee.openeid.siva.validation.document.report.DataFileData;
 import ee.openeid.siva.validation.document.report.DataFilesReport;
 import ee.openeid.siva.validation.service.DataFilesService;
-import ee.openeid.validation.service.ddoc.DDOCDataFilesService;
+import ee.openeid.validation.service.timemark.DDOCDataFilesService;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -34,11 +40,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Collections;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class DataFilesProxyTest {

@@ -238,7 +238,7 @@ public class DocumentValidationIT extends SiVaRestTests{
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIGNED_DATA_NOT_FOUND"))
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The reference data object(s) is not found!"))
-                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file <Test document.pdf> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"))
+                .body("validationReport.validationConclusion.validationWarnings", Matchers.isEmptyOrNullString())
         ;
 
     }
@@ -267,7 +267,7 @@ public class DocumentValidationIT extends SiVaRestTests{
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIGNED_DATA_NOT_FOUND"))
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The reference data object(s) is not found!"))
-                .body("validationReport.validationConclusion.validationWarnings", Matchers.isEmptyOrNullString());
+                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("The signature file for signature S0 has an entry for file <Test document.pdf> with mimetype <application/octet-stream> but the manifest file does not have an entry for this file"));
 
     }
 

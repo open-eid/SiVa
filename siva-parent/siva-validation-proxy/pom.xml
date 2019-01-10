@@ -79,12 +79,9 @@
         </dependency>
         <dependency>
             <groupId>ee.openid.siva</groupId>
-            <artifactId>bdoc-validation-service</artifactId>
+            <artifactId>timemark-container-validation-service</artifactId>
         </dependency>
-        <dependency>
-            <groupId>ee.openid.siva</groupId>
-            <artifactId>ddoc-validation-service</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>ee.openid.siva</groupId>
             <artifactId>siva-statistics</artifactId>

@@ -15,18 +15,19 @@
  */
 package ee.openeid.siva.resttest;
 
+import static ee.openeid.siva.resttest.ValidationRequestIT.getFailMessageForKey;
+import static ee.openeid.siva.resttest.ValidationRequestIT.getRequestErrorsCount;
+import static org.junit.Assert.assertTrue;
+
 import ee.openeid.siva.integrationtest.SiVaRestTests;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-
-import static ee.openeid.siva.resttest.ValidationRequestIT.getFailMessageForKey;
-import static ee.openeid.siva.resttest.ValidationRequestIT.getRequestErrorsCount;
-import static org.junit.Assert.assertTrue;
 
 
 @Category(IntegrationTest.class)
@@ -107,7 +108,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
                 .then()
                 .body("dataFiles[0].filename", Matchers.is("Šužlikud sõid ühe õuna ära.txt"))
                 .body("dataFiles[0].mimeType", Matchers.is("text/plain"))
-                .body("dataFiles[0].base64", Matchers.is("VGVzdDENClRlc3QyDQpUZfB0Mw0KS2H+bWFhciAuLi4uDQo=\n"))
+                .body("dataFiles[0].base64", Matchers.is("VGVzdDENClRlc3QyDQpUZfB0Mw0KS2H+bWFhciAuLi4uDQo="))
                 .body("dataFiles[0].size", Matchers.is(35));
     }
 
@@ -132,7 +133,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
         postForDataFiles(jsonObject.toString())
                 .then()
                 .body("dataFiles[0].size", Matchers.is(35))
-                .body("dataFiles[0].base64", Matchers.is("VGVzdDENClRlc3QyDQpUZfB0Mw0KS2H+bWFhciAuLi4uDQo=\n"));
+                .body("dataFiles[0].base64", Matchers.is("VGVzdDENClRlc3QyDQpUZfB0Mw0KS2H+bWFhciAuLi4uDQo="));
     }
 
     /**
@@ -198,7 +199,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
                 .then()
                 .body("dataFiles[0].filename", Matchers.is("Šužlikud sõid ühe õuna ära.txt"))
                 .body("dataFiles[0].mimeType", Matchers.is("text/plain"))
-                .body("dataFiles[0].base64", Matchers.is("VGVzdDENClRlc3QyDQpUZfB0Mw0KS2H+bWFhciAuLi4uDQo=\n"))
+                .body("dataFiles[0].base64", Matchers.is("VGVzdDENClRlc3QyDQpUZfB0Mw0KS2H+bWFhciAuLi4uDQo="))
                 .body("dataFiles[0].size", Matchers.is(35));
     }
 

@@ -119,14 +119,10 @@
             </dependency>
             <dependency>
                 <groupId>ee.openid.siva</groupId>
-                <artifactId>bdoc-validation-service</artifactId>
+                <artifactId>timemark-container-validation-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>ee.openid.siva</groupId>
-                <artifactId>ddoc-validation-service</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+
             <dependency>
                 <groupId>ee.openid.siva</groupId>
                 <artifactId>xroad-validation-service</artifactId>

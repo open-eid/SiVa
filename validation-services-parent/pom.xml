@@ -29,14 +29,13 @@
         <module>validation-commons</module>
         <module>generic-validation-service</module>
         <module>timestamptoken-validation-service</module>
-        <module>bdoc-validation-service</module>
-        <module>ddoc-validation-service</module>
+        <module>timemark-container-validation-service</module>
         <module>xroad-validation-service</module>
         <module>tsl-loader</module>
     </modules>
 
     <properties>
-        <digidoc4j.version>2.1.0</digidoc4j.version>
+        <digidoc4j.version>3.0.0</digidoc4j.version>
     </properties>
 
     <dependencyManagement>

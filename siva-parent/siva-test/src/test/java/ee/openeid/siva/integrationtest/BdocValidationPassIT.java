@@ -136,11 +136,11 @@ public class BdocValidationPassIT extends SiVaRestTests {
      *
      * Expected Result: The document should pass the validation
      *
-     * File: 24050_short_ecdsa_correct_file_mimetype.bdoc
+     * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
     public void bdocEccSha256signature() {
-        assertAllSignaturesAreValid(postForReport("24050_short_ecdsa_correct_file_mimetype.bdoc"));
+        assertAllSignaturesAreValid(postForReport("Valid_IDCard_MobID_signatures.bdoc"));
     }
 
     /**
@@ -486,20 +486,23 @@ public class BdocValidationPassIT extends SiVaRestTests {
      *
      * Expected Result: The document should pass the validation
      *
-     * File: testECCDemo.bdoc
+     * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
     public void bdocWithEccTimeMarkShouldPass() {
 
-        setTestFilesDirectory("bdoc/test/timemark/");
-        post(validationRequestFor("testECCDemo.bdoc", null, null))
+        setTestFilesDirectory("bdoc/live/timemark/");
+        post(validationRequestFor("Valid_IDCard_MobID_signatures.bdoc", null, null))
                 .then()
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.signatures[1].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("validationReport.validationConclusion.signatures[1].signatureLevel", Matchers.is("QESIG"))
+                .body("validationReport.validationConclusion.signatures[1].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(2))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2));
     }
 
     /**

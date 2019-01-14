@@ -21,7 +21,6 @@ import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.digidoc4j.TSLCertificateSource;
-import org.digidoc4j.impl.asic.tsl.TSLCertificateSourceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,16 +29,15 @@ public class TSLUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TSLUtils.class);
 
-    public static TSLCertificateSource createTSLFromTrustedCertSource(TrustedListsCertificateSource trustedListSource) {
-        TSLCertificateSource tslCertificateSource = new TSLCertificateSourceImpl();
+    public static TSLCertificateSource addCertificatesFromTrustedListSource(TSLCertificateSource tsl, TrustedListsCertificateSource trustedListSource) {
         trustedListSource.getCertificates().forEach(certToken -> {
             ServiceInfo serviceInfo = null;
             if (!certToken.getAssociatedTSPS().isEmpty()) {
                 serviceInfo = (ServiceInfo) certToken.getAssociatedTSPS().toArray()[0];
             }
-            tslCertificateSource.addCertificate(certToken, serviceInfo);
+            tsl.addCertificate(certToken, serviceInfo);
         });
-        LOGGER.debug("{} certificates added to TSL certificate source", tslCertificateSource.getCertificates().size());
-        return tslCertificateSource;
+        LOGGER.debug("{} certificates added to TSL certificate source", trustedListSource.getCertificates().size());
+        return tsl;
     }
 }

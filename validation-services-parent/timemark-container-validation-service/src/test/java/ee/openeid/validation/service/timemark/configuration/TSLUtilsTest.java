@@ -19,6 +19,7 @@ package ee.openeid.validation.service.timemark.configuration;
 import ee.openeid.tsl.CustomCertificatesLoader;
 import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import org.digidoc4j.TSLCertificateSource;
+import org.digidoc4j.impl.asic.tsl.TSLCertificateSourceImpl;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,8 +37,9 @@ public class TSLUtilsTest {
     }
 
     @Test
-    public void allCertificatesShouldBeCopiedFromTrustedListSourceToTSLSource() throws Exception {
-        TSLCertificateSource tslCertificateSource = TSLUtils.createTSLFromTrustedCertSource(trustedListsCertificateSource);
+    public void allCertificatesShouldBeCopiedFromTrustedListSourceToTSLSource() {
+        TSLCertificateSource tslCertificateSource = new TSLCertificateSourceImpl();
+        tslCertificateSource = TSLUtils.addCertificatesFromTrustedListSource(tslCertificateSource, trustedListsCertificateSource);
         assertEquals(tslCertificateSource.getCertificates(), trustedListsCertificateSource.getCertificates());
     }
 

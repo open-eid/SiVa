@@ -18,13 +18,13 @@ package ee.openeid.validation.service.timemark.configuration;
 
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
+import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
 import ee.openeid.validation.service.timemark.XMLEntityAttackValidator;
 import ee.openeid.validation.service.timemark.signature.policy.BDOCSignaturePolicyService;
 import ee.openeid.validation.service.timemark.signature.policy.PolicyConfigurationWrapper;
-import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.Configuration;
-import org.digidoc4j.TSLCertificateSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -40,18 +40,20 @@ import org.springframework.context.annotation.Bean;
 })
 public class TimemarkContainerValidationServiceConfiguration {
 
+    @Autowired
+    private TSLLoaderConfigurationProperties tslLoaderConfigurationProperties;
+
     @Bean(name = "timemarkPolicyService")
     public ConstraintLoadingSignaturePolicyService timemarkSignaturePolicyService(BDOCSignaturePolicyProperties properties) {
         return new ConstraintLoadingSignaturePolicyService(properties);
     }
 
     @Bean
-    public PolicyConfigurationWrapper policyConfiguration(TrustedListsCertificateSource trustedListSource, BDOCSignaturePolicyService bdocSignaturePolicyService) {
+    public PolicyConfigurationWrapper policyConfiguration(BDOCSignaturePolicyService bdocSignaturePolicyService) {
         Configuration configuration = new Configuration();
+        configuration.setTslLocation(tslLoaderConfigurationProperties.getUrl());
         ConstraintDefinedPolicy policy = bdocSignaturePolicyService.getPolicy(StringUtils.EMPTY);
         configuration.setValidationPolicy(bdocSignaturePolicyService.getAbsolutePath(policy.getName()));
-        TSLCertificateSource tslCertificateSource = TSLUtils.createTSLFromTrustedCertSource(trustedListSource);
-        configuration.setTSL(tslCertificateSource);
         return new PolicyConfigurationWrapper(configuration, policy);
     }
 }

@@ -16,12 +16,10 @@
 
 package ee.openeid.validation.service.timemark.signature.policy;
 
-import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
-
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import ee.openeid.validation.service.timemark.configuration.BDOCSignaturePolicyProperties;
 import ee.openeid.validation.service.timemark.configuration.TSLUtils;
-
+import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.Configuration;
 import org.slf4j.Logger;
@@ -30,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 
@@ -70,7 +67,7 @@ public class BDOCConfigurationService {
         Configuration configuration = policyConfiguration.getConfiguration();
         if (configuration.getTSL().getCertificates().size() != trustedListSource.getCertificates().size()) {
             LOGGER.debug("some or all trusted certificates are not added to D4J configuration, repopulating from cert pool");
-            policyConfiguration.getConfiguration().setTSL(TSLUtils.createTSLFromTrustedCertSource(trustedListSource));
+            policyConfiguration.getConfiguration().setTSL(TSLUtils.addCertificatesFromTrustedListSource(configuration.getTSL(), trustedListSource));
         }
     }
 

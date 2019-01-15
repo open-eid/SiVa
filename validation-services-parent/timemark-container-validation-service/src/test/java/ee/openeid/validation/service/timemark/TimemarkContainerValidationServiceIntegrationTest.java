@@ -27,6 +27,7 @@ import ee.openeid.tsl.CustomCertificatesLoader;
 import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.TSLValidationJobFactory;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
+import ee.openeid.validation.service.timemark.configuration.TestDigiDoc4jConfiguration;
 import ee.openeid.validation.service.timemark.configuration.TimemarkContainerValidationServiceConfiguration;
 import ee.openeid.validation.service.timemark.signature.policy.BDOCConfigurationService;
 import ee.openeid.validation.service.timemark.signature.policy.BDOCSignaturePolicyService;
@@ -56,6 +57,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
+        TestDigiDoc4jConfiguration.class,
         TSLLoaderConfiguration.class,
         TSLLoader.class,
         CustomCertificatesLoader.class,

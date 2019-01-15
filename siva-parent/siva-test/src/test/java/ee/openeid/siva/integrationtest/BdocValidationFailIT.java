@@ -94,12 +94,12 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * <p>
      * Expected Result: The document should fail the validation
      * <p>
-     * File: 3f_2s_1partly_signed.bdoc
+     * File: BdocMultipleSignaturesMixedWithValidAndInvalid.bdoc
      */
     @Test
     public void bdocInvalidAndValidMultipleSignatures() {
-        setTestFilesDirectory("document_validation_test_files/bdoc/");
-        assertSomeSignaturesAreValid(postForReport("3f_2s_1partly_signed.bdoc"), 1);
+        setTestFilesDirectory("bdoc/test/timemark/");
+        assertSomeSignaturesAreValid(postForReport("BdocMultipleSignaturesMixedWithValidAndInvalid.bdoc"), 3);
     }
 
     /**
@@ -369,10 +369,9 @@ public class BdocValidationFailIT extends SiVaRestTests {
         post(validationRequestFor("23613_TM_wrong-manifest-mimetype.bdoc"))
                 .then()
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("OCSP Responder does not meet TM requirements"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file <test.txt> with mimetype <application/binary> but the signature file for signature S0 indicates the mimetype is <application/octet-stream>"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
     }
 
     /**

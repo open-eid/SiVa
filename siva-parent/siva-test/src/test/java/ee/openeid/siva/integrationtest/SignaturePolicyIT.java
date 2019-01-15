@@ -547,7 +547,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
      */
-    @Ignore("Tests fails cause OCSP responders does not match")
+
     @Test
     public void bdocDocumentQesNoTypeShouldPassWithStrictPolicy() {
         setTestFilesDirectory("bdoc/test/timemark/");
@@ -1111,7 +1111,6 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
      */
-    @Ignore("Tests fails cause OCSP responders does not match")
     @Test
     public void bdocDocumentQesNoTypeShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/test/timemark/");

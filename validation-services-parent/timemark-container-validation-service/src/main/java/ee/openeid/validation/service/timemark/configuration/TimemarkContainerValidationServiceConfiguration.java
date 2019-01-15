@@ -49,8 +49,7 @@ public class TimemarkContainerValidationServiceConfiguration {
     }
 
     @Bean
-    public PolicyConfigurationWrapper policyConfiguration(BDOCSignaturePolicyService bdocSignaturePolicyService) {
-        Configuration configuration = new Configuration();
+    public PolicyConfigurationWrapper policyConfiguration(BDOCSignaturePolicyService bdocSignaturePolicyService, Configuration configuration) {
         configuration.setTslLocation(tslLoaderConfigurationProperties.getUrl());
         ConstraintDefinedPolicy policy = bdocSignaturePolicyService.getPolicy(StringUtils.EMPTY);
         configuration.setValidationPolicy(bdocSignaturePolicyService.getAbsolutePath(policy.getName()));

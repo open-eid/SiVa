@@ -63,7 +63,6 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.digidoc4j.dss</groupId>

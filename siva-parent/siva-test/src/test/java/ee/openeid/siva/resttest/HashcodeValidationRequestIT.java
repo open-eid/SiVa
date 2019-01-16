@@ -16,8 +16,6 @@
 
 package ee.openeid.siva.resttest;
 
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.response.ValidatableResponse;
 import ee.openeid.siva.common.DateTimeMatcher;
 import ee.openeid.siva.integrationtest.SiVaRestTests;
 import ee.openeid.siva.integrationtest.TestData;
@@ -27,6 +25,8 @@ import ee.openeid.siva.validation.service.signature.policy.PredefinedValidationP
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.siva.webapp.request.Datafile;
 import ee.openeid.siva.webapp.request.JSONHashcodeValidationRequest;
+import io.restassured.RestAssured;
+import io.restassured.response.ValidatableResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.commons.codec.binary.Base64;

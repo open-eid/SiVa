@@ -354,7 +354,7 @@ However, all the properties can be overridden on the service or embedded web ser
 By default, the service loads it's global configuration from the application.yml file that is packaged inside the jar file.
 Default configuration parameters can be overridden by providing custom application.yml in the [following locations](http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html#boot-features-external-config-application-property-files), or using command line parameters or by using other [externalized configuration methods](http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html) methods.
 
-For example, to configure the embedded Undertow web server inside a fat jar to run on different port (default is 8080), change the **server.port** following property:
+For example, to configure the embedded Tomcat web server inside a fat jar to run on different port (default is 8080), change the **server.port** following property:
 ```bash
 server.port=8080
 ```

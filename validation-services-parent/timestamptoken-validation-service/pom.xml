@@ -28,10 +28,6 @@
     <name>TimeStampToken Validation Service</name>
     <description>Validates digitally signed TST files</description>
 
-    <properties>
-        <cxf.version>3.0.6</cxf.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>ee.openid.siva</groupId>
@@ -87,12 +83,12 @@
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcpkix-jdk15on</artifactId>
-            <version>1.58</version>
+            <version>${bouncycastle.version}</version>
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
-            <version>1.58</version>
+            <version>${bouncycastle.version}</version>
         </dependency>
 
     </dependencies>

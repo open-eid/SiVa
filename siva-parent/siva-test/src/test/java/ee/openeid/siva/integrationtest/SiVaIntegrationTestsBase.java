@@ -16,14 +16,12 @@
 
 package ee.openeid.siva.integrationtest;
 
-import com.jayway.restassured.RestAssured;
 import ee.openeid.siva.SivaWebApplication;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.SimpleReport;
-import ee.openeid.siva.webapp.request.validation.annotations.ValidSignatureFilename;
-import org.apache.commons.lang3.StringEscapeUtils;
+import io.restassured.RestAssured;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.BeforeClass;

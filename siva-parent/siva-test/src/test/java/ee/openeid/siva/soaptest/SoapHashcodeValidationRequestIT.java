@@ -16,7 +16,6 @@
 
 package ee.openeid.siva.soaptest;
 
-import com.jayway.restassured.response.ValidatableResponse;
 import ee.openeid.siva.common.DateTimeMatcher;
 import ee.openeid.siva.integrationtest.TestData;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
@@ -25,6 +24,7 @@ import ee.openeid.siva.validation.service.signature.policy.PredefinedValidationP
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.siva.webapp.request.Datafile;
 import ee.openeid.siva.webapp.request.JSONHashcodeValidationRequest;
+import io.restassured.response.ValidatableResponse;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;

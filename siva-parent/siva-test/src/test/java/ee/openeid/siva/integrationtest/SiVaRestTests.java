@@ -17,12 +17,12 @@
 package ee.openeid.siva.integrationtest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.response.Response;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.webapp.request.Datafile;
 import ee.openeid.siva.webapp.response.ValidationResponse;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FilenameUtils;
 import org.json.JSONObject;
@@ -41,8 +41,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.config.EncoderConfig.encoderConfig;
+import static io.restassured.RestAssured.given;
+import static io.restassured.config.EncoderConfig.encoderConfig;
 
 public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
 
@@ -75,7 +75,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         return given()
                 .log().headers()
                 .log().method()
-                .log().path()
+                .log().uri()
                 .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
                 .body(request)
                 .contentType(ContentType.JSON)
@@ -87,7 +87,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         return given()
                 .log().headers()
                 .log().method()
-                .log().path()
+                .log().uri()
                 .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
                 .body(request)
                 .log().body()

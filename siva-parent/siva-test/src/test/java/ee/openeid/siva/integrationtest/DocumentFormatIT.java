@@ -16,9 +16,9 @@
 
 package ee.openeid.siva.integrationtest;
 
-import com.jayway.restassured.RestAssured;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.validation.document.report.SimpleReport;
+import io.restassured.RestAssured;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;

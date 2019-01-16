@@ -16,8 +16,8 @@
 
 package ee.openeid.siva.integrationtest;
 
-import com.jayway.restassured.RestAssured;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.BeforeClass;

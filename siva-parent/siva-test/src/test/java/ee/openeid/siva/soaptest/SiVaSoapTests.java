@@ -16,13 +16,13 @@
 
 package ee.openeid.siva.soaptest;
 
-import com.jayway.restassured.response.Response;
 import ee.openeid.siva.integrationtest.SiVaIntegrationTestsBase;
 import ee.openeid.siva.webapp.request.Datafile;
 import ee.openeid.siva.webapp.request.JSONHashcodeValidationRequest;
 import ee.openeid.siva.webapp.soap.DataFilesReport;
 import ee.openeid.siva.webapp.soap.ValidateDocumentResponse;
 import ee.openeid.siva.webapp.soap.ValidationReport;
+import io.restassured.response.Response;
 import org.apache.commons.codec.binary.Base64;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -37,7 +37,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-import static com.jayway.restassured.RestAssured.given;
+import static io.restassured.RestAssured.given;
+
 
 public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
 

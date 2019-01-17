@@ -548,27 +548,28 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
      *
      * Expected Result: Warning element is present
      *
-     * File: ns6t3cp7.ddoc
+     * File: 18912.ddoc
      */
     @Test
     public void ddocOptionalWarningElementIsPresent() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestFor("ns6t3cp7.ddoc"))
+        post(validationRequestFor("18912.ddoc"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"))
                 .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S0"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("SIILBEK,JANNO,38003260232"))
+                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("xxx.docx"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("readme"))
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
-                .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2012-09-17T14:28:01Z"))
+                .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2012-09-21T11:56:53Z"))
                 .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("Bad digest for DataFile: D0 alternate digest matches!"))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2012-09-17T14:28:12Z"))
+                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2012-09-21T11:56:55Z"))
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("ns6t3cp7.ddoc"))
+                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("18912.ddoc"))
+                .body("validationReport.validationConclusion.validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }

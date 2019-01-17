@@ -135,6 +135,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
                 .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.containsString("Invalid signature value!"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2012-09-19T06:28:55Z"))
+                .body("validationReport.validationConclusion.validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
@@ -159,6 +160,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
                 .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.containsString("Bad digest for DataFile: D0"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
@@ -183,6 +185,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.2"))
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Signature has no OCSP confirmation!"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
@@ -395,31 +398,6 @@ public class DdocValidationFailIT extends SiVaRestTests{
                 .body("requestErrors", Matchers.hasSize(2));
     }
 
-    /**
-     * TestCaseID: Ddoc-ValidationFail-17
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
-     *
-     * Title: Ddoc XML namespace error in container
-     *
-     * Expected Result: The document should pass with warning
-     *
-     * File: ns6t3cp7.ddoc
-     */
-    @Test
-    public void ddocNamespaceErrorShouldFail() {
-        setTestFilesDirectory("ddoc/live/timemark/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("ns6t3cp7.ddoc"));
-        post(validationRequestWithValidKeys(encodedString, "ns6t3cp7.ddoc", "POLv3"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("Bad digest for DataFile: D0 alternate digest matches!"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
-    }
     @Override
     protected String getTestFilesDirectory() {
         return testFilesDirectory;

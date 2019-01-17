@@ -41,7 +41,8 @@ public class PDFSignaturePolicyTest extends PDFValidationServiceTest {
         assertEquals(validationConclusion.getSignaturesCount(), validationConclusion.getValidSignaturesCount());
     }
 
-    @Test @Ignore //TODO: New test file is needed
+    @Test
+    @Ignore //TODO: New test file is needed
     public void softCertSignatureShouldBeInvalidWithQESPolicy() throws Exception {
         SimpleReport report = validateWithPolicy("POLv4", PDF_WITH_SOFT_CERT_SIGNATURE);
         assertTrue(report.getValidationConclusion().getValidSignaturesCount() == 0);

@@ -292,6 +292,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("Bad digest for DataFile: D0 alternate digest matches!"))
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
                 .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("18912.ddoc"))
+                .body("validationReport.validationConclusion.validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
@@ -328,8 +329,9 @@ public class DdocValidationPassIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is(""))
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.0_hashcode"))
                 .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("SK-XML1.0_hashcode.ddoc"))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(2))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2));
+                .body("validationReport.validationConclusion.validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"));
     }
 
     /**
@@ -438,6 +440,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3_hashcode"))
                 .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("DIGIDOC-XML1.3_hashcode.ddoc"))
+                .body("validationReport.validationConclusion.validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }

@@ -55,7 +55,7 @@ public abstract class TimemarkContainerValidationReportBuilder {
     Container container;
     private ValidationDocument validationDocument;
     private ValidationPolicy validationPolicy;
-    private List<DigiDoc4JException> containerErrors;
+    List<DigiDoc4JException> containerErrors;
     private boolean isReportSignatureEnabled;
 
     public TimemarkContainerValidationReportBuilder(Container container, ValidationDocument validationDocument, ValidationPolicy validationPolicy, List<DigiDoc4JException> containerErrors, boolean isReportSignatureEnabled) {
@@ -116,7 +116,7 @@ public abstract class TimemarkContainerValidationReportBuilder {
     private List<ValidationWarning> containerValidationWarnings() {
         List<ValidationWarning> validationWarnings = containerErrors.stream().map(e -> createValidationWarning(e.getMessage())).collect(Collectors.toList());
         validationWarnings.removeIf(s -> container.getSignatures().stream().anyMatch(sig -> getErrors(sig).stream().anyMatch(err -> err.getContent().equals(s.getContent()))));
-        validationWarnings.addAll(getValidationWarningsForUnsignedDataFiles());
+        addExtraValidationWarnings(validationWarnings);
         return validationWarnings;
     }
 
@@ -211,9 +211,14 @@ public abstract class TimemarkContainerValidationReportBuilder {
         return signature.getSigningCertificate().getSubjectName(X509Cert.SubjectName.C);
     }
 
+    abstract void addExtraValidationWarnings(List<ValidationWarning> validationWarnings);
+
     abstract List<ValidationWarning> getValidationWarningsForUnsignedDataFiles();
+
     abstract List<SignatureScope> getSignatureScopes(Signature signature, List<String> dataFilenames);
+
     abstract String getSignatureForm();
+
     abstract String getSignatureFormat(SignatureProfile profile);
 
 }

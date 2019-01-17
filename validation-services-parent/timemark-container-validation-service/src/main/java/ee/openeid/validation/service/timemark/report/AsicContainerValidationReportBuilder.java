@@ -26,23 +26,23 @@ public class AsicContainerValidationReportBuilder extends TimemarkContainerValid
 
     @Override
     List<ValidationWarning> getValidationWarningsForUnsignedDataFiles() {
-        List<String> dataFilenames = container.getDataFiles().stream().map(DataFile:: getName).collect(Collectors.toList());
+        List<String> dataFilenames = container.getDataFiles().stream().map(DataFile::getName).collect(Collectors.toList());
         return container.getSignatures()
                 .stream()
                 .map(signature -> createValidationWarning(signature, getUnsignedFiles((AsicESignature) signature, dataFilenames)))
-                .filter(Objects:: nonNull)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
     @Override
     List<SignatureScope> getSignatureScopes(Signature signature, List<String> dataFilenames) {
         AsicESignature bDocSignature = (AsicESignature) signature;
-            return bDocSignature.getOrigin().getReferences()
-                    .stream()
-                    .map(r -> decodeUriIfPossible(r.getURI()))
-                    .filter(dataFilenames :: contains) //filters out Signed Properties
-                    .map(AsicContainerValidationReportBuilder:: createFullSignatureScopeForDataFile)
-                    .collect(Collectors.toList());
+        return bDocSignature.getOrigin().getReferences()
+                .stream()
+                .map(r -> decodeUriIfPossible(r.getURI()))
+                .filter(dataFilenames::contains) //filters out Signed Properties
+                .map(AsicContainerValidationReportBuilder::createFullSignatureScopeForDataFile)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -53,6 +53,11 @@ public class AsicContainerValidationReportBuilder extends TimemarkContainerValid
     @Override
     String getSignatureFormat(SignatureProfile profile) {
         return XADES_FORMAT_PREFIX + profile.toString();
+    }
+
+    @Override
+    void addExtraValidationWarnings(List<ValidationWarning> validationWarnings) {
+        validationWarnings.addAll(getValidationWarningsForUnsignedDataFiles());
     }
 
     private static SignatureScope createFullSignatureScopeForDataFile(String filename) {
@@ -92,4 +97,5 @@ public class AsicContainerValidationReportBuilder extends TimemarkContainerValid
                 .filter(df -> !uris.contains(df))
                 .collect(Collectors.toList());
     }
+
 }

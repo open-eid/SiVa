@@ -23,6 +23,13 @@ public class DDOCContainerValidationReportBuilder extends TimemarkContainerValid
     }
 
     @Override
+    void addExtraValidationWarnings(List<ValidationWarning> validationWarnings) {
+        ValidationWarning timestampValidationWarning = new ValidationWarning();
+        timestampValidationWarning.setContent(DDOC_TIMESTAMP_WARNING);
+        validationWarnings.add(timestampValidationWarning);
+    }
+
+    @Override
     List<ValidationWarning> getValidationWarningsForUnsignedDataFiles() {
         return new ArrayList<>();
     }

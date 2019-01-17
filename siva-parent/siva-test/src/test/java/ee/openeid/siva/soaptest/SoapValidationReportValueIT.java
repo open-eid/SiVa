@@ -212,7 +212,6 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      * File: SK-XML1.0.ddoc
      *
      */
-    @Ignore //TODO: https://github.com/open-eid/SiVa/issues/11
     @Test
     public void SoapDdocCorrectValuesArePresentV1_0() {
         setTestFilesDirectory("ddoc/live/timemark/");
@@ -220,8 +219,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         assertEquals("validSignaturesCount should equal with signaturesCount", getValidationReportFromDom(report).getValidationConclusion().getSignaturesCount(),getValidationReportFromDom(report).getValidationConclusion().getValidSignaturesCount());
         assertEquals("SignatureFormat should match expected", "SK_XML_1.0", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureFormat());
         assertEquals("Indication should match expected", "TOTAL-PASSED", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getIndication().value());
-        assertTrue("SignatureLevel should match expected", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureLevel().isEmpty());
-        assertEquals("SignatureScopes should match expected", "", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
+        assertEquals("SignatureScopes should match expected", "FullSignatureScope", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
         assertTrue("Errors should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getErrors().getError().isEmpty());
         assertTrue("Warnings should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getWarnings().getWarning().isEmpty());
         assertEquals("SignatureForm should match expected", "DIGIDOC_XML_1.0", getValidationReportFromDom(report).getValidationConclusion().getSignatureForm());

@@ -613,7 +613,6 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
      * File: SK-XML1.0.ddoc
      */
     @Test
-    @Ignore //TODO: https://github.com/open-eid/SiVa/issues/11
     public void ddocCorrectValuesArePresentV1_0() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("SK-XML1.0.ddoc"))
@@ -621,17 +620,15 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaDdoc.json"))
                 .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S0"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("SK_XML_1.0"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is(""))
                 .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("ANSIP,ANDRUS,35610012722"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is(""))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.hasSize(0))
+                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("Tartu ja Tallinna koostooleping.doc"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is(""))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
                 .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2002-10-07T12:10:19Z"))
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.hasSize(0))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is(""))
+                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2002-10-07T11:10:47Z"))
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.0"))
                 .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("SK-XML1.0.ddoc"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(2))

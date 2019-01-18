@@ -273,14 +273,13 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * <p>
      * File: TS-05_23634_TS_unknown_TSA.asice
      */
-    @Ignore //TODO: https://ec.europa.eu/cefdigital/tracker/browse/DSS-1221
     @Test
     public void asiceNotTrustedTsaCert() {
         post(validationRequestFor("TS-05_23634_TS_unknown_TSA.asice", null, null))
                 .then()
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Signature has an invalid timestamp"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the timestamps validation process is not conclusive!"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }

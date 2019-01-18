@@ -166,12 +166,13 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      *
      * File: hellopades-lt-sha256-rsa1023.pdf
      */
-    @Ignore //TODO Bug fixed in DSS version 5.1. https://ec.europa.eu/cefdigital/tracker/browse/DSS-1145
     @Test
     public void documentSignedWithRsa1023AlgoShouldFail() {
         post(validationRequestFor("hellopades-lt-sha256-rsa1023.pdf"))
-                .then().
-                body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT")); //Specific assertions needs to be added
+                .then()
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("NO_POE"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("The past signature validation is not conclusive!"));
     }
 
     /**

@@ -16,9 +16,9 @@
 
 package ee.openeid.siva.webapp.soap.transformer;
 
-import ee.openeid.siva.proxy.document.Datafile;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.document.ReportType;
+import ee.openeid.siva.validation.document.Datafile;
 import ee.openeid.siva.webapp.soap.HashDataFile;
 import ee.openeid.siva.webapp.soap.SoapHashcodeValidationRequest;
 import org.apache.commons.codec.binary.Base64;

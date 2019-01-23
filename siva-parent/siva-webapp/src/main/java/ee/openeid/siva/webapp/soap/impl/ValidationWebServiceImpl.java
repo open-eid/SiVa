@@ -16,7 +16,7 @@
 
 package ee.openeid.siva.webapp.soap.impl;
 
-import ee.openeid.siva.proxy.ValidationProxy;
+import ee.openeid.siva.proxy.ContainerValidationProxy;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.webapp.soap.SoapValidationRequest;
 import ee.openeid.siva.webapp.soap.ValidationReport;
@@ -33,7 +33,7 @@ import javax.xml.ws.Holder;
 @SchemaValidation(type = SchemaValidation.SchemaValidationType.IN)
 public class ValidationWebServiceImpl implements ValidationWebService {
 
-    private ValidationProxy validationProxy;
+    private ContainerValidationProxy validationProxy;
     private SoapValidationRequestToProxyDocumentTransformer requestTransformer;
     private ValidationReportSoapResponseTransformer responseTransformer;
 
@@ -45,7 +45,7 @@ public class ValidationWebServiceImpl implements ValidationWebService {
     }
 
     @Autowired
-    public void setValidationProxy(ValidationProxy validationProxy) {
+    public void setValidationProxy(ContainerValidationProxy validationProxy) {
         this.validationProxy = validationProxy;
     }
 

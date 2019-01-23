@@ -196,14 +196,14 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
     protected static String createXMLHashcodeValidationRequest(JSONHashcodeValidationRequest request) {
         return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
                 "   <soapenv:Header/>\n" +
-                "   <soapenv:Body>\n" +
-                "      <soap:HashcodeValidationDocument>\n" +
-                "         <soap:HashcodeValidationRequest>\n" +
-                "           " + addParameter("SignatureFile", request.getSignatureFile()) +
-                "           " + addParameter("Filename", request.getFilename()) +
-                "           " + addParameter("ReportType", request.getReportType()) +
-                "           " + addParameter("SignaturePolicy", request.getSignaturePolicy()) +
-                "           " + formDataFilesBlock(request.getDatafiles()) +
+                "   <soapenv:Body>\n" + //TODO: uncomment
+//                "      <soap:HashcodeValidationDocument>\n" +
+//                "         <soap:HashcodeValidationRequest>\n" +
+//                "           " + addParameter("SignatureFile", request.getSignatureFile()) +
+//                "           " + addParameter("Filename", request.getFilename()) +
+//                "           " + addParameter("ReportType", request.getReportType()) +
+//                "           " + addParameter("SignaturePolicy", request.getSignaturePolicy()) +
+//                "           " + formDataFilesBlock(request.getDatafiles()) +
                 "         </soap:HashcodeValidationRequest>\n" +
                 "      </soap:HashcodeValidationDocument>\n" +
                 "   </soapenv:Body>\n" +

@@ -19,6 +19,7 @@ package ee.openeid.siva.integrationtest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.webapp.request.Datafile;
+import ee.openeid.siva.webapp.request.SignatureFile;
 import ee.openeid.siva.webapp.response.ValidationResponse;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -36,10 +37,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.config.EncoderConfig.encoderConfig;
@@ -193,29 +191,31 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         return jsonObject.toString();
     }
 
-    protected String validationRequestHashcode(String signature, String filename, String signaturePolicy, String reportType, String dataFile, String hashAlgo, String hash) {
-        List<Datafile> list = new ArrayList<>();
+    protected String validationRequestHashcode(String signature, String signaturePolicy, String reportType, String dataFile, String hashAlgo, String hash) {
+
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put(SIGNATURE_FILE, Base64.encodeBase64String(readFileFromTestResources(signature)));
-        jsonObject.put(FILENAME, filename);
-        jsonObject.put(SIGNATURE_POLICY, signaturePolicy);
-        jsonObject.put(REPORT_TYPE, reportType);
+
         Datafile dataFileObject = new Datafile();
         dataFileObject.setHash(hash);
         dataFileObject.setHashAlgo(hashAlgo);
         dataFileObject.setFilename(dataFile);
-        list.add(dataFileObject);
-        jsonObject.put(DATAFILES, list);
+
+        SignatureFile signatureFile = new SignatureFile();
+        signatureFile.setSignature(Base64.encodeBase64String(readFileFromTestResources(signature)));
+        signatureFile.setDatafiles(Collections.singletonList(dataFileObject));
+
+        jsonObject.put(SIGNATURE_FILES, Collections.singletonList(signatureFile));
+        jsonObject.put(SIGNATURE_POLICY, signaturePolicy);
+        jsonObject.put(REPORT_TYPE, reportType);
+
         return jsonObject.toString();
     }
 
     protected String validationRequestHashcodeReadFromFile(String signature, String signaturePolicy, String reportType) throws ParserConfigurationException, IOException, SAXException {
-        List<Datafile> list = new ArrayList<>();
+        List<Datafile> datafiles = new ArrayList<>();
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put(SIGNATURE_FILE, Base64.encodeBase64String(readFileFromTestResources(signature)));
-        jsonObject.put(FILENAME, signature);
-        jsonObject.put(SIGNATURE_POLICY, signaturePolicy);
-        jsonObject.put(REPORT_TYPE, reportType);
+        SignatureFile signatureFile = new SignatureFile();
+        signatureFile.setSignature(Base64.encodeBase64String(readFileFromTestResources(signature)));
 
         String testFilesBase = getProjectBaseDirectory() + "src/test/resources/" + getTestFilesDirectory() + signature;
 
@@ -230,9 +230,13 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
             dataFileObject.setHash(nList.item(k).getChildNodes().item(1).getFirstChild().getNodeValue());
             dataFileObject.setHashAlgo("SHA256");
             dataFileObject.setFilename(nList.item(k).getAttributes().getNamedItem("URI").getNodeValue());
-            list.add(dataFileObject);
+            datafiles.add(dataFileObject);
         }
-        jsonObject.put(DATAFILES, list);
+        signatureFile.setDatafiles(datafiles);
+
+        jsonObject.put(SIGNATURE_POLICY, signaturePolicy);
+        jsonObject.put(REPORT_TYPE, reportType);
+        jsonObject.put(SIGNATURE_FILES, Collections.singletonList(signatureFile));
         return jsonObject.toString();
     }
 

@@ -60,7 +60,7 @@ public class ValidationExceptionHandler {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public RequestValidationError handleMalformedSignatureFileException(MalformedSignatureFileException e) {
         RequestValidationError requestValidationError = new RequestValidationError();
-        requestValidationError.addFieldError("signatureFile", getMessage("validation.error.message.signatureFile.malformed"));
+        requestValidationError.addFieldError("signatureFiles.signature", getMessage("validation.error.message.signatureFile.malformed"));
         return requestValidationError;
     }
 

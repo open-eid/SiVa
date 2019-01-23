@@ -16,9 +16,9 @@
 
 package ee.openeid.siva.webapp;
 
+import ee.openeid.siva.proxy.ContainerValidationProxy;
 import ee.openeid.siva.proxy.DataFilesProxy;
 import ee.openeid.siva.proxy.HashcodeValidationProxy;
-import ee.openeid.siva.proxy.ValidationProxy;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.document.ReportType;
 import ee.openeid.siva.proxy.http.RESTValidationProxyException;
@@ -29,6 +29,7 @@ import ee.openeid.siva.validation.exception.MalformedSignatureFileException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import ee.openeid.siva.webapp.request.Datafile;
+import ee.openeid.siva.webapp.request.SignatureFile;
 import ee.openeid.siva.webapp.transformer.DataFilesRequestToProxyDocumentTransformer;
 import ee.openeid.siva.webapp.transformer.HashcodeValidationRequestToProxyDocumentTransformer;
 import ee.openeid.siva.webapp.transformer.ValidationRequestToProxyDocumentTransformer;
@@ -52,10 +53,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
+import java.util.Collections;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -69,7 +69,7 @@ public class ValidationExceptionHandlerTest {
     private static final String GET_DATA_FILES_URL_TEMPLATE = "/getDataFiles";
     private ValidationController validationController;
     private DataFilesController dataFilesController;
-    private ValidationProxy validationProxy;
+    private ContainerValidationProxy validationProxy;
     private DataFilesProxy dataFilesProxy;
     private HashcodeValidationProxy hashcodeValidationProxy;
     private MockMvc mockMvc;
@@ -81,11 +81,11 @@ public class ValidationExceptionHandlerTest {
     public void SetUp() {
         validationController = new ValidationController();
         dataFilesController = new DataFilesController();
-        validationProxy = Mockito.mock(ValidationProxy.class);
+        validationProxy = Mockito.mock(ContainerValidationProxy.class);
         dataFilesProxy = Mockito.mock(DataFilesProxy.class);
         hashcodeValidationProxy = Mockito.mock(HashcodeValidationProxy.class);
 
-        validationController.setValidationProxy(validationProxy);
+        validationController.setContainerValidationProxy(validationProxy);
         validationController.setTransformer(new ValidationRequestToProxyDocumentTransformer());
         validationController.setHashcodeValidationProxy(hashcodeValidationProxy);
         validationController.setHashRequestTransformer(new HashcodeValidationRequestToProxyDocumentTransformer());
@@ -285,7 +285,7 @@ public class ValidationExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors", hasSize(1)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].key", is("signatureFile")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].key", is("signatureFiles.signature")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].message", containsString("Signature file malformed")))
                 .andReturn();
     }
@@ -322,15 +322,17 @@ public class ValidationExceptionHandlerTest {
 
     private JSONObject requestWithInvalidFormatSignatureFile() {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("signatureFile", "NOT_XML_FORMATTED_FILE_CONTENT");
-        jsonObject.put("filename", "signature0.xml");
-        jsonObject.put("reportType", ReportType.SIMPLE);
-        jsonObject.put("signaturePolicy", "POLv3");
-
         Datafile datafile = new Datafile();
         datafile.setFilename("test");
         datafile.setHash("test-hash-1");
         datafile.setHashAlgo("SHA256");
+        SignatureFile signatureFile = new SignatureFile();
+        signatureFile.setSignature("NOT_XML_FORMATTED_FILE_CONTENT");
+        signatureFile.setDatafiles(Collections.singletonList(datafile));
+        jsonObject.put("signatureFiles", Arrays.asList(signatureFile));
+
+        jsonObject.put("reportType", ReportType.SIMPLE);
+        jsonObject.put("signaturePolicy", "POLv3");
 
         jsonObject.put("datafiles", Arrays.asList(datafile));
         return jsonObject;

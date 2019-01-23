@@ -16,13 +16,15 @@
 
 package ee.openeid.siva.webapp.transformer;
 
-import ee.openeid.siva.proxy.document.Datafile;
-import ee.openeid.siva.proxy.document.ProxyDocument;
+import ee.openeid.siva.proxy.document.ProxyHashcodeDataSet;
 import ee.openeid.siva.proxy.document.ReportType;
+import ee.openeid.siva.validation.document.Datafile;
 import ee.openeid.siva.webapp.request.HashcodeValidationRequest;
+import ee.openeid.siva.webapp.request.SignatureFile;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,25 +32,35 @@ import java.util.stream.Collectors;
 @Component
 public class HashcodeValidationRequestToProxyDocumentTransformer {
 
-    public ProxyDocument transform(HashcodeValidationRequest hashcodeValidationRequest) {
-        ProxyDocument proxyDocument = new ProxyDocument();
+    public ProxyHashcodeDataSet transform(HashcodeValidationRequest hashcodeValidationRequest) {
+        ProxyHashcodeDataSet proxyHashcodeDataSet = new ProxyHashcodeDataSet();
 
-        proxyDocument.setName(hashcodeValidationRequest.getFilename());
+        setReportType(hashcodeValidationRequest, proxyHashcodeDataSet);
+        proxyHashcodeDataSet.setSignaturePolicy(hashcodeValidationRequest.getSignaturePolicy());
+        proxyHashcodeDataSet.setSignatureFiles(mapSignatureFiles(hashcodeValidationRequest.getSignatureFiles()));
 
-        proxyDocument.setBytes(Base64.decodeBase64(hashcodeValidationRequest.getSignatureFile()));
+        return proxyHashcodeDataSet;
+    }
 
+    private void setReportType(HashcodeValidationRequest hashcodeValidationRequest, ProxyHashcodeDataSet proxyHashcodeDataSet) {
         if (hashcodeValidationRequest.getReportType() != null) {
-            proxyDocument.setReportType(ReportType.reportTypeFromString(hashcodeValidationRequest.getReportType()));
+            proxyHashcodeDataSet.setReportType(ReportType.reportTypeFromString(hashcodeValidationRequest.getReportType()));
         } else {
-            proxyDocument.setReportType(ReportType.SIMPLE);
+            proxyHashcodeDataSet.setReportType(ReportType.SIMPLE);
         }
+    }
 
-        proxyDocument.setSignaturePolicy(hashcodeValidationRequest.getSignaturePolicy());
+    private List<ee.openeid.siva.validation.document.SignatureFile> mapSignatureFiles(List<SignatureFile> requestSignatureFiles) {
+        List<ee.openeid.siva.validation.document.SignatureFile> signatureFiles = new ArrayList<>();
 
-        List<Datafile> datafiles = mapRequestDatafilesToProxyDocument(hashcodeValidationRequest.getDatafiles());
-        proxyDocument.setDatafiles(datafiles);
+        requestSignatureFiles.forEach(requestSignatureFile -> {
+            ee.openeid.siva.validation.document.SignatureFile signatureFile = new ee.openeid.siva.validation.document.SignatureFile();
+            signatureFile.setSignature(Base64.decodeBase64(requestSignatureFile.getSignature()));
+            signatureFile.setDatafiles(mapRequestDatafilesToProxyDocument(requestSignatureFile.getDatafiles()));
+            signatureFiles.add(signatureFile);
+        });
 
-        return proxyDocument;
+        return signatureFiles;
     }
 
     private List<Datafile> mapRequestDatafilesToProxyDocument(List<ee.openeid.siva.webapp.request.Datafile> requestDatafiles) {

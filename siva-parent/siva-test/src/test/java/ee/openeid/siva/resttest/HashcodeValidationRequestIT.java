@@ -25,12 +25,12 @@ import ee.openeid.siva.validation.service.signature.policy.PredefinedValidationP
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.siva.webapp.request.Datafile;
 import ee.openeid.siva.webapp.request.JSONHashcodeValidationRequest;
+import ee.openeid.siva.webapp.request.SignatureFile;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;
 import org.json.JSONObject;
@@ -45,6 +45,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.hamcrest.Matchers.*;
 
@@ -53,7 +54,6 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
 
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "document_format_test_files/";
     private static final String VALIDATION_CONCLUSION_PREFIX = "validationReport.validationConclusion.";
-    private static final String SIGNATURE_FILENAME_SUFFIX = ".xml";
 
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
     private ZonedDateTime testStartDate;
@@ -102,7 +102,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Title: Input correct values for detailed report
      *
-     * Expected Result: Detailed report is returned
+     * Expected Result: Simple report is returned
      *
      * File: hashAsiceXades.xml
      **/
@@ -111,7 +111,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setReportType(ReportType.DETAILED.getValue());
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
-        assertDetailedReportWithSignature(response, request);
+        assertSimpleReportWithSignature(response, request);
     }
 
     /**
@@ -121,7 +121,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
      *
-     * Title: Input missing signature file
+     * Title: Input missing signature files
      *
      * Expected Result: Error is returned
      *
@@ -130,12 +130,13 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     @Test
     public void signatureFileMissing() {
         JSONHashcodeValidationRequest request = validRequestBody();
-        request.setSignatureFile(null);
+
+        request.setSignatureFiles(null);
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertErrorResponse(response,
-                new RequestError(SIGNATURE_FILE, MAY_NOT_BE_EMPTY),
-                new RequestError(SIGNATURE_FILE, SIGNATURE_FILE_NOT_BASE64_ENCODED)
+                new RequestError(SIGNATURE_FILES, MAY_NOT_BE_EMPTY),
+                new RequestError(SIGNATURE_FILES, MAY_NOT_BE_NULL)
         );
     }
 
@@ -155,12 +156,11 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     @Test
     public void signatureFileEmpty() {
         JSONHashcodeValidationRequest request = validRequestBody();
-        request.setSignatureFile("");
+        request.setSignatureFiles(Collections.emptyList());
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertErrorResponse(response,
-                new RequestError(SIGNATURE_FILE, MAY_NOT_BE_EMPTY),
-                new RequestError(SIGNATURE_FILE, SIGNATURE_FILE_NOT_BASE64_ENCODED)
+                new RequestError(SIGNATURE_FILES, MAY_NOT_BE_EMPTY)
         );
     }
 
@@ -171,7 +171,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
      *
-     * Title: Input incorrect signature file
+     * Title: Input incorrect signature
      *
      * Expected Result: Error is returned
      *
@@ -180,12 +180,10 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     @Test
     public void signatureFileNotBase64Encoded() {
         JSONHashcodeValidationRequest request = validRequestBody();
-        request.setSignatureFile("NOT.BASE64.ENCODED.VALUE");
+        request.getSignatureFiles().get(0).setSignature("NOT.BASE64.ENCODED.VALUE");
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
-        assertErrorResponse(response,
-                new RequestError(SIGNATURE_FILE, SIGNATURE_FILE_NOT_BASE64_ENCODED)
-        );
+        assertErrorResponse(response, new RequestError(SIGNATURE_INDEX_0, SIGNATURE_FILE_NOT_BASE64_ENCODED));
     }
 
     /**
@@ -205,7 +203,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     public void signatureFileContentWithoutSignature() {
         String randomXmlFileWithoutSignature = "PD94bWwgdmVyc2lvbj0nMS4wJyAgZW5jb2Rpbmc9J1VURi04JyA/Pg0KPHRlc3Q+DQoJPGRhdGE+DQoJCTxzb21ldGhpbmc+c29tZSBkYXRhPC9zb21ldGhpbmc+DQoJPC9kYXRhPg0KPC90ZXN0Pg0K";
         JSONHashcodeValidationRequest request = validRequestBody();
-        request.setSignatureFile(randomXmlFileWithoutSignature);
+        request.getSignatureFiles().get(0).setSignature(randomXmlFileWithoutSignature);
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertSimpleReportWithoutSignature(response, request);
@@ -225,162 +223,14 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: hashAsiceXades.xml
      **/
     @Test
-    public void signatureFileContentNotXML() {
+    public void signatureContentNotXML() {
         String notXmlFormattedContent = Base64.encodeBase64String("NOT_XML_FORMATTED_FILE_CONTENT".getBytes(StandardCharsets.UTF_8));
         JSONHashcodeValidationRequest request = validRequestBody();
-        request.setSignatureFile(notXmlFormattedContent);
+        request.getSignatureFiles().get(0).setSignature(notXmlFormattedContent);
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertErrorResponse(response,
-                new RequestError(SIGNATURE_FILE, SIGNATURE_FILE_MALFORMED)
-        );
-    }
-
-    /**
-     * TestCaseID: Hascode-Validation-Request-8
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
-     *
-     * Title: Input missing filename
-     *
-     * Expected Result: Error is returned
-     *
-     * File: hashAsiceXades.xml
-     **/
-    @Test
-    public void filenameMissing() {
-        JSONHashcodeValidationRequest request = validRequestBody();
-        request.setFilename(null);
-
-        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
-        assertErrorResponse(response,
-                new RequestError(FILENAME, MAY_NOT_BE_EMPTY),
-                new RequestError(FILENAME, INVALID_FILENAME),
-                new RequestError(FILENAME, INVALID_FILENAME_EXTENSION)
-        );
-    }
-
-    /**
-     * TestCaseID: Hascode-Validation-Request-9
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
-     *
-     * Title: Input empty filename
-     *
-     * Expected Result: Error is returned
-     *
-     * File: hashAsiceXades.xml
-     **/
-    @Test
-    public void filenameEmpty() {
-        JSONHashcodeValidationRequest request = validRequestBody();
-        request.setFilename("");
-
-        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
-        assertErrorResponse(response,
-                new RequestError(FILENAME, INVALID_FILENAME_SIZE),
-                new RequestError(FILENAME, INVALID_FILENAME_EXTENSION),
-                new RequestError(FILENAME, MAY_NOT_BE_EMPTY)
-        );
-    }
-
-    /**
-     * TestCaseID: Hascode-Validation-Request-10
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
-     *
-     * Title: Input whitespace filename
-     *
-     * Expected Result: Error is returned
-     *
-     * File: hashAsiceXades.xml
-     **/
-    @Test
-    public void filenameEmptyWhitespace() {
-        JSONHashcodeValidationRequest request = validRequestBody();
-        request.setFilename(" ");
-
-        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
-        assertErrorResponse(response,
-                new RequestError(FILENAME, INVALID_FILENAME_EXTENSION),
-                new RequestError(FILENAME, MAY_NOT_BE_EMPTY)
-        );
-    }
-
-    /**
-     * TestCaseID: Hascode-Validation-Request-11
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
-     *
-     * Title: Input too long filename
-     *
-     * Expected Result: Error is returned
-     *
-     * File: hashAsiceXades.xml
-     **/
-    @Test
-    public void filenameTooLong() {
-        JSONHashcodeValidationRequest request = validRequestBody();
-        request.setFilename(StringUtils.repeat('a', 260 + 1 - SIGNATURE_FILENAME_SUFFIX.length()) + SIGNATURE_FILENAME_SUFFIX);
-
-        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
-        assertErrorResponse(response,
-                new RequestError(FILENAME, INVALID_FILENAME_SIZE));
-    }
-
-    /**
-     * TestCaseID: Hascode-Validation-Request-12
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
-     *
-     * Title: Input invalid format filename
-     *
-     * Expected Result: Error is returned
-     *
-     * File: hashAsiceXades.xml
-     **/
-    @Test
-    public void filenameInvalidFormat() {
-        JSONHashcodeValidationRequest request = validRequestBody();
-        request.setFilename("*:?!");
-
-        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
-        assertErrorResponse(response,
-                new RequestError(FILENAME, INVALID_FILENAME_EXTENSION)
-        );
-    }
-
-    /**
-     * TestCaseID: Hascode-Validation-Request-13
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
-     *
-     * Title: Input wrong file type in filename
-     *
-     * Expected Result: Error is returned
-     *
-     * File: hashAsiceXades.xml
-     **/
-    @Test
-    public void filenameInvalidExtension() {
-        JSONHashcodeValidationRequest request = validRequestBody();
-        request.setFilename("signature.pdf");
-
-        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
-        assertErrorResponse(response,
-                new RequestError(FILENAME, INVALID_FILENAME_EXTENSION)
+                new RequestError(SIGNATURE, SIGNATURE_MALFORMED)
         );
     }
 
@@ -585,7 +435,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     @Test
     public void dataFilesMissing() {
         JSONHashcodeValidationRequest request = validRequestBody();
-        request.setDatafiles(null);
+        request.getSignatureFiles().get(0).setDatafiles(null);
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertErrorResponse(response,
@@ -610,12 +460,11 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     @Test
     public void dataFilesEmpty() {
         JSONHashcodeValidationRequest request = validRequestBody();
-        request.setDatafiles(new ArrayList<>());
+        request.getSignatureFiles().get(0).setDatafiles(new ArrayList<>());
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertErrorResponse(response,
-                new RequestError(DATAFILES, MAY_NOT_BE_EMPTY),
-                new RequestError(DATAFILES, MAY_NOT_BE_NULL)
+                new RequestError(DATAFILES, MAY_NOT_BE_EMPTY)
         );
     }
 
@@ -635,7 +484,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     @Test
     public void dataFileFilenameMissing() {
         JSONHashcodeValidationRequest request = validRequestBody();
-        request.getDatafiles().get(0).setFilename(null);
+        request.getSignatureFiles().get(0).getDatafiles().get(0).setFilename(null);
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertErrorResponse(response,
@@ -660,7 +509,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     @Test
     public void dataFileFilenameEmpty() {
         JSONHashcodeValidationRequest request = validRequestBody();
-        request.getDatafiles().get(0).setFilename("");
+        request.getSignatureFiles().get(0).getDatafiles().get(0).setFilename("");
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertErrorResponse(response,
@@ -685,7 +534,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     @Test
     public void dataFileFilenameTooLong() {
         JSONHashcodeValidationRequest request = validRequestBody();
-        request.getDatafiles().get(0).setFilename(StringUtils.repeat('a', 261));
+        request.getSignatureFiles().get(0).getDatafiles().get(0).setFilename(StringUtils.repeat('a', 261));
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertErrorResponse(response,
@@ -710,7 +559,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     @Test
     public void dataFileHashAlgorithmInvalid() {
         JSONHashcodeValidationRequest request = validRequestBody();
-        request.getDatafiles().get(0).setHashAlgo("INVALID_HASH_ALGORITHM");
+        request.getSignatureFiles().get(0).getDatafiles().get(0).setHashAlgo("INVALID_HASH_ALGORITHM");
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertErrorResponse(response,
@@ -734,7 +583,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     @Test
     public void dataFileHashAlgorithmCaseInsensitive() {
         JSONHashcodeValidationRequest request = validRequestBody();
-        request.getDatafiles().get(0).setHashAlgo("sha256");
+        request.getSignatureFiles().get(0).getDatafiles().get(0).setHashAlgo("sha256");
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertSimpleReportWithSignature(response, request);
@@ -756,7 +605,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     @Test
     public void dataFileHashMissing() {
         JSONHashcodeValidationRequest request = validRequestBody();
-        request.getDatafiles().get(0).setHash(null);
+        request.getSignatureFiles().get(0).getDatafiles().get(0).setHash(null);
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertErrorResponse(response,
@@ -781,7 +630,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     @Test
     public void dataFileHashEmpty() {
         JSONHashcodeValidationRequest request = validRequestBody();
-        request.getDatafiles().get(0).setHash("");
+        request.getSignatureFiles().get(0).getDatafiles().get(0).setHash("");
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertErrorResponse(response,
@@ -806,7 +655,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     @Test
     public void dataFileHashNotBase64Encoded() {
         JSONHashcodeValidationRequest request = validRequestBody();
-        request.getDatafiles().get(0).setHash("NOT.BASE64.ENCODED.VALUE");
+        request.getSignatureFiles().get(0).getDatafiles().get(0).setHash("NOT.BASE64.ENCODED.VALUE");
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertErrorResponse(response,
@@ -841,7 +690,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         validDataFile.setHashAlgo(TestData.MOCK_XADES_DATAFILE_HASH_ALGO);
         validDataFile.setFilename(TestData.MOCK_XADES_DATAFILE_FILENAME);
 
-        request.setDatafiles(Arrays.asList(
+        request.getSignatureFiles().get(0).setDatafiles(Arrays.asList(
                 invalidDataFile,
                 validDataFile)
         );
@@ -894,7 +743,6 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     private void assertValidationConclusion(ValidatableResponse response, JSONHashcodeValidationRequest request) {
         response.statusCode(HttpStatus.OK.value())
                 .body(VALIDATION_CONCLUSION_PREFIX + "validationTime", DateTimeMatcher.isEqualOrAfter(testStartDate))
-                .body(VALIDATION_CONCLUSION_PREFIX + "validatedDocument.filename", equalTo(request.getFilename()))
                 .body(VALIDATION_CONCLUSION_PREFIX + "validationLevel", is(TestData.VALID_VALIDATION_LEVEL_ARCHIVAL_DATA));
 
         ValidationPolicy signaturePolicy;
@@ -983,35 +831,32 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
 
     private JSONHashcodeValidationRequest validRequestBody() {
         JSONHashcodeValidationRequest request = new JSONHashcodeValidationRequest();
-        request.setSignatureFile(Base64.encodeBase64String(readFileFromTestResources(TestData.MOCK_XADES_SIGNATURE_FILE)));
-        request.setFilename(TestData.MOCK_XADES_SIGNATURE_FILE_NAME);
-        request.setReportType(ReportType.SIMPLE.getValue());
-        request.setSignaturePolicy(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_1);
-
         Datafile datafile = new Datafile();
         datafile.setHash(TestData.MOCK_XADES_DATAFILE_HASH);
         datafile.setHashAlgo(TestData.MOCK_XADES_DATAFILE_HASH_ALGO);
         datafile.setFilename(TestData.MOCK_XADES_DATAFILE_FILENAME);
-        request.setDatafiles(Arrays.asList(datafile));
+
+        SignatureFile signatureFile = new SignatureFile();
+        signatureFile.setSignature(Base64.encodeBase64String(readFileFromTestResources(TestData.MOCK_XADES_SIGNATURE_FILE)));
+        signatureFile.setDatafiles(Collections.singletonList(datafile));
+
+        request.setReportType(ReportType.SIMPLE.getValue());
+        request.setSignaturePolicy(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_1);
+
+        request.setSignatureFiles(Collections.singletonList(signatureFile));
         return request;
     }
 
     private String toRequest(JSONHashcodeValidationRequest request) {
         JSONObject jsonObject = new JSONObject();
-        if (request.getSignatureFile() != null) {
-            jsonObject.put(SIGNATURE_FILE, request.getSignatureFile());
-        }
-        if (request.getFilename() != null) {
-            jsonObject.put(FILENAME, request.getFilename());
+        if(request.getSignatureFiles() != null) {
+            jsonObject.put(SIGNATURE_FILES, request.getSignatureFiles());
         }
         if (request.getSignaturePolicy() != null) {
             jsonObject.put(SIGNATURE_POLICY, request.getSignaturePolicy());
         }
         if (request.getReportType() != null) {
             jsonObject.put(REPORT_TYPE, request.getReportType());
-        }
-        if (CollectionUtils.isNotEmpty(request.getDatafiles())) {
-            jsonObject.put(DATAFILES, request.getDatafiles());
         }
         return jsonObject.toString();
     }

@@ -28,17 +28,27 @@ public class ValidationRequestToProxyDocumentTransformer {
 
     public ProxyDocument transform(ValidationRequest validationRequest) {
         ProxyDocument proxyDocument = new ProxyDocument();
+
         proxyDocument.setName(validationRequest.getFilename());
-        if (validationRequest.getDocumentType() != null)
-            proxyDocument.setDocumentType(DocumentTypeResolver.documentTypeFromString(validationRequest.getDocumentType()));
         proxyDocument.setBytes(Base64.decodeBase64(validationRequest.getDocument()));
+        proxyDocument.setSignaturePolicy(validationRequest.getSignaturePolicy());
+
+        setDocumentType(validationRequest, proxyDocument);
+        setReportType(validationRequest, proxyDocument);
+        return proxyDocument;
+    }
+
+    private void setReportType(ValidationRequest validationRequest, ProxyDocument proxyDocument) {
         if (validationRequest.getReportType() != null) {
             proxyDocument.setReportType(ReportType.reportTypeFromString(validationRequest.getReportType()));
         } else {
             proxyDocument.setReportType(ReportType.SIMPLE);
         }
-        proxyDocument.setSignaturePolicy(validationRequest.getSignaturePolicy());
-        return proxyDocument;
+    }
+
+    private void setDocumentType(ValidationRequest validationRequest, ProxyDocument proxyDocument) {
+        if (validationRequest.getDocumentType() != null)
+            proxyDocument.setDocumentType(DocumentTypeResolver.documentTypeFromString(validationRequest.getDocumentType()));
     }
 
 }

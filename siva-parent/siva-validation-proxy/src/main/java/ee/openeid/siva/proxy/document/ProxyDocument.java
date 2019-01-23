@@ -16,22 +16,22 @@
 
 package ee.openeid.siva.proxy.document;
 
+import ee.openeid.siva.proxy.ProxyRequest;
+import ee.openeid.siva.validation.document.Datafile;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
 @Data
-public class ProxyDocument {
+@EqualsAndHashCode(callSuper=true)
+public class ProxyDocument extends ProxyRequest {
 
     private byte[] bytes;
 
     private String name;
 
     protected DocumentType documentType;
-
-    private String signaturePolicy;
-
-    private ReportType reportType;
 
     private List<Datafile> datafiles;
 }

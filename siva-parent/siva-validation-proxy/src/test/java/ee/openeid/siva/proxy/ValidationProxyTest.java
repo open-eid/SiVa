@@ -59,8 +59,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
-//import ee.openeid.validation.service.ddoc.report.DDOCValidationReportBuilder;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ValidationProxyTest {
     private static final String DEFAULT_DOCUMENT_NAME = "document.";
@@ -72,7 +70,7 @@ public class ValidationProxyTest {
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
-    private ValidationProxy validationProxy;
+    private ContainerValidationProxy validationProxy;
 
     private ApplicationContext applicationContext;
 
@@ -84,7 +82,7 @@ public class ValidationProxyTest {
 
     @Before
     public void setUp() {
-        validationProxy = new ValidationProxy();
+        validationProxy = new ContainerValidationProxy();
 
         applicationContext = mock(ApplicationContext.class);
         validationProxy.setApplicationContext(applicationContext);

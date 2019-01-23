@@ -88,7 +88,7 @@ public class GenericValidationService implements ValidationService {
 
             final ConstraintDefinedPolicy policy = signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy());
 
-            final eu.europa.esig.dss.validation.reports.Reports reports =  validator.validateDocument(policy.getConstraintDataStream());
+            final eu.europa.esig.dss.validation.reports.Reports reports = validator.validateDocument(policy.getConstraintDataStream());
 
             validateRevocationFreshness(reports);
 
@@ -161,6 +161,17 @@ public class GenericValidationService implements ValidationService {
         }
     }
 
+    DSSDocument createDssDocument(final ValidationDocument validationDocument) {
+        if (validationDocument == null) {
+            return null;
+        }
+        final InMemoryDocument dssDocument = new InMemoryDocument(validationDocument.getBytes());
+        dssDocument.setName(validationDocument.getName());
+        dssDocument.setMimeType(MimeType.fromFileName(validationDocument.getName()));
+
+        return dssDocument;
+    }
+
     private boolean isRevocationFreshnessCheckInvalid(CertificateWrapper certificateWrapper, TimestampWrapper timeStampWrapper) {
         return certificateWrapper.getRevocationData().stream().anyMatch(
                 r -> {
@@ -177,17 +188,6 @@ public class GenericValidationService implements ValidationService {
 
     private int getCertificatePoolSize(CommonCertificateVerifier certificateVerifier) {
         return certificateVerifier.getTrustedCertSource().getCertificatePool().getNumberOfCertificates();
-    }
-
-    private DSSDocument createDssDocument(final ValidationDocument validationDocument) {
-        if (validationDocument == null) {
-            return null;
-        }
-        final InMemoryDocument dssDocument = new InMemoryDocument(validationDocument.getBytes());
-        dssDocument.setName(validationDocument.getName());
-        dssDocument.setMimeType(MimeType.fromFileName(validationDocument.getName()));
-
-        return dssDocument;
     }
 
     protected RuntimeException constructMalformedDocumentException(RuntimeException cause) {

@@ -16,14 +16,19 @@
 
 package ee.openeid.siva.webapp;
 
-import ee.openeid.siva.proxy.ValidationProxy;
+import ee.openeid.siva.proxy.ContainerValidationProxy;
+import ee.openeid.siva.proxy.ProxyRequest;
 import ee.openeid.siva.proxy.document.ProxyDocument;
+import ee.openeid.siva.statistics.StatisticsService;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.webapp.request.ValidationRequest;
 import ee.openeid.siva.webapp.transformer.ValidationRequestToProxyDocumentTransformer;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -32,17 +37,20 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ValidationControllerTest {
 
     private ValidationProxySpy validationProxyServiceSpy = new ValidationProxySpy();
     private ValidationRequestToProxyDocumentTransformerSpy transformerSpy = new ValidationRequestToProxyDocumentTransformerSpy();
-
+    @Mock
+    private StatisticsService statisticsService;
     private MockMvc mockMvc;
 
     @Before
     public void setUp() {
         ValidationController validationController = new ValidationController();
-        validationController.setValidationProxy(validationProxyServiceSpy);
+        validationProxyServiceSpy.setStatisticsService(statisticsService);
+        validationController.setContainerValidationProxy(validationProxyServiceSpy);
         validationController.setTransformer(transformerSpy);
         mockMvc = standaloneSetup(validationController).build();
     }
@@ -50,8 +58,8 @@ public class ValidationControllerTest {
     @Test
     public void validJsonIsCorrectlyMappedToPOJO() throws Exception {
         mockMvc.perform(post("/validate")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(validRequest().toString().getBytes())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(validRequest().toString().getBytes())
         );
         assertEquals("filename.asd", transformerSpy.validationRequest.getFilename());
         assertEquals("QVNE", transformerSpy.validationRequest.getDocument());
@@ -179,14 +187,10 @@ public class ValidationControllerTest {
         return jsonObject;
     }
 
-    private class ValidationProxySpy extends ValidationProxy {
-
-        private ProxyDocument document;
-
+    private class ValidationProxySpy extends ContainerValidationProxy {
         @Override
-        public SimpleReport validate(ProxyDocument document) {
-            this.document = document;
-            return null;
+        public SimpleReport validateRequest(ProxyRequest proxyRequest) {
+            return new SimpleReport();
         }
     }
 

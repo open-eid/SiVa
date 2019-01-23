@@ -16,9 +16,9 @@
 
 package ee.openeid.siva.webapp;
 
+import ee.openeid.siva.proxy.ContainerValidationProxy;
 import ee.openeid.siva.proxy.HashcodeValidationProxy;
-import ee.openeid.siva.proxy.ValidationProxy;
-import ee.openeid.siva.proxy.document.ProxyDocument;
+import ee.openeid.siva.proxy.document.ProxyHashcodeDataSet;
 import ee.openeid.siva.webapp.request.JSONHashcodeValidationRequest;
 import ee.openeid.siva.webapp.request.JSONValidationRequest;
 import ee.openeid.siva.webapp.response.ValidationResponse;
@@ -36,25 +36,25 @@ import javax.validation.Valid;
 @RestController
 public class ValidationController {
 
-    private ValidationProxy validationProxy;
-    private ValidationRequestToProxyDocumentTransformer transformer;
+    private ContainerValidationProxy containerValidationProxy;
     private HashcodeValidationProxy hashcodeValidationProxy;
+    private ValidationRequestToProxyDocumentTransformer transformer;
     private HashcodeValidationRequestToProxyDocumentTransformer hashRequestTransformer;
 
     @RequestMapping(value = "/validate", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public ValidationResponse validate(@Valid @RequestBody JSONValidationRequest validationRequest) {
-        return new ValidationResponse(validationProxy.validate(transformer.transform(validationRequest)));
+        return new ValidationResponse(containerValidationProxy.validate(transformer.transform(validationRequest)));
     }
 
     @RequestMapping(value = "/validateHashcode", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public ValidationResponse validateHashcode(@Valid @RequestBody JSONHashcodeValidationRequest validationRequest) {
-        ProxyDocument proxyDocument = hashRequestTransformer.transform(validationRequest);
+        ProxyHashcodeDataSet proxyDocument = hashRequestTransformer.transform(validationRequest);
         return new ValidationResponse(hashcodeValidationProxy.validate(proxyDocument));
     }
 
     @Autowired
-    public void setValidationProxy(ValidationProxy validationProxy) {
-        this.validationProxy = validationProxy;
+    public void setContainerValidationProxy(ContainerValidationProxy containerValidationProxy) {
+        this.containerValidationProxy = containerValidationProxy;
     }
 
     @Autowired

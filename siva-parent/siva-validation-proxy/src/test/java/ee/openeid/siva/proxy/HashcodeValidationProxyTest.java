@@ -16,21 +16,16 @@
 
 package ee.openeid.siva.proxy;
 
-import ee.openeid.siva.proxy.document.Datafile;
-import ee.openeid.siva.proxy.document.ProxyDocument;
+
+import ee.openeid.siva.proxy.document.ProxyHashcodeDataSet;
 import ee.openeid.siva.proxy.exception.ValidatonServiceNotFoundException;
-import ee.openeid.siva.proxy.http.RESTProxyService;
 import ee.openeid.siva.statistics.StatisticsService;
+import ee.openeid.siva.validation.document.Datafile;
+import ee.openeid.siva.validation.document.SignatureFile;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Error;
-import ee.openeid.siva.validation.document.report.Info;
-import ee.openeid.siva.validation.document.report.Policy;
-import ee.openeid.siva.validation.document.report.Reports;
-import ee.openeid.siva.validation.document.report.SignatureValidationData;
-import ee.openeid.siva.validation.document.report.SimpleReport;
-import ee.openeid.siva.validation.document.report.ValidatedDocument;
-import ee.openeid.siva.validation.document.report.ValidationConclusion;
-import ee.openeid.siva.validation.service.ValidationService;
+import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.validation.service.generic.HashcodeGenericValidationService;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -47,13 +42,10 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class HashcodeValidationProxyTest {
-    private static final String DEFAULT_DOCUMENT_NAME = "document.xml";
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -71,9 +63,6 @@ public class HashcodeValidationProxyTest {
         applicationContext = mock(ApplicationContext.class);
         hashcodeValidationProxy.setApplicationContext(applicationContext);
 
-        RESTProxyService restProxyService = mock(RESTProxyService.class);
-        hashcodeValidationProxy.setRestProxyService(restProxyService);
-
         StatisticsService statisticsService = mock(StatisticsService.class);
         hashcodeValidationProxy.setStatisticsService(statisticsService);
 
@@ -87,7 +76,7 @@ public class HashcodeValidationProxyTest {
         exception.expect(ValidatonServiceNotFoundException.class);
         exception.expectMessage("hashcodeGenericValidationService not found");
 
-        ProxyDocument proxyDocument = mockProxyDocument();
+        ProxyHashcodeDataSet proxyDocument = mockHashCodeDataSet();
         hashcodeValidationProxy.validate(proxyDocument);
 
         verify(applicationContext).getBean(anyString());
@@ -97,16 +86,19 @@ public class HashcodeValidationProxyTest {
     public void proxyDocumentShouldReturnValidationReport() {
         when(applicationContext.getBean("hashcodeGenericValidationService")).thenReturn(validationServiceSpy);
 
-        ProxyDocument proxyDocument = mockProxyDocument();
+        ProxyHashcodeDataSet proxyDocument = mockHashCodeDataSet();
         SimpleReport report = hashcodeValidationProxy.validate(proxyDocument);
         assertEquals(validationServiceSpy.reports.getSimpleReport(), report);
     }
 
-    private ProxyDocument mockProxyDocument() {
-        ProxyDocument proxyDocument = new ProxyDocument();
-        proxyDocument.setName(DEFAULT_DOCUMENT_NAME);
-        proxyDocument.setDatafiles(createDatafiles(createDatafile("test", "test-hash-1", "SHA256")));
-        return proxyDocument;
+    private ProxyHashcodeDataSet mockHashCodeDataSet() {
+        ProxyHashcodeDataSet proxyHashcodeDataSet = new ProxyHashcodeDataSet();
+        SignatureFile signatureFile = new SignatureFile();
+        signatureFile.setSignature("hash".getBytes());
+        signatureFile.setDatafiles(createDatafiles(createDatafile("test", "test-hash-1", "SHA256")));
+        proxyHashcodeDataSet.setSignatureFiles(Collections.singletonList(signatureFile));
+
+        return proxyHashcodeDataSet;
     }
 
     private List<Datafile> createDatafiles(Datafile... datafiles) {
@@ -121,7 +113,7 @@ public class HashcodeValidationProxyTest {
         return datafile;
     }
 
-    private class ValidationServiceSpy implements ValidationService {
+    private class ValidationServiceSpy extends HashcodeGenericValidationService {
 
         Reports reports;
 

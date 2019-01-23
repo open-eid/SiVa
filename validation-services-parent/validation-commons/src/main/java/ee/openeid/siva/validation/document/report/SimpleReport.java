@@ -24,7 +24,6 @@ public class SimpleReport {
     private ValidationConclusion validationConclusion;
 
     public SimpleReport() {
-
     }
 
     public SimpleReport(ValidationConclusion validationConclusion) {

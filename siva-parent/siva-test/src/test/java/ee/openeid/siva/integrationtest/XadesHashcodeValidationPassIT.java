@@ -58,7 +58,7 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void validXadesWithHashcodeFromAsice() {
-        postHashcodeValidation(validationRequestHashcode("Valid_XAdES_LT_TS.xml","Valid_XAdES_LT_TS.xml", null, null, "RELEASE-NOTES.txt", "SHA256", "Sj/WcgsM57hpCiR5E8OycJ4jioYwdHzz3s4e5LXditA="))
+        postHashcodeValidation(validationRequestHashcode("Valid_XAdES_LT_TS.xml", null, null, "RELEASE-NOTES.txt", "SHA256", "Sj/WcgsM57hpCiR5E8OycJ4jioYwdHzz3s4e5LXditA="))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -83,7 +83,7 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void validXadesWithHashcodeFromBdoc() {
-        postHashcodeValidation(validationRequestHashcode("Valid_XAdES_LT_TM.xml","Valid_XAdES_LT_TM.xml", null, null, "lama.jpg", "SHA256", "jmQGVaxq5Qb+hZNIQC1FPcRUd+YInHtlTg/ImAh5wQY="))
+        postHashcodeValidation(validationRequestHashcode("Valid_XAdES_LT_TM.xml", null, null, "lama.jpg", "SHA256", "jmQGVaxq5Qb+hZNIQC1FPcRUd+YInHtlTg/ImAh5wQY="))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))

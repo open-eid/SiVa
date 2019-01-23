@@ -16,12 +16,16 @@
 
 package ee.openeid.siva.proxy;
 
-import ee.openeid.siva.proxy.document.ProxyDocument;
-import ee.openeid.siva.validation.document.Datafile;
+import ee.openeid.siva.proxy.document.ProxyHashcodeDataSet;
+import ee.openeid.siva.proxy.document.ReportType;
+import ee.openeid.siva.validation.document.SignatureFile;
 import ee.openeid.siva.validation.document.ValidationDocument;
+import ee.openeid.siva.validation.document.report.Reports;
+import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.validation.service.ValidationService;
+import ee.openeid.validation.service.generic.HashcodeGenericValidationService;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,31 +35,30 @@ public class HashcodeValidationProxy extends ValidationProxy {
     private static final String HASHCODE_GENERIC_SERVICE = "hashcodeGeneric";
 
     @Override
-    protected String constructValidatorName(ProxyDocument proxyDocument) {
+    String constructValidatorName(ProxyRequest proxyRequest) {
         return HASHCODE_GENERIC_SERVICE + SERVICE_BEAN_NAME_POSTFIX;
     }
 
     @Override
-    protected ValidationDocument createValidationDocument(ProxyDocument proxyDocument) {
-        ValidationDocument validationDocument = super.createValidationDocument(proxyDocument);
-        validationDocument.setDatafiles(mapProxyDatafilesToValidationDocument(proxyDocument.getDatafiles()));
-        return validationDocument;
-    }
+    public SimpleReport validateRequest(ProxyRequest proxyRequest) {
+        ValidationService validationService = getServiceForType(proxyRequest);
+        if (validationService instanceof HashcodeGenericValidationService && proxyRequest instanceof ProxyHashcodeDataSet) {
 
-    private List<Datafile> mapProxyDatafilesToValidationDocument(List<ee.openeid.siva.proxy.document.Datafile> proxyDatafiles) {
-        if (proxyDatafiles.isEmpty()) {
-            return Collections.emptyList();
+            List<ValidationDocument> validationDocuments = ((ProxyHashcodeDataSet) proxyRequest).getSignatureFiles()
+                    .stream()
+                    .map(signatureFile -> createValidationDocument(proxyRequest.getSignaturePolicy(), signatureFile))
+                    .collect(Collectors.toList());
+            Reports reports =  ((HashcodeGenericValidationService) validationService).validate(validationDocuments);
+            return chooseReport(reports, ReportType.SIMPLE);
         }
-        return proxyDatafiles.stream()
-                .map(this::mapRequestDatafileToProxyDatafile)
-                .collect(Collectors.toList());
+        throw new IllegalStateException("Something went wrong with hashcode validation");
     }
 
-    private ee.openeid.siva.validation.document.Datafile  mapRequestDatafileToProxyDatafile(ee.openeid.siva.proxy.document.Datafile requestDatafile) {
-        ee.openeid.siva.validation.document.Datafile validationDatafile = new ee.openeid.siva.validation.document.Datafile ();
-        validationDatafile.setFilename(requestDatafile.getFilename());
-        validationDatafile.setHash(requestDatafile.getHash());
-        validationDatafile.setHashAlgo(requestDatafile.getHashAlgo());
-        return validationDatafile;
+    ValidationDocument createValidationDocument(String signaturePolicy, SignatureFile signatureFile) {
+        ValidationDocument validationDocument = new ValidationDocument();
+        validationDocument.setSignaturePolicy(signaturePolicy);
+        validationDocument.setBytes(signatureFile.getSignature());
+        validationDocument.setDatafiles(signatureFile.getDatafiles());
+        return validationDocument;
     }
 }

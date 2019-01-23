@@ -54,7 +54,7 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
      **/
     @Test
     public void dataFileHashAlgorithmDoesNotMatchWithSignatureDataFileHashAlgorithm() {
-        postHashcodeValidation(validationRequestHashcode("Valid_XAdES_LT_TM.xml","Valid_XAdES_LT_TM.xml", null, null, "lama.jpg", "SHA512", "jmQGVaxq5Qb+hZNIQC1FPcRUd+YInHtlTg/ImAh5wQY="))
+        postHashcodeValidation(validationRequestHashcode("Valid_XAdES_LT_TM.xml", null, null, "lama.jpg", "SHA512", "jmQGVaxq5Qb+hZNIQC1FPcRUd+YInHtlTg/ImAh5wQY="))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
@@ -81,7 +81,7 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
      **/
     @Test
     public void dataFileHashDoesNotMatchWithSignatureFile() {
-               postHashcodeValidation(validationRequestHashcode("Valid_XAdES_LT_TM.xml","Valid_XAdES_LT_TM.xml", null, null, "lama.jpg", "SHA512", "wrongHashq5Qb+hZNIQC1FPcRUd+YInHtlTg/ImAh5wQY="))
+               postHashcodeValidation(validationRequestHashcode("Valid_XAdES_LT_TM.xml", null, null, "lama.jpg", "SHA512", "wrongHashq5Qb+hZNIQC1FPcRUd+YInHtlTg/ImAh5wQY="))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
@@ -108,7 +108,7 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
      **/
     @Test
     public void dataFileFilenameDoesNotMatchWithSignatureFile() {
-        postHashcodeValidation(validationRequestHashcode("Valid_XAdES_LT_TS.xml","Valid_XAdES_LT_TS.xml", null, null, "wrongDataFileName.jpg", "SHA256", "Sj/WcgsM57hpCiR5E8OycJ4jioYwdHzz3s4e5LXditA="))
+        postHashcodeValidation(validationRequestHashcode("Valid_XAdES_LT_TS.xml", null, null, "wrongDataFileName.jpg", "SHA256", "Sj/WcgsM57hpCiR5E8OycJ4jioYwdHzz3s4e5LXditA="))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
@@ -135,7 +135,7 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
      **/
     @Test
     public void invalidSignature() {
-        postHashcodeValidation(validationRequestHashcode("Invalid_XAdES_LT_TM.xml","Invalid_XAdES_LT_TM.xml", null, null, "build.xml", "SHA256", "l40iM30GCmzmwkPp2I4ZzBKvQ5m3FD5v76xnDCDCU+E="))
+        postHashcodeValidation(validationRequestHashcode("Invalid_XAdES_LT_TM.xml", null, null, "build.xml", "SHA256", "l40iM30GCmzmwkPp2I4ZzBKvQ5m3FD5v76xnDCDCU+E="))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))

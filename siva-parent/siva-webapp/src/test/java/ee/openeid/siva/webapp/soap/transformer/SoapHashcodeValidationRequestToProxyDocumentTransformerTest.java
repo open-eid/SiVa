@@ -18,6 +18,7 @@ package ee.openeid.siva.webapp.soap.transformer;
 
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.document.ReportType;
+import ee.openeid.siva.validation.document.Datafile;
 import ee.openeid.siva.webapp.soap.HashAlgorithm;
 import ee.openeid.siva.webapp.soap.HashDataFile;
 import ee.openeid.siva.webapp.soap.SoapHashcodeValidationRequest;
@@ -29,10 +30,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.*;
 
 public class SoapHashcodeValidationRequestToProxyDocumentTransformerTest {
 
@@ -90,7 +88,7 @@ public class SoapHashcodeValidationRequestToProxyDocumentTransformerTest {
         assertDataFileValues(proxyDocument.getDatafiles().get(0), validationRequest.getDataFiles().getDataFile().get(0));
     }
 
-    private void assertDataFileValues(ee.openeid.siva.proxy.document.Datafile proxyDataFile, HashDataFile requestDataFile) {
+    private void assertDataFileValues(Datafile proxyDataFile, HashDataFile requestDataFile) {
         assertSame(proxyDataFile.getFilename(), requestDataFile.getFilename());
         assertSame(proxyDataFile.getHash(),     requestDataFile.getHash());
         assertSame(proxyDataFile.getHashAlgo(), requestDataFile.getHashAlgo().value());

@@ -18,10 +18,10 @@ package ee.openeid.validation.service.generic;
 
 import ee.openeid.siva.validation.document.Datafile;
 import ee.openeid.siva.validation.document.ValidationDocument;
+import ee.openeid.siva.validation.document.report.Reports;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.exception.MalformedSignatureFileException;
-import eu.europa.esig.dss.DSSDocument;
-import eu.europa.esig.dss.DigestAlgorithm;
-import eu.europa.esig.dss.DigestDocument;
+import eu.europa.esig.dss.*;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +30,11 @@ import java.util.stream.Collectors;
 
 @Service
 public class HashcodeGenericValidationService extends GenericValidationService {
+
+    public Reports validate(List<ValidationDocument> validationDocuments) {
+        List<Reports> reports = validationDocuments.stream().map(validationDocument -> validateDocument(validationDocument)).collect(Collectors.toList());
+        return mergeReportsToOne(reports);
+    }
 
     @Override
     protected SignedDocumentValidator createValidatorFromDocument(final ValidationDocument validationDocument) {
@@ -42,6 +47,14 @@ public class HashcodeGenericValidationService extends GenericValidationService {
     @Override
     protected RuntimeException constructMalformedDocumentException(RuntimeException cause) {
         return new MalformedSignatureFileException(cause, "Signature file malformed");
+    }
+
+    @Override
+    protected DSSDocument createDssDocument(final ValidationDocument validationDocument) {
+        if (validationDocument == null) {
+            return null;
+        }
+        return new InMemoryDocument(validationDocument.getBytes());
     }
 
     private List<DSSDocument> createDetachedContents(final List<Datafile> datafiles) {
@@ -58,6 +71,29 @@ public class HashcodeGenericValidationService extends GenericValidationService {
         digestDocument.addDigest(digestAlgorithm, datafile.getHash());
 
         return digestDocument;
+    }
+
+    private Reports mergeReportsToOne(List<Reports> reportsList) {
+        int signaturesCount = 0;
+        int validSignaturesCount = 0;
+        Reports response = null;
+        for (Reports reports : reportsList) {
+            ValidationConclusion validationConclusion = reports.getSimpleReport().getValidationConclusion();
+            if (signaturesCount == 0) {
+                response = reports;
+                validSignaturesCount = validationConclusion.getValidSignaturesCount();
+            } else {
+                response.getSimpleReport().getValidationConclusion().getSignatures().addAll(validationConclusion.getSignatures());
+                validSignaturesCount = validSignaturesCount + validationConclusion.getValidSignaturesCount();
+            }
+            signaturesCount = signaturesCount + validationConclusion.getSignaturesCount();
+        }
+        if (response != null) {
+            ValidationConclusion validationConclusion = response.getSimpleReport().getValidationConclusion();
+            validationConclusion.setSignaturesCount(signaturesCount);
+            validationConclusion.setValidSignaturesCount(validSignaturesCount);
+        }
+        return response;
     }
 
 }

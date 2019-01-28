@@ -17,7 +17,7 @@
 package ee.openeid.validation.service.timemark;
 
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
-import ee.openeid.validation.service.timemark.security.SecureSAXParsers;
+import ee.openeid.siva.validation.security.SecureSAXParsers;
 
 import org.digidoc4j.ddoc.factory.SignatureInputStream;
 import org.slf4j.Logger;

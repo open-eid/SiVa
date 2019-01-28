@@ -16,11 +16,12 @@
 
 package ee.openeid.siva.webapp.soap.transformer;
 
-import ee.openeid.siva.proxy.document.ProxyDocument;
+import ee.openeid.siva.proxy.document.ProxyHashcodeDataSet;
 import ee.openeid.siva.proxy.document.ReportType;
 import ee.openeid.siva.validation.document.Datafile;
 import ee.openeid.siva.webapp.soap.HashAlgorithm;
 import ee.openeid.siva.webapp.soap.HashDataFile;
+import ee.openeid.siva.webapp.soap.SignatureFile;
 import ee.openeid.siva.webapp.soap.SoapHashcodeValidationRequest;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Test;
@@ -29,6 +30,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -38,17 +40,10 @@ public class SoapHashcodeValidationRequestToProxyDocumentTransformerTest {
     private SoapHashcodeValidationRequestToProxyDocumentTransformer transformer = new SoapHashcodeValidationRequestToProxyDocumentTransformer();
 
     @Test
-    public void filenameRemainsUnchanged() throws IOException, URISyntaxException {
-        SoapHashcodeValidationRequest validationRequest = mockValidValidationRequest();
-        ProxyDocument proxyDocument = transformer.transform(validationRequest);
-        assertEquals(validationRequest.getFilename(), proxyDocument.getName());
-    }
-
-    @Test
     public void contentIsCorrectlyTransformedToBytes() throws IOException, URISyntaxException {
         SoapHashcodeValidationRequest validationRequest = mockValidValidationRequest();
-        ProxyDocument proxyDocument = transformer.transform(validationRequest);
-        assertEquals(validationRequest.getSignatureFile(), Base64.encodeBase64String(proxyDocument.getBytes()));
+        ProxyHashcodeDataSet proxyDocument = transformer.transform(validationRequest);
+        assertEquals(validationRequest.getSignatureFiles().getSignatureFile().get(0).getSignature(), Base64.encodeBase64String(proxyDocument.getSignatureFiles().get(0).getSignature()));
     }
 
     @Test
@@ -57,7 +52,7 @@ public class SoapHashcodeValidationRequestToProxyDocumentTransformerTest {
         validationRequest.setReportType(null);
 
         assertNull(validationRequest.getReportType());
-        ProxyDocument proxyDocument = transformer.transform(validationRequest);
+        ProxyHashcodeDataSet proxyDocument = transformer.transform(validationRequest);
         assertSame(proxyDocument.getReportType(), ReportType.SIMPLE);
     }
 
@@ -66,14 +61,14 @@ public class SoapHashcodeValidationRequestToProxyDocumentTransformerTest {
         SoapHashcodeValidationRequest validationRequest = mockValidValidationRequest();
         validationRequest.setReportType(ee.openeid.siva.webapp.soap.ReportType.DETAILED);
 
-        ProxyDocument proxyDocument = transformer.transform(validationRequest);
+        ProxyHashcodeDataSet proxyDocument = transformer.transform(validationRequest);
         assertSame(proxyDocument.getReportType(), ReportType.DETAILED);
     }
 
     @Test
     public void signaturePolicyRemainsUnchanged() throws IOException, URISyntaxException {
         SoapHashcodeValidationRequest validationRequest = mockValidValidationRequest();
-        ProxyDocument proxyDocument = transformer.transform(validationRequest);
+        ProxyHashcodeDataSet proxyDocument = transformer.transform(validationRequest);
         assertEquals(proxyDocument.getSignaturePolicy(), proxyDocument.getSignaturePolicy());
     }
 
@@ -81,16 +76,18 @@ public class SoapHashcodeValidationRequestToProxyDocumentTransformerTest {
     public void dataFilesTransformedCorrectlyWhileValuesRemainingUnchanged() throws URISyntaxException, IOException {
         SoapHashcodeValidationRequest validationRequest = mockValidValidationRequest();
 
-        ProxyDocument proxyDocument = transformer.transform(validationRequest);
+        ProxyHashcodeDataSet proxyDocument = transformer.transform(validationRequest);
+        List<HashDataFile> requestDatafiles = validationRequest.getSignatureFiles().getSignatureFile().get(0).getDataFiles().getDataFile();
+        List<Datafile> proxyDataFiles = proxyDocument.getSignatureFiles().get(0).getDatafiles();
 
-        assertFalse(proxyDocument.getDatafiles().isEmpty());
-        assertSame(validationRequest.getDataFiles().getDataFile().size(), proxyDocument.getDatafiles().size());
-        assertDataFileValues(proxyDocument.getDatafiles().get(0), validationRequest.getDataFiles().getDataFile().get(0));
+        assertFalse(proxyDataFiles.isEmpty());
+        assertSame(requestDatafiles.size(), proxyDataFiles.size());
+        assertDataFileValues(proxyDataFiles.get(0), requestDatafiles.get(0));
     }
 
-    private void assertDataFileValues(Datafile proxyDataFile, HashDataFile requestDataFile) {
+    private void assertDataFileValues(ee.openeid.siva.validation.document.Datafile proxyDataFile, HashDataFile requestDataFile) {
         assertSame(proxyDataFile.getFilename(), requestDataFile.getFilename());
-        assertSame(proxyDataFile.getHash(),     requestDataFile.getHash());
+        assertSame(proxyDataFile.getHash(), requestDataFile.getHash());
         assertSame(proxyDataFile.getHashAlgo(), requestDataFile.getHashAlgo().value());
     }
 
@@ -104,15 +101,20 @@ public class SoapHashcodeValidationRequestToProxyDocumentTransformerTest {
         hashDataFile.setHashAlgo(HashAlgorithm.SHA_256);
         hashDataFile.setHash("IucjUcbRo9Rke0bZLiHcwiIipplP9pSrSPr7LKln1EiI=");
 
-        SoapHashcodeValidationRequest.DataFiles dataFiles = new SoapHashcodeValidationRequest.DataFiles();
+        SignatureFile signatureFile = new SignatureFile();
+        SoapHashcodeValidationRequest.SignatureFiles signatureFiles = new SoapHashcodeValidationRequest.SignatureFiles();
+
+        SignatureFile.DataFiles dataFiles = new SignatureFile.DataFiles();
         dataFiles.getDataFile().add(hashDataFile);
 
+        signatureFile.setDataFiles(dataFiles);
+        signatureFile.setSignature(base64EncodedSignatureFile);
+        signatureFiles.getSignatureFile().add(signatureFile);
+
         SoapHashcodeValidationRequest validationRequest = new SoapHashcodeValidationRequest();
-        validationRequest.setSignatureFile(base64EncodedSignatureFile);
-        validationRequest.setFilename("signature0.xml");
         validationRequest.setReportType(ee.openeid.siva.webapp.soap.ReportType.SIMPLE);
         validationRequest.setSignaturePolicy("POLv3");
-        validationRequest.setDataFiles(dataFiles);
+        validationRequest.setSignatureFiles(signatureFiles);
         return validationRequest;
     }
 }

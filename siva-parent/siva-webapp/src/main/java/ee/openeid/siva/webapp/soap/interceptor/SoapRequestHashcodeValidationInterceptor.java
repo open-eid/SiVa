@@ -17,7 +17,6 @@
 package ee.openeid.siva.webapp.soap.interceptor;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -28,35 +27,46 @@ public class SoapRequestHashcodeValidationInterceptor extends AbstractRequestVal
 
     @Override
     void validateRequestBody(SOAPBody body) {
-        validateSignatureFile(body);
-        validateSignatureFilename(body);
-        validateDataFiles(body);
+        validateSignatureFiles(body);
         overrideReportType(body);
     }
 
-    private void validateSignatureFile(SOAPBody body) {
-        String signatureFile = getElementValueFromBody(body, "SignatureFile");
-        if (StringUtils.isNotBlank(signatureFile) && !Base64.isBase64(signatureFile)) {
-            throwFault(errorMessage("validation.error.message.signatureFile.invalidBase64"));
+    private void validateSignatureFiles(SOAPBody body) {
+
+        NodeList signaturesFiles = body.getElementsByTagName("SignatureFiles");
+        if (signaturesFiles != null) {
+            for (int i = 0; i < signaturesFiles.getLength(); i++) {
+                Node signatureFilesChildNode = signaturesFiles.item(i);
+                if (1 == signatureFilesChildNode.getNodeType()) {
+                    NodeList signatureFile = signatureFilesChildNode.getChildNodes();
+                    if (signatureFile != null) {
+                        for (int j = 0; j < signatureFile.getLength(); j++) {
+                            Node signatureFileChildNode = signatureFile.item(j);
+                            if (1 == signatureFileChildNode.getNodeType()) {
+                                parseAndValidateSignatureFile(signatureFileChildNode.getChildNodes());
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
-    private void validateSignatureFilename(SOAPBody body) {
-        String filename = getElementValueFromBody(body, "Filename", "HashcodeValidationRequest");
-        if (StringUtils.isBlank(filename)) {
-            throwFault(errorMessage("validation.error.message.filename.format"));
-        } else if (!hasValidExtension(filename)) {
-            throwFault(errorMessage("validation.error.message.signatureExtension"));
+    private void parseAndValidateSignatureFile(NodeList signatureFileNodes) {
+        for (int i = 0; i < signatureFileNodes.getLength(); i++) {
+            Node node = signatureFileNodes.item(i);
+            if (1 == node.getNodeType()) {
+                String localName = node.getLocalName();
+                if (localName.equals("Signature")) {
+                    validateSignature(node.getTextContent());
+                } else if (localName.equals("DataFiles")) {
+                    validateDataFiles(node);
+                }
+            }
         }
     }
 
-    private boolean hasValidExtension(String filename) {
-        String extension = FilenameUtils.getExtension(filename);
-        return extension != null && extension.equalsIgnoreCase("xml");
-    }
-
-    private void validateDataFiles(SOAPBody body) {
-        Node dataFiles = body.getElementsByTagName("DataFiles").item(0);
+    private void validateDataFiles(Node dataFiles) {
         if (dataFiles != null) {
             NodeList dataFileChildNodes = dataFiles.getChildNodes();
             for (int i = 0; i < dataFileChildNodes.getLength(); i++) {
@@ -78,10 +88,16 @@ public class SoapRequestHashcodeValidationInterceptor extends AbstractRequestVal
                     overrideDataFileHashAlgorithm(node);
                 } else if (localName.equals("Hash")) {
                     validateDataFileHash(node.getTextContent());
-                } else if (localName.equals("Filename")){
+                } else if (localName.equals("Filename")) {
                     validateDataFileName(node.getTextContent());
                 }
             }
+        }
+    }
+
+    private void validateSignature(String hash) {
+        if (StringUtils.isNotBlank(hash) && !Base64.isBase64(hash)) {
+            throwFault(errorMessage("validation.error.message.signatureFile.signature.invalidBase64"));
         }
     }
 

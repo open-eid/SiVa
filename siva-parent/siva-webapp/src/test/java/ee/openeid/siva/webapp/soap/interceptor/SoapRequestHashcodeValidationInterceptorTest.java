@@ -58,9 +58,13 @@ public class SoapRequestHashcodeValidationInterceptorTest {
     @Mock
     private SOAPBody body;
     @Mock
+    private Node signatureNode;
+    @Mock
+    private Node signatureFilesNode;
+    @Mock
     private Node signatureFileNode;
     @Mock
-    private Node signatureFilenameNode;
+    private Node dataFilesNode;
     @Mock
     private Node signaturePolicyNode;
     @Mock
@@ -83,6 +87,7 @@ public class SoapRequestHashcodeValidationInterceptorTest {
         mockDataFileChildNode(dataFilesFilenameNode, "test.txt");
         mockDataFileChildNode(dataFilesHashAlgoNode, "SHA256");
         mockDataFileChildNode(dataFilesHashNode, "dGVzdA==");
+        mockDataFileChildNode(signatureNode, "dGVzdA==");
         mockValidSoapMessage();
     }
 
@@ -100,52 +105,17 @@ public class SoapRequestHashcodeValidationInterceptorTest {
     }
 
     @Test
-    public void whenSignatureFileNotBase64Encoded_thenFaultIsThrown() {
-        mockSignatureFileNode("NOT.BASE64.ENCODED.TEXT");
+    public void whenSignatureNotBase64Encoded_thenFaultIsThrown() {
+        mockDataFileChildNode(signatureNode, "NOT.BASE64.ENCODED.TEXT");
         Fault soapFault = handleMessageInInterceptor(message);
         assertFaultWithExpectedMessage(soapFault, SIGNATURE_FILE_INVALID_BASE64_ERROR_MESSAGE);
     }
 
     @Test
-    public void whenSignatureFileNull_thenNotValidated() {
-        mockSignatureFileNode(null);
-        Fault soapFault = handleMessageInInterceptor(message);
-        assertNull(soapFault);
-    }
-
-    @Test
     public void whenSignatureFileEmpty_thenNotValidated() {
-        mockSignatureFileNode("");
+        mockDataFileChildNode(signatureNode, null);
         Fault soapFault = handleMessageInInterceptor(message);
         assertNull(soapFault);
-    }
-
-    @Test
-    public void whenSignatureFilenameExtensionInvalid_thenFaultIsThrown() {
-        mockSignatureFilenameNode("INVALID_FILENAME.pdf");
-        Fault soapFault = handleMessageInInterceptor(message);
-        assertFaultWithExpectedMessage(soapFault, FILENAME_INVALID_EXTENSION_ERROR_MESSAGE);
-    }
-
-    @Test
-    public void signatureFilenameFormatIsNotValidated() {
-        mockSignatureFilenameNode("FILENAME_WITH_INVALID_ELEMENTS_&*:%.xml");
-        Fault soapFault = handleMessageInInterceptor(message);
-        assertNull(soapFault);
-    }
-
-    @Test
-    public void whenSignatureFilenameNull_thenNotValidated() {
-        mockSignatureFilenameNode(null);
-        Fault soapFault = handleMessageInInterceptor(message);
-        assertFaultWithExpectedMessage(soapFault, SIGNATURE_FILE_INVALID_FORMAT_ERROR_MESSAGE);
-    }
-
-    @Test
-    public void whenSignatureFilenameEmpty_thenNotValidated() {
-        mockSignatureFilenameNode("");
-        Fault soapFault = handleMessageInInterceptor(message);
-        assertFaultWithExpectedMessage(soapFault, SIGNATURE_FILE_INVALID_FORMAT_ERROR_MESSAGE);
     }
 
     @Test
@@ -263,22 +233,32 @@ public class SoapRequestHashcodeValidationInterceptorTest {
         doReturn(envelope).when(soapPart).getEnvelope();
         doReturn(soapPart).when(soapMessage).getSOAPPart();
         doReturn(soapMessage).when(message).getContent(SOAPMessage.class);
-        mockSignatureFileNode("YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWE=");
-        mockSignatureFilenameNode("VALID_FILENAME+#$!}[]()-_.,;€ˇ~^'äöõü§@.xml");
+        mockSignatureFilesNode();
         mockReportTypeNode(ReportType.DETAILED.getValue());
         mockSignaturePolicyNode("POLv3");
+    }
+
+    private void mockSignatureFilesNode() {
+
+        Node signatureFilesNode = mock(Node.class);
+        NodeList nodeList = new MockNodeList(signatureFilesNode);
+        doReturn(nodeList).when(body).getElementsByTagName("SignatureFiles");
+        doReturn((short) 1).when(signatureFilesNode).getNodeType();
+
+        NodeList signatureFilesChildNodes = new MockNodeList( signatureFileNode);
+        doReturn(signatureFilesChildNodes).when(signatureFilesNode).getChildNodes();
+        doReturn((short) 1).when(signatureFileNode).getNodeType();
+
+        NodeList signatureFileChildNodes = new MockNodeList(signatureNode, dataFilesNode);
+        doReturn(signatureFileChildNodes).when(signatureFileNode).getChildNodes();
+        doReturn((short) 1).when(signatureNode).getNodeType();
+        doReturn((short) 1).when(dataFilesNode).getNodeType();
+
+        doReturn("Signature").when(signatureNode).getLocalName();
+        doReturn("DataFiles").when(dataFilesNode).getLocalName();
+
+
         mockDataFileNode();
-    }
-
-    private void mockSignatureFileNode(String signatureFile) {
-        mockNode(signatureFileNode, "SignatureFile", signatureFile);
-    }
-
-    private void mockSignatureFilenameNode(String filename) {
-        mockNode(signatureFilenameNode, "Filename", filename);
-        Node filenameNodeParentNode = mock(Node.class);
-        doReturn("HashcodeValidationRequest").when(filenameNodeParentNode).getLocalName();
-        doReturn(filenameNodeParentNode).when(signatureFilenameNode).getParentNode();
     }
 
     private void mockSignaturePolicyNode(String signaturePolicy) {
@@ -289,10 +269,11 @@ public class SoapRequestHashcodeValidationInterceptorTest {
         mockNode(reportTypeNode, "ReportType", reportType);
     }
 
+    private void mockSignatureNode(String reportType) {
+        mockNode(signatureNode, "ReportType", reportType);
+    }
+
     private void mockDataFileNode() {
-        Node dataFilesNode = mock(Node.class);
-        NodeList nodeList = new MockNodeList(dataFilesNode);
-        doReturn(nodeList).when(body).getElementsByTagName("DataFiles");
 
         Node dataFileNode = mock(Node.class);
         NodeList childNodes = new MockNodeList(dataFileNode);

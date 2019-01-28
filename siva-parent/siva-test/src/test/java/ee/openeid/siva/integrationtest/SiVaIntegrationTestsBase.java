@@ -60,7 +60,7 @@ public abstract class SiVaIntegrationTestsBase {
     protected static final String SIGNATURE_FILE_NOT_BASE64_ENCODED = "Signature file is not valid base64 encoded string";
     protected static final String SIGNATURE_MALFORMED = "Signature file malformed";
     protected static final String INVALID_SIGNATURE_POLICY = "Invalid signature policy";
-
+    protected static final String SIGNATURE_FILE_MALFORMED = "Signature file malformed";
     protected static final String DOCUMENT_TYPE = "documentType";
     protected static final String FILENAME = "filename";
     protected static final String DOCUMENT = "document";

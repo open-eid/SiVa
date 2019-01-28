@@ -31,11 +31,22 @@
 
             <xs:complexType name="SoapHashcodeValidationRequest">
                 <xs:sequence>
-                    <xs:element name="SignatureFile" type="tns:NotEmptyString"/>
-                    <xs:element name="Filename" type="tns:Filename"/>
+                    <xs:element name="SignatureFiles">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element maxOccurs="unbounded" name="SignatureFile" type="tns:SignatureFile"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
                     <xs:element minOccurs="0" name="ReportType" type="tns:ReportType" default="SIMPLE"/>
                     <xs:element minOccurs="0" name="SignaturePolicy" type="tns:SignaturePolicy" default="POLv4"/>
-                    <xs:element name="DataFiles">
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="SignatureFile">
+                <xs:sequence>
+                    <xs:element name="Signature" type="tns:NotEmptyString"/>
+                    <xs:element minOccurs="0" name="DataFiles">
                         <xs:complexType>
                             <xs:sequence>
                                 <xs:element maxOccurs="unbounded" name="DataFile" type="tns:HashDataFile"/>

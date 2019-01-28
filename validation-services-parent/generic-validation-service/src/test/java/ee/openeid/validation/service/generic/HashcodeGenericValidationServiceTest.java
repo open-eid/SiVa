@@ -5,6 +5,7 @@ import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.Datafile;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Reports;
+import ee.openeid.siva.validation.document.report.SignatureScope;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.validation.service.generic.configuration.GenericSignaturePolicyProperties;
 import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
@@ -52,6 +53,10 @@ public class HashcodeGenericValidationServiceTest {
     @Test
     public void validHashcodeRequest() throws Exception {
         Reports response = validationService.validate(getValidationDocumentSingletonList());
+        SignatureScope signatureScope = response.getSimpleReport().getValidationConclusion().getSignatures().get(0).getSignatureScopes().get(0);
+        Assert.assertEquals("LvhnsrgBZBK9kTQ8asbPtcsjuEhBo9s3QDdCcIxlMmo=", signatureScope.getHash());
+        Assert.assertEquals("SHA256", signatureScope.getHashAlgo());
+        Assert.assertEquals("test.pdf", signatureScope.getName());
         Assert.assertEquals((Integer) 1, response.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
         Assert.assertEquals(1L, response.getSimpleReport().getValidationConclusion().getSignatures().size());
     }
@@ -64,6 +69,17 @@ public class HashcodeGenericValidationServiceTest {
         Assert.assertEquals((Integer) 2, response.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
         Assert.assertEquals((Integer) 2, response.getSimpleReport().getValidationConclusion().getSignaturesCount());
         Assert.assertEquals(2L, response.getSimpleReport().getValidationConclusion().getSignatures().size());
+    }
+
+    @Test
+    public void validDataFromSignatureFile() throws Exception {
+        List<ValidationDocument> validationDocuments = getValidationDocumentSingletonList();
+        validationDocuments.get(0).setDatafiles(null);
+        Reports response = validationService.validate(validationDocuments);
+        SignatureScope signatureScope = response.getSimpleReport().getValidationConclusion().getSignatures().get(0).getSignatureScopes().get(0);
+        Assert.assertEquals("LvhnsrgBZBK9kTQ8asbPtcsjuEhBo9s3QDdCcIxlMmo=", signatureScope.getHash());
+        Assert.assertEquals("SHA256", signatureScope.getHashAlgo());
+        Assert.assertEquals("test.pdf", signatureScope.getName());
     }
 
     private List<ValidationDocument> getValidationDocumentSingletonList() throws URISyntaxException, IOException {

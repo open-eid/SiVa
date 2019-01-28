@@ -24,6 +24,7 @@ import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPBody;
@@ -69,7 +70,11 @@ public abstract class AbstractRequestValidationInterceptor extends AbstractSoapI
     }
 
     String getElementValueFromBody(SOAPBody body, String elementName) {
-        Node elementNode = body.getElementsByTagName(elementName).item(0);
+        NodeList nodeList = body.getElementsByTagName(elementName);
+        if (nodeList == null) {
+            return null;
+        }
+        Node elementNode = nodeList.item(0);
         if (elementNode == null) {
             return null;
         }

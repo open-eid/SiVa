@@ -19,11 +19,13 @@ package ee.openeid.siva.soaptest;
 import ee.openeid.siva.integrationtest.SiVaIntegrationTestsBase;
 import ee.openeid.siva.webapp.request.Datafile;
 import ee.openeid.siva.webapp.request.JSONHashcodeValidationRequest;
+import ee.openeid.siva.webapp.request.SignatureFile;
 import ee.openeid.siva.webapp.soap.DataFilesReport;
 import ee.openeid.siva.webapp.soap.ValidateDocumentResponse;
 import ee.openeid.siva.webapp.soap.ValidationReport;
 import io.restassured.response.Response;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.collections4.CollectionUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -143,7 +145,7 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
     }
 
     protected String validationRequestForDocumentExtended(String document, String filename, String documentType, String signaturePolicy) {
-        if(documentType==null){
+        if (documentType == null) {
             return createXMLValidationRequestWithoutDocumentType(document, filename, signaturePolicy);
         }
         return createXMLValidationRequestExtended(
@@ -196,18 +198,35 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
     protected static String createXMLHashcodeValidationRequest(JSONHashcodeValidationRequest request) {
         return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
                 "   <soapenv:Header/>\n" +
-                "   <soapenv:Body>\n" + //TODO: uncomment
-//                "      <soap:HashcodeValidationDocument>\n" +
-//                "         <soap:HashcodeValidationRequest>\n" +
-//                "           " + addParameter("SignatureFile", request.getSignatureFile()) +
-//                "           " + addParameter("Filename", request.getFilename()) +
-//                "           " + addParameter("ReportType", request.getReportType()) +
-//                "           " + addParameter("SignaturePolicy", request.getSignaturePolicy()) +
-//                "           " + formDataFilesBlock(request.getDatafiles()) +
+                "   <soapenv:Body>\n" +
+                "      <soap:HashcodeValidationDocument>\n" +
+                "         <soap:HashcodeValidationRequest>\n" +
+                "           " + formSignatureFilesBlock(request.getSignatureFiles()) +
+                "           " + addParameter("ReportType", request.getReportType()) +
+                "           " + addParameter("SignaturePolicy", request.getSignaturePolicy()) +
                 "         </soap:HashcodeValidationRequest>\n" +
                 "      </soap:HashcodeValidationDocument>\n" +
                 "   </soapenv:Body>\n" +
                 "</soapenv:Envelope>";
+    }
+
+    private static String formSignatureFilesBlock(List<SignatureFile> signatureFiles) {
+        if (signatureFiles == null) {
+            return "";
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<SignatureFiles>");
+        signatureFiles.forEach(signatureFile -> {
+            stringBuilder
+                    .append("<SignatureFile>")
+                    .append("   " + addParameter("Signature", signatureFile.getSignature()));
+            if (CollectionUtils.isNotEmpty(signatureFile.getDatafiles())) {
+                stringBuilder.append(formDataFilesBlock(signatureFile.getDatafiles()));
+            }
+            stringBuilder.append("</SignatureFile>");
+        });
+        stringBuilder.append("</SignatureFiles>");
+        return stringBuilder.toString();
     }
 
     private static String formDataFilesBlock(List<Datafile> datafiles) {
@@ -290,7 +309,7 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
         }
     }
 
-    protected String currentDateTime(String timeZone, String timeFormat){
+    protected String currentDateTime(String timeZone, String timeFormat) {
         final Date currentTime = new Date();
         final SimpleDateFormat sdf = new SimpleDateFormat(timeFormat);
 

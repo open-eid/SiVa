@@ -17,6 +17,7 @@
 package ee.openeid.siva.webapp.soap.impl;
 
 import ee.openeid.siva.proxy.HashcodeValidationProxy;
+import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.webapp.soap.HashcodeValidationWebService;
 import ee.openeid.siva.webapp.soap.SoapHashcodeValidationRequest;
 import ee.openeid.siva.webapp.soap.ValidationReport;
@@ -38,9 +39,8 @@ public class HashcodeValidationWebServiceImpl implements HashcodeValidationWebSe
 
     @Override
     public void hashcodeValidationDocument(SoapHashcodeValidationRequest validationRequest, Holder<ValidationReport> validationReport, Holder<String> validationReportSignature) {
-//        SimpleReport simpleReport = hashcodeValidationProxy.validate(hashRequestTransformer.transform(validationRequest));
-//        validationReport.value = responseTransformer.toSoapResponse(simpleReport);
-        //TODO: NOT READY
+        SimpleReport simpleReport = hashcodeValidationProxy.validate(hashRequestTransformer.transform(validationRequest));
+        validationReport.value = responseTransformer.toSoapResponse(simpleReport);
     }
 
     @Autowired

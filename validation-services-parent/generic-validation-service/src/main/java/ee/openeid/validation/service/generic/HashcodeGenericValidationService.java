@@ -21,10 +21,17 @@ import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.exception.MalformedSignatureFileException;
-import eu.europa.esig.dss.*;
+import ee.openeid.siva.validation.security.SecureSAXParsers;
+import eu.europa.esig.dss.DSSDocument;
+import eu.europa.esig.dss.DigestAlgorithm;
+import eu.europa.esig.dss.DigestDocument;
+import eu.europa.esig.dss.InMemoryDocument;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
+import javax.xml.parsers.SAXParser;
+import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,10 +45,29 @@ public class HashcodeGenericValidationService extends GenericValidationService {
 
     @Override
     protected SignedDocumentValidator createValidatorFromDocument(final ValidationDocument validationDocument) {
+        List<Datafile> datafiles = getDataFileInfoIfNeeded(validationDocument);
+        if(CollectionUtils.isNotEmpty(datafiles)){
+            validationDocument.setDatafiles(datafiles);
+        }
         SignedDocumentValidator validator = super.createValidatorFromDocument(validationDocument);
         List<DSSDocument> detachedContents = createDetachedContents(validationDocument.getDatafiles());
         validator.setDetachedContents(detachedContents);
         return validator;
+    }
+
+    private List<Datafile> getDataFileInfoIfNeeded(ValidationDocument validationDocument) {
+        if (CollectionUtils.isNotEmpty(validationDocument.getDatafiles())) {
+            return null;
+        } else {
+            try {
+                SAXParser saxParser = SecureSAXParsers.createParser();
+                SignatureXmlHandler handler = new SignatureXmlHandler();
+                saxParser.parse(new ByteArrayInputStream(validationDocument.getBytes()), handler);
+                return handler.getDatafiles();
+            } catch (Exception e) {
+                throw constructMalformedDocumentException(new RuntimeException(e));
+            }
+        }
     }
 
     @Override
@@ -58,6 +84,9 @@ public class HashcodeGenericValidationService extends GenericValidationService {
     }
 
     private List<DSSDocument> createDetachedContents(final List<Datafile> datafiles) {
+        if(CollectionUtils.isEmpty(datafiles)){
+            throw constructMalformedDocumentException(new RuntimeException("Data files are missing"));
+        }
         return datafiles.stream()
                 .map(this::createDigestDocument)
                 .collect(Collectors.toList());

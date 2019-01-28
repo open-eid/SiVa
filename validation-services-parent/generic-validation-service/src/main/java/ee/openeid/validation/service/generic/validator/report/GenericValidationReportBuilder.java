@@ -16,6 +16,7 @@
 
 package ee.openeid.validation.service.generic.validator.report;
 
+import ee.openeid.siva.validation.document.Datafile;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
@@ -29,6 +30,7 @@ import eu.europa.esig.dss.validation.reports.wrapper.CertificateWrapper;
 import eu.europa.esig.dss.validation.reports.wrapper.RevocationWrapper;
 import eu.europa.esig.dss.validation.reports.wrapper.SignatureWrapper;
 import eu.europa.esig.dss.validation.reports.wrapper.TimestampWrapper;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;
@@ -122,7 +124,7 @@ public class GenericValidationReportBuilder {
 
     private String changeAndValidateSignatureFormat(String signatureFormat, String signatureId) {
         if (TM_POLICY_OID.equals(dssReports.getDiagnosticData().getSignatureById(signatureId).getPolicyId())) {
-           signatureFormat = signatureFormat.replace(LT_XAdES_SIGNATURE_FORMAT, LT_TM_XAdES_SIGNATURE_FORMAT);
+            signatureFormat = signatureFormat.replace(LT_XAdES_SIGNATURE_FORMAT, LT_TM_XAdES_SIGNATURE_FORMAT);
         }
         if (isInvalidFormat(signatureFormat, signatureId)) {
             signatureFormat = signatureFormat.replace(LT_SIGNATURE_FORMAT_SUFFIX, BASELINE_SIGNATURE_FORMAT_SUFFIX);
@@ -133,9 +135,9 @@ public class GenericValidationReportBuilder {
     }
 
     private boolean isInvalidFormat(String signatureFormat, String signatureId) {
-      return Indication.TOTAL_PASSED == dssReports.getSimpleReport().getIndication(signatureId)
-              && dssReports.getDiagnosticData().getSignatureById(signatureId).getTimestampList().isEmpty()
-              && !signatureFormat.equals(LT_TM_XAdES_SIGNATURE_FORMAT);
+        return Indication.TOTAL_PASSED == dssReports.getSimpleReport().getIndication(signatureId)
+                && dssReports.getDiagnosticData().getSignatureById(signatureId).getTimestampList().isEmpty()
+                && !signatureFormat.equals(LT_TM_XAdES_SIGNATURE_FORMAT);
     }
 
     private Info parseSignatureInfo(String signatureFormat, String signatureId) {
@@ -148,7 +150,7 @@ public class GenericValidationReportBuilder {
     private Date getBestSignatureTime(String signatureFormat, String signatureId) {
         SignatureWrapper signature = dssReports.getDiagnosticData().getSignatureById(signatureId);
         if (signatureFormat.equals(LT_TM_XAdES_SIGNATURE_FORMAT)) {
-            for (RevocationWrapper revocationData: dssReports.getDiagnosticData().getAllRevocationData()) {
+            for (RevocationWrapper revocationData : dssReports.getDiagnosticData().getAllRevocationData()) {
                 return revocationData.getProductionDate();
             }
         } else {
@@ -157,6 +159,7 @@ public class GenericValidationReportBuilder {
         }
         return null;
     }
+
     private List<Error> parseSignatureErrors(String signatureId) {
         return dssReports.getSimpleReport().getErrors(signatureId)
                 .stream()
@@ -195,6 +198,16 @@ public class GenericValidationReportBuilder {
         signatureScope.setContent(emptyWhenNull(dssSignatureScope.getValue()));
         signatureScope.setName(emptyWhenNull(dssSignatureScope.getName()));
         signatureScope.setScope(emptyWhenNull(dssSignatureScope.getScope()));
+        if (CollectionUtils.isNotEmpty(validationDocument.getDatafiles())) {
+            Optional<Datafile> dataFile = validationDocument.getDatafiles()
+                    .stream()
+                    .filter(datafile -> datafile.getFilename().equals(dssSignatureScope.getName()))
+                    .findFirst();
+            if (dataFile.isPresent()) {
+                signatureScope.setHash(dataFile.get().getHash());
+                signatureScope.setHashAlgo(dataFile.get().getHashAlgo());
+            }
+        }
         return signatureScope;
     }
 

@@ -428,7 +428,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Title: Data file missing
      *
-     * Expected Result: Error is returned
+     * Expected Result: Simple report is returned
      *
      * File: hashAsiceXades.xml
      **/
@@ -438,10 +438,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         request.getSignatureFiles().get(0).setDatafiles(null);
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
-        assertErrorResponse(response,
-                new RequestError(DATAFILES, MAY_NOT_BE_EMPTY),
-                new RequestError(DATAFILES, MAY_NOT_BE_NULL)
-        );
+        assertSimpleReportWithSignature(response, request);
     }
 
     /**
@@ -453,7 +450,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Title: Empty data files list
      *
-     * Expected Result: Error is returned
+     * Expected Result: Simple report is returned
      *
      * File: hashAsiceXades.xml
      **/
@@ -463,9 +460,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         request.getSignatureFiles().get(0).setDatafiles(new ArrayList<>());
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
-        assertErrorResponse(response,
-                new RequestError(DATAFILES, MAY_NOT_BE_EMPTY)
-        );
+        assertSimpleReportWithSignature(response, request);
     }
 
     /**

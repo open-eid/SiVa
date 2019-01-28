@@ -26,4 +26,8 @@ public class SignatureScope {
     private String scope;
 
     private String content;
+
+    private String hashAlgo;
+
+    private String hash;
 }

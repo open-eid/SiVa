@@ -14,7 +14,7 @@
  * See the Licence for the specific language governing permissions and limitations under the Licence.
  */
 
-package ee.openeid.validation.service.timemark.security;
+package ee.openeid.siva.validation.security;
 
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;

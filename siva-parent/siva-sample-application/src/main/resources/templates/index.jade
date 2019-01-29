@@ -30,6 +30,15 @@ block content
                     option(value="") default
                     option(value="Simple") Simple
                     option(value="Detailed") Detailed
+
+        .col-md-3
+            .input-group
+                span.input-group-addon#type-addon Validation type:
+                select.form-control#type-select(aria-describedby="type-addon")
+                    option(value="") default
+                    option(value="Container") Container
+                    option(value="Hashcode") Hashcode
+
         .col-md-3
             .input-group
                 span.input-group-addon Return Data Files:

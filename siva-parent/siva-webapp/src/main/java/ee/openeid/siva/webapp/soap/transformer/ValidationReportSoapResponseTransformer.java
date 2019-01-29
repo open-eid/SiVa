@@ -227,7 +227,8 @@ public class ValidationReportSoapResponseTransformer {
             responseSignatureScope.setContent(signatureScope.getContent());
             responseSignatureScope.setName(signatureScope.getName());
             responseSignatureScope.setScope(signatureScope.getScope());
-
+            responseSignatureScope.setHashAlgo(signatureScope.getHashAlgo());
+            responseSignatureScope.setHash(signatureScope.getHash());
             responseSignatureScopes.getSignatureScope().add(responseSignatureScope);
         }
 

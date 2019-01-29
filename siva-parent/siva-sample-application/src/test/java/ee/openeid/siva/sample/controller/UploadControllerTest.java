@@ -73,6 +73,9 @@ public class UploadControllerTest {
     private DataFilesTaskRunner dataFilesTaskRunner;
 
     @MockBean
+    private HashcodeValidationTaskRunner hashcodeValidationTaskRunner;
+
+    @MockBean
     private UploadFileCacheService hazelcastUploadFileCacheService;
 
     @MockBean
@@ -96,6 +99,7 @@ public class UploadControllerTest {
         final Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
         logger.detachAppender(mockAppender);
         reset(taskRunner);
+        reset(hashcodeValidationTaskRunner);
         reset(dataFilesTaskRunner);
         Thread.interrupted();
     }
@@ -127,6 +131,7 @@ public class UploadControllerTest {
                 .param("policy", "")
                 .param("encodedFilename", "ranodom.bdoc")
                 .param("returnDataFiles", "false")
+                .param("type", "")
                 .param("report", ""))
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8));
@@ -148,6 +153,7 @@ public class UploadControllerTest {
                 .param("policy", "")
                 .param("encodedFilename", "ranodom.bdoc")
                 .param("returnDataFiles", "false")
+                .param("type", "")
                 .param("report", ""))
                 .andExpect(MockMvcResultMatchers.status().is(200));
     }
@@ -165,6 +171,7 @@ public class UploadControllerTest {
                 .param("policy", "")
                 .param("encodedFilename", "ranodom.bdoc")
                 .param("returnDataFiles", "false")
+                .param("type", "")
                 .param("report", ""))
                 .andExpect(MockMvcResultMatchers.status().is(200));
     }
@@ -183,6 +190,7 @@ public class UploadControllerTest {
                 .param("policy", "")
                 .param("encodedFilename", "ranodom.bdoc")
                 .param("returnDataFiles", "false")
+                .param("type", "")
                 .param("report", ""))
                 .andExpect(MockMvcResultMatchers.status().is(200));
 

@@ -231,6 +231,8 @@
                     <xs:element name="Name" minOccurs="0" type="xs:string"/>
                     <xs:element name="Scope" minOccurs="0" type="xs:string"/>
                     <xs:element name="Content" minOccurs="0" type="xs:string"/>
+                    <xs:element name="HashAlgo" minOccurs="0" type="xs:string"/>
+                    <xs:element name="Hash" minOccurs="0" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="Warning">

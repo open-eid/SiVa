@@ -24,8 +24,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class SivaRESTWebServiceConfigurationProperties {
     private static final String DEFAULT_SERVICE_URL = "http://localhost:8080";
     private String jsonServicePath = "/validate";
+    private String jsonHashcodeServicePath = "/validateHashcode";
     private String jsonDataFilesServicePath = "/getDataFiles";
     private String soapDataFilesServicePath = "/soap/dataFilesWebService/getDocumentDataFiles";
     private String soapServicePath = "/soap/validationWebService/validateDocument";
+    private String soapHashcodeServicePath = "/soap/hashcodeValidationWebService/hashcodeValidationDocument";
     private String serviceHost = DEFAULT_SERVICE_URL;
 }

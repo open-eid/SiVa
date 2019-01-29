@@ -116,7 +116,7 @@ public class ValidationReportSoapResponseTransformer {
     private ValidatedDocumentData toSoapValidatedDocument(ValidatedDocument validatedDocument) {
         ValidatedDocumentData validatedDocumentData = new ValidatedDocumentData();
         validatedDocumentData.setFilename(validatedDocument.getFilename());
-        validatedDocumentData.setFileHashInHex(validatedDocument.getFileHashInHex());
+        validatedDocumentData.setFileHash(validatedDocument.getFileHash());
         validatedDocumentData.setHashAlgo(validatedDocument.getHashAlgo());
         return validatedDocumentData;
 

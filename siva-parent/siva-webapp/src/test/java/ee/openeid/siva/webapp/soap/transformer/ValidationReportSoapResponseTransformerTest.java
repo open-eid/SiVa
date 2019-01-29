@@ -44,7 +44,7 @@ public class ValidationReportSoapResponseTransformerTest {
         ValidationReport soapValidationReport = transformer.toSoapResponse(simpleReport);
         ValidationConclusion soapValidationConclusion = soapValidationReport.getValidationConclusion();
         Assert.assertEquals(validationConclusion.getValidatedDocument().getFilename(), soapValidationConclusion.getValidatedDocument().getFilename());
-        Assert.assertEquals(validationConclusion.getValidatedDocument().getFileHashInHex(), soapValidationConclusion.getValidatedDocument().getFileHashInHex());
+        Assert.assertEquals(validationConclusion.getValidatedDocument().getFileHash(), soapValidationConclusion.getValidatedDocument().getFileHash());
         Assert.assertEquals(validationConclusion.getValidatedDocument().getHashAlgo(), soapValidationConclusion.getValidatedDocument().getHashAlgo());
         Assert.assertEquals(validationConclusion.getSignatureForm(), soapValidationConclusion.getSignatureForm());
         Assert.assertEquals(validationConclusion.getValidationTime(), soapValidationConclusion.getValidationTime());

@@ -64,7 +64,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The reference data object(s) is not intact!"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.validatedDocument.fileHashInHex", Matchers.is("FBF589854B8E94FD110DF10D4DA4B3112AFE0DB8390F7198712DC2B2A8CF9B45"));
+                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("+/WJhUuOlP0RDfENTaSzESr+Dbg5D3GYcS3CsqjPm0U="));
     }
 
     /**
@@ -96,7 +96,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2))
-                .body("validationReport.validationConclusion.validatedDocument.fileHashInHex", Matchers.is("B341F436C824E71E85600FAAEB9918A3C10D226E194CCC714A232339F35C2EA4"));
+                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("s0H0Nsgk5x6FYA+q65kYo8ENIm4ZTMxxSiMjOfNcLqQ="));
     }
 
     /**
@@ -126,7 +126,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2))
-                .body("validationReport.validationConclusion.validatedDocument.fileHashInHex", Matchers.is("4545537760A1E178AD08D9369ED253081DDA017F984A47BFC5B21DF08C022689"));
+                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("RUVTd2Ch4XitCNk2ntJTCB3aAX+YSke/xbId8IwCJok="));
     }
 
     /**

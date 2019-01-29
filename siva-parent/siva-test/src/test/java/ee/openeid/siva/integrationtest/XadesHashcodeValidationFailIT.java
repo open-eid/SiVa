@@ -63,7 +63,7 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2013-11-25T13:16:59Z"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.validatedDocument.fileHashInHex", Matchers.is("0A8CE9855F20AF4E519AD3A2E89F24472C60C09726066CCE00292DEFD091F64D"));
+                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("CozphV8gr05RmtOi6J8kRyxgwJcmBmzOACkt79CR9k0="));
     }
 
     /**
@@ -90,7 +90,7 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2013-11-25T13:16:59Z"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.validatedDocument.fileHashInHex", Matchers.is("0A8CE9855F20AF4E519AD3A2E89F24472C60C09726066CCE00292DEFD091F64D"));
+                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("CozphV8gr05RmtOi6J8kRyxgwJcmBmzOACkt79CR9k0="));
     }
 
     /**
@@ -117,7 +117,7 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2014-10-31T14:08:19Z"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.validatedDocument.fileHashInHex", Matchers.is("F9FD100BD985DF062E954A42FD292CA095F614329CFC179D01F5D318C47DC50A"));
+                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("+f0QC9mF3wYulUpC/SksoJX2FDKc/BedAfXTGMR9xQo="));
     }
 
     /**
@@ -144,7 +144,7 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2013-11-11T06:45:46Z"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.validatedDocument.fileHashInHex", Matchers.is("E78B39742B170A959BFD9638A639CCA5FA55A2F21938D819ED428D84500BFD96"));
+                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("54s5dCsXCpWb/ZY4pjnMpfpVovIZONgZ7UKNhFAL/ZY="));
     }
 
     @Override

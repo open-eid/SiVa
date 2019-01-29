@@ -2,9 +2,12 @@ package ee.openeid.validation.service.generic;
 
 import ee.openeid.siva.validation.document.Datafile;
 import eu.europa.esig.dss.DigestAlgorithm;
+import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +29,11 @@ public class SignatureXmlHandler extends DefaultHandler {
             currentDatafile = new Datafile();
             for (int i = 0; i < attributes.getLength(); i++) {
                 if ("URI".equals(attributes.getQName(i))) {
-                    currentDatafile.setFilename(attributes.getValue(i));
+                    try {
+                        currentDatafile.setFilename(URLDecoder.decode(attributes.getValue(i), "UTF-8"));
+                    } catch (UnsupportedEncodingException e) {
+                        throw new IllegalArgumentException("Invalid file name");
+                    }
                 }
             }
         }
@@ -58,7 +65,9 @@ public class SignatureXmlHandler extends DefaultHandler {
     @Override
     public void characters(char ch[], int start, int length) {
         if (signedInfo && reference && currentDatafile != null) {
-            currentDatafile.setHash(new String(ch, start, length));
+            String characters = new String(ch, start, length).trim();
+            if (StringUtils.isNotBlank(characters))
+                currentDatafile.setHash(characters);
         }
     }
 

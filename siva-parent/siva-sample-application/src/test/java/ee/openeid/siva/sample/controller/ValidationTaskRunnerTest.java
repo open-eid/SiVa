@@ -83,7 +83,7 @@ public class ValidationTaskRunnerTest {
 
     @Test
     public void givenValidUploadFileReturnsValidationResultOfAllServices() throws Exception {
-        validationTaskRunner.run("","",  new UploadedFile());
+        validationTaskRunner.run("", "", new UploadedFile());
 
         assertThat(validationTaskRunner.getValidationResult(ResultType.JSON)).isEqualTo("{}");
         assertThat(validationTaskRunner.getValidationResult(ResultType.SOAP)).isEqualTo("<soap></soap>");

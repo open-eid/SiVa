@@ -116,7 +116,7 @@ public class ValidationReportSoapResponseTransformer {
     private ValidatedDocumentData toSoapValidatedDocument(ValidatedDocument validatedDocument) {
         ValidatedDocumentData validatedDocumentData = new ValidatedDocumentData();
         validatedDocumentData.setFilename(validatedDocument.getFilename());
-        validatedDocumentData.setFileHashInHex(validatedDocument.getFileHashInHex());
+        validatedDocumentData.setFileHash(validatedDocument.getFileHash());
         validatedDocumentData.setHashAlgo(validatedDocument.getHashAlgo());
         return validatedDocumentData;
 
@@ -227,7 +227,8 @@ public class ValidationReportSoapResponseTransformer {
             responseSignatureScope.setContent(signatureScope.getContent());
             responseSignatureScope.setName(signatureScope.getName());
             responseSignatureScope.setScope(signatureScope.getScope());
-
+            responseSignatureScope.setHashAlgo(signatureScope.getHashAlgo());
+            responseSignatureScope.setHash(signatureScope.getHash());
             responseSignatureScopes.getSignatureScope().add(responseSignatureScope);
         }
 

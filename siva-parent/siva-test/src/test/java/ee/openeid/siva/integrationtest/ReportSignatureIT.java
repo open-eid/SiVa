@@ -144,10 +144,10 @@ public class ReportSignatureIT extends SiVaRestTests {
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
     @Test
-    public void whenRequestingSimpleReport_andreportSignatureEnabledTrue_fileHashInHex_InReport() {
+    public void whenRequestingSimpleReport_andreportSignatureEnabledTrue_fileHash_InReport() {
         post(validationRequestFor("hellopades-pades-lt-sha256-sign.pdf", null, "Simple"))
                 .then().log().all()
-                .body("validationReport.validationConclusion.validatedDocument.fileHashInHex", not(isEmptyOrNullString()));
+                .body("validationReport.validationConclusion.validatedDocument.fileHash", not(isEmptyOrNullString()));
     }
 
     /**
@@ -165,10 +165,10 @@ public class ReportSignatureIT extends SiVaRestTests {
      */
     @Ignore //This test should be ran manually after configuring the report signature feature
     @Test
-    public void whenRequestingSimpleReport_andreportSignatureEnabledFalse_fileHashInHex_NotInReport() {
+    public void whenRequestingSimpleReport_andreportSignatureEnabledFalse_fileHash_NotInReport() {
         post(validationRequestFor("hellopades-pades-lt-sha256-sign.pdf", null, "Simple"))
                 .then().log().all()
-                .body("validationReport.validationConclusion.validatedDocument.fileHashInHex", isEmptyOrNullString());
+                .body("validationReport.validationConclusion.validatedDocument.fileHash", isEmptyOrNullString());
     }
 
     private Response validateRequestForDetailedReport(String request, String validationUrl) {

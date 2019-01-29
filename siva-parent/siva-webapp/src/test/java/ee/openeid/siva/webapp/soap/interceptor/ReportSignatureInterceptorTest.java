@@ -135,7 +135,7 @@ public class ReportSignatureInterceptorTest {
                                     "<ValidationTime>2017-10-02T12:04:01Z</ValidationTime>" +
                                     "<ValidatedDocument>" +
                                         "<Filename>hellopades-pades-lt-sha256-sign.pdf</Filename>" +
-                                        "<FileHashInHex>CAA597B767D182A512290AE23F20F23A3AD6B40C348BA5BDFDDF9568E025694B</FileHashInHex>" +
+                                        "<FileHash>CAA597B767D182A512290AE23F20F23A3AD6B40C348BA5BDFDDF9568E025694B</FileHash>" +
                                         "<HashAlgo>SHA-256</HashAlgo>" +
                                     "</ValidatedDocument>" +
                                     "<ValidationLevel>ARCHIVAL_DATA</ValidationLevel>" +

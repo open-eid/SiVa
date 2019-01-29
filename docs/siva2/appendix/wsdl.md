@@ -109,7 +109,7 @@ See also [Interfaces](/siva2/interfaces) for more information about the SOAP int
             <xs:complexType name="ValidatedDocumentData">
                 <xs:sequence>
                     <xs:element name="Filename" type="xs:string"/>
-                    <xs:element name="FileHashInHex" minOccurs="0" type="xs:string"/>
+                    <xs:element name="FileHash" minOccurs="0" type="xs:string"/>
                     <xs:element name="HashAlgo" minOccurs="0" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>

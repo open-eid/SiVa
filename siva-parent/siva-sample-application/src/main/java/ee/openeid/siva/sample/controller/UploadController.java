@@ -42,10 +42,12 @@ import static ee.openeid.siva.sample.siva.ValidationReportUtils.*;
 class UploadController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UploadController.class);
     private static final String START_PAGE_VIEW_NAME = "index";
+    private static final String HASHCODE = "Hashcode";
     private static final long SECOND_IN_MILLISECONDS = 1000L;
     private static final int JSON_INDENT_FACTOR = 4;
     private ValidationTaskRunner validationTaskRunner;
     private DataFilesTaskRunner dataFilesTaskRunner;
+    private HashcodeValidationTaskRunner hashcodeValidationTaskRunner;
     private UploadFileCacheService fileUploadService;
     private GoogleAnalyticsProperties googleAnalyticsProperties;
 
@@ -65,6 +67,7 @@ class UploadController {
             @RequestParam(value = "file") MultipartFile file,
             @RequestParam String policy,
             @RequestParam String report,
+            @RequestParam String type,
             @RequestParam String encodedFilename,
             @RequestParam boolean returnDataFiles,
             Model model
@@ -80,9 +83,12 @@ class UploadController {
             if (returnDataFiles) {
                 dataFilesTaskRunner.run(uploadedFile);
             }
-            validationTaskRunner.run(policy, report, uploadedFile);
-
-            setModelFlashAttributes(model);
+            if (HASHCODE.equals(type)) {
+                hashcodeValidationTaskRunner.run(policy, report, uploadedFile);
+            } else {
+                validationTaskRunner.run(policy, report, uploadedFile);
+            }
+            setModelFlashAttributes(model, HASHCODE.equals(type));
         } catch (IOException e) {
             LOGGER.warn("File upload problem", e);
             model.addAttribute("error", "File upload failed with message: " + e.getMessage());
@@ -92,11 +98,13 @@ class UploadController {
         } finally {
             fileUploadService.deleteUploadedFile(timestamp);
             validationTaskRunner.clearValidationResults();
+            hashcodeValidationTaskRunner.clearValidationResults();
             dataFilesTaskRunner.clearDataFilesResults();
         }
 
         return validationResponse(model);
     }
+
 
     private String getJsonValidationResult() {
         return validationTaskRunner.getValidationResult(ResultType.JSON);
@@ -104,6 +112,14 @@ class UploadController {
 
     private String getSoapValidationResult() {
         return validationTaskRunner.getValidationResult(ResultType.SOAP);
+    }
+
+    private String getHashcodeJsonValidationResult() {
+        return hashcodeValidationTaskRunner.getValidationResult(ResultType.JSON);
+    }
+
+    private String getHashcodeSoapValidationResult() {
+        return hashcodeValidationTaskRunner.getValidationResult(ResultType.SOAP);
     }
 
     private String getJsonDataFilesResult() {
@@ -114,12 +130,20 @@ class UploadController {
         return dataFilesTaskRunner.getDataFilesResult(ResultType.SOAP);
     }
 
-    private void setModelFlashAttributes(Model model) throws JsonProcessingException {
-        String jsonValidationResult = getJsonValidationResult();
-        String soapValidationResult = getSoapValidationResult();
+    private void setModelFlashAttributes(Model model, boolean isHashcode) throws JsonProcessingException {
+        String jsonValidationResult;
+        String soapValidationResult;
+        if (isHashcode) {
+            jsonValidationResult = getHashcodeJsonValidationResult();
+            soapValidationResult = getHashcodeSoapValidationResult();
+        } else {
+            jsonValidationResult = getJsonValidationResult();
+            soapValidationResult = getSoapValidationResult();
+        }
 
         final ValidationResponse response = new ValidationResponse();
-        response.setFilename(getValidateFilename(jsonValidationResult));
+        if (!isHashcode)
+            response.setFilename(getValidateFilename(jsonValidationResult));
         response.setOverAllValidationResult(getOverallValidationResult(jsonValidationResult));
         response.setValidationWarnings(getValidationWarnings(jsonValidationResult));
         final String output = isJSONValid(jsonValidationResult) ? jsonValidationResult : handleMissingJSON();
@@ -138,6 +162,11 @@ class UploadController {
     @Autowired
     public void setValidationTaskRunner(ValidationTaskRunner validationTaskRunner) {
         this.validationTaskRunner = validationTaskRunner;
+    }
+
+    @Autowired
+    public void setHashcodeValidationTaskRunner(HashcodeValidationTaskRunner hashcodeValidationTaskRunner) {
+        this.hashcodeValidationTaskRunner = hashcodeValidationTaskRunner;
     }
 
     @Autowired

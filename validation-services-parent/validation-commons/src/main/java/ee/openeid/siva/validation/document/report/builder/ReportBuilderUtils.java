@@ -22,7 +22,6 @@ import ee.openeid.siva.validation.service.signature.policy.properties.Validation
 import eu.europa.esig.dss.validation.SignatureQualification;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.bouncycastle.util.encoders.Hex;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -30,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.TimeZone;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -78,12 +78,12 @@ public final class ReportBuilderUtils {
             String documentHash;
             try {
                 MessageDigest messageDigest = MessageDigest.getInstance(DIGEST_ALGO);
-                documentHash = Hex.toHexString(messageDigest.digest(document)).toUpperCase();
+                documentHash = Base64.getEncoder().encodeToString(messageDigest.digest(document));
             } catch (NoSuchAlgorithmException e) {
                 throw new IllegalArgumentException(e);
             }
 
-            validatedDocument.setFileHashInHex(documentHash);
+            validatedDocument.setFileHash(documentHash);
             validatedDocument.setHashAlgo(DIGEST_ALGO);
         }
         validatedDocument.setFilename(filename);

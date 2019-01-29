@@ -17,8 +17,8 @@
 package ee.openeid.siva.sample.controller;
 
 import ee.openeid.siva.sample.cache.UploadedFile;
+import ee.openeid.siva.sample.siva.HashcodeValidationService;
 import ee.openeid.siva.sample.siva.SivaServiceType;
-import ee.openeid.siva.sample.siva.ValidationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,14 +39,14 @@ import static ee.openeid.siva.sample.controller.ResultType.JSON;
 import static ee.openeid.siva.sample.controller.ResultType.SOAP;
 
 @Service
-class ValidationTaskRunner {
+class HashcodeValidationTaskRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(ValidationTaskRunner.class);
     private final Map<ResultType, String> validationResults = new ConcurrentHashMap<>();
-    private ValidationService jsonValidationService;
-    private ValidationService soapValidationService;
+    private HashcodeValidationService jsonValidationService;
+    private HashcodeValidationService soapValidationService;
 
     void run(String policy, String report, UploadedFile uploadedFile) throws InterruptedException {
-        Map<ResultType, ValidationService> serviceMap = getValidationServiceMap();
+        Map<ResultType, HashcodeValidationService> serviceMap = getValidationServiceMap();
 
         ExecutorService executorService = Executors.newFixedThreadPool(serviceMap.size());
         serviceMap.entrySet().forEach(entry -> executorService.submit(() -> validateFile(entry.getValue(), entry.getKey(), report, uploadedFile, policy)));
@@ -55,20 +55,20 @@ class ValidationTaskRunner {
         executorService.awaitTermination(2, TimeUnit.MINUTES);
     }
 
-    private static SimpleImmutableEntry<ResultType, ValidationService> addEntry(
+    private static SimpleImmutableEntry<ResultType, HashcodeValidationService> addEntry(
             ResultType resultType,
-            ValidationService validationService
+            HashcodeValidationService validationService
     ) {
         return new SimpleImmutableEntry<>(resultType, validationService);
     }
 
-    private Map<ResultType, ValidationService> getValidationServiceMap() {
+    private Map<ResultType, HashcodeValidationService> getValidationServiceMap() {
         return Stream.of(addEntry(JSON, jsonValidationService), addEntry(SOAP, soapValidationService))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     private void validateFile(
-            ValidationService validationService,
+            HashcodeValidationService validationService,
             ResultType resultType,
             String report,
             UploadedFile uploadedFile,
@@ -94,14 +94,14 @@ class ValidationTaskRunner {
     }
 
     @Autowired
-    @Qualifier(value = SivaServiceType.JSON_SERVICE)
-    public void setJsonValidationService(final ValidationService jsonValidationService) {
+    @Qualifier(value = SivaServiceType.JSON_HASHCODE_SERVICE)
+    public void setJsonValidationService(HashcodeValidationService jsonValidationService) {
         this.jsonValidationService = jsonValidationService;
     }
 
     @Autowired
-    @Qualifier(value = SivaServiceType.SOAP_SERVICE)
-    public void setSoapValidationService(ValidationService soapValidationService) {
+    @Qualifier(value = SivaServiceType.SOAP_HASHCODE_SERVICE)
+    public void setSoapValidationService(HashcodeValidationService soapValidationService) {
         this.soapValidationService = soapValidationService;
     }
 }

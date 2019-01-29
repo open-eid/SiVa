@@ -146,7 +146,7 @@ public class ReportBuilderUtilsTest {
         ValidatedDocument response = ReportBuilderUtils.createValidatedDocument(true, "filename.asice", data);
         Assert.assertEquals("filename.asice", response.getFilename());
         Assert.assertEquals("SHA-256", response.getHashAlgo());
-        Assert.assertEquals("ba477a0ac57e10dd90bb5bf0289c5990fe839c619b26fde7c2aac62f526d4113".toUpperCase(), response.getFileHashInHex());
+        Assert.assertEquals("ukd6CsV+EN2Qu1vwKJxZkP6DnGGbJv3nwqrGL1JtQRM=", response.getFileHash());
     }
 
     @Test
@@ -155,6 +155,6 @@ public class ReportBuilderUtilsTest {
         ValidatedDocument response = ReportBuilderUtils.createValidatedDocument(false, "filename.asice", data);
         Assert.assertEquals("filename.asice", response.getFilename());
         Assert.assertEquals(null, response.getHashAlgo());
-        Assert.assertEquals(null, response.getFileHashInHex());
+        Assert.assertEquals(null, response.getFileHash());
     }
 }

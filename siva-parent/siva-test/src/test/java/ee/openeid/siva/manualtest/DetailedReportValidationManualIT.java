@@ -708,7 +708,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      *
      * Title: Validate detailed report file hash if ReportSignatureEnabled value true
      *
-     * Expected Result: fileHashInHex calculated
+     * Expected Result: fileHash calculated
      *
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
@@ -719,7 +719,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
         String request = detailedReportRequest(filename,VALID_SIGNATURE_POLICY_4);
         response =  validateRequestForDetailedReport(request,VALIDATION_ENDPOINT);
         assertThat(response.jsonPath().getString("validationReport.validationConclusion.validatedDocument.filename"), equalTo("hellopades-lt-sha256-rsa2048.pdf"));
-        assertThat(response.jsonPath().getString("validationReport.validationConclusion.validatedDocument.fileHashInHex"), notNullValue() );
+        assertThat(response.jsonPath().getString("validationReport.validationConclusion.validatedDocument.fileHash"), notNullValue() );
         assertThat(response.jsonPath().getString("validationReport.validationConclusion.validatedDocument.hashAlgo"), equalTo("SHA-256"));
         assertThat(response.jsonPath().getString("validationReportSignature"), notNullValue());
     }
@@ -733,7 +733,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      *
      * Title: Validate detailed report file hash if ReportSignatureEnabled value false
      *
-     * Expected Result: fileHashInHex no calculated
+     * Expected Result: fileHash no calculated
      *
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
@@ -744,7 +744,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
         String request = detailedReportRequest(filename,VALID_SIGNATURE_POLICY_4);
         response =  validateRequestForDetailedReport(request,VALIDATION_ENDPOINT);
         assertThat(response.jsonPath().getString("validationReport.validationConclusion.validatedDocument.filename"), equalTo(filename));
-        assertThat(response.jsonPath().getString("validationReport.validationConclusion.validatedDocument.fileHashInHex"), nullValue() );
+        assertThat(response.jsonPath().getString("validationReport.validationConclusion.validatedDocument.fileHash"), nullValue() );
         assertThat(response.jsonPath().getString("validationReport.validationConclusion.validatedDocument.hashAlgo"), nullValue());
     }
 

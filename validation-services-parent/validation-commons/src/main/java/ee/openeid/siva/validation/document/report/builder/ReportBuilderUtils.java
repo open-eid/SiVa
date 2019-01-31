@@ -73,6 +73,9 @@ public final class ReportBuilderUtils {
     }
 
     public static ValidatedDocument createValidatedDocument(boolean reportSignatureEnabled, String filename, byte[] document) {
+        if (StringUtils.isBlank(filename) && !reportSignatureEnabled) {
+            return null;
+        }
         ValidatedDocument validatedDocument = new ValidatedDocument();
         if (reportSignatureEnabled) {
             String documentHash;

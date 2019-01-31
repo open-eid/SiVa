@@ -68,7 +68,8 @@ public class ValidationReportSoapResponseTransformer {
         responseValidationConclusion.setSignatureForm(validationConclusion.getSignatureForm());
         responseValidationConclusion.setPolicy(toSoapResponsePolicy(validationConclusion.getPolicy()));
         responseValidationConclusion.setValidationLevel(validationConclusion.getValidationLevel());
-        responseValidationConclusion.setValidatedDocument(toSoapValidatedDocument(validationConclusion.getValidatedDocument()));
+        if (validationConclusion.getValidatedDocument() != null)
+            responseValidationConclusion.setValidatedDocument(toSoapValidatedDocument(validationConclusion.getValidatedDocument()));
         responseValidationConclusion.setSignaturesCount(validationConclusion.getSignaturesCount());
         if (validationConclusion.getSignatures() != null)
             responseValidationConclusion.setSignatures(toSoapResponseSignatures(validationConclusion.getSignatures()));

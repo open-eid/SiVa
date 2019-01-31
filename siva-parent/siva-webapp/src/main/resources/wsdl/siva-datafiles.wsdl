@@ -18,7 +18,7 @@
             <xs:complexType name="SoapDataFilesRequest">
                 <xs:sequence>
                     <xs:element name="Document" type="xs:string"/>
-                    <xs:element minOccurs="0" maxOccurs="1" name="Filename" type="xs:string"/>
+                    <xs:element name="Filename" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
 

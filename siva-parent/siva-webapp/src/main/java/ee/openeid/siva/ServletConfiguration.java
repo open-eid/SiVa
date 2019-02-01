@@ -21,6 +21,7 @@ import ee.openeid.siva.monitoring.configuration.MonitoringConfiguration;
 import ee.openeid.siva.monitoring.indicator.UrlHealthIndicator;
 import ee.openeid.siva.proxy.configuration.ProxyConfigurationProperties;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
+import ee.openeid.siva.webapp.configuration.WsdlServiceConfigurationProperties;
 import ee.openeid.siva.webapp.soap.DataFilesWebService;
 import ee.openeid.siva.webapp.soap.HashcodeValidationWebService;
 import ee.openeid.siva.webapp.soap.ValidationWebService;
@@ -52,7 +53,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootConfiguration
-@EnableConfigurationProperties({ReportConfigurationProperties.class, ProxyConfigurationProperties.class})
+@EnableConfigurationProperties({ReportConfigurationProperties.class, ProxyConfigurationProperties.class, WsdlServiceConfigurationProperties.class})
 public class ServletConfiguration extends MonitoringConfiguration {
     private static final String VALIDATION_WEB_SERVICE_ENDPOINT = "/validationWebService";
     private static final String HASHCODE_VALIDATION_WEB_SERVICE_ENDPOINT = "/hashcodeValidationWebService";
@@ -60,6 +61,7 @@ public class ServletConfiguration extends MonitoringConfiguration {
     private static final String URL_MAPPING = "/soap/*";
 
     private ProxyConfigurationProperties proxyProperties;
+    private WsdlServiceConfigurationProperties wsdlServiceConfigurationProperties;
 
     @Autowired
     @Qualifier("SoapReportSignatureInterceptor")
@@ -103,10 +105,10 @@ public class ServletConfiguration extends MonitoringConfiguration {
     public Endpoint validationEndpoint(SpringBus springBus, ValidationWebService validationWebService) {
         EndpointImpl endpoint = new EndpointImpl(springBus, validationWebService);
         endpoint.setWsdlLocation("wsdl/siva.wsdl");
-
         endpoint.getOutInterceptors().addAll(commonEndpointOutInterceptors());
         endpoint.getInInterceptors().add(new SoapRequestValidationInterceptor());
-
+        if (wsdlServiceConfigurationProperties.getValidationWebServiceUrl() != null)
+            endpoint.setPublishedEndpointUrl(wsdlServiceConfigurationProperties.getValidationWebServiceUrl());
         endpoint.publish(VALIDATION_WEB_SERVICE_ENDPOINT);
         return endpoint;
     }
@@ -115,7 +117,8 @@ public class ServletConfiguration extends MonitoringConfiguration {
     public Endpoint hashcodeValidationEndpoint(SpringBus springBus, HashcodeValidationWebService validationWebService) {
         EndpointImpl endpoint = new EndpointImpl(springBus, validationWebService);
         endpoint.setWsdlLocation("wsdl/siva-hashcode-validation.wsdl");
-
+        if (wsdlServiceConfigurationProperties.getHashcodeValidationWebService() != null)
+            endpoint.setPublishedEndpointUrl(wsdlServiceConfigurationProperties.getHashcodeValidationWebService());
         endpoint.getOutInterceptors().addAll(commonEndpointOutInterceptors());
         endpoint.getInInterceptors().add(new SoapRequestHashcodeValidationInterceptor());
 
@@ -132,13 +135,10 @@ public class ServletConfiguration extends MonitoringConfiguration {
     public Endpoint dataFilesEndpoint(SpringBus springBus, DataFilesWebService dataFilesWebService) {
         EndpointImpl endpoint = new EndpointImpl(springBus, dataFilesWebService);
         endpoint.setWsdlLocation("wsdl/siva-datafiles.wsdl");
+        if (wsdlServiceConfigurationProperties.getDataFilesWebService() != null)
+            endpoint.setPublishedEndpointUrl(wsdlServiceConfigurationProperties.getDataFilesWebService());
         endpoint.publish(DATAFILES_ENDPOINT);
         return endpoint;
-    }
-
-    @Autowired
-    public void setProxyProperties(ProxyConfigurationProperties proxyProperties) {
-        this.proxyProperties = proxyProperties;
     }
 
     public List<UrlHealthIndicator.ExternalLink> getDefaultExternalLinks() {
@@ -153,5 +153,15 @@ public class ServletConfiguration extends MonitoringConfiguration {
         outInterceptors.add(new SAAJOutInterceptor());
         outInterceptors.add(reportSignatureInterceptor);
         return outInterceptors;
+    }
+
+    @Autowired
+    public void setProxyProperties(ProxyConfigurationProperties proxyProperties) {
+        this.proxyProperties = proxyProperties;
+    }
+
+    @Autowired
+    public void setWsdlServiceConfigurationProperties(WsdlServiceConfigurationProperties wsdlServiceConfigurationProperties) {
+        this.wsdlServiceConfigurationProperties = wsdlServiceConfigurationProperties;
     }
 }

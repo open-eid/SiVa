@@ -225,7 +225,7 @@
             </wsdl:output>
         </wsdl:operation>
     </wsdl:binding>
-    <wsdl:service name="SignatureValidationService">
+    <wsdl:service name="ValidationWebServiceService">
         <wsdl:port binding="tns:SignatureValidationServiceSoapBinding" name="ValidationWebServiceImplPort">
             <soap:address location="http://localhost:8080/soap/validationWebService"/>
         </wsdl:port>

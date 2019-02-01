@@ -450,7 +450,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Title: Empty data files list
      *
-     * Expected Result: Simple report is returned
+     * Expected Result: Error is returned
      *
      * File: hashAsiceXades.xml
      **/
@@ -460,7 +460,9 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         request.getSignatureFiles().get(0).setDatafiles(new ArrayList<>());
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
-        assertSimpleReportWithSignature(response, request);
+        assertErrorResponse(response,
+                new RequestError(DATAFILES, INVALID_DATAFILES_LIST)
+        );
     }
 
     /**

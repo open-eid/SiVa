@@ -205,7 +205,7 @@ public class GenericValidationReportBuilder {
                     .findFirst();
             if (dataFile.isPresent()) {
                 signatureScope.setHash(dataFile.get().getHash());
-                signatureScope.setHashAlgo(dataFile.get().getHashAlgo());
+                signatureScope.setHashAlgo(dataFile.get().getHashAlgo().toUpperCase());
             }
         }
         return signatureScope;

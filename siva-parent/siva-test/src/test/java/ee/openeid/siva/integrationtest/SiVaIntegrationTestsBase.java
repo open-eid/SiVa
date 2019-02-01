@@ -50,6 +50,7 @@ public abstract class SiVaIntegrationTestsBase {
     protected static final String INVALID_DOCUMENT_TYPE = "Invalid document type";
     protected static final String INVALID_DATA_FILE_FILENAME = "Invalid filename. Can only return data files for DDOC type containers.";
     protected static final String INVALID_FILENAME = "Invalid filename";
+    protected static final String INVALID_DATAFILES_LIST = "Invalid dataFiles list";
     protected static final String INVALID_FILENAME_SIZE = "size must be between 1 and 260";
     protected static final String INVALID_POLICY_SIZE = "size must be between 1 and 100";
     protected static final String INVALID_REPORT_TYPE = "Invalid report type";

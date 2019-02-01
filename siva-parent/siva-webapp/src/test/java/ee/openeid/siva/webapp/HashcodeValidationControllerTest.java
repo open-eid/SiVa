@@ -42,6 +42,7 @@ import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
+
 @RunWith(MockitoJUnitRunner.class)
 public class HashcodeValidationControllerTest {
 
@@ -106,6 +107,28 @@ public class HashcodeValidationControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(request.toString().getBytes()))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void emptyDataFilesListReturnsErrorResponse() throws Exception {
+        List<Datafile> datafiles = new ArrayList<>();
+        List<SignatureFile> signatureFiles = createSignatureFiles("test", datafiles);
+        JSONObject request = hashcodeValidationRequest(signatureFiles);
+        mockMvc.perform(post("/validateHashcode")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request.toString().getBytes()))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void nullDataFilesListReturnsErrorResponse() throws Exception {
+        List<Datafile> datafiles = null;
+        List<SignatureFile> signatureFiles = createSignatureFiles("test", datafiles);
+        JSONObject request = hashcodeValidationRequest(signatureFiles);
+        mockMvc.perform(post("/validateHashcode")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request.toString().getBytes()))
+                .andExpect(status().is2xxSuccessful());
     }
 
     @Test

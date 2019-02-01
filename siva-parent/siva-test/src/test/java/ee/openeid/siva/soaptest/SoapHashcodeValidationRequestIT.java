@@ -203,7 +203,8 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
         request.getSignatureFiles().get(0).setDatafiles(new ArrayList<>());
 
         ValidatableResponse response = postHashcodeValidation(request).then();
-        assertSimpleReportWithSignature(response, request);
+        assertClientFault(response,
+                "Unmarshalling Error: cvc-complex-type.2.4.b: The content of element 'DataFiles' is not complete. One of '{DataFile}' is expected. ");
     }
 
     @Test

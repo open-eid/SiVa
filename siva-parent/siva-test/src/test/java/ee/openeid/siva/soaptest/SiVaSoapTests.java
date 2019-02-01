@@ -25,7 +25,6 @@ import ee.openeid.siva.webapp.soap.ValidateDocumentResponse;
 import ee.openeid.siva.webapp.soap.ValidationReport;
 import io.restassured.response.Response;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.collections4.CollectionUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -220,7 +219,7 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
             stringBuilder
                     .append("<SignatureFile>")
                     .append("   " + addParameter("Signature", signatureFile.getSignature()));
-            if (CollectionUtils.isNotEmpty(signatureFile.getDatafiles())) {
+            if (signatureFile.getDatafiles() != null) {
                 stringBuilder.append(formDataFilesBlock(signatureFile.getDatafiles()));
             }
             stringBuilder.append("</SignatureFile>");

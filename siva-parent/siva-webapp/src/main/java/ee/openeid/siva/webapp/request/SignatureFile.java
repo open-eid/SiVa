@@ -1,5 +1,6 @@
 package ee.openeid.siva.webapp.request;
 
+import ee.openeid.siva.webapp.request.validation.annotations.NullOrNotEmpty;
 import ee.openeid.siva.webapp.request.validation.annotations.ValidBase64String;
 import lombok.Data;
 
@@ -13,5 +14,6 @@ public class SignatureFile {
     private String signature;
 
     @Valid
+    @NullOrNotEmpty
     private List<Datafile> datafiles;
 }

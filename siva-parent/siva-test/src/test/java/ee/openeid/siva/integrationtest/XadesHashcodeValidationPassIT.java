@@ -58,14 +58,14 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void validXadesWithHashcodeFromAsice() {
-        postHashcodeValidation(validationRequestHashcode("Valid_XAdES_LT_TS.xml", null, null, "RELEASE-NOTES.txt", "SHA256", "Sj/WcgsM57hpCiR5E8OycJ4jioYwdHzz3s4e5LXditA="))
+        postHashcodeValidation(validationRequestHashcode("Valid_XAdES_LT_TS.xml", null, null, "test.txt", "SHA256", "RnKZobNWVy8u92sDL4S2j1BUzMT5qTgt6hm90TfAGRo="))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2014-10-31T14:08:19Z"))
-                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("+f0QC9mF3wYulUpC/SksoJX2FDKc/BedAfXTGMR9xQo="));
+                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2019-02-05T13:27:24Z"))
+                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("VLcbTMyISKcCDPJDQ/Z34/TbBueUeqLMFPOrD9Av+b4="));
     }
 
     /**
@@ -83,14 +83,14 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void validXadesWithHashcodeFromBdoc() {
-        postHashcodeValidation(validationRequestHashcode("Valid_XAdES_LT_TM.xml", null, null, "lama.jpg", "SHA256", "jmQGVaxq5Qb+hZNIQC1FPcRUd+YInHtlTg/ImAh5wQY="))
+        postHashcodeValidation(validationRequestHashcode("Valid_XAdES_LT_TM.xml", null, null, "test.txt", "SHA256", "RnKZobNWVy8u92sDL4S2j1BUzMT5qTgt6hm90TfAGRo="))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2013-11-25T13:16:59Z"))
-                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("CozphV8gr05RmtOi6J8kRyxgwJcmBmzOACkt79CR9k0="));
+                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2019-02-05T13:36:23Z"))
+                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("9Rfw5pxkfQyLn7eKnSmTqDQbFKeAEDqUXoRN9Sthyo4="));
     }
 
     /**
@@ -112,10 +112,10 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2018-10-08T06:21:08Z"))
+                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2019-02-05T12:48:26Z"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("oNeqbP2n8aXgciMQe3X4HnhvGlhp7tj4vRABhFupH7o="));
+                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("9un8fNcRbS462smQM6YW+Od987gc8Cm4wC+CdSjaXAc="));
     }
 
     @Override

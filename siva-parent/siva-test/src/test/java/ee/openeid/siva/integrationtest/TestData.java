@@ -37,11 +37,9 @@ public class TestData {
     public static final String VALID_VALIDATION_CONCLUSION_SIGNATURE_FORMAT_BDOC_LT = "BDOC_2.1";
     public static final String VALID_VALIDATION_CONCLUSION_SIGNATURE_FORMAT_ASIC_S = "ASIC-S";
 
-    public static final String VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_1 = "QESIG";
-    public static final String VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_2 = "NOT_ADES_QC_QSCD";
-    public static final String VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_ADESIG_QC = "ADESIG_QC";
-    public static final String VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_NOT_ADES_QC = "NOT_ADES_QC";
-    public static final String VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_INDETERMINATE_ADESIG_QC = "INDETERMINATE_ADESIG_QC";
+    public static final String VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_QESIG = "QESIG";
+    public static final String VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_NOT_ADES_QC_QSCD = "NOT_ADES_QC_QSCD";
+    public static final String VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_INDETERMINATE_QESIG = "INDETERMINATE_QESIG";
 
     public static final String VALID_INDICATION_VALUE_PASSED = "PASSED";
     public static final String VALID_INDICATION_VALUE_FAILED = "FAILED";
@@ -210,16 +208,16 @@ public class TestData {
     public static final String TSA_QTST = "http://uri.etsi.org/TrstSvc/Svctype/TSA/QTST";
     public static final String GRANTED = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/granted";
 
-    public static final String MOCK_XADES_SIGNATURE_FILE = "hashAsiceXades.xml";
+    public static final String MOCK_XADES_SIGNATURE_FILE = "Valid_XAdES_LT_TS.xml";
     public static final String MOCK_XADES_SIGNATURE_FILE_NAME = "VALID_FILENAME+#$!}[]()-_.,;€ˇ~^'äöõü§@.xml";
-    public static final String MOCK_XADES_SIGNATURE_ID = "S1510667783001";
-    public static final String MOCK_XADES_SIGNATURE_SIGNER = "NURM,AARE,PNOEE-38211015222";
-    public static final String MOCK_XADES_SIGNATURE_CLAIMED_SIGNING_TIME = "2017-11-14T13:56:23Z";
-    public static final String MOCK_XADES_SIGNATURE_BEST_SIGNATURE_TIME = "2017-11-14T13:56:34Z";
-    public static final String MOCK_XADES_DATAFILE_HASH = "IucjUcbRo9Rke0bZLiHcwiIiplP9pSrSPr7LKln1EiI=";
+    public static final String MOCK_XADES_SIGNATURE_ID = "id-3adeffc353d287db270f5fb98bbcda02";
+    public static final String MOCK_XADES_SIGNATURE_SIGNER = "MÄNNIK,MARI-LIIS,47101010033";
+    public static final String MOCK_XADES_SIGNATURE_CLAIMED_SIGNING_TIME = "2019-02-05T13:27:22Z";
+    public static final String MOCK_XADES_SIGNATURE_BEST_SIGNATURE_TIME = "2019-02-05T13:27:24Z";
+    public static final String MOCK_XADES_DATAFILE_HASH = "RnKZobNWVy8u92sDL4S2j1BUzMT5qTgt6hm90TfAGRo=";
     public static final String MOCK_XADES_DATAFILE_HASH2 = "47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=";
     public static final String MOCK_XADES_DATAFILE_HASH_ALGO = "SHA256";
-    public static final String MOCK_XADES_DATAFILE_FILENAME = "test.pdf";
+    public static final String MOCK_XADES_DATAFILE_FILENAME = "test.txt";
     public static final String MOCK_XADES_DATAFILE_FILENAME2 = "Proov (2).txt";
 
 }

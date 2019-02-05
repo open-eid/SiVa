@@ -45,7 +45,7 @@ import static org.hamcrest.Matchers.*;
 @Category(IntegrationTest.class)
 public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
 
-    private static final String DEFAULT_TEST_FILES_DIRECTORY = "document_format_test_files/";
+    private static final String DEFAULT_TEST_FILES_DIRECTORY = "xades/";
     private static final String VALIDATION_CONCLUSION_PREFIX = "Envelope.Body.HashcodeValidationResponse.ValidationReport.ValidationConclusion.";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
     private ZonedDateTime testStartDate;
@@ -409,7 +409,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
                 .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.children().size()", is(1))
                 .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].Id", is(TestData.MOCK_XADES_SIGNATURE_ID))
                 .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignatureFormat", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_FORMAT_XADES_LT))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignatureLevel", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_ADESIG_QC))
+                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignatureLevel", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_QESIG))
                 .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignedBy", is(TestData.MOCK_XADES_SIGNATURE_SIGNER))
                 .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].Indication", is(TestData.VALID_INDICATION_TOTAL_PASSED))
                 .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignatureScopes.children().size()", is(1))
@@ -428,7 +428,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
                 .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.children().size()", is(1))
                 .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].Id", is(TestData.MOCK_XADES_SIGNATURE_ID))
                 .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignatureFormat", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_FORMAT_XADES_LT))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignatureLevel", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_INDETERMINATE_ADESIG_QC))
+                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignatureLevel", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_INDETERMINATE_QESIG))
                 .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignedBy", is(TestData.MOCK_XADES_SIGNATURE_SIGNER))
                 .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].Indication", is(TestData.VALID_INDICATION_VALUE_INDETERMINATE))
                 .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SubIndication", is(TestData.SUB_INDICATION_SIGNED_DATA_NOT_FOUND))
@@ -449,7 +449,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
                 .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.children().size()", is(1))
                 .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].Id", is(TestData.MOCK_XADES_SIGNATURE_ID))
                 .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignatureFormat", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_FORMAT_XADES_LT))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignatureLevel", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_NOT_ADES_QC))
+                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignatureLevel", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_NOT_ADES_QC_QSCD))
                 .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignedBy", is(TestData.MOCK_XADES_SIGNATURE_SIGNER))
                 .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].Indication", is(TestData.VALID_INDICATION_TOTAL_FAILED))
                 .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SubIndication", is(TestData.SUB_INDICATION_HASH_FAILURE))

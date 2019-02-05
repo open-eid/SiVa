@@ -47,14 +47,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static ee.openeid.siva.integrationtest.TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_1;
-import static ee.openeid.siva.integrationtest.TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2;
+import static ee.openeid.siva.integrationtest.TestData.*;
 import static org.hamcrest.Matchers.*;
 
 @Category(IntegrationTest.class)
 public class HashcodeValidationRequestIT extends SiVaRestTests {
 
-    private static final String DEFAULT_TEST_FILES_DIRECTORY = "document_format_test_files/";
+    private static final String DEFAULT_TEST_FILES_DIRECTORY = "xades/";
     private static final String VALIDATION_CONCLUSION_PREFIX = "validationReport.validationConclusion.";
 
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
@@ -86,7 +85,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Simple report is returned
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void okHashcodeValidationWithSimpleReport() {
@@ -106,7 +105,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Simple report is returned
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void simpleReportIsReturnedWithDetailedReportType() {
@@ -127,7 +126,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Default is used
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void reportTypeMissingDefaultsToSimple() {
@@ -149,7 +148,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Report type is case insensitive
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void reportTypeCaseInsensitive() {
@@ -171,7 +170,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is returned
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void reportTypeInvalid() {
@@ -194,7 +193,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Default is used
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void signaturePolicyPOLv3() {
@@ -219,7 +218,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Default is used
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void signaturePolicyPOLv4() {
@@ -244,7 +243,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Default is used
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void signaturePolicyMissing_defaultsToPOLv4() {
@@ -269,7 +268,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is returned
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void signaturePolicyInvalid() {
@@ -292,7 +291,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is returned
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void signaturePolicyInvalidFormat() {
@@ -315,7 +314,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is returned
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void signaturePolicyEmpty() {
@@ -338,7 +337,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is returned
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void signaturePolicyTooLong() {
@@ -362,7 +361,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Last value is used
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void doubleSignaturePolicy() {
@@ -395,7 +394,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is returned
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void signatureFileMissing() {
@@ -421,7 +420,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is returned
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void signatureFileEmpty() {
@@ -445,7 +444,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is returned
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void signatureFileNotBase64Encoded() {
@@ -467,7 +466,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Validation report is returned
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void signatureFileContentWithoutSignature() {
@@ -490,7 +489,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is returned
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void signatureContentNotXML() {
@@ -515,7 +514,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Simple report is returned
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void dataFilesMissing() {
@@ -536,7 +535,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is returned
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void dataFilesEmpty() {
@@ -560,7 +559,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is returned
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void dataFileFilenameMissing() {
@@ -585,7 +584,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is returned
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void dataFileFilenameEmpty() {
@@ -610,7 +609,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is returned
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void dataFileFilenameTooLong() {
@@ -634,7 +633,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is returned
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void dataFileHashAlgorithmInvalid() {
@@ -658,7 +657,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Validation report is returned
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void dataFileHashAlgorithmCaseInsensitive() {
@@ -680,7 +679,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is returned
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void dataFileHashMissing() {
@@ -705,7 +704,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is returned
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void dataFileHashEmpty() {
@@ -731,7 +730,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is returned
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void dataFileHashNotBase64Encoded() {
@@ -755,7 +754,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is returned
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void dataFileHasTooLong() {
@@ -779,7 +778,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Last value is used
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void doubleFieldsInDatafiles() {
@@ -796,9 +795,9 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
                 "                    \"filename\": \"test2.pdf\",\n" +
                 "                    \"hashAlgo\": \"SHA512\",\n" +
                 "                    \"hash\": \"IucjUcbRo9RkdsfdfsscwiIiplP9pSrSPr7LKln1EiI=\",\n" +
-                "                    \"filename\": \"test.pdf\",\n" +
-                "                    \"hashAlgo\": \"SHA256\",\n" +
-                "                    \"hash\": \"IucjUcbRo9Rke0bZLiHcwiIiplP9pSrSPr7LKln1EiI=\"\n" +
+                "                    \"filename\": \"" + MOCK_XADES_DATAFILE_FILENAME + "\",\n" +
+                "                    \"hashAlgo\": \"" + MOCK_XADES_DATAFILE_HASH_ALGO + "\",\n" +
+                "                    \"hash\": \"" + MOCK_XADES_DATAFILE_HASH + "\"\n" +
                 "                }\n" +
                 "            ]\n" +
                 "        }\n" +
@@ -820,7 +819,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Expected Result: Validation report is returned
      *
-     * File: hashAsiceXades.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void multipleDataFilesOneNotInSignature() {
@@ -903,7 +902,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
                 .body(VALIDATION_CONCLUSION_PREFIX + "signatures", hasSize(1))
                 .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].id", is(TestData.MOCK_XADES_SIGNATURE_ID))
                 .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureFormat", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_FORMAT_XADES_LT))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureLevel", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_ADESIG_QC))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureLevel", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_QESIG))
                 .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signedBy", is(TestData.MOCK_XADES_SIGNATURE_SIGNER))
                 .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].indication", is(TestData.VALID_INDICATION_TOTAL_PASSED))
                 .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes", hasSize(1))

@@ -135,16 +135,16 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
      **/
     @Test
     public void invalidSignature() {
-        postHashcodeValidation(validationRequestHashcode("Invalid_XAdES_LT_TM.xml", null, null, "build.xml", "SHA256", "l40iM30GCmzmwkPp2I4ZzBKvQ5m3FD5v76xnDCDCU+E="))
+        postHashcodeValidation(validationRequestHashcode("Invalid_XAdES_LT_TM.xml", null, null, "test.txt", "SHA256", "RnKZobNWVy8u92sDL4S2j1BUzMT5qTgt6hm90TfAGRo="))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The certificate chain for revocation data is not trusted, there is no trusted anchor."))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2013-11-11T06:45:46Z"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The signature is not intact!"))
+                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2019-02-05T13:36:23Z"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("54s5dCsXCpWb/ZY4pjnMpfpVovIZONgZ7UKNhFAL/ZY="));
+                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("ZbbpVP+ue5TfDdbpzZ93b9LK+++26IfQNb7cjCKV7jE="));
     }
 
     @Override

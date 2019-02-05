@@ -583,6 +583,15 @@ siva.xroad.signaturePolicy.defaultPolicy= POLv3
 !!! note
     By default, X-road validation currently supports only POLv3
    
+   
+* WSDL service url parameters   
+
+| Property | Description |
+| -------- | ----------- |
+|**siva.endpoint.validationWebServiceUrl**| Validation wsdl service address location |
+|**siva.endpoint.hashcodeValidationWebService**| Hashcode validation wsdl service address location |
+|**siva.endpoint.dataFilesWebService**| Data files wsdl service address location |
+   
 ### Demo webapp parameters
 
 * Linking to SiVa webapp

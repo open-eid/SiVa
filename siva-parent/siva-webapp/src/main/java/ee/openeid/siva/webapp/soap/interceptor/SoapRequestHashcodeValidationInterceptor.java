@@ -25,6 +25,8 @@ import javax.xml.soap.SOAPBody;
 
 public class SoapRequestHashcodeValidationInterceptor extends AbstractRequestValidationInterceptor {
 
+    private static final int MAX_HASH_LENGTH = 1000;
+
     @Override
     void validateRequestBody(SOAPBody body) {
         validateSignatureFiles(body);
@@ -102,7 +104,7 @@ public class SoapRequestHashcodeValidationInterceptor extends AbstractRequestVal
     }
 
     private void validateDataFileHash(String hash) {
-        if (StringUtils.isNotBlank(hash) && !Base64.isBase64(hash)) {
+        if (StringUtils.isNotBlank(hash) && (!Base64.isBase64(hash) || hash.length() > MAX_HASH_LENGTH)) {
             throwFault(errorMessage("validation.error.message.base64"));
         }
     }

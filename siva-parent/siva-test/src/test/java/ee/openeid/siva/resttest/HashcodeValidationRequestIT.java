@@ -33,11 +33,9 @@ import lombok.Data;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
@@ -49,7 +47,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static ee.openeid.siva.integrationtest.TestData.*;
+import static ee.openeid.siva.integrationtest.TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_1;
+import static ee.openeid.siva.integrationtest.TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2;
 import static org.hamcrest.Matchers.*;
 
 @Category(IntegrationTest.class)
@@ -182,31 +181,6 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertErrorResponse(response,
                 new RequestError(REPORT_TYPE, INVALID_REPORT_TYPE));
-    }
-
-    /**
-     * TestCaseID: Hascode-Validation-Request-Report-Type-6
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
-     *
-     * Title: Report type too long
-     *
-     * Expected Result: Error is returned
-     *
-     * File: hashAsiceXades.xml
-     **/
-    @Ignore //TODO: SIVA-136
-    @Test
-    public void reportTypeTooLong() {
-        JSONHashcodeValidationRequest request = validRequestBody();
-        request.setReportType(StringUtils.repeat('a', 501));
-
-        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
-        assertErrorResponse(response,
-                new RequestError(SIGNATURE_POLICY, INVALID_POLICY_SIZE)
-        );
     }
 
     /**
@@ -741,7 +715,8 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertErrorResponse(response,
                 new RequestError(DATAFILES_HASH, MAY_NOT_BE_EMPTY),
-                new RequestError(DATAFILES_HASH, INVALID_BASE_64)
+                new RequestError(DATAFILES_HASH, INVALID_BASE_64),
+                new RequestError(DATAFILES_HASH, INVALID_HASH_SIZE)
         );
     }
 
@@ -782,7 +757,6 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * File: hashAsiceXades.xml
      **/
-    @Ignore
     @Test
     public void dataFileHasTooLong() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -883,22 +857,6 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         }
     }
 
-    private void assertDetailedReportWithSignature(ValidatableResponse response, JSONHashcodeValidationRequest request) {
-        assertSimpleReportWithSignature(response, request);
-        response
-                .body("validationReport.validationProcess.signatures", hasSize(1))
-                .body("validationReport.validationProcess.signatures[0].validationProcessBasicSignatures.conclusion.indication", is(TestData.VALID_INDICATION_VALUE_PASSED))
-                .body("validationReport.validationProcess.signatures[0].validationProcessTimestamps.conclusion.indication", hasItem(TestData.VALID_INDICATION_VALUE_PASSED))
-                .body("validationReport.validationProcess.signatures[0].validationProcessLongTermData.conclusion.indication", is(TestData.VALID_INDICATION_VALUE_PASSED))
-                .body("validationReport.validationProcess.signatures[0].validationProcessArchivalData.conclusion.indication", is(TestData.VALID_INDICATION_VALUE_PASSED))
-
-                .body("validationReport.validationProcess.tlanalysis", hasSize(2))
-                .body("validationReport.validationProcess.tlanalysis[0].countryCode", is("EU"))
-                .body("validationReport.validationProcess.tlanalysis[0].conclusion.indication", is(TestData.VALID_INDICATION_VALUE_PASSED))
-                .body("validationReport.validationProcess.tlanalysis[1].countryCode", is("EE"))
-                .body("validationReport.validationProcess.tlanalysis[1].conclusion.indication", is(TestData.VALID_INDICATION_VALUE_PASSED));
-    }
-
     private void assertSimpleReportWithSignature(ValidatableResponse response, JSONHashcodeValidationRequest request) {
         assertValidationConclusion(response, request);
         assertSignatureTotalPassed(response);
@@ -958,52 +916,6 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
                 .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].info.bestSignatureTime", is(TestData.MOCK_XADES_SIGNATURE_BEST_SIGNATURE_TIME))
                 .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].errors", Matchers.isEmptyOrNullString())
                 .body(VALIDATION_CONCLUSION_PREFIX + "validSignaturesCount", is(1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signaturesCount", is(1));
-    }
-
-    private void assertSignatureDataNotFound(ValidatableResponse response) {
-        response
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures", hasSize(1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].id", is(TestData.MOCK_XADES_SIGNATURE_ID))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureFormat", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_FORMAT_XADES_LT))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureLevel", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_INDETERMINATE_ADESIG_QC))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signedBy", is(TestData.MOCK_XADES_SIGNATURE_SIGNER))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].indication", is(TestData.VALID_INDICATION_VALUE_INDETERMINATE))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].subIndication", is(TestData.SUB_INDICATION_SIGNED_DATA_NOT_FOUND))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes", hasSize(1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].name", is(TestData.MOCK_XADES_DATAFILE_FILENAME))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].scope", is(TestData.VALID_SIGNATURE_SCOPE_VALUE_1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].content", is(TestData.VALID_SIGNATURE_SCOPE_CONTENT_1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].hashAlgo", is(TestData.MOCK_XADES_DATAFILE_HASH_ALGO))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].hash", is(TestData.MOCK_XADES_DATAFILE_HASH))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].claimedSigningTime", is(TestData.MOCK_XADES_SIGNATURE_CLAIMED_SIGNING_TIME))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].info.bestSignatureTime", is(TestData.MOCK_XADES_SIGNATURE_BEST_SIGNATURE_TIME))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].errors", hasSize(1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].errors[0].content" , is("The reference data object(s) is not found!"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "validSignaturesCount", is(0))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signaturesCount", is(1));
-    }
-
-    private void assertSignatureHashFailure(ValidatableResponse response) {
-        response
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures", hasSize(1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].id", is(TestData.MOCK_XADES_SIGNATURE_ID))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureFormat", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_FORMAT_XADES_LT))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureLevel", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_NOT_ADES_QC))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signedBy", is(TestData.MOCK_XADES_SIGNATURE_SIGNER))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].indication", is(TestData.VALID_INDICATION_TOTAL_FAILED))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].subIndication", is(TestData.SUB_INDICATION_HASH_FAILURE))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes", hasSize(1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].name", is(TestData.MOCK_XADES_DATAFILE_FILENAME))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].scope", is(TestData.VALID_SIGNATURE_SCOPE_VALUE_1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].content", is(TestData.VALID_SIGNATURE_SCOPE_CONTENT_1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].hashAlgo", is(TestData.MOCK_XADES_DATAFILE_HASH_ALGO))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].hash", is(TestData.MOCK_XADES_DATAFILE_HASH))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].claimedSigningTime", is(TestData.MOCK_XADES_SIGNATURE_CLAIMED_SIGNING_TIME))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].info.bestSignatureTime", is(TestData.MOCK_XADES_SIGNATURE_BEST_SIGNATURE_TIME))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].errors", hasSize(1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].errors[0].content" , is("The reference data object(s) is not intact!"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "validSignaturesCount", is(0))
                 .body(VALIDATION_CONCLUSION_PREFIX + "signaturesCount", is(1));
     }
 

@@ -21,6 +21,8 @@ import ee.openeid.siva.webapp.request.validation.annotations.ValidFilename;
 import ee.openeid.siva.webapp.request.validation.annotations.ValidHashAlgo;
 import lombok.Data;
 
+import javax.validation.constraints.Size;
+
 @Data
 public class Datafile {
 
@@ -31,6 +33,7 @@ public class Datafile {
     private String hashAlgo;
 
     @ValidBase64String
+    @Size(min = 1, max = 1000)
     private String hash;
 
 }

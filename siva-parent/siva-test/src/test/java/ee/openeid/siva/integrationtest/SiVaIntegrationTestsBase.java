@@ -52,6 +52,7 @@ public abstract class SiVaIntegrationTestsBase {
     protected static final String INVALID_FILENAME = "Invalid filename";
     protected static final String INVALID_DATAFILES_LIST = "Invalid dataFiles list";
     protected static final String INVALID_FILENAME_SIZE = "size must be between 1 and 260";
+    protected static final String INVALID_HASH_SIZE = "size must be between 1 and 1000";
     protected static final String INVALID_POLICY_SIZE = "size must be between 1 and 100";
     protected static final String INVALID_REPORT_TYPE = "Invalid report type";
     protected static final String INVALID_HASH_ALGO = "Invalid hash algorithm";

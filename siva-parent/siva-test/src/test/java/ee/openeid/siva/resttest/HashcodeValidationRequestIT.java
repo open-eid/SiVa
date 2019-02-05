@@ -33,9 +33,11 @@ import lombok.Data;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
@@ -47,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static ee.openeid.siva.integrationtest.TestData.*;
 import static org.hamcrest.Matchers.*;
 
 @Category(IntegrationTest.class)
@@ -74,7 +77,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: Get-Hascode-Validation-Request-1
+     * TestCaseID: Hascode-Validation-Request-Report-Type-1
      *
      * TestType: Automated
      *
@@ -94,7 +97,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: Hascode-Validation-Request-2
+     * TestCaseID: Hascode-Validation-Request-Report-Type-2
      *
      * TestType: Automated
      *
@@ -107,7 +110,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: hashAsiceXades.xml
      **/
     @Test
-    public void okHashcodeValidationWithDetailedReport() {
+    public void simpleReportIsReturnedWithDetailedReportType() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setReportType(ReportType.DETAILED.getValue());
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
@@ -115,7 +118,300 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: Hascode-Validation-Request-3
+     * TestCaseID: Hascode-Validation-Request-Report-Type-3
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Report type missing
+     *
+     * Expected Result: Default is used
+     *
+     * File: hashAsiceXades.xml
+     **/
+    @Test
+    public void reportTypeMissingDefaultsToSimple() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setReportType(null);
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertSimpleReportWithSignature(response, request);
+    }
+
+    /**
+     * TestCaseID: Hascode-Validation-Request-Report-Type-4
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Report type case sensitivity
+     *
+     * Expected Result: Report type is case insensitive
+     *
+     * File: hashAsiceXades.xml
+     **/
+    @Test
+    public void reportTypeCaseInsensitive() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setReportType("SiMpLe");
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertSimpleReportWithSignature(response, request);
+    }
+
+    /**
+     * TestCaseID: Hascode-Validation-Request-Report-Type-5
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Report type is invalid
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
+    @Test
+    public void reportTypeInvalid() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setReportType("INVALID_REPORT_TYPE");
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(REPORT_TYPE, INVALID_REPORT_TYPE));
+    }
+
+    /**
+     * TestCaseID: Hascode-Validation-Request-Report-Type-6
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Report type too long
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
+    @Ignore //TODO: SIVA-136
+    @Test
+    public void reportTypeTooLong() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setReportType(StringUtils.repeat('a', 501));
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(SIGNATURE_POLICY, INVALID_POLICY_SIZE)
+        );
+    }
+
+    /**
+     * TestCaseID: Hascode-Validation-Request-Policy-1
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Signature policy missing
+     *
+     * Expected Result: Default is used
+     *
+     * File: hashAsiceXades.xml
+     **/
+    @Test
+    public void signaturePolicyPOLv3() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setSignaturePolicy(VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_1);
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request))
+                .then()
+                .body(VALIDATION_CONCLUSION_PREFIX + "policy.policyName", equalTo(VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_1));
+
+        assertSimpleReportWithSignature(response, request);
+    }
+
+    /**
+     * TestCaseID: Hascode-Validation-Request-Policy-2
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Signature policy missing
+     *
+     * Expected Result: Default is used
+     *
+     * File: hashAsiceXades.xml
+     **/
+    @Test
+    public void signaturePolicyPOLv4() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setSignaturePolicy(VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2);
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request))
+                .then()
+                .body(VALIDATION_CONCLUSION_PREFIX + "policy.policyName", equalTo(VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2));
+
+        assertSimpleReportWithSignature(response, request);
+    }
+
+    /**
+     * TestCaseID: Hascode-Validation-Request-Policy-3
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Signature policy missing
+     *
+     * Expected Result: Default is used
+     *
+     * File: hashAsiceXades.xml
+     **/
+    @Test
+    public void signaturePolicyMissing_defaultsToPOLv4() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setSignaturePolicy(null);
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request))
+                .then()
+                .body(VALIDATION_CONCLUSION_PREFIX + "policy.policyName", equalTo(VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2));
+
+        assertSimpleReportWithSignature(response, request);
+    }
+
+    /**
+     * TestCaseID: Hascode-Validation-Request-Policy-4
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Signature policy is invalid
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
+    @Test
+    public void signaturePolicyInvalid() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setSignaturePolicy("POLv2");
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(SIGNATURE_POLICY, "Invalid signature policy: " + request.getSignaturePolicy() + "; Available abstractPolicies: [POLv3, POLv4]"));
+    }
+
+    /**
+     * TestCaseID: Hascode-Validation-Request-Policy-5
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Incorrect signature policy format
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
+    @Test
+    public void signaturePolicyInvalidFormat() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setSignaturePolicy("POLv3.*");
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(SIGNATURE_POLICY, INVALID_SIGNATURE_POLICY));
+    }
+
+    /**
+     * TestCaseID: Hascode-Validation-Request-Policy-6
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Signature policy is empty
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
+    @Test
+    public void signaturePolicyEmpty() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setSignaturePolicy("");
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(SIGNATURE_POLICY, INVALID_POLICY_SIZE));
+    }
+
+    /**
+     * TestCaseID: Hascode-Validation-Request-Policy-7
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Signature policy too long
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
+    @Test
+    public void signaturePolicyTooLong() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setSignaturePolicy(StringUtils.repeat('a', 101));
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(SIGNATURE_POLICY, INVALID_POLICY_SIZE)
+        );
+    }
+
+    /**
+     * TestCaseID: Hascode-Validation-Request-Policy-8
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Signature policy too long
+     *
+     * Expected Result: Last value is used
+     *
+     * File: hashAsiceXades.xml
+     **/
+    @Test
+    public void doubleSignaturePolicy() {
+        String file = Base64.encodeBase64String(readFileFromTestResources(TestData.MOCK_XADES_SIGNATURE_FILE));
+
+        String request = "{\n" +
+                "    \"reportType\": \"Simple\",\n" +
+                "    \"signaturePolicy\": \"POLv3\",\n" +
+                "    \"signaturePolicy\": \"POLv.5\",\n" +
+                "    \"signatureFiles\": [\n" +
+                "        {\n" +
+                "            \"signature\": \"" + file + "\"\n" +
+                "        }\n" +
+                "    ]\n" +
+                "}";
+
+        ValidatableResponse response = postHashcodeValidation(request).then();
+        assertErrorResponse(response,
+                new RequestError(SIGNATURE_POLICY, INVALID_SIGNATURE_POLICY));
+    }
+
+    /**
+     * TestCaseID: Hascode-Validation-Request-Signature-1
      *
      * TestType: Automated
      *
@@ -141,7 +437,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: Hascode-Validation-Request-4
+     * TestCaseID: Hascode-Validation-Request-Signature-2
      *
      * TestType: Automated
      *
@@ -165,7 +461,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: Hascode-Validation-Request-5
+     * TestCaseID: Hascode-Validation-Request-Signature-3
      *
      * TestType: Automated
      *
@@ -187,7 +483,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: Hascode-Validation-Request-6
+     * TestCaseID: Hascode-Validation-Request-Signature-4
      *
      * TestType: Automated
      *
@@ -210,7 +506,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: Hascode-Validation-Request-7
+     * TestCaseID: Hascode-Validation-Request-Signature-5
      *
      * TestType: Automated
      *
@@ -235,198 +531,13 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: Hascode-Validation-Request-14
+     * TestCaseID: Hascode-Validation-Request-Datafiles-1
      *
      * TestType: Automated
      *
      * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
      *
-     * Title: Report type missing
-     *
-     * Expected Result: Default is used
-     *
-     * File: hashAsiceXades.xml
-     **/
-    @Test
-    public void reportTypeMissing_defaultsToSimple() {
-        JSONHashcodeValidationRequest request = validRequestBody();
-        request.setReportType(null);
-
-        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
-        assertSimpleReportWithSignature(response, request);
-    }
-
-    /**
-     * TestCaseID: Hascode-Validation-Request-15
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
-     *
-     * Title: Report type case sensitivity
-     *
-     * Expected Result: Report type is case insensitive
-     *
-     * File: hashAsiceXades.xml
-     **/
-    @Test
-    public void reportTypeCaseInsensitive() {
-        JSONHashcodeValidationRequest request = validRequestBody();
-        request.setReportType("SiMpLe");
-
-        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
-        assertSimpleReportWithSignature(response, request);
-    }
-
-    /**
-     * TestCaseID: Hascode-Validation-Request-16
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
-     *
-     * Title: Report type is invalid
-     *
-     * Expected Result: Error is returned
-     *
-     * File: hashAsiceXades.xml
-     **/
-    @Test
-    public void reportTypeInvalid() {
-        JSONHashcodeValidationRequest request = validRequestBody();
-        request.setReportType("INVALID_REPORT_TYPE");
-
-        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
-        assertErrorResponse(response,
-                new RequestError(REPORT_TYPE, INVALID_REPORT_TYPE));
-    }
-
-    /**
-     * TestCaseID: Hascode-Validation-Request-17
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
-     *
-     * Title: Signature policy missing
-     *
-     * Expected Result: Default is used
-     *
-     * File: hashAsiceXades.xml
-     **/
-    @Test
-    public void signaturePolicyMissing_defaultsToPOLv4() {
-        JSONHashcodeValidationRequest request = validRequestBody();
-        request.setSignaturePolicy(null);
-
-        ValidatableResponse response = postHashcodeValidation(toRequest(request))
-                .then()
-                .body(VALIDATION_CONCLUSION_PREFIX + "policy.policyName", equalTo(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2));
-
-        assertSimpleReportWithSignature(response, request);
-    }
-
-    /**
-     * TestCaseID: Hascode-Validation-Request-18
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
-     *
-     * Title: Signature policy is invalid
-     *
-     * Expected Result: Error is returned
-     *
-     * File: hashAsiceXades.xml
-     **/
-    @Test
-    public void signaturePolicyInvalid() {
-        JSONHashcodeValidationRequest request = validRequestBody();
-        request.setSignaturePolicy("POLv2");
-
-        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
-        assertErrorResponse(response,
-                new RequestError(SIGNATURE_POLICY, "Invalid signature policy: " + request.getSignaturePolicy() + "; Available abstractPolicies: [POLv3, POLv4]"));
-    }
-
-    /**
-     * TestCaseID: Hascode-Validation-Request-19
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
-     *
-     * Title: Incorrect signature policy format
-     *
-     * Expected Result: Error is returned
-     *
-     * File: hashAsiceXades.xml
-     **/
-    @Test
-    public void signaturePolicyInvalidFormat() {
-        JSONHashcodeValidationRequest request = validRequestBody();
-        request.setSignaturePolicy("POLv2.*");
-
-        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
-        assertErrorResponse(response,
-                new RequestError(SIGNATURE_POLICY, INVALID_SIGNATURE_POLICY));
-    }
-
-    /**
-     * TestCaseID: Hascode-Validation-Request-20
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
-     *
-     * Title: Signature policy is empty
-     *
-     * Expected Result: Error is returned
-     *
-     * File: hashAsiceXades.xml
-     **/
-    @Test
-    public void signaturePolicyEmpty() {
-        JSONHashcodeValidationRequest request = validRequestBody();
-        request.setSignaturePolicy("");
-
-        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
-        assertErrorResponse(response,
-                new RequestError(SIGNATURE_POLICY, INVALID_POLICY_SIZE));
-    }
-
-    /**
-     * TestCaseID: Hascode-Validation-Request-21
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
-     *
-     * Title: Signature policy too long
-     *
-     * Expected Result: Error is returned
-     *
-     * File: hashAsiceXades.xml
-     **/
-    @Test
-    public void signaturePolicyTooLong() {
-        JSONHashcodeValidationRequest request = validRequestBody();
-        request.setSignaturePolicy(StringUtils.repeat('a', 101));
-
-        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
-        assertErrorResponse(response,
-                new RequestError(SIGNATURE_POLICY, INVALID_POLICY_SIZE)
-        );
-    }
-
-    /**
-     * TestCaseID: Hascode-Validation-Request-22
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
-     *
-     * Title: Data file missing
+     * Title: Data files not in request
      *
      * Expected Result: Simple report is returned
      *
@@ -434,15 +545,14 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      **/
     @Test
     public void dataFilesMissing() {
-        JSONHashcodeValidationRequest request = validRequestBody();
-        request.getSignatureFiles().get(0).setDatafiles(null);
+        JSONHashcodeValidationRequest request = validRequestBodyMinimal();
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertSimpleReportWithSignature(response, request);
     }
 
     /**
-     * TestCaseID: Hascode-Validation-Request-23
+     * TestCaseID: Hascode-Validation-Request-Datafiles-2
      *
      * TestType: Automated
      *
@@ -466,7 +576,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: Hascode-Validation-Request-24
+     * TestCaseID: Hascode-Validation-Request-Datafiles-3
      *
      * TestType: Automated
      *
@@ -491,7 +601,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: Hascode-Validation-Request-25
+     * TestCaseID: Hascode-Validation-Request-Datafiles-4
      *
      * TestType: Automated
      *
@@ -516,7 +626,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: Hascode-Validation-Request-26
+     * TestCaseID: Hascode-Validation-Request-Datafiles-5
      *
      * TestType: Automated
      *
@@ -539,9 +649,8 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         );
     }
 
-
     /**
-     * TestCaseID: Hascode-Validation-Request-28
+     * TestCaseID: Hascode-Validation-Request-Datafiles-6
      *
      * TestType: Automated
      *
@@ -565,7 +674,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: Hascode-Validation-Request-29
+     * TestCaseID: Hascode-Validation-Request-Datafiles-7
      *
      * TestType: Automated
      *
@@ -587,7 +696,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: Hascode-Validation-Request-30
+     * TestCaseID: Hascode-Validation-Request-Datafiles-8
      *
      * TestType: Automated
      *
@@ -612,7 +721,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: Hascode-Validation-Request-31
+     * TestCaseID: Hascode-Validation-Request-Datafiles-9
      *
      * TestType: Automated
      *
@@ -637,7 +746,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: Hascode-Validation-Request-32
+     * TestCaseID: Hascode-Validation-Request-Datafiles-10
      *
      * TestType: Automated
      *
@@ -661,7 +770,73 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: Hascode-Validation-Request-33
+     * TestCaseID: Hascode-Validation-Request-Datafiles-11
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Hash too long
+     *
+     * Expected Result: Error is returned
+     *
+     * File: hashAsiceXades.xml
+     **/
+    @Ignore
+    @Test
+    public void dataFileHasTooLong() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.getSignatureFiles().get(0).getDatafiles().get(0).setHash(StringUtils.repeat('P', 1001));
+
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertErrorResponse(response,
+                new RequestError(DATAFILES_HASH, INVALID_HASH_SIZE)
+        );
+    }
+
+    /**
+     * TestCaseID: Hascode-Validation-Request-Policy-12
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Double fields in datafile object
+     *
+     * Expected Result: Last value is used
+     *
+     * File: hashAsiceXades.xml
+     **/
+    @Test
+    public void doubleFieldsInDatafiles() {
+        String file = Base64.encodeBase64String(readFileFromTestResources(TestData.MOCK_XADES_SIGNATURE_FILE));
+
+        String request = "{\n" +
+                "    \"reportType\": \"Simple\",\n" +
+                "    \"signaturePolicy\": \"POLv4\",\n" +
+                "    \"signatureFiles\": [\n" +
+                "        {\n" +
+                "            \"signature\":\"" + file + "\",\n" +
+                "            \"datafiles\": [\n" +
+                "                {\n" +
+                "                    \"filename\": \"test2.pdf\",\n" +
+                "                    \"hashAlgo\": \"SHA512\",\n" +
+                "                    \"hash\": \"IucjUcbRo9RkdsfdfsscwiIiplP9pSrSPr7LKln1EiI=\",\n" +
+                "                    \"filename\": \"test.pdf\",\n" +
+                "                    \"hashAlgo\": \"SHA256\",\n" +
+                "                    \"hash\": \"IucjUcbRo9Rke0bZLiHcwiIiplP9pSrSPr7LKln1EiI=\"\n" +
+                "                }\n" +
+                "            ]\n" +
+                "        }\n" +
+                "    ]\n" +
+                "}";
+
+        ValidatableResponse response = postHashcodeValidation(request).then();
+        assertSignatureTotalPassed(response);
+    }
+
+    /**
+     * TestCaseID: Hascode-Validation-Request-Datafiles-12
      *
      * TestType: Automated
      *
@@ -674,7 +849,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: hashAsiceXades.xml
      **/
     @Test
-    public void multipleDataFiles_firstDataFileIncorrect_secondDataFileCorrect() {
+    public void multipleDataFilesOneNotInSignature() {
         JSONHashcodeValidationRequest request = validRequestBody();
 
         Datafile invalidDataFile = new Datafile();
@@ -744,7 +919,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
 
         ValidationPolicy signaturePolicy;
         if (request.getSignaturePolicy() == null) {
-            signaturePolicy = determineValidationPolicy(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2);
+            signaturePolicy = determineValidationPolicy(VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2);
         } else {
             signaturePolicy = determineValidationPolicy(request.getSignaturePolicy());
         }
@@ -756,9 +931,9 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     }
 
     private ValidationPolicy determineValidationPolicy(String signaturePolicy) {
-        if (TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_1.equals(signaturePolicy)) {
+        if (VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_1.equals(signaturePolicy)) {
             return PredefinedValidationPolicySource.ADES_POLICY;
-        } else if (TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2.equals(signaturePolicy)) {
+        } else if (VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2.equals(signaturePolicy)) {
             return PredefinedValidationPolicySource.QES_POLICY;
         } else {
             throw new IllegalArgumentException("Unknown validation policy '" + signaturePolicy + "'");
@@ -777,6 +952,8 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
                 .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].name", is(TestData.MOCK_XADES_DATAFILE_FILENAME))
                 .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].scope", is(TestData.VALID_SIGNATURE_SCOPE_VALUE_1))
                 .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].content", is(TestData.VALID_SIGNATURE_SCOPE_CONTENT_1))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].hashAlgo", is(TestData.MOCK_XADES_DATAFILE_HASH_ALGO))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].hash", is(TestData.MOCK_XADES_DATAFILE_HASH))
                 .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].claimedSigningTime", is(TestData.MOCK_XADES_SIGNATURE_CLAIMED_SIGNING_TIME))
                 .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].info.bestSignatureTime", is(TestData.MOCK_XADES_SIGNATURE_BEST_SIGNATURE_TIME))
                 .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].errors", Matchers.isEmptyOrNullString())
@@ -797,6 +974,8 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
                 .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].name", is(TestData.MOCK_XADES_DATAFILE_FILENAME))
                 .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].scope", is(TestData.VALID_SIGNATURE_SCOPE_VALUE_1))
                 .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].content", is(TestData.VALID_SIGNATURE_SCOPE_CONTENT_1))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].hashAlgo", is(TestData.MOCK_XADES_DATAFILE_HASH_ALGO))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].hash", is(TestData.MOCK_XADES_DATAFILE_HASH))
                 .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].claimedSigningTime", is(TestData.MOCK_XADES_SIGNATURE_CLAIMED_SIGNING_TIME))
                 .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].info.bestSignatureTime", is(TestData.MOCK_XADES_SIGNATURE_BEST_SIGNATURE_TIME))
                 .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].errors", hasSize(1))
@@ -818,6 +997,8 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
                 .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].name", is(TestData.MOCK_XADES_DATAFILE_FILENAME))
                 .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].scope", is(TestData.VALID_SIGNATURE_SCOPE_VALUE_1))
                 .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].content", is(TestData.VALID_SIGNATURE_SCOPE_CONTENT_1))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].hashAlgo", is(TestData.MOCK_XADES_DATAFILE_HASH_ALGO))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].hash", is(TestData.MOCK_XADES_DATAFILE_HASH))
                 .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].claimedSigningTime", is(TestData.MOCK_XADES_SIGNATURE_CLAIMED_SIGNING_TIME))
                 .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].info.bestSignatureTime", is(TestData.MOCK_XADES_SIGNATURE_BEST_SIGNATURE_TIME))
                 .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].errors", hasSize(1))
@@ -838,8 +1019,16 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         signatureFile.setDatafiles(Collections.singletonList(datafile));
 
         request.setReportType(ReportType.SIMPLE.getValue());
-        request.setSignaturePolicy(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_1);
+        request.setSignaturePolicy(VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2);
 
+        request.setSignatureFiles(Collections.singletonList(signatureFile));
+        return request;
+    }
+
+    private JSONHashcodeValidationRequest validRequestBodyMinimal() {
+        JSONHashcodeValidationRequest request = new JSONHashcodeValidationRequest();
+        SignatureFile signatureFile = new SignatureFile();
+        signatureFile.setSignature(Base64.encodeBase64String(readFileFromTestResources(TestData.MOCK_XADES_SIGNATURE_FILE)));
         request.setSignatureFiles(Collections.singletonList(signatureFile));
         return request;
     }

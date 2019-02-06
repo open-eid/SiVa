@@ -225,33 +225,60 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         return jsonObject.toString();
     }
 
-    protected String validationRequestHashcodeReadFromFile(String signature, String signaturePolicy, String reportType) throws ParserConfigurationException, IOException, SAXException {
-        List<Datafile> datafiles = new ArrayList<>();
+    protected String validationRequestHashcodeSimpleMultipleFiles(List <String> signatureFiles, String signaturePolicy, String reportType) {
+
         JSONObject jsonObject = new JSONObject();
-        SignatureFile signatureFile = new SignatureFile();
-        signatureFile.setSignature(Base64.encodeBase64String(readFileFromTestResources(signature)));
-
-        String testFilesBase = getProjectBaseDirectory() + "src/test/resources/" + getTestFilesDirectory() + signature;
-
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        Document document = builder.parse(new File(testFilesBase));
-        document.getDocumentElement().normalize();
-        NodeList nList = document.getElementsByTagName("ds:Reference");
-
-        for(int k=0; k<nList.getLength()-1; k++) {
-            Datafile dataFileObject = new Datafile();
-            dataFileObject.setHash(nList.item(k).getChildNodes().item(1).getFirstChild().getNodeValue());
-            dataFileObject.setHashAlgo("SHA256");
-            dataFileObject.setFilename(nList.item(k).getAttributes().getNamedItem("URI").getNodeValue());
-            datafiles.add(dataFileObject);
+        List<SignatureFile> signatureFileList = new ArrayList<>();
+        for (String signature : signatureFiles) {
+            SignatureFile signatureFile = new SignatureFile();
+            signatureFile.setSignature(Base64.encodeBase64String(readFileFromTestResources(signature)));
+            signatureFileList.add(signatureFile);
         }
-        signatureFile.setDatafiles(datafiles);
+        jsonObject.put(SIGNATURE_FILES, signatureFileList);
+        jsonObject.put(SIGNATURE_POLICY, signaturePolicy);
+        jsonObject.put(REPORT_TYPE, reportType);
+
+        return jsonObject.toString();
+    }
+
+    protected String validationRequestHashcodeMultipleFiles(List <String> signatureFiles, String signaturePolicy, String reportType) throws ParserConfigurationException, IOException, SAXException {
+        return validationRequestHashcodeMultipleFilesReturnsObject(signatureFiles, signaturePolicy, reportType).toString();
+    }
+
+    protected JSONObject validationRequestHashcodeMultipleFilesReturnsObject(List <String> signatureFiles, String signaturePolicy, String reportType) throws ParserConfigurationException, IOException, SAXException {
+        JSONObject jsonObject = new JSONObject();
+        List<SignatureFile> signatureFileList = new ArrayList<>();
+        for (String signature : signatureFiles) {
+
+            SignatureFile signatureFile = new SignatureFile();
+            signatureFile.setSignature(Base64.encodeBase64String(readFileFromTestResources(signature)));
+            String testFilesBase = getProjectBaseDirectory() + "src/test/resources/" + getTestFilesDirectory() + signature;
+
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document document = builder.parse(new File(testFilesBase));
+            document.getDocumentElement().normalize();
+            NodeList nList = document.getElementsByTagName("ds:Reference");
+
+            List<Datafile> datafiles = new ArrayList<>();
+
+            for(int k=0; k<nList.getLength()-1; k++) {
+                Datafile dataFileObject = new Datafile();
+                dataFileObject.setHash(nList.item(k).getChildNodes().item(1).getFirstChild().getNodeValue());
+                String algorithm = nList.item(k).getChildNodes().item(0).getAttributes().getNamedItem("Algorithm").getNodeValue();
+                dataFileObject.setHashAlgo(algorithm.substring(algorithm.lastIndexOf("#") + 1));
+                dataFileObject.setFilename(nList.item(k).getAttributes().getNamedItem("URI").getNodeValue());
+                datafiles.add(dataFileObject);
+            }
+            signatureFile.setDatafiles(datafiles);
+
+            signatureFileList.add(signatureFile);
+        }
 
         jsonObject.put(SIGNATURE_POLICY, signaturePolicy);
         jsonObject.put(REPORT_TYPE, reportType);
-        jsonObject.put(SIGNATURE_FILES, Collections.singletonList(signatureFile));
-        return jsonObject.toString();
+        jsonObject.put(SIGNATURE_FILES, signatureFileList );
+        return jsonObject;
     }
 
     protected String validationRequestForExtended(String documentKey, String encodedDocument,

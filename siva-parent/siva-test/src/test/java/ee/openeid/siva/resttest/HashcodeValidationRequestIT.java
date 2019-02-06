@@ -39,13 +39,22 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static ee.openeid.siva.integrationtest.TestData.*;
 import static org.hamcrest.Matchers.*;
@@ -842,6 +851,130 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertSimpleReportWithSignature(response, request);
+    }
+
+    /**
+     * TestCaseID: Hascode-Validation-Request-Signatures-1
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Several signatures validated
+     *
+     * Expected Result: Validation report is returned
+     *
+     * File: multiple files
+     **/
+    @Test
+    public void multipleSignatureFilesShouldPass() {
+        setTestFilesDirectory("xades/container/");
+        postHashcodeValidation(validationRequestHashcodeSimpleMultipleFiles(returnFiles(getTestFilesDirectory()), null, null))
+                .then()
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signedBy", is("MÄNNIK,MARI-LIIS,47101010033"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes", hasSize(2))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].hashAlgo", is("SHA256"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[1].signedBy", is("ŽAIKOVSKI,IGOR,37101010021"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[1].signatureScopes", hasSize(2))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[1].signatureScopes[0].hashAlgo", is("SHA256"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[2].signedBy", is("VÄRNICK,KRÕÕT,48812040138"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[2].signatureScopes", hasSize(2))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[2].signatureScopes[0].hashAlgo", is("SHA256"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[3].signedBy", is("JÕEORG,JAAK-KRISTJAN,38001085718"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[3].signatureScopes", hasSize(2))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[3].signatureScopes[0].hashAlgo", is("SHA384"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[4].signedBy", is("ÅLT-DELETÈ,CØNTROLINA,48908209998"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[4].signatureScopes", hasSize(2))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[4].signatureScopes[0].hashAlgo", is("SHA512"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "validSignaturesCount", Matchers.is(5));
+    }
+
+    /**
+     * TestCaseID: Hascode-Validation-Request-Signatures-2
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Several signatures validated with datafile info
+     *
+     * Expected Result: Validation report is returned
+     *
+     * File: multiple files
+     **/
+    @Test
+    public void multipleSignatureFilesShouldPassWithDatafiles() throws IOException, SAXException, ParserConfigurationException {
+        setTestFilesDirectory("xades/container/");
+        postHashcodeValidation(validationRequestHashcodeMultipleFiles(returnFiles(getTestFilesDirectory()), null, null))
+                .then()
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signedBy", is("MÄNNIK,MARI-LIIS,47101010033"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes", hasSize(2))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].hashAlgo", is("SHA256"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[1].signedBy", is("ŽAIKOVSKI,IGOR,37101010021"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[1].signatureScopes", hasSize(2))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[1].signatureScopes[0].hashAlgo", is("SHA256"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[2].signedBy", is("VÄRNICK,KRÕÕT,48812040138"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[2].signatureScopes", hasSize(2))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[2].signatureScopes[0].hashAlgo", is("SHA256"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[3].signedBy", is("JÕEORG,JAAK-KRISTJAN,38001085718"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[3].signatureScopes", hasSize(2))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[3].signatureScopes[0].hashAlgo", is("SHA384"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[4].signedBy", is("ÅLT-DELETÈ,CØNTROLINA,48908209998"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[4].signatureScopes", hasSize(2))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[4].signatureScopes[0].hashAlgo", is("SHA512"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "validSignaturesCount", Matchers.is(5));
+    }
+
+    /**
+     * TestCaseID: Hascode-Validation-Request-Signatures-2
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Several signatures validated one signature not valid
+     *
+     * Expected Result: Validation report is returned
+     *
+     * File: multiple files
+     **/
+    @Test
+    public void multipleSignatureFilesOneFaulty() throws IOException, SAXException, ParserConfigurationException {
+        setTestFilesDirectory("xades/container/");
+        JSONObject jsonObject = validationRequestHashcodeMultipleFilesReturnsObject(returnFiles(getTestFilesDirectory()), null, null);
+        jsonObject.getJSONArray("signatureFiles").getJSONObject(0).getJSONArray("datafiles").getJSONObject(0).put("hash", "sjajsa");
+        postHashcodeValidation(jsonObject.toString())
+                .then()
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signedBy", is("MÄNNIK,MARI-LIIS,47101010033"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].indication", is("TOTAL-FAILED"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].hashAlgo", is("SHA256"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[1].signedBy", is("ŽAIKOVSKI,IGOR,37101010021"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[1].signatureScopes", hasSize(2))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[1].signatureScopes[0].hashAlgo", is("SHA256"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[2].signedBy", is("VÄRNICK,KRÕÕT,48812040138"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[2].signatureScopes", hasSize(2))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[2].signatureScopes[0].hashAlgo", is("SHA256"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[3].signedBy", is("JÕEORG,JAAK-KRISTJAN,38001085718"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[3].signatureScopes", hasSize(2))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[3].signatureScopes[0].hashAlgo", is("SHA384"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[4].signedBy", is("ÅLT-DELETÈ,CØNTROLINA,48908209998"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[4].signatureScopes", hasSize(2))
+                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[4].signatureScopes[0].hashAlgo", is("SHA512"))
+                .body(VALIDATION_CONCLUSION_PREFIX + "validSignaturesCount", Matchers.is(4));
+    }
+
+    List<String> returnFiles(String filesLocation) {
+
+        List<String> files = new ArrayList<>();
+        File folder = new File(getProjectBaseDirectory() + "src/test/resources/" + filesLocation);
+        File[] listOfFiles = folder.listFiles();
+
+        for (int i = 0; i < listOfFiles.length; i++) {
+            if (listOfFiles[i].isFile()) {
+                files.add(listOfFiles[i].getName());
+            }
+        }
+        return  files;
     }
 
     private void assertErrorResponse(ValidatableResponse response, RequestError... requestErrors) {

@@ -57,8 +57,8 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      */
     @Test
-    public void validXadesWithHashcodeFromAsice() {
-        postHashcodeValidation(validationRequestHashcode("Valid_XAdES_LT_TS.xml", null, null, "test.txt", "SHA256", "RnKZobNWVy8u92sDL4S2j1BUzMT5qTgt6hm90TfAGRo="))
+    public void validXadesWithHashcodeFromAsice() throws IOException, SAXException, ParserConfigurationException {
+        postHashcodeValidation(validationRequestHashcodeSimple("Valid_XAdES_LT_TS.xml", null, null))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -83,7 +83,7 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void validXadesWithHashcodeFromBdoc() {
-        postHashcodeValidation(validationRequestHashcode("Valid_XAdES_LT_TM.xml", null, null, "test.txt", "SHA256", "RnKZobNWVy8u92sDL4S2j1BUzMT5qTgt6hm90TfAGRo="))
+        postHashcodeValidation(validationRequestHashcodeSimple("Valid_XAdES_LT_TM.xml", null, null))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -108,7 +108,7 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void validXadesWithHashcodeWithMultipleDataFiles() throws IOException, SAXException, ParserConfigurationException {
-        postHashcodeValidation(validationRequestHashcodeReadFromFile("Valid_XAdES_LT_TS_multiple_datafiles.xml", null, null))
+        postHashcodeValidation(validationRequestHashcodeSimple("Valid_XAdES_LT_TS_multiple_datafiles.xml", null, null))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -116,6 +116,173 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
                 .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("9un8fNcRbS462smQM6YW+Od987gc8Cm4wC+CdSjaXAc="));
+    }
+
+    /**
+     * TestCaseID: Xades-Hashcode-Validation-Pass-4
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4
+     *
+     * Title: Datafile has + in name
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: test+document.xml
+     */
+    @Test
+    public void validXadesWithPlusInDataFileName() {
+        postHashcodeValidation(validationRequestHashcode("test+document.xml", null, null, "test+document.txt", "SHA256", "heKN3NGQ0HttzgmfKG0L243dfG7W+6kTMO5n7YbKeS4="))
+                .then()
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2019-02-05T12:43:15Z"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("test+document.txt"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("6oZW1I3X0FvX2+6BHFoHXMtYsqF9zmzOuwGihTlWTx8="));
+    }
+
+    /**
+     * TestCaseID: Xades-Hashcode-Validation-Pass-5
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4
+     *
+     * Title: Datafile has space in name
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: spacesInDatafile.xml
+     */
+    @Test
+    public void validXadesWithSpaceInDataFileName() {
+        postHashcodeValidation(validationRequestHashcode("spacesInDatafile.xml", null, null, "Te st in g.txt", "SHA256", "5UxI8Rm1jUZm48+Vkdutyrsyr3L/MPu/RK1V81AeKEY="))
+                .then()
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2019-02-05T13:22:04Z"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("Te st in g.txt"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("3dE3KRKNN4IpsgxY9A49M9ib7RELQDyyuKWUCcmEPnU="));
+    }
+
+    /**
+     * TestCaseID: Xades-Hashcode-Validation-Algorithms-1
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4
+     *
+     * Title: Datafile digest in SHA1
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: sha224_TS.xml
+     */
+    @Test
+    public void sha1DatafileDigestSignatureShouldPass() {
+        postHashcodeValidation(validationRequestHashcode("sha1_TM.xml", null, null, "test.txt", "SHA1", "qP3CBanxnMHHUHpgxPAbE9Edf9A="))
+                .then()
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].hashAlgo", Matchers.is("SHA1"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
+    }
+
+    /**
+     * TestCaseID: Xades-Hashcode-Validation-Algorithms-2
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4
+     *
+     * Title: Datafile digest in SHA224
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: sha224_TS.xml
+     */
+    @Test
+    public void sha224DatafileDigestSignatureShouldPass() {
+        postHashcodeValidation(validationRequestHashcode("sha224_TS.xml", null, null, "test1.txt", "SHA224", "C7YzVACWz0f8pxd7shHKB1BzOuIuSjBysO3xgw=="))
+                .then()
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].hashAlgo", Matchers.is("SHA224"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
+    }
+
+    /**
+     * TestCaseID: Xades-Hashcode-Validation-Algorithms-3
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4
+     *
+     * Title: Datafile digest in SHA256
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     */
+    @Test
+    public void sha256DatafileDigestSignatureShouldPass() {
+        postHashcodeValidation(validationRequestHashcode("Valid_XAdES_LT_TS.xml", null, null, "test.txt", "SHA256", "RnKZobNWVy8u92sDL4S2j1BUzMT5qTgt6hm90TfAGRo="))
+                .then()
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].hashAlgo", Matchers.is("SHA256"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
+    }
+
+    /**
+     * TestCaseID: Xades-Hashcode-Validation-Algorithms-4
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4
+     *
+     * Title: Datafile digest in SHA384
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: sha384_TS.xml
+     */
+    @Test
+    public void sha384DatafileDigestSignatureShouldPass() {
+        postHashcodeValidation(validationRequestHashcode("sha384_TS.xml", null, null, "test1.txt", "SHA384", "DU5PS1Qcd2gu8U3g+4hDYldhAoT/sxEWz6YV8cEdjAaVEFMYSNOypSL+xt4KkK9k"))
+                .then()
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].hashAlgo", Matchers.is("SHA384"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
+    }
+
+    /**
+     * TestCaseID: Xades-Hashcode-Validation-Algorithms-5
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4
+     *
+     * Title: Datafile digest in SHA512
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: sha512_TS.xml
+     */
+    @Test
+    public void sha512DatafileDigestSignatureShouldPass() {
+        postHashcodeValidation(validationRequestHashcode("sha512_TS.xml", null, null, "test1.txt", "SHA512", "pA2Dh2/WoCnnxGL9PZd+DQivXUmq8dQG1nyQY3phKZPKlm/HfZZDG8yB79hTG2F4pV9LqW+6SGsETE9d+LQsRg=="))
+                .then()
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].hashAlgo", Matchers.is("SHA512"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
     }
 
     @Override

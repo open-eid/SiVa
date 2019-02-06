@@ -211,6 +211,20 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         return jsonObject.toString();
     }
 
+    protected String validationRequestHashcodeSimple(String signature, String signaturePolicy, String reportType) {
+
+        JSONObject jsonObject = new JSONObject();
+
+        SignatureFile signatureFile = new SignatureFile();
+        signatureFile.setSignature(Base64.encodeBase64String(readFileFromTestResources(signature)));
+
+        jsonObject.put(SIGNATURE_FILES, Collections.singletonList(signatureFile));
+        jsonObject.put(SIGNATURE_POLICY, signaturePolicy);
+        jsonObject.put(REPORT_TYPE, reportType);
+
+        return jsonObject.toString();
+    }
+
     protected String validationRequestHashcodeReadFromFile(String signature, String signaturePolicy, String reportType) throws ParserConfigurationException, IOException, SAXException {
         List<Datafile> datafiles = new ArrayList<>();
         JSONObject jsonObject = new JSONObject();

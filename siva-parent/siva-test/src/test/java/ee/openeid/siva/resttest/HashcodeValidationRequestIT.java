@@ -873,11 +873,11 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
 
         postHashcodeValidation(validationRequestHashcodeSimpleMultipleFiles(files, null, null)).then()
                 .body(VALIDATION_CONCLUSION_PREFIX + "validSignaturesCount", Matchers.is(5))
-                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'MÄNNIK,MARI-LIIS,47101010033'}.signatureScopes[0].hashAlgo", is("SHA256"))
-                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'JÕEORG,JAAK-KRISTJAN,38001085718'}.signatureScopes[0].hashAlgo", is("SHA384"))
-                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'ŽAIKOVSKI,IGOR,37101010021'}.signatureScopes[0].hashAlgo", is("SHA256"))
-                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'VÄRNICK,KRÕÕT,48812040138'}.signatureScopes[0].hashAlgo", is("SHA256"))
-                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'ÅLT-DELETÈ,CØNTROLINA,48908209998'}.signatureScopes[0].hashAlgo", is("SHA512"));
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'MÄNNIK,MARI-LIIS,47101010033'}.signatureScopes[0].hashAlgo", is(HASH_ALGO_SHA256))
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'JÕEORG,JAAK-KRISTJAN,38001085718'}.signatureScopes[0].hashAlgo", is(HASH_ALGO_SHA384))
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'ŽAIKOVSKI,IGOR,37101010021'}.signatureScopes[0].hashAlgo", is(HASH_ALGO_SHA256))
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'VÄRNICK,KRÕÕT,48812040138'}.signatureScopes[0].hashAlgo", is(HASH_ALGO_SHA256))
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'ÅLT-DELETÈ,CØNTROLINA,48908209998'}.signatureScopes[0].hashAlgo", is(HASH_ALGO_SHA512));
     }
 
 
@@ -900,11 +900,11 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         postHashcodeValidation(validationRequestHashcodeMultipleFiles(returnFiles(getTestFilesDirectory()), null, null))
                 .then()
                 .body(VALIDATION_CONCLUSION_PREFIX + "validSignaturesCount", Matchers.is(5))
-                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'MÄNNIK,MARI-LIIS,47101010033'}.signatureScopes[0].hashAlgo", is("SHA256"))
-                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'JÕEORG,JAAK-KRISTJAN,38001085718'}.signatureScopes[0].hashAlgo", is("SHA384"))
-                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'ŽAIKOVSKI,IGOR,37101010021'}.signatureScopes[0].hashAlgo", is("SHA256"))
-                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'VÄRNICK,KRÕÕT,48812040138'}.signatureScopes[0].hashAlgo", is("SHA256"))
-                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'ÅLT-DELETÈ,CØNTROLINA,48908209998'}.signatureScopes[0].hashAlgo", is("SHA512"));
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'MÄNNIK,MARI-LIIS,47101010033'}.signatureScopes[0].hashAlgo", is(HASH_ALGO_SHA256))
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'JÕEORG,JAAK-KRISTJAN,38001085718'}.signatureScopes[0].hashAlgo", is(HASH_ALGO_SHA384))
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'ŽAIKOVSKI,IGOR,37101010021'}.signatureScopes[0].hashAlgo", is(HASH_ALGO_SHA256))
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'VÄRNICK,KRÕÕT,48812040138'}.signatureScopes[0].hashAlgo", is(HASH_ALGO_SHA256))
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'ÅLT-DELETÈ,CØNTROLINA,48908209998'}.signatureScopes[0].hashAlgo", is(HASH_ALGO_SHA512));
     }
 
     /**
@@ -923,16 +923,19 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     @Test
     public void multipleSignatureFilesOneFaulty() throws IOException, SAXException, ParserConfigurationException {
         setTestFilesDirectory("xades/container/");
-        JSONObject jsonObject = validationRequestHashcodeMultipleFilesReturnsObject(returnFiles(getTestFilesDirectory()), null, null);
-        jsonObject.getJSONArray("signatureFiles").getJSONObject(0).getJSONArray("datafiles").getJSONObject(0).put("hash", "sjajsa");
+        List<String> files = returnFiles(getTestFilesDirectory());
+        JSONObject jsonObject = validationRequestHashcodeMultipleFilesReturnsObject(files, null, null);
+
+        jsonObject.getJSONArray("signatureFiles").getJSONObject(files.indexOf("signatures1.xml")).getJSONArray("datafiles").getJSONObject(0).put("hash", "sjajsa");
         postHashcodeValidation(jsonObject.toString())
                 .then()
                 .body(VALIDATION_CONCLUSION_PREFIX + "validSignaturesCount", Matchers.is(4))
                 .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'MÄNNIK,MARI-LIIS,47101010033'}.indication", is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'JÕEORG,JAAK-KRISTJAN,38001085718'}.signatureScopes[0].hashAlgo", is("SHA384"))
-                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'ŽAIKOVSKI,IGOR,37101010021'}.signatureScopes[0].hashAlgo", is("SHA256"))
-                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'VÄRNICK,KRÕÕT,48812040138'}.signatureScopes[0].hashAlgo", is("SHA256"))
-                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'ÅLT-DELETÈ,CØNTROLINA,48908209998'}.signatureScopes[0].hashAlgo", is("SHA512"));
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'MÄNNIK,MARI-LIIS,47101010033'}.signatureScopes[0].hashAlgo", is(HASH_ALGO_SHA256))
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'JÕEORG,JAAK-KRISTJAN,38001085718'}.signatureScopes[0].hashAlgo", is(HASH_ALGO_SHA384))
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'ŽAIKOVSKI,IGOR,37101010021'}.signatureScopes[0].hashAlgo", is(HASH_ALGO_SHA256))
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'VÄRNICK,KRÕÕT,48812040138'}.signatureScopes[0].hashAlgo", is(HASH_ALGO_SHA256))
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'ÅLT-DELETÈ,CØNTROLINA,48908209998'}.signatureScopes[0].hashAlgo", is(HASH_ALGO_SHA512));
     }
 
     List<String> returnFiles(String filesLocation) {

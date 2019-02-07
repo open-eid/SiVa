@@ -22,7 +22,10 @@ public class TestData {
     public static final String VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2 = "POLv4";
     public static final String VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_3 = "POLv5";
 
-    public static final String VALID_HASH_ALGO = "SHA-256";
+    public static final String HASH_ALGO_SHA224 = "SHA224";
+    public static final String HASH_ALGO_SHA256 = "SHA256";
+    public static final String HASH_ALGO_SHA384 = "SHA384";
+    public static final String HASH_ALGO_SHA512 = "SHA512";
 
     public static final String VALID_VALIDATION_CONCLUSION_SIGNATURE_FORMAT_PADES_LT = "PAdES-BASELINE-LT";
     public static final String VALID_VALIDATION_CONCLUSION_SIGNATURE_FORMAT_PADES_LTA = "PAdES-BASELINE-LTA";

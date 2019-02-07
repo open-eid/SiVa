@@ -40,6 +40,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static ee.openeid.siva.integrationtest.TestData.HASH_ALGO_SHA256;
+import static ee.openeid.siva.integrationtest.TestData.HASH_ALGO_SHA512;
 import static org.hamcrest.Matchers.*;
 
 @Category(IntegrationTest.class)
@@ -260,7 +262,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
     @Test
     public void dataFileHashAlgorithmCaseInsensitive() {
         JSONHashcodeValidationRequest request = validRequestBody();
-        request.getSignatureFiles().get(0).getDatafiles().get(0).setHashAlgo("sha256");
+        request.getSignatureFiles().get(0).getDatafiles().get(0).setHashAlgo(HASH_ALGO_SHA256);
 
         ValidatableResponse response = postHashcodeValidation(request).then();
         assertSimpleReportWithSignature(response, request);
@@ -269,7 +271,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
     @Test
     public void dataFileHashAlgorithmDoesNotMatchWithSignatureDataFileHashAlgorithm() {
         JSONHashcodeValidationRequest request = validRequestBody();
-        request.getSignatureFiles().get(0).getDatafiles().get(0).setHashAlgo("SHA512");
+        request.getSignatureFiles().get(0).getDatafiles().get(0).setHashAlgo(HASH_ALGO_SHA512);
 
         ValidatableResponse response = postHashcodeValidation(request).then();
         assertValidationConclusion(response, request);

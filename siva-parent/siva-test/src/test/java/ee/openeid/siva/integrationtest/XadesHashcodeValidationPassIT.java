@@ -28,6 +28,8 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
+import static ee.openeid.siva.integrationtest.TestData.*;
+
 @Category(IntegrationTest.class)
 public class XadesHashcodeValidationPassIT extends SiVaRestTests {
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "xades/";
@@ -133,7 +135,7 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void validXadesWithPlusInDataFileName() {
-        postHashcodeValidation(validationRequestHashcode("test+document.xml", null, null, "test+document.txt", "SHA256", "heKN3NGQ0HttzgmfKG0L243dfG7W+6kTMO5n7YbKeS4="))
+        postHashcodeValidation(validationRequestHashcode("test+document.xml", null, null, "test+document.txt", HASH_ALGO_SHA256, "heKN3NGQ0HttzgmfKG0L243dfG7W+6kTMO5n7YbKeS4="))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -159,7 +161,7 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void validXadesWithSpaceInDataFileName() {
-        postHashcodeValidation(validationRequestHashcode("spacesInDatafile.xml", null, null, "Te st in g.txt", "SHA256", "5UxI8Rm1jUZm48+Vkdutyrsyr3L/MPu/RK1V81AeKEY="))
+        postHashcodeValidation(validationRequestHashcode("spacesInDatafile.xml", null, null, "Te st in g.txt", HASH_ALGO_SHA256, "5UxI8Rm1jUZm48+Vkdutyrsyr3L/MPu/RK1V81AeKEY="))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -208,11 +210,11 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void sha224DatafileDigestSignatureShouldPass() {
-        postHashcodeValidation(validationRequestHashcode("sha224_TS.xml", null, null, "test1.txt", "SHA224", "C7YzVACWz0f8pxd7shHKB1BzOuIuSjBysO3xgw=="))
+        postHashcodeValidation(validationRequestHashcode("sha224_TS.xml", null, null, "test1.txt", HASH_ALGO_SHA224, "C7YzVACWz0f8pxd7shHKB1BzOuIuSjBysO3xgw=="))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].hashAlgo", Matchers.is("SHA224"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].hashAlgo", Matchers.is(HASH_ALGO_SHA224))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
     }
 
@@ -231,11 +233,11 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void sha256DatafileDigestSignatureShouldPass() {
-        postHashcodeValidation(validationRequestHashcode("Valid_XAdES_LT_TS.xml", null, null, "test.txt", "SHA256", "RnKZobNWVy8u92sDL4S2j1BUzMT5qTgt6hm90TfAGRo="))
+        postHashcodeValidation(validationRequestHashcode("Valid_XAdES_LT_TS.xml", null, null, "test.txt", HASH_ALGO_SHA256, "RnKZobNWVy8u92sDL4S2j1BUzMT5qTgt6hm90TfAGRo="))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].hashAlgo", Matchers.is("SHA256"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].hashAlgo", Matchers.is(HASH_ALGO_SHA256))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
     }
 
@@ -254,11 +256,11 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void sha384DatafileDigestSignatureShouldPass() {
-        postHashcodeValidation(validationRequestHashcode("sha384_TS.xml", null, null, "test1.txt", "SHA384", "DU5PS1Qcd2gu8U3g+4hDYldhAoT/sxEWz6YV8cEdjAaVEFMYSNOypSL+xt4KkK9k"))
+        postHashcodeValidation(validationRequestHashcode("sha384_TS.xml", null, null, "test1.txt", HASH_ALGO_SHA384, "DU5PS1Qcd2gu8U3g+4hDYldhAoT/sxEWz6YV8cEdjAaVEFMYSNOypSL+xt4KkK9k"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].hashAlgo", Matchers.is("SHA384"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].hashAlgo", Matchers.is(HASH_ALGO_SHA384))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
     }
 
@@ -277,11 +279,11 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void sha512DatafileDigestSignatureShouldPass() {
-        postHashcodeValidation(validationRequestHashcode("sha512_TS.xml", null, null, "test1.txt", "SHA512", "pA2Dh2/WoCnnxGL9PZd+DQivXUmq8dQG1nyQY3phKZPKlm/HfZZDG8yB79hTG2F4pV9LqW+6SGsETE9d+LQsRg=="))
+        postHashcodeValidation(validationRequestHashcode("sha512_TS.xml", null, null, "test1.txt", HASH_ALGO_SHA512, "pA2Dh2/WoCnnxGL9PZd+DQivXUmq8dQG1nyQY3phKZPKlm/HfZZDG8yB79hTG2F4pV9LqW+6SGsETE9d+LQsRg=="))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].hashAlgo", Matchers.is("SHA512"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].hashAlgo", Matchers.is(HASH_ALGO_SHA512))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
     }
 

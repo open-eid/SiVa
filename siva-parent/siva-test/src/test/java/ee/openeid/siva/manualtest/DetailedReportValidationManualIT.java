@@ -720,7 +720,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
         response =  validateRequestForDetailedReport(request,VALIDATION_ENDPOINT);
         assertThat(response.jsonPath().getString("validationReport.validationConclusion.validatedDocument.filename"), equalTo("hellopades-lt-sha256-rsa2048.pdf"));
         assertThat(response.jsonPath().getString("validationReport.validationConclusion.validatedDocument.fileHash"), notNullValue() );
-        assertThat(response.jsonPath().getString("validationReport.validationConclusion.validatedDocument.hashAlgo"), equalTo("SHA-256"));
+        assertThat(response.jsonPath().getString("validationReport.validationConclusion.validatedDocument.hashAlgo"), equalTo("SHA256"));
         assertThat(response.jsonPath().getString("validationReportSignature"), notNullValue());
     }
 

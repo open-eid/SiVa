@@ -39,7 +39,7 @@ public final class ReportBuilderUtils {
 
     private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final String GREENWICH_MEAN_TIME = "Etc/GMT";
-    private static final String DIGEST_ALGO = "SHA-256";
+    private static final String DIGEST_ALGO = "SHA256";
     private static final String UNKNOWN_VALUE = "NA";
     private static final String QES_POLICY = "POLv4";
     private static final String SIGNATURE_LEVEL_ERROR = "Signature/seal level do not meet the minimal level required by applied policy";
@@ -80,7 +80,7 @@ public final class ReportBuilderUtils {
         if (reportSignatureEnabled) {
             String documentHash;
             try {
-                MessageDigest messageDigest = MessageDigest.getInstance(DIGEST_ALGO);
+                MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
                 documentHash = Base64.getEncoder().encodeToString(messageDigest.digest(document));
             } catch (NoSuchAlgorithmException e) {
                 throw new IllegalArgumentException(e);

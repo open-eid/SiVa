@@ -145,7 +145,7 @@ public class ReportBuilderUtilsTest {
         byte[] data = "testData".getBytes();
         ValidatedDocument response = ReportBuilderUtils.createValidatedDocument(true, "filename.asice", data);
         Assert.assertEquals("filename.asice", response.getFilename());
-        Assert.assertEquals("SHA-256", response.getHashAlgo());
+        Assert.assertEquals("SHA256", response.getHashAlgo());
         Assert.assertEquals("ukd6CsV+EN2Qu1vwKJxZkP6DnGGbJv3nwqrGL1JtQRM=", response.getFileHash());
     }
 

@@ -16,6 +16,7 @@
 
 package ee.openeid.siva.resttest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import ee.openeid.siva.common.DateTimeMatcher;
 import ee.openeid.siva.integrationtest.SiVaRestTests;
 import ee.openeid.siva.integrationtest.TestData;
@@ -27,6 +28,7 @@ import ee.openeid.siva.webapp.request.Datafile;
 import ee.openeid.siva.webapp.request.JSONHashcodeValidationRequest;
 import ee.openeid.siva.webapp.request.SignatureFile;
 import io.restassured.RestAssured;
+import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -50,13 +52,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static ee.openeid.siva.integrationtest.TestData.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 @Category(IntegrationTest.class)
@@ -869,25 +869,17 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     @Test
     public void multipleSignatureFilesShouldPass() {
         setTestFilesDirectory("xades/container/");
-        postHashcodeValidation(validationRequestHashcodeSimpleMultipleFiles(returnFiles(getTestFilesDirectory()), null, null))
-                .then()
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signedBy", is("MÄNNIK,MARI-LIIS,47101010033"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes", hasSize(2))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].hashAlgo", is("SHA256"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[1].signedBy", is("ŽAIKOVSKI,IGOR,37101010021"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[1].signatureScopes", hasSize(2))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[1].signatureScopes[0].hashAlgo", is("SHA256"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[2].signedBy", is("VÄRNICK,KRÕÕT,48812040138"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[2].signatureScopes", hasSize(2))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[2].signatureScopes[0].hashAlgo", is("SHA256"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[3].signedBy", is("JÕEORG,JAAK-KRISTJAN,38001085718"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[3].signatureScopes", hasSize(2))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[3].signatureScopes[0].hashAlgo", is("SHA384"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[4].signedBy", is("ÅLT-DELETÈ,CØNTROLINA,48908209998"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[4].signatureScopes", hasSize(2))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[4].signatureScopes[0].hashAlgo", is("SHA512"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "validSignaturesCount", Matchers.is(5));
+        List <String> files = returnFiles(getTestFilesDirectory());
+
+        postHashcodeValidation(validationRequestHashcodeSimpleMultipleFiles(files, null, null)).then()
+                .body(VALIDATION_CONCLUSION_PREFIX + "validSignaturesCount", Matchers.is(5))
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'MÄNNIK,MARI-LIIS,47101010033'}.signatureScopes[0].hashAlgo", is("SHA256"))
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'JÕEORG,JAAK-KRISTJAN,38001085718'}.signatureScopes[0].hashAlgo", is("SHA384"))
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'ŽAIKOVSKI,IGOR,37101010021'}.signatureScopes[0].hashAlgo", is("SHA256"))
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'VÄRNICK,KRÕÕT,48812040138'}.signatureScopes[0].hashAlgo", is("SHA256"))
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'ÅLT-DELETÈ,CØNTROLINA,48908209998'}.signatureScopes[0].hashAlgo", is("SHA512"));
     }
+
 
     /**
      * TestCaseID: Hascode-Validation-Request-Signatures-2
@@ -907,22 +899,12 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         setTestFilesDirectory("xades/container/");
         postHashcodeValidation(validationRequestHashcodeMultipleFiles(returnFiles(getTestFilesDirectory()), null, null))
                 .then()
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signedBy", is("MÄNNIK,MARI-LIIS,47101010033"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes", hasSize(2))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].hashAlgo", is("SHA256"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[1].signedBy", is("ŽAIKOVSKI,IGOR,37101010021"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[1].signatureScopes", hasSize(2))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[1].signatureScopes[0].hashAlgo", is("SHA256"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[2].signedBy", is("VÄRNICK,KRÕÕT,48812040138"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[2].signatureScopes", hasSize(2))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[2].signatureScopes[0].hashAlgo", is("SHA256"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[3].signedBy", is("JÕEORG,JAAK-KRISTJAN,38001085718"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[3].signatureScopes", hasSize(2))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[3].signatureScopes[0].hashAlgo", is("SHA384"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[4].signedBy", is("ÅLT-DELETÈ,CØNTROLINA,48908209998"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[4].signatureScopes", hasSize(2))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[4].signatureScopes[0].hashAlgo", is("SHA512"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "validSignaturesCount", Matchers.is(5));
+                .body(VALIDATION_CONCLUSION_PREFIX + "validSignaturesCount", Matchers.is(5))
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'MÄNNIK,MARI-LIIS,47101010033'}.signatureScopes[0].hashAlgo", is("SHA256"))
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'JÕEORG,JAAK-KRISTJAN,38001085718'}.signatureScopes[0].hashAlgo", is("SHA384"))
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'ŽAIKOVSKI,IGOR,37101010021'}.signatureScopes[0].hashAlgo", is("SHA256"))
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'VÄRNICK,KRÕÕT,48812040138'}.signatureScopes[0].hashAlgo", is("SHA256"))
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'ÅLT-DELETÈ,CØNTROLINA,48908209998'}.signatureScopes[0].hashAlgo", is("SHA512"));
     }
 
     /**
@@ -945,22 +927,12 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         jsonObject.getJSONArray("signatureFiles").getJSONObject(0).getJSONArray("datafiles").getJSONObject(0).put("hash", "sjajsa");
         postHashcodeValidation(jsonObject.toString())
                 .then()
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signedBy", is("MÄNNIK,MARI-LIIS,47101010033"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].indication", is("TOTAL-FAILED"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].hashAlgo", is("SHA256"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[1].signedBy", is("ŽAIKOVSKI,IGOR,37101010021"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[1].signatureScopes", hasSize(2))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[1].signatureScopes[0].hashAlgo", is("SHA256"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[2].signedBy", is("VÄRNICK,KRÕÕT,48812040138"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[2].signatureScopes", hasSize(2))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[2].signatureScopes[0].hashAlgo", is("SHA256"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[3].signedBy", is("JÕEORG,JAAK-KRISTJAN,38001085718"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[3].signatureScopes", hasSize(2))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[3].signatureScopes[0].hashAlgo", is("SHA384"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[4].signedBy", is("ÅLT-DELETÈ,CØNTROLINA,48908209998"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[4].signatureScopes", hasSize(2))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[4].signatureScopes[0].hashAlgo", is("SHA512"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "validSignaturesCount", Matchers.is(4));
+                .body(VALIDATION_CONCLUSION_PREFIX + "validSignaturesCount", Matchers.is(4))
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'MÄNNIK,MARI-LIIS,47101010033'}.indication", is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'JÕEORG,JAAK-KRISTJAN,38001085718'}.signatureScopes[0].hashAlgo", is("SHA384"))
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'ŽAIKOVSKI,IGOR,37101010021'}.signatureScopes[0].hashAlgo", is("SHA256"))
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'VÄRNICK,KRÕÕT,48812040138'}.signatureScopes[0].hashAlgo", is("SHA256"))
+                .body("validationReport.validationConclusion.signatures.find {signatures -> signatures.signedBy == 'ÅLT-DELETÈ,CØNTROLINA,48908209998'}.signatureScopes[0].hashAlgo", is("SHA512"));
     }
 
     List<String> returnFiles(String filesLocation) {
@@ -997,15 +969,17 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     private void assertSimpleReportWithoutSignature(ValidatableResponse response, JSONHashcodeValidationRequest request) {
         assertValidationConclusion(response, request);
         response
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures", isEmptyOrNullString())
-                .body(VALIDATION_CONCLUSION_PREFIX + "validSignaturesCount", is(0))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signaturesCount", is(0));
+                .root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatures", isEmptyOrNullString())
+                .body("validSignaturesCount", is(0))
+                .body("signaturesCount", is(0));
     }
 
     private void assertValidationConclusion(ValidatableResponse response, JSONHashcodeValidationRequest request) {
         response.statusCode(HttpStatus.OK.value())
-                .body(VALIDATION_CONCLUSION_PREFIX + "validationTime", DateTimeMatcher.isEqualOrAfter(testStartDate))
-                .body(VALIDATION_CONCLUSION_PREFIX + "validationLevel", is(TestData.VALID_VALIDATION_LEVEL_ARCHIVAL_DATA));
+                .root(VALIDATION_CONCLUSION_PREFIX)
+                .body("validationTime", DateTimeMatcher.isEqualOrAfter(testStartDate))
+                .body("validationLevel", is(TestData.VALID_VALIDATION_LEVEL_ARCHIVAL_DATA));
 
         ValidationPolicy signaturePolicy;
         if (request.getSignaturePolicy() == null) {
@@ -1015,9 +989,10 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         }
 
         response
-                .body(VALIDATION_CONCLUSION_PREFIX + "policy.policyDescription", equalTo(signaturePolicy.getDescription()))
-                .body(VALIDATION_CONCLUSION_PREFIX + "policy.policyName", equalTo(signaturePolicy.getName()))
-                .body(VALIDATION_CONCLUSION_PREFIX + "policy.policyUrl", equalTo(signaturePolicy.getUrl()));
+                .root(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", equalTo(signaturePolicy.getDescription()))
+                .body("policy.policyName", equalTo(signaturePolicy.getName()))
+                .body("policy.policyUrl", equalTo(signaturePolicy.getUrl()));
     }
 
     private ValidationPolicy determineValidationPolicy(String signaturePolicy) {
@@ -1032,23 +1007,24 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
 
     private void assertSignatureTotalPassed(ValidatableResponse response) {
         response
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures", hasSize(1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].id", is(TestData.MOCK_XADES_SIGNATURE_ID))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureFormat", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_FORMAT_XADES_LT))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureLevel", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_QESIG))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signedBy", is(TestData.MOCK_XADES_SIGNATURE_SIGNER))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].indication", is(TestData.VALID_INDICATION_TOTAL_PASSED))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes", hasSize(1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].name", is(TestData.MOCK_XADES_DATAFILE_FILENAME))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].scope", is(TestData.VALID_SIGNATURE_SCOPE_VALUE_1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].content", is(TestData.VALID_SIGNATURE_SCOPE_CONTENT_1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].hashAlgo", is(TestData.MOCK_XADES_DATAFILE_HASH_ALGO))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].signatureScopes[0].hash", is(TestData.MOCK_XADES_DATAFILE_HASH))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].claimedSigningTime", is(TestData.MOCK_XADES_SIGNATURE_CLAIMED_SIGNING_TIME))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].info.bestSignatureTime", is(TestData.MOCK_XADES_SIGNATURE_BEST_SIGNATURE_TIME))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signatures[0].errors", Matchers.isEmptyOrNullString())
-                .body(VALIDATION_CONCLUSION_PREFIX + "validSignaturesCount", is(1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "signaturesCount", is(1));
+                .root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatures", hasSize(1))
+                .body("signatures[0].id", is(TestData.MOCK_XADES_SIGNATURE_ID))
+                .body("signatures[0].signatureFormat", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_FORMAT_XADES_LT))
+                .body("signatures[0].signatureLevel", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_QESIG))
+                .body("signatures[0].signedBy", is(TestData.MOCK_XADES_SIGNATURE_SIGNER))
+                .body("signatures[0].indication", is(TestData.VALID_INDICATION_TOTAL_PASSED))
+                .body("signatures[0].signatureScopes", hasSize(1))
+                .body("signatures[0].signatureScopes[0].name", is(TestData.MOCK_XADES_DATAFILE_FILENAME))
+                .body("signatures[0].signatureScopes[0].scope", is(TestData.VALID_SIGNATURE_SCOPE_VALUE_1))
+                .body("signatures[0].signatureScopes[0].content", is(TestData.VALID_SIGNATURE_SCOPE_CONTENT_1))
+                .body("signatures[0].signatureScopes[0].hashAlgo", is(TestData.MOCK_XADES_DATAFILE_HASH_ALGO))
+                .body("signatures[0].signatureScopes[0].hash", is(TestData.MOCK_XADES_DATAFILE_HASH))
+                .body("signatures[0].claimedSigningTime", is(TestData.MOCK_XADES_SIGNATURE_CLAIMED_SIGNING_TIME))
+                .body("signatures[0].info.bestSignatureTime", is(TestData.MOCK_XADES_SIGNATURE_BEST_SIGNATURE_TIME))
+                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("validSignaturesCount", is(1))
+                .body("signaturesCount", is(1));
     }
 
     private JSONHashcodeValidationRequest validRequestBody() {

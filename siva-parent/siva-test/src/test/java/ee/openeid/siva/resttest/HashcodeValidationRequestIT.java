@@ -926,7 +926,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         List<String> files = returnFiles(getTestFilesDirectory());
         JSONObject jsonObject = validationRequestHashcodeMultipleFilesReturnsObject(files, null, null);
 
-        jsonObject.getJSONArray("signatureFiles").getJSONObject(files.indexOf("signatures1.xml")).getJSONArray("datafiles").getJSONObject(0).put("hash", "sjajsa");
+        jsonObject.getJSONArray("signatureFiles").getJSONObject(files.indexOf("signatures0.xml")).getJSONArray("datafiles").getJSONObject(0).put("hash", "sjajsa");
         postHashcodeValidation(jsonObject.toString())
                 .then()
                 .body(VALIDATION_CONCLUSION_PREFIX + "validSignaturesCount", Matchers.is(4))

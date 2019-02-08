@@ -307,12 +307,4 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
             throw new RuntimeException(e);
         }
     }
-
-    protected String currentDateTime(String timeZone, String timeFormat) {
-        final Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(timeFormat);
-
-        sdf.setTimeZone(TimeZone.getTimeZone(timeZone));
-        return sdf.format(currentTime);
-    }
 }

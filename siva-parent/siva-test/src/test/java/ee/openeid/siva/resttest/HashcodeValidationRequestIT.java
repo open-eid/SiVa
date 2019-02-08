@@ -198,9 +198,9 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
      *
-     * Title: Signature policy missing
+     * Title: Signature policy POLv3
      *
-     * Expected Result: Default is used
+     * Expected Result: Correct policy is returned
      *
      * File: Valid_XAdES_LT_TS.xml
      **/
@@ -223,9 +223,9 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
      *
-     * Title: Signature policy missing
+     * Title: Signature policy POLv4
      *
-     * Expected Result: Default is used
+     * Expected Result: Correct policy is returned
      *
      * File: Valid_XAdES_LT_TS.xml
      **/
@@ -366,7 +366,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
      *
-     * Title: Signature policy too long
+     * Title: Double signature policy
      *
      * Expected Result: Last value is used
      *

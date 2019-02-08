@@ -40,8 +40,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static ee.openeid.siva.integrationtest.TestData.HASH_ALGO_SHA256;
-import static ee.openeid.siva.integrationtest.TestData.HASH_ALGO_SHA512;
+import static ee.openeid.siva.integrationtest.TestData.*;
+import static ee.openeid.siva.integrationtest.TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2;
 import static org.hamcrest.Matchers.*;
 
 @Category(IntegrationTest.class)
@@ -58,6 +58,19 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
         testStartDate = ZonedDateTime.now(ZoneId.of("GMT"));
     }
 
+    /**
+     * TestCaseID: Soap-Hashcode-Validation-Report-Type-1
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Valid request
+     *
+     * Expected Result: Simple report is returned with valid signatures
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     */
     @Test
     public void okHashcodeValidationWithSimpleReport() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -65,64 +78,42 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
         assertSimpleReportWithSignature(response, request);
     }
 
+    /**
+     * TestCaseID: Soap-Hashcode-Validation-Report-Type-2
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Valid request with detailed report
+     *
+     * Expected Result: Simple report is returned with valid signatures
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     */
     @Test
-    public void okHashcodeValidationWithDetailedReport() {
+    public void okHashcodeValidationDetailedReportRequested() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setReportType(ReportType.DETAILED.value());
         ValidatableResponse response = postHashcodeValidation(request).then();
         assertSimpleReportWithSignature(response, request);
     }
 
+    /**
+     * TestCaseID: Soap-Hashcode-Validation-Report-Type-3
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Report type missing
+     *
+     * Expected Result: Default is used
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     **/
     @Test
-    public void signatureFilesMissing() {
-        JSONHashcodeValidationRequest request = validRequestBody();
-        request.setSignatureFiles(null);
-
-        ValidatableResponse response = postHashcodeValidation(request).then();
-        assertClientFault(response, "Unmarshalling Error: cvc-complex-type.2.4.a: Invalid content was found starting with element 'ReportType'. One of '{SignatureFiles}' is expected. ");
-    }
-
-    @Test
-    public void signatureFilesEmpty() {
-        JSONHashcodeValidationRequest request = validRequestBody();
-        request.setSignatureFiles(new ArrayList<>());
-
-        ValidatableResponse response = postHashcodeValidation(request).then();
-        assertClientFault(response, "Unmarshalling Error: cvc-complex-type.2.4.b: The content of element 'SignatureFiles' is not complete. One of '{SignatureFile}' is expected. ");
-    }
-
-    @Test
-    public void signatureNotBase64Encoded() {
-        JSONHashcodeValidationRequest request = validRequestBody();
-
-        request.getSignatureFiles().get(0).setSignature("NOT.BASE64.ENCODED.VALUE");
-
-        ValidatableResponse response = postHashcodeValidation(request).then();
-        assertClientFault(response, SIGNATURE_FILE_NOT_BASE64_ENCODED);
-    }
-
-    @Test
-    public void signatureContentWithoutSignature() {
-        String randomXmlFileWithoutSignature = "PD94bWwgdmVyc2lvbj0nMS4wJyAgZW5jb2Rpbmc9J1VURi04JyA/Pg0KPHRlc3Q+DQoJPGRhdGE+DQoJCTxzb21ldGhpbmc+c29tZSBkYXRhPC9zb21ldGhpbmc+DQoJPC9kYXRhPg0KPC90ZXN0Pg0K";
-        JSONHashcodeValidationRequest request = validRequestBody();
-        request.getSignatureFiles().get(0).setSignature(randomXmlFileWithoutSignature);
-
-        ValidatableResponse response = postHashcodeValidation(request).then();
-        assertSimpleReportWithoutSignature(response, request);
-    }
-
-    @Test
-    public void signatureContentNotXML() {
-        String notXmlFormattedContent = Base64.encodeBase64String("NOT_XML_FORMATTED_FILE_CONTENT".getBytes(StandardCharsets.UTF_8));
-        JSONHashcodeValidationRequest request = validRequestBody();
-        request.getSignatureFiles().get(0).setSignature(notXmlFormattedContent);
-
-        ValidatableResponse response = postHashcodeValidation(request).then();
-        assertClientFault(response, SIGNATURE_FILE_MALFORMED);
-    }
-
-    @Test
-    public void reportTypeMissing_defaultsToSimple() {
+    public void reportTypeMissingDefaultsToSimple() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setReportType(null);
 
@@ -130,6 +121,19 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
         assertSimpleReportWithSignature(response, request);
     }
 
+    /**
+     * TestCaseID: Soap-Hashcode-Validation-Report-Type-4
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Report type case sensitivity
+     *
+     * Expected Result: Report type is case insensitive
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     **/
     @Test
     public void reportTypeCaseInsensitive() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -139,6 +143,19 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
         assertSimpleReportWithSignature(response, request);
     }
 
+    /**
+     * TestCaseID: Soap-Hashcode-Validation-Report-Type-5
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Report type is invalid
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     **/
     @Test
     public void reportTypeInvalid() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -149,6 +166,69 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
                 "Unmarshalling Error: cvc-enumeration-valid: Value 'INVALID_REPORT_TYPE' is not facet-valid with respect to enumeration '[SIMPLE, DETAILED]'. It must be a value from the enumeration. ");
     }
 
+    /**
+     * TestCaseID: Soap-Hashcode-Validation-Policy-1
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Signature policy POLv3
+     *
+     * Expected Result: Correct policy is returned
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     **/
+    @Test
+    public void signaturePolicyPOLv3() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setSignaturePolicy(VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_1);
+
+        ValidatableResponse response = postHashcodeValidation(request)
+                .then()
+                .body(VALIDATION_CONCLUSION_PREFIX + "Policy.PolicyName", equalTo(VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_1));
+
+        assertSimpleReportWithSignature(response, request);
+    }
+
+    /**
+     * TestCaseID: Soap-Hashcode-Validation-Policy-2
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Signature policy POLv4
+     *
+     * Expected Result: Correct policy is returned
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     **/
+    @Test
+    public void signaturePolicyPOLv4() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setSignaturePolicy(VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2);
+
+        ValidatableResponse response = postHashcodeValidation(request)
+                .then()
+                .body(VALIDATION_CONCLUSION_PREFIX + "Policy.PolicyName", equalTo(VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2));
+
+        assertSimpleReportWithSignature(response, request);
+    }
+
+    /**
+     * TestCaseID: Soap-Hashcode-Validation-Policy-3
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Default policy
+     *
+     * Expected Result: POLv4 is returned
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     **/
     @Test
     public void signaturePolicyMissing_defaultsToPOLv4() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -160,6 +240,19 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
         assertSimpleReportWithSignature(response, request);
     }
 
+    /**
+     * TestCaseID: Soap-Hashcode-Validation-Policy-4
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Invalid policy asked
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     **/
     @Test
     public void signaturePolicyInvalid() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -170,6 +263,19 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
                 "Invalid signature policy: " + request.getSignaturePolicy() + "; Available abstractPolicies: [POLv3, POLv4]");
     }
 
+    /**
+     * TestCaseID: Soap-Hashcode-Validation-Policy-5
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Invalid policy format
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     **/
     @Test
     public void signaturePolicyInvalidFormat() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -180,6 +286,19 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
                 "Unmarshalling Error: cvc-pattern-valid: Value 'POLv2.*' is not facet-valid with respect to pattern '[A-Za-z0-9_ -]*' for type 'SignaturePolicy'. ");
     }
 
+    /**
+     * TestCaseID: Soap-Hashcode-Validation-Policy-6
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Too long policy
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     **/
     @Test
     public void signaturePolicyTooLong() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -190,6 +309,132 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
                 "Unmarshalling Error: cvc-maxLength-valid: Value 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' with length = '101' is not facet-valid with respect to maxLength '100' for type 'SignaturePolicy'. ");
     }
 
+    /**
+     * TestCaseID: Soap-Hashcode-ValidationRequest-Signature-1
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Signature file missing
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     */
+    @Test
+    public void signatureFilesMissing() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setSignatureFiles(null);
+
+        ValidatableResponse response = postHashcodeValidation(request).then();
+        assertClientFault(response, "Unmarshalling Error: cvc-complex-type.2.4.a: Invalid content was found starting with element 'ReportType'. One of '{SignatureFiles}' is expected. ");
+    }
+
+    /**
+     * TestCaseID: Soap-Hashcode-ValidationRequest-Signature-2
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Signature file empty
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     */
+    @Test
+    public void signatureFilesEmpty() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setSignatureFiles(new ArrayList<>());
+
+        ValidatableResponse response = postHashcodeValidation(request).then();
+        assertClientFault(response, "Unmarshalling Error: cvc-complex-type.2.4.b: The content of element 'SignatureFiles' is not complete. One of '{SignatureFile}' is expected. ");
+    }
+
+    /**
+     * TestCaseID: Soap-Hashcode-ValidationRequest-Signature-3
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Signature file not Base64
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     */
+    @Test
+    public void signatureNotBase64Encoded() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+
+        request.getSignatureFiles().get(0).setSignature("NOT.BASE64.ENCODED.VALUE");
+
+        ValidatableResponse response = postHashcodeValidation(request).then();
+        assertClientFault(response, SIGNATURE_FILE_NOT_BASE64_ENCODED);
+    }
+
+    /**
+     * TestCaseID: Soap-Hashcode-ValidationRequest-Signature-4
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Signature file without signature
+     *
+     * Expected Result: Report without signature is returned
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     */
+    @Test
+    public void signatureContentWithoutSignature() {
+        String randomXmlFileWithoutSignature = "PD94bWwgdmVyc2lvbj0nMS4wJyAgZW5jb2Rpbmc9J1VURi04JyA/Pg0KPHRlc3Q+DQoJPGRhdGE+DQoJCTxzb21ldGhpbmc+c29tZSBkYXRhPC9zb21ldGhpbmc+DQoJPC9kYXRhPg0KPC90ZXN0Pg0K";
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.getSignatureFiles().get(0).setSignature(randomXmlFileWithoutSignature);
+
+        ValidatableResponse response = postHashcodeValidation(request).then();
+        assertSimpleReportWithoutSignature(response, request);
+    }
+
+    /**
+     * TestCaseID: Soap-Hashcode-ValidationRequest-Signature-5
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Signature file not XML
+     *
+     * Expected Result: Report without signature is returned
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     */
+    @Test
+    public void signatureContentNotXML() {
+        String notXmlFormattedContent = Base64.encodeBase64String("NOT_XML_FORMATTED_FILE_CONTENT".getBytes(StandardCharsets.UTF_8));
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.getSignatureFiles().get(0).setSignature(notXmlFormattedContent);
+
+        ValidatableResponse response = postHashcodeValidation(request).then();
+        assertClientFault(response, SIGNATURE_FILE_MALFORMED);
+    }
+
+    /**
+     * TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-1
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Request without datafiles
+     *
+     * Expected Result: Validation report is returned
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     */
     @Test
     public void dataFilesMissing() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -199,6 +444,19 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
         assertSimpleReportWithSignature(response, request);
     }
 
+    /**
+     * TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-2
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Request with empty data files
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     */
     @Test
     public void dataFilesEmpty() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -209,6 +467,19 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
                 "Unmarshalling Error: cvc-complex-type.2.4.b: The content of element 'DataFiles' is not complete. One of '{DataFile}' is expected. ");
     }
 
+    /**
+     * TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-3
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Request without datafile filename
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     */
     @Test
     public void dataFileFilenameMissing() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -219,6 +490,19 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
                 "Unmarshalling Error: cvc-complex-type.2.4.a: Invalid content was found starting with element 'HashAlgo'. One of '{Filename}' is expected. ");
     }
 
+    /**
+     * TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-4
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Request with empty filename
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     */
     @Test
     public void dataFileFilenameEmpty() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -229,6 +513,19 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
                 "Invalid datafile filename format");
     }
 
+    /**
+     * TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-5
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Request without datafile filename
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     */
     @Test
     public void dataFileFilenameEmptyWhitespace() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -239,6 +536,19 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
                 "Invalid datafile filename format");
     }
 
+    /**
+     * TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-6
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Request with too long datafile name
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     */
     @Test
     public void dataFileFilenameTooLong() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -249,6 +559,19 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
                 "Unmarshalling Error: cvc-maxLength-valid: Value 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' with length = '261' is not facet-valid with respect to maxLength '260' for type 'Filename'. ");
     }
 
+    /**
+     * TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-7
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Request with invalid hash algorithm
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     */
     @Test
     public void dataFileHashAlgorithmInvalid() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -259,15 +582,41 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
                 "Unmarshalling Error: cvc-enumeration-valid: Value 'INVALID_HASH_ALGORITHM' is not facet-valid with respect to enumeration '[SHA1, SHA224, SHA256, SHA384, SHA512, RIPEMD160, MD2, MD5]'. It must be a value from the enumeration. ");
     }
 
+    /**
+     * TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-8
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Hash algo small case
+     *
+     * Expected Result: Report is returned
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     */
     @Test
     public void dataFileHashAlgorithmCaseInsensitive() {
         JSONHashcodeValidationRequest request = validRequestBody();
-        request.getSignatureFiles().get(0).getDatafiles().get(0).setHashAlgo(HASH_ALGO_SHA256);
+        request.getSignatureFiles().get(0).getDatafiles().get(0).setHashAlgo("sha256");
 
         ValidatableResponse response = postHashcodeValidation(request).then();
         assertSimpleReportWithSignature(response, request);
     }
 
+    /**
+     * TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-9
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Hash algo mismatch
+     *
+     * Expected Result: Report with invalid signature
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     */
     @Test
     public void dataFileHashAlgorithmDoesNotMatchWithSignatureDataFileHashAlgorithm() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -278,6 +627,19 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
         assertSignatureDataNotFound(response);
     }
 
+    /**
+     * TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-10
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Datafile hash missing
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     */
     @Test
     public void dataFileHashMissing() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -288,6 +650,19 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
                 "Unmarshalling Error: cvc-complex-type.2.4.b: The content of element 'DataFile' is not complete. One of '{Hash}' is expected. ");
     }
 
+    /**
+     * TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-11
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Data file hash empty
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     */
     @Test
     public void dataFileHashEmpty() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -298,6 +673,19 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
                 "Unmarshalling Error: cvc-pattern-valid: Value '' is not facet-valid with respect to pattern '\\S+' for type 'NotEmptyString'. ");
     }
 
+    /**
+     * TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-12
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Datafile hash not Base64
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     */
     @Test
     public void dataFileHashNotBase64Encoded() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -307,6 +695,19 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
         assertClientFault(response, INVALID_BASE_64);
     }
 
+    /**
+     * TestCaseID: Soap-Hashcode-ValidationRequest-1
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Multiple data files
+     *
+     * Expected Result: Report is returned with signature statuses
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     */
     @Test
     public void multipleDataFiles_firstDataFileIncorrect_secondDataFileCorrect() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -330,6 +731,19 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
         assertSimpleReportWithSignature(response, request);
     }
 
+    /**
+     * TestCaseID: Soap-Hashcode-ValidationRequest-2
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Wrong hash
+     *
+     * Expected Result: Report is returned with invalid signature
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     */
     @Test
     public void dataFileHashDoesNotMatchWithSignatureFile_totalFailedHashFailure() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -340,6 +754,19 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
         assertSignatureHashFailure(response);
     }
 
+    /**
+     * TestCaseID: Soap-Hashcode-ValidationRequest-3
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Wrong data file name
+     *
+     * Expected Result: Report is returned with signature statuses
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     */
     @Test
     public void dataFileHashCorrectButFilenameDoesNotMatchWithSignatureFile() {
         JSONHashcodeValidationRequest request = validRequestBody();
@@ -350,6 +777,19 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
         assertSignatureDataNotFound(response);
     }
 
+    /**
+     * TestCaseID: Soap-Hashcode-ValidationRequest-4
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Empty request body
+     *
+     * Expected Result: Report is returned with signature statuses
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     */
     @Test
     public void validationRequestBodyEmpty() {
         String emptyRequestBody =
@@ -407,64 +847,64 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
     }
 
     private void assertSignatureTotalPassed(ValidatableResponse response) {
-        response
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.children().size()", is(1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].Id", is(TestData.MOCK_XADES_SIGNATURE_ID))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignatureFormat", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_FORMAT_XADES_LT))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignatureLevel", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_QESIG))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignedBy", is(TestData.MOCK_XADES_SIGNATURE_SIGNER))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].Indication", is(TestData.VALID_INDICATION_TOTAL_PASSED))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignatureScopes.children().size()", is(1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignatureScopes.SignatureScope[0].Name", is(TestData.MOCK_XADES_DATAFILE_FILENAME))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignatureScopes.SignatureScope[0].Scope", is(TestData.VALID_SIGNATURE_SCOPE_VALUE_1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignatureScopes.SignatureScope[0].Content", is(TestData.VALID_SIGNATURE_SCOPE_CONTENT_1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].ClaimedSigningTime", is(TestData.MOCK_XADES_SIGNATURE_CLAIMED_SIGNING_TIME))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].Info.BestSignatureTime", is(TestData.MOCK_XADES_SIGNATURE_BEST_SIGNATURE_TIME))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].Errors", isEmptyOrNullString())
-                .body(VALIDATION_CONCLUSION_PREFIX + "ValidSignaturesCount", is("1"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "SignaturesCount", is("1"));
+        response.root(VALIDATION_CONCLUSION_PREFIX)
+                .body("Signatures.children().size()", is(1))
+                .body("Signatures.Signature[0].Id", is(TestData.MOCK_XADES_SIGNATURE_ID))
+                .body("Signatures.Signature[0].SignatureFormat", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_FORMAT_XADES_LT))
+                .body("Signatures.Signature[0].SignatureLevel", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_QESIG))
+                .body("Signatures.Signature[0].SignedBy", is(TestData.MOCK_XADES_SIGNATURE_SIGNER))
+                .body("Signatures.Signature[0].Indication", is(TestData.VALID_INDICATION_TOTAL_PASSED))
+                .body("Signatures.Signature[0].SignatureScopes.children().size()", is(1))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Name", is(TestData.MOCK_XADES_DATAFILE_FILENAME))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Scope", is(TestData.VALID_SIGNATURE_SCOPE_VALUE_1))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Content", is(TestData.VALID_SIGNATURE_SCOPE_CONTENT_1))
+                .body("Signatures.Signature[0].ClaimedSigningTime", is(TestData.MOCK_XADES_SIGNATURE_CLAIMED_SIGNING_TIME))
+                .body("Signatures.Signature[0].Info.BestSignatureTime", is(TestData.MOCK_XADES_SIGNATURE_BEST_SIGNATURE_TIME))
+                .body("Signatures.Signature[0].Errors", isEmptyOrNullString())
+                .body("ValidSignaturesCount", is("1"))
+                .body("SignaturesCount", is("1"));
     }
 
     private void assertSignatureDataNotFound(ValidatableResponse response) {
-        response
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.children().size()", is(1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].Id", is(TestData.MOCK_XADES_SIGNATURE_ID))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignatureFormat", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_FORMAT_XADES_LT))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignatureLevel", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_INDETERMINATE_QESIG))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignedBy", is(TestData.MOCK_XADES_SIGNATURE_SIGNER))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].Indication", is(TestData.VALID_INDICATION_VALUE_INDETERMINATE))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SubIndication", is(TestData.SUB_INDICATION_SIGNED_DATA_NOT_FOUND))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignatureScopes.children().size()", is(1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignatureScopes.SignatureScope[0].Name", is(TestData.MOCK_XADES_DATAFILE_FILENAME))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignatureScopes.SignatureScope[0].Scope", is(TestData.VALID_SIGNATURE_SCOPE_VALUE_1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignatureScopes.SignatureScope[0].Content", is(TestData.VALID_SIGNATURE_SCOPE_CONTENT_1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].ClaimedSigningTime", is(TestData.MOCK_XADES_SIGNATURE_CLAIMED_SIGNING_TIME))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].Info.BestSignatureTime", is(TestData.MOCK_XADES_SIGNATURE_BEST_SIGNATURE_TIME))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].Errors.children().size()", is(1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].Errors.Error[0].Content" , is("The reference data object(s) is not found!"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "ValidSignaturesCount", is("0"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "SignaturesCount", is("1"));
+        response.root(VALIDATION_CONCLUSION_PREFIX)
+                .body("Signatures.children().size()", is(1))
+                .body("Signatures.Signature[0].Id", is(TestData.MOCK_XADES_SIGNATURE_ID))
+                .body("Signatures.Signature[0].SignatureFormat", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_FORMAT_XADES_LT))
+                .body("Signatures.Signature[0].SignatureLevel", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_INDETERMINATE_QESIG))
+                .body("Signatures.Signature[0].SignedBy", is(TestData.MOCK_XADES_SIGNATURE_SIGNER))
+                .body("Signatures.Signature[0].Indication", is(TestData.VALID_INDICATION_VALUE_INDETERMINATE))
+                .body("Signatures.Signature[0].SubIndication", is(TestData.SUB_INDICATION_SIGNED_DATA_NOT_FOUND))
+                .body("Signatures.Signature[0].SignatureScopes.children().size()", is(1))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Name", is(TestData.MOCK_XADES_DATAFILE_FILENAME))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Scope", is(TestData.VALID_SIGNATURE_SCOPE_VALUE_1))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Content", is(TestData.VALID_SIGNATURE_SCOPE_CONTENT_1))
+                .body("Signatures.Signature[0].ClaimedSigningTime", is(TestData.MOCK_XADES_SIGNATURE_CLAIMED_SIGNING_TIME))
+                .body("Signatures.Signature[0].Info.BestSignatureTime", is(TestData.MOCK_XADES_SIGNATURE_BEST_SIGNATURE_TIME))
+                .body("Signatures.Signature[0].Errors.children().size()", is(1))
+                .body("Signatures.Signature[0].Errors.Error[0].Content" , is("The reference data object(s) is not found!"))
+                .body("ValidSignaturesCount", is("0"))
+                .body("SignaturesCount", is("1"));
     }
 
     private void assertSignatureHashFailure(ValidatableResponse response) {
-        response
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.children().size()", is(1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].Id", is(TestData.MOCK_XADES_SIGNATURE_ID))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignatureFormat", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_FORMAT_XADES_LT))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignatureLevel", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_NOT_ADES_QC_QSCD))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignedBy", is(TestData.MOCK_XADES_SIGNATURE_SIGNER))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].Indication", is(TestData.VALID_INDICATION_TOTAL_FAILED))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SubIndication", is(TestData.SUB_INDICATION_HASH_FAILURE))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignatureScopes.children().size()", is(1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignatureScopes.SignatureScope[0].Name", is(TestData.MOCK_XADES_DATAFILE_FILENAME))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignatureScopes.SignatureScope[0].Scope", is(TestData.VALID_SIGNATURE_SCOPE_VALUE_1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].SignatureScopes.SignatureScope[0].Content", is(TestData.VALID_SIGNATURE_SCOPE_CONTENT_1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].ClaimedSigningTime", is(TestData.MOCK_XADES_SIGNATURE_CLAIMED_SIGNING_TIME))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].Info.BestSignatureTime", is(TestData.MOCK_XADES_SIGNATURE_BEST_SIGNATURE_TIME))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].Errors.children().size()", is(1))
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures.Signature[0].Errors.Error[0].Content" , is("The reference data object(s) is not intact!"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "ValidSignaturesCount", is("0"))
-                .body(VALIDATION_CONCLUSION_PREFIX + "SignaturesCount", is("1"));
+        response.root(VALIDATION_CONCLUSION_PREFIX)
+                .body("Signatures.children().size()", is(1))
+                .body("Signatures.Signature[0].Id", is(TestData.MOCK_XADES_SIGNATURE_ID))
+                .body("Signatures.Signature[0].SignatureFormat", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_FORMAT_XADES_LT))
+                .body("Signatures.Signature[0].SignatureLevel", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_NOT_ADES_QC_QSCD))
+                .body("Signatures.Signature[0].SignedBy", is(TestData.MOCK_XADES_SIGNATURE_SIGNER))
+                .body("Signatures.Signature[0].Indication", is(TestData.VALID_INDICATION_TOTAL_FAILED))
+                .body("Signatures.Signature[0].SubIndication", is(TestData.SUB_INDICATION_HASH_FAILURE))
+                .body("Signatures.Signature[0].SignatureScopes.children().size()", is(1))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Name", is(TestData.MOCK_XADES_DATAFILE_FILENAME))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Scope", is(TestData.VALID_SIGNATURE_SCOPE_VALUE_1))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Content", is(TestData.VALID_SIGNATURE_SCOPE_CONTENT_1))
+                .body("Signatures.Signature[0].ClaimedSigningTime", is(TestData.MOCK_XADES_SIGNATURE_CLAIMED_SIGNING_TIME))
+                .body("Signatures.Signature[0].Info.BestSignatureTime", is(TestData.MOCK_XADES_SIGNATURE_BEST_SIGNATURE_TIME))
+                .body("Signatures.Signature[0].Errors.children().size()", is(1))
+                .body("Signatures.Signature[0].Errors.Error[0].Content" , is("The reference data object(s) is not intact!"))
+                .body("ValidSignaturesCount", is("0"))
+                .body("SignaturesCount", is("1"));
     }
 
     private void assertClientFault(ValidatableResponse response, String errorMessage) {

@@ -28,6 +28,7 @@ import ee.openeid.siva.webapp.soap.ReportType;
 import io.restassured.response.ValidatableResponse;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -805,6 +806,106 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
                 .body("Envelope.Body.Fault.faultstring", is("No binding operation info while invoking unknown method with params unknown."));
     }
 
+    /**
+     * TestCaseID: Xades-Hashcode-Validation-Special-1
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4
+     *
+     * Title: Datafile has + in name
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: test+document.xml
+     */
+    @Test
+    public void validXadesWithPlusInDataFileName() {
+        postHashcodeValidation(createXMLHashcodeValidationRequestSimple("test+document.xml"))
+                .then()
+                .root(VALIDATION_CONCLUSION_PREFIX)
+                .body("Signatures.Signature[0].SignatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
+                .body("Signatures.Signature[0].Info.BestSignatureTime", Matchers.is("2019-02-05T12:43:15Z"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Name", Matchers.is("test+document.txt"))
+                .body("ValidSignaturesCount", is("1"));
+    }
+
+    /**
+     * TestCaseID: Xades-Hashcode-Validation-Special-2
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4
+     *
+     * Title: Datafile has space in name
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: spacesInDataFile.xml
+     */
+    @Test
+    public void validXadesWithSpaceInDataFileName() {
+        postHashcodeValidation(createXMLHashcodeValidationRequestSimple("spacesInDataFile.xml"))
+                .then()
+                .root(VALIDATION_CONCLUSION_PREFIX)
+                .body("Signatures.Signature[0].SignatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
+                .body("Signatures.Signature[0].Info.BestSignatureTime", Matchers.is("2019-02-05T13:22:04Z"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Name", Matchers.is("Te st in g.txt"))
+                .body("ValidSignaturesCount", is("1"));
+    }
+
+    /**
+     * TestCaseID: Xades-Hashcode-Validation-Special-3
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4
+     *
+     * Title: Datafile has + in name with full API request
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: test+document.xml
+     */
+    @Test
+    public void datafileWithPlusInFilenameRequestedThrougApi() {
+        postHashcodeValidation(createXMLHashcodeValidationRequest(validRequestBody("test+document.xml", HASH_ALGO_SHA256, "test+document.txt", "heKN3NGQ0HttzgmfKG0L243dfG7W+6kTMO5n7YbKeS4=")))
+                .then()
+                .root(VALIDATION_CONCLUSION_PREFIX)
+                .body("Signatures.Signature[0].SignatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
+                .body("Signatures.Signature[0].Info.BestSignatureTime", Matchers.is("2019-02-05T12:43:15Z"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Name", Matchers.is("test+document.txt"))
+                .body("ValidSignaturesCount", is("1"));
+    }
+
+    /**
+     * TestCaseID: Xades-Hashcode-Validation-Special-2
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4
+     *
+     * Title: Datafile has space in name with full API request
+     *
+     * Expected Result: The document should pass the validation
+     *
+     * File: spacesInDataFile.xml
+     */
+    @Test
+    public void datafileWithSpaceInFilenameRequestedThroughApi() {
+        postHashcodeValidation(createXMLHashcodeValidationRequest(validRequestBody("spacesInDataFile.xml", HASH_ALGO_SHA256, "Te st in g.txt", "5UxI8Rm1jUZm48+Vkdutyrsyr3L/MPu/RK1V81AeKEY=")))
+                .then()
+                .root(VALIDATION_CONCLUSION_PREFIX)
+                .body("Signatures.Signature[0].SignatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
+                .body("Signatures.Signature[0].Info.BestSignatureTime", Matchers.is("2019-02-05T13:22:04Z"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Name", Matchers.is("Te st in g.txt"))
+                .body("ValidSignaturesCount", is("1"));
+    }
+
     private void assertSimpleReportWithSignature(ValidatableResponse response, JSONHashcodeValidationRequest request) {
         assertValidationConclusion(response, request);
         assertSignatureTotalPassed(response);
@@ -927,6 +1028,24 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
         SignatureFile signatureFile = new SignatureFile();
         signatureFile.setDatafiles(Collections.singletonList(datafile));
         signatureFile.setSignature(Base64.encodeBase64String(readFileFromTestResources(TestData.MOCK_XADES_SIGNATURE_FILE)));
+        request.setSignatureFiles(Collections.singletonList(signatureFile));
+
+        return request;
+    }
+
+    private JSONHashcodeValidationRequest validRequestBody(String signatureFileName, String hashAlgo, String datafileName, String datafileHash) {
+        JSONHashcodeValidationRequest request = new JSONHashcodeValidationRequest();
+
+        Datafile datafile = new Datafile();
+        datafile.setHash(datafileHash);
+        datafile.setHashAlgo(hashAlgo);
+        datafile.setFilename(datafileName);
+
+        request.setReportType(ReportType.SIMPLE.value());
+        request.setSignaturePolicy(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_1);
+        SignatureFile signatureFile = new SignatureFile();
+        signatureFile.setDatafiles(Collections.singletonList(datafile));
+        signatureFile.setSignature(Base64.encodeBase64String(readFileFromTestResources(signatureFileName)));
         request.setSignatureFiles(Collections.singletonList(signatureFile));
 
         return request;

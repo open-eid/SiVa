@@ -17,6 +17,7 @@
 package ee.openeid.siva.soaptest;
 
 import ee.openeid.siva.integrationtest.SiVaIntegrationTestsBase;
+import ee.openeid.siva.integrationtest.TestData;
 import ee.openeid.siva.webapp.request.Datafile;
 import ee.openeid.siva.webapp.request.JSONHashcodeValidationRequest;
 import ee.openeid.siva.webapp.request.SignatureFile;
@@ -203,6 +204,24 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
                 "           " + formSignatureFilesBlock(request.getSignatureFiles()) +
                 "           " + addParameter("ReportType", request.getReportType()) +
                 "           " + addParameter("SignaturePolicy", request.getSignaturePolicy()) +
+                "         </soap:HashcodeValidationRequest>\n" +
+                "      </soap:HashcodeValidationDocument>\n" +
+                "   </soapenv:Body>\n" +
+                "</soapenv:Envelope>";
+    }
+
+    protected String createXMLHashcodeValidationRequestSimple(String signatureXml) {
+        JSONHashcodeValidationRequest request = new JSONHashcodeValidationRequest();
+        SignatureFile signatureFile = new SignatureFile();
+        signatureFile.setSignature(Base64.encodeBase64String(readFileFromTestResources(signatureXml)));
+        request.setSignatureFiles(Collections.singletonList(signatureFile));
+
+        return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
+                "   <soapenv:Header/>\n" +
+                "   <soapenv:Body>\n" +
+                "      <soap:HashcodeValidationDocument>\n" +
+                "         <soap:HashcodeValidationRequest>\n" +
+                "           " + formSignatureFilesBlock(request.getSignatureFiles()) +
                 "         </soap:HashcodeValidationRequest>\n" +
                 "      </soap:HashcodeValidationDocument>\n" +
                 "   </soapenv:Body>\n" +

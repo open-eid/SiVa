@@ -842,11 +842,11 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * Expected Result: The document should pass the validation
      *
-     * File: spacesInDataFile.xml
+     * File: spacesInDatafile.xml
      */
     @Test
     public void validXadesWithSpaceInDataFileName() {
-        postHashcodeValidation(createXMLHashcodeValidationRequestSimple("spacesInDataFile.xml"))
+        postHashcodeValidation(createXMLHashcodeValidationRequestSimple("spacesInDatafile.xml"))
                 .then()
                 .root(VALIDATION_CONCLUSION_PREFIX)
                 .body("Signatures.Signature[0].SignatureFormat", Matchers.is("XAdES_BASELINE_LT"))
@@ -882,7 +882,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
     }
 
     /**
-     * TestCaseID: Xades-Hashcode-Validation-Special-2
+     * TestCaseID: Xades-Hashcode-Validation-Special-4
      *
      * TestType: Automated
      *
@@ -892,11 +892,11 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * Expected Result: The document should pass the validation
      *
-     * File: spacesInDataFile.xml
+     * File: spacesInDatafile.xml
      */
     @Test
     public void datafileWithSpaceInFilenameRequestedThroughApi() {
-        postHashcodeValidation(createXMLHashcodeValidationRequest(validRequestBody("spacesInDataFile.xml", HASH_ALGO_SHA256, "Te st in g.txt", "5UxI8Rm1jUZm48+Vkdutyrsyr3L/MPu/RK1V81AeKEY=")))
+        postHashcodeValidation(createXMLHashcodeValidationRequest(validRequestBody("spacesInDatafile.xml", HASH_ALGO_SHA256, "Te st in g.txt", "5UxI8Rm1jUZm48+Vkdutyrsyr3L/MPu/RK1V81AeKEY=")))
                 .then()
                 .root(VALIDATION_CONCLUSION_PREFIX)
                 .body("Signatures.Signature[0].SignatureFormat", Matchers.is("XAdES_BASELINE_LT"))

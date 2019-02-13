@@ -21,6 +21,7 @@ import eu.europa.esig.dss.client.http.commons.OCSPDataLoader;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.entity.InputStreamEntity;
@@ -42,7 +43,7 @@ public class SkOcspDataLoader extends OCSPDataLoader {
         LOGGER.info("Getting OCSP response from " + url);
 
         HttpPost httpRequest = null;
-        HttpResponse httpResponse = null;
+        CloseableHttpResponse httpResponse = null;
         CloseableHttpClient client = null;
         try {
             final URI uri = URI.create(url.trim());
@@ -62,9 +63,9 @@ public class SkOcspDataLoader extends OCSPDataLoader {
             }
 
             client = getHttpClient(url);
-            httpResponse = getHttpResponse(client, httpRequest, url);
+            httpResponse = getHttpResponse(client, httpRequest);
 
-            return readHttpResponse(url, httpResponse);
+            return readHttpResponse(httpResponse);
         } catch (IOException e) {
             throw new DSSException(e);
         } finally {

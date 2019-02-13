@@ -84,17 +84,8 @@ public class PDFValidationServiceTest {
         validationService.validateDocument(new ValidationDocument());
     }
 
-    void assertNoErrorsOrWarnings(SignatureValidationData signatureValidationData) {
-        assertNoErrors(signatureValidationData);
-        assertNoWarnings(signatureValidationData);
-    }
-
-    private void assertNoErrors(SignatureValidationData signatureValidationData) {
+    void assertNoErrors(SignatureValidationData signatureValidationData) {
         assertTrue(signatureValidationData.getErrors().size() == 0);
-    }
-
-    private void assertNoWarnings(SignatureValidationData signatureValidationData) {
-        assertTrue(signatureValidationData.getWarnings().size() == 0);
     }
 
     ValidationDocument buildValidationDocument(String testFile) throws Exception {

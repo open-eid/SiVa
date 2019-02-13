@@ -55,7 +55,7 @@ public class TestData {
 
     public static final String VALID_SIGNATURE_SCOPE_CONTENT_1 = "Full document";
     public static final String VALID_SIGNATURE_SCOPE_CONTENT_2 = "The document byte range: [0, 14153, 52047, 491]";
-    public static final String VALID_SIGNATURE_SCOPE_VALUE_1 = "FullSignatureScope";
+    public static final String VALID_SIGNATURE_SCOPE_VALUE_1 = "FULL";
     public static final String VALID_SIGNATURE_SCOPE_VALUE_2 = "PdfByteRangeSignatureScope";
 
     public static final String VALID_VALIDATION_PROCESS_NAMEID_1 = "QUAL_TL_FRESH";
@@ -199,6 +199,7 @@ public class TestData {
 
     public static final String SUB_INDICATION_HASH_FAILURE = "HASH_FAILURE";
     public static final String SUB_INDICATION_SIGNED_DATA_NOT_FOUND = "SIGNED_DATA_NOT_FOUND";
+    public static final String SUB_INDICATION_SIG_CRYPTO_FAILURE = "SIG_CRYPTO_FAILURE";
 
     public static final String VALID_VALIDATION_PROCESS_SIGNATUREQUALIFICATION = "NOT_ADES_QC_QSCD";
     public static final String VALID_VALIDATION_PROCESS_SIGNATUREQUALIFICATION_2 = "QESIG";

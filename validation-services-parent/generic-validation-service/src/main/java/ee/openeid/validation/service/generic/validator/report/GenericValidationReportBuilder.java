@@ -115,7 +115,7 @@ public class GenericValidationReportBuilder {
         signatureValidationData.setErrors(parseSignatureErrors(signatureId));
         signatureValidationData.setWarnings(parseSignatureWarnings(signatureId));
         signatureValidationData.setInfo(parseSignatureInfo(signatureValidationData.getSignatureFormat(), signatureId));
-        signatureValidationData.setCountryCode(getCountryCode());
+        signatureValidationData.setCountryCode(getCountryCode(signatureId));
         signatureValidationData.setIndication(parseIndication(signatureId, signatureValidationData.getErrors()));
         signatureValidationData.setSubIndication(parseSubIndication(signatureId, signatureValidationData.getErrors()));
 
@@ -197,7 +197,8 @@ public class GenericValidationReportBuilder {
         SignatureScope signatureScope = new SignatureScope();
         signatureScope.setContent(emptyWhenNull(dssSignatureScope.getValue()));
         signatureScope.setName(emptyWhenNull(dssSignatureScope.getName()));
-        signatureScope.setScope(emptyWhenNull(dssSignatureScope.getScope()));
+        if (dssSignatureScope.getScope() != null)
+            signatureScope.setScope(emptyWhenNull(dssSignatureScope.getScope().name()));
         if (CollectionUtils.isNotEmpty(validationDocument.getDatafiles())) {
             Optional<Datafile> dataFile = validationDocument.getDatafiles()
                     .stream()
@@ -241,8 +242,8 @@ public class GenericValidationReportBuilder {
         return emptyWhenNull(dssReports.getSimpleReport().getSignedBy(signatureId));
     }
 
-    private String getCountryCode() {
-        String signingCertId = dssReports.getDiagnosticData().getSigningCertificateId();
+    private String getCountryCode(String signatureId) {
+        String signingCertId = dssReports.getDiagnosticData().getSigningCertificateId(signatureId);
         Optional<String> countryCode = dssReports.getDiagnosticData().getUsedCertificates().stream()
                 .filter(cert -> cert.getId().equals(signingCertId))
                 .map(CertificateWrapper::getCountryName)

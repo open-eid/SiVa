@@ -19,15 +19,12 @@ package ee.openeid.tsl;
 import eu.europa.esig.dss.DSSUtils;
 import eu.europa.esig.dss.tsl.*;
 import eu.europa.esig.dss.util.TimeDependentValues;
+import eu.europa.esig.dss.validation.process.qualification.EIDASUtils;
 import eu.europa.esig.dss.x509.CertificateToken;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -35,7 +32,7 @@ import java.util.*;
 
 @Component
 @Profile("test")
-public class CustomCertificatesLoader {
+public class CustomCertificatesLoader implements CertificatesLoader{
 
     private static final String QC_WITH_QSCD = "http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/QCWithQSCD";
     private static final String QC_STATEMENT = "http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/QCStatement";
@@ -43,18 +40,9 @@ public class CustomCertificatesLoader {
 
     private static final String CA_QC = "http://uri.etsi.org/TrstSvc/Svctype/CA/QC";
     private static final String OCSP_QC = "http://uri.etsi.org/TrstSvc/Svctype/Certstatus/OCSP/QC";
-    private static final String UNDER_SUPERVISION = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/undersupervision";
-    private static final String GRANTED = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/granted";
     private static final Logger LOGGER = LoggerFactory.getLogger(TSLLoader.class);
 
-    private TrustedListsCertificateSource trustedListSource;
-
-    @PostConstruct
-    public void init() {
-        loadEstonianTestCertificates(trustedListSource);
-    }
-
-    private void loadEstonianTestCertificates(TrustedListsCertificateSource tlCertSource) {
+    public void loadExtraCertificates(TrustedListsCertificateSource tlCertSource) {
         LOGGER.info("Loading Estonian Test Certificates");
         CertificateToken certToken;
 
@@ -187,7 +175,7 @@ public class CustomCertificatesLoader {
 
         // TEST of ESTEID-SK 2015
         certToken = DSSUtils.loadCertificateFromBase64EncodedString(
-                        "MIIGgzCCBWugAwIBAgIQEDb9gCZi4PdWc7IoNVIbsTANBgkqhkiG9w0BAQwFADB9\n" +
+                "MIIGgzCCBWugAwIBAgIQEDb9gCZi4PdWc7IoNVIbsTANBgkqhkiG9w0BAQwFADB9\n" +
                         "MQswCQYDVQQGEwJFRTEiMCAGA1UECgwZQVMgU2VydGlmaXRzZWVyaW1pc2tlc2t1\n" +
                         "czEwMC4GA1UEAwwnVEVTVCBvZiBFRSBDZXJ0aWZpY2F0aW9uIENlbnRyZSBSb290\n" +
                         "IENBMRgwFgYJKoZIhvcNAQkBFglwa2lAc2suZWUwIBcNMTUxMjE4MDcxMzQ0WhgP\n" +
@@ -257,7 +245,7 @@ public class CustomCertificatesLoader {
                         "26x1lOcCk0KRBr/mBk9gaC0TxmYhuum99V5+fM5sJ6WwFRS1ruLyt1piQiATIRVe\n" +
                         "pcPZlmxrjmZcfQ+dp1jWj3cS7pJ9mCZsr5H74U3K");
 
-        tlCertSource.addCertificate(certToken, getCAServiceInfo(UNDER_SUPERVISION, certToken, "Nortal NQSK16 Test Cert Signing"));
+        tlCertSource.addCertificate(certToken, getCAServiceInfo(certToken, "Nortal NQSK16 Test Cert Signing"));
 
         // TEST of KLASS3-SK 2010
         certToken = DSSUtils.loadCertificateFromBase64EncodedString(
@@ -447,30 +435,32 @@ public class CustomCertificatesLoader {
                         "B7TYeIrgMTT01SNXY0cC+cWAqHot6NWZQtKOGwu8TlqTjkZd7E0sq3a6QWBb5/22" +
                         "0xDd5B09RzzLbIhKS/PKsdVR/UQNdYOhQ/H3kBRCJeMENNRi2iuUtw2SAyRBwHY=");
 
-        tlCertSource.addCertificate(certToken, getCAServiceInfo(UNDER_SUPERVISION, certToken, "Management CA"));
+        tlCertSource.addCertificate(certToken, getCAServiceInfo(certToken, "Management CA"));
 
         LOGGER.info("Finished Loading Estonian Test Certificates");
     }
 
-    private ServiceInfo getCAServiceInfo(String status , CertificateToken certToken, String serviceName) {
+    private List<ServiceInfo> getCAServiceInfo(CertificateToken certToken, String serviceName) {
         ServiceInfo serviceInfo = new ServiceInfo();
-        Map<String, List<Condition>> qualifiersAndConditions = new HashMap<>();
-        serviceInfo.setStatus(getServiceInfoStatuses(status, certToken, CA_QC, qualifiersAndConditions));
 
-        serviceInfo.setServiceName(serviceName);
-        return serviceInfo;
+        Map<String, List<Condition>> qualifiersAndConditions = new HashMap<>();
+        serviceInfo.setStatus(getServiceInfoStatuses(serviceName, certToken, CA_QC, qualifiersAndConditions));
+        serviceInfo.setTlCountryCode("EU");
+        serviceInfo.setTspName(serviceName);
+        return Collections.singletonList(serviceInfo);
     }
 
-    private ServiceInfo getCAServiceInfoWithQcConditions(CertificateToken certToken, String serviceName) {
+    private List<ServiceInfo> getCAServiceInfoWithQcConditions(CertificateToken certToken, String serviceName) {
         ServiceInfo serviceInfo = new ServiceInfo();
-        serviceInfo.setServiceName(serviceName);
+        serviceInfo.setTspName(serviceName);
+        serviceInfo.setTlCountryCode("EU");
         Map<String, List<Condition>> qualifiersAndConditions = new HashMap<>();
         qualifiersAndConditions.put(QC_WITH_QSCD, Collections.singletonList(createDigitalSignatureOrNonRepudiationListCondition()));
         qualifiersAndConditions.put(QC_STATEMENT, Collections.singletonList(createNonRepudiationCriteriaListCondition()));
         qualifiersAndConditions.put(QC_FOR_ESIG, Collections.singletonList(createNonRepudiationCriteriaListCondition()));
-        serviceInfo.setStatus(getServiceInfoStatuses(UNDER_SUPERVISION, certToken, CA_QC, qualifiersAndConditions));
+        serviceInfo.setStatus(getServiceInfoStatuses(serviceName, certToken, CA_QC, qualifiersAndConditions));
 
-        return serviceInfo;
+        return Collections.singletonList(serviceInfo);
     }
 
     private CompositeCondition createNonRepudiationCriteriaListCondition() {
@@ -487,21 +477,22 @@ public class CustomCertificatesLoader {
     }
 
 
-    private ServiceInfo getOCSPServiceInfo(CertificateToken certToken) {
+    private List<ServiceInfo> getOCSPServiceInfo(CertificateToken certToken) {
         ServiceInfo serviceInfo = new ServiceInfo();
+        serviceInfo.setTlCountryCode("EU");
         Map<String, List<Condition>> qualifiersAndConditions = new HashMap<>();
-        serviceInfo.setStatus(getServiceInfoStatuses(UNDER_SUPERVISION, certToken, OCSP_QC, qualifiersAndConditions));
+        serviceInfo.setStatus(getServiceInfoStatuses("OCSP", certToken, OCSP_QC, qualifiersAndConditions));
 
-        return serviceInfo;
+        return Collections.singletonList(serviceInfo);
     }
 
-    private TimeDependentValues<ServiceInfoStatus> getServiceInfoStatuses(String status, CertificateToken certToken, String type, Map<String, List<Condition>> qualifiersAndConditions) {
-        return new TimeDependentValues(Collections.singletonList(createUnderSupervisionStatus(status, certToken, type, qualifiersAndConditions)));
+    private TimeDependentValues<ServiceInfoStatus> getServiceInfoStatuses(String serviceName, CertificateToken certToken, String type, Map<String, List<Condition>> qualifiersAndConditions) {
+        return new TimeDependentValues(Collections.singletonList(createServiceStatus(serviceName, certToken, type, qualifiersAndConditions)));
     }
 
-    private Date getServiceInfoStartDate(){
+    private Date getServiceInfoStartDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        String dateInString = "31-08-2013";
+        String dateInString = "31-08-2011";
 
         try {
             return sdf.parse(dateInString);
@@ -509,14 +500,18 @@ public class CustomCertificatesLoader {
             throw new RuntimeException(e);
         }
     }
-    private ServiceInfoStatus createUnderSupervisionStatus(String status, CertificateToken certToken, String type, Map<String, List<Condition>> qualifiersAndConditions) {
+
+    private ServiceInfoStatus createServiceStatus(String serviceName, CertificateToken certToken, String type, Map<String, List<Condition>> qualifiersAndConditions) {
         Date startDate = getServiceInfoStartDate();
-        return new ServiceInfoStatus(type, status, qualifiersAndConditions, null, null, certToken.getCertificate().getNotBefore(), startDate, null);
+        return new ServiceInfoStatus(serviceName, type, getStatus(startDate), qualifiersAndConditions, Arrays.asList("http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/ForeSignatures"), null, certToken.getCertificate().getNotBefore(), startDate, null);
     }
 
-    @Autowired
-    public void setTrustedListsCertificateSource(TrustedListsCertificateSource trustedListSource) {
-        this.trustedListSource = trustedListSource;
+    private String getStatus(Date startDate) {
+        if (EIDASUtils.isPostEIDAS(startDate)) {
+            return "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/granted";
+        } else {
+            return "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/undersupervision";
+        }
     }
 
 }

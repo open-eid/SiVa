@@ -22,8 +22,9 @@ import eu.europa.esig.dss.x509.ocsp.OCSPToken;
 
 public class AlwaysFailingOCSPSource implements OCSPSource {
 
+
     @Override
-    public OCSPToken getOCSPToken(CertificateToken certificateToken, CertificateToken issuerCertificateToken) {
+    public OCSPToken getRevocationToken(CertificateToken certificateToken, CertificateToken issuerCertificateToken) {
         return null;
     }
 }

@@ -24,6 +24,8 @@ import org.digidoc4j.TSLCertificateSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TSLUtils {
 
@@ -32,10 +34,11 @@ public class TSLUtils {
     public static TSLCertificateSource addCertificatesFromTrustedListSource(TSLCertificateSource tsl, TrustedListsCertificateSource trustedListSource) {
         trustedListSource.getCertificates().forEach(certToken -> {
             ServiceInfo serviceInfo = null;
-            if (!certToken.getAssociatedTSPS().isEmpty()) {
-                serviceInfo = (ServiceInfo) certToken.getAssociatedTSPS().toArray()[0];
+
+            if (!trustedListSource.getTrustServices(certToken).isEmpty()) {
+                serviceInfo = (ServiceInfo) trustedListSource.getTrustServices(certToken).toArray()[0];
             }
-            tsl.addCertificate(certToken, serviceInfo);
+            tsl.addCertificate(certToken, Collections.singletonList(serviceInfo));
         });
         LOGGER.debug("{} certificates added to TSL certificate source", trustedListSource.getCertificates().size());
         return tsl;

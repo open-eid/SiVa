@@ -16,14 +16,13 @@
 
 package ee.openeid.validation.service.generic;
 
-import static org.junit.Assert.*;
-
 import ee.openeid.siva.validation.document.report.*;
-
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
+
+import static org.junit.Assert.*;
 
 public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
 
@@ -87,7 +86,7 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
         SignatureScope scope = report.getValidationConclusion().getSignatures().get(0).getSignatureScopes().get(0);
 
         assertEquals("The document byte range: [0, 14153, 52047, 491]", scope.getContent());
-        assertEquals("PdfByteRangeSignatureScope", scope.getScope());
+        assertEquals("PARTIAL", scope.getScope());
         assertEquals("PDF previous version #1", scope.getName());
     }
 
@@ -95,7 +94,7 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
     public void validationResultForValidPDFShouldNotHaveErrorsOrWarnings() throws Exception {
         SimpleReport report = validationService.validateDocument(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
-        report.getValidationConclusion().getSignatures().forEach(this::assertNoErrorsOrWarnings);
+        report.getValidationConclusion().getSignatures().forEach(this::assertNoErrors);
     }
 
     @Test

@@ -26,6 +26,6 @@ public class AlwaysFailingOCSPSourceTest {
     @Test
     public void alwaysFailingOcspSourceShouldReturnNullInsteadOfOcspToken() throws Exception {
         OCSPSource ocspSource = new AlwaysFailingOCSPSource();
-        assertNull(ocspSource.getOCSPToken(null, null));
+        assertNull(ocspSource.getRevocationToken(null, null));
     }
 }

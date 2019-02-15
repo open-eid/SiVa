@@ -34,6 +34,7 @@ public class TestData {
     public static final String SIGNATURE_FORMAT_XADES_T = "XAdES_BASELINE_T";
     public static final String SIGNATURE_FORMAT_XADES_LT_TM = "XAdES_BASELINE_LT_TM";
     public static final String SIGNATURE_FORMAT_XADES_LT = "XAdES_BASELINE_LT";
+    public static final String SIGNATURE_FORMAT_XADES_LTA = "XAdES_BASELINE_LTA";
     public static final String SIGNATURE_FORMAT_SK_XML = "SK_XML_1.0";
     public static final String SIGNATURE_FORMAT_DIGIDOC_XML = "DIGIDOC_XML_1.3";
 
@@ -76,9 +77,9 @@ public class TestData {
     public static final String SUB_INDICATION_TRY_LATER = "TRY_LATER";
     public static final String SUB_INDICATION_SIGNED_DATA_NOT_FOUND = "SIGNED_DATA_NOT_FOUND";
 
-    public static final String VALID_SIGNATURE_SCOPE_CONTENT_1 = "Full document";
+    public static final String VALID_SIGNATURE_SCOPE_CONTENT_FULL = "Full document";
     public static final String VALID_SIGNATURE_SCOPE_CONTENT_2 = "The document byte range: [0, 14153, 52047, 491]";
-    public static final String VALID_SIGNATURE_SCOPE_VALUE_1 = "FULL";
+    public static final String SIGNATURE_SCOPE_FULL = "FULL";
     public static final String VALID_SIGNATURE_SCOPE_VALUE_2 = "PdfByteRangeSignatureScope";
 
     public static final String VALID_VALIDATION_PROCESS_NAMEID_1 = "QUAL_TL_FRESH";

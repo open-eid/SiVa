@@ -97,8 +97,8 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
         assertThat(response.jsonPath().getString(validationConclusion + ".signatures.signedBy[0]"), equalTo("NURM,AARE,38211015222"));
         assertThat(response.jsonPath().getString(validationConclusion + ".signatures.indication[0]"), equalTo(TOTAL_PASSED));
         assertThat(response.jsonPath().getString(validationConclusion + ".signatures.signatureScopes[0].name[0]"), equalTo("Tresting.txt"));
-        assertThat(response.jsonPath().getString(validationConclusion + ".signatures.signatureScopes[0].scope[0]"), equalTo(VALID_SIGNATURE_SCOPE_VALUE_1));
-        assertThat(response.jsonPath().getString(validationConclusion + ".signatures.signatureScopes[0].content[0]"), equalTo(VALID_SIGNATURE_SCOPE_CONTENT_1));
+        assertThat(response.jsonPath().getString(validationConclusion + ".signatures.signatureScopes[0].scope[0]"), equalTo(SIGNATURE_SCOPE_FULL));
+        assertThat(response.jsonPath().getString(validationConclusion + ".signatures.signatureScopes[0].content[0]"), equalTo(VALID_SIGNATURE_SCOPE_CONTENT_FULL));
         assertThat(response.jsonPath().getString(validationConclusion + ".signatures.claimedSigningTime[0]"), equalTo("2016-10-11T09:35:48Z"));
         assertThat(response.jsonPath().getString(validationConclusion + ".signatures.info.bestSignatureTime[0]"), equalTo("2016-10-11T09:36:10Z"));
     }
@@ -646,12 +646,12 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessTimestamps[0].constraint[0].name[0].nameId"), equalTo(VALID_VALIDATION_PROCESS_NAMEID_49));
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessTimestamps[0].constraint[0].name[0].value"), equalTo(VALID_VALIDATION_PROCESS_VALUE_48));
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessTimestamps[0].constraint[0].status[0]"), equalTo(VALID_VALIDATION_PROCESS_STATUS_1));
-        assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessTimestamps[0].constraint[0].error[0].value"), equalTo(ERROR_TS_PROCESS_NOT_CONCLUSIVE));
+        assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessTimestamps[0].constraint[0].error[0].value"), equalTo(TS_PROCESS_NOT_CONCLUSIVE));
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessTimestamps[0].constraint[0].error[0].nameId"), equalTo(VALID_VALIDATION_PROCESS_ERROR_NAMEID_9));
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessTimestamps[0].constraint[0].id"), notNullValue());
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessTimestamps[0].conclusion[0].indication"), equalTo(VALID_INDICATION_VALUE_FAILED));
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessTimestamps[0].conclusion[0].subIndication"), equalTo(SUB_INDICATION_SIG_CONSTRAINTS_FAILURE));
-        assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessTimestamps[0].conclusion.errors[0].value[0]"), equalTo(ERROR_TS_PROCESS_NOT_CONCLUSIVE));
+        assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessTimestamps[0].conclusion.errors[0].value[0]"), equalTo(TS_PROCESS_NOT_CONCLUSIVE));
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessTimestamps[0].conclusion.errors[0].nameId[0]"), equalTo(VALID_VALIDATION_PROCESS_ERROR_NAMEID_9));
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessTimestamps[0].id"), notNullValue());
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessTimestamps[0].type[0]"), equalTo("SIGNATURE_TIMESTAMP"));

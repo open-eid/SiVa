@@ -21,6 +21,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import static ee.openeid.siva.integrationtest.TestData.SIGNATURE_LEVEL_QESIG;
+
 public class SignaturePolicyIT extends SiVaRestTests {
 
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "pdf/signing_certifacte_test_files/";
@@ -573,13 +575,10 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
                 .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_4_URL))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("NA"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is(SIGNATURE_LEVEL_QESIG))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The certificate is not qualified at (best) signing time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[2].content", Matchers.is("The certificate is not for eSig at (best) signing time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[3].content", Matchers.is("The private key is not on a QSCD at (best) signing time!"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
@@ -1160,14 +1159,10 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
                 .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_3_URL))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("NA"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is(SIGNATURE_LEVEL_QESIG))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The certificate is not qualified at (best) signing time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[2].content", Matchers.is("The certificate is not for eSig at (best) signing time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[3].content", Matchers.is("The private key is not on a QSCD at (best) signing time!"))
-
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }

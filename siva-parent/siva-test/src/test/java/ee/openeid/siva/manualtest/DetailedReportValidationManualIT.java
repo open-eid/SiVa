@@ -92,8 +92,8 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
         assertThat(response.jsonPath().getString(validationConclusion + ".validSignaturesCount"), equalTo("1"));
         assertThat(response.jsonPath().getString(validationConclusion + ".signatures"), notNullValue());
         assertThat(response.jsonPath().getString(validationConclusion + ".signatures.id[0]"), equalTo("S0"));
-        assertThat(response.jsonPath().getString(validationConclusion + ".signatures.signatureFormat[0]"), equalTo(VALID_VALIDATION_CONCLUSION_SIGNATURE_FORMAT_XADES_LT));
-        assertThat(response.jsonPath().getString(validationConclusion + ".signatures.signatureLevel[0]"), equalTo(VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_QESIG));
+        assertThat(response.jsonPath().getString(validationConclusion + ".signatures.signatureFormat[0]"), equalTo(SIGNATURE_FORMAT_XADES_LT));
+        assertThat(response.jsonPath().getString(validationConclusion + ".signatures.signatureLevel[0]"), equalTo(SIGNATURE_LEVEL_QESIG));
         assertThat(response.jsonPath().getString(validationConclusion + ".signatures.signedBy[0]"), equalTo("NURM,AARE,38211015222"));
         assertThat(response.jsonPath().getString(validationConclusion + ".signatures.indication[0]"), equalTo(VALID_INDICATION_TOTAL_PASSED));
         assertThat(response.jsonPath().getString(validationConclusion + ".signatures.signatureScopes[0].name[0]"), equalTo("Tresting.txt"));

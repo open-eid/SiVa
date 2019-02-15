@@ -71,7 +71,7 @@ public class CustomCertificatesLoader implements CertificatesLoader{
                         "tH3vIMUPPiKdiNkGjVLSdChwkW3z+m0EvAjyD9rnGCmjeEm5diLFu7VMNVqupsbZ" +
                         "SfDzzBLc5+6TqgQTOG7GaZk2diMkn03iLdHGFrh8ML+mXG9SjEPI");
 
-        tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "TEST of EE Certification Centre Root CA"));
+        tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "TEST of EE Certification Centre Root CA", getServiceInfoStartDate("2018-11-02")));
 
         // TEST of EE-GovCA2018
         certToken = DSSUtils.loadCertificateFromBase64EncodedString(
@@ -104,7 +104,7 @@ public class CustomCertificatesLoader implements CertificatesLoader{
                         "ONIvS2rm8kJ7HR5tAkIAoFn7n5ZW62dXMmPk+LReR1hUyTpxrxC31QjqvMqM2AbM\n" +
                         "8luw0f/AaC5qsEdwKrKT+p1xvnjSyIVfcMiu6Q3T2EE=");
 
-        tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "TEST of EE-GovCA2018"));
+        tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "TEST of EE-GovCA2018", getServiceInfoStartDate("2018-11-02")));
 
         // TEST of ESTEID2018
         certToken = DSSUtils.loadCertificateFromBase64EncodedString(
@@ -139,7 +139,7 @@ public class CustomCertificatesLoader implements CertificatesLoader{
                         "8OP0kHx/j1t7htN2CXjpSjGFZw5TTI4s1eGyTbe0UJRBXEkUKfFbZVmzGPFPprwU\n" +
                         "dSPi8PpO7+xGBYlFHA4z+Q==");
 
-        tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "TEST of ESTEID2018"));
+        tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "TEST of ESTEID2018", getServiceInfoStartDate("2018-04-05")));
 
         // TEST of ESTEID-SK 2011
         certToken = DSSUtils.loadCertificateFromBase64EncodedString(
@@ -171,7 +171,7 @@ public class CustomCertificatesLoader implements CertificatesLoader{
                         "2c0eVE4OxRulZ3KmBLPWbJKZ0TyGa/Aooc+TorEjxz//WzcF/Sklp4FeD0MU" +
                         "39UURIlg7LfEcm832bPzZzVGFd4drBd5Dy0Uquu63kW7RDqr+wQFSxKr9DIH");
 
-        tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "TEST of ESTEID-SK 2011"));
+        tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "TEST of ESTEID-SK 2011", getServiceInfoStartDate("2016-06-30")));
 
         // TEST of ESTEID-SK 2015
         certToken = DSSUtils.loadCertificateFromBase64EncodedString(
@@ -211,7 +211,7 @@ public class CustomCertificatesLoader implements CertificatesLoader{
                         "WFX/wdzr3fqeaQ3gs/PyD53YuJXRzFrktgJJoJWnHEYIhEwbai9+OeKr4L4kTkxv\n" +
                         "PKTyjjpLKcjUk0Y0cxg7BuzwevonyBtL72b/FVs6XsXJJqCa3W4T");
 
-        tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "TEST of ESTEID-SK 2015"));
+        tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "TEST of ESTEID-SK 2015", getServiceInfoStartDate("2016-06-30")));
 
         // Nortal NQSK16 Test Cert Signing
         certToken = DSSUtils.loadCertificateFromBase64EncodedString(
@@ -245,7 +245,7 @@ public class CustomCertificatesLoader implements CertificatesLoader{
                         "26x1lOcCk0KRBr/mBk9gaC0TxmYhuum99V5+fM5sJ6WwFRS1ruLyt1piQiATIRVe\n" +
                         "pcPZlmxrjmZcfQ+dp1jWj3cS7pJ9mCZsr5H74U3K");
 
-        tlCertSource.addCertificate(certToken, getCAServiceInfo(certToken, "Nortal NQSK16 Test Cert Signing"));
+        tlCertSource.addCertificate(certToken, getCAServiceInfo(certToken, "Nortal NQSK16 Test Cert Signing", getServiceInfoStartDate("2016-06-30")));
 
         // TEST of KLASS3-SK 2010
         certToken = DSSUtils.loadCertificateFromBase64EncodedString(
@@ -276,7 +276,7 @@ public class CustomCertificatesLoader implements CertificatesLoader{
                         "0yczX3d8+I3EBNBlzfPMsyU1LCn6Opbs2/DGF/4enhRGk/49L6ltfOyOA73buSog" +
                         "S2JkvCweSx6Y2cs1fXVyFszm2HJmQgwbZYfR");
 
-        tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "TEST of KLASS3-SK 2010"));
+        tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "TEST of KLASS3-SK 2010", getServiceInfoStartDate("2016-06-30")));
 
         // TEST of SK OCSP RESPONDER 2011
         certToken = DSSUtils.loadCertificateFromBase64EncodedString(
@@ -307,7 +307,7 @@ public class CustomCertificatesLoader implements CertificatesLoader{
                         "Dei5Q3+XTED41j8szRWglzYf6zOv4djkja64WYraQ5zb4x8Xh7qTCk6UupZ7" +
                         "je+0oRfuz0h/3zyRdjcRPkjloSpQp/NG8Rmrcnr874p8d9fdwCrRI7U=");
 
-        tlCertSource.addCertificate(certToken, getOCSPServiceInfo(certToken));
+        tlCertSource.addCertificate(certToken, getOCSPServiceInfo(certToken, "TEST of SK OCSP RESPONDER 2011", getServiceInfoStartDate("2016-06-30")));
 
         // QuoVadis Time-Stamp Authority 1
         certToken = DSSUtils.loadCertificateFromBase64EncodedString(
@@ -346,7 +346,7 @@ public class CustomCertificatesLoader implements CertificatesLoader{
                         "VjdeCe3o0E9dUVSBgp4Ulu3x9hLJ9ps1+xt/HtM2VYEDiIlF5CLzyhm/0Egdss8o" +
                         "+TJRSQWq43roK5RW7Gle");
 
-        tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "QuoVadis Time-Stamp Authority 1"));
+        tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "QuoVadis Time-Stamp Authority 1", getServiceInfoStartDate("2018-11-02")));
 
         // DEMO of SK TSA 2014
         certToken = DSSUtils.loadCertificateFromBase64EncodedString(
@@ -373,7 +373,7 @@ public class CustomCertificatesLoader implements CertificatesLoader{
                         "OOZmM1Bf8PzD6etlLSKkYB+mB77Omqgflzz+Jjyh45o+305MRzHDFeJZx7WxC+XT\n" +
                         "NWQ0ZFTFfc0ozxxzUWUlfNfpWyQh3+4LbeSQRWrNkbNRfCpYotyM6AY=");
 
-        tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "DEMO of SK TSA 2014"));
+        tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "DEMO of SK TSA 2014", getServiceInfoStartDate("2016-06-30")));
 
         // QuoVadis Time-Stamp Authority 2
         certToken = DSSUtils.loadCertificateFromBase64EncodedString(
@@ -412,7 +412,7 @@ public class CustomCertificatesLoader implements CertificatesLoader{
                         "0QFoiIbPLv8vFH/ObkV/tivBelxHNYZt0JrgNQQAG7TcQ4GSxWzxmXU35BHvaOuj" +
                         "h2qLqIv3l1rSlPt82HY=");
 
-        tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "QuoVadis Time-Stamp Authority 2"));
+        tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "QuoVadis Time-Stamp Authority 2", getServiceInfoStartDate("2018-11-02")));
 
         //Management CA for soft cert
         certToken = DSSUtils.loadCertificateFromBase64EncodedString(
@@ -435,22 +435,22 @@ public class CustomCertificatesLoader implements CertificatesLoader{
                         "B7TYeIrgMTT01SNXY0cC+cWAqHot6NWZQtKOGwu8TlqTjkZd7E0sq3a6QWBb5/22" +
                         "0xDd5B09RzzLbIhKS/PKsdVR/UQNdYOhQ/H3kBRCJeMENNRi2iuUtw2SAyRBwHY=");
 
-        tlCertSource.addCertificate(certToken, getCAServiceInfo(certToken, "Management CA"));
+        tlCertSource.addCertificate(certToken, getCAServiceInfo(certToken, "Management CA", getServiceInfoStartDate("2018-11-02")));
 
         LOGGER.info("Finished Loading Estonian Test Certificates");
     }
 
-    private List<ServiceInfo> getCAServiceInfo(CertificateToken certToken, String serviceName) {
+    private List<ServiceInfo> getCAServiceInfo(CertificateToken certToken, String serviceName, Date statusStartDate) {
         ServiceInfo serviceInfo = new ServiceInfo();
 
         Map<String, List<Condition>> qualifiersAndConditions = new HashMap<>();
-        serviceInfo.setStatus(getServiceInfoStatuses(serviceName, certToken, CA_QC, qualifiersAndConditions));
+        serviceInfo.setStatus(getServiceInfoStatuses(serviceName, certToken, CA_QC, qualifiersAndConditions, statusStartDate));
         serviceInfo.setTlCountryCode("EU");
         serviceInfo.setTspName(serviceName);
         return Collections.singletonList(serviceInfo);
     }
 
-    private List<ServiceInfo> getCAServiceInfoWithQcConditions(CertificateToken certToken, String serviceName) {
+    private List<ServiceInfo> getCAServiceInfoWithQcConditions(CertificateToken certToken, String serviceName, Date statusStartDate) {
         ServiceInfo serviceInfo = new ServiceInfo();
         serviceInfo.setTspName(serviceName);
         serviceInfo.setTlCountryCode("EU");
@@ -458,7 +458,7 @@ public class CustomCertificatesLoader implements CertificatesLoader{
         qualifiersAndConditions.put(QC_WITH_QSCD, Collections.singletonList(createDigitalSignatureOrNonRepudiationListCondition()));
         qualifiersAndConditions.put(QC_STATEMENT, Collections.singletonList(createNonRepudiationCriteriaListCondition()));
         qualifiersAndConditions.put(QC_FOR_ESIG, Collections.singletonList(createNonRepudiationCriteriaListCondition()));
-        serviceInfo.setStatus(getServiceInfoStatuses(serviceName, certToken, CA_QC, qualifiersAndConditions));
+        serviceInfo.setStatus(getServiceInfoStatuses(serviceName, certToken, CA_QC, qualifiersAndConditions, statusStartDate));
 
         return Collections.singletonList(serviceInfo);
     }
@@ -477,33 +477,32 @@ public class CustomCertificatesLoader implements CertificatesLoader{
     }
 
 
-    private List<ServiceInfo> getOCSPServiceInfo(CertificateToken certToken) {
+    private List<ServiceInfo> getOCSPServiceInfo(CertificateToken certToken, String serviceName, Date statusStartDate) {
         ServiceInfo serviceInfo = new ServiceInfo();
         serviceInfo.setTlCountryCode("EU");
         Map<String, List<Condition>> qualifiersAndConditions = new HashMap<>();
-        serviceInfo.setStatus(getServiceInfoStatuses("OCSP", certToken, OCSP_QC, qualifiersAndConditions));
+        serviceInfo.setStatus(getServiceInfoStatuses(serviceName, certToken, OCSP_QC, qualifiersAndConditions, statusStartDate));
 
         return Collections.singletonList(serviceInfo);
     }
 
-    private TimeDependentValues<ServiceInfoStatus> getServiceInfoStatuses(String serviceName, CertificateToken certToken, String type, Map<String, List<Condition>> qualifiersAndConditions) {
-        return new TimeDependentValues(Collections.singletonList(createServiceStatus(serviceName, certToken, type, qualifiersAndConditions)));
+    private TimeDependentValues<ServiceInfoStatus> getServiceInfoStatuses(String serviceName, CertificateToken certToken, String type, Map<String, List<Condition>> qualifiersAndConditions, Date statusStartDate) {
+        return new TimeDependentValues(Collections.singletonList(createServiceStatus(serviceName, certToken, type, qualifiersAndConditions, statusStartDate)));
     }
 
-    private Date getServiceInfoStartDate() {
+    private Date getServiceInfoStartDate(String statusStartDate) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        String dateInString = "31-08-2011";
 
         try {
-            return sdf.parse(dateInString);
+            return sdf.parse(statusStartDate);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private ServiceInfoStatus createServiceStatus(String serviceName, CertificateToken certToken, String type, Map<String, List<Condition>> qualifiersAndConditions) {
-        Date startDate = getServiceInfoStartDate();
-        return new ServiceInfoStatus(serviceName, type, getStatus(startDate), qualifiersAndConditions, Arrays.asList("http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/ForeSignatures"), null, certToken.getCertificate().getNotBefore(), startDate, null);
+    private ServiceInfoStatus createServiceStatus(String serviceName, CertificateToken certToken, String type, Map<String, List<Condition>> qualifiersAndConditions, Date statusStartDate) {
+
+        return new ServiceInfoStatus(serviceName, type, getStatus(statusStartDate), qualifiersAndConditions, Arrays.asList("http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/ForeSignatures"), null, certToken.getCertificate().getNotBefore(), statusStartDate, null);
     }
 
     private String getStatus(Date startDate) {

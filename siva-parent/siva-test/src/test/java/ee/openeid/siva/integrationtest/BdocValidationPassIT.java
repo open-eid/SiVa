@@ -25,6 +25,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.springframework.http.HttpStatus;
 
 @Category(IntegrationTest.class)
 public class BdocValidationPassIT extends SiVaRestTests {
@@ -527,6 +528,58 @@ public class BdocValidationPassIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+    }
+
+    /**
+     * TestCaseID: Bdoc-ValidationPass-21
+     * <p>
+     * TestType: Automated
+     * <p>
+     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     * <p>
+     * Title: Asice with wrong slash character ('\') in data file mime-type value
+     * <p>
+     * Expected Result: The document should pass
+     * <p>
+     * File: EE_SER-AEX-B-LT-V-33.bdoc
+     */
+    @Test
+    public void bdocInvalidMimeTypeCharsShouldPass() {
+        setTestFilesDirectory("bdoc/live/timestamp/");
+        post(validationRequestFor("EE_SER-AEX-B-LT-V-33.bdoc"))
+                .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2016-04-13T08:37:52Z"))
+                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
+    }
+
+
+    /**
+     * TestCaseID: Bdoc-ValidationPass-22
+     * <p>
+     * TestType: Automated
+     * <p>
+     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     * <p>
+     * Title: Bdoc with invalid mimetype in manifest
+     * <p>
+     * Expected Result: The document should pass
+     * <p>
+     * File: 23147_weak-warning-sha1-invalid-mimetype-in-manifest.bdoc
+     */
+    @Test
+    // @Ignore("https://jira.ria.ee/browse/DD4J-161")
+    public void bdocMalformedBdocWithInvalidMimetypeInManifestShouldPass() {
+        post(validationRequestFor("23147_weak-warning-sha1-invalid-mimetype-in-manifest.bdoc"))
+                .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2013-11-13T10:09:49Z"))
+                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
+
     }
 
     @Override

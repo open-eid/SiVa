@@ -126,54 +126,6 @@ public class BdocValidationFailIT extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: Bdoc-ValidationFail-5
-     * <p>
-     * TestType: Automated
-     * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
-     * <p>
-     * Title: Bdoc with invalid mimetype in manifest
-     * <p>
-     * Expected Result: document malformed error should be returned
-     * <p>
-     * File: 23147_weak-warning-sha1-invalid-mimetype-in-manifest.bdoc
-     */
-    @Test
-    @Ignore("https://jira.ria.ee/browse/DD4J-161")
-    public void bdocMalformedBdocWithInvalidMimetypeInManifest() {
-        post(validationRequestFor("23147_weak-warning-sha1-invalid-mimetype-in-manifest.bdoc"))
-                .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
-                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
-
-    }
-
-    /**
-     * TestCaseID: Bdoc-ValidationFail-6
-     * <p>
-     * TestType: Automated
-     * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
-     * <p>
-     * Title: Asice with wrong slash character ('\') in data file mime-type value
-     * <p>
-     * Expected Result: The document should fail the validation
-     * <p>
-     * File: EE_SER-AEX-B-LT-V-33.bdoc
-     */
-    @Test
-    @Ignore("https://jira.ria.ee/browse/DD4J-161")
-    public void bdocInvalidMimeTypeChars() {
-        setTestFilesDirectory("bdoc/live/timestamp/");
-        post(validationRequestFor("EE_SER-AEX-B-LT-V-33.bdoc"))
-                .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
-                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
-    }
-
-    /**
      * TestCaseID: Bdoc-ValidationFail-7
      * <p>
      * TestType: Automated

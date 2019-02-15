@@ -63,7 +63,6 @@ import static org.hamcrest.Matchers.*;
 public class HashcodeValidationRequestIT extends SiVaRestTests {
 
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "xades/";
-    private static final String VALIDATION_CONCLUSION_PREFIX = "validationReport.validationConclusion.";
 
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
     private ZonedDateTime testStartDate;
@@ -982,7 +981,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         response.statusCode(HttpStatus.OK.value())
                 .root(VALIDATION_CONCLUSION_PREFIX)
                 .body("validationTime", DateTimeMatcher.isEqualOrAfter(testStartDate))
-                .body("validationLevel", is(TestData.VALID_VALIDATION_LEVEL_ARCHIVAL_DATA));
+                .body("validationLevel", is(TestData.VALIDATION_LEVEL_ARCHIVAL_DATA));
 
         ValidationPolicy signaturePolicy;
         if (request.getSignaturePolicy() == null) {
@@ -1016,7 +1015,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", is(TestData.SIGNATURE_FORMAT_XADES_LT))
                 .body("signatures[0].signatureLevel", is(TestData.SIGNATURE_LEVEL_QESIG))
                 .body("signatures[0].signedBy", is(TestData.MOCK_XADES_SIGNATURE_SIGNER))
-                .body("signatures[0].indication", is(TestData.VALID_INDICATION_TOTAL_PASSED))
+                .body("signatures[0].indication", is(TOTAL_PASSED))
                 .body("signatures[0].signatureScopes", hasSize(1))
                 .body("signatures[0].signatureScopes[0].name", is(TestData.MOCK_XADES_DATAFILE_FILENAME))
                 .body("signatures[0].signatureScopes[0].scope", is(TestData.VALID_SIGNATURE_SCOPE_VALUE_1))

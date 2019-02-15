@@ -31,23 +31,50 @@ public class TestData {
     public static final String SIGNATURE_FORMAT_PADES_LTA = "PAdES_BASELINE_LTA";
     public static final String SIGNATURE_FORMAT_PADES_B = "PAdES_BASELINE_B";
     public static final String SIGNATURE_FORMAT_XADES_B = "XAdES_BASELINE_B";
+    public static final String SIGNATURE_FORMAT_XADES_T = "XAdES_BASELINE_T";
     public static final String SIGNATURE_FORMAT_XADES_LT_TM = "XAdES_BASELINE_LT_TM";
     public static final String SIGNATURE_FORMAT_XADES_LT = "XAdES_BASELINE_LT";
     public static final String SIGNATURE_FORMAT_SK_XML = "SK_XML_1.0";
     public static final String SIGNATURE_FORMAT_DIGIDOC_XML = "DIGIDOC_XML_1.3";
 
+    public static final String SIGNATURE_FORM_ASICE = "ASiC-E";
+    public static final String SIGNATURE_FORM_ASICS = "ASiC-S";
+
     public static final String SIGNATURE_LEVEL_QESIG = "QESIG";
     public static final String SIGNATURE_LEVEL_NOT_ADES_QC_QSCD = "NOT_ADES_QC_QSCD";
     public static final String SIGNATURE_LEVEL_INDETERMINATE_QESIG = "INDETERMINATE_QESIG";
+    public static final String SIGNATURE_LEVEL_NOT_ADES = "NOT_ADES";
 
     public static final String VALID_INDICATION_VALUE_PASSED = "PASSED";
     public static final String VALID_INDICATION_VALUE_FAILED = "FAILED";
-    public static final String VALID_INDICATION_VALUE_INDETERMINATE= "INDETERMINATE";
-    public static final String VALID_INDICATION_TOTAL_FAILED = "TOTAL-FAILED";
-    public static final String VALID_INDICATION_TOTAL_PASSED = "TOTAL-PASSED";
+    public static final String INDETERMINATE= "INDETERMINATE";
+    public static final String TOTAL_FAILED = "TOTAL-FAILED";
+    public static final String TOTAL_PASSED = "TOTAL-PASSED";
 
-    public static final String VALID_SIGNATURE_FORM_1 = "ASiC-E";
-    public static final String VALID_SIGNATURE_FORM_2 = "ASiC-S";
+    // Subindications based on TS 119 102-1 v1.2.1
+    public static final String SUB_INDICATION_FORMAT_FAILURE = "FORMAT_FAILURE";
+    public static final String SUB_INDICATION_HASH_FAILURE = "HASH_FAILURE";
+    public static final String SUB_INDICATION_SIG_CRYPTO_FAILURE = "SIG_CRYPTO_FAILURE";
+    public static final String SUB_INDICATION_REVOKED = "REVOKED";
+    public static final String SUB_INDICATION_EXPIRED = "EXPIRED";
+    public static final String SUB_INDICATION_NOT_YET_VALID = "NOT_YET_VALID";
+    public static final String SUB_INDICATION_SIG_CONSTRAINTS_FAILURE = "SIG_CONSTRAINTS_FAILURE";
+    public static final String SUB_INDICATION_CHAIN_CONSTRAINTS_FAILURE = "CHAIN_CONSTRAINTS_FAILURE";
+    public static final String SUB_INDICATION_CERTIFICATE_CHAIN_GENERAL_FAILURE = "CERTIFICATE_CHAIN_GENERAL_FAILURE";
+    public static final String SUB_INDICATION_CRYPTO_CONSTRAINTS_FAILURE = "CRYPTO_CONSTRAINTS_FAILURE";
+    public static final String SUB_INDICATION_POLICY_PROCESSING_ERROR = "POLICY_PROCESSING_ERROR";
+    public static final String SUB_INDICATION_SIGNATURE_POLICY_NOT_AVAILABLE = "SIGNATURE_POLICY_NOT_AVAILABLE";
+    public static final String SUB_INDICATION_TIMESTAMP_ORDER_FAILURE = "TIMESTAMP_ORDER_FAILURE";
+    public static final String SUB_INDICATION_NO_SIGNING_CERTIFICATE_FOUND = "NO_SIGNING_CERTIFICATE_FOUND";
+    public static final String SUB_INDICATION_NO_CERTIFICATE_CHAIN_FOUND = "NO_CERTIFICATE_CHAIN_FOUND";
+    public static final String SUB_INDICATION_REVOKED_NO_POE = "REVOKED_NO_POE";
+    public static final String SUB_INDICATION_REVOKED_CA_NO_POE = "REVOKED_CA_NO_POE ";
+    public static final String SUB_INDICATION_OUT_OF_BOUNDS_NOT_REVOKED = "OUT_OF_BOUNDS_NOT_REVOKED";
+    public static final String SUB_INDICATION_OUT_OF_BOUNDS_NO_POE = "OUT_OF_BOUNDS_NO_POE";
+    public static final String SUB_INDICATION_CRYPTO_CONSTRAINTS_FAILURE_NO_POE = "CRYPTO_CONSTRAINTS_FAILURE_NO_POE";
+    public static final String SUB_INDICATION_NO_POE = "NO_POE";
+    public static final String SUB_INDICATION_TRY_LATER = "TRY_LATER";
+    public static final String SUB_INDICATION_SIGNED_DATA_NOT_FOUND = "SIGNED_DATA_NOT_FOUND";
 
     public static final String VALID_SIGNATURE_SCOPE_CONTENT_1 = "Full document";
     public static final String VALID_SIGNATURE_SCOPE_CONTENT_2 = "The document byte range: [0, 14153, 52047, 491]";
@@ -166,12 +193,20 @@ public class TestData {
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_2 = "The expected format is not found!";
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_3 = "The result of the Basic validation process is not acceptable to continue the process!";
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_4 = "The expected format is not found!";
-    public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_5 = "The result of the LTV validation process is not acceptable to continue the process!";
+    public static final String LTV_PROCESS_NOT_ACCEPTABLE = "The result of the LTV validation process is not acceptable to continue the process!";
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_6 = "The expected format is not found!";
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_7 = "The certificate is not qualified!";
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_8 = "No revocation data for the certificate";
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_9 = "The signature is not intact!";
-    public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_10 = "The result of the timestamps validation process is not conclusive!";
+    public static final String TS_PROCESS_NOT_CONCLUSIVE = "The result of the timestamps validation process is not conclusive!";
+    public static final String REFERENCE_DATA_NOT_INTACT = "The reference data object is not intact!";
+    public static final String CERTIFICATE_DO_NOT_MATCH_TRUST_SERVICE = "The trusted certificate doesn't match the trust service";
+    public static final String PAST_SIG_VALIDATION_NOT_CONCLUSIVE = "The past signature validation is not conclusive!";
+    public static final String SIG_CREATED_WITH_EXP_CERT = "Signature has been created with expired certificate";
+    public static final String CERT_PATH_NOT_TRUSTED = "The certificate path is not trusted!";
+    public static final String REVOCATION_NOT_FRESH = "The revocation information is not considered as 'fresh'.";
+    public static final String ALL_FILES_NOT_SIGNED = "All files are not signed!";
+
 
     public static final String VALID_VALIDATION_PROCESS_ERROR_NAMEID_1 = "ADEST_ROBVPIIC_ANS";
     public static final String VALID_VALIDATION_PROCESS_ERROR_NAMEID_2 = "BBB_FC_IEFF_ANS";
@@ -188,19 +223,7 @@ public class TestData {
     public static final String VALID_VALIDATION_PROCESS_STATUS_2 = "OK";
     public static final String VALID_VALIDATION_PROCESS_STATUS_3 = "WARNING";
 
-    public static final String VALID_VALIDATION_PROCESS_SUB_INDICATION_1 = "CHAIN_CONSTRAINTS_FAILURE";
-    public static final String VALID_VALIDATION_PROCESS_SUB_INDICATION_2 = "TRY_LATER";
-    public static final String VALID_VALIDATION_PROCESS_SUB_INDICATION_3 = "SIG_CRYPTO_FAILURE";
-    public static final String VALID_VALIDATION_PROCESS_SUB_INDICATION_4 = "SIG_CONSTRAINTS_FAILURE";
-
-    public static final String SUB_INDICATION_HASH_FAILURE = "HASH_FAILURE";
-    public static final String SUB_INDICATION_SIGNED_DATA_NOT_FOUND = "SIGNED_DATA_NOT_FOUND";
-    public static final String SUB_INDICATION_SIG_CRYPTO_FAILURE = "SIG_CRYPTO_FAILURE";
-
-    public static final String VALID_VALIDATION_PROCESS_SIGNATUREQUALIFICATION = "NOT_ADES_QC_QSCD";
-    public static final String VALID_VALIDATION_PROCESS_SIGNATUREQUALIFICATION_2 = "QESIG";
-
-    public static final String VALID_VALIDATION_LEVEL_ARCHIVAL_DATA = "ARCHIVAL_DATA";
+    public static final String VALIDATION_LEVEL_ARCHIVAL_DATA = "ARCHIVAL_DATA";
 
     public static final String CA_QC = "http://uri.etsi.org/TrstSvc/Svctype/CA/QC";
     public static final String OCSP_QC = "http://uri.etsi.org/TrstSvc/Svctype/Certstatus/OCSP/QC";
@@ -219,5 +242,7 @@ public class TestData {
     public static final String MOCK_XADES_DATAFILE_HASH_ALGO = "SHA256";
     public static final String MOCK_XADES_DATAFILE_FILENAME = "test.txt";
     public static final String MOCK_XADES_DATAFILE_FILENAME2 = "Proov (2).txt";
+
+    public static final String VALIDATION_CONCLUSION_PREFIX = "validationReport.validationConclusion.";
 
 }

@@ -24,6 +24,8 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
 
+import static ee.openeid.siva.integrationtest.TestData.*;
+
 @Category(IntegrationTest.class)
 public class AsiceValidationFailIT extends SiVaRestTests {
 
@@ -56,15 +58,16 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     @Test
     public void asiceInvalidSingleSignature() {
         post(validationRequestFor("InvalidLiveSignature.asice"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2016-10-11T09:36:10Z"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!", "The result of the timestamps validation process is not conclusive!", "The reference data object is not intact!"))
-                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("+/WJhUuOlP0RDfENTaSzESr+Dbg5D3GYcS3CsqjPm0U="));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_HASH_FAILURE))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-10-11T09:36:10Z"))
+                .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE, TS_PROCESS_NOT_CONCLUSIVE, REFERENCE_DATA_NOT_INTACT))
+                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("validatedDocument.fileHash", Matchers.is("+/WJhUuOlP0RDfENTaSzESr+Dbg5D3GYcS3CsqjPm0U="));
     }
 
     /**
@@ -83,20 +86,20 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     @Test
     public void asiceInvalidMultipleSignatures() {
         post(validationRequestFor("InvalidMultipleSignatures.asice"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2016-06-21T21:33:10Z"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!", "The result of the timestamps validation process is not conclusive!", "The reference data object is not intact!"))
-                .body("validationReport.validationConclusion.signatures[1].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[1].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
-                .body("validationReport.validationConclusion.signatures[1].info.bestSignatureTime", Matchers.is("2016-06-21T21:38:50Z"))
-                .body("validationReport.validationConclusion.signatures[1].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!", "The result of the timestamps validation process is not conclusive!", "The reference data object is not intact!"))
-                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2))
-                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("s0H0Nsgk5x6FYA+q65kYo8ENIm4ZTMxxSiMjOfNcLqQ="));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_SIG_CRYPTO_FAILURE))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-06-21T21:33:10Z"))
+                .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE, TS_PROCESS_NOT_CONCLUSIVE, REFERENCE_DATA_NOT_INTACT))
+                .body("signatures[1].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[1].subIndication", Matchers.is(SUB_INDICATION_SIG_CRYPTO_FAILURE))
+                .body("signatures[1].info.bestSignatureTime", Matchers.is("2016-06-21T21:38:50Z"))
+                .body("signatures[1].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE, TS_PROCESS_NOT_CONCLUSIVE, REFERENCE_DATA_NOT_INTACT))
+                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(2))
+                .body("validatedDocument.fileHash", Matchers.is("s0H0Nsgk5x6FYA+q65kYo8ENIm4ZTMxxSiMjOfNcLqQ="));
     }
 
     /**
@@ -115,18 +118,18 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     @Test
     public void asiceInvalidAndValidMultipleSignatures() {
         post(validationRequestFor("InvalidAndValidSignatures.asice"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[1].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[1].info.bestSignatureTime", Matchers.is("2016-06-21T21:38:50Z"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2016-06-21T21:33:10Z"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!", "The result of the timestamps validation process is not conclusive!", "The reference data object is not intact!"))
-                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2))
-                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("RUVTd2Ch4XitCNk2ntJTCB3aAX+YSke/xbId8IwCJok="));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[1].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[1].info.bestSignatureTime", Matchers.is("2016-06-21T21:38:50Z"))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_SIG_CRYPTO_FAILURE))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-06-21T21:33:10Z"))
+                .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE, TS_PROCESS_NOT_CONCLUSIVE, REFERENCE_DATA_NOT_INTACT))
+                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(2))
+                .body("validatedDocument.fileHash", Matchers.is("RUVTd2Ch4XitCNk2ntJTCB3aAX+YSke/xbId8IwCJok="));
     }
 
     /**
@@ -170,14 +173,14 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     @Test
     public void asiceInvalidTimeStampDontMatchSigValue() {
         post(validationRequestFor("TS-02_23634_TS_wrong_SignatureValue.asice"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2015-11-13T11:15:36Z"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!", "The result of the timestamps validation process is not conclusive!", "The reference data object is not intact!"))
-                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_SIG_CRYPTO_FAILURE))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2015-11-13T11:15:36Z"))
+                .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE, TS_PROCESS_NOT_CONCLUSIVE, REFERENCE_DATA_NOT_INTACT))
+                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -196,14 +199,14 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     @Test
     public void asiceInvalidNonRepudiationKey() {
         post(validationRequestFor("EE_SER-AEX-B-LT-I-43.asice", VALID_SIGNATURE_POLICY_3,"Simple"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("NOT_ADES"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CONSTRAINTS_FAILURE"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].signatureLevel", Matchers.is(SIGNATURE_LEVEL_NOT_ADES))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_SIG_CONSTRAINTS_FAILURE))
+                .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE))
+                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -222,14 +225,14 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     @Test
     public void asiceInvalidNonRepudiationKeyNoComplianceInfo() {
         post(validationRequestFor("EE_SER-AEX-B-LT-I-26.asice"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CONSTRAINTS_FAILURE"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_SIG_CONSTRAINTS_FAILURE))
+                .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE))
+                .body("signatures[0].warnings[0].content", Matchers.is(CERTIFICATE_DO_NOT_MATCH_TRUST_SERVICE))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -249,14 +252,14 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     public void asiceNotTrustedOcspCert() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDSS("TM-01_bdoc21-unknown-resp.bdoc", null, null))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2013-11-11T06:45:46Z")) //this may not be valid time to show
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].indication", Matchers.is(INDETERMINATE))
+                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_NO_CERTIFICATE_CHAIN_FOUND))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2013-11-11T06:45:46Z")) //this may not be valid time to show
+                .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE))
+                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -275,12 +278,12 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     @Test
     public void asiceNotTrustedTsaCert() {
         post(validationRequestFor("TS-05_23634_TS_unknown_TSA.asice", null, null))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the timestamps validation process is not conclusive!"))
-                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].errors.content", Matchers.hasItems(TS_PROCESS_NOT_CONCLUSIVE))
+                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -299,14 +302,14 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     @Test
     public void asiceTsOcspStatusRevoked() {
         post(validationRequestFor("EE_SER-AEX-B-LT-R-25.asice"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("NO_POE"))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2014-11-07T11:43:06Z"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The past signature validation is not conclusive!"))
-                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].indication", Matchers.is(INDETERMINATE))
+                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_NO_POE))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2014-11-07T11:43:06Z"))
+                .body("signatures[0].errors.content", Matchers.hasItems(PAST_SIG_VALIDATION_NOT_CONCLUSIVE))
+                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -325,13 +328,13 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     @Test
     public void asiceOcspAndTsDifferenceOver24H() {
         post(validationRequestFor("EE_SER-AEX-B-LT-V-20.asice"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2014-11-07T13:18:01Z"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The revocation information is not considered as 'fresh'."))
-                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2014-11-07T13:18:01Z"))
+                .body("signatures[0].errors.content", Matchers.hasItems(REVOCATION_NOT_FRESH))
+                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -350,12 +353,12 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     @Test
     public void asiceUnsignedDataFiles() {
         post(validationRequestFor("EE_SER-AEX-B-LT-V-34.asice"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].warnings.content", Matchers.hasItems("All files are not signed!"))
-                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[0].warnings.content", Matchers.hasItems(ALL_FILES_NOT_SIGNED))
+                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("validSignaturesCount", Matchers.is(1));
 
     }
 
@@ -376,13 +379,13 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     public void asiceSignatureValueDoNotCorrespondToSignedInfo() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDSS("REF-19_bdoc21-no-sig-asn1-pref.bdoc", null, null))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_SIG_CRYPTO_FAILURE))
+                .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE))
+                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -401,14 +404,14 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     @Test
     public void asiceBaselineBesSignatureLevel() {
         post(validationRequestFor("signWithIdCard_d4j_1.0.4_BES.asice"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_B))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE))
+                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -428,13 +431,13 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     public void asiceBaselineEpesSignatureLevel() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("TM-04_kehtivuskinnituset.4.asice"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_B))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE))
+                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -454,13 +457,13 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     public void asiceSignersCertNotTrusted() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("SS-4_teadmataCA.4.asice"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("The certificate path is not trusted!"))
-                .body("validationReport.validationConclusion.signatures[0].errors[1].content", Matchers.is("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].errors[0].content", Matchers.is(CERT_PATH_NOT_TRUSTED))
+                .body("signatures[0].errors[1].content", Matchers.is(LTV_PROCESS_NOT_ACCEPTABLE))
+                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -480,14 +483,14 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     public void asiceTmOcspStatusRevoked() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("TM-15_revoked.4.asice"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("NO_POE"))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2013-10-11T11:27:19Z"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The past signature validation is not conclusive!"))
-                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].indication", Matchers.is(INDETERMINATE))
+                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_NO_POE))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2013-10-11T11:27:19Z"))
+                .body("signatures[0].errors.content", Matchers.hasItems(PAST_SIG_VALIDATION_NOT_CONCLUSIVE))
+                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -507,12 +510,12 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     public void asiceTmOcspStatusUnknown() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("TM-16_unknown.4.asice"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE))
+                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -532,13 +535,13 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     public void asiceSignedFileRemoved() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("KS-21_fileeemaldatud.4.asice"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIGNED_DATA_NOT_FOUND"))
-                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].indication", Matchers.is(INDETERMINATE))
+                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_SIGNED_DATA_NOT_FOUND))
+                .body("signatures[0].errors[0].content", Matchers.is(LTV_PROCESS_NOT_ACCEPTABLE))
+                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -580,13 +583,13 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     public void asiceDataFilesDontMatchHash() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDSS("REF-14_filesisumuudetud.4.bdoc", null, null))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_HASH_FAILURE))
+                .body("signatures[0].errors.content", Matchers.hasItem(LTV_PROCESS_NOT_ACCEPTABLE))
+                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -605,13 +608,13 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     @Test
     public void asiceBaselineTSignature() {
         post(validationRequestFor("TS-06_23634_TS_missing_OCSP.asice", null, null))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_T"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_T))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].errors.content", Matchers.hasItem(LTV_PROCESS_NOT_ACCEPTABLE))
+                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -632,12 +635,12 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     public void asiceCertificateValidityOutOfOcspRange() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDSS("", null, null))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("Signature has been created with expired certificate"))
-                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].errors.content", Matchers.hasItem(SIG_CREATED_WITH_EXP_CERT))
+                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     @Override

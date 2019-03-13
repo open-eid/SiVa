@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2017 Riigi Infosüsteemide Amet
+  ~ Copyright 2019 Riigi Infosüsteemide Amet
   ~
   ~ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
   ~ the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -60,6 +60,18 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

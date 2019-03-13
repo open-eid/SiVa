@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2019 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -78,13 +78,13 @@ public class PDFSignaturePolicyTest extends PDFValidationServiceTest {
         validateWithPolicy("non-existing-policy");
     }
 
-    private SimpleReport validateWithPolicy(String policyName) throws Exception {
+    private SimpleReport validateWithPolicy(String policyName) {
         return validateWithPolicy(policyName, PDF_WITH_ONE_VALID_SIGNATURE);
     }
 
-    private SimpleReport validateWithPolicy(String policyName, String document) throws Exception {
+    private SimpleReport validateWithPolicy(String policyName, String document) {
         ValidationDocument validationDocument = buildValidationDocument(document);
         validationDocument.setSignaturePolicy(policyName);
-        return validationService.validateDocument(validationDocument).getSimpleReport();
+        return validateAndAssertReports(validationDocument).getSimpleReport();
     }
 }

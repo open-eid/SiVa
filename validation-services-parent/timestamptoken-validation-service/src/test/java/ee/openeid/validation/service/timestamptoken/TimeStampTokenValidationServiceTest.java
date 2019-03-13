@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2019 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -19,6 +19,7 @@ package ee.openeid.validation.service.timestamptoken;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
+import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
 import ee.openeid.siva.validation.exception.DocumentRequirementsException;
@@ -33,6 +34,9 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 @RunWith(SpringRunner.class)
 public class TimeStampTokenValidationServiceTest {
@@ -89,8 +93,19 @@ public class TimeStampTokenValidationServiceTest {
         Assert.assertEquals("Signature not intact", simpleReport.getValidationConclusion().getTimeStampTokens().get(0).getError().get(0).getContent());
     }
 
+    @Test
+    public void onlySimpleReportPresentInDocumentValidationResultReports() {
+        Reports reports = validationService.validateDocument(buildValidationDocument("timestamptoken-ddoc.asics"));
 
-    private ValidationDocument buildValidationDocument(String testFile) throws Exception {
+        assertNotNull(reports.getSimpleReport().getValidationConclusion());
+        assertNotNull(reports.getDetailedReport().getValidationConclusion());
+        assertNotNull(reports.getDiagnosticReport().getValidationConclusion());
+
+        assertNull(reports.getDetailedReport().getValidationProcess());
+        assertNull(reports.getDiagnosticReport().getDiagnosticData());
+    }
+
+    private ValidationDocument buildValidationDocument(String testFile) {
         return DummyValidationDocumentBuilder
                 .aValidationDocument()
                 .withDocument(TEST_FILES_LOCATION + testFile)

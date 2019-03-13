@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2017 Riigi Infosüsteemide Amet
+  ~ Copyright 2019 Riigi Infosüsteemide Amet
   ~
   ~ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
   ~ the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -67,6 +67,10 @@
         <dependency>
             <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-detailed-report-jaxb</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.digidoc4j.dss</groupId>
+            <artifactId>dss-diagnostic-jaxb</artifactId>
         </dependency>
     </dependencies>
 

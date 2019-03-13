@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2019 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -17,14 +17,28 @@
 package ee.openeid.validation.service.timemark.report;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
+import ee.openeid.siva.validation.document.report.DetailedReport;
+import ee.openeid.siva.validation.document.report.DiagnosticReport;
 import ee.openeid.siva.validation.document.report.Error;
-import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.validation.document.report.Info;
+import ee.openeid.siva.validation.document.report.Reports;
+import ee.openeid.siva.validation.document.report.SignatureScope;
+import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
+import ee.openeid.siva.validation.document.report.ValidationWarning;
+import ee.openeid.siva.validation.document.report.Warning;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import eu.europa.esig.dss.validation.SignatureQualification;
 import eu.europa.esig.dss.validation.policy.rules.SubIndication;
 import org.apache.commons.lang3.StringUtils;
-import org.digidoc4j.*;
+import org.digidoc4j.Container;
+import org.digidoc4j.DataFile;
+import org.digidoc4j.Signature;
+import org.digidoc4j.SignatureProfile;
+import org.digidoc4j.ValidationResult;
+import org.digidoc4j.X509Cert;
 import org.digidoc4j.exceptions.DigiDoc4JException;
 import org.digidoc4j.impl.asic.asice.AsicESignature;
 import org.digidoc4j.impl.ddoc.DDocContainer;
@@ -34,7 +48,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.*;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.getValidationTime;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.processSignatureIndications;
 import static org.digidoc4j.X509Cert.SubjectName.CN;
 
 public abstract class TimemarkContainerValidationReportBuilder {
@@ -91,7 +108,8 @@ public abstract class TimemarkContainerValidationReportBuilder {
         }
         SimpleReport simpleReport = new SimpleReport(validationConclusion);
         DetailedReport detailedReport = new DetailedReport(validationConclusion, null);
-        return new Reports(simpleReport, detailedReport);
+        DiagnosticReport diagnosticReport = new DiagnosticReport(validationConclusion, null);
+        return new Reports(simpleReport, detailedReport, diagnosticReport);
     }
 
     private ValidationConclusion getValidationConclusion() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2019 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -70,8 +70,9 @@ public class GenericValidationReportBuilder {
         SimpleReport simpleReport = new SimpleReport(validationConclusion);
         validationConclusion.setValidationLevel(validationLevel.name());
         DetailedReport detailedReport = new DetailedReport(validationConclusion, dssReports.getDetailedReportJaxb());
+        DiagnosticReport diagnosticReport = new DiagnosticReport(validationConclusion, dssReports.getDiagnosticDataJaxb());
 
-        return new Reports(simpleReport, detailedReport);
+        return new Reports(simpleReport, detailedReport, diagnosticReport);
     }
 
     private ValidationConclusion getValidationConclusion() {

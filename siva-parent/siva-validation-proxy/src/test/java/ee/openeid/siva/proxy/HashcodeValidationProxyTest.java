@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Riigi Infosüsteemide Amet
+ * Copyright 2019 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -18,6 +18,7 @@ package ee.openeid.siva.proxy;
 
 
 import ee.openeid.siva.proxy.document.ProxyHashcodeDataSet;
+import ee.openeid.siva.proxy.document.ReportType;
 import ee.openeid.siva.proxy.exception.ValidatonServiceNotFoundException;
 import ee.openeid.siva.statistics.StatisticsService;
 import ee.openeid.siva.validation.document.Datafile;
@@ -41,6 +42,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -91,6 +94,20 @@ public class HashcodeValidationProxyTest {
         assertEquals(validationServiceSpy.reports.getSimpleReport(), report);
     }
 
+    @Test
+    public void hashcodeValidationAlwaysReturnsSimpleReport() {
+        when(applicationContext.getBean("hashcodeGenericValidationService")).thenReturn(validationServiceSpy);
+        ProxyHashcodeDataSet proxyDocument = mockHashCodeDataSet();
+
+        for (ReportType reportType : ReportType.values()) {
+            proxyDocument.setReportType(reportType);
+            SimpleReport report = hashcodeValidationProxy.validate(proxyDocument);
+            assertTrue(report instanceof SimpleReport);
+            assertFalse(report instanceof DetailedReport);
+            assertFalse(report instanceof DiagnosticReport);
+        }
+    }
+
     private ProxyHashcodeDataSet mockHashCodeDataSet() {
         ProxyHashcodeDataSet proxyHashcodeDataSet = new ProxyHashcodeDataSet();
         SignatureFile signatureFile = new SignatureFile();
@@ -132,7 +149,7 @@ public class HashcodeValidationProxyTest {
             validationConclusion.setPolicy(createDummyPolicy());
             validationConclusion.setSignatures(createDummySignatures());
             SimpleReport simpleReport = new SimpleReport(validationConclusion);
-            return new Reports(simpleReport, null);
+            return new Reports(simpleReport, null, null);
         }
 
         private ValidatedDocument createDummyValidatedDocument() {

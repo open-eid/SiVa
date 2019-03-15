@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Riigi Infosüsteemide Amet
+ * Copyright 2019 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -90,6 +90,14 @@ public class ValidationControllerTest {
     }
 
     @Test
+    public void requestWithInvalidReportTypeReturnsErroneousResponse() throws Exception {
+        mockMvc.perform(post("/validate")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestWithInvalidReportType().toString().getBytes()))
+               .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void requestWithInvalidKeysShouldBeRejectedWithError() throws Exception {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("filename", "filename.exe");
@@ -140,13 +148,6 @@ public class ValidationControllerTest {
         return "file" + illegalCharacter + "name.pdf";
     }
 
-    private void testIllegalFilename(String filename) throws Exception {
-        mockMvc.perform(post("/validate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestWithFilename(filename).toString().getBytes()))
-                .andExpect(status().isBadRequest());
-    }
-
     private JSONObject validRequest() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("document", "QVNE");
@@ -169,6 +170,12 @@ public class ValidationControllerTest {
     private JSONObject requestWithEmptyDocument() {
         JSONObject jsonObject = validRequest();
         jsonObject.put("document", "");
+        return jsonObject;
+    }
+
+    private JSONObject requestWithInvalidReportType() {
+        JSONObject jsonObject = validRequest();
+        jsonObject.put("reportType", "INVALID_REPORT_TYPE");
         return jsonObject;
     }
 

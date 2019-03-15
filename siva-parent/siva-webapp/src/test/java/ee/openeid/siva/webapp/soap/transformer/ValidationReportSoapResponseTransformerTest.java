@@ -16,20 +16,54 @@
 
 package ee.openeid.siva.webapp.soap.transformer;
 
-import eu.europa.esig.dss.jaxb.detailedreport.XmlTLAnalysis;
-
 import ee.openeid.siva.validation.document.report.DetailedReport;
+import ee.openeid.siva.validation.document.report.DiagnosticReport;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
 import ee.openeid.siva.validation.document.report.ValidatedDocument;
+import ee.openeid.siva.webapp.soap.response.DiagnosticData;
 import ee.openeid.siva.webapp.soap.response.ValidationConclusion;
 import ee.openeid.siva.webapp.soap.response.ValidationReport;
-
+import eu.europa.esig.dss.jaxb.detailedreport.XmlTLAnalysis;
+import eu.europa.esig.dss.jaxb.diagnostic.XmlBasicSignature;
+import eu.europa.esig.dss.jaxb.diagnostic.XmlCertificate;
+import eu.europa.esig.dss.jaxb.diagnostic.XmlChainItem;
+import eu.europa.esig.dss.jaxb.diagnostic.XmlContainerInfo;
+import eu.europa.esig.dss.jaxb.diagnostic.XmlDigestAlgoAndValue;
+import eu.europa.esig.dss.jaxb.diagnostic.XmlManifestFile;
+import eu.europa.esig.dss.jaxb.diagnostic.XmlPolicy;
+import eu.europa.esig.dss.jaxb.diagnostic.XmlSignature;
+import eu.europa.esig.dss.jaxb.diagnostic.XmlSignatureProductionPlace;
+import eu.europa.esig.dss.jaxb.diagnostic.XmlSigningCertificate;
+import eu.europa.esig.dss.jaxb.diagnostic.XmlStructuralValidation;
+import eu.europa.esig.dss.jaxb.diagnostic.XmlTimestamp;
+import eu.europa.esig.dss.jaxb.diagnostic.XmlTrustedList;
+import eu.europa.esig.dss.validation.diagnostic.BasicSignature;
+import eu.europa.esig.dss.validation.diagnostic.Certificate;
+import eu.europa.esig.dss.validation.diagnostic.CertificateChain;
+import eu.europa.esig.dss.validation.diagnostic.ContainerInfo;
+import eu.europa.esig.dss.validation.diagnostic.Signature;
+import eu.europa.esig.dss.validation.diagnostic.SigningCertificate;
+import eu.europa.esig.dss.validation.diagnostic.Timestamp;
+import eu.europa.esig.dss.validation.diagnostic.TrustedList;
 import org.junit.Assert;
 import org.junit.Test;
 
+import javax.xml.datatype.XMLGregorianCalendar;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
 public class ValidationReportSoapResponseTransformerTest {
 
@@ -42,39 +76,9 @@ public class ValidationReportSoapResponseTransformerTest {
         simpleReport.setValidationConclusion(validationConclusion);
 
         ValidationReport soapValidationReport = transformer.toSoapResponse(simpleReport);
-        ValidationConclusion soapValidationConclusion = soapValidationReport.getValidationConclusion();
-        Assert.assertEquals(validationConclusion.getValidatedDocument().getFilename(), soapValidationConclusion.getValidatedDocument().getFilename());
-        Assert.assertEquals(validationConclusion.getValidatedDocument().getFileHash(), soapValidationConclusion.getValidatedDocument().getFileHash());
-        Assert.assertEquals(validationConclusion.getValidatedDocument().getHashAlgo(), soapValidationConclusion.getValidatedDocument().getHashAlgo());
-        Assert.assertEquals(validationConclusion.getSignatureForm(), soapValidationConclusion.getSignatureForm());
-        Assert.assertEquals(validationConclusion.getValidationTime(), soapValidationConclusion.getValidationTime());
-        Assert.assertEquals(validationConclusion.getValidationWarnings().get(0).getContent(), soapValidationConclusion.getValidationWarnings().getValidationWarning().get(0).getContent());
-        Assert.assertEquals(validationConclusion.getSignaturesCount(), soapValidationConclusion.getSignaturesCount());
-        Assert.assertEquals(validationConclusion.getValidSignaturesCount(), soapValidationConclusion.getValidSignaturesCount());
-        Assert.assertEquals(validationConclusion.getPolicy().getPolicyDescription(), soapValidationConclusion.getPolicy().getPolicyDescription());
-        Assert.assertEquals(validationConclusion.getPolicy().getPolicyName(), soapValidationConclusion.getPolicy().getPolicyName());
-        Assert.assertEquals(validationConclusion.getPolicy().getPolicyUrl(), soapValidationConclusion.getPolicy().getPolicyUrl());
-
-        Assert.assertEquals(validationConclusion.getValidationLevel(), soapValidationConclusion.getValidationLevel());
-
-        Assert.assertEquals(validationConclusion.getTimeStampTokens().get(0).getIndication().name(), soapValidationConclusion.getTimeStampTokens().getTimeStampToken().get(0).getIndication().name());
-        Assert.assertEquals(validationConclusion.getTimeStampTokens().get(0).getError().get(0).getContent(), soapValidationConclusion.getTimeStampTokens().getTimeStampToken().get(0).getErrors().getError().get(0).getContent());
-        Assert.assertEquals(validationConclusion.getTimeStampTokens().get(0).getSignedBy(), soapValidationConclusion.getTimeStampTokens().getTimeStampToken().get(0).getSignedBy());
-        Assert.assertEquals(validationConclusion.getTimeStampTokens().get(0).getSignedTime(), soapValidationConclusion.getTimeStampTokens().getTimeStampToken().get(0).getSignedTime());
-
-        Assert.assertEquals(validationConclusion.getSignatures().get(0).getClaimedSigningTime(), soapValidationConclusion.getSignatures().getSignature().get(0).getClaimedSigningTime());
-        Assert.assertEquals(validationConclusion.getSignatures().get(0).getId(), soapValidationConclusion.getSignatures().getSignature().get(0).getId());
-        Assert.assertEquals(validationConclusion.getSignatures().get(0).getIndication(), soapValidationConclusion.getSignatures().getSignature().get(0).getIndication().value());
-        Assert.assertEquals(validationConclusion.getSignatures().get(0).getSignatureFormat(), soapValidationConclusion.getSignatures().getSignature().get(0).getSignatureFormat());
-        Assert.assertEquals(validationConclusion.getSignatures().get(0).getSignatureLevel(), soapValidationConclusion.getSignatures().getSignature().get(0).getSignatureLevel());
-        Assert.assertEquals(validationConclusion.getSignatures().get(0).getSignedBy(), soapValidationConclusion.getSignatures().getSignature().get(0).getSignedBy());
-        Assert.assertEquals(validationConclusion.getSignatures().get(0).getSubIndication(), soapValidationConclusion.getSignatures().getSignature().get(0).getSubIndication());
-        Assert.assertEquals(validationConclusion.getSignatures().get(0).getInfo().getBestSignatureTime(), soapValidationConclusion.getSignatures().getSignature().get(0).getInfo().getBestSignatureTime());
-        Assert.assertEquals(validationConclusion.getSignatures().get(0).getErrors().get(0).getContent(), soapValidationConclusion.getSignatures().getSignature().get(0).getErrors().getError().get(0).getContent());
-        Assert.assertEquals(validationConclusion.getSignatures().get(0).getWarnings().get(0).getContent(), soapValidationConclusion.getSignatures().getSignature().get(0).getWarnings().getWarning().get(0).getContent());
-        Assert.assertEquals(validationConclusion.getSignatures().get(0).getSignatureScopes().get(0).getContent(), soapValidationConclusion.getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getContent());
-        Assert.assertEquals(validationConclusion.getSignatures().get(0).getSignatureScopes().get(0).getName(), soapValidationConclusion.getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getName());
-        Assert.assertEquals(validationConclusion.getSignatures().get(0).getSignatureScopes().get(0).getScope(), soapValidationConclusion.getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
+        assertValidationConclusion(validationConclusion, soapValidationReport.getValidationConclusion());
+        assertNull(soapValidationReport.getValidationProcess());
+        assertNull(soapValidationReport.getDiagnosticData());
     }
 
     @Test
@@ -82,9 +86,22 @@ public class ValidationReportSoapResponseTransformerTest {
         ee.openeid.siva.validation.document.report.ValidationConclusion validationConclusion = createMockedValidationConclusion();
         eu.europa.esig.dss.jaxb.detailedreport.DetailedReport validationProcess = createMockedValidationProcess();
         DetailedReport detailedReport = new DetailedReport(validationConclusion, validationProcess);
-        detailedReport.setValidationProcess(createMockedValidationProcess());
         ValidationReport responseValidationReport = transformer.toSoapResponse(detailedReport);
+        assertValidationConclusion(validationConclusion, responseValidationReport.getValidationConclusion());
+        assertNull(responseValidationReport.getDiagnosticData());
         Assert.assertEquals("EE", responseValidationReport.getValidationProcess().getTLAnalysis().get(0).getCountryCode());
+    }
+
+    @Test
+    public void qualifiedDiagnosticDataIsCorrectlyTransformedToSoapResponseReport() {
+        ee.openeid.siva.validation.document.report.ValidationConclusion validationConclusion = createMockedValidationConclusion();
+        eu.europa.esig.dss.jaxb.diagnostic.DiagnosticData diagnosticData = createMockedDiagnosticData();
+        DiagnosticReport diagnosticReport = new DiagnosticReport(validationConclusion, diagnosticData);
+
+        ValidationReport responseValidationReport = transformer.toSoapResponse(diagnosticReport);
+        assertValidationConclusion(validationConclusion, responseValidationReport.getValidationConclusion());
+        assertDiagnosticData(diagnosticData, responseValidationReport.getDiagnosticData());
+        assertNull(responseValidationReport.getValidationProcess());
     }
 
     @Test
@@ -95,6 +112,210 @@ public class ValidationReportSoapResponseTransformerTest {
         ValidationConclusion responseValidationConclusion = responseValidationReport.getValidationConclusion();
         Assert.assertEquals(validationConclusion.getSignatures().get(0).getIndication(), responseValidationConclusion.getSignatures().getSignature().get(0).getIndication().value());
 
+    }
+
+    private void assertValidationConclusion(ee.openeid.siva.validation.document.report.ValidationConclusion dssValidationConclusion, ValidationConclusion soapValidationConclusion) {
+        assertEquals(dssValidationConclusion.getValidatedDocument().getFilename(), soapValidationConclusion.getValidatedDocument().getFilename());
+        assertEquals(dssValidationConclusion.getValidatedDocument().getFileHash(), soapValidationConclusion.getValidatedDocument().getFileHash());
+        assertEquals(dssValidationConclusion.getValidatedDocument().getHashAlgo(), soapValidationConclusion.getValidatedDocument().getHashAlgo());
+        assertEquals(dssValidationConclusion.getSignatureForm(), soapValidationConclusion.getSignatureForm());
+        assertEquals(dssValidationConclusion.getValidationTime(), soapValidationConclusion.getValidationTime());
+        assertEquals(dssValidationConclusion.getValidationWarnings().get(0).getContent(), soapValidationConclusion.getValidationWarnings().getValidationWarning().get(0).getContent());
+        assertEquals(dssValidationConclusion.getSignaturesCount(), soapValidationConclusion.getSignaturesCount());
+        assertEquals(dssValidationConclusion.getValidSignaturesCount(), soapValidationConclusion.getValidSignaturesCount());
+        assertEquals(dssValidationConclusion.getPolicy().getPolicyDescription(), soapValidationConclusion.getPolicy().getPolicyDescription());
+        assertEquals(dssValidationConclusion.getPolicy().getPolicyName(), soapValidationConclusion.getPolicy().getPolicyName());
+        assertEquals(dssValidationConclusion.getPolicy().getPolicyUrl(), soapValidationConclusion.getPolicy().getPolicyUrl());
+
+        assertEquals(dssValidationConclusion.getValidationLevel(), soapValidationConclusion.getValidationLevel());
+
+        assertEquals(dssValidationConclusion.getTimeStampTokens().get(0).getIndication().name(), soapValidationConclusion.getTimeStampTokens().getTimeStampToken().get(0).getIndication().name());
+        assertEquals(dssValidationConclusion.getTimeStampTokens().get(0).getError().get(0).getContent(), soapValidationConclusion.getTimeStampTokens().getTimeStampToken().get(0).getErrors().getError().get(0).getContent());
+        assertEquals(dssValidationConclusion.getTimeStampTokens().get(0).getSignedBy(), soapValidationConclusion.getTimeStampTokens().getTimeStampToken().get(0).getSignedBy());
+        assertEquals(dssValidationConclusion.getTimeStampTokens().get(0).getSignedTime(), soapValidationConclusion.getTimeStampTokens().getTimeStampToken().get(0).getSignedTime());
+
+        assertEquals(dssValidationConclusion.getSignatures().get(0).getClaimedSigningTime(), soapValidationConclusion.getSignatures().getSignature().get(0).getClaimedSigningTime());
+        assertEquals(dssValidationConclusion.getSignatures().get(0).getId(), soapValidationConclusion.getSignatures().getSignature().get(0).getId());
+        assertEquals(dssValidationConclusion.getSignatures().get(0).getIndication(), soapValidationConclusion.getSignatures().getSignature().get(0).getIndication().value());
+        assertEquals(dssValidationConclusion.getSignatures().get(0).getSignatureFormat(), soapValidationConclusion.getSignatures().getSignature().get(0).getSignatureFormat());
+        assertEquals(dssValidationConclusion.getSignatures().get(0).getSignatureLevel(), soapValidationConclusion.getSignatures().getSignature().get(0).getSignatureLevel());
+        assertEquals(dssValidationConclusion.getSignatures().get(0).getSignedBy(), soapValidationConclusion.getSignatures().getSignature().get(0).getSignedBy());
+        assertEquals(dssValidationConclusion.getSignatures().get(0).getSubIndication(), soapValidationConclusion.getSignatures().getSignature().get(0).getSubIndication());
+        assertEquals(dssValidationConclusion.getSignatures().get(0).getInfo().getBestSignatureTime(), soapValidationConclusion.getSignatures().getSignature().get(0).getInfo().getBestSignatureTime());
+        assertEquals(dssValidationConclusion.getSignatures().get(0).getErrors().get(0).getContent(), soapValidationConclusion.getSignatures().getSignature().get(0).getErrors().getError().get(0).getContent());
+        assertEquals(dssValidationConclusion.getSignatures().get(0).getWarnings().get(0).getContent(), soapValidationConclusion.getSignatures().getSignature().get(0).getWarnings().getWarning().get(0).getContent());
+        assertEquals(dssValidationConclusion.getSignatures().get(0).getSignatureScopes().get(0).getContent(), soapValidationConclusion.getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getContent());
+        assertEquals(dssValidationConclusion.getSignatures().get(0).getSignatureScopes().get(0).getName(), soapValidationConclusion.getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getName());
+        assertEquals(dssValidationConclusion.getSignatures().get(0).getSignatureScopes().get(0).getScope(), soapValidationConclusion.getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
+    }
+
+    private void assertDiagnosticData(eu.europa.esig.dss.jaxb.diagnostic.DiagnosticData dssDiagnosticData, DiagnosticData soapDiagnosticData) {
+        assertEquals(dssDiagnosticData.getDocumentName(), soapDiagnosticData.getDocumentName());
+        assertDateEquals(dssDiagnosticData.getValidationDate(), soapDiagnosticData.getValidationDate());
+        assertContainerInfo(dssDiagnosticData.getContainerInfo(), soapDiagnosticData.getContainerInfo());
+        assertTrustedList(dssDiagnosticData.getListOfTrustedLists(), soapDiagnosticData.getListOfTrustedLists());
+
+        for (int i = 0; i < dssDiagnosticData.getTrustedLists().size(); i++) {
+            assertTrustedList(dssDiagnosticData.getTrustedLists().get(i), soapDiagnosticData.getTrustedLists().getTrustedList().get(i));
+        }
+
+        for (int i = 0; i < dssDiagnosticData.getSignatures().size(); i++) {
+            assertSignature(dssDiagnosticData.getSignatures().get(i), soapDiagnosticData.getSignatures().getSignature().get(i));
+        }
+
+        for (int i = 0; i < dssDiagnosticData.getUsedCertificates().size(); i++) {
+            assertUserCertificate(dssDiagnosticData.getUsedCertificates().get(i), soapDiagnosticData.getUsedCertificates().getCertificate().get(i));
+        }
+    }
+
+    private void assertContainerInfo(XmlContainerInfo dssContainerInfo, ContainerInfo containerInfo) {
+        assertEquals(dssContainerInfo.getContainerType(), containerInfo.getContainerType());
+        assertEquals(dssContainerInfo.getMimeTypeContent(), containerInfo.getMimeTypeContent());
+        assertEquals(dssContainerInfo.getZipComment(), containerInfo.getZipComment());
+
+        for (int i = 0; i < dssContainerInfo.getContentFiles().size(); i++) {
+            assertEquals(dssContainerInfo.getContentFiles().get(i), containerInfo.getContentFiles().getContentFile().get(i));
+        }
+
+        for (int i = 0; i < dssContainerInfo.getManifestFiles().size(); i++) {
+            assertEquals(dssContainerInfo.getManifestFiles().get(i).getFilename(), containerInfo.getManifestFiles().getManifestFile().get(i).getFilename());
+            assertEquals(dssContainerInfo.getManifestFiles().get(i).getSignatureFilename(), containerInfo.getManifestFiles().getManifestFile().get(i).getSignatureFilename());
+
+            for (int j = 0; j < dssContainerInfo.getManifestFiles().get(i).getEntries().size(); j++) {
+                assertEquals(dssContainerInfo.getManifestFiles().get(i).getEntries().get(j), containerInfo.getManifestFiles().getManifestFile().get(i).getEntries().getEntry().get(j));
+            }
+        }
+    }
+
+    private void assertTrustedList(XmlTrustedList dssTrustedList, TrustedList trustedList) {
+        assertEquals(dssTrustedList.getCountryCode(), trustedList.getCountryCode());
+        assertDateEquals(dssTrustedList.getIssueDate(), trustedList.getIssueDate());
+        assertDateEquals(dssTrustedList.getLastLoading(), trustedList.getLastLoading());
+        assertDateEquals(dssTrustedList.getNextUpdate(), trustedList.getNextUpdate());
+        assertEquals(dssTrustedList.getSequenceNumber(), trustedList.getSequenceNumber());
+        assertEquals(dssTrustedList.getUrl(), trustedList.getUrl());
+        assertEquals(dssTrustedList.getVersion(), trustedList.getVersion());
+    }
+
+    private void assertSignature(XmlSignature dssSignature, Signature signature) {
+        assertEquals(dssSignature.getId(), signature.getId());
+        assertEquals(dssSignature.getParentId(), signature.getParentId());
+        assertEquals(dssSignature.getErrorMessage(), signature.getErrorMessage());
+        assertEquals(dssSignature.getContentHints(), signature.getContentHints());
+        assertEquals(dssSignature.getContentIdentifier(), signature.getContentIdentifier());
+        assertEquals(dssSignature.getContentType(), signature.getContentType());
+        assertEquals(dssSignature.getSignatureFilename(), signature.getSignatureFilename());
+        assertEquals(dssSignature.getSignatureFormat(), signature.getSignatureFormat());
+        assertEquals(dssSignature.getPolicy().getId(), signature.getPolicy().getId());
+        assertEquals(dssSignature.getPolicy().getNotice(), signature.getPolicy().getNotice());
+        assertEquals(dssSignature.getPolicy().getProcessingError(), signature.getPolicy().getProcessingError());
+        assertEquals(dssSignature.getPolicy().getUrl(), signature.getPolicy().getUrl());
+        assertEquals(dssSignature.getPolicy().getDigestAlgoAndValue().getDigestValue(), signature.getPolicy().getDigestAlgoAndValue().getDigestValue());
+        assertEquals(dssSignature.getPolicy().getDigestAlgoAndValue().getDigestMethod(), signature.getPolicy().getDigestAlgoAndValue().getDigestMethod());
+        assertEquals(dssSignature.getPolicy().isAsn1Processable(), signature.getPolicy().isAsn1Processable());
+        assertEquals(dssSignature.getPolicy().isDigestAlgorithmsEqual(), signature.getPolicy().isDigestAlgorithmsEqual());
+        assertEquals(dssSignature.getPolicy().isIdentified(), signature.getPolicy().isIdentified());
+        assertEquals(dssSignature.getPolicy().isStatus(), signature.getPolicy().isStatus());
+        assertEquals(dssSignature.getStructuralValidation().getMessage(), signature.getStructuralValidation().getMessage());
+        assertEquals(dssSignature.getStructuralValidation().isValid(), signature.getStructuralValidation().isValid());
+        assertEquals(dssSignature.getSignatureProductionPlace().getAddress(), signature.getSignatureProductionPlace().getAddress());
+        assertEquals(dssSignature.getSignatureProductionPlace().getCity(), signature.getSignatureProductionPlace().getCity());
+        assertEquals(dssSignature.getSignatureProductionPlace().getCountryName(), signature.getSignatureProductionPlace().getCountryName());
+        assertEquals(dssSignature.getSignatureProductionPlace().getPostalCode(), signature.getSignatureProductionPlace().getPostalCode());
+        assertEquals(dssSignature.getSignatureProductionPlace().getStateOrProvince(), signature.getSignatureProductionPlace().getStateOrProvince());
+        assertEquals(dssSignature.isCounterSignature(), signature.isCounterSignature());
+        assertEquals(dssSignature.getClaimedRoles(), signature.getClaimedRoles().getClaimedRoles());
+        assertEquals(dssSignature.getCommitmentTypeIndication(), signature.getCommitmentTypeIndication().getIndication());
+
+        assertDateEquals(dssSignature.getDateTime(), signature.getDateTime());
+
+        for (int i = 0; i < dssSignature.getCertificateChain().size(); i++) {
+            assertCertificateChainItem(dssSignature.getCertificateChain().get(i), signature.getCertificateChain().getChainItem().get(i));
+        }
+
+        for (int i = 0; i < dssSignature.getTimestamps().size(); i++) {
+            assertTimestamp(dssSignature.getTimestamps().get(i), signature.getTimestamps().getTimestamp().get(i));
+        }
+
+        assertBasicSignature(dssSignature.getBasicSignature(), signature.getBasicSignature());
+        assertSigningCertificate(dssSignature.getSigningCertificate(), signature.getSigningCertificate());
+    }
+
+    private void assertTimestamp(XmlTimestamp dssXmlTimestamp, Timestamp timestamp) {
+        assertEquals(dssXmlTimestamp.isMessageImprintDataFound(), timestamp.isMessageImprintDataFound());
+        assertEquals(dssXmlTimestamp.isMessageImprintDataIntact(), timestamp.isMessageImprintDataIntact());
+        assertEquals(dssXmlTimestamp.getId(), timestamp.getId());
+        assertEquals(dssXmlTimestamp.getType(), timestamp.getType());
+        assertEquals(dssXmlTimestamp.getCanonicalizationMethod(), timestamp.getCanonicalizationMethod());
+        assertEquals(dssXmlTimestamp.getEncodedSignedDataDigestValue(), timestamp.getEncodedSignedDataDigestValue());
+        assertEquals(dssXmlTimestamp.getSignedDataDigestAlgo(), timestamp.getSignedDataDigestAlgo());
+
+        for (int i = 0; i < dssXmlTimestamp.getCertificateChain().size(); i++) {
+            assertEquals(dssXmlTimestamp.getCertificateChain().get(i).getId(), timestamp.getCertificateChain().getChainItem().get(i).getId());
+            assertEquals(dssXmlTimestamp.getCertificateChain().get(i).getSource(), timestamp.getCertificateChain().getChainItem().get(i).getSource());
+        }
+
+        assertBasicSignature(dssXmlTimestamp.getBasicSignature(), timestamp.getBasicSignature());
+        assertSigningCertificate(dssXmlTimestamp.getSigningCertificate(), timestamp.getSigningCertificate());
+    }
+
+    private void assertCertificateChainItem(XmlChainItem dssChainItem, CertificateChain.ChainItem chainItem) {
+        assertEquals(dssChainItem.getId(), chainItem.getId());
+        assertEquals(dssChainItem.getSource(), chainItem.getSource());
+    }
+
+    private void assertBasicSignature(XmlBasicSignature dssBasicSignature, BasicSignature basicSignature) {
+        assertEquals(dssBasicSignature.isSignatureIntact(), basicSignature.isSignatureIntact());
+        assertEquals(dssBasicSignature.isSignatureValid(), basicSignature.isSignatureValid());
+        assertEquals(dssBasicSignature.isReferenceDataFound(), basicSignature.isReferenceDataFound());
+        assertEquals(dssBasicSignature.isReferenceDataIntact(), basicSignature.isReferenceDataIntact());
+        assertEquals(dssBasicSignature.getEncryptionAlgoUsedToSignThisToken(), basicSignature.getEncryptionAlgoUsedToSignThisToken());
+        assertEquals(dssBasicSignature.getKeyLengthUsedToSignThisToken(), basicSignature.getKeyLengthUsedToSignThisToken());
+        assertEquals(dssBasicSignature.getMaskGenerationFunctionUsedToSignThisToken(), basicSignature.getMaskGenerationFunctionUsedToSignThisToken());
+    }
+
+    private void assertSigningCertificate(XmlSigningCertificate dssSigningCertificate, SigningCertificate signingCertificate) {
+        assertEquals(dssSigningCertificate.getId(), signingCertificate.getId());
+        assertEquals(dssSigningCertificate.getSigned(), signingCertificate.getSigned());
+        assertEquals(dssSigningCertificate.isIssuerSerialMatch(), signingCertificate.isIssuerSerialMatch());
+        assertEquals(dssSigningCertificate.isDigestValuePresent(), signingCertificate.isDigestValuePresent());
+        assertEquals(dssSigningCertificate.isAttributePresent(), signingCertificate.isAttributePresent());
+        assertEquals(dssSigningCertificate.isDigestValueMatch(), signingCertificate.isDigestValueMatch());
+    }
+
+    private void assertUserCertificate(XmlCertificate dssXmlCertificate, Certificate certificate) {
+        assertEquals(dssXmlCertificate.getId(), certificate.getId());
+        assertEquals(dssXmlCertificate.getCommonName(), certificate.getCommonName());
+        assertEquals(dssXmlCertificate.getCountryName(), certificate.getCountryName());
+        assertEquals(dssXmlCertificate.getSerialNumber(), certificate.getSerialNumber());
+        assertThat(dssXmlCertificate.getBase64Encoded(), equalTo(certificate.getBase64Encoded()));
+        assertEquals(dssXmlCertificate.getGivenName(), certificate.getGivenName());
+        assertEquals(dssXmlCertificate.getSurname(), certificate.getSurname());
+        assertEquals(dssXmlCertificate.getOrganizationalUnit(), certificate.getOrganizationalUnit());
+        assertEquals(dssXmlCertificate.getOrganizationName(), certificate.getOrganizationName());
+        assertEquals(dssXmlCertificate.getPseudonym(),   certificate.getPseudonym());
+        assertEquals(dssXmlCertificate.getPublicKeyEncryptionAlgo(), certificate.getPublicKeyEncryptionAlgo());
+        assertEquals(dssXmlCertificate.getPublicKeySize(), certificate.getPublicKeySize());
+        assertDateEquals(dssXmlCertificate.getNotAfter(), certificate.getNotAfter());
+        assertDateEquals(dssXmlCertificate.getNotBefore(), certificate.getNotBefore());
+
+        for (int i = 0; i < dssXmlCertificate.getCertificateChain().size(); i++) {
+            assertCertificateChainItem(dssXmlCertificate.getCertificateChain().get(i), certificate.getCertificateChain().getChainItem().get(i));
+        }
+
+        assertBasicSignature(dssXmlCertificate.getBasicSignature(), certificate.getBasicSignature());
+        assertSigningCertificate(dssXmlCertificate.getSigningCertificate(), certificate.getSigningCertificate());
+    }
+
+
+    private void assertDateEquals(Date dssDate, XMLGregorianCalendar date) {
+        /**
+         * At the moment DSS parsed date values are in UTC format but displayed timezone element is not displayed.
+         * Adding Z to date string before parsing to epoch.
+         * If given assertion fails, then given hack should be removed.
+         */
+        assertFalse(date.toString().endsWith("Z"));
+        assertEquals(dssDate.getTime() / 1000, Instant.parse(date.toString() + "Z").getEpochSecond());
     }
 
     private eu.europa.esig.dss.jaxb.detailedreport.DetailedReport createMockedValidationProcess() {
@@ -204,4 +425,166 @@ public class ValidationReportSoapResponseTransformerTest {
         return warnings;
     }
 
+    private eu.europa.esig.dss.jaxb.diagnostic.DiagnosticData createMockedDiagnosticData() {
+        eu.europa.esig.dss.jaxb.diagnostic.DiagnosticData diagnosticData = new eu.europa.esig.dss.jaxb.diagnostic.DiagnosticData();
+        diagnosticData.setDocumentName("TEST_DOCUMENT_NAME");
+        diagnosticData.setValidationDate(new Date());
+        diagnosticData.setContainerInfo(createMockedContainerInfo());
+        XmlTrustedList mockedXmlTrustedList = createMockedXmlTrustedList();
+        diagnosticData.setListOfTrustedLists(mockedXmlTrustedList);
+        diagnosticData.setTrustedLists(Collections.singletonList(mockedXmlTrustedList));
+        diagnosticData.setUsedCertificates(Arrays.asList(createMockedXmlCertificate("1"), createMockedXmlCertificate("2")));
+        diagnosticData.setSignatures(Arrays.asList(createMockedXmlSignature("1"), createMockedXmlSignature("2")));
+        return diagnosticData;
+    }
+
+    private XmlTrustedList createMockedXmlTrustedList() {
+        XmlTrustedList xmlTrustedList = new XmlTrustedList();
+        xmlTrustedList.setCountryCode("EE");
+        xmlTrustedList.setIssueDate(new Date());
+        xmlTrustedList.setLastLoading(new Date());
+        xmlTrustedList.setNextUpdate(new Date());
+        xmlTrustedList.setSequenceNumber(1);
+        xmlTrustedList.setUrl("URL");
+        xmlTrustedList.setVersion(2);
+        xmlTrustedList.setWellSigned(true);
+        return xmlTrustedList;
+    }
+
+    private XmlContainerInfo createMockedContainerInfo() {
+        XmlContainerInfo containerInfo = new XmlContainerInfo();
+        containerInfo.setContainerType("CONTAINER_TYPE");
+        containerInfo.setMimeTypeContent("CONTAINER_MIME_TYPE");
+        containerInfo.setMimeTypeFilePresent(false);
+        containerInfo.setZipComment("ZIP_COMMENT");
+        containerInfo.setContentFiles(Arrays.asList("COUNTED_FILE_1", "COUNTED_FILE_2"));
+        containerInfo.setManifestFiles(Arrays.asList(createMockedXmlManifestFile("FILENAME_1"), createMockedXmlManifestFile("FILENAME_2")));
+        return containerInfo;
+    }
+
+    private XmlManifestFile createMockedXmlManifestFile(String filename) {
+        XmlManifestFile xmlManifestFile = new XmlManifestFile();
+        xmlManifestFile.setFilename(filename);
+        xmlManifestFile.setSignatureFilename("SIGNATURE_FILENAME");
+        xmlManifestFile.setEntries(Arrays.asList("ENTRY_1", "ENTRY_2"));
+        return xmlManifestFile;
+    }
+
+    private XmlCertificate createMockedXmlCertificate(String id) {
+        XmlCertificate xmlCertificate = new XmlCertificate();
+        xmlCertificate.setBasicSignature(new XmlBasicSignature());
+        xmlCertificate.setBase64Encoded("something".getBytes(StandardCharsets.UTF_8));
+        xmlCertificate.setId(id);
+        xmlCertificate.setCommonName("COMMON_NAME");
+        xmlCertificate.setCountryName("COUNTRY_NAME");
+        xmlCertificate.setGivenName("GIVEN_NAME");
+        xmlCertificate.setSurname("SURNAME");
+        xmlCertificate.setOrganizationalUnit("OU");
+        xmlCertificate.setSerialNumber(BigInteger.ONE);
+        xmlCertificate.setTrusted(true);
+        xmlCertificate.setPseudonym("PSEUDONYM");
+        xmlCertificate.setPublicKeyEncryptionAlgo("ALGO");
+        xmlCertificate.setBasicSignature(createMockedBasicSignature());
+        xmlCertificate.setSigningCertificate(createMockedSigningCertificate());
+        xmlCertificate.setPublicKeySize(1000);
+        xmlCertificate.setNotAfter(new Date());
+        xmlCertificate.setNotBefore(new Date());
+        return xmlCertificate;
+    }
+
+    private XmlSignature createMockedXmlSignature(String id) {
+        XmlSignature signature = new XmlSignature();
+        signature.setId(id);
+        signature.setContentHints("CONTENTS_HINTS");
+        signature.setContentType("CONTENT_TYPE");
+        signature.setCounterSignature(true);
+        signature.setErrorMessage("ERROR_MESSAGE");
+
+        signature.setBasicSignature(createMockedBasicSignature());
+
+        XmlPolicy policy = new XmlPolicy();
+        policy.setId("ID");
+        policy.setDigestAlgorithmsEqual(true);
+        policy.setAsn1Processable(true);
+        policy.setIdentified(true);
+        policy.setStatus(true);
+        policy.setDigestAlgorithmsEqual(true);
+        policy.setNotice("NOTICE");
+        policy.setProcessingError("PROCESSING_ERROR");
+
+        XmlDigestAlgoAndValue xmlDigestAlgoAndValue = new XmlDigestAlgoAndValue();
+        xmlDigestAlgoAndValue.setDigestMethod("METHOD");
+        xmlDigestAlgoAndValue.setDigestValue("VALUE");
+        policy.setDigestAlgoAndValue(xmlDigestAlgoAndValue);
+        signature.setPolicy(policy);
+        signature.setSigningCertificate(createMockedSigningCertificate());
+
+        XmlStructuralValidation xmlStructuralValidation = new XmlStructuralValidation();
+        xmlStructuralValidation.setMessage("MESSAGE");
+        xmlStructuralValidation.setValid(true);
+        signature.setStructuralValidation(xmlStructuralValidation);
+
+        XmlSignatureProductionPlace xmlSignatureProductionPlace = new XmlSignatureProductionPlace();
+        xmlSignatureProductionPlace.setAddress("ADDRESS");
+        xmlSignatureProductionPlace.setCity("CITY");
+        xmlSignatureProductionPlace.setCountryName("ESTONIA");
+        xmlSignatureProductionPlace.setPostalCode("POSTAL_CODE");
+        xmlSignatureProductionPlace.setStateOrProvince("STATE");
+        signature.setSignatureProductionPlace(xmlSignatureProductionPlace);
+
+        signature.setCertificateChain(Arrays.asList(createMockedXmlChainItem("1"), createMockedXmlChainItem("2")));
+        signature.setClaimedRoles(Arrays.asList("role1", "role2"));
+        signature.setCommitmentTypeIndication(Arrays.asList("1", "2"));
+        signature.setDateTime(new Date());
+
+        signature.setTimestamps(Arrays.asList(createMockedXmlTimestamp("1"), createMockedXmlTimestamp("2")));
+        return signature;
+    }
+
+    private XmlBasicSignature createMockedBasicSignature() {
+        XmlBasicSignature basicSignature = new XmlBasicSignature();
+        basicSignature.setDigestAlgoUsedToSignThisToken("A");
+        basicSignature.setEncryptionAlgoUsedToSignThisToken("B");
+        basicSignature.setKeyLengthUsedToSignThisToken("C");
+        basicSignature.setMaskGenerationFunctionUsedToSignThisToken("D");
+        basicSignature.setReferenceDataFound(true);
+        basicSignature.setReferenceDataIntact(true);
+        basicSignature.setSignatureIntact(true);
+        basicSignature.setSignatureValid(true);
+        return basicSignature;
+    }
+
+    private XmlSigningCertificate createMockedSigningCertificate() {
+        XmlSigningCertificate xmlSigningCertificate = new XmlSigningCertificate();
+        xmlSigningCertificate.setId("ID");
+        xmlSigningCertificate.setSigned("VALUE");
+        xmlSigningCertificate.setIssuerSerialMatch(true);
+        xmlSigningCertificate.setDigestValuePresent(true);
+        xmlSigningCertificate.setAttributePresent(true);
+        xmlSigningCertificate.setDigestValueMatch(true);
+        return xmlSigningCertificate;
+    }
+
+    private XmlChainItem createMockedXmlChainItem(String id) {
+        XmlChainItem chainItem = new XmlChainItem();
+        chainItem.setId(id);
+        chainItem.setSource("SOURCE");
+        return chainItem;
+    }
+
+    private XmlTimestamp createMockedXmlTimestamp(String id) {
+        XmlTimestamp timestamp = new XmlTimestamp();
+        timestamp.setId(id);
+        timestamp.setBasicSignature(createMockedBasicSignature());
+        timestamp.setCanonicalizationMethod("METHOD");
+        timestamp.setEncodedSignedDataDigestValue("VALUE");
+        timestamp.setMessageImprintDataFound(true);
+        timestamp.setMessageImprintDataIntact(true);
+        timestamp.setProductionTime(new Date());
+        timestamp.setSignedDataDigestAlgo("ALGO");
+        timestamp.setSigningCertificate(createMockedSigningCertificate());
+        timestamp.setType("TYPE");
+        timestamp.setCertificateChain(Arrays.asList(createMockedXmlChainItem("33"), createMockedXmlChainItem("44")));
+        return timestamp;
+    }
 }

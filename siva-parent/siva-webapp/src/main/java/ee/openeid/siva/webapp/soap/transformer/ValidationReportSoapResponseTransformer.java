@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2019 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -17,21 +17,33 @@
 package ee.openeid.siva.webapp.soap.transformer;
 
 import ee.openeid.siva.validation.document.report.DetailedReport;
+import ee.openeid.siva.validation.document.report.DiagnosticReport;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
 import ee.openeid.siva.validation.document.report.ValidatedDocument;
-import ee.openeid.siva.webapp.soap.Error;
-import ee.openeid.siva.webapp.soap.*;
+import ee.openeid.siva.webapp.soap.response.Error;
+import ee.openeid.siva.webapp.soap.response.Indication;
+import ee.openeid.siva.webapp.soap.response.Info;
+import ee.openeid.siva.webapp.soap.response.Policy;
+import ee.openeid.siva.webapp.soap.response.SignatureScope;
+import ee.openeid.siva.webapp.soap.response.SignatureValidationData;
+import ee.openeid.siva.webapp.soap.response.TimeStampTokenData;
+import ee.openeid.siva.webapp.soap.response.ValidatedDocumentData;
+import ee.openeid.siva.webapp.soap.response.ValidationConclusion;
+import ee.openeid.siva.webapp.soap.response.ValidationReport;
+import ee.openeid.siva.webapp.soap.response.ValidationWarning;
+import ee.openeid.siva.webapp.soap.response.Warning;
+import ee.openeid.siva.webapp.soap.transformer.report.DetailedReportTransformer;
+import ee.openeid.siva.webapp.soap.transformer.report.DiagnosticDataTransformer;
 import org.springframework.stereotype.Component;
 
-import javax.xml.bind.*;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.List;
 
 @Component
 public class ValidationReportSoapResponseTransformer {
-    private static final String EU_DETAILED_REPORT_PACKAGE = "eu.europa.esig.dss.validation.detailed_report";
+
+    private static final DetailedReportTransformer DETAILED_REPORT_TRANSFORMER = new DetailedReportTransformer();
+    private static final DiagnosticDataTransformer DIAGNOSTIC_DATA_TRANSFORMER = new DiagnosticDataTransformer();
 
     private static Policy toSoapResponsePolicy(ee.openeid.siva.validation.document.report.Policy policy) {
         Policy responsePolicy = new Policy();
@@ -50,17 +62,17 @@ public class ValidationReportSoapResponseTransformer {
     }
 
     public ValidationReport toSoapResponse(SimpleReport report) {
-        ValidationReport responseValidationReport = new ValidationReport();
-
+        ValidationReport validationReport = new ValidationReport();
         ValidationConclusion responseValidationConclusion = toSoapValidationConclusion(report.getValidationConclusion());
-        responseValidationReport.setValidationConclusion(responseValidationConclusion);
+        validationReport.setValidationConclusion(responseValidationConclusion);
 
         if (report instanceof DetailedReport) {
-            ee.openeid.siva.webapp.soap.DetailedReport xmlDetailedReport = toSoapDetailedReport(((DetailedReport) report).getValidationProcess());
-            responseValidationReport.setValidationProcess(xmlDetailedReport);
-        }
+            validationReport.setValidationProcess(DETAILED_REPORT_TRANSFORMER.transform(((DetailedReport) report).getValidationProcess()));
 
-        return responseValidationReport;
+        } else if (report instanceof DiagnosticReport) {
+            validationReport.setDiagnosticData(DIAGNOSTIC_DATA_TRANSFORMER.transform(((DiagnosticReport) report).getDiagnosticData()));
+        }
+        return validationReport;
     }
 
     private ValidationConclusion toSoapValidationConclusion(ee.openeid.siva.validation.document.report.ValidationConclusion validationConclusion) {
@@ -81,37 +93,6 @@ public class ValidationReportSoapResponseTransformer {
         if (validationConclusion.getTimeStampTokens() != null)
             responseValidationConclusion.setTimeStampTokens(toSoapResponseResponseTimeStamps(validationConclusion.getTimeStampTokens()));
         return responseValidationConclusion;
-    }
-
-    @SuppressWarnings("unchecked")
-    private ee.openeid.siva.webapp.soap.DetailedReport toSoapDetailedReport(eu.europa.esig.dss.jaxb.detailedreport.DetailedReport detailedReport) {
-        try {
-            if (detailedReport == null)
-                return null;
-            JAXBContext marshallerContext = JAXBContext.newInstance(eu.europa.esig.dss.jaxb.detailedreport.DetailedReport.class);
-            Marshaller marshaller = marshallerContext.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            StringWriter writer = new StringWriter();
-            marshaller.marshal(detailedReport, writer);
-            String requestString = writer.toString();
-
-            JAXBContext unMarshallerContext = JAXBContext.newInstance(EU_DETAILED_REPORT_PACKAGE);
-            Unmarshaller unmarshaller = unMarshallerContext.createUnmarshaller();
-            StringReader reader = new StringReader(requestString);
-
-            JAXBElement<eu.europa.esig.dss.validation.detailed_report.DetailedReport> detailedReportJAXBElement = (JAXBElement<eu.europa.esig.dss.validation.detailed_report.DetailedReport>) unmarshaller.unmarshal(reader);
-            return transformDetailReport(detailedReportJAXBElement.getValue());
-        } catch (JAXBException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private ee.openeid.siva.webapp.soap.DetailedReport transformDetailReport(eu.europa.esig.dss.validation.detailed_report.DetailedReport euDetailReport) {
-        ee.openeid.siva.webapp.soap.DetailedReport detailedReport = new ee.openeid.siva.webapp.soap.DetailedReport();
-        detailedReport.getTLAnalysis().addAll(euDetailReport.getTLAnalysis());
-        detailedReport.getSignatures().addAll(euDetailReport.getSignatures());
-        detailedReport.getBasicBuildingBlocks().addAll(euDetailReport.getBasicBuildingBlocks());
-        return detailedReport;
     }
 
     private ValidatedDocumentData toSoapValidatedDocument(ValidatedDocument validatedDocument) {

@@ -27,6 +27,7 @@
         <xs:sequence>
             <xs:element ref="tns:ValidationConclusion"/>
             <xs:element minOccurs="0" ref="tns:ValidationProcess"/>
+            <xs:element minOccurs="0" ref="tns:DiagnosticData"/>
         </xs:sequence>
     </xs:complexType>
 

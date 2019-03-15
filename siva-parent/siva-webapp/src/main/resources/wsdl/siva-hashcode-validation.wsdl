@@ -78,6 +78,7 @@
                 <xs:restriction base="xs:string">
                     <xs:enumeration value="SIMPLE" />
                     <xs:enumeration value="DETAILED" />
+                    <xs:enumeration value="DIAGNOSTIC" />
                 </xs:restriction>
             </xs:simpleType>
 

@@ -46,14 +46,6 @@
                     <xs:element name="Size" type="xs:long"/>
                 </xs:sequence>
             </xs:complexType>
-            <xs:simpleType name="DocumentType">
-                <xs:restriction base="xs:string">
-                    <xs:enumeration value="PDF"/>
-                    <xs:enumeration value="XROAD"/>
-                    <xs:enumeration value="BDOC"/>
-                    <xs:enumeration value="DDOC"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:schema>
     </wsdl:types>
     <wsdl:message name="GetDocumentDataFiles">

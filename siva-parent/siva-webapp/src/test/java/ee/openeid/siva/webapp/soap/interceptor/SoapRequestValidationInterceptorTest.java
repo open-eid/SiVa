@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2019 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -16,6 +16,7 @@
 
 package ee.openeid.siva.webapp.soap.interceptor;
 
+import ee.openeid.siva.proxy.document.DocumentType;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.binding.soap.interceptor.SoapInterceptor;
 import org.apache.cxf.interceptor.Fault;
@@ -28,9 +29,16 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import javax.xml.soap.*;
+import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPEnvelope;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
+import javax.xml.soap.SOAPPart;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
@@ -42,7 +50,6 @@ public class SoapRequestValidationInterceptorTest {
     private static final int EXPECTED_STATUS_CODE = 400;
     private static final String EXPECTED_FAULT_CODE = "Client";
     private static final String INVALID_BASE64 = "Document is not encoded in a valid base64 string";
-    private static final String INVALID_FILENAME = "Invalid filename";
     private static final String INVALID_POLICY = "Invalid signature policy";
     private static final String INVALID_DOCUMENTTYPE = "Invalid document type";
 
@@ -103,16 +110,37 @@ public class SoapRequestValidationInterceptorTest {
 
     @Test
     public void whenPolicyIsInvalidThenFaultIsThrownWithInvalidPolicyMessage() throws SOAPException {
-        mockSoapMessage("filename", "AABBBAA", "BDOC", ";:::;;");
+        mockSoapMessage("filename", "AABBBAA", "XROAD", ";:::;;");
         Fault soapFault = handleMessageInInterceptor(message);
         assertFaultWithExpectedMessage(soapFault, INVALID_POLICY);
     }
 
     @Test
     public void noSoapFaultIsThrownWithValidRequest() throws SOAPException {
-        mockSoapMessage("filename", "c2Q=", "BDOC", "AA");
+        mockSoapMessage("filename", "c2Q=", "XROAD", "AA");
         Fault soapFault = handleMessageInInterceptor(message);
         assertNull(soapFault);
+    }
+
+    @Test
+    public void documentTypeBDOCThrowsInvalidDocumentTypeFault() throws SOAPException {
+        mockSoapMessage("filename", "c2Q=", DocumentType.BDOC.name(), "AA");
+        Fault soapFault = handleMessageInInterceptor(message);
+        assertFaultWithExpectedMessage(soapFault, INVALID_DOCUMENTTYPE);
+    }
+
+    @Test
+    public void documentTypeDDOCThrowsInvalidDocumentTypeFault() throws SOAPException {
+        mockSoapMessage("filename", "c2Q=", DocumentType.DDOC.name(), "AA");
+        Fault soapFault = handleMessageInInterceptor(message);
+        assertFaultWithExpectedMessage(soapFault, INVALID_DOCUMENTTYPE);
+    }
+
+    @Test
+    public void documentTypePDFThrowsInvalidDocumentTypeFault() throws SOAPException {
+        mockSoapMessage("filename", "c2Q=", DocumentType.PDF.name(), "AA");
+        Fault soapFault = handleMessageInInterceptor(message);
+        assertFaultWithExpectedMessage(soapFault, INVALID_DOCUMENTTYPE);
     }
 
     private Fault handleMessageInInterceptor(SoapMessage soapMessage) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Riigi Infosüsteemide Amet
+ * Copyright 2019 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -20,7 +20,7 @@ import ee.openeid.siva.proxy.HashcodeValidationProxy;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.webapp.soap.HashcodeValidationWebService;
 import ee.openeid.siva.webapp.soap.SoapHashcodeValidationRequest;
-import ee.openeid.siva.webapp.soap.ValidationReport;
+import ee.openeid.siva.webapp.soap.response.ValidationReport;
 import ee.openeid.siva.webapp.soap.transformer.SoapHashcodeValidationRequestToProxyDocumentTransformer;
 import ee.openeid.siva.webapp.soap.transformer.ValidationReportSoapResponseTransformer;
 import org.apache.cxf.annotations.SchemaValidation;

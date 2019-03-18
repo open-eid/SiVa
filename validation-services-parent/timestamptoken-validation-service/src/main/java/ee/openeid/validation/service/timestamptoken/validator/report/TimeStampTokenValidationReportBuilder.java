@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2019 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -17,14 +17,20 @@
 package ee.openeid.validation.service.timestamptoken.validator.report;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.validation.document.report.DetailedReport;
+import ee.openeid.siva.validation.document.report.DiagnosticReport;
+import ee.openeid.siva.validation.document.report.Reports;
+import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.*;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.getValidationTime;
 
 public class TimeStampTokenValidationReportBuilder {
 
@@ -46,7 +52,8 @@ public class TimeStampTokenValidationReportBuilder {
         ValidationConclusion validationConclusion = getValidationConclusion();
         SimpleReport simpleReport = new SimpleReport(validationConclusion);
         DetailedReport detailedReport = new DetailedReport(validationConclusion, null);
-        return new Reports(simpleReport, detailedReport);
+        DiagnosticReport diagnosticReport = new DiagnosticReport(validationConclusion, null);
+        return new Reports(simpleReport, detailedReport, diagnosticReport);
     }
 
     private ValidationConclusion getValidationConclusion() {

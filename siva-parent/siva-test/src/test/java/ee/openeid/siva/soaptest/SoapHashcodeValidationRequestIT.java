@@ -164,7 +164,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
 
         ValidatableResponse response = postHashcodeValidation(request).then();
         assertClientFault(response,
-                "Unmarshalling Error: cvc-enumeration-valid: Value 'INVALID_REPORT_TYPE' is not facet-valid with respect to enumeration '[SIMPLE, DETAILED]'. It must be a value from the enumeration. ");
+                "Unmarshalling Error: cvc-enumeration-valid: Value 'INVALID_REPORT_TYPE' is not facet-valid with respect to enumeration '[SIMPLE, DETAILED, DIAGNOSTIC]'. It must be a value from the enumeration. ");
     }
 
     /**

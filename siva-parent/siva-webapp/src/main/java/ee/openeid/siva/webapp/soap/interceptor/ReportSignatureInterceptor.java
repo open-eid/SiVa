@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2019 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -103,7 +103,8 @@ public class ReportSignatureInterceptor extends AbstractSoapInterceptor {
 
     private void addValidationReportSignature(SOAPBody soapBody, byte[] validationReportSignature) throws SOAPException {
         SOAPElement validationResponseElement = (SOAPElement) soapBody.getFirstChild();
-        validationResponseElement.addChildElement("ValidationReportSignature").setTextContent(Base64.encodeBase64String(validationReportSignature));
+        validationResponseElement.addChildElement("ValidationReportSignature", "", "http://soap.webapp.siva.openeid.ee/response/")
+                                 .setTextContent(Base64.encodeBase64String(validationReportSignature));
     }
 
     public void setSignatureService(SignatureService signatureService) {

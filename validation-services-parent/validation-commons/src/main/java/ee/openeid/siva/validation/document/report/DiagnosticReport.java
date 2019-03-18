@@ -16,22 +16,22 @@
 
 package ee.openeid.siva.validation.document.report;
 
+import eu.europa.esig.dss.jaxb.diagnostic.DiagnosticData;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class Reports {
+public class DiagnosticReport extends SimpleReport {
 
-    SimpleReport simpleReport;
-    DetailedReport detailedReport;
-    DiagnosticReport diagnosticReport;
+    private DiagnosticData diagnosticData;
 
-    public Reports() {
-        this(null, null, null);
+    public DiagnosticReport() {
     }
 
-    public Reports(SimpleReport simpleReport, DetailedReport detailedReport, DiagnosticReport diagnosticReport) {
-        this.simpleReport = simpleReport;
-        this.detailedReport = detailedReport;
-        this.diagnosticReport = diagnosticReport;
+    public DiagnosticReport(ValidationConclusion validationConclusion, DiagnosticData diagnosticData) {
+        super(validationConclusion);
+        this.diagnosticData = diagnosticData;
     }
+
 }

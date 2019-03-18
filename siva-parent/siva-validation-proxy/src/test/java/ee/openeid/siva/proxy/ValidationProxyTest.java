@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2019 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -18,13 +18,24 @@ package ee.openeid.siva.proxy;
 
 import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.proxy.document.ProxyDocument;
+import ee.openeid.siva.proxy.document.ReportType;
 import ee.openeid.siva.proxy.exception.ValidatonServiceNotFoundException;
 import ee.openeid.siva.proxy.http.RESTProxyService;
 import ee.openeid.siva.statistics.StatisticsService;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
+import ee.openeid.siva.validation.document.report.DetailedReport;
+import ee.openeid.siva.validation.document.report.DiagnosticReport;
 import ee.openeid.siva.validation.document.report.Error;
-import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.validation.document.report.Info;
+import ee.openeid.siva.validation.document.report.Policy;
+import ee.openeid.siva.validation.document.report.Reports;
+import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
+import ee.openeid.siva.validation.document.report.ValidatedDocument;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
+import ee.openeid.siva.validation.document.report.ValidationWarning;
 import ee.openeid.siva.validation.exception.DocumentRequirementsException;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
@@ -48,6 +59,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -55,9 +67,12 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ValidationProxyTest {
@@ -101,7 +116,7 @@ public class ValidationProxyTest {
         ValidationConclusion validationConclusion = new ValidationConclusion();
         validationConclusion.setSignaturesCount(1);
         validationConclusion.setValidSignaturesCount(1);
-        Reports reports = new Reports(new SimpleReport(validationConclusion), null);
+        Reports reports = new Reports(new SimpleReport(validationConclusion), null, null);
 
         BDDMockito.given(restProxyService.validate(any(ValidationDocument.class))).willReturn(reports);
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.XROAD);
@@ -244,6 +259,41 @@ public class ValidationProxyTest {
         Assert.assertTrue( validationConclusion.getValidationWarnings().isEmpty());
     }
 
+    @Test
+    public void requestValidationReturnsReportInRequestedType() {
+        mockValidationServices();
+        for (DocumentType documentType : DocumentType.values()) {
+            validateRequestAndAssertExpectedReportType(mockProxyDocumentWithDocument(documentType, ReportType.SIMPLE),     SimpleReport.class);
+            validateRequestAndAssertExpectedReportType(mockProxyDocumentWithDocument(documentType, ReportType.DETAILED),   DetailedReport.class);
+            validateRequestAndAssertExpectedReportType(mockProxyDocumentWithDocument(documentType, ReportType.DIAGNOSTIC), DiagnosticReport.class);
+            validateRequestAndAssertExpectedReportType(mockProxyDocumentWithDocument(documentType, null),                  SimpleReport.class);
+
+            System.out.println("Successfully validated for document of type " + documentType);
+        }
+    }
+
+    private void mockValidationServices() {
+        Reports mockReports = mockReports();
+        ValidationService validationServiceMock = mock(ValidationService.class);
+        when(applicationContext.getBean(anyString())).thenReturn(validationServiceMock);
+        when(validationServiceMock.validateDocument(any())).thenReturn(mockReports);
+
+        // Separate service used for documents of type XROAD
+        when(restProxyService.validate(any())).thenReturn(mockReports);
+    }
+
+    private void validateRequestAndAssertExpectedReportType(ProxyDocument proxyDocument, Class<? extends SimpleReport> expectedReportClass) {
+        SimpleReport report = validationProxy.validateRequest(proxyDocument);
+        assertTrue(expectedReportClass.isInstance(report));
+    }
+
+    private Reports mockReports() {
+        Reports reports = new Reports();
+        reports.setSimpleReport(new SimpleReport());
+        reports.setDetailedReport(new DetailedReport());
+        reports.setDiagnosticReport(new DiagnosticReport());
+        return reports;
+    }
 
     private GenericValidationService getGenericValidationService() {
         GenericValidationService validationService = new GenericValidationService();
@@ -266,9 +316,15 @@ public class ValidationProxyTest {
     }
 
     private ProxyDocument mockProxyDocumentWithDocument(DocumentType documentType) {
+        return mockProxyDocumentWithDocument(documentType, ReportType.SIMPLE);
+    }
+
+    private ProxyDocument mockProxyDocumentWithDocument(DocumentType documentType, ReportType reportType) {
         ProxyDocument proxyDocument = new ProxyDocument();
         proxyDocument.setDocumentType(documentType);
         proxyDocument.setName(DEFAULT_DOCUMENT_NAME + documentType.name());
+        proxyDocument.setBytes("TEST_FILE_CONTENT".getBytes(StandardCharsets.UTF_8));
+        proxyDocument.setReportType(reportType);
         return proxyDocument;
     }
 
@@ -306,7 +362,7 @@ public class ValidationProxyTest {
             validationConclusion.setPolicy(createDummyPolicy());
             validationConclusion.setSignatures(createDummySignatures());
             SimpleReport simpleReport = new SimpleReport(validationConclusion);
-            return new Reports(simpleReport, null);
+            return new Reports(simpleReport, null, null);
         }
 
         private ValidatedDocument createDummyValidatedDocument() {

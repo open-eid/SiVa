@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2019 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -19,6 +19,7 @@ package ee.openeid.validation.service.generic;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
+import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
@@ -41,7 +42,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.Assert.*;
+import java.util.Date;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @SpringBootTest(classes = {PDFValidationServiceTest.TestConfiguration.class})
 @RunWith(SpringRunner.class)
@@ -97,7 +102,37 @@ public class PDFValidationServiceTest {
         assertTrue(signatureValidationData.getWarnings().size() == 0);
     }
 
-    ValidationDocument buildValidationDocument(String testFile) throws Exception {
+    void assertValidationDate(Date validationStartDate, Date validationDate) {
+        Date now = new Date();
+        assertTrue(validationDate.after(validationStartDate) || validationDate.equals(validationStartDate));
+        assertTrue(validationDate.before(now) || validationDate.equals(now));
+    }
+
+    Reports validateAndAssertReports(ValidationDocument validationDocument) {
+        Reports reports = validationService.validateDocument(validationDocument);
+        assertAllReportsPresent(reports);
+        assertReportsValidationConclusionsIdentical(reports);
+        assertReportsDocumentName(validationDocument.getName(), reports);
+        return reports;
+    }
+
+    private void assertReportsDocumentName(String documentName, Reports reports) {
+        assertEquals(documentName, reports.getSimpleReport().getValidationConclusion().getValidatedDocument().getFilename());
+        assertEquals(documentName, reports.getDiagnosticReport().getDiagnosticData().getDocumentName());
+    }
+
+    private void assertReportsValidationConclusionsIdentical(Reports reports) {
+        assertEquals(reports.getSimpleReport().getValidationConclusion(), reports.getDetailedReport().getValidationConclusion());
+        assertEquals(reports.getSimpleReport().getValidationConclusion(), reports.getDiagnosticReport().getValidationConclusion());
+    }
+
+    private void assertAllReportsPresent(Reports reports) {
+        assertNotNull(reports.getSimpleReport());
+        assertNotNull(reports.getDetailedReport());
+        assertNotNull(reports.getDiagnosticReport());
+    }
+
+    ValidationDocument buildValidationDocument(String testFile) {
         return DummyValidationDocumentBuilder
                 .aValidationDocument()
                 .withDocument(TEST_FILES_LOCATION + testFile)

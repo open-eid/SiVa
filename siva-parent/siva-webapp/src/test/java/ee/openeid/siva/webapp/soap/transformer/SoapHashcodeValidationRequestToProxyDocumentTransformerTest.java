@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Riigi Infosüsteemide Amet
+ * Copyright 2019 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -32,7 +32,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 
 public class SoapHashcodeValidationRequestToProxyDocumentTransformerTest {
 
@@ -58,11 +61,13 @@ public class SoapHashcodeValidationRequestToProxyDocumentTransformerTest {
 
     @Test
     public void reportTypeRemainsUnchangedIfNotNull() throws URISyntaxException, IOException {
-        SoapHashcodeValidationRequest validationRequest = mockValidValidationRequest();
-        validationRequest.setReportType(ee.openeid.siva.webapp.soap.ReportType.DETAILED);
+        for (ee.openeid.siva.webapp.soap.ReportType reportType : ee.openeid.siva.webapp.soap.ReportType.values()) {
+            SoapHashcodeValidationRequest validationRequest = mockValidValidationRequest();
+            validationRequest.setReportType(reportType);
 
-        ProxyHashcodeDataSet proxyDocument = transformer.transform(validationRequest);
-        assertSame(proxyDocument.getReportType(), ReportType.DETAILED);
+            ProxyHashcodeDataSet proxyDocument = transformer.transform(validationRequest);
+            assertSame(proxyDocument.getReportType(), ReportType.reportTypeFromString(reportType.name()));
+        }
     }
 
     @Test

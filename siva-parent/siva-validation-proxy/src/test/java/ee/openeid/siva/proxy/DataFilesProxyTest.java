@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2019 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -17,15 +17,21 @@
 package ee.openeid.siva.proxy;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 import ee.openeid.siva.proxy.document.ProxyDocument;
+import ee.openeid.siva.proxy.document.ReportType;
 import ee.openeid.siva.proxy.exception.DataFilesServiceNotFoundException;
 import ee.openeid.siva.validation.document.DataFilesDocument;
 import ee.openeid.siva.validation.document.report.DataFileData;
 import ee.openeid.siva.validation.document.report.DataFilesReport;
+import ee.openeid.siva.validation.document.report.DetailedReport;
+import ee.openeid.siva.validation.document.report.DiagnosticReport;
+import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.service.DataFilesService;
 import ee.openeid.validation.service.timemark.DDOCDataFilesService;
 
@@ -82,6 +88,18 @@ public class DataFilesProxyTest {
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument("filename.ddoc");
         DataFilesReport report = dataFilesProxy.getDataFiles(proxyDocument);
         assertEquals(dataFilesServiceSpy.dataFilesReport, report);
+    }
+
+    @Test
+    public void dataFilesProxyDoesNotDependOnRequestReportTypeAndAlwaysReturnsDataFilesReport() {
+        when(applicationContext.getBean(DDOCDataFilesService.class.getSimpleName())).thenReturn(dataFilesServiceSpy);
+        ProxyDocument proxyDocument = mockProxyDocumentWithDocument("filename.ddoc");
+
+        for (ReportType reportType : ReportType.values()) {
+            proxyDocument.setReportType(reportType);
+            DataFilesReport report = dataFilesProxy.getDataFiles(proxyDocument);
+            assertTrue(report instanceof DataFilesReport);
+        }
     }
 
     private ProxyDocument mockProxyDocumentWithDocument(String filename) {

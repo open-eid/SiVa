@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2019 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -18,6 +18,8 @@ package ee.openeid.siva.webapp.transformer;
 
 import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.proxy.document.ProxyDocument;
+import ee.openeid.siva.proxy.document.ReportType;
+import ee.openeid.siva.proxy.document.typeresolver.UnsupportedTypeException;
 import ee.openeid.siva.testutils.MockValidationRequestBuilder;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Before;
@@ -70,6 +72,29 @@ public class ValidationRequestToProxyDocumentTransformerTest {
     public void xroadTypeIsCorrectlyTransformedToDocumentType() {
         validationRequest.setType("xroad");
         assertEquals(DocumentType.XROAD, transformer.transform(validationRequest).getDocumentType());
+    }
+
+    @Test
+    public void reportTypeIsCorrectlyTransformedToReportType() {
+        for (ReportType reportType : ReportType.values()) {
+            validationRequest.setReportType(reportType.name());
+            assertEquals(reportType, transformer.transform(validationRequest).getReportType());
+        }
+    }
+
+    @Test
+    public void nullReportTypeIsTransformedToSimpleReportType() {
+        validationRequest.setReportType(null);
+        assertEquals(ReportType.SIMPLE, transformer.transform(validationRequest).getReportType());
+    }
+
+    @Test
+    public void invalidReportTypeThrowsUnsupportedTypeException() {
+        expectedException.expect(UnsupportedTypeException.class);
+        expectedException.expectMessage("ReportType of type 'INVALID_MISS_TYPED_OR_MISSING_REPORT_TYPE' is not supported");
+
+        validationRequest.setReportType("INVALID_MISS_TYPED_OR_MISSING_REPORT_TYPE");
+        transformer.transform(validationRequest).getReportType();
     }
 
     @Test

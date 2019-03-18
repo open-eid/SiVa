@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2019 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -35,7 +35,7 @@ final class BDOCTestUtils {
     static final String BDOC_TEST_FILE_UNSIGNED = "3f_2s_1f_unsigned.bdoc";
     static final String BDOC_TEST_FILE_ALL_SIGNED = "2f_all_signed.bdoc";
 
-    static ValidationDocument buildValidationDocument(String testFile) throws Exception {
+    static ValidationDocument buildValidationDocument(String testFile) {
         return DummyValidationDocumentBuilder
                 .aValidationDocument()
                 .withDocument(TEST_FILES_LOCATION + testFile)

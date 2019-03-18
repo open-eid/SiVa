@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Riigi Infosüsteemide Amet
+ * Copyright 2019 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -16,14 +16,14 @@
 
 package ee.openeid.siva.soaptest;
 
+import com.google.common.collect.ImmutableMap;
 import ee.openeid.siva.integrationtest.SiVaIntegrationTestsBase;
-import ee.openeid.siva.integrationtest.TestData;
 import ee.openeid.siva.webapp.request.Datafile;
 import ee.openeid.siva.webapp.request.JSONHashcodeValidationRequest;
 import ee.openeid.siva.webapp.request.SignatureFile;
 import ee.openeid.siva.webapp.soap.DataFilesReport;
-import ee.openeid.siva.webapp.soap.ValidateDocumentResponse;
-import ee.openeid.siva.webapp.soap.ValidationReport;
+import ee.openeid.siva.webapp.soap.response.ValidateDocumentResponse;
+import ee.openeid.siva.webapp.soap.response.ValidationReport;
 import io.restassured.response.Response;
 import org.apache.commons.codec.binary.Base64;
 import org.w3c.dom.Document;
@@ -33,14 +33,10 @@ import org.w3c.dom.Node;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import static io.restassured.RestAssured.given;
-
 
 public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
 
@@ -275,7 +271,7 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
 
     protected Document extractReportDom(String httpBody) {
         Document document = XMLUtils.parseXml(httpBody);
-        Element element = XMLUtils.findElementByXPath(document, "//d:ValidateDocumentResponse/d:ValidationReport", Collections.singletonMap("d", "http://soap.webapp.siva.openeid.ee/"));
+        Element element = XMLUtils.findElementByXPath(document, "//d:ValidateDocumentResponse/c:ValidationReport", ImmutableMap.of("d", "http://soap.webapp.siva.openeid.ee/", "c", "http://soap.webapp.siva.openeid.ee/response/"));
         return XMLUtils.documentFromNode(element);
     }
 

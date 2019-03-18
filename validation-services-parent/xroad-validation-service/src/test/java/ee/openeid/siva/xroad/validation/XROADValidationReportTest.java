@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2019 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -18,6 +18,7 @@ package ee.openeid.siva.xroad.validation;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Policy;
+import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import org.junit.Before;
@@ -26,8 +27,13 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.ADES_POLICY;
-import static ee.openeid.siva.xroad.validation.XROADTestUtils.*;
+import static ee.openeid.siva.xroad.validation.XROADTestUtils.XROAD_BATCHSIGNATURE;
+import static ee.openeid.siva.xroad.validation.XROADTestUtils.XROAD_SIMPLE;
+import static ee.openeid.siva.xroad.validation.XROADTestUtils.buildValidationDocument;
+import static ee.openeid.siva.xroad.validation.XROADTestUtils.initializeXROADValidationService;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 
 public class XROADValidationReportTest {
@@ -107,6 +113,18 @@ public class XROADValidationReportTest {
     public void whenNonExistingPolicyIsGivenThenValidatorShouldThrowException() throws Exception {
         expectedException.expect(InvalidPolicyException.class);
         validateWithPolicy("non-existing-policy");
+    }
+
+    @Test
+    public void onlySimpleReportPresentInDocumentValidationResultReports() throws Exception {
+        Reports reports = validationService.validateDocument(buildValidationDocument(XROAD_SIMPLE));
+
+        assertNotNull(reports.getSimpleReport().getValidationConclusion());
+        assertNotNull(reports.getDetailedReport().getValidationConclusion());
+        assertNotNull(reports.getDiagnosticReport().getValidationConclusion());
+
+        assertNull(reports.getDetailedReport().getValidationProcess());
+        assertNull(reports.getDiagnosticReport().getDiagnosticData());
     }
 
     private SimpleReport validateWithPolicy(String policyName) throws Exception {

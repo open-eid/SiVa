@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2019 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -17,8 +17,8 @@
 package ee.openeid.siva.soaptest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
-import ee.openeid.siva.webapp.soap.SignatureValidationData;
-import ee.openeid.siva.webapp.soap.ValidationReport;
+import ee.openeid.siva.webapp.soap.response.SignatureValidationData;
+import ee.openeid.siva.webapp.soap.response.ValidationReport;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Before;
 import org.junit.Ignore;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2019 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -16,51 +16,55 @@
 
 package ee.openeid.siva.webapp.soap.transformer;
 
+import ee.openeid.siva.proxy.document.ReportType;
+import ee.openeid.siva.proxy.document.typeresolver.UnsupportedTypeException;
 import ee.openeid.siva.webapp.soap.DocumentType;
 import ee.openeid.siva.webapp.soap.SoapValidationRequest;
 import org.apache.commons.codec.binary.Base64;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertEquals;
 
 public class SoapValidationRequestToProxyDocumentTransformerTest {
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     private SoapValidationRequestToProxyDocumentTransformer transformer = new SoapValidationRequestToProxyDocumentTransformer();
 
     @Test
     public void contentIsCorrectlyTransformedToBytes() {
         String documentContent = "ZmlsZWNvbnRlbnQ=";
-        SoapValidationRequest validationRequest = createSoapValidationRequest(documentContent, DocumentType.BDOC, "file.bdoc", "some policy");
+        SoapValidationRequest validationRequest = createSoapValidationRequest(documentContent, DocumentType.XROAD, "file.bdoc", "some policy");
         assertEquals(validationRequest.getDocument(), Base64.encodeBase64String(transformer.transform(validationRequest).getBytes()));
     }
 
     @Test
-    public void reportTypeIsCorrectlyTransformed(){
-        String documentContent = "ZmlsZWNvbnRlbnQ=";
-        SoapValidationRequest validationRequest = createSoapValidationRequest(documentContent, DocumentType.BDOC, "file.bdoc", "some policy");
-        validationRequest.setReportType("Simple");
-        assertEquals(validationRequest.getReportType(), transformer.transform(validationRequest).getReportType().getValue());
+    public void reportTypeIsCorrectlyTransformed() {
+        for (ReportType reportType : ReportType.values()) {
+            SoapValidationRequest validationRequest = createSoapValidationRequest("ZmlsZWNvbnRlbnQ=", DocumentType.XROAD, "file.bdoc", "some policy");
+            validationRequest.setReportType(reportType.getValue());
+            assertEquals(validationRequest.getReportType(), transformer.transform(validationRequest).getReportType().getValue());
+        }
     }
 
     @Test
-    public void pdfTypeIsCorrectlyTransformedToDocumentType() {
-        DocumentType docType = DocumentType.PDF;
-        SoapValidationRequest validationRequest = createSoapValidationRequest("Ymxh", docType, "file.pdf", "some policy");
-        assertEquals(validationRequest.getDocumentType().name(), transformer.transform(validationRequest).getDocumentType().name());
+    public void reportTypeNullIsNotOverAssigned() {
+        SoapValidationRequest validationRequest = createSoapValidationRequest("ZmlsZWNvbnRlbnQ=", DocumentType.XROAD, "file.bdoc", "some policy");
+        validationRequest.setReportType(null);
+        assertEquals(null, transformer.transform(validationRequest).getReportType());
     }
 
     @Test
-    public void bdocTypeIsCorrectlyTransformedToDocumentType() {
-        DocumentType docType = DocumentType.BDOC;
-        SoapValidationRequest validationRequest = createSoapValidationRequest("Ymxh", docType, "file.bdoc", "some policy");
-        assertEquals(validationRequest.getDocumentType().name(), transformer.transform(validationRequest).getDocumentType().name());
-    }
-
-    @Test
-    public void ddocTypeIsCorrectlyTransformedToDocumentType() {
-        DocumentType docType = DocumentType.DDOC;
-        SoapValidationRequest validationRequest = createSoapValidationRequest("Ymxh", docType, "file.ddoc", "some policy");
-        assertEquals(validationRequest.getDocumentType().name(), transformer.transform(validationRequest).getDocumentType().name());
+    public void invalidReportTypeThrowsUnsupportedTypeException() {
+        String reportType = "INVALID_REPORT_TYPE";
+        exception.expect(UnsupportedTypeException.class);
+        exception.expectMessage("ReportType of type '" + reportType + "' is not supported");
+        SoapValidationRequest validationRequest = createSoapValidationRequest("ZmlsZWNvbnRlbnQ=", DocumentType.XROAD, "file.bdoc", "some policy");
+        validationRequest.setReportType(reportType);
+        transformer.transform(validationRequest);
     }
 
     @Test
@@ -73,14 +77,14 @@ public class SoapValidationRequestToProxyDocumentTransformerTest {
     @Test
     public void filenameRemainsUnchanged() {
         String filename = "random file name.bdoc";
-        SoapValidationRequest validationRequest = createSoapValidationRequest("Ymxh", DocumentType.BDOC, filename, "some policy");
+        SoapValidationRequest validationRequest = createSoapValidationRequest("Ymxh", DocumentType.XROAD, filename, "some policy");
         assertEquals(validationRequest.getFilename(), transformer.transform(validationRequest).getName());
     }
 
     @Test
     public void signaturePolicyRemainsUnchanged() {
         String policy = "policy";
-        SoapValidationRequest validationRequest = createSoapValidationRequest("Ymxh", DocumentType.BDOC, "file.bdoc", policy);
+        SoapValidationRequest validationRequest = createSoapValidationRequest("Ymxh", DocumentType.XROAD, "file.bdoc", policy);
         assertEquals(validationRequest.getSignaturePolicy(), transformer.transform(validationRequest).getSignaturePolicy());
     }
 

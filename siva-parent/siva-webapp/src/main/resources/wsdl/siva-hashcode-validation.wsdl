@@ -3,7 +3,7 @@
                   xmlns:xs="http://www.w3.org/2001/XMLSchema"
                   xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
                   xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
-                  xmlns:external="http://dss.esig.europa.eu/validation/detailed-report"
+                  xmlns:response="http://soap.webapp.siva.openeid.ee/response/"
                   targetNamespace="http://soap.webapp.siva.openeid.ee/"
                   name="SignatureHashcodeValidationService">
 
@@ -13,15 +13,11 @@
                    targetNamespace="http://soap.webapp.siva.openeid.ee/">
 
             <xs:import namespace="http://x-road.eu/xsd/xroad.xsd" schemaLocation="xroad.xsd"/>
-            <xs:import namespace="http://dss.esig.europa.eu/validation/detailed-report" schemaLocation="DetailedReport.xsd"/>
-
-            <xs:element name="ValidationReport" type="tns:ValidationReport"/>
-            <xs:element name="ValidationProcess" substitutionGroup="external:DetailedReport"/>
-            <xs:element name="ValidationConclusion" type="tns:ValidationConclusion"/>
+            <xs:import namespace="http://soap.webapp.siva.openeid.ee/response/" schemaLocation="ValidationResponse.xsd"/>
 
             <xs:element name="HashcodeValidationDocument" type="tns:HashcodeValidationDocument"/>
             <xs:element name="HashcodeValidationRequest" type="tns:SoapHashcodeValidationRequest"/>
-            <xs:element name="HashcodeValidationResponse" type="tns:ValidateDocumentResponse"/>
+            <xs:element name="HashcodeValidationResponse" type="response:ValidateDocumentResponse"/>
 
             <xs:complexType name="HashcodeValidationDocument">
                 <xs:sequence>
@@ -82,6 +78,7 @@
                 <xs:restriction base="xs:string">
                     <xs:enumeration value="SIMPLE" />
                     <xs:enumeration value="DETAILED" />
+                    <xs:enumeration value="DIAGNOSTIC" />
                 </xs:restriction>
             </xs:simpleType>
 
@@ -103,158 +100,6 @@
                     <xs:enumeration value="RIPEMD160" />
                     <xs:enumeration value="MD2" />
                     <xs:enumeration value="MD5" />
-                </xs:restriction>
-            </xs:simpleType>
-
-            <xs:complexType name="ValidateDocumentResponse">
-                <xs:sequence>
-                    <xs:element minOccurs="1" ref="tns:ValidationReport"/>
-                    <xs:element minOccurs="0" name="ValidationReportSignature" type="xs:string"/>
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="ValidationReport">
-                <xs:sequence>
-                    <xs:element minOccurs="1" ref="tns:ValidationConclusion"/>
-                    <xs:element minOccurs="0" ref="tns:ValidationProcess"/>
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="ValidationConclusion">
-                <xs:sequence>
-
-                    <xs:element name="Policy" type="tns:Policy"/>
-                    <xs:element name="ValidationTime" type="xs:string"/>
-                    <xs:element name="ValidatedDocument" type="tns:ValidatedDocumentData"/>
-                    <xs:element name="ValidationLevel" minOccurs="0" type="xs:string"/>
-                    <xs:element name="ValidationWarnings" minOccurs="0">
-                        <xs:complexType>
-                            <xs:sequence>
-                                <xs:element maxOccurs="unbounded" minOccurs="0" name="ValidationWarning"
-                                            type="tns:ValidationWarning"/>
-                            </xs:sequence>
-                        </xs:complexType>
-                    </xs:element>
-                    <xs:element name="SignatureForm" minOccurs="0" type="xs:string"/>
-                    <xs:element name="Signatures" minOccurs="0">
-                        <xs:complexType>
-                            <xs:sequence>
-                                <xs:element maxOccurs="unbounded" minOccurs="0" name="Signature"
-                                            type="tns:SignatureValidationData"/>
-                            </xs:sequence>
-                        </xs:complexType>
-                    </xs:element>
-                    <xs:element name="TimeStampTokens" minOccurs="0">
-                        <xs:complexType>
-                            <xs:sequence>
-                                <xs:element minOccurs="0" maxOccurs="unbounded" name="TimeStampToken"
-                                            type="tns:TimeStampTokenData"/>
-                            </xs:sequence>
-                        </xs:complexType>
-                    </xs:element>
-                    <xs:element name="ValidSignaturesCount" minOccurs="0" type="xs:int"/>
-                    <xs:element name="SignaturesCount" minOccurs="0" type="xs:int"/>
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="Policy">
-                <xs:sequence>
-                    <xs:element name="PolicyDescription" type="xs:string"/>
-                    <xs:element name="PolicyName" type="xs:string"/>
-                    <xs:element name="PolicyUrl" type="xs:string"/>
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="TimeStampTokenData">
-                <xs:sequence>
-                    <xs:element name="Indication" type="tns:Indication"/>
-                    <xs:element name="SignedBy" type="xs:string"/>
-                    <xs:element name="SignedTime" type="xs:string"/>
-                    <xs:element name="Errors" minOccurs="0">
-                        <xs:complexType>
-                            <xs:sequence>
-                                <xs:element maxOccurs="unbounded" minOccurs="0" name="Error" type="tns:Error"/>
-                            </xs:sequence>
-                        </xs:complexType>
-                    </xs:element>
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="ValidatedDocumentData">
-                <xs:sequence>
-                    <xs:element name="Filename" type="xs:string"/>
-                    <xs:element name="FileHash" minOccurs="0" type="xs:string"/>
-                    <xs:element name="HashAlgo" minOccurs="0" type="xs:string"/>
-                </xs:sequence>
-            </xs:complexType>
-
-            <xs:complexType name="SignatureValidationData">
-                <xs:sequence>
-                    <xs:element name="Id" type="xs:string"/>
-                    <xs:element name="SignatureFormat" type="xs:string"/>
-                    <xs:element name="SignatureLevel" minOccurs="0" type="xs:string"/>
-                    <xs:element name="SignedBy" type="xs:string"/>
-                    <xs:element name="Indication" type="tns:Indication"/>
-                    <xs:element name="SubIndication" minOccurs="0" type="xs:string"/>
-                    <xs:element name="Errors" minOccurs="0">
-                        <xs:complexType>
-                            <xs:sequence>
-                                <xs:element maxOccurs="unbounded" minOccurs="0" name="Error" type="tns:Error"/>
-                            </xs:sequence>
-                        </xs:complexType>
-                    </xs:element>
-                    <xs:element name="SignatureScopes" minOccurs="0">
-                        <xs:complexType>
-                            <xs:sequence>
-                                <xs:element maxOccurs="unbounded" name="SignatureScope" type="tns:SignatureScope"/>
-                            </xs:sequence>
-                        </xs:complexType>
-                    </xs:element>
-                    <xs:element name="ClaimedSigningTime" type="xs:string"/>
-                    <xs:element name="Warnings" minOccurs="0">
-                        <xs:complexType>
-                            <xs:sequence>
-                                <xs:element maxOccurs="unbounded" minOccurs="0" name="Warning" type="tns:Warning"/>
-                            </xs:sequence>
-                        </xs:complexType>
-                    </xs:element>
-                    <xs:element name="Info" minOccurs="0" type="tns:Info"/>
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="Error">
-                <xs:sequence>
-                    <xs:element name="Content" type="xs:string"/>
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="ValidationWarning">
-                <xs:sequence>
-                    <xs:element name="Content" type="xs:string"/>
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="SignatureScope">
-                <xs:sequence>
-                    <xs:element name="Name" minOccurs="0" type="xs:string"/>
-                    <xs:element name="Scope" minOccurs="0" type="xs:string"/>
-                    <xs:element name="Content" minOccurs="0" type="xs:string"/>
-                    <xs:element name="HashAlgo" minOccurs="0" type="xs:string"/>
-                    <xs:element name="Hash" minOccurs="0" type="xs:string"/>
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="Warning">
-                <xs:sequence>
-                    <xs:element name="Content" type="xs:string"/>
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="Info">
-                <xs:sequence>
-                    <xs:element minOccurs="0" name="BestSignatureTime" type="xs:string"/>
-                </xs:sequence>
-            </xs:complexType>
-            <xs:simpleType name="DocumentType">
-                <xs:restriction base="xs:string">
-                    <xs:enumeration value="XROAD"/>
-                </xs:restriction>
-            </xs:simpleType>
-            <xs:simpleType name="Indication">
-                <xs:restriction base="xs:string">
-                    <xs:enumeration value="TOTAL-PASSED"/>
-                    <xs:enumeration value="TOTAL-FAILED"/>
-                    <xs:enumeration value="INDETERMINATE"/>
                 </xs:restriction>
             </xs:simpleType>
         </xs:schema>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2019 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -67,7 +67,7 @@ public class ReportSignatureInterceptorTest {
     }
 
     @Test
-    public void whenReportTypeInRequest_thenReportSignatureIsAdded() throws Exception {
+    public void whenDetailedReportTypeInRequest_thenReportSignatureIsAdded() throws Exception {
         mockSoapMessage("Detailed");
         reportSignatureInterceptor.handleMessage(message);
 
@@ -77,14 +77,23 @@ public class ReportSignatureInterceptorTest {
     }
 
     @Test
-    public void whenReportTypeInRequest_thenReportSignatureIsNotAdded() throws Exception {
+    public void whenSimpleReportTypeInRequest_thenReportSignatureIsNotAdded() throws Exception {
         mockSoapMessage("Simple");
         reportSignatureInterceptor.handleMessage(message);
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         responseSoapMessage.writeTo(stream);
         assertFalse(new String(stream.toByteArray()).contains(Base64.encodeBase64String(getRawSignatureMock())));
+    }
 
+    @Test
+    public void whenDiagnosticReportTypeInRequest_thenReportSignatureIsNotAdded() throws Exception {
+        mockSoapMessage("Diagnostic");
+        reportSignatureInterceptor.handleMessage(message);
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        responseSoapMessage.writeTo(stream);
+        assertFalse(new String(stream.toByteArray()).contains(Base64.encodeBase64String(getRawSignatureMock())));
     }
 
     private void mockSoapMessage(String requestReportType) throws Exception {

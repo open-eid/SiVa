@@ -73,9 +73,9 @@ public class ReportSignatureIT extends SiVaRestTests {
      *
      * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
      *
-     * Title: Simple report signature should be in response
+     * Title: Detailed report signature should be in response
      *
-     * Expected Result: Simple report response should contain signature
+     * Expected Result: Detailed report response should contain signature
      *
      * File: hellopades-pades-lt-sha256-sign.pdf
      */

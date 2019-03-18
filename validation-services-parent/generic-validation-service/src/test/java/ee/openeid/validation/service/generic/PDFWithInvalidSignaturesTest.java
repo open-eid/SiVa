@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2019 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -16,15 +16,26 @@
 
 package ee.openeid.validation.service.generic;
 
+import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Error;
-import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
+import eu.europa.esig.dss.jaxb.diagnostic.DiagnosticData;
+import eu.europa.esig.dss.jaxb.diagnostic.XmlSignature;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 public class PDFWithInvalidSignaturesTest extends PDFValidationServiceTest {
 
@@ -33,7 +44,7 @@ public class PDFWithInvalidSignaturesTest extends PDFValidationServiceTest {
     @Test
     @Ignore("java.lang.OutOfMemoryError: Java heap space may occur")
     public void validatingPdfWithOneBaselineProfileBSignatureReturnsReportWithNoValidSignatures() throws Exception {
-        SimpleReport report = validationService.validateDocument(
+        SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_WITH_ONE_BASELINE_PROFILE_B_SIGNATURE)).getSimpleReport();
         assertNotNull(report);
         ValidationConclusion validationConclusion = report.getValidationConclusion();
@@ -44,7 +55,7 @@ public class PDFWithInvalidSignaturesTest extends PDFValidationServiceTest {
     @Ignore(/*TODO:*/"SignatureFormatConstraint outputs error node in wrong format, so error is not parsed correctly to report (VAL-197)")
     @Test
     public void validatingPdfWithOneBaselineProfileBSignatureReturnsReportWithOneCorrectlyFormattedError() throws Exception {
-        SimpleReport report = validationService.validateDocument(
+        SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_WITH_ONE_BASELINE_PROFILE_B_SIGNATURE)).getSimpleReport();
         System.out.println(report);
         SignatureValidationData signature = report.getValidationConclusion().getSignatures().get(0);
@@ -55,6 +66,42 @@ public class PDFWithInvalidSignaturesTest extends PDFValidationServiceTest {
         //check error object integrity
         assertTrue(StringUtils.isNotBlank(error.getContent()));
 
+    }
+
+    @Test
+    public void assertPdfSignedWithInvalidSignatureDiagnosticData() {
+        Date validationStartDate = new Date();
+
+        ValidationDocument validationDocument = buildValidationDocument(PDF_WITH_ONE_BASELINE_PROFILE_B_SIGNATURE);
+        Reports reports = validateAndAssertReports(validationDocument);
+        DiagnosticData diagnosticData = reports.getDiagnosticReport().getDiagnosticData();
+
+        assertValidationDate(validationStartDate, diagnosticData.getValidationDate());
+        assertNull(diagnosticData.getContainerInfo());
+
+        assertSame(1, diagnosticData.getSignatures().size());
+        XmlSignature signature = diagnosticData.getSignatures().get(0);
+        assertEquals(validationDocument.getName(), signature.getSignatureFilename());
+        assertNull(signature.getErrorMessage());
+        assertEquals("PAdES-BASELINE-B", signature.getSignatureFormat());
+        assertEquals("application/pdf", signature.getContentType());
+        assertEquals(new GregorianCalendar(2015, 6, 9, 9, 15, 51).getTime(), signature.getDateTime());
+        assertTrue(signature.getStructuralValidation().isValid());
+        assertTrue(signature.getBasicSignature().isSignatureIntact());
+        assertTrue(signature.getBasicSignature().isSignatureValid());
+        assertTrue(signature.getSigningCertificate().isAttributePresent());
+        assertTrue(signature.getSigningCertificate().isDigestValuePresent());
+        assertTrue(signature.getSigningCertificate().isDigestValueMatch());
+        assertTrue(signature.getSigningCertificate().isIssuerSerialMatch());
+
+        assertSame(2, diagnosticData.getUsedCertificates().size());
+        assertSame(2, signature.getCertificateChain().size());
+
+        assertSame(1, diagnosticData.getTrustedLists().size());
+        assertEquals("EE", diagnosticData.getTrustedLists().get(0).getCountryCode());
+
+        assertNotNull(diagnosticData.getListOfTrustedLists());
+        assertEquals("EU", diagnosticData.getListOfTrustedLists().getCountryCode());
     }
 
 }

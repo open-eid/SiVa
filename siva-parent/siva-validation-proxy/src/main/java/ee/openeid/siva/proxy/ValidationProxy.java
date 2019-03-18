@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Riigi Infosüsteemide Amet
+ * Copyright 2019 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -45,10 +45,20 @@ public abstract class ValidationProxy {
     }
 
     SimpleReport chooseReport(Reports reports, ReportType reportType) {
-        if (reportType == ReportType.DETAILED) {
-            return reports.getDetailedReport();
+        if (reportType == null) {
+            return reports.getSimpleReport();
         }
-        return reports.getSimpleReport();
+
+        switch (reportType) {
+            case SIMPLE:
+                return reports.getSimpleReport();
+            case DETAILED:
+                return reports.getDetailedReport();
+            case DIAGNOSTIC:
+                return reports.getDiagnosticReport();
+            default:
+                throw new IllegalArgumentException("Failed to determine report type - report of type '" + reportType.name() + "' is unhandled");
+        }
     }
 
     ValidationService getServiceForType(ProxyRequest proxyRequest) {

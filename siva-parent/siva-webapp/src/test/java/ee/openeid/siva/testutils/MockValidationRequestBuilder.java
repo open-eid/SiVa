@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2019 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -109,5 +109,8 @@ public class MockValidationRequestBuilder {
             this.type = type;
         }
 
+        public void setReportType(String reportType) {
+            this.reportType = reportType;
+        }
     }
 }

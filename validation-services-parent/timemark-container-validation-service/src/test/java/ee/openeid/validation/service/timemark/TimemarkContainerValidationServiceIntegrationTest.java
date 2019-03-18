@@ -176,6 +176,7 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void vShouldIncludeRequiredFields() throws Exception {
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
         ValidationConclusion validationConclusion = validationResult2Signatures.getValidationConclusion();
@@ -203,6 +204,7 @@ public class TimemarkContainerValidationServiceIntegrationTest {
                 .count() > 0);
     }
 
+    @Ignore
     @Test
     public void vShouldHaveCorrectSignatureValidationDataForSignature1() throws Exception {
 

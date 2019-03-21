@@ -339,7 +339,7 @@ Structure of validationConclusion block
     }],
     "policy": {
         "policyDescription": "Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result.",
-        "policyUrl": "http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#POLv4",
+        "policyUrl": "http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4",
         "policyName": "POLv4"
     },
     "signatureForm": "ASiC_E"

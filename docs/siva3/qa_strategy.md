@@ -3,7 +3,7 @@
 The goal of this document is to give general overview of the used infrastructure, processes, schedule and actions to ensure good quality delivery. The document describes activities in the whole software development process. Analysis, development and testing are separated for the sake of structure and transparency although they are integral parts of the development cycle.
 This is living document and will be constantly updated as the project evolves.
 ## Environments and infrastructure
-![Enviroment](../img/siva/qa_strategy/siva2/Env.png)
+![Enviroment](../img/siva/qa_strategy/siva3/Env.png)
 
 There are different test environments for quality assurance, depending on the nature and aim.
 
@@ -40,11 +40,11 @@ Customized process based on Kanban is used in the development. The process consi
 * Daily team stand-ups are held
 * Tasks marked done are developed, tested and ready to be shipped
 * Bi-weekly meetings are held to give status on progress and discuss open questions
-![Development process](../img/siva/qa_strategy/siva2/developmentProcess.png)
+![Development process](../img/siva/qa_strategy/siva3/developmentProcess.png)
 
 ### Issue lifecycle
 Each ticket in JIRA Kanban board goes through the following states that correspond the development procedure described in previous chapter.
-![Issue lifecycle](../img/siva/qa_strategy/siva2/taskWorkFlow.png)
+![Issue lifecycle](../img/siva/qa_strategy/siva3/taskWorkFlow.png)
 
 Description of states:
 
@@ -75,11 +75,11 @@ SonarLint is used to validate code automatically. It integrates both suggested t
 Testing follows the principles described in reference document [(1) in References](/siva3/references/)
 The goal is to automate as much of the testing process as possible, however some aspects of the testing will be carried out manually.
 As the development is carried out by the backlog priority the testing follows the same principle. After each feature release test cases, test automation code and test results will be available through GitHub.
-![Testing schedule](../img/siva/qa_strategy/siva2/testingFlow.png)
+![Testing schedule](../img/siva/qa_strategy/siva3/testingFlow.png)
 ### Testing process
 
 All automatic tests, except load tests will follow the same execution process. The tests are ran automatically during the project build process by Travis CI after each push in GitHub.
-![Testing process](../img/siva/qa_strategy/siva2/TestProcess.png)
+![Testing process](../img/siva/qa_strategy/siva3/TestProcess.png)
 
 ### Test case management
 Test cases are handled as integral part of test automation code. The same applies on manual tests, in manual test cases some portion of automation may be used to execute the tests but the results are verified manually. All the test cases and test code will be maintained in the GitHub.
@@ -139,12 +139,12 @@ The report will have at least the following elements:
 **Integration testing**
 
 The scope of the tests is illustrated on the image below. The goal is to test the SiVA application API (both X-Road and REST/JSON) and to test the independent module capability for validation of specific type of file. Both valid and invalid inputs are tested. More info about testing specifics can be found in Test Plan [Integration testing](/siva/test_plan/#integration-test-introduction) section.
-![Integration testing](../img/siva/qa_strategy/siva2/integrationTest.png)
+![Integration testing](../img/siva/qa_strategy/siva3/integrationTest.png)
 
 **System testing**
 
 The scope of the tests is illustrated on the image below. The goal of the test is to test the entire length of signature validation process and to test supportive functions. In addition Demo application is tested. More info about testing specifics can be found in Test Plan [System testing](/siva/test_plan/#system-test-introduction) section.
-![System testing](../img/siva/qa_strategy/siva2/systemTest.png)
+![System testing](../img/siva/qa_strategy/siva3/systemTest.png)
 
 
 **Regression testing**

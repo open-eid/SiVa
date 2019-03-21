@@ -77,7 +77,7 @@ Required:
 
 | Component | Description |
 |------------------------------|--------------------------------------------------------|
-| **Policies and constraints** | (Optional) By default, two policies are supported and integrated into SiVa - see [SiVa Validation Policy](/siva2/appendix/validation_policy). However, it is possible to customize the validation policies and their constraints. Configuration is validation service specific. See the [overriding configuration](/siva2/systemintegrators_guide/#configuration-parameters) section for details. |
+| **Policies and constraints** | (Optional) By default, two policies are supported and integrated into SiVa - see [SiVa Validation Policy](/siva3/appendix/validation_policy). However, it is possible to customize the validation policies and their constraints. Configuration is validation service specific. See the [overriding configuration](/siva3/systemintegrators_guide/#configuration-parameters) section for details. |
 | **Externalized configuration** | Application specific configuration (property files, command line variables, etc) that allow overriding the default values set within the webapp. |
 
 ## External subsystems

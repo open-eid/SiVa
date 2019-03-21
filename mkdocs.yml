@@ -39,8 +39,8 @@ pages:
       - Appendix 3 - WSDL/XSD of SOAP Interface : siva3/appendix/wsdl.md
       - Appendix 4 - Known Issues : siva3/appendix/known_issues.md
 - 9. SIVA 2.0 (Deprecated):
-      - 9.1. DEFINITIONS: siva3/definitions.md
-      - 9.2. BACKGROUND: siva3/overview.md
+      - 9.1. DEFINITIONS: siva2/definitions.md
+      - 9.2. BACKGROUND: siva2/overview.md
       - 9.3. STRUCTURE & ACTIVITIES:
            - 9.3.1 Component model: siva2/structure_and_activities.md
            - 9.3.2 Use cases: siva2/use_cases.md

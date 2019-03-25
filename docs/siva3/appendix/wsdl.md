@@ -945,7 +945,7 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
     <xs:element name="DiagnosticData">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="DocumentName" type="xs:string" />
+                <xs:element name="DocumentName" type="xs:string" minOccurs="0" />
                 <xs:element name="ValidationDate" type="xs:dateTime" />
                 <xs:element name="ContainerInfo" type="ContainerInfo" minOccurs="0" />
                 <xs:element name="Signatures" minOccurs="0">
@@ -1024,6 +1024,15 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
             <xs:element name="SignatureFormat" type="xs:string" />
 
             <xs:element name="StructuralValidation"	type="StructuralValidation" minOccurs="0" />
+
+            <xs:element name="DigestMatchers" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="DigestMatcher" type="DigestMatcher" minOccurs="0" maxOccurs="unbounded" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
             <xs:element name="BasicSignature" type="BasicSignature" />
             <xs:element name="SigningCertificate" type="SigningCertificate" minOccurs="0" />
             <xs:element name="CertificateChain"	type="CertificateChain" minOccurs="0" />
@@ -1067,7 +1076,7 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
 
         </xs:sequence>
         <xs:attribute name="Id" type="xs:string" use="required" />
-        <xs:attribute name="CounterSignature" type="xs:boolean"/>
+        <xs:attribute name="CounterSignature" type="xs:boolean" use="optional" />
     </xs:complexType>
 
     <xs:complexType name="SignatureProductionPlace">
@@ -1100,12 +1109,15 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
             <xs:element name="IssuerDistinguishedName" type="DistinguishedName" maxOccurs="unbounded" />
             <xs:element name="SerialNumber" type="xs:integer" />
             <xs:element name="CommonName" type="xs:string" minOccurs="0"/>
+            <xs:element name="Locality" type="xs:string" minOccurs="0"/>
+            <xs:element name="State" type="xs:string" minOccurs="0"/>
             <xs:element name="CountryName" type="xs:string" minOccurs="0"/>
             <xs:element name="OrganizationName" type="xs:string" minOccurs="0"/>
             <xs:element name="GivenName" type="xs:string" minOccurs="0"/>
             <xs:element name="OrganizationalUnit" type="xs:string" minOccurs="0"/>
             <xs:element name="Surname" type="xs:string" minOccurs="0"/>
             <xs:element name="Pseudonym" type="xs:string" minOccurs="0"/>
+            <xs:element name="Email" type="xs:string" minOccurs="0"/>
 
             <xs:element name="AuthorityInformationAccessUrls" minOccurs="0">
                 <xs:complexType>
@@ -1142,8 +1154,14 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
+            <xs:element name="ExtendedKeyUsages" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="oid" type="OID" minOccurs="0" maxOccurs="unbounded" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
 
-            <xs:element name="IdKpOCSPSigning" type="xs:boolean" minOccurs="0" />
             <xs:element name="IdPkixOcspNoCheck" type="xs:boolean" minOccurs="0" />
 
             <xs:element name="BasicSignature" type="BasicSignature" />
@@ -1153,10 +1171,10 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
             <xs:element name="Trusted" type="xs:boolean" />
             <xs:element name="SelfSigned" type="xs:boolean" />
 
-            <xs:element name="CertificatePolicyIds" minOccurs="0">
+            <xs:element name="CertificatePolicies" minOccurs="0">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element name="oid" type="OID" minOccurs="0" maxOccurs="unbounded" />
+                        <xs:element name="certificatePolicy" type="CertificatePolicy" minOccurs="0" maxOccurs="unbounded" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -1191,7 +1209,6 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
                 </xs:complexType>
             </xs:element>
 
-            <xs:element name="Info" type="InfoType" minOccurs="0" />
             <xs:element name="Base64Encoded" type="xs:base64Binary" minOccurs="0" />
         </xs:sequence>
         <xs:attribute name="Id" type="xs:string" use="required" />
@@ -1200,15 +1217,23 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
     <xs:complexType name="OID">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute name="Description" type="xs:string"/>
+                <xs:attribute name="Description" type="xs:string" use="optional" />
             </xs:extension>
         </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="CertificatePolicy">
+        <xs:complexContent>
+            <xs:extension base="OID">
+                <xs:attribute name="cpsUrl" type="xs:string" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
 
     <xs:complexType name="DistinguishedName">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute name="Format" type="xs:string"/>
+                <xs:attribute name="Format" type="xs:string" use="optional" />
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -1217,10 +1242,17 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute name="name" type="xs:string" use="required" />
-                <xs:attribute name="scope" type="xs:string" use="required" />
+                <xs:attribute name="scope" type="ScopeType" use="required" />
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
+    <xs:simpleType name="ScopeType" final="restriction">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="FULL" />
+            <xs:enumeration value="PARTIAL" />
+        </xs:restriction>
+    </xs:simpleType>
 
     <xs:complexType name="StructuralValidation">
         <xs:sequence>
@@ -1235,8 +1267,6 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
             <xs:element name="KeyLengthUsedToSignThisToken" type="xs:string" minOccurs="0" />
             <xs:element name="DigestAlgoUsedToSignThisToken" type="xs:string" minOccurs="0"  />
             <xs:element name="MaskGenerationFunctionUsedToSignThisToken" type="xs:string" minOccurs="0"  />
-            <xs:element name="ReferenceDataFound" type="xs:boolean" />
-            <xs:element name="ReferenceDataIntact" type="xs:boolean" />
             <xs:element name="SignatureIntact" type="xs:boolean" />
             <xs:element name="SignatureValid" type="xs:boolean" />
         </xs:sequence>
@@ -1248,23 +1278,8 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
             <xs:element name="DigestValuePresent" type="xs:boolean" minOccurs="0" />
             <xs:element name="DigestValueMatch" type="xs:boolean" minOccurs="0" />
             <xs:element name="IssuerSerialMatch" type="xs:boolean" minOccurs="0" />
-            <xs:element name="Signed" type="xs:string" minOccurs="0" />
         </xs:sequence>
         <xs:attribute name="Id" type="xs:string" use="required" />
-    </xs:complexType>
-
-    <xs:complexType name="InfoType">
-        <xs:sequence>
-            <xs:element name="Message" maxOccurs="unbounded" minOccurs="0">
-                <xs:complexType>
-                    <xs:simpleContent>
-                        <xs:extension base="xs:string">
-                            <xs:attribute name="Id" type="xs:int" use="required" />
-                        </xs:extension>
-                    </xs:simpleContent>
-                </xs:complexType>
-            </xs:element>
-        </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="TimestampedObjects">
@@ -1275,9 +1290,9 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
 
     <xs:complexType name="TimestampedObject">
         <xs:sequence>
-            <xs:element name="DigestAlgoAndValue" type="DigestAlgoAndValue" minOccurs="0"/>
+            <xs:element name="DigestAlgoAndValue" type="DigestAlgoAndValue" minOccurs="0" maxOccurs="1" />
         </xs:sequence>
-        <xs:attribute name="Id" type="xs:string"/>
+        <xs:attribute name="Id" type="xs:string" use="optional" />
         <xs:attribute name="Category" type="TimestampedObjectType" use="required" />
     </xs:complexType>
 
@@ -1314,25 +1329,52 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
 
     <xs:complexType name="DigestAlgoAndValue">
         <xs:sequence>
-            <xs:element name="DigestMethod" type="xs:string" />
-            <xs:element name="DigestValue" type="xs:string" />
+            <xs:element name="DigestMethod" type="xs:string" minOccurs="0" /> <!-- Optional in case the digest cannot be retrieved -->
+            <xs:element name="DigestValue" type="xs:string" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
+
+    <xs:complexType name="DigestMatcher">
+        <xs:complexContent>
+            <xs:extension base="DigestAlgoAndValue">
+                <xs:sequence>
+                    <xs:element name="DataFound" type="xs:boolean" />
+                    <xs:element name="DataIntact" type="xs:boolean" />
+                </xs:sequence>
+                <xs:attribute name="type" type="DigestMatcherType" use="required" />
+                <xs:attribute name="name" type="xs:string" use="optional"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:simpleType name="DigestMatcherType" final="restriction">
+        <xs:restriction base="xs:string">
+            <!-- XAdES -->
+            <xs:enumeration value="REFERENCE" />
+            <xs:enumeration value="OBJECT" />
+            <xs:enumeration value="MANIFEST" />
+            <xs:enumeration value="MANIFEST_ENTRY" />
+            <xs:enumeration value="SIGNED_PROPERTIES" />
+
+            <!-- CAdES -->
+            <xs:enumeration value="MESSAGE_DIGEST" />
+
+            <!-- TIMESTAMP -->
+            <xs:enumeration value="MESSAGE_IMPRINT" />
+        </xs:restriction>
+    </xs:simpleType>
 
     <xs:complexType name="Timestamp">
         <xs:sequence>
             <xs:element name="ProductionTime" type="xs:dateTime" />
-            <xs:element name="SignedDataDigestAlgo" type="xs:string" />
-            <xs:element name="EncodedSignedDataDigestValue" type="xs:string" />
-            <xs:element name="MessageImprintDataFound" type="xs:boolean" />
-            <xs:element name="MessageImprintDataIntact" type="xs:boolean" />
-            <xs:element name="CanonicalizationMethod" type="xs:string" minOccurs="0" />
-
+            <xs:element name="DigestMatcher" type="DigestMatcher" />
             <xs:element name="BasicSignature" type="BasicSignature" />
             <xs:element name="SigningCertificate" type="SigningCertificate" minOccurs="0" />
             <xs:element name="CertificateChain" type="CertificateChain" minOccurs="0" />
 
             <xs:element name="TimestampedObjects" type="TimestampedObjects" minOccurs="0" />
+
+            <xs:element name="Base64Encoded" type="xs:base64Binary" minOccurs="0" />
         </xs:sequence>
         <xs:attribute name="Id" type="xs:string" use="required" />
         <xs:attribute name="Type" type="xs:string" use="required" />
@@ -1352,6 +1394,8 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
             <xs:element name="RevocationDate" type="xs:dateTime" minOccurs="0" />
             <xs:element name="ExpiredCertsOnCRL" type="xs:dateTime" minOccurs="0" /> <!-- CRL -->
             <xs:element name="ArchiveCutOff" type="xs:dateTime" minOccurs="0" /> <!-- OCSP -->
+            <xs:element name="CertHashExtensionPresent" type="xs:boolean" minOccurs="0" /> <!-- OCSP -->
+            <xs:element name="CertHashExtensionMatch" type="xs:boolean" minOccurs="0" /> <!-- OCSP -->
 
             <xs:element name="DigestAlgoAndValues" type="DigestAlgoAndValues" minOccurs="0" />
 
@@ -1359,7 +1403,7 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
             <xs:element name="SigningCertificate" type="SigningCertificate" minOccurs="0" />
             <xs:element name="CertificateChain" type="CertificateChain" minOccurs="0" />
 
-            <xs:element name="Info" type="InfoType" minOccurs="0" />
+            <xs:element name="Base64Encoded" type="xs:base64Binary" minOccurs="0" />
         </xs:sequence>
         <xs:attribute name="Id" type="xs:string" use="required" />
     </xs:complexType>
@@ -1380,7 +1424,7 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
     <xs:complexType name="TrustedServiceProvider">
         <xs:sequence>
             <xs:element name="TSPName" type="xs:string" />
-            <xs:element name="TSPServiceName" type="xs:string" />
+            <xs:element name="TSPRegistrationIdentifier" type="xs:string" minOccurs="0" />
             <xs:element name="CountryCode" type="xs:string" />
 
             <xs:element name="TrustedServices">
@@ -1395,6 +1439,7 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
 
     <xs:complexType name="TrustedService">
         <xs:sequence>
+            <xs:element name="ServiceName" type="xs:string" />
             <xs:element name="ServiceType" type="xs:string" />
             <xs:element name="Status" type="xs:string" />
             <xs:element name="StartDate" type="xs:dateTime" />

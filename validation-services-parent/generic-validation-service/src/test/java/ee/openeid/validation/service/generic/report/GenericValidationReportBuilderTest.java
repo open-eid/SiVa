@@ -108,7 +108,6 @@ public class GenericValidationReportBuilderTest {
         xmlSignature.setPolicy(xmlPolicy);
 
         XmlSigningCertificate signingCertificate = new XmlSigningCertificate();
-        signingCertificate.setSigned("true");
         signingCertificate.setId("SIG-CERT-id");
         xmlSignature.setSigningCertificate(signingCertificate);
 

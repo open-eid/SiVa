@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2019 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -99,6 +99,10 @@ public class GenericValidationServiceTest {
         DiagnosticData diagnosticData = new DiagnosticData();
         XmlCertificate usedCertificate = new XmlCertificate();
         usedCertificate.setId(CERTIFICATE_ID);
+
+        XmlDistinguishedName distinguishedName = new XmlDistinguishedName();
+        distinguishedName.setValue("SERIALNUMBER=333,CN=SOME\\,THING\\,333");
+        usedCertificate.getSubjectDistinguishedName().add(distinguishedName);
 
         List<XmlCertificate> usedCertificates = new ArrayList<>();
         usedCertificates.add(usedCertificate);

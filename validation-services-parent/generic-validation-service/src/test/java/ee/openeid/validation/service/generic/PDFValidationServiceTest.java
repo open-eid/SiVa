@@ -21,6 +21,7 @@ import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
 import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.SubjectDistinguishedName;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.tsl.CustomCertificatesLoader;
@@ -130,6 +131,13 @@ public class PDFValidationServiceTest {
         assertNotNull(reports.getSimpleReport());
         assertNotNull(reports.getDetailedReport());
         assertNotNull(reports.getDiagnosticReport());
+    }
+
+    void assertSubjectDNPresent(SignatureValidationData signature, String serialNumber, String commonName) {
+        SubjectDistinguishedName subjectDistinguishedName = signature.getSubjectDistinguishedName();
+        assertNotNull(subjectDistinguishedName);
+        assertEquals(serialNumber, subjectDistinguishedName.getSerialNumber());
+        assertEquals(commonName, subjectDistinguishedName.getCommonName());
     }
 
     ValidationDocument buildValidationDocument(String testFile) {

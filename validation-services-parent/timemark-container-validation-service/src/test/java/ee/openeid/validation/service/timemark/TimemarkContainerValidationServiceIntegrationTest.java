@@ -23,6 +23,7 @@ import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.document.report.SignatureScope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.validation.document.report.SubjectDistinguishedName;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.document.report.ValidationWarning;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
@@ -124,6 +125,8 @@ public class TimemarkContainerValidationServiceIntegrationTest {
                 hasProperty("content", is("Container contains a file named <document_3.xml> which is not found in the signature file")),
                 hasProperty("content", is("Signature PUDOV,VADIM,39101013724 has unsigned files: document_3.xml"))
         ));
+
+
     }
 
     @Test
@@ -218,6 +221,8 @@ public class TimemarkContainerValidationServiceIntegrationTest {
         assertEquals("XAdES_BASELINE_LT_TM", sig1.getSignatureFormat());
         assertEquals("QESIG", sig1.getSignatureLevel());
         assertEquals("JUHANSON,ALLAN,38608014910", sig1.getSignedBy());
+        assertEquals("JUHANSON,ALLAN,38608014910", sig1.getSubjectDistinguishedName().getCommonName());
+        assertEquals("38608014910", sig1.getSubjectDistinguishedName().getSerialNumber());
         assertEquals(SignatureValidationData.Indication.TOTAL_PASSED.toString(), sig1.getIndication());
         assertTrue(StringUtils.isEmpty(sig1.getSubIndication()));
         assertTrue(sig1.getErrors().size() == 0);
@@ -243,6 +248,8 @@ public class TimemarkContainerValidationServiceIntegrationTest {
         assertEquals("XAdES_BASELINE_LT_TM", sig2.getSignatureFormat());
         assertEquals("QESIG", sig2.getSignatureLevel());
         assertEquals("VOLL,ANDRES,39004170346", sig2.getSignedBy());
+        assertEquals("VOLL,ANDRES,39004170346", sig2.getSubjectDistinguishedName().getCommonName());
+        assertEquals("39004170346", sig2.getSubjectDistinguishedName().getSerialNumber());
         assertEquals(SignatureValidationData.Indication.TOTAL_PASSED.toString(), sig2.getIndication());
         assertTrue(StringUtils.isEmpty(sig2.getSubIndication()));
         assertTrue(sig2.getErrors().size() == 0);
@@ -378,6 +385,24 @@ public class TimemarkContainerValidationServiceIntegrationTest {
 
         assertNull(reports.getDetailedReport().getValidationProcess());
         assertNull(reports.getDiagnosticReport().getDiagnosticData());
+    }
+
+    @Test
+    public void subjectDNPresentInAllReportTypesValidationConclusion() {
+        Reports reports = timemarkContainerValidationService.validateDocument(buildValidationDocument(BDOC_TEST_FILE_ALL_SIGNED));
+
+        String expectedSerialNumber = "47711040261";
+        String expectedCommonName = "SOLOVEI,JULIA,47711040261";
+        assertSubjectDNPresent(reports.getSimpleReport().getValidationConclusion().getSignatures().get(0), expectedSerialNumber, expectedCommonName);
+        assertSubjectDNPresent(reports.getDetailedReport().getValidationConclusion().getSignatures().get(0), expectedSerialNumber, expectedCommonName);
+        assertSubjectDNPresent(reports.getDiagnosticReport().getValidationConclusion().getSignatures().get(0), expectedSerialNumber, expectedCommonName);
+    }
+
+    private void assertSubjectDNPresent(SignatureValidationData signature, String serialNumber, String commonName) {
+        SubjectDistinguishedName subjectDistinguishedName = signature.getSubjectDistinguishedName();
+        assertNotNull(subjectDistinguishedName);
+        assertEquals(serialNumber, subjectDistinguishedName.getSerialNumber());
+        assertEquals(commonName, subjectDistinguishedName.getCommonName());
     }
 
     private void testWithAllQualifiersSet(String policy) throws Exception {

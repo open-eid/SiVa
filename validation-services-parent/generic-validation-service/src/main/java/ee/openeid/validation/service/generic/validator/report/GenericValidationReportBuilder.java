@@ -22,6 +22,7 @@ import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
+import ee.openeid.siva.validation.util.SubjectDNParser;
 import eu.europa.esig.dss.jaxb.diagnostic.XmlSignatureScope;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
 import eu.europa.esig.dss.validation.policy.rules.Indication;
@@ -111,6 +112,7 @@ public class GenericValidationReportBuilder {
         signatureValidationData.setSignatureFormat(changeAndValidateSignatureFormat(dssReports.getSimpleReport().getSignatureFormat(signatureId), signatureId));
         signatureValidationData.setSignatureLevel(dssReports.getSimpleReport().getSignatureQualification(signatureId).name());
         signatureValidationData.setSignedBy(parseSignedBy(signatureId));
+        signatureValidationData.setSubjectDistinguishedName(parseSubjectDistinguishedName(signatureId));
         signatureValidationData.setClaimedSigningTime(parseClaimedSigningTime(signatureId));
         signatureValidationData.setSignatureScopes(parseSignatureScopes(signatureId));
         signatureValidationData.setErrors(parseSignatureErrors(signatureId));
@@ -119,8 +121,16 @@ public class GenericValidationReportBuilder {
         signatureValidationData.setCountryCode(getCountryCode());
         signatureValidationData.setIndication(parseIndication(signatureId, signatureValidationData.getErrors()));
         signatureValidationData.setSubIndication(parseSubIndication(signatureId, signatureValidationData.getErrors()));
-
         return signatureValidationData;
+    }
+
+    private SubjectDistinguishedName parseSubjectDistinguishedName(String signatureId) {
+        String signingCertificateId = dssReports.getDiagnosticData().getSignatureById(signatureId).getSigningCertificateId();
+        CertificateWrapper signingCertificate = dssReports.getDiagnosticData().getUsedCertificateById(signingCertificateId);
+        return SubjectDistinguishedName.builder()
+               .serialNumber(SubjectDNParser.parse(signingCertificate.getCertificateDN(), SubjectDNParser.RDN.SERIALNUMBER))
+               .commonName(signingCertificate.getCommonName())
+               .build();
     }
 
     private String changeAndValidateSignatureFormat(String signatureFormat, String signatureId) {

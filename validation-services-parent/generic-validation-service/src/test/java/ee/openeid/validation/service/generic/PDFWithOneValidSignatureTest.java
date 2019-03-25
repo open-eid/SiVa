@@ -25,6 +25,7 @@ import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.document.report.Warning;
 import eu.europa.esig.dss.jaxb.diagnostic.DiagnosticData;
 import eu.europa.esig.dss.jaxb.diagnostic.XmlSignature;
+import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -125,6 +126,8 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
         assertEquals("The certificate is not qualified!", firstSignatureWarnings.get(1).getContent());
         assertEquals("The certificate is not supported by SSCD!", secondSignatureWarnings.get(0).getContent());
         assertEquals("The certificate is not qualified!", secondSignatureWarnings.get(1).getContent());
+
+        assertSubjectDNPresent(report.getValidationConclusion().getSignatures().get(0), "36706020210", "SINIVEE,VEIKO");
     }
 
     @Test
@@ -161,5 +164,7 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
 
         assertNotNull(diagnosticData.getListOfTrustedLists());
         assertEquals("EU", diagnosticData.getListOfTrustedLists().getCountryCode());
+
+        assertSubjectDNPresent(reports.getDiagnosticReport().getValidationConclusion().getSignatures().get(0), "36706020210", "SINIVEE,VEIKO,36706020210");
     }
 }

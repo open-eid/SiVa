@@ -96,6 +96,7 @@
             <xs:element name="SignatureFormat" type="xs:string"/>
             <xs:element name="SignatureLevel" minOccurs="0" type="xs:string"/>
             <xs:element name="SignedBy" type="xs:string"/>
+            <xs:element name="SubjectDistinguishedName" minOccurs="0"  type="tns:SubjectDistinguishedName"/>
             <xs:element name="Indication" type="tns:Indication"/>
             <xs:element name="SubIndication" minOccurs="0" type="xs:string"/>
             <xs:element name="Errors" minOccurs="0">
@@ -155,6 +156,13 @@
     <xs:complexType name="Info">
         <xs:sequence>
             <xs:element minOccurs="0" name="BestSignatureTime" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="SubjectDistinguishedName">
+        <xs:sequence>
+            <xs:element name="SerialNumber" type="xs:string"/>
+            <xs:element name="CommonName" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 

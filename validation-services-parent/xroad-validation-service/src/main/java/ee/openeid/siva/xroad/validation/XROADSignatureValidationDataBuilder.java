@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2019 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -20,7 +20,9 @@ import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.Info;
 import ee.openeid.siva.validation.document.report.SignatureScope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.SubjectDistinguishedName;
 import ee.openeid.siva.validation.util.CertUtil;
+import ee.openeid.siva.validation.util.SubjectDNParser;
 import ee.ria.xroad.common.CodedException;
 import ee.ria.xroad.common.asic.AsicContainer;
 import ee.ria.xroad.common.asic.AsicContainerVerifier;
@@ -37,7 +39,9 @@ import java.util.stream.Collectors;
 
 import static ee.openeid.siva.validation.document.report.SignatureValidationData.Indication.TOTAL_FAILED;
 import static ee.openeid.siva.validation.document.report.SignatureValidationData.Indication.TOTAL_PASSED;
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.*;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.getDateFormatterWithGMTZone;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.valueNotPresent;
 
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class XROADSignatureValidationDataBuilder {
@@ -54,8 +58,8 @@ public class XROADSignatureValidationDataBuilder {
         signatureValidationData.setId(getSignatureId(verifier.getSignature()));
         signatureValidationData.setSignatureFormat(getSignatureFormat(verifier.getAsic()));
         signatureValidationData.setSignatureLevel(valueNotPresent());
-
         signatureValidationData.setSignedBy(getSignedBy(verifier.getSignerCert()));
+        signatureValidationData.setSubjectDistinguishedName(getSubjectDistinguishedName(verifier.getSignerCert()));
         signatureValidationData.setSubIndication(valueNotPresent());
         signatureValidationData.setErrors(mapValidationExceptionsToErrors(validationExceptions));
         signatureValidationData.setSignatureScopes(getSignatureScopes());
@@ -87,6 +91,21 @@ public class XROADSignatureValidationDataBuilder {
             return emptyWhenNull(CertUtil.getCommonName(signerCert));
         }
         return valueNotPresent();
+    }
+
+    private SubjectDistinguishedName getSubjectDistinguishedName(X509Certificate certificate) {
+        if (certificate == null) {
+            return SubjectDistinguishedName.builder()
+               .serialNumber(null)
+               .commonName(null)
+               .build();
+        }
+
+        String subjectDistinguishedName = certificate.getSubjectDN().getName();
+        return SubjectDistinguishedName.builder()
+               .commonName(SubjectDNParser.parse(subjectDistinguishedName, SubjectDNParser.RDN.CN))
+               .serialNumber(SubjectDNParser.parse(subjectDistinguishedName, SubjectDNParser.RDN.SERIALNUMBER))
+               .build();
     }
 
     private String getSignatureFormat(AsicContainer asicContainer) {

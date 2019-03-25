@@ -63,7 +63,21 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
             <wsdl:output message="tns:ValidateDocumentResponse" name="ValidateDocumentResponse"/>
         </wsdl:operation>
     </wsdl:portType>
-    <wsdl:binding name="SignatureValidationServiceSoapBinding" type="tns:ValidationWebService">
+
+    <wsdl:binding name="ValidationWebServiceSoapBinding" type="tns:ValidationWebService">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="ValidateDocument">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="ValidateDocument">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="ValidateDocumentResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:binding name="XRoadValidationWebServiceSoapBinding" type="tns:ValidationWebService">
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
         <wsdl:operation name="ValidateDocument">
             <soap:operation soapAction="" style="document"/>
@@ -87,11 +101,19 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
             </wsdl:output>
         </wsdl:operation>
     </wsdl:binding>
+
     <wsdl:service name="ValidationWebServiceService">
-        <wsdl:port binding="tns:SignatureValidationServiceSoapBinding" name="ValidationWebServiceImplPort">
+        <wsdl:port binding="tns:ValidationWebServiceSoapBinding" name="ValidationWebServiceImplPort">
             <soap:address location="http://localhost:8080/soap/validationWebService"/>
         </wsdl:port>
     </wsdl:service>
+
+    <wsdl:service name="XRoadValidationWebService">
+        <wsdl:port binding="tns:XRoadValidationWebServiceSoapBinding" name="XRoadValidationWebServiceImplPort">
+            <soap:address location="http://localhost:8080/soap/validationWebService"/>
+        </wsdl:port>
+    </wsdl:service>
+
 </wsdl:definitions>
 ```
 
@@ -211,6 +233,7 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
     <wsdl:message name="HashcodeValidationResponse">
         <wsdl:part element="tns:HashcodeValidationResponse" name="parameters"/>
     </wsdl:message>
+
     <wsdl:message name="requestHeader">
         <wsdl:part name="client" element="xrd:client"/>
         <wsdl:part name="service" element="xrd:service"/>
@@ -227,7 +250,20 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
         </wsdl:operation>
     </wsdl:portType>
 
-    <wsdl:binding name="SignatureHashcodeValidationServiceSoapBinding" type="tns:HashcodeValidationWebService">
+    <wsdl:binding name="HashcodeValidationWebServiceSoapBinding" type="tns:HashcodeValidationWebService">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="HashcodeValidationDocument">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="HashcodeValidationDocument">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="HashcodeValidationResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:binding name="XRoadHashcodeValidationWebServiceSoapBinding" type="tns:HashcodeValidationWebService">
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
         <wsdl:operation name="HashcodeValidationDocument">
             <soap:operation soapAction="" style="document"/>
@@ -253,10 +289,17 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
     </wsdl:binding>
 
     <wsdl:service name="HashcodeValidationWebServiceService">
-        <wsdl:port binding="tns:SignatureHashcodeValidationServiceSoapBinding" name="HashcodeValidationWebServiceImplPort">
+        <wsdl:port binding="tns:HashcodeValidationWebServiceSoapBinding" name="HashcodeValidationWebServiceImplPort">
             <soap:address location="http://localhost:8080/soap/hashcodeValidationWebService"/>
         </wsdl:port>
     </wsdl:service>
+
+    <wsdl:service name="XRoadHashcodeValidationWebService">
+        <wsdl:port binding="tns:XRoadHashcodeValidationWebServiceSoapBinding" name="XRoadHashcodeValidationWebServiceImplPort">
+            <soap:address location="http://localhost:8080/soap/hashcodeValidationWebService"/>
+        </wsdl:port>
+    </wsdl:service>
+
 </wsdl:definitions>
 ```
 
@@ -333,7 +376,21 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
             <wsdl:output message="tns:GetDocumentDataFilesResponse" name="GetDocumentDataFilesResponse"/>
         </wsdl:operation>
     </wsdl:portType>
-    <wsdl:binding name="DataFilesServiceSoapBinding" type="tns:DataFilesWebService">
+
+    <wsdl:binding name="DataFilesWebServiceSoapBinding" type="tns:DataFilesWebService">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="GetDocumentDataFiles">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="GetDocumentDataFiles">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="GetDocumentDataFilesResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:binding name="XRoadDataFilesWebServiceSoapBinding" type="tns:DataFilesWebService">
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
         <wsdl:operation name="GetDocumentDataFiles">
             <soap:operation soapAction="" style="document"/>
@@ -357,8 +414,15 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
             </wsdl:output>
         </wsdl:operation>
     </wsdl:binding>
+
     <wsdl:service name="DataFilesWebServiceService">
-        <wsdl:port binding="tns:DataFilesServiceSoapBinding" name="DataFilesWebServiceImplPort">
+        <wsdl:port binding="tns:DataFilesWebServiceSoapBinding" name="DataFilesWebServiceImplPort">
+            <soap:address location="http://localhost:8080/soap/dataFilesWebService"/>
+        </wsdl:port>
+    </wsdl:service>
+
+    <wsdl:service name="XRoadDataFilesWebService">
+        <wsdl:port binding="tns:XRoadDataFilesWebServiceSoapBinding" name="XRoadDataFilesWebServiceImplPort">
             <soap:address location="http://localhost:8080/soap/dataFilesWebService"/>
         </wsdl:port>
     </wsdl:service>
@@ -466,6 +530,7 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
             <xs:element name="SignatureFormat" type="xs:string"/>
             <xs:element name="SignatureLevel" minOccurs="0" type="xs:string"/>
             <xs:element name="SignedBy" type="xs:string"/>
+            <xs:element name="SubjectDistinguishedName" minOccurs="0"  type="tns:SubjectDistinguishedName"/>
             <xs:element name="Indication" type="tns:Indication"/>
             <xs:element name="SubIndication" minOccurs="0" type="xs:string"/>
             <xs:element name="Errors" minOccurs="0">
@@ -525,6 +590,13 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
     <xs:complexType name="Info">
         <xs:sequence>
             <xs:element minOccurs="0" name="BestSignatureTime" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="SubjectDistinguishedName">
+        <xs:sequence>
+            <xs:element name="SerialNumber" type="xs:string"/>
+            <xs:element name="CommonName" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 

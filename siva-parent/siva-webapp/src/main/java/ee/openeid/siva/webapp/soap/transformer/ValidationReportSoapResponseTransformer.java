@@ -27,6 +27,7 @@ import ee.openeid.siva.webapp.soap.response.Info;
 import ee.openeid.siva.webapp.soap.response.Policy;
 import ee.openeid.siva.webapp.soap.response.SignatureScope;
 import ee.openeid.siva.webapp.soap.response.SignatureValidationData;
+import ee.openeid.siva.webapp.soap.response.SubjectDistinguishedName;
 import ee.openeid.siva.webapp.soap.response.TimeStampTokenData;
 import ee.openeid.siva.webapp.soap.response.ValidatedDocumentData;
 import ee.openeid.siva.webapp.soap.response.ValidationConclusion;
@@ -155,6 +156,7 @@ public class ValidationReportSoapResponseTransformer {
         responseSignature.setSignatureFormat(signature.getSignatureFormat());
         responseSignature.setSignatureLevel(signature.getSignatureLevel());
         responseSignature.setSignedBy(signature.getSignedBy());
+        responseSignature.setSubjectDistinguishedName(toSoapResponseSignatureSubjectDN(signature.getSubjectDistinguishedName()));
         responseSignature.setIndication(Indication.fromValue(signature.getIndication()));
         responseSignature.setSubIndication(signature.getSubIndication());
         responseSignature.setInfo(toSoapResponseSignatureInfo(signature.getInfo()));
@@ -163,6 +165,13 @@ public class ValidationReportSoapResponseTransformer {
         responseSignature.setSignatureScopes(toSoapResponseSignatureScopes(signature.getSignatureScopes()));
 
         return responseSignature;
+    }
+
+    private SubjectDistinguishedName toSoapResponseSignatureSubjectDN(ee.openeid.siva.validation.document.report.SubjectDistinguishedName subjectDistinguishedName) {
+        SubjectDistinguishedName responseSubjectDN = new SubjectDistinguishedName();
+        responseSubjectDN.setCommonName(subjectDistinguishedName.getCommonName());
+        responseSubjectDN.setSerialNumber(subjectDistinguishedName.getSerialNumber());
+        return responseSubjectDN;
     }
 
     private TimeStampTokenData.Errors toSoapResponseTimeStampsErrors(List<ee.openeid.siva.validation.document.report.Error> timeStampsErrors) {
@@ -216,5 +225,4 @@ public class ValidationReportSoapResponseTransformer {
 
         return responseSignatureScopes;
     }
-
 }

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 Riigi Infosüsteemide Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
+
 package ee.openeid.validation.service.timemark;
 
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
@@ -150,6 +166,8 @@ public class DDOCServiceIntegrationTest {
         assertEquals("DIGIDOC_XML_1.3", sig1.getSignatureFormat());
         assertTrue(StringUtils.isEmpty(sig1.getSignatureLevel()));
         assertEquals("KESKEL,URMO,38002240232", sig1.getSignedBy());
+        assertEquals("KESKEL,URMO,38002240232", sig1.getSubjectDistinguishedName().getCommonName());
+        assertEquals("38002240232", sig1.getSubjectDistinguishedName().getSerialNumber());
         assertEquals(SignatureValidationData.Indication.TOTAL_PASSED.toString(), sig1.getIndication());
         assertTrue(sig1.getErrors().size() == 0);
         assertTrue(sig1.getWarnings().isEmpty());
@@ -174,6 +192,8 @@ public class DDOCServiceIntegrationTest {
         assertEquals("DIGIDOC_XML_1.3", sig2.getSignatureFormat());
         assertTrue(StringUtils.isEmpty(sig2.getSignatureLevel()));
         assertEquals("JALUKSE,KRISTJAN,38003080336", sig2.getSignedBy());
+        assertEquals("JALUKSE,KRISTJAN,38003080336", sig2.getSubjectDistinguishedName().getCommonName());
+        assertEquals("38003080336", sig2.getSubjectDistinguishedName().getSerialNumber());
         assertEquals(SignatureValidationData.Indication.TOTAL_PASSED.toString(), sig2.getIndication());
         assertTrue(sig2.getErrors().size() == 0);
         assertTrue(sig2.getWarnings().isEmpty());
@@ -244,6 +264,23 @@ public class DDOCServiceIntegrationTest {
     public void whenNonExistingPolicyIsGivenThenValidatorShouldThrowException() throws Exception {
         expectedException.expect(InvalidPolicyException.class);
         validateWithPolicy("non-existing-policy");
+    }
+
+    @Test
+    public void multiSignatureDDOCSubjectDNValuesPresent() throws Exception {
+        SimpleReport report = timemarkContainerValidationService.validateDocument(buildValidationDocument(VALID_DDOC_2_SIGNATURES)).getSimpleReport();
+        SignatureValidationData signatureValidationData = report.getValidationConclusion().getSignatures().get(0);
+        SignatureValidationData signatureValidationData2 = report.getValidationConclusion().getSignatures().get(1);
+
+        assertSubjectDNPresent(signatureValidationData, "KESKEL,URMO,38002240232", "38002240232");
+        assertSubjectDNPresent(signatureValidationData2, "JALUKSE,KRISTJAN,38003080336", "38003080336");
+    }
+
+    private void assertSubjectDNPresent(SignatureValidationData signature, String commonName, String serialNumber) {
+        SubjectDistinguishedName subjectDistinguishedName = signature.getSubjectDistinguishedName();
+        assertNotNull(subjectDistinguishedName);
+        assertEquals(serialNumber, subjectDistinguishedName.getSerialNumber());
+        assertEquals(commonName, subjectDistinguishedName.getCommonName());
     }
 
     private static DataFilesDocument buildDataFilesDocument() throws Exception {

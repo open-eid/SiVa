@@ -25,6 +25,7 @@ import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.document.report.SignatureScope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.validation.document.report.SubjectDistinguishedName;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.document.report.ValidationWarning;
 import ee.openeid.siva.validation.document.report.Warning;
@@ -150,6 +151,7 @@ public abstract class TimemarkContainerValidationReportBuilder {
         signatureValidationData.setSignatureFormat(getSignatureFormat(signature.getProfile()));
         signatureValidationData.setSignatureLevel(getSignatureLevel(signature));
         signatureValidationData.setSignedBy(removeQuotes(signature.getSigningCertificate().getSubjectName(CN)));
+        signatureValidationData.setSubjectDistinguishedName(parseSubjectDistinguishedName(signature.getSigningCertificate()));
         signatureValidationData.setErrors(getErrors(signature));
         signatureValidationData.setSignatureScopes(getSignatureScopes(signature, dataFilenames));
         signatureValidationData.setClaimedSigningTime(ReportBuilderUtils.getDateFormatterWithGMTZone().format(signature.getClaimedSigningTime()));
@@ -160,6 +162,13 @@ public abstract class TimemarkContainerValidationReportBuilder {
         signatureValidationData.setCountryCode(getCountryCode(signature));
 
         return signatureValidationData;
+    }
+
+    private SubjectDistinguishedName parseSubjectDistinguishedName(X509Cert signingCertificate) {
+        return SubjectDistinguishedName.builder()
+               .serialNumber(removeQuotes(signingCertificate.getSubjectName(X509Cert.SubjectName.SERIALNUMBER)))
+               .commonName(removeQuotes(signingCertificate.getSubjectName(X509Cert.SubjectName.CN)))
+               .build();
     }
 
     String removeQuotes(String subjectName) {

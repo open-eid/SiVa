@@ -25,6 +25,7 @@ import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import eu.europa.esig.dss.jaxb.diagnostic.DiagnosticData;
 import eu.europa.esig.dss.jaxb.diagnostic.XmlSignature;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -102,6 +103,11 @@ public class PDFWithInvalidSignaturesTest extends PDFValidationServiceTest {
 
         assertNotNull(diagnosticData.getListOfTrustedLists());
         assertEquals("EU", diagnosticData.getListOfTrustedLists().getCountryCode());
+
+        Assert.assertSame(1, reports.getDiagnosticReport().getValidationConclusion().getSignatures().size());
+
+        SignatureValidationData signatureValidationData = reports.getDiagnosticReport().getValidationConclusion().getSignatures().get(0);
+        assertSubjectDNPresent(signatureValidationData, "36706020210", "SINIVEE,VEIKO,36706020210");
     }
 
 }

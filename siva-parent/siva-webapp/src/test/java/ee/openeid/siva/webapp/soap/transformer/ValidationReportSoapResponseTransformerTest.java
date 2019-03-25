@@ -18,7 +18,9 @@ package ee.openeid.siva.webapp.soap.transformer;
 
 import ee.openeid.siva.validation.document.report.DetailedReport;
 import ee.openeid.siva.validation.document.report.DiagnosticReport;
+import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.validation.document.report.SubjectDistinguishedName;
 import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
 import ee.openeid.siva.validation.document.report.ValidatedDocument;
 import ee.openeid.siva.webapp.soap.response.DiagnosticData;
@@ -134,19 +136,23 @@ public class ValidationReportSoapResponseTransformerTest {
         assertEquals(dssValidationConclusion.getTimeStampTokens().get(0).getSignedBy(), soapValidationConclusion.getTimeStampTokens().getTimeStampToken().get(0).getSignedBy());
         assertEquals(dssValidationConclusion.getTimeStampTokens().get(0).getSignedTime(), soapValidationConclusion.getTimeStampTokens().getTimeStampToken().get(0).getSignedTime());
 
-        assertEquals(dssValidationConclusion.getSignatures().get(0).getClaimedSigningTime(), soapValidationConclusion.getSignatures().getSignature().get(0).getClaimedSigningTime());
-        assertEquals(dssValidationConclusion.getSignatures().get(0).getId(), soapValidationConclusion.getSignatures().getSignature().get(0).getId());
-        assertEquals(dssValidationConclusion.getSignatures().get(0).getIndication(), soapValidationConclusion.getSignatures().getSignature().get(0).getIndication().value());
-        assertEquals(dssValidationConclusion.getSignatures().get(0).getSignatureFormat(), soapValidationConclusion.getSignatures().getSignature().get(0).getSignatureFormat());
-        assertEquals(dssValidationConclusion.getSignatures().get(0).getSignatureLevel(), soapValidationConclusion.getSignatures().getSignature().get(0).getSignatureLevel());
-        assertEquals(dssValidationConclusion.getSignatures().get(0).getSignedBy(), soapValidationConclusion.getSignatures().getSignature().get(0).getSignedBy());
-        assertEquals(dssValidationConclusion.getSignatures().get(0).getSubIndication(), soapValidationConclusion.getSignatures().getSignature().get(0).getSubIndication());
-        assertEquals(dssValidationConclusion.getSignatures().get(0).getInfo().getBestSignatureTime(), soapValidationConclusion.getSignatures().getSignature().get(0).getInfo().getBestSignatureTime());
-        assertEquals(dssValidationConclusion.getSignatures().get(0).getErrors().get(0).getContent(), soapValidationConclusion.getSignatures().getSignature().get(0).getErrors().getError().get(0).getContent());
-        assertEquals(dssValidationConclusion.getSignatures().get(0).getWarnings().get(0).getContent(), soapValidationConclusion.getSignatures().getSignature().get(0).getWarnings().getWarning().get(0).getContent());
-        assertEquals(dssValidationConclusion.getSignatures().get(0).getSignatureScopes().get(0).getContent(), soapValidationConclusion.getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getContent());
-        assertEquals(dssValidationConclusion.getSignatures().get(0).getSignatureScopes().get(0).getName(), soapValidationConclusion.getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getName());
-        assertEquals(dssValidationConclusion.getSignatures().get(0).getSignatureScopes().get(0).getScope(), soapValidationConclusion.getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
+        SignatureValidationData dssSignature = dssValidationConclusion.getSignatures().get(0);
+        ee.openeid.siva.webapp.soap.response.SignatureValidationData responseSignature = soapValidationConclusion.getSignatures().getSignature().get(0);
+        assertEquals(dssSignature.getClaimedSigningTime(), responseSignature.getClaimedSigningTime());
+        assertEquals(dssSignature.getId(), responseSignature.getId());
+        assertEquals(dssSignature.getIndication(), responseSignature.getIndication().value());
+        assertEquals(dssSignature.getSignatureFormat(), responseSignature.getSignatureFormat());
+        assertEquals(dssSignature.getSignatureLevel(), responseSignature.getSignatureLevel());
+        assertEquals(dssSignature.getSignedBy(), responseSignature.getSignedBy());
+        assertEquals(dssSignature.getSubIndication(), responseSignature.getSubIndication());
+        assertEquals(dssSignature.getInfo().getBestSignatureTime(), responseSignature.getInfo().getBestSignatureTime());
+        assertEquals(dssSignature.getErrors().get(0).getContent(), responseSignature.getErrors().getError().get(0).getContent());
+        assertEquals(dssSignature.getWarnings().get(0).getContent(), responseSignature.getWarnings().getWarning().get(0).getContent());
+        assertEquals(dssSignature.getSignatureScopes().get(0).getContent(), responseSignature.getSignatureScopes().getSignatureScope().get(0).getContent());
+        assertEquals(dssSignature.getSignatureScopes().get(0).getName(), responseSignature.getSignatureScopes().getSignatureScope().get(0).getName());
+        assertEquals(dssSignature.getSignatureScopes().get(0).getScope(), responseSignature.getSignatureScopes().getSignatureScope().get(0).getScope());
+        assertEquals(dssSignature.getSubjectDistinguishedName().getCommonName(), responseSignature.getSubjectDistinguishedName().getCommonName());
+        assertEquals(dssSignature.getSubjectDistinguishedName().getSerialNumber(), responseSignature.getSubjectDistinguishedName().getSerialNumber());
     }
 
     private void assertDiagnosticData(eu.europa.esig.dss.jaxb.diagnostic.DiagnosticData dssDiagnosticData, DiagnosticData soapDiagnosticData) {
@@ -385,6 +391,10 @@ public class ValidationReportSoapResponseTransformerTest {
         signature.setSignatureFormat("PAdES_LT");
         signature.setSignatureLevel("QES");
         signature.setSignedBy("nobody");
+        SubjectDistinguishedName subjectDistinguishedName = new SubjectDistinguishedName();
+        subjectDistinguishedName.setCommonName("COMMON_NAME");
+        subjectDistinguishedName.setSerialNumber("SERIALNUMBER");
+        signature.setSubjectDistinguishedName(subjectDistinguishedName);
         signature.setErrors(createMockedSignatureErrors());
         signature.setInfo(createMockedSignatureInfo());
         signature.setSignatureScopes(createMockedSignatureScopes());

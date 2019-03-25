@@ -102,10 +102,25 @@ public class GenericValidationReportBuilderTest {
         xmlSignature.setSignatureScopes(Collections.singletonList(xmlSignatureScope));
         xmlSignature.setId("SIG-id");
         xmlSignature.setTimestamps(Collections.singletonList(new XmlTimestamp()));
+
         XmlPolicy xmlPolicy = new XmlPolicy();
         xmlPolicy.setId(policyId);
         xmlSignature.setPolicy(xmlPolicy);
+
+        XmlSigningCertificate signingCertificate = new XmlSigningCertificate();
+        signingCertificate.setSigned("true");
+        signingCertificate.setId("SIG-CERT-id");
+        xmlSignature.setSigningCertificate(signingCertificate);
+
         diagnosticData.setSignatures(Collections.singletonList(xmlSignature));
+
+        XmlCertificate xmlCertificate = new XmlCertificate();
+        xmlCertificate.setId(signingCertificate.getId());
+        XmlDistinguishedName distinguishedName = new XmlDistinguishedName();
+        distinguishedName.setFormat("RFC2253");
+        distinguishedName.setValue("2.5.4.5=#130b3437313031303130303333,2.5.4.42=#0c05504552454e494d49,2.5.4.4=#0c074545534e494d49,CN=PERENIMI\\,EESNIMI\\,47101010033,OU=digital signature,O=ESTEID,C=EE");
+        xmlCertificate.getSubjectDistinguishedName().add(distinguishedName);
+        diagnosticData.setUsedCertificates(Collections.singletonList(xmlCertificate));
         return diagnosticData;
     }
 

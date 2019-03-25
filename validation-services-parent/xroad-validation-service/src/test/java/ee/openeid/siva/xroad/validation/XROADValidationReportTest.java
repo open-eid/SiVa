@@ -19,7 +19,9 @@ package ee.openeid.siva.xroad.validation;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Policy;
 import ee.openeid.siva.validation.document.report.Reports;
+import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import org.junit.Before;
 import org.junit.Rule;
@@ -34,6 +36,7 @@ import static ee.openeid.siva.xroad.validation.XROADTestUtils.initializeXROADVal
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 
 
 public class XROADValidationReportTest {
@@ -52,6 +55,7 @@ public class XROADValidationReportTest {
         ValidationDocument validationDocument = buildValidationDocument(XROAD_SIMPLE);
         SimpleReport report = validationService.validateDocument(validationDocument).getSimpleReport();
         assertEquals("Riigi Infosüsteemi Amet", report.getValidationConclusion().getSignatures().get(0).getSignedBy());
+        assertSubjectDNPresent(report.getValidationConclusion(), "70006317", "Riigi Infosüsteemi Amet");
     }
 
     @Test
@@ -59,6 +63,7 @@ public class XROADValidationReportTest {
         ValidationDocument validationDocument = buildValidationDocument(XROAD_BATCHSIGNATURE);
         SimpleReport report = validationService.validateDocument(validationDocument).getSimpleReport();
         assertEquals("ASiC-E_batchsignature", report.getValidationConclusion().getSignatureForm());
+        assertSubjectDNPresent(report.getValidationConclusion(), "70006317", "Riigi Infosüsteemi Amet");
     }
 
     @Test
@@ -125,6 +130,14 @@ public class XROADValidationReportTest {
 
         assertNull(reports.getDetailedReport().getValidationProcess());
         assertNull(reports.getDiagnosticReport().getDiagnosticData());
+    }
+
+    public void assertSubjectDNPresent(ValidationConclusion validationConclusion, String expectedSerialNumber, String expectedCommonName) {
+        assertSame(1, validationConclusion.getSignatures().size());
+        SignatureValidationData signature = validationConclusion.getSignatures().get(0);
+        assertNotNull(signature.getSubjectDistinguishedName());
+        assertEquals(expectedSerialNumber, signature.getSubjectDistinguishedName().getSerialNumber());
+        assertEquals(expectedCommonName, signature.getSubjectDistinguishedName().getCommonName());
     }
 
     private SimpleReport validateWithPolicy(String policyName) throws Exception {

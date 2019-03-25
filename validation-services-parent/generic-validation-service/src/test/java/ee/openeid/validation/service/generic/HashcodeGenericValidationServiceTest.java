@@ -1,11 +1,27 @@
-package ee.openeid.validation.service.generic;
+/*
+ * Copyright 2019 Riigi Infosüsteemide Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
 
+package ee.openeid.validation.service.generic;
 
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.Datafile;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.document.report.SignatureScope;
+import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.validation.service.generic.configuration.GenericSignaturePolicyProperties;
 import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
@@ -25,6 +41,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @SpringBootTest(classes = {PDFValidationServiceTest.TestConfiguration.class})
 @RunWith(SpringRunner.class)
@@ -80,6 +99,17 @@ public class HashcodeGenericValidationServiceTest {
         Assert.assertEquals("LvhnsrgBZBK9kTQ8asbPtcsjuEhBo9s3QDdCcIxlMmo=", signatureScope.getHash());
         Assert.assertEquals("SHA256", signatureScope.getHashAlgo());
         Assert.assertEquals("test.pdf", signatureScope.getName());
+    }
+
+    @Test
+    public void hashcodeValidationSubjectDNCorrectlyPresent() throws Exception {
+        Reports reports = validationService.validate(getValidationDocumentSingletonList());
+
+        Assert.assertSame(1, reports.getSimpleReport().getValidationConclusion().getSignatures().size());
+        SignatureValidationData signature = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0);
+        assertNotNull(signature.getSubjectDistinguishedName());
+        assertEquals("38605170596", signature.getSubjectDistinguishedName().getSerialNumber());
+        assertEquals("PAULIUS PODOLSKIS", signature.getSubjectDistinguishedName().getCommonName());
     }
 
     private List<ValidationDocument> getValidationDocumentSingletonList() throws URISyntaxException, IOException {

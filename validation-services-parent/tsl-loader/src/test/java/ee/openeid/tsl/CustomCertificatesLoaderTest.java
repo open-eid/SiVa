@@ -36,14 +36,14 @@ public class CustomCertificatesLoaderTest {
 
     @Before
     public void setUp() {
-        CustomCertificatesLoader customCertificatesLoader = new CustomCertificatesLoader();
+
         trustedListSource = new TrustedListsCertificateSource();
-        customCertificatesLoader.setTrustedListsCertificateSource(trustedListSource);
-        customCertificatesLoader.init();
     }
 
     @Test
     public void allTestCertificatesShouldBeAddedToTSL() {
+        CustomCertificatesLoader customCertificatesLoader = new CustomCertificatesLoader();
+        customCertificatesLoader.loadExtraCertificates(trustedListSource);
         List<CertificateToken> certTokens = getCertificateTokens();
         assertEquals(12, certTokens.size());
     }
@@ -70,13 +70,13 @@ public class CustomCertificatesLoaderTest {
     }
 
     private boolean isManagementOrNortalServiceInfo(ServiceInfo serviceInfo) {
-        return StringUtils.contains(serviceInfo.getServiceName(), "Management") || StringUtils.contains(serviceInfo.getServiceName(), "Nortal");
+        return StringUtils.contains(serviceInfo.getTspName(), "Management") || StringUtils.contains(serviceInfo.getTspName(), "Nortal");
     }
 
     private boolean isNonManagementCA(ServiceInfo serviceInfo) {
         return
                 StringUtils.equals("http://uri.etsi.org/TrstSvc/Svctype/CA/QC", serviceInfo.getStatus().getLatest().getType()) &&
-                !isManagementOrNortalServiceInfo(serviceInfo);
+                        !isManagementOrNortalServiceInfo(serviceInfo);
     }
 
     private List<CertificateToken> getCertificateTokens() {
@@ -86,7 +86,7 @@ public class CustomCertificatesLoaderTest {
     }
 
     private void assertNoQualifiers(ServiceInfo serviceInfo) {
-        serviceInfo.getStatus().iterator().forEachRemaining(s->s.getQualifiersAndConditions().isEmpty());
+        serviceInfo.getStatus().iterator().forEachRemaining(s -> s.getQualifiersAndConditions().isEmpty());
         assertTrue(serviceInfo.getStatus().getLatest().getQualifiersAndConditions().keySet().isEmpty());
 
     }
@@ -100,7 +100,8 @@ public class CustomCertificatesLoaderTest {
     }
 
     private ServiceInfo getServiceInfo(CertificateToken certificateToken) {
-        return (ServiceInfo) certificateToken.getAssociatedTSPS().toArray()[0];
+        return (ServiceInfo) trustedListSource.getTrustServices(certificateToken).toArray()[0];
+
     }
 
 

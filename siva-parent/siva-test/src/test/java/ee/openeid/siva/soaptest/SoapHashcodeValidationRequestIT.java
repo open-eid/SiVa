@@ -625,7 +625,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
 
         ValidatableResponse response = postHashcodeValidation(request).then();
         assertValidationConclusion(response, request);
-        assertSignatureDataNotFound(response);
+        assertSignatureHashFailure(response, SUB_INDICATION_SIG_CRYPTO_FAILURE);
     }
 
     /**
@@ -752,7 +752,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
 
         ValidatableResponse response = postHashcodeValidation(request).then();
         assertValidationConclusion(response, request);
-        assertSignatureHashFailure(response);
+        assertSignatureHashFailure(response, TestData.SUB_INDICATION_HASH_FAILURE);
     }
 
     /**
@@ -922,7 +922,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
     private void assertValidationConclusion(ValidatableResponse response, JSONHashcodeValidationRequest request) {
         response.statusCode(HttpStatus.OK.value())
                 .body(VALIDATION_CONCLUSION_PREFIX + "ValidationTime", DateTimeMatcher.isEqualOrAfter(testStartDate))
-                .body(VALIDATION_CONCLUSION_PREFIX + "ValidationLevel", is(TestData.VALID_VALIDATION_LEVEL_ARCHIVAL_DATA));
+                .body(VALIDATION_CONCLUSION_PREFIX + "ValidationLevel", is(TestData.VALIDATION_LEVEL_ARCHIVAL_DATA));
 
         ValidationPolicy signaturePolicy;
         if (request.getSignaturePolicy() == null) {
@@ -951,14 +951,14 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
         response.root(VALIDATION_CONCLUSION_PREFIX)
                 .body("Signatures.children().size()", is(1))
                 .body("Signatures.Signature[0].Id", is(TestData.MOCK_XADES_SIGNATURE_ID))
-                .body("Signatures.Signature[0].SignatureFormat", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_FORMAT_XADES_LT))
-                .body("Signatures.Signature[0].SignatureLevel", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_QESIG))
+                .body("Signatures.Signature[0].SignatureFormat", is(TestData.SIGNATURE_FORMAT_XADES_LT))
+                .body("Signatures.Signature[0].SignatureLevel", is(TestData.SIGNATURE_LEVEL_QESIG))
                 .body("Signatures.Signature[0].SignedBy", is(TestData.MOCK_XADES_SIGNATURE_SIGNER))
-                .body("Signatures.Signature[0].Indication", is(TestData.VALID_INDICATION_TOTAL_PASSED))
+                .body("Signatures.Signature[0].Indication", is(TestData.TOTAL_PASSED))
                 .body("Signatures.Signature[0].SignatureScopes.children().size()", is(1))
                 .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Name", is(TestData.MOCK_XADES_DATAFILE_FILENAME))
-                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Scope", is(TestData.VALID_SIGNATURE_SCOPE_VALUE_1))
-                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Content", is(TestData.VALID_SIGNATURE_SCOPE_CONTENT_1))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Scope", is(TestData.SIGNATURE_SCOPE_FULL))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Content", is(TestData.VALID_SIGNATURE_SCOPE_CONTENT_FULL))
                 .body("Signatures.Signature[0].ClaimedSigningTime", is(TestData.MOCK_XADES_SIGNATURE_CLAIMED_SIGNING_TIME))
                 .body("Signatures.Signature[0].Info.BestSignatureTime", is(TestData.MOCK_XADES_SIGNATURE_BEST_SIGNATURE_TIME))
                 .body("Signatures.Signature[0].Errors", isEmptyOrNullString())
@@ -970,40 +970,40 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
         response.root(VALIDATION_CONCLUSION_PREFIX)
                 .body("Signatures.children().size()", is(1))
                 .body("Signatures.Signature[0].Id", is(TestData.MOCK_XADES_SIGNATURE_ID))
-                .body("Signatures.Signature[0].SignatureFormat", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_FORMAT_XADES_LT))
-                .body("Signatures.Signature[0].SignatureLevel", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_INDETERMINATE_QESIG))
+                .body("Signatures.Signature[0].SignatureFormat", is(TestData.SIGNATURE_FORMAT_XADES_LT))
+                .body("Signatures.Signature[0].SignatureLevel", is(TestData.SIGNATURE_LEVEL_INDETERMINATE_QESIG))
                 .body("Signatures.Signature[0].SignedBy", is(TestData.MOCK_XADES_SIGNATURE_SIGNER))
-                .body("Signatures.Signature[0].Indication", is(TestData.VALID_INDICATION_VALUE_INDETERMINATE))
+                .body("Signatures.Signature[0].Indication", is(TestData.INDETERMINATE))
                 .body("Signatures.Signature[0].SubIndication", is(TestData.SUB_INDICATION_SIGNED_DATA_NOT_FOUND))
                 .body("Signatures.Signature[0].SignatureScopes.children().size()", is(1))
                 .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Name", is(TestData.MOCK_XADES_DATAFILE_FILENAME))
-                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Scope", is(TestData.VALID_SIGNATURE_SCOPE_VALUE_1))
-                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Content", is(TestData.VALID_SIGNATURE_SCOPE_CONTENT_1))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Scope", is(TestData.SIGNATURE_SCOPE_FULL))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Content", is(TestData.VALID_SIGNATURE_SCOPE_CONTENT_FULL))
                 .body("Signatures.Signature[0].ClaimedSigningTime", is(TestData.MOCK_XADES_SIGNATURE_CLAIMED_SIGNING_TIME))
                 .body("Signatures.Signature[0].Info.BestSignatureTime", is(TestData.MOCK_XADES_SIGNATURE_BEST_SIGNATURE_TIME))
                 .body("Signatures.Signature[0].Errors.children().size()", is(1))
-                .body("Signatures.Signature[0].Errors.Error[0].Content" , is("The reference data object(s) is not found!"))
+                .body("Signatures.Signature[0].Errors.Error[0].Content" , is("The result of the LTV validation process is not acceptable to continue the process!"))
                 .body("ValidSignaturesCount", is("0"))
                 .body("SignaturesCount", is("1"));
     }
 
-    private void assertSignatureHashFailure(ValidatableResponse response) {
+    private void assertSignatureHashFailure(ValidatableResponse response, String subIndication) {
         response.root(VALIDATION_CONCLUSION_PREFIX)
                 .body("Signatures.children().size()", is(1))
                 .body("Signatures.Signature[0].Id", is(TestData.MOCK_XADES_SIGNATURE_ID))
-                .body("Signatures.Signature[0].SignatureFormat", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_FORMAT_XADES_LT))
-                .body("Signatures.Signature[0].SignatureLevel", is(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_NOT_ADES_QC_QSCD))
+                .body("Signatures.Signature[0].SignatureFormat", is(TestData.SIGNATURE_FORMAT_XADES_LT))
+                .body("Signatures.Signature[0].SignatureLevel", is(TestData.SIGNATURE_LEVEL_NOT_ADES_QC_QSCD))
                 .body("Signatures.Signature[0].SignedBy", is(TestData.MOCK_XADES_SIGNATURE_SIGNER))
-                .body("Signatures.Signature[0].Indication", is(TestData.VALID_INDICATION_TOTAL_FAILED))
-                .body("Signatures.Signature[0].SubIndication", is(TestData.SUB_INDICATION_HASH_FAILURE))
+                .body("Signatures.Signature[0].Indication", is(TestData.TOTAL_FAILED))
+                .body("Signatures.Signature[0].SubIndication", is(subIndication))
                 .body("Signatures.Signature[0].SignatureScopes.children().size()", is(1))
                 .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Name", is(TestData.MOCK_XADES_DATAFILE_FILENAME))
-                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Scope", is(TestData.VALID_SIGNATURE_SCOPE_VALUE_1))
-                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Content", is(TestData.VALID_SIGNATURE_SCOPE_CONTENT_1))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Scope", is(TestData.SIGNATURE_SCOPE_FULL))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Content", is(TestData.VALID_SIGNATURE_SCOPE_CONTENT_FULL))
                 .body("Signatures.Signature[0].ClaimedSigningTime", is(TestData.MOCK_XADES_SIGNATURE_CLAIMED_SIGNING_TIME))
                 .body("Signatures.Signature[0].Info.BestSignatureTime", is(TestData.MOCK_XADES_SIGNATURE_BEST_SIGNATURE_TIME))
                 .body("Signatures.Signature[0].Errors.children().size()", is(1))
-                .body("Signatures.Signature[0].Errors.Error[0].Content" , is("The reference data object(s) is not intact!"))
+                .body("Signatures.Signature[0].Errors.Error[0].Content" , is("The result of the LTV validation process is not acceptable to continue the process!"))
                 .body("ValidSignaturesCount", is("0"))
                 .body("SignaturesCount", is("1"));
     }

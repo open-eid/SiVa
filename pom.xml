@@ -103,7 +103,7 @@
         <project.encoding>UTF-8</project.encoding>
         <language.level>1.8</language.level>
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss'Z'</maven.build.timestamp.format>
-        <dss.version>5.2.d4j.4</dss.version>
+        <dss.version>5.4.d4j.1</dss.version>
         <bouncycastle.version>1.60</bouncycastle.version>
         <spring.boot.version>1.5.19.RELEASE</spring.boot.version>
         <powermock.version>1.7.4</powermock.version>

@@ -86,19 +86,19 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
         assertThat(response.jsonPath().getString(validationConclusion + ".policy.policyDescription"), equalTo(POLICY_4_DESCRIPTION));
         assertThat(response.jsonPath().getString(validationConclusion + ".policy.policyName"), equalTo(VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2));
         assertThat(response.jsonPath().getString(validationConclusion + ".policy.policyUrl"), equalTo(POLICY_4_URL));
-        assertThat(response.jsonPath().getString(validationConclusion + ".signatureForm"), equalTo(VALID_SIGNATURE_FORM_1));
+        assertThat(response.jsonPath().getString(validationConclusion + ".signatureForm"), equalTo(SIGNATURE_FORM_ASICE));
         assertThat(response.jsonPath().getString(validationConclusion + ".validationTime"), DateTimeMatcher.isEqualOrAfter(testStartDate));
         assertThat(response.jsonPath().getString(validationConclusion + ".signaturesCount"), equalTo("1"));
         assertThat(response.jsonPath().getString(validationConclusion + ".validSignaturesCount"), equalTo("1"));
         assertThat(response.jsonPath().getString(validationConclusion + ".signatures"), notNullValue());
         assertThat(response.jsonPath().getString(validationConclusion + ".signatures.id[0]"), equalTo("S0"));
-        assertThat(response.jsonPath().getString(validationConclusion + ".signatures.signatureFormat[0]"), equalTo(VALID_VALIDATION_CONCLUSION_SIGNATURE_FORMAT_XADES_LT));
-        assertThat(response.jsonPath().getString(validationConclusion + ".signatures.signatureLevel[0]"), equalTo(VALID_VALIDATION_CONCLUSION_SIGNATURE_LEVEL_QESIG));
+        assertThat(response.jsonPath().getString(validationConclusion + ".signatures.signatureFormat[0]"), equalTo(SIGNATURE_FORMAT_XADES_LT));
+        assertThat(response.jsonPath().getString(validationConclusion + ".signatures.signatureLevel[0]"), equalTo(SIGNATURE_LEVEL_QESIG));
         assertThat(response.jsonPath().getString(validationConclusion + ".signatures.signedBy[0]"), equalTo("NURM,AARE,38211015222"));
-        assertThat(response.jsonPath().getString(validationConclusion + ".signatures.indication[0]"), equalTo(VALID_INDICATION_TOTAL_PASSED));
+        assertThat(response.jsonPath().getString(validationConclusion + ".signatures.indication[0]"), equalTo(TOTAL_PASSED));
         assertThat(response.jsonPath().getString(validationConclusion + ".signatures.signatureScopes[0].name[0]"), equalTo("Tresting.txt"));
-        assertThat(response.jsonPath().getString(validationConclusion + ".signatures.signatureScopes[0].scope[0]"), equalTo(VALID_SIGNATURE_SCOPE_VALUE_1));
-        assertThat(response.jsonPath().getString(validationConclusion + ".signatures.signatureScopes[0].content[0]"), equalTo(VALID_SIGNATURE_SCOPE_CONTENT_1));
+        assertThat(response.jsonPath().getString(validationConclusion + ".signatures.signatureScopes[0].scope[0]"), equalTo(SIGNATURE_SCOPE_FULL));
+        assertThat(response.jsonPath().getString(validationConclusion + ".signatures.signatureScopes[0].content[0]"), equalTo(VALID_SIGNATURE_SCOPE_CONTENT_FULL));
         assertThat(response.jsonPath().getString(validationConclusion + ".signatures.claimedSigningTime[0]"), equalTo("2016-10-11T09:35:48Z"));
         assertThat(response.jsonPath().getString(validationConclusion + ".signatures.info.bestSignatureTime[0]"), equalTo("2016-10-11T09:36:10Z"));
     }
@@ -159,7 +159,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
         assertThat(response.jsonPath().getString(validationProcess + ".qmatrixBlock.signatureAnalysis.constraint.name[0].value[8]"), equalTo(VALID_VALIDATION_PROCESS_VALUE_41));
         assertThat(response.jsonPath().getString(validationProcess + ".qmatrixBlock.signatureAnalysis.constraint[0].status[8]"), equalTo(VALID_VALIDATION_PROCESS_STATUS_2));
         assertThat(response.jsonPath().getString(validationProcess + ".qmatrixBlock.signatureAnalysis.conclusion.indication[0]"), equalTo(VALID_INDICATION_VALUE_PASSED));
-        assertThat(response.jsonPath().getString(validationProcess + ".qmatrixBlock.signatureAnalysis.signatureQualification[0]"), equalTo(VALID_VALIDATION_PROCESS_SIGNATUREQUALIFICATION_2));
+        assertThat(response.jsonPath().getString(validationProcess + ".qmatrixBlock.signatureAnalysis.signatureQualification[0]"), equalTo(SIGNATURE_LEVEL_QESIG));
         assertThat(response.jsonPath().getString(validationProcess + ".qmatrixBlock.signatureAnalysis.id"), notNullValue());
         assertThat(response.jsonPath().getString(validationProcess + ".qmatrixBlock.tlanalysis"), notNullValue());
         assertThat(response.jsonPath().getString(validationProcess + ".qmatrixBlock.tlanalysis.constraint[0]"), notNullValue());
@@ -640,18 +640,18 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessBasicSignatures.constraint.error[0].nameId[0]"), equalTo(VALID_VALIDATION_PROCESS_ERROR_NAMEID_1));
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessBasicSignatures.constraint[0].id[0]"), equalTo("S0"));
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessBasicSignatures.conclusion[0].indication"), equalTo(VALID_INDICATION_VALUE_FAILED));
-        assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessBasicSignatures.conclusion[0].subIndication"), equalTo(VALID_VALIDATION_PROCESS_SUB_INDICATION_3));
+        assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessBasicSignatures.conclusion[0].subIndication"), equalTo(SUB_INDICATION_SIG_CRYPTO_FAILURE));
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessBasicSignatures.conclusion.errors[0].value[0]"), equalTo(VALID_VALIDATION_PROCESS_ERROR_VALUE_9));
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessBasicSignatures.conclusion.errors[0].nameId[0]"), equalTo(VALID_VALIDATION_PROCESS_ERROR_NAMEID_8));
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessTimestamps[0].constraint[0].name[0].nameId"), equalTo(VALID_VALIDATION_PROCESS_NAMEID_49));
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessTimestamps[0].constraint[0].name[0].value"), equalTo(VALID_VALIDATION_PROCESS_VALUE_48));
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessTimestamps[0].constraint[0].status[0]"), equalTo(VALID_VALIDATION_PROCESS_STATUS_1));
-        assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessTimestamps[0].constraint[0].error[0].value"), equalTo(VALID_VALIDATION_PROCESS_ERROR_VALUE_10));
+        assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessTimestamps[0].constraint[0].error[0].value"), equalTo(TS_PROCESS_NOT_CONCLUSIVE));
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessTimestamps[0].constraint[0].error[0].nameId"), equalTo(VALID_VALIDATION_PROCESS_ERROR_NAMEID_9));
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessTimestamps[0].constraint[0].id"), notNullValue());
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessTimestamps[0].conclusion[0].indication"), equalTo(VALID_INDICATION_VALUE_FAILED));
-        assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessTimestamps[0].conclusion[0].subIndication"), equalTo(VALID_VALIDATION_PROCESS_SUB_INDICATION_4));
-        assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessTimestamps[0].conclusion.errors[0].value[0]"), equalTo(VALID_VALIDATION_PROCESS_ERROR_VALUE_10));
+        assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessTimestamps[0].conclusion[0].subIndication"), equalTo(SUB_INDICATION_SIG_CONSTRAINTS_FAILURE));
+        assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessTimestamps[0].conclusion.errors[0].value[0]"), equalTo(TS_PROCESS_NOT_CONCLUSIVE));
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessTimestamps[0].conclusion.errors[0].nameId[0]"), equalTo(VALID_VALIDATION_PROCESS_ERROR_NAMEID_9));
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessTimestamps[0].id"), notNullValue());
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessTimestamps[0].type[0]"), equalTo("SIGNATURE_TIMESTAMP"));
@@ -661,7 +661,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessLongTermData.constraint[0].error[0].value"), equalTo(VALID_VALIDATION_PROCESS_ERROR_VALUE_3));
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessLongTermData.constraint[0].error[0].nameId"), equalTo(VALID_VALIDATION_PROCESS_ERROR_NAMEID_3));
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessLongTermData.conclusion[0].indication"), equalTo(VALID_INDICATION_VALUE_FAILED));
-        assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessLongTermData.conclusion[0].subIndication"), equalTo(VALID_VALIDATION_PROCESS_SUB_INDICATION_3));
+        assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessLongTermData.conclusion[0].subIndication"), equalTo(SUB_INDICATION_SIG_CRYPTO_FAILURE));
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessLongTermData.conclusion[0].errors[0].nameId"), equalTo(VALID_VALIDATION_PROCESS_ERROR_NAMEID_8));
         assertThat(response.jsonPath().getString(validationProcess + ".signatures.validationProcessLongTermData.conclusion[0].errors[0].value"), equalTo(VALID_VALIDATION_PROCESS_ERROR_VALUE_9));
     }
@@ -693,7 +693,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
         assertThat(response.jsonPath().getString(validationConclusion + ".policy.policyDescription"), equalTo(POLICY_4_DESCRIPTION));
         assertThat(response.jsonPath().getString(validationConclusion + ".policy.policyName"), equalTo(VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2));
         assertThat(response.jsonPath().getString(validationConclusion + ".policy.policyUrl"), equalTo(POLICY_4_URL));
-        assertThat(response.jsonPath().getString(validationConclusion + ".signatureForm"), equalTo(VALID_SIGNATURE_FORM_2));
+        assertThat(response.jsonPath().getString(validationConclusion + ".signatureForm"), equalTo(SIGNATURE_FORM_ASICS));
         assertThat(response.jsonPath().getString(validationConclusion + ".validationTime"), DateTimeMatcher.isEqualOrAfter(testStartDate));
         assertThat(response.jsonPath().getString(validationConclusion + ".signaturesCount"), equalTo("1"));
         assertThat(response.jsonPath().getString(validationConclusion + ".validSignaturesCount"), equalTo("1"));

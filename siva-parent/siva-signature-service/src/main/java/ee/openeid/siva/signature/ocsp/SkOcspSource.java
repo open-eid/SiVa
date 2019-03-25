@@ -68,7 +68,7 @@ public class SkOcspSource implements OCSPSource {
     }
 
     @Override
-    public OCSPToken getOCSPToken(CertificateToken certificateToken, CertificateToken issuerCertificateToken) {
+    public OCSPToken getRevocationToken(CertificateToken certificateToken, CertificateToken issuerCertificateToken) {
         LOGGER.debug("Getting OCSP token");
         if (dataLoader == null) {
             throw new RuntimeException("Data loader is null");

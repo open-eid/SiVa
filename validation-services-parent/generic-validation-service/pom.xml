@@ -51,6 +51,10 @@
         </dependency>
         <dependency>
             <groupId>org.digidoc4j.dss</groupId>
+            <artifactId>dss-pades-pdfbox</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-service</artifactId>
         </dependency>
         <dependency>

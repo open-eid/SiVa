@@ -16,13 +16,10 @@
 
 package ee.openeid.tsl;
 
-import static org.mockito.Mockito.*;
+import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
 import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.tsl.service.TSLValidationJob;
 import eu.europa.esig.dss.x509.KeyStoreCertificateSource;
-
-import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +29,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TSLLoaderTest {
@@ -50,6 +49,8 @@ public class TSLLoaderTest {
     private TrustedListsCertificateSource trustedListSource;
     @Mock
     private KeyStoreCertificateSource keyStoreCertificateSource;
+    @Mock
+    private CertificatesLoader certificatesLoader;
 
     @InjectMocks
     private TSLLoader tslLoader;

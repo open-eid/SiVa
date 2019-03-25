@@ -60,8 +60,8 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocInvalidSingleSignature() {
         SimpleReport report = postForReport("IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc");
         assertAllSignaturesAreInvalid(report);
-        assertEquals("The signature is not intact!", report.getValidationConclusion().getSignatures().get(0).getErrors().get(0).getContent());
-        assertEquals(3, report.getValidationConclusion().getSignatures().get(0).getErrors().size());
+        assertEquals("The result of the LTV validation process is not acceptable to continue the process!", report.getValidationConclusion().getSignatures().get(0).getErrors().get(0).getContent());
+        assertEquals(4, report.getValidationConclusion().getSignatures().get(0).getErrors().size());
     }
 
     /**
@@ -126,54 +126,6 @@ public class BdocValidationFailIT extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: Bdoc-ValidationFail-5
-     * <p>
-     * TestType: Automated
-     * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
-     * <p>
-     * Title: Bdoc with invalid mimetype in manifest
-     * <p>
-     * Expected Result: document malformed error should be returned
-     * <p>
-     * File: 23147_weak-warning-sha1-invalid-mimetype-in-manifest.bdoc
-     */
-    @Test
-    @Ignore("https://jira.ria.ee/browse/DD4J-161")
-    public void bdocMalformedBdocWithInvalidMimetypeInManifest() {
-        post(validationRequestFor("23147_weak-warning-sha1-invalid-mimetype-in-manifest.bdoc"))
-                .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
-                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
-
-    }
-
-    /**
-     * TestCaseID: Bdoc-ValidationFail-6
-     * <p>
-     * TestType: Automated
-     * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
-     * <p>
-     * Title: Asice with wrong slash character ('\') in data file mime-type value
-     * <p>
-     * Expected Result: The document should fail the validation
-     * <p>
-     * File: EE_SER-AEX-B-LT-V-33.bdoc
-     */
-    @Test
-    @Ignore("https://jira.ria.ee/browse/DD4J-161")
-    public void bdocInvalidMimeTypeChars() {
-        setTestFilesDirectory("bdoc/live/timestamp/");
-        post(validationRequestFor("EE_SER-AEX-B-LT-V-33.bdoc"))
-                .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
-                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
-    }
-
-    /**
      * TestCaseID: Bdoc-ValidationFail-7
      * <p>
      * TestType: Automated
@@ -195,7 +147,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
                 .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2015-11-13T11:15:36Z"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The signature is not intact!"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!", "The result of the timestamps validation process is not conclusive!", "The reference data object is not intact!", "Signature has an invalid timestamp"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
@@ -221,7 +173,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("NOT_ADES"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CONSTRAINTS_FAILURE"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The signer's certificate has not expected key-usage!"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
@@ -246,7 +198,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CONSTRAINTS_FAILURE"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The signer's certificate has not expected key-usage!"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
@@ -272,7 +224,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The certificate chain for revocation data is not trusted, there is no trusted anchor."))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
@@ -395,7 +347,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The signature is not intact!"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
@@ -420,7 +372,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The expected format is not found!"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
@@ -446,7 +398,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_EPES"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The expected format is not found!"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
@@ -469,11 +421,10 @@ public class BdocValidationFailIT extends SiVaRestTests {
         post(validationRequestForDD4j("SS-4_teadmataCA.4.asice", null, null))
                 .then()
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2013-10-11T08:15:47Z"))
                 .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("The certificate path is not trusted!"))
-                .body("validationReport.validationConclusion.signatures[0].errors[1].content", Matchers.is("The certificate chain for signature is not trusted, there is no trusted anchor."))
+                .body("validationReport.validationConclusion.signatures[0].errors[1].content", Matchers.is("The result of the LTV validation process is not acceptable to continue the process!"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
@@ -521,9 +472,8 @@ public class BdocValidationFailIT extends SiVaRestTests {
         post(validationRequestForDD4j("TM-16_unknown.4.asice", null, null))
                 .then()
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("TRY_LATER"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("No revocation data for the certificate"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
@@ -617,7 +567,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("The reference data object(s) is not intact!"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("The result of the LTV validation process is not acceptable to continue the process!"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
@@ -641,10 +591,9 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .then()
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("TRY_LATER"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2014-05-19T10:48:04Z"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("No revocation data for the certificate"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("The result of the LTV validation process is not acceptable to continue the process!"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 

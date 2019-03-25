@@ -138,7 +138,7 @@ public class GenericValidationService implements ValidationService {
 
         DiagnosticData diagnosticData = reports.getDiagnosticData();
 
-        if (diagnosticData.getUsedCertificates() != null && diagnosticData.getSigningCertificateId() != null) {
+        if (diagnosticData.getUsedCertificates() != null && diagnosticData.getFirstSigningCertificateId() != null) {
             for (CertificateWrapper certificateWrapper : diagnosticData.getUsedCertificates()) {
                 for (SignatureWrapper signatureWrapper : diagnosticData.getSignatures()) {
                     if (certificateWrapper.getId().equals(signatureWrapper.getSigningCertificateId()) && !signatureWrapper.getTimestampList().isEmpty()) {

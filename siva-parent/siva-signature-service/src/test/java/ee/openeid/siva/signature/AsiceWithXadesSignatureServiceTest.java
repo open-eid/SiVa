@@ -80,7 +80,7 @@ public class AsiceWithXadesSignatureServiceTest {
     @Test
     public void AsiceSignatureServiceConfiguredWithInvalidPkcs12Password_shouldThrowException() throws IOException {
         expectedException.expect(DSSException.class);
-        expectedException.expectMessage("keystore password was incorrect");
+        expectedException.expectMessage("Unable to instantiate KeyStoreSignatureTokenConnection");
 
         asiceSignatureService.getProperties().getPkcs12().setPassword("invalid password");
         asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text");

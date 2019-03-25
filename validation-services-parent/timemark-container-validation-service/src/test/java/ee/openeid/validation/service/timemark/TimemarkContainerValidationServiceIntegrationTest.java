@@ -42,6 +42,7 @@ import eu.europa.esig.dss.tsl.Condition;
 import eu.europa.esig.dss.tsl.ServiceInfo;
 import eu.europa.esig.dss.x509.CertificateToken;
 import org.apache.commons.lang3.StringUtils;
+import org.digidoc4j.TSLCertificateSource;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -110,7 +111,6 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     private BDOCConfigurationService configurationService;
     @Autowired
     private ReportConfigurationProperties reportConfigurationProperties;
-
 
 
     @Test
@@ -226,7 +226,7 @@ public class TimemarkContainerValidationServiceIntegrationTest {
         assertEquals(SignatureValidationData.Indication.TOTAL_PASSED.toString(), sig1.getIndication());
         assertTrue(StringUtils.isEmpty(sig1.getSubIndication()));
         assertTrue(sig1.getErrors().size() == 0);
-        assertTrue(sig1.getWarnings().size() == 0);
+        assertTrue(sig1.getWarnings().size() == 1);
         assertTrue(sig1.getSignatureScopes().size() == 1);
         SignatureScope scope = sig1.getSignatureScopes().get(0);
         assertEquals("chrome-signing.log", scope.getName());
@@ -253,7 +253,7 @@ public class TimemarkContainerValidationServiceIntegrationTest {
         assertEquals(SignatureValidationData.Indication.TOTAL_PASSED.toString(), sig2.getIndication());
         assertTrue(StringUtils.isEmpty(sig2.getSubIndication()));
         assertTrue(sig2.getErrors().size() == 0);
-        assertTrue(sig2.getWarnings().size() == 0);
+        assertTrue(sig2.getWarnings().size() == 1);
         assertTrue(sig2.getSignatureScopes().size() == 1);
         SignatureScope scope = sig2.getSignatureScopes().get(0);
         assertEquals("chrome-signing.log", scope.getName());
@@ -414,9 +414,10 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     private ServiceInfo getServiceInfoForService(String serviceName, String policy) {
-        return configurationService.loadPolicyConfiguration(policy).getConfiguration().getTSL().getCertificatePool().getCertificateTokens()
+        TSLCertificateSource tslCertificateSource = configurationService.loadPolicyConfiguration(policy).getConfiguration().getTSL();
+        return tslCertificateSource.getCertificatePool().getCertificateTokens()
                 .stream()
-                .map(this::getServiceInfo)
+                .map(certificateToken -> getServiceInfo(tslCertificateSource, certificateToken))
                 .filter(si -> serviceMatchesServiceName(si, serviceName))
                 .findFirst().get();
     }
@@ -428,12 +429,12 @@ public class TimemarkContainerValidationServiceIntegrationTest {
 
     }
 
-    private ServiceInfo getServiceInfo(CertificateToken certificateToken) {
-        return (ServiceInfo) certificateToken.getAssociatedTSPS().toArray()[0];
+    private ServiceInfo getServiceInfo(TSLCertificateSource tslCertificateSource, CertificateToken certificateToken) {
+        return (ServiceInfo) tslCertificateSource.getTrustServices(certificateToken).toArray()[0];
     }
 
     private boolean serviceMatchesServiceName(ServiceInfo serviceInfo, String serviceName) {
-        return StringUtils.contains(serviceInfo.getServiceName(), serviceName);
+        return StringUtils.contains(serviceInfo.getTspName(), serviceName);
     }
 
     private void removeQcConditions(ServiceInfo serviceInfo, String... qualifiers) {

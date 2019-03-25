@@ -26,6 +26,6 @@ public class AlwaysFailingCRLSourceTest {
     @Test
     public void alwaysFailingCRLSourceShouldNotFindCRL() {
         CRLSource crlSource = new AlwaysFailingCRLSource();
-        assertNull(crlSource.findCrl(null));
+        assertNull(crlSource.getRevocationToken(null, null));
     }
 }

@@ -22,7 +22,7 @@ import eu.europa.esig.dss.x509.crl.CRLToken;
 
 public class AlwaysFailingCRLSource implements CRLSource {
     @Override
-    public CRLToken findCrl(CertificateToken certificateToken) {
+    public CRLToken getRevocationToken(CertificateToken certificateToken, CertificateToken issuerCertificateToken) {
         return null;
     }
 }

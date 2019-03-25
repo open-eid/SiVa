@@ -42,6 +42,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.KeyStore;
 import java.util.Arrays;
 
 @Service
@@ -108,10 +109,10 @@ public class AsiceWithXadesSignatureService implements SignatureService {
         Pkcs11Properties pkcs11Properties = configurationProperties.getPkcs11();
         Pkcs12Properties pkcs12Properties = configurationProperties.getPkcs12();
         if (pkcs11Properties != null) {
-            return new Pkcs11SignatureToken(pkcs11Properties.getPath(), pkcs11Properties.getPassword().toCharArray(), pkcs11Properties.getSlotIndex());
+            return new Pkcs11SignatureToken(pkcs11Properties.getPath(), new KeyStore.PasswordProtection(pkcs11Properties.getPassword().toCharArray()), pkcs11Properties.getSlotIndex());
         } else if (pkcs12Properties != null) {
             InputStream p12InputStream = getKeystoreInputStream(pkcs12Properties.getPath());
-            return new Pkcs12SignatureToken(p12InputStream, pkcs12Properties.getPassword());
+            return new Pkcs12SignatureToken(p12InputStream, new KeyStore.PasswordProtection(pkcs12Properties.getPassword().toCharArray()));
         } else {
             throw new SignatureServiceException("Either Pkcs11 or Pkcs12 must be configured! Currently there is none configured..");
         }

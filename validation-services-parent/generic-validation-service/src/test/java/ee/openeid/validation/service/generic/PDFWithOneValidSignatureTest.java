@@ -25,7 +25,6 @@ import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.document.report.Warning;
 import eu.europa.esig.dss.jaxb.diagnostic.DiagnosticData;
 import eu.europa.esig.dss.jaxb.diagnostic.XmlSignature;
-import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -94,7 +93,7 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
         SignatureScope scope = report.getValidationConclusion().getSignatures().get(0).getSignatureScopes().get(0);
 
         assertEquals("The document byte range: [0, 14153, 52047, 491]", scope.getContent());
-        assertEquals("PdfByteRangeSignatureScope", scope.getScope());
+        assertEquals("PARTIAL", scope.getScope());
         assertEquals("PDF previous version #1", scope.getName());
     }
 
@@ -102,7 +101,7 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
     public void validationResultForValidPDFShouldNotHaveErrorsOrWarnings() {
         SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
-        report.getValidationConclusion().getSignatures().forEach(this::assertNoErrorsOrWarnings);
+        report.getValidationConclusion().getSignatures().forEach(this::assertNoErrors);
     }
 
     @Test

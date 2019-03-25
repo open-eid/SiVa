@@ -179,7 +179,6 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
-    @Ignore
     public void vShouldIncludeRequiredFields() throws Exception {
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
         ValidationConclusion validationConclusion = validationResult2Signatures.getValidationConclusion();
@@ -207,7 +206,6 @@ public class TimemarkContainerValidationServiceIntegrationTest {
                 .count() > 0);
     }
 
-    @Ignore
     @Test
     public void vShouldHaveCorrectSignatureValidationDataForSignature1() throws Exception {
 
@@ -226,7 +224,7 @@ public class TimemarkContainerValidationServiceIntegrationTest {
         assertEquals(SignatureValidationData.Indication.TOTAL_PASSED.toString(), sig1.getIndication());
         assertTrue(StringUtils.isEmpty(sig1.getSubIndication()));
         assertTrue(sig1.getErrors().size() == 0);
-        assertTrue(sig1.getWarnings().size() == 1);
+        assertTrue(sig1.getWarnings().size() == 0);
         assertTrue(sig1.getSignatureScopes().size() == 1);
         SignatureScope scope = sig1.getSignatureScopes().get(0);
         assertEquals("chrome-signing.log", scope.getName());
@@ -253,7 +251,7 @@ public class TimemarkContainerValidationServiceIntegrationTest {
         assertEquals(SignatureValidationData.Indication.TOTAL_PASSED.toString(), sig2.getIndication());
         assertTrue(StringUtils.isEmpty(sig2.getSubIndication()));
         assertTrue(sig2.getErrors().size() == 0);
-        assertTrue(sig2.getWarnings().size() == 1);
+        assertTrue(sig2.getWarnings().size() == 0);
         assertTrue(sig2.getSignatureScopes().size() == 1);
         SignatureScope scope = sig2.getSignatureScopes().get(0);
         assertEquals("chrome-signing.log", scope.getName());

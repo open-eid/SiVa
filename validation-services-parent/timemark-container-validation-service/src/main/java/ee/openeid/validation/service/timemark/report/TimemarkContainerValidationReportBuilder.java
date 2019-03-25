@@ -165,9 +165,11 @@ public abstract class TimemarkContainerValidationReportBuilder {
     }
 
     private SubjectDistinguishedName parseSubjectDistinguishedName(X509Cert signingCertificate) {
+        String serialNumber = signingCertificate.getSubjectName(X509Cert.SubjectName.SERIALNUMBER);
+        String commonName = signingCertificate.getSubjectName(CN);
         return SubjectDistinguishedName.builder()
-               .serialNumber(removeQuotes(signingCertificate.getSubjectName(X509Cert.SubjectName.SERIALNUMBER)))
-               .commonName(removeQuotes(signingCertificate.getSubjectName(X509Cert.SubjectName.CN)))
+               .serialNumber(serialNumber != null ? removeQuotes(serialNumber) : null)
+               .commonName(commonName != null ? removeQuotes(commonName) : null)
                .build();
     }
 

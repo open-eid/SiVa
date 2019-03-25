@@ -111,6 +111,7 @@
     <wsdl:message name="HashcodeValidationResponse">
         <wsdl:part element="tns:HashcodeValidationResponse" name="parameters"/>
     </wsdl:message>
+
     <wsdl:message name="requestHeader">
         <wsdl:part name="client" element="xrd:client"/>
         <wsdl:part name="service" element="xrd:service"/>
@@ -127,7 +128,20 @@
         </wsdl:operation>
     </wsdl:portType>
 
-    <wsdl:binding name="SignatureHashcodeValidationServiceSoapBinding" type="tns:HashcodeValidationWebService">
+    <wsdl:binding name="HashcodeValidationWebServiceSoapBinding" type="tns:HashcodeValidationWebService">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="HashcodeValidationDocument">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="HashcodeValidationDocument">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="HashcodeValidationResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:binding name="XRoadHashcodeValidationWebServiceSoapBinding" type="tns:HashcodeValidationWebService">
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
         <wsdl:operation name="HashcodeValidationDocument">
             <soap:operation soapAction="" style="document"/>
@@ -153,8 +167,15 @@
     </wsdl:binding>
 
     <wsdl:service name="HashcodeValidationWebServiceService">
-        <wsdl:port binding="tns:SignatureHashcodeValidationServiceSoapBinding" name="HashcodeValidationWebServiceImplPort">
+        <wsdl:port binding="tns:HashcodeValidationWebServiceSoapBinding" name="HashcodeValidationWebServiceImplPort">
             <soap:address location="http://localhost:8080/soap/hashcodeValidationWebService"/>
         </wsdl:port>
     </wsdl:service>
+
+    <wsdl:service name="XRoadHashcodeValidationWebService">
+        <wsdl:port binding="tns:XRoadHashcodeValidationWebServiceSoapBinding" name="XRoadHashcodeValidationWebServiceImplPort">
+            <soap:address location="http://localhost:8080/soap/hashcodeValidationWebService"/>
+        </wsdl:port>
+    </wsdl:service>
+
 </wsdl:definitions>

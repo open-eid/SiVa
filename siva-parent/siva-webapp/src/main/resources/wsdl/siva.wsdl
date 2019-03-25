@@ -56,7 +56,21 @@
             <wsdl:output message="tns:ValidateDocumentResponse" name="ValidateDocumentResponse"/>
         </wsdl:operation>
     </wsdl:portType>
-    <wsdl:binding name="SignatureValidationServiceSoapBinding" type="tns:ValidationWebService">
+
+    <wsdl:binding name="ValidationWebServiceSoapBinding" type="tns:ValidationWebService">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="ValidateDocument">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="ValidateDocument">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="ValidateDocumentResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:binding name="XRoadValidationWebServiceSoapBinding" type="tns:ValidationWebService">
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
         <wsdl:operation name="ValidateDocument">
             <soap:operation soapAction="" style="document"/>
@@ -80,9 +94,17 @@
             </wsdl:output>
         </wsdl:operation>
     </wsdl:binding>
+
     <wsdl:service name="ValidationWebServiceService">
-        <wsdl:port binding="tns:SignatureValidationServiceSoapBinding" name="ValidationWebServiceImplPort">
+        <wsdl:port binding="tns:ValidationWebServiceSoapBinding" name="ValidationWebServiceImplPort">
             <soap:address location="http://localhost:8080/soap/validationWebService"/>
         </wsdl:port>
     </wsdl:service>
+
+    <wsdl:service name="XRoadValidationWebService">
+        <wsdl:port binding="tns:XRoadValidationWebServiceSoapBinding" name="XRoadValidationWebServiceImplPort">
+            <soap:address location="http://localhost:8080/soap/validationWebService"/>
+        </wsdl:port>
+    </wsdl:service>
+
 </wsdl:definitions>

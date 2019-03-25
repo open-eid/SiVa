@@ -68,7 +68,21 @@
             <wsdl:output message="tns:GetDocumentDataFilesResponse" name="GetDocumentDataFilesResponse"/>
         </wsdl:operation>
     </wsdl:portType>
-    <wsdl:binding name="DataFilesServiceSoapBinding" type="tns:DataFilesWebService">
+
+    <wsdl:binding name="DataFilesWebServiceSoapBinding" type="tns:DataFilesWebService">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="GetDocumentDataFiles">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="GetDocumentDataFiles">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="GetDocumentDataFilesResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:binding name="XRoadDataFilesWebServiceSoapBinding" type="tns:DataFilesWebService">
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
         <wsdl:operation name="GetDocumentDataFiles">
             <soap:operation soapAction="" style="document"/>
@@ -92,8 +106,15 @@
             </wsdl:output>
         </wsdl:operation>
     </wsdl:binding>
+
     <wsdl:service name="DataFilesWebServiceService">
-        <wsdl:port binding="tns:DataFilesServiceSoapBinding" name="DataFilesWebServiceImplPort">
+        <wsdl:port binding="tns:DataFilesWebServiceSoapBinding" name="DataFilesWebServiceImplPort">
+            <soap:address location="http://localhost:8080/soap/dataFilesWebService"/>
+        </wsdl:port>
+    </wsdl:service>
+
+    <wsdl:service name="XRoadDataFilesWebService">
+        <wsdl:port binding="tns:XRoadDataFilesWebServiceSoapBinding" name="XRoadDataFilesWebServiceImplPort">
             <soap:address location="http://localhost:8080/soap/dataFilesWebService"/>
         </wsdl:port>
     </wsdl:service>

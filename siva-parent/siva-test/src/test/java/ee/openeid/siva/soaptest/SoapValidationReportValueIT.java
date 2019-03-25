@@ -71,7 +71,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         assertEquals("SignatureLevel should match expected", "QESIG", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureLevel());
         assertEquals("SignatureScopes should match expected", "FullSignatureScope", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
         assertTrue("Errors should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getErrors().getError().isEmpty());
-        assertEquals("Warning should match expected", "The trusted certificate doesn't match the trust service", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getWarnings().getWarning().get(0).getContent());
+        assertTrue("Warnings should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getWarnings().getWarning().isEmpty());
         assertEquals("SignatureForm should match expected", "ASiC-E", getValidationReportFromDom(report).getValidationConclusion().getSignatureForm());
     }
 
@@ -101,7 +101,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         assertEquals("SignatureLevel should match expected", "QESIG", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureLevel());
         assertEquals("SignatureScopes should match expected", "FullSignatureScope", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
         assertTrue("Errors should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getErrors().getError().isEmpty());
-        assertEquals("Warning should match expected", "The trusted certificate doesn't match the trust service", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getWarnings().getWarning().get(0).getContent());
+        assertTrue("Warnings should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getWarnings().getWarning().isEmpty());
         assertEquals("SignatureForm should match expected", "ASiC-E", getValidationReportFromDom(report).getValidationConclusion().getSignatureForm());
     }
 
@@ -193,7 +193,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         assertEquals("SignatureLevel should match expected", "QESIG",getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureLevel());
         assertEquals("SignatureScopes should match expected", "FullSignatureScope", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
         assertTrue("Errors should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getErrors().getError().isEmpty());
-        assertEquals("Warning should match expected", "The trusted certificate doesn't match the trust service", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getWarnings().getWarning().get(0).getContent());
+        assertTrue("Warnings should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getWarnings().getWarning().isEmpty());
         assertEquals("SignatureForm should match expected", "ASiC-E", getValidationReportFromDom(report).getValidationConclusion().getSignatureForm());
     }
 

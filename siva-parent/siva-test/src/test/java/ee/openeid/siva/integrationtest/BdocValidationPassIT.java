@@ -551,7 +551,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2016-04-13T08:37:52Z"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
     }
 
@@ -577,7 +577,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2013-11-13T10:09:49Z"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
 
     }

@@ -34,6 +34,7 @@ public class DetailedReportTransformer
         ee.openeid.siva.webapp.soap.response.DetailedReport detailedReport = new ee.openeid.siva.webapp.soap.response.DetailedReport();
         detailedReport.getTLAnalysis().addAll(dssDetailReport.getTLAnalysis());
         detailedReport.getSignatures().addAll(dssDetailReport.getSignatures());
+        detailedReport.setCertificate(detailedReport.getCertificate());
         detailedReport.getBasicBuildingBlocks().addAll(dssDetailReport.getBasicBuildingBlocks());
         return detailedReport;
     }

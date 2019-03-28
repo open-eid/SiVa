@@ -25,6 +25,9 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
 
+import static ee.openeid.siva.integrationtest.TestData.*;
+import static org.hamcrest.Matchers.*;
+
 @Category(IntegrationTest.class)
 public class SoapValidationRequestIT extends SiVaSoapTests {
 
@@ -992,6 +995,68 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .statusCode(HttpStatus.OK.value())
                 .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
                 .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
+    }
+
+    /**
+     * TestCaseID: Soap-ValidationRequest-ReportType-1
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Simple report is requested
+     *
+     * Expected Result: Simple report is returned
+     *
+     * File:PdfValidSingleSignature.pdf
+     */
+    @Test
+    public void soapValidationRequestSimpleReportType() {
+        post(validationRequestForDocumentReportType("PdfValidSingleSignature.pdf", REPORT_TYPE_SIMPLE))
+                .then().root(SOAP_VALIDATION_CONCLUSION_PREFIX)
+                .body("ValidSignaturesCount", is("1"));
+    }
+
+    /**
+     * TestCaseID: Soap-ValidationRequest-ReportType-2
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Detailed report is requested
+     *
+     * Expected Result: Detailed report is returned
+     *
+     * File:PdfValidSingleSignature.pdf
+     */
+    @Test
+    public void soapValidationRequestDetailedReportType() {
+        post(validationRequestForDocumentReportType("PdfValidSingleSignature.pdf", REPORT_TYPE_DETAILED))
+                .then()
+                .body(SOAP_VALIDATION_CONCLUSION_PREFIX + ".ValidSignaturesCount", is("1"))
+                .body("Envelope.Body.ValidateDocumentResponse.ValidationReport.ValidationProcess.Signatures.ValidationProcessBasicSignatures.Conclusion.Indication", is(VALID_INDICATION_VALUE_PASSED));
+    }
+
+    /**
+     * TestCaseID: Soap-ValidationRequest-ReportType-3
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Diagnostic report is requested
+     *
+     * Expected Result: Diagnostic report is returned
+     *
+     * File:PdfValidSingleSignature.pdf
+     */
+    @Test
+    public void soapValidationRequestDiagnosticReportType() {
+        post(validationRequestForDocumentReportType("PdfValidSingleSignature.pdf", REPORT_TYPE_DIAGNOSTIC))
+                .then()
+                .body(SOAP_VALIDATION_CONCLUSION_PREFIX + ".ValidSignaturesCount", is("1"))
+                .body("Envelope.Body.ValidateDocumentResponse.ValidationReport.DiagnosticData.DocumentName", is("PdfValidSingleSignature.pdf"));
     }
 
     @Override

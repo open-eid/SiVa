@@ -42,7 +42,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static ee.openeid.siva.integrationtest.TestData.*;
-import static ee.openeid.siva.integrationtest.TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2;
+import static ee.openeid.siva.integrationtest.TestData.SIGNATURE_POLICY_2;
 import static org.hamcrest.Matchers.*;
 
 @Category(IntegrationTest.class)
@@ -168,6 +168,27 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
     }
 
     /**
+     * TestCaseID: Soap-Hashcode-Validation-Report-Type-6
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Valid request with report Diagnostic
+     *
+     * Expected Result: Simple report is returned with valid signatures
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     */
+    @Test
+    public void okHashcodeValidationDiagnosticReportRequested() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setReportType(ReportType.DIAGNOSTIC.value());
+        ValidatableResponse response = postHashcodeValidation(request).then();
+        assertSimpleReportWithSignature(response, request);
+    }
+
+    /**
      * TestCaseID: Soap-Hashcode-Validation-Policy-1
      *
      * TestType: Automated
@@ -183,11 +204,11 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
     @Test
     public void signaturePolicyPOLv3() {
         JSONHashcodeValidationRequest request = validRequestBody();
-        request.setSignaturePolicy(VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_1);
+        request.setSignaturePolicy(SIGNATURE_POLICY_1);
 
         ValidatableResponse response = postHashcodeValidation(request)
                 .then()
-                .body(VALIDATION_CONCLUSION_PREFIX + "Policy.PolicyName", equalTo(VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_1));
+                .body(VALIDATION_CONCLUSION_PREFIX + "Policy.PolicyName", equalTo(SIGNATURE_POLICY_1));
 
         assertSimpleReportWithSignature(response, request);
     }
@@ -208,11 +229,11 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
     @Test
     public void signaturePolicyPOLv4() {
         JSONHashcodeValidationRequest request = validRequestBody();
-        request.setSignaturePolicy(VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2);
+        request.setSignaturePolicy(SIGNATURE_POLICY_2);
 
         ValidatableResponse response = postHashcodeValidation(request)
                 .then()
-                .body(VALIDATION_CONCLUSION_PREFIX + "Policy.PolicyName", equalTo(VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2));
+                .body(VALIDATION_CONCLUSION_PREFIX + "Policy.PolicyName", equalTo(SIGNATURE_POLICY_2));
 
         assertSimpleReportWithSignature(response, request);
     }
@@ -236,7 +257,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
         request.setSignaturePolicy(null);
 
         ValidatableResponse response = postHashcodeValidation(request).then()
-                .body(VALIDATION_CONCLUSION_PREFIX + "Policy.PolicyName", equalTo(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2));
+                .body(VALIDATION_CONCLUSION_PREFIX + "Policy.PolicyName", equalTo(TestData.SIGNATURE_POLICY_2));
 
         assertSimpleReportWithSignature(response, request);
     }
@@ -926,7 +947,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
 
         ValidationPolicy signaturePolicy;
         if (request.getSignaturePolicy() == null) {
-            signaturePolicy = determineValidationPolicy(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2);
+            signaturePolicy = determineValidationPolicy(TestData.SIGNATURE_POLICY_2);
         } else {
             signaturePolicy = determineValidationPolicy(request.getSignaturePolicy());
         }
@@ -938,9 +959,9 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
     }
 
     private ValidationPolicy determineValidationPolicy(String signaturePolicy) {
-        if (TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_1.equals(signaturePolicy)) {
+        if (TestData.SIGNATURE_POLICY_1.equals(signaturePolicy)) {
             return PredefinedValidationPolicySource.ADES_POLICY;
-        } else if (TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2.equals(signaturePolicy)) {
+        } else if (TestData.SIGNATURE_POLICY_2.equals(signaturePolicy)) {
             return PredefinedValidationPolicySource.QES_POLICY;
         } else {
             throw new IllegalArgumentException("Unknown validation policy '" + signaturePolicy + "'");
@@ -1024,7 +1045,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
         datafile.setFilename(TestData.MOCK_XADES_DATAFILE_FILENAME);
 
         request.setReportType(ReportType.SIMPLE.value());
-        request.setSignaturePolicy(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_1);
+        request.setSignaturePolicy(TestData.SIGNATURE_POLICY_1);
         SignatureFile signatureFile = new SignatureFile();
         signatureFile.setDatafiles(Collections.singletonList(datafile));
         signatureFile.setSignature(Base64.encodeBase64String(readFileFromTestResources(TestData.MOCK_XADES_SIGNATURE_FILE)));
@@ -1042,7 +1063,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
         datafile.setFilename(datafileName);
 
         request.setReportType(ReportType.SIMPLE.value());
-        request.setSignaturePolicy(TestData.VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_1);
+        request.setSignaturePolicy(TestData.SIGNATURE_POLICY_1);
         SignatureFile signatureFile = new SignatureFile();
         signatureFile.setDatafiles(Collections.singletonList(datafile));
         signatureFile.setSignature(Base64.encodeBase64String(readFileFromTestResources(signatureFileName)));

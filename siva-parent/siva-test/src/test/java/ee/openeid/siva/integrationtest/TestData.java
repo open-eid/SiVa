@@ -18,9 +18,12 @@ package ee.openeid.siva.integrationtest;
 
 public class TestData {
 
-    public static final String VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_1 = "POLv3";
-    public static final String VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2 = "POLv4";
-    public static final String VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_3 = "POLv5";
+    public static final String SIGNATURE_POLICY_1 = "POLv3";
+    public static final String SIGNATURE_POLICY_2 = "POLv4";
+
+    public static final String REPORT_TYPE_SIMPLE = "Simple";
+    public static final String REPORT_TYPE_DETAILED = "Detailed";
+    public static final String REPORT_TYPE_DIAGNOSTIC = "Diagnostic";
 
     public static final String HASH_ALGO_SHA224 = "SHA224";
     public static final String HASH_ALGO_SHA256 = "SHA256";
@@ -245,5 +248,7 @@ public class TestData {
     public static final String MOCK_XADES_DATAFILE_FILENAME2 = "Proov (2).txt";
 
     public static final String VALIDATION_CONCLUSION_PREFIX = "validationReport.validationConclusion.";
+
+    public static final String SOAP_VALIDATION_CONCLUSION_PREFIX = "Envelope.Body.ValidateDocumentResponse.ValidationReport.ValidationConclusion";
 
 }

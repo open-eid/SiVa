@@ -32,6 +32,7 @@ import org.springframework.http.HttpStatus;
 import java.util.List;
 import java.util.Map;
 
+import static ee.openeid.siva.integrationtest.TestData.*;
 import static io.restassured.path.json.JsonPath.from;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
@@ -78,9 +79,9 @@ public class ValidationRequestIT extends SiVaRestTests {
     @Test
     public void validationRequestAllRequiredInputs() {
         post(validationRequestFor("Valid_IDCard_MobID_signatures.bdoc"))
-                .then()
-                .body("validationReport.validationConclusion.validatedDocument.filename", equalTo("Valid_IDCard_MobID_signatures.bdoc"))
-                .body("validationReport.validationConclusion.validSignaturesCount", equalTo(2));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("validatedDocument.filename", equalTo("Valid_IDCard_MobID_signatures.bdoc"))
+                .body("validSignaturesCount", equalTo(2));
     }
 
     /**
@@ -101,10 +102,10 @@ public class ValidationRequestIT extends SiVaRestTests {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
         post(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-simple.asice", "XROAD", "POLv3"))
-                .then()
-                .body("validationReport.validationConclusion.validatedDocument.filename", equalTo("xroad-simple.asice"))
-                .body("validationReport.validationConclusion.policy.policyName", equalTo("POLv3"))
-                .body("validationReport.validationConclusion.validSignaturesCount", equalTo(1));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("validatedDocument.filename", equalTo("xroad-simple.asice"))
+                .body("policy.policyName", equalTo("POLv3"))
+                .body("validSignaturesCount", equalTo(1));
     }
 
     /**
@@ -181,8 +182,8 @@ public class ValidationRequestIT extends SiVaRestTests {
         jsonObject.put("ExtraOne", "RandomValue");
         jsonObject.put("ExtraTwo", "AnotherValue");
         post(jsonObject.toString())
-                .then()
-                .body("validationReport.validationConclusion.validatedDocument.filename", equalTo("Valid_IDCard_MobID_signatures.bdoc"));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("validatedDocument.filename", equalTo("Valid_IDCard_MobID_signatures.bdoc"));
     }
 
     /**
@@ -278,9 +279,9 @@ public class ValidationRequestIT extends SiVaRestTests {
     public void validationRequestCorrectBase64() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", null))
-                .then()
-                .body("validationReport.validationConclusion.validatedDocument.filename", equalTo("Valid_IDCard_MobID_signatures.bdoc"))
-                .body("validationReport.validationConclusion.validSignaturesCount", equalTo(2));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("validatedDocument.filename", equalTo("Valid_IDCard_MobID_signatures.bdoc"))
+                .body("validSignaturesCount", equalTo(2));
     }
 
     /**
@@ -345,8 +346,8 @@ public class ValidationRequestIT extends SiVaRestTests {
     public void ValidationRequestCaseInsensitiveFilename() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bDoC", null))
-                .then()
-                .body("validationReport.validationConclusion.validSignaturesCount", equalTo(2));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("validSignaturesCount", equalTo(2));
     }
 
     /**
@@ -366,8 +367,8 @@ public class ValidationRequestIT extends SiVaRestTests {
     public void ValidationRequestSpaceInFilename() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "Valid IDCard Mob ID_signatures .bDoC", null))
-                .then()
-                .body("validationReport.validationConclusion.validSignaturesCount", equalTo(2));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("validSignaturesCount", equalTo(2));
     }
 
     /**
@@ -390,8 +391,8 @@ public class ValidationRequestIT extends SiVaRestTests {
         String filename = StringUtils.repeat("a", 250) + ".bdoc";
 
         post(validationRequestWithValidKeys(encodedString, filename, "POLv3"))
-                .then()
-                .body("validationReport.validationConclusion.validatedDocument.filename", equalTo(filename));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("validatedDocument.filename", equalTo(filename));
     }
 
     /**
@@ -442,8 +443,8 @@ public class ValidationRequestIT extends SiVaRestTests {
         jsonObject.put(SIGNATURE_POLICY, "POLv3");
 
         post(jsonObject.toString())
-                .then()
-                .body("validationReport.validationConclusion.validSignaturesCount", equalTo(2));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("validSignaturesCount", equalTo(2));
     }
 
     /**
@@ -469,8 +470,8 @@ public class ValidationRequestIT extends SiVaRestTests {
         jsonObject.put(DOCUMENT_TYPE, "XROAD");
 
         post(jsonObject.toString())
-                .then()
-                .body("validationReport.validationConclusion.validSignaturesCount", equalTo(1));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("validSignaturesCount", equalTo(1));
     }
 
     /**
@@ -518,8 +519,8 @@ public class ValidationRequestIT extends SiVaRestTests {
     @Test
     public void validationRequestDefaultPolicy() {
         post(validationRequestFor("Valid_IDCard_MobID_signatures.bdoc"))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyName", equalTo("POLv4"));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyName", equalTo("POLv4"));
     }
 
     /**
@@ -538,8 +539,8 @@ public class ValidationRequestIT extends SiVaRestTests {
     @Test
     public void validationRequestPOLv3() {
         post(validationRequestFor("Valid_IDCard_MobID_signatures.bdoc", "POLv3", null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyName", equalTo("POLv3"));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyName", equalTo("POLv3"));
     }
 
     /**
@@ -558,8 +559,8 @@ public class ValidationRequestIT extends SiVaRestTests {
     @Test
     public void validationRequestPOLv4() {
         post(validationRequestFor("Valid_IDCard_MobID_signatures.bdoc", "POLv4", null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyName", equalTo("POLv4"));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyName", equalTo("POLv4"));
     }
 
     /**
@@ -617,7 +618,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
      *
-     * Title: ReportType parameter is missing
+     * Title: ReportType parameter Simple
      *
      * Expected Result: Simple report is returned
      *
@@ -625,15 +626,10 @@ public class ValidationRequestIT extends SiVaRestTests {
      */
     @Test
     public void validationRequestSimpleReport() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("TS-11_23634_TS_2_timestamps.asice"));
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put(DOCUMENT, encodedString);
-        jsonObject.put(FILENAME, "TS-11_23634_TS_2_timestamps.asice");
-        jsonObject.put(REPORT_TYPE, "Simple");
-
-        post(jsonObject.toString())
+        post(validationRequestFor("TS-11_23634_TS_2_timestamps.asice", null, REPORT_TYPE_SIMPLE ))
                 .then()
                 .body("validationReport.validationProcess", isEmptyOrNullString())
+                .body("validationReport.diagnosticData", isEmptyOrNullString())
                 .body("validationReport.validationConclusion.validSignaturesCount", equalTo(1));
     }
 
@@ -644,22 +640,17 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
      *
-     * Title: ReportType parameter is missing
+     * Title: ReportType parameter Detailed
      *
-     * Expected Result: Simple report is returned
+     * Expected Result: Detailed report is returned
      *
      * File: TS-11_23634_TS_2_timestamps.asice
      */
     @Test
     public void validationRequestDetailedReport() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("TS-11_23634_TS_2_timestamps.asice"));
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put(DOCUMENT, encodedString);
-        jsonObject.put(FILENAME, "TS-11_23634_TS_2_timestamps.asice");
-        jsonObject.put(REPORT_TYPE, "Detailed");
-
-        post(jsonObject.toString())
+        post(validationRequestFor("TS-11_23634_TS_2_timestamps.asice", null, REPORT_TYPE_DETAILED ))
                 .then()
+                .body("validationReport.diagnosticData", isEmptyOrNullString())
                 .body("validationReport.validationProcess.signatures[0].validationSignatureQualification.signatureQualification", equalTo("QESIG"))
                 .body("validationReport.validationConclusion.validSignaturesCount", equalTo(1));
     }
@@ -772,6 +763,28 @@ public class ValidationRequestIT extends SiVaRestTests {
     }
 
     /**
+     * TestCaseID: ValidationRequest-Parameters-31
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: ReportType parameter Diagnostic
+     *
+     * Expected Result: Diagnostic report is returned
+     *
+     * File: TS-11_23634_TS_2_timestamps.asice
+     */
+    @Test
+    public void validationRequestDiagnosticReport() {
+        post(validationRequestFor("TS-11_23634_TS_2_timestamps.asice", null, REPORT_TYPE_DIAGNOSTIC ))
+                .then()
+                .body("validationReport.validationProcess", isEmptyOrNullString())
+                .body("validationReport.diagnosticData.documentName", equalTo("TS-11_23634_TS_2_timestamps.asice"))
+                .body("validationReport.validationConclusion.validSignaturesCount", equalTo(1));
+    }
+
+    /**
      * TestCaseID: ValidationRequest-Validator-1
      *
      * TestType: Automated
@@ -835,8 +848,8 @@ public class ValidationRequestIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timestamp/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("bdoc21-TS.asice"));
         post(validationRequestWithValidKeys(encodedString, "bdoc21-TS.bdoc", "POLv3"))
-                .then()
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("validSignaturesCount", Matchers.is(1));
     }
 
     /**
@@ -952,6 +965,8 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
+
+
 
     @Override
     protected String getTestFilesDirectory() {

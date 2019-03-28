@@ -16,7 +16,6 @@
 
 package ee.openeid.siva.resttest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import ee.openeid.siva.common.DateTimeMatcher;
 import ee.openeid.siva.integrationtest.SiVaRestTests;
 import ee.openeid.siva.integrationtest.TestData;
@@ -28,7 +27,6 @@ import ee.openeid.siva.webapp.request.Datafile;
 import ee.openeid.siva.webapp.request.JSONHashcodeValidationRequest;
 import ee.openeid.siva.webapp.request.SignatureFile;
 import io.restassured.RestAssured;
-import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -47,13 +45,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static ee.openeid.siva.integrationtest.TestData.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -191,6 +185,27 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     }
 
     /**
+     * TestCaseID: Hascode-Validation-Request-Report-Type-2
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     *
+     * Title: Input correct values for detailed report
+     *
+     * Expected Result: Simple report is returned
+     *
+     * File: Valid_XAdES_LT_TS.xml
+     **/
+    @Test
+    public void simpleReportIsReturnedWithDiagnosticReportType() {
+        JSONHashcodeValidationRequest request = validRequestBody();
+        request.setReportType(ReportType.DIAGNOSTIC.getValue());
+        ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
+        assertSimpleReportWithSignature(response, request);
+    }
+
+    /**
      * TestCaseID: Hascode-Validation-Request-Policy-1
      *
      * TestType: Automated
@@ -206,11 +221,11 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     @Test
     public void signaturePolicyPOLv3() {
         JSONHashcodeValidationRequest request = validRequestBody();
-        request.setSignaturePolicy(VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_1);
+        request.setSignaturePolicy(SIGNATURE_POLICY_1);
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request))
                 .then()
-                .body(VALIDATION_CONCLUSION_PREFIX + "policy.policyName", equalTo(VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_1));
+                .body(VALIDATION_CONCLUSION_PREFIX + "policy.policyName", equalTo(SIGNATURE_POLICY_1));
 
         assertSimpleReportWithSignature(response, request);
     }
@@ -231,11 +246,11 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     @Test
     public void signaturePolicyPOLv4() {
         JSONHashcodeValidationRequest request = validRequestBody();
-        request.setSignaturePolicy(VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2);
+        request.setSignaturePolicy(SIGNATURE_POLICY_2);
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request))
                 .then()
-                .body(VALIDATION_CONCLUSION_PREFIX + "policy.policyName", equalTo(VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2));
+                .body(VALIDATION_CONCLUSION_PREFIX + "policy.policyName", equalTo(SIGNATURE_POLICY_2));
 
         assertSimpleReportWithSignature(response, request);
     }
@@ -260,7 +275,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request))
                 .then()
-                .body(VALIDATION_CONCLUSION_PREFIX + "policy.policyName", equalTo(VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2));
+                .body(VALIDATION_CONCLUSION_PREFIX + "policy.policyName", equalTo(SIGNATURE_POLICY_2));
 
         assertSimpleReportWithSignature(response, request);
     }
@@ -985,7 +1000,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
 
         ValidationPolicy signaturePolicy;
         if (request.getSignaturePolicy() == null) {
-            signaturePolicy = determineValidationPolicy(VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2);
+            signaturePolicy = determineValidationPolicy(SIGNATURE_POLICY_2);
         } else {
             signaturePolicy = determineValidationPolicy(request.getSignaturePolicy());
         }
@@ -998,9 +1013,9 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
     }
 
     private ValidationPolicy determineValidationPolicy(String signaturePolicy) {
-        if (VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_1.equals(signaturePolicy)) {
+        if (SIGNATURE_POLICY_1.equals(signaturePolicy)) {
             return PredefinedValidationPolicySource.ADES_POLICY;
-        } else if (VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2.equals(signaturePolicy)) {
+        } else if (SIGNATURE_POLICY_2.equals(signaturePolicy)) {
             return PredefinedValidationPolicySource.QES_POLICY;
         } else {
             throw new IllegalArgumentException("Unknown validation policy '" + signaturePolicy + "'");
@@ -1041,7 +1056,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         signatureFile.setDatafiles(Collections.singletonList(datafile));
 
         request.setReportType(ReportType.SIMPLE.getValue());
-        request.setSignaturePolicy(VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2);
+        request.setSignaturePolicy(SIGNATURE_POLICY_2);
 
         request.setSignatureFiles(Collections.singletonList(signatureFile));
         return request;

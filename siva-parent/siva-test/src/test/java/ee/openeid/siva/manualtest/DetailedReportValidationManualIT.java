@@ -84,7 +84,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
         ZonedDateTime testStartDate = ZonedDateTime.now(ZoneId.of("GMT"));
         response =  validateRequestForDetailedReport(request,VALIDATION_ENDPOINT);
         assertThat(response.jsonPath().getString(validationConclusion + ".policy.policyDescription"), equalTo(POLICY_4_DESCRIPTION));
-        assertThat(response.jsonPath().getString(validationConclusion + ".policy.policyName"), equalTo(VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2));
+        assertThat(response.jsonPath().getString(validationConclusion + ".policy.policyName"), equalTo(SIGNATURE_POLICY_2));
         assertThat(response.jsonPath().getString(validationConclusion + ".policy.policyUrl"), equalTo(POLICY_4_URL));
         assertThat(response.jsonPath().getString(validationConclusion + ".signatureForm"), equalTo(SIGNATURE_FORM_ASICE));
         assertThat(response.jsonPath().getString(validationConclusion + ".validationTime"), DateTimeMatcher.isEqualOrAfter(testStartDate));
@@ -691,7 +691,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
         ZonedDateTime testStartDate = ZonedDateTime.now(ZoneId.of("GMT"));
         response = validateRequestForDetailedReport(request, VALIDATION_ENDPOINT);
         assertThat(response.jsonPath().getString(validationConclusion + ".policy.policyDescription"), equalTo(POLICY_4_DESCRIPTION));
-        assertThat(response.jsonPath().getString(validationConclusion + ".policy.policyName"), equalTo(VALID_VALIDATION_CONCLUSION_SIGNATURE_POLICY_2));
+        assertThat(response.jsonPath().getString(validationConclusion + ".policy.policyName"), equalTo(SIGNATURE_POLICY_2));
         assertThat(response.jsonPath().getString(validationConclusion + ".policy.policyUrl"), equalTo(POLICY_4_URL));
         assertThat(response.jsonPath().getString(validationConclusion + ".signatureForm"), equalTo(SIGNATURE_FORM_ASICS));
         assertThat(response.jsonPath().getString(validationConclusion + ".validationTime"), DateTimeMatcher.isEqualOrAfter(testStartDate));

@@ -168,6 +168,10 @@ public class ValidationReportSoapResponseTransformer {
     }
 
     private SubjectDistinguishedName toSoapResponseSignatureSubjectDN(ee.openeid.siva.validation.document.report.SubjectDistinguishedName subjectDistinguishedName) {
+        if (subjectDistinguishedName == null) {
+            return null;
+        }
+
         SubjectDistinguishedName responseSubjectDN = new SubjectDistinguishedName();
         responseSubjectDN.setCommonName(subjectDistinguishedName.getCommonName());
         responseSubjectDN.setSerialNumber(subjectDistinguishedName.getSerialNumber());
@@ -211,6 +215,10 @@ public class ValidationReportSoapResponseTransformer {
     }
 
     private SignatureValidationData.SignatureScopes toSoapResponseSignatureScopes(List<ee.openeid.siva.validation.document.report.SignatureScope> signatureScopes) {
+        if (signatureScopes == null) {
+            return null;
+        }
+
         SignatureValidationData.SignatureScopes responseSignatureScopes = new SignatureValidationData.SignatureScopes();
 
         for (ee.openeid.siva.validation.document.report.SignatureScope signatureScope : signatureScopes) {

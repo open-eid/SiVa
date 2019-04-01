@@ -372,6 +372,8 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.serialNumber", Matchers.notNullValue())
+                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.commonName", Matchers.notNullValue())
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));

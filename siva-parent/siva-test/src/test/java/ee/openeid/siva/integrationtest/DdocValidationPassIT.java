@@ -284,6 +284,8 @@ public class DdocValidationPassIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
                 .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("36706020210"))
+                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.commonName", Matchers.is("SINIVEE,VEIKO,36706020210"))
                 .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("readme"))
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))

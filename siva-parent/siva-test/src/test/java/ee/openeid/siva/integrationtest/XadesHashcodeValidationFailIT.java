@@ -64,6 +64,8 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
                 .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2019-02-05T13:36:23Z"))
+                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("47101010033"))
+                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.commonName", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
                 .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("9Rfw5pxkfQyLn7eKnSmTqDQbFKeAEDqUXoRN9Sthyo4="));
@@ -107,7 +109,7 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
      *
      * Expected Result: Validation report is returned
      *
-     * File: Valid_XAdES_LT_TM.xml
+     * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
     public void dataFileFilenameDoesNotMatchWithSignatureFile() {
@@ -118,6 +120,8 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIGNED_DATA_NOT_FOUND"))
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
                 .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2019-02-05T13:27:24Z"))
+                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("47101010033"))
+                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.commonName", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
                 .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("VLcbTMyISKcCDPJDQ/Z34/TbBueUeqLMFPOrD9Av+b4="));

@@ -135,6 +135,8 @@ public class DdocValidationFailIT extends SiVaRestTests{
                 .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.containsString("Invalid signature value!"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2012-09-19T06:28:55Z"))
+                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.serialNumber", Matchers.notNullValue())
+                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.commonName", Matchers.notNullValue())
                 .body("validationReport.validationConclusion.validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }

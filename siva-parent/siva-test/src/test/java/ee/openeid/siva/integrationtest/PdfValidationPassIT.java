@@ -129,6 +129,8 @@ public class PdfValidationPassIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
                 .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The revocation information is not considered as 'fresh'."))
+                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.serialNumber", Matchers.notNullValue())
+                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.commonName", Matchers.notNullValue())
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }

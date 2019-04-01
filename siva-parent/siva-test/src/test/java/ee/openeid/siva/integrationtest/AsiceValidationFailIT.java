@@ -62,6 +62,8 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("NURM,AARE,38211015222"))
+                .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("38211015222"))
                 .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_HASH_FAILURE))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-10-11T09:36:10Z"))
                 .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE, TS_PROCESS_NOT_CONCLUSIVE, REFERENCE_DATA_NOT_INTACT))

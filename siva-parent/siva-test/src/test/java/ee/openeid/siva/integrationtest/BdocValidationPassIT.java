@@ -499,6 +499,8 @@ public class BdocValidationPassIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("47101010033"))
+                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.commonName", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }

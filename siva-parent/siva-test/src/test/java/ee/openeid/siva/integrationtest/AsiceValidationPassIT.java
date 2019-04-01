@@ -221,6 +221,8 @@ public class AsiceValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
                 .body("signatures[0].signatureLevel", Matchers.is(SIGNATURE_LEVEL_QESIG))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("Wilson OÜ digital stamp"))
+                .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("12508548"))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(1));
     }
@@ -248,6 +250,8 @@ public class AsiceValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].signatureLevel", Matchers.is(SIGNATURE_LEVEL_QESIG))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2014-10-30T18:50:35Z"))
+                .body("signatures[0].subjectDistinguishedName.commonName", Matchers.notNullValue())
+                .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.notNullValue())
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -328,6 +332,8 @@ public class AsiceValidationPassIT extends SiVaRestTests {
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
                 .body("signatures[0].warnings", Matchers.isEmptyOrNullString())
+                .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
+                .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("47101010033"))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(1));
 

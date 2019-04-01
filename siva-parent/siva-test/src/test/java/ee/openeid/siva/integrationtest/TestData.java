@@ -155,8 +155,8 @@ public class TestData {
     public static final String VALID_VALIDATION_PROCESS_VALUE_13 = "Is the certificate's digest value valid?";
     public static final String VALID_VALIDATION_PROCESS_VALUE_14 = "Are the issuer distinguished name and the serial number equal?";
     public static final String VALID_VALIDATION_PROCESS_VALUE_15 = "Is the signature policy known?";
-    public static final String VALID_VALIDATION_PROCESS_VALUE_16 = "Is the reference data object(s) found?";
-    public static final String VALID_VALIDATION_PROCESS_VALUE_17 = "Is the reference data object(s) intact?";
+    public static final String VALID_VALIDATION_PROCESS_VALUE_16 = "Is the reference data object found?";
+    public static final String VALID_VALIDATION_PROCESS_VALUE_17 = "Is the reference data object intact?";
     public static final String VALID_VALIDATION_PROCESS_VALUE_18 = "Is the signature intact?";
     public static final String VALID_VALIDATION_PROCESS_VALUE_19 = "Is signed qualifying property: 'signing-time' present?";
     public static final String VALID_VALIDATION_PROCESS_VALUE_20 = "Are signature cryptographic constraints met?";
@@ -248,6 +248,7 @@ public class TestData {
     public static final String MOCK_XADES_DATAFILE_FILENAME2 = "Proov (2).txt";
 
     public static final String VALIDATION_CONCLUSION_PREFIX = "validationReport.validationConclusion.";
+    public static final String VALIDATION_PROCESS_PREFIX = "validationReport.validationProcess.";
 
     public static final String SOAP_VALIDATION_CONCLUSION_PREFIX = "Envelope.Body.ValidateDocumentResponse.ValidationReport.ValidationConclusion";
 

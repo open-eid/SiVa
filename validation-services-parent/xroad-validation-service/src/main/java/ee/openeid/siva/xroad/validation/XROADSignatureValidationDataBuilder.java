@@ -29,6 +29,7 @@ import ee.ria.xroad.common.asic.AsicContainerVerifier;
 import ee.ria.xroad.common.signature.Signature;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 import java.security.cert.X509Certificate;
 import java.util.Collection;
@@ -95,10 +96,7 @@ public class XROADSignatureValidationDataBuilder {
 
     private SubjectDistinguishedName getSubjectDistinguishedName(X509Certificate certificate) {
         if (certificate == null) {
-            return SubjectDistinguishedName.builder()
-               .serialNumber(null)
-               .commonName(null)
-               .build();
+            return null;
         }
 
         String subjectDistinguishedName = certificate.getSubjectDN().getName();
@@ -116,11 +114,7 @@ public class XROADSignatureValidationDataBuilder {
     }
 
     private List<SignatureScope> getSignatureScopes() {
-        SignatureScope scope = new SignatureScope();
-        scope.setContent(valueNotPresent());
-        scope.setName(valueNotPresent());
-        scope.setScope(valueNotPresent());
-        return Collections.singletonList(scope);
+        return null;
     }
 
     private List<Error> mapValidationExceptionsToErrors(Collection<CodedException> validationExceptions) {
@@ -139,8 +133,13 @@ public class XROADSignatureValidationDataBuilder {
 
     private Info getInfo(Date timestampDate) {
         String bestSignatureTime = timestampDate != null ? emptyWhenNull(getDateFormatterWithGMTZone().format(timestampDate)) : valueNotPresent();
-        Info info = new Info();
-        info.setBestSignatureTime(bestSignatureTime);
-        return info;
+
+        if (StringUtils.isNotBlank(bestSignatureTime)) {
+            Info info = new Info();
+            info.setBestSignatureTime(bestSignatureTime);
+            return info;
+        } else {
+            return null;
+        }
     }
 }

@@ -20,9 +20,8 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Data
-@ConfigurationProperties("siva.endpoint")
+@ConfigurationProperties("siva.wsdl")
 public class WsdlServiceConfigurationProperties {
-    private String validationWebServiceUrl;
-    private String hashcodeValidationWebServiceUrl;
-    private String dataFilesWebServiceUrl;
+
+    private String endpointUrl;
 }

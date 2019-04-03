@@ -449,6 +449,12 @@ See the reference list of all common [application properties](http://docs.spring
 | ------ | ----------- |
 | **siva.proxy.xroadUrl** | A URL where the X-Road validation requests are forwarded <ul><li>Default: **http://localhost:8081**</li></ul>|
 
+* Configure SOAP services endpoint URL-s displayed in WSDL
+
+| Property | Description |
+| ------ | ----------- |
+| **siva.wsdl.endpoint-url** | SOAP services endpoint URL to what specific service name is added within the application. Must contain only scheme, host and/or port. No additional path elements should be added.  |
+
 * Collecting statistics with Google Analytics
 
 | Property | Description |

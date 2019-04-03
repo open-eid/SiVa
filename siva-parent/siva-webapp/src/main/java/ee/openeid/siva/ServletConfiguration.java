@@ -113,13 +113,13 @@ public class ServletConfiguration extends MonitoringConfiguration {
     }
 
     @Bean
-    public Endpoint validationEndpoint(SpringBus springBus, ValidationWebService validationWebService) {
-        return constructValidationEndpoint(springBus, validationWebService, "ValidationWebServiceService", null);
+    public Endpoint validationXRoadEndpoint(SpringBus springBus, ValidationWebService validationWebService) {
+        return constructValidationEndpoint(springBus, validationWebService, "XRoadValidationWebService", "XRoad");
     }
 
     @Bean
-    public Endpoint validationXRoadEndpoint(SpringBus springBus, ValidationWebService validationWebService) {
-        return constructValidationEndpoint(springBus, validationWebService, "XRoadValidationWebService", "XRoad");
+    public Endpoint validationEndpoint(SpringBus springBus, ValidationWebService validationWebService) {
+        return constructValidationEndpoint(springBus, validationWebService, "ValidationWebServiceService", null);
     }
 
     @Bean
@@ -148,16 +148,7 @@ public class ServletConfiguration extends MonitoringConfiguration {
         endpoint.setServiceName(new QName(SIVA_SERVICE_NAMESPACE, serviceName));
         endpoint.getOutInterceptors().addAll(commonEndpointOutInterceptors());
         endpoint.getInInterceptors().add(new SoapRequestValidationInterceptor());
-        if (StringUtils.isNotBlank(wsdlConfProperties.getValidationWebServiceUrl())) {
-            endpoint.setPublishedEndpointUrl(constructPublishedEndpointUrl(wsdlConfProperties.getValidationWebServiceUrl(), VALIDATION_WEB_SERVICE_ENDPOINT));
-        }
-        /**
-         *  Solution for having multiple services defined in the same WSDL go against the same endpoint.
-         *  For that multiple EndpointImpl instances must be constructed pointing to the specific service.
-         *  To construct multiple EndpointImpl instances from the same WSDL the published endpoint name must be different and therefore extra is added.
-         *  It does result with additional unnecessary endpoint for reaching WSDL and XSD.
-         */
-        endpoint.publish(constructPublishingPath(VALIDATION_WEB_SERVICE_ENDPOINT, endpointPathExtra));
+        publishEndpoint(endpoint, VALIDATION_WEB_SERVICE_ENDPOINT, endpointPathExtra);
         return endpoint;
     }
 
@@ -167,10 +158,7 @@ public class ServletConfiguration extends MonitoringConfiguration {
         endpoint.setServiceName(new QName(SIVA_SERVICE_NAMESPACE, serviceName));
         endpoint.getOutInterceptors().addAll(commonEndpointOutInterceptors());
         endpoint.getInInterceptors().add(new SoapRequestHashcodeValidationInterceptor());
-        if (StringUtils.isNotBlank(wsdlConfProperties.getHashcodeValidationWebServiceUrl())) {
-            endpoint.setPublishedEndpointUrl(constructPublishedEndpointUrl(wsdlConfProperties.getHashcodeValidationWebServiceUrl(), HASHCODE_VALIDATION_WEB_SERVICE_ENDPOINT));
-        }
-        endpoint.publish(constructPublishingPath(HASHCODE_VALIDATION_WEB_SERVICE_ENDPOINT, endpointPathExtra));
+        publishEndpoint(endpoint, HASHCODE_VALIDATION_WEB_SERVICE_ENDPOINT, endpointPathExtra);
         return endpoint;
     }
 
@@ -178,11 +166,21 @@ public class ServletConfiguration extends MonitoringConfiguration {
         EndpointImpl endpoint = new EndpointImpl(springBus, validationWebService);
         endpoint.setWsdlLocation("wsdl/siva-datafiles.wsdl");
         endpoint.setServiceName(new QName(SIVA_SERVICE_NAMESPACE, serviceName));
-        if (StringUtils.isNotBlank(wsdlConfProperties.getDataFilesWebServiceUrl())) {
-            endpoint.setPublishedEndpointUrl(constructPublishedEndpointUrl(wsdlConfProperties.getDataFilesWebServiceUrl(), DATAFILES_ENDPOINT));
-        }
-        endpoint.publish(constructPublishingPath(DATAFILES_ENDPOINT, endpointPathExtra));
+        publishEndpoint(endpoint, DATAFILES_ENDPOINT, endpointPathExtra);
         return endpoint;
+    }
+
+    /**
+     *  Solution for having multiple services defined in the same WSDL go against the same endpoint.
+     *  For that multiple EndpointImpl instances must be constructed pointing to the specific service.
+     *  To construct multiple EndpointImpl instances from the same WSDL the published endpoint name must be different and therefore extra is added.
+     *  It does result with additional unnecessary endpoint for reaching WSDL and XSD.
+     */
+    private void publishEndpoint(EndpointImpl endpoint, String serviceEndpoint, String endpointPathExtra) {
+        if (StringUtils.isNotBlank(wsdlConfProperties.getEndpointUrl())) {
+            endpoint.setPublishedEndpointUrl(constructPublishedEndpointUrl(wsdlConfProperties.getEndpointUrl(), serviceEndpoint));
+        }
+        endpoint.publish(constructPublishingPath(serviceEndpoint, endpointPathExtra));
     }
 
     private String constructPublishedEndpointUrl(String url, String path) {

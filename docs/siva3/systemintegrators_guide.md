@@ -453,7 +453,7 @@ See the reference list of all common [application properties](http://docs.spring
 
 | Property | Description |
 | ------ | ----------- |
-| **siva.wsdl.endpoint-url** | SOAP services endpoint URL to what specific service name is added within the application. Must contain only scheme, host and/or port. No additional path elements should be added.  |
+| **siva.wsdl.endpoint-url** | SOAP services endpoint URL to what specific service name is added within the application. Must contain only scheme, host and/or port and optional path. Service name must not be added to the url.  |
 
 * Collecting statistics with Google Analytics
 
@@ -588,15 +588,6 @@ siva.xroad.signaturePolicy.defaultPolicy= POLv3
     Default policy configuration is lost when policy detail properties (name, description, url or constraintPath) are overridden or new custom policies added in custom configuration files (in this case, the existing default policies must be redefined in configuration files explicitly)
 !!! note
     By default, X-road validation currently supports only POLv3
-   
-   
-* WSDL service url parameters   
-
-| Property | Description |
-| -------- | ----------- |
-|**siva.endpoint.validationWebServiceUrl**| Validation wsdl service address location |
-|**siva.endpoint.hashcodeValidationWebService**| Hashcode validation wsdl service address location |
-|**siva.endpoint.dataFilesWebService**| Data files wsdl service address location |
    
 ### Demo webapp parameters
 

@@ -185,7 +185,9 @@ public class ServletConfiguration extends MonitoringConfiguration {
 
     private String constructPublishedEndpointUrl(String url, String path) {
         try {
-            return new URIBuilder(url).setPath("soap" + path).build().toString();
+            URIBuilder uriBuilder = new URIBuilder(url);
+            uriBuilder.setPath(uriBuilder.getPath() + (uriBuilder.getPath().endsWith("/") ? "" : "/") + "soap" + path);
+            return uriBuilder.build().toString();
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException("Failed to construct SOAP publication endpoint url from " + url + " and path " + path, e);
         }

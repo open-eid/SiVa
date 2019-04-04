@@ -148,6 +148,7 @@
                 <jmeter.host.name>localhost</jmeter.host.name>
                 <jmeter.host.port>8080</jmeter.host.port>
                 <jmeter.host.endpoint>/validate</jmeter.host.endpoint>
+                <jmeter.host.hashcodeendpoint>/validateHashcode</jmeter.host.hashcodeendpoint>
                 <jmeter.host.soapendpoint>/soap/validationWebService</jmeter.host.soapendpoint>
                 <jmeter.host.timeout>180000</jmeter.host.timeout>
                 <jmeter.testfiles.dir>${project.basedir}/src/test/jmeter/test-files</jmeter.testfiles.dir>
@@ -182,6 +183,7 @@
                                         <host.name>${jmeter.host.name}</host.name>
                                         <host.port>${jmeter.host.port}</host.port>
                                         <host.endpoint>${jmeter.host.endpoint}</host.endpoint>
+                                        <host.hashcodeendpoint>${jmeter.host.hashcodeendpoint}</host.hashcodeendpoint>
                                         <host.soapendpoint>${jmeter.host.soapendpoint}</host.soapendpoint>
                                         <host.timeout>${jmeter.host.timeout}</host.timeout>
                                         <testfiles.dir>${jmeter.testfiles.dir}</testfiles.dir>

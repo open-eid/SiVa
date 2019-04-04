@@ -9,3 +9,4 @@
 | 1.3            | 20.12.2017  | Aare Nurm, Siim Suu, Madis Piigli    | Documentation updates           |
 | 1.4            | 29.01.2019  | Aare Nurm    | Addition of SIVA 3.0 document structure           |
 | 1.5            | 21.03.2019  | Jorgen Heinsoo | SIVA 3.2 documentation additions with diagnostic data report description |             
+| 1.6            | 04.04.2019  | Aare Nurm | Finalizing the documentation for release |     

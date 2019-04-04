@@ -1,4 +1,4 @@
-site_name: SiVa 3.2 - Validation Service Documentation
+site_name: SiVa 3.2 - Signature Validation Service Documentation
 theme:
     name: material
     include_sidebar: false
@@ -15,9 +15,8 @@ extra_css:
 markdown_extensions:
   - codehilite
   - admonition
-  - grid_tables
   - def_list
-pages:
+nav:
 - VERSION HISTORY: version_info.md
 - INTRODUCTION: index.md
 - 1. DEFINITIONS: siva3/definitions.md

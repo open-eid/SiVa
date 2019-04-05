@@ -26,7 +26,7 @@ The description how to execute the tests together with SoapUI project file to be
 
 ### Execution of Manual type of tests
 
-Most of the manual tests require that SiVa service is set up together with SiVa Sample application. The instructions how to set up SiVa are given in [System integrator's guide](http://open-eid.github.io/SiVa/siva/v2/systemintegrators_guide/)
+Most of the manual tests require that SiVa service is set up together with SiVa Sample application. The instructions how to set up SiVa are given in [System integrator's guide](http://open-eid.github.io/SiVa/siva3/systemintegrators_guide/)
 
 Execution of manual tests depends on testable area. These tests can be divided into following categories:
 
@@ -41,7 +41,7 @@ Files to use in manual tests can be found in [SiVa GitHub](https://github.com/op
 
 This section of the document gives overview of Integration Testing carried out on SiVa web service and SiVa Sample application.
 
-SiVa web service Integration Testing is using RestAssured library v2.9.0 to implement automatic checks for REST/SOAP based tests.
+SiVa web service Integration Testing is using IO RestAssured library v3.3.0 to implement automatic checks for REST/SOAP based tests.
 
 The testing of the SiVa web service is divided into sections based on the software architecture and functionalities provided to the users. The sections are:
 
@@ -49,11 +49,13 @@ The testing of the SiVa web service is divided into sections based on the softwa
   * SOAP API
   * DDOC container signature validation
   * BDOC container signature validation
+  * ASICE container signature validation
   * ASIC-S container signature validation
   * PDF signature validation
   * X-Road ASIC-E signature validation
+  * XAdES hashcode validation
 
-The goal is to focus testing on functionalities implemented in SiVa web service application. Functionalities provided by [Validation libraries](../siva3/overview/#Validation-libraries) are not explicitly tested.
+The goal is to focus testing on functionalities implemented in SiVa web service application. Functionalities provided by [Validation libraries](../overview/#Validation-libraries) are not explicitly tested.
 
 In addition SiVa Sample Application is tested. These tests are carried out manually.
 
@@ -78,9 +80,9 @@ In all of the negative cases correctness of returned error message is checked.
 
 Specific test cases and input files can be found in:
 
-  * [ValidationRequestIT.java](../siva3/appendix/test_cases/#validationrequestitjava)
-  * [DocumentFormatIT.java](../siva3/appendix/test_cases/#documentformatitjava)
-  * [HashcodeValidationRequestIT.java](../siva3/appendix/test_cases/#hashcodevalidationrequestitjava)
+  * [ValidationRequestIT.java](../appendix/test_cases/#validationrequestitjava)
+  * [DocumentFormatIT.java](../appendix/test_cases/#documentformatitjava)
+  * [HashcodeValidationRequestIT.java](../appendix/test_cases/#hashcodevalidationrequestitjava)
 
 ### Get Data Files request tests
 
@@ -98,7 +100,7 @@ In all of the negative cases correctness of returned error message is checked.
 
 Specific test cases and input files can be found in:
 
-  * [GetDataFileRequestIT.java](../siva3/appendix/test_cases/#getdatafilerequestitjava)
+  * [GetDataFileRequestIT.java](../appendix/test_cases/#getdatafilerequestitjava)
 
 ### Validation report and report siganture tests
 
@@ -106,17 +108,18 @@ SiVa web service returns uniform Validation Report on all the supported document
 
 Following areas are tested on output (Validation Report):
 
-  * JSON structure on DDOC, BDOC, PDF, ASIC-E, ASIC-S and ASICE-E X-Road document types
-  * Presence of the mandatory elements on DDOC, BDOC, PDF, ASIC-E, ASIC-S and ASICE-E X-Road document types
-  * Presence of optional elements on DDOC, BDOC, PDF, ASIC-E, ASIC-S and ASICE-E X-Road document types
+  * JSON structure on DDOC, BDOC, PDF, ASIC-E, ASIC-S, XAdES hashcode and ASICE-E X-Road document types
+  * Presence of the mandatory elements on DDOC, BDOC, PDF, ASIC-E, ASIC-S, XAdES hashcode and ASICE-E X-Road document types
+  * Presence of optional elements on DDOC, BDOC, PDF, ASIC-E, ASIC-S, XAdES hashcode and ASICE-E X-Road document types
   * Verification of expected values
   * JSON structure on containers without signatures
 
 Specific test cases and input files can be found in:
 
-  * [ValidationReportValueVerificationIT.java](../siva3/appendix/test_cases/#validationReportValueVerificationitjava)
-  * [ReportSignatureManualIT.java](../siva3/appendix/test_cases/#reportSignatureManualitjava)
-  * [DetailedReportValidationManualIT.java](../siva3/appendix/test_cases/#detailedReportValidationManualitjava)
+  * [ValidationReportValueVerificationIT.java](../appendix/test_cases/#validationReportValueVerificationitjava)
+  * [ReportSignatureManualIT.java](../appendix/test_cases/#reportSignatureManualitjava)
+  * [DetailedReportValidationManualIT.java](../appendix/test_cases/#detailedReportValidationManualitjava)
+  * [DiagnosticReportValidationManualIT.java](../appendix/test_cases/#diagnosticReportValidationManualitjava)
   
 ## Testing of SOAP API
 
@@ -140,8 +143,8 @@ In all of the negative cases correctness of returned error message is checked.
 
 Specific test cases and input files can be found in:
 
-  * [SoapValidationRequestIT.java](../siva3/appendix/test_cases/#soapvalidationrequestitjava)
-  * [SoapHashcodeValidationRequestIT.java](../siva3/appendix/test_cases/#soaphashcodevalidationrequestitjava)
+  * [SoapValidationRequestIT.java](../appendix/test_cases/#soapvalidationrequestitjava)
+  * [SoapHashcodeValidationRequestIT.java](../appendix/test_cases/#soaphashcodevalidationrequestitjava)
 
 ### Get Data Files request tests
 
@@ -159,7 +162,7 @@ In all of the negative cases correctness of returned error message is checked.
 
 Specific test cases and input files can be found in:
 
-  * [SoapGetDataFileRequestIT.java](../siva3/appendix/test_cases/#soapgetdatafilerequestitjava)
+  * [SoapGetDataFileRequestIT.java](../appendix/test_cases/#soapgetdatafilerequestitjava)
 
 ### Validation report tests
 
@@ -167,13 +170,13 @@ SiVa web service returns uniform Validation Report on all the supported document
 
 Following areas are tested on output (Validation Report):
 
-  * Presence of the mandatory elements on DDOC, BDOC, PDF, ASIC-S ASIC-E and ASICE-E X-Road document types
-  * Presence of optional elements on DDOC, BDOC, PDF, ASIC-S, ASIC-E and ASICE-E X-Road document types
+  * Presence of the mandatory elements on DDOC, BDOC, PDF, ASIC-S ASIC-E, XAdES hashcode and ASICE-E X-Road document types
+  * Presence of optional elements on DDOC, BDOC, PDF, ASIC-S, ASIC-E, XAdES hashcode and ASICE-E X-Road document types
   * Verification of expected values
 
 Specific test cases and input files can be found in:
 
-  * [SoapValidationReportValueIT.java](../siva3/appendix/test_cases/#soapvalidationreportvalueitjava)
+  * [SoapValidationReportValueIT.java](../appendix/test_cases/#soapvalidationreportvalueitjava)
 
 ### Get Data Files report tests
 
@@ -185,7 +188,7 @@ Following areas are tested on output:
 
 Specific test cases and input files can be found in:
 
-  * [SoapGetDataFileReportIT.java](../siva3/appendix/test_cases/#soapgetdatafilereportitjava)
+  * [SoapGetDataFileReportIT.java](../appendix/test_cases/#soapgetdatafilereportitjava)
 
 ## Testing of DDOC container signature validation
 
@@ -200,14 +203,13 @@ The testing of DDOC signatures consists of following main cases:
 
 Specific test cases and input files can be found in:
 
-  * [DdocValidationFailIT.java](../siva3/appendix/test_cases/#ddocvalidationfailitjava)
-  * [DdocValidationPassIT.java](../siva3/appendix/test_cases/#ddocvalidationpassitjava)
-  * [LargeFileIT.java](../siva3/appendix/test_cases/#largefileitjava)
+  * [DdocValidationFailIT.java](../appendix/test_cases/#ddocvalidationfailitjava)
+  * [DdocValidationPassIT.java](../appendix/test_cases/#ddocvalidationpassitjava)
+  * [LargeFileIT.java](../appendix/test_cases/#largefileitjava)
 
 **What is not tested:**
 
   * Verification of different causes in container for invalid result is out of scope.
-
 
 ## Testing of BDOC container signature validation
 
@@ -218,13 +220,32 @@ The testing of BDOC container signatures consists of following main cases:
   * Containers with valid signature(s) are validated
   * Containers with invalid signature(s) or no signature are validated
   * Containers sizes near maximum are validated
-  * Containers with baseline LT, LTA, T and B profiles
+  * Containers with baseline B, T, LT, LT_TM and LTA profile (files with BDOC extension)
 
 Specific test cases and input files can be found in:
 
-  * [BdocValidationFailIT.java](../siva3/appendix/test_cases/#bdocvalidationfailitjava)
-  * [BdocValidationPassIT.java](../siva3/appendix/test_cases/#bdocvalidationpassitjava)
-  * [LargeFileIT.java](../siva3/appendix/test_cases/#largefileitjava)
+  * [BdocValidationFailIT.java](../appendix/test_cases/#bdocvalidationfailitjava)
+  * [BdocValidationPassIT.java](../appendix/test_cases/#bdocvalidationpassitjava)
+  * [LargeFileIT.java](../appendix/test_cases/#largefileitjava)
+
+**What is not tested:**
+
+  * Verification of different causes in container for invalid result is out of scope.
+  
+## Testing of ASIC-E container signature validation
+
+The goal of the ASIC-E container signature validation testing is to check that the validation results given by DSS library are properly presented in validation report.
+
+The testing of ASIC-E container signatures consists of following main cases:
+
+  * Containers with valid signature(s) are validated
+  * Containers with invalid signature(s) or no signature are validated
+  * Containers with baseline B, T, LT and LTA profile
+
+Specific test cases and input files can be found in:
+
+  * [AsiceValidationFailIT.java](../appendix/test_cases/#asicevalidationfailitjava)
+  * [AsiceValidationPassIT.java](../appendix/test_cases/#asicevalidationpassitjava)
 
 **What is not tested:**
 
@@ -242,13 +263,32 @@ The testing of ASIC-S container signatures consists of following main cases:
 
 Specific test cases and input files can be found in:
 
-  * [AsicsValidationFailIT.java](../siva3/appendix/test_cases/#bdocvalidationfailitjava)
-  * [AsicsValidationPassIT.java](../siva3/appendix/test_cases/#bdocvalidationpassitjava)
+  * [AsicsValidationFailIT.java](../appendix/test_cases/#bdocvalidationfailitjava)
+  * [AsicsValidationPassIT.java](../appendix/test_cases/#bdocvalidationpassitjava)
 
 **What is not tested:**
 
   * Verification of different causes in container for invalid result is out of scope.
 
+## Testing of XAdES hashcode signature validation
+
+The goal of the XAdES hashcode signature validation testing is to check that the validation results given by DSS library are properly presented in validation report.
+
+The testing of XAdES hashcode signatures consists of following main cases:
+
+  * XAdES signatures with valid signature(s) are validated
+  * XAdES signatures with invalid signature(s) or no signature are validated
+  * XAdES signatures extracted from BDOC and ASIC-E
+  * XAdES signatures with baseline B, T, LT and LTA profile
+
+Specific test cases and input files can be found in:
+
+  * [XadesHashcodeValidationFailIT.java](../appendix/test_cases/#xadeshashcodevalidationfailitjava)
+  * [XadesHashcodeValidationPassIT.java](../appendix/test_cases/#xadeshashcodevalidationpassitjava)
+
+**What is not tested:**
+
+  * Verification of different causes in container for invalid result is out of scope.
 
 ## Testing of PDF signature validation
 
@@ -263,16 +303,16 @@ The testing of PDF signatures consists of following main cases:
   * Containers with serial and parallel signatures are validated
   * Containers with different signature cryptocaphic algorithms are validated
   * Containers with OCSP values inside and outside bounds are validated
-  * Containers with baseline LT, LTA, T and B profiles
+  * Containers with baseline B, T, LT and LTA profile
   
 
 Specific test cases and input files can be found in:
 
-  * [PdfBaselineProfileIT.java](../siva3/appendix/test_cases/#pdfbaselineprofileitjava)
+  * [PdfBaselineProfileIT.java](../appendix/test_cases/#pdfbaselineprofileitjava)
   * [PdfSignatureCryptographicAlgorithmIT.java](../siva/appendix/test_cases/#pdfsignaturecryptographicalgorithmitjava)
-  * [PdfValidationFailIT.java](../siva3/appendix/test_cases/#pdfvalidationfailitjava)
-  * [PdfValidationPassIT.java](../siva3/appendix/test_cases/#pdfvalidationpassitjava)
-  * [LargeFileIT.java](../siva3/appendix/test_cases/#largefileitjava)
+  * [PdfValidationFailIT.java](../appendix/test_cases/#pdfvalidationfailitjava)
+  * [PdfValidationPassIT.java](../appendix/test_cases/#pdfvalidationpassitjava)
+  * [LargeFileIT.java](../appendix/test_cases/#largefileitjava)
 
 ## Testing of X-Road ASIC-E container signature validation
 
@@ -285,8 +325,8 @@ The testing of ASICE signatures consists of following main cases:
 
 Specific test cases and input files can be found in:
 
-  * [XroadValidationPassIT.java](../siva3/appendix/test_cases/#xroadvalidationpassitjava)
-  * [XroadValidationFailIT.java](../siva3/appendix/test_cases/#xroadvalidationfailitjava)
+  * [XroadValidationPassIT.java](../appendix/test_cases/#xroadvalidationpassitjava)
+  * [XroadValidationFailIT.java](../appendix/test_cases/#xroadvalidationfailitjava)
 
 **What is not tested:**
 
@@ -306,7 +346,7 @@ The testing of Data Files Extraction consists of following main cases:
 
 Specific test cases and input files can be found in:
 
-  * [DdocGetDataFilesIT.java](../siva3/appendix/test_cases/#ddocgetdatafilesitjava)
+  * [DdocGetDataFilesIT.java](../appendix/test_cases/#ddocgetdatafilesitjava)
 
 ## Testing of user statistics
 
@@ -328,8 +368,8 @@ As both systems use the same data the testing follows the same principles for bo
   
 Specific test cases and input files can be found in:
 
-  * [StatisticsToGAManualIT.java](../siva3/appendix/test_cases/#statisticstogamanualitjava)
-  * [StatisticsToLogsManualIT.java](../siva3/appendix/test_cases/#statisticstologsmanualitjava)
+  * [StatisticsToGAManualIT.java](../appendix/test_cases/#statisticstogamanualitjava)
+  * [StatisticsToLogsManualIT.java](../appendix/test_cases/#statisticstologsmanualitjava)
   
   **What is not tested:**
 
@@ -347,7 +387,7 @@ Testing of SiVa Sample Application is done manually. The main cases are:
 
 Sample test cases with input files can be found in:
 
-  * [Sample Application Integration Test](../siva3/appendix/test_cases/#sample-application-integration-test) 
+  * [Sample Application Integration Test](../appendix/test_cases/#sample-application-integration-test) 
   
 ## System Test introduction
 
@@ -382,7 +422,7 @@ Tests along with test case descriptions are available for rerun in [github](http
 
 Specific test cases and input files can be found in:
 
-  * [X-Road Soap System Test](../siva3/appendix/test_cases/#x-road-soap-system-test)
+  * [X-Road Soap System Test](../appendix/test_cases/#x-road-soap-system-test)
 
 ## Configuration/administration testing
 
@@ -394,7 +434,7 @@ Following areas are covered:
 
 Specific test cases can be found in:
 
-  * [Configuration System Test](../siva3/appendix/test_cases/#configuration-system-test)  
+  * [Configuration System Test](../appendix/test_cases/#configuration-system-test)  
 
 ## Load Test introduction
 

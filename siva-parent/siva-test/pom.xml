@@ -118,7 +118,7 @@
                             <arguments>
                                 <argument>java</argument>
                                 <argument>-jar</argument>
-                                <argument>${basedir}/../../validation-services-parent/xroad-validation-service/target/xroad-validation-service-${project.version}.jar</argument>
+                                <argument>${basedir}/../../validation-services-parent/xroad-validation-service/target/xroad-validation-service-${project.version}-exec.jar</argument>
                             </arguments>
                         </configuration>
                     </execution>

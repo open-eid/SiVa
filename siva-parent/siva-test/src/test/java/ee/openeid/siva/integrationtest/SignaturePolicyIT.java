@@ -661,6 +661,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: allkiri_ades.asice
      */
     @Test
+    @Ignore("SIVA-146")
     public void bdocDocumentAdesNonSscdCompliantShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestForDD4j("allkiri_ades.asice", VALID_SIGNATURE_POLICY_3, null))
@@ -1148,6 +1149,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
      */
     @Test
+    @Ignore("SIVA-146")
     public void bdocDocumentQesNoTypeShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestForDD4j("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc", VALID_SIGNATURE_POLICY_3, null))

@@ -33,6 +33,7 @@ import ee.openeid.validation.service.timemark.configuration.TestDigiDoc4jConfigu
 import ee.openeid.validation.service.timemark.configuration.TimemarkContainerValidationServiceConfiguration;
 import ee.openeid.validation.service.timemark.signature.policy.BDOCConfigurationService;
 import ee.openeid.validation.service.timemark.signature.policy.BDOCSignaturePolicyService;
+import ee.openeid.validation.service.timemark.signature.policy.CertificateConfigurationLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.util.encoders.Base64;
 import org.junit.Ignore;
@@ -69,6 +70,7 @@ import static org.junit.Assert.*;
         BDOCSignaturePolicyService.class,
         ConstraintLoadingSignaturePolicyService.class,
         BDOCConfigurationService.class,
+        CertificateConfigurationLoader.class,
         ReportConfigurationProperties.class
 })
 @ActiveProfiles("test")

@@ -33,10 +33,10 @@ import org.springframework.context.annotation.Bean;
 @SpringBootConfiguration
 @EnableAutoConfiguration
 @EnableConfigurationProperties({
-    BDOCSignaturePolicyProperties.class,
-    BDOCValidationServiceProperties.class,
-    DDOCValidationServiceProperties.class,
-    XMLEntityAttackValidator.class
+        BDOCSignaturePolicyProperties.class,
+        BDOCValidationServiceProperties.class,
+        DDOCValidationServiceProperties.class,
+        XMLEntityAttackValidator.class
 })
 public class TimemarkContainerValidationServiceConfiguration {
 
@@ -49,7 +49,7 @@ public class TimemarkContainerValidationServiceConfiguration {
     }
 
     @Bean
-    public PolicyConfigurationWrapper policyConfiguration(BDOCSignaturePolicyService bdocSignaturePolicyService, Configuration configuration) {
+    public PolicyConfigurationWrapper policyConfiguration( BDOCSignaturePolicyService bdocSignaturePolicyService, Configuration configuration) {
         configuration.setTslLocation(tslLoaderConfigurationProperties.getUrl());
         ConstraintDefinedPolicy policy = bdocSignaturePolicyService.getPolicy(StringUtils.EMPTY);
         configuration.setValidationPolicy(bdocSignaturePolicyService.getAbsolutePath(policy.getName()));

@@ -17,6 +17,7 @@ public class ProductionDigiDoc4jConfiguration {
     @Bean
     private org.digidoc4j.Configuration getConfiguration() {
         org.digidoc4j.Configuration configuration = new org.digidoc4j.Configuration(Configuration.Mode.PROD);
+        configuration.setTslLocation(tslLoaderConfigurationProperties.getUrl());
         return configuration;
     }
 

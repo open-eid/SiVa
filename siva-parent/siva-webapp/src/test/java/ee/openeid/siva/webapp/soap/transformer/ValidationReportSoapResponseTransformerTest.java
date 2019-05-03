@@ -119,6 +119,26 @@ public class ValidationReportSoapResponseTransformerTest {
         Assert.assertEquals(validationConclusion.getSignatures().get(0).getIndication(), responseValidationConclusion.getSignatures().getSignature().get(0).getIndication().value());
     }
 
+    @Test
+    public void detailedReportWithNullValidationProcess() {
+        ee.openeid.siva.validation.document.report.ValidationConclusion validationConclusion = createMockedValidationConclusion();
+        DetailedReport detailedReport = new DetailedReport(validationConclusion, null);
+        ValidationReport responseValidationReport = transformer.toSoapResponse(detailedReport);
+        assertValidationConclusion(validationConclusion, responseValidationReport.getValidationConclusion());
+        assertNull(responseValidationReport.getValidationProcess());
+        assertNull(responseValidationReport.getDiagnosticData());
+    }
+
+    @Test
+    public void diagnosticReportWithNullDiagnosticData() {
+        ee.openeid.siva.validation.document.report.ValidationConclusion validationConclusion = createMockedValidationConclusion();
+        DiagnosticReport diagnosticReport = new DiagnosticReport(validationConclusion, null);
+        ValidationReport responseValidationReport = transformer.toSoapResponse(diagnosticReport);
+        assertValidationConclusion(validationConclusion, responseValidationReport.getValidationConclusion());
+        assertNull(responseValidationReport.getValidationProcess());
+        assertNull(responseValidationReport.getDiagnosticData());
+    }
+
     private void assertValidationConclusion(ee.openeid.siva.validation.document.report.ValidationConclusion dssValidationConclusion, ValidationConclusion soapValidationConclusion) {
         assertEquals(dssValidationConclusion.getValidatedDocument().getFilename(), soapValidationConclusion.getValidatedDocument().getFilename());
         assertEquals(dssValidationConclusion.getValidatedDocument().getFileHash(), soapValidationConclusion.getValidatedDocument().getFileHash());

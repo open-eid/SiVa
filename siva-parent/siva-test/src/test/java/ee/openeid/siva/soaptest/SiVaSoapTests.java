@@ -25,6 +25,7 @@ import ee.openeid.siva.webapp.soap.DataFilesReport;
 import ee.openeid.siva.webapp.soap.response.ValidateDocumentResponse;
 import ee.openeid.siva.webapp.soap.response.ValidationReport;
 import io.restassured.response.Response;
+import io.restassured.response.ValidatableResponse;
 import org.apache.commons.codec.binary.Base64;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -36,7 +37,12 @@ import javax.xml.bind.Unmarshaller;
 import java.util.Collections;
 import java.util.List;
 
+import static ee.openeid.siva.integrationtest.TestData.SOAP_DETAILED_REPORT_PREFIX;
+import static ee.openeid.siva.integrationtest.TestData.SOAP_DIAGNOSTIC_DATA_PREFIX;
+import static ee.openeid.siva.integrationtest.TestData.SOAP_VALIDATION_CONCLUSION_PREFIX;
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.Matchers.emptyIterable;
 
 public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
 
@@ -321,5 +327,23 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    protected static void isSimpleReport(ValidatableResponse response) {
+        response.body(SOAP_VALIDATION_CONCLUSION_PREFIX, anything())
+                .body(SOAP_DETAILED_REPORT_PREFIX, emptyIterable())
+                .body(SOAP_DIAGNOSTIC_DATA_PREFIX, emptyIterable());
+    }
+
+    protected static void isDetailedReport(ValidatableResponse response) {
+        response.body(SOAP_VALIDATION_CONCLUSION_PREFIX, anything())
+                .body(SOAP_DETAILED_REPORT_PREFIX, anything())
+                .body(SOAP_DIAGNOSTIC_DATA_PREFIX, emptyIterable());
+    }
+
+    protected static void isDiagnosticReport(ValidatableResponse response) {
+        response.body(SOAP_VALIDATION_CONCLUSION_PREFIX, anything())
+                .body(SOAP_DETAILED_REPORT_PREFIX, emptyIterable())
+                .body(SOAP_DIAGNOSTIC_DATA_PREFIX, anything());
     }
 }

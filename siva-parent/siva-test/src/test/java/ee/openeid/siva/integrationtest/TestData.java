@@ -252,5 +252,7 @@ public class TestData {
     public static final String DIAGNOSTIC_DATA_PREFIX = "validationReport.diagnosticData.";
 
     public static final String SOAP_VALIDATION_CONCLUSION_PREFIX = "Envelope.Body.ValidateDocumentResponse.ValidationReport.ValidationConclusion";
+    public static final String SOAP_DETAILED_REPORT_PREFIX = "Envelope.Body.ValidateDocumentResponse.ValidationReport.ValidationProcess";
+    public static final String SOAP_DIAGNOSTIC_DATA_PREFIX = "Envelope.Body.ValidateDocumentResponse.ValidationReport.DiagnosticData";
 
 }

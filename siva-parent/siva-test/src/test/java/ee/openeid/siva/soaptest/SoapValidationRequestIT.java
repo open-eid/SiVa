@@ -17,6 +17,7 @@
 package ee.openeid.siva.soaptest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+import io.restassured.response.ValidatableResponse;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;
@@ -998,7 +999,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
     }
 
     /**
-     * TestCaseID: Soap-ValidationRequest-ReportType-1
+     * TestCaseID: Soap-ValidationRequest-PDF-ReportType-1
      *
      * TestType: Automated
      *
@@ -1011,14 +1012,16 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File:PdfValidSingleSignature.pdf
      */
     @Test
-    public void soapValidationRequestSimpleReportType() {
-        post(validationRequestForDocumentReportType("PdfValidSingleSignature.pdf", REPORT_TYPE_SIMPLE))
-                .then().root(SOAP_VALIDATION_CONCLUSION_PREFIX)
+    public void soapPDFValidationRequestSimpleReportType() {
+        ValidatableResponse response = post(validationRequestForDocumentReportType("PdfValidSingleSignature.pdf", REPORT_TYPE_SIMPLE))
+                .then();
+        response.root(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("ValidSignaturesCount", is("1"));
+        isSimpleReport(response);
     }
 
     /**
-     * TestCaseID: Soap-ValidationRequest-ReportType-2
+     * TestCaseID: Soap-ValidationRequest-PDF-ReportType-2
      *
      * TestType: Automated
      *
@@ -1031,15 +1034,17 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File:PdfValidSingleSignature.pdf
      */
     @Test
-    public void soapValidationRequestDetailedReportType() {
-        post(validationRequestForDocumentReportType("PdfValidSingleSignature.pdf", REPORT_TYPE_DETAILED))
-                .then()
+    public void soapPDFValidationRequestDetailedReportType() {
+        ValidatableResponse response = post(validationRequestForDocumentReportType("PdfValidSingleSignature.pdf", REPORT_TYPE_DETAILED))
+                .then();
+        response
                 .body(SOAP_VALIDATION_CONCLUSION_PREFIX + ".ValidSignaturesCount", is("1"))
                 .body("Envelope.Body.ValidateDocumentResponse.ValidationReport.ValidationProcess.Signatures.ValidationProcessBasicSignatures.Conclusion.Indication", is(VALID_INDICATION_VALUE_PASSED));
+        isDetailedReport(response);
     }
 
     /**
-     * TestCaseID: Soap-ValidationRequest-ReportType-3
+     * TestCaseID: Soap-ValidationRequest-PDF-ReportType-3
      *
      * TestType: Automated
      *
@@ -1052,11 +1057,193 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File:PdfValidSingleSignature.pdf
      */
     @Test
-    public void soapValidationRequestDiagnosticReportType() {
-        post(validationRequestForDocumentReportType("PdfValidSingleSignature.pdf", REPORT_TYPE_DIAGNOSTIC))
-                .then()
+    public void soapPDFValidationRequestDiagnosticReportType() {
+        ValidatableResponse response = post(validationRequestForDocumentReportType("PdfValidSingleSignature.pdf", REPORT_TYPE_DIAGNOSTIC))
+                .then();
+        response
                 .body(SOAP_VALIDATION_CONCLUSION_PREFIX + ".ValidSignaturesCount", is("1"))
                 .body("Envelope.Body.ValidateDocumentResponse.ValidationReport.DiagnosticData.DocumentName", is("PdfValidSingleSignature.pdf"));
+        isDiagnosticReport(response);
+    }
+
+    /**
+     * TestCaseID: Soap-ValidationRequest-BDOC-ReportType-1
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Simple report is requested
+     *
+     * Expected Result: Simple report is returned
+     *
+     * File:BdocContainerNoSignature.bdoc
+     */
+    @Test
+    public void soapBDOCValidationRequestSimpleReportType() {
+        ValidatableResponse response = post(validationRequestForDocumentReportType("BdocContainerNoSignature.bdoc", REPORT_TYPE_SIMPLE))
+                .then();
+        isSimpleReport(response);
+    }
+
+    /**
+     * TestCaseID: Soap-ValidationRequest-BDOC-ReportType-2
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Detailed report is requested
+     *
+     * Expected Result: Simple report is returned
+     *
+     * File:BdocContainerNoSignature.bdoc
+     */
+    @Test
+    public void soapBDOCValidationRequestDetailedReportType() {
+        ValidatableResponse response = post(validationRequestForDocumentReportType("BdocContainerNoSignature.bdoc", REPORT_TYPE_DETAILED))
+                .then();
+        isSimpleReport(response);
+    }
+
+    /**
+     * TestCaseID: Soap-ValidationRequest-BDOC-ReportType-3
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Diagnostic report is requested
+     *
+     * Expected Result: Simple report is returned
+     *
+     * File:BdocContainerNoSignature.bdoc
+     */
+    @Test
+    public void soapBDOCValidationRequestDiagnosticReportType() {
+        ValidatableResponse response = post(validationRequestForDocumentReportType("BdocContainerNoSignature.bdoc", REPORT_TYPE_DIAGNOSTIC))
+                .then();
+        isSimpleReport(response);
+    }
+
+    /**
+     * TestCaseID: Soap-ValidationRequest-DDOC-ReportType-1
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Simple report is requested
+     *
+     * Expected Result: Simple report is returned
+     *
+     * File:DdocContainerNoSignature.ddoc
+     */
+    @Test
+    public void soapDDOCValidationRequestSimpleReportType() {
+        ValidatableResponse response = post(validationRequestForDocumentReportType("DdocContainerNoSignature.ddoc", REPORT_TYPE_SIMPLE))
+                .then();
+        isSimpleReport(response);
+    }
+
+    /**
+     * TestCaseID: Soap-ValidationRequest-DDOC-ReportType-2
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Detailed report is requested
+     *
+     * Expected Result: Simple report is returned
+     *
+     * File:DdocContainerNoSignature.ddoc
+     */
+    @Test
+    public void soapDDOCValidationRequestDetailedReportType() {
+        ValidatableResponse response = post(validationRequestForDocumentReportType("DdocContainerNoSignature.ddoc", REPORT_TYPE_DETAILED))
+                .then();
+        isSimpleReport(response);
+    }
+
+    /**
+     * TestCaseID: Soap-ValidationRequest-DDOC-ReportType-3
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Diagnostic report is requested
+     *
+     * Expected Result: Simple report is returned
+     *
+     * File:DdocContainerNoSignature.ddoc
+     */
+    @Test
+    public void soapDDOCValidationRequestDiagnosticReportType() {
+        ValidatableResponse response = post(validationRequestForDocumentReportType("DdocContainerNoSignature.ddoc", REPORT_TYPE_DIAGNOSTIC))
+                .then();
+        isSimpleReport(response);
+    }
+
+    /**
+     * TestCaseID: Soap-ValidationRequest-ASICE-ReportType-1
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Simple report is requested
+     *
+     * Expected Result: Simple report is returned
+     *
+     * File:AsiceContainerNoSignature.asice
+     */
+    @Test
+    public void soapAsicEValidationRequestSimpleReportType() {
+        ValidatableResponse response = post(validationRequestForDocumentReportType("AsiceContainerNoSignature.asice", REPORT_TYPE_SIMPLE))
+                .then();
+        isSimpleReport(response);
+    }
+
+    /**
+     * TestCaseID: Soap-ValidationRequest-ASICE-ReportType-2
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Detailed report is requested
+     *
+     * Expected Result: Simple report is returned
+     *
+     * File:AsiceContainerNoSignature.asice
+     */
+    @Test
+    public void soapAsicEValidationRequestDetailedReportType() {
+        ValidatableResponse response = post(validationRequestForDocumentReportType("AsiceContainerNoSignature.asice", REPORT_TYPE_DETAILED))
+                .then();
+        isSimpleReport(response);
+    }
+
+    /**
+     * TestCaseID: Soap-ValidationRequest-ASICE-ReportType-3
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Diagnostic report is requested
+     *
+     * Expected Result: Simple report is returned
+     *
+     * File:AsiceContainerNoSignature.asice
+     */
+    @Test
+    public void soapAsicEValidationRequestDiagnosticReportType() {
+        ValidatableResponse response = post(validationRequestForDocumentReportType("AsiceContainerNoSignature.asice", REPORT_TYPE_DIAGNOSTIC))
+                .then();
+        isSimpleReport(response);
     }
 
     @Override

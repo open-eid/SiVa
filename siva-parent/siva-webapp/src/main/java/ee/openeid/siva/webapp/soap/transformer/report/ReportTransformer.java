@@ -46,6 +46,10 @@ abstract class ReportTransformer<D, I, F> {
     }
 
     public F transform(D report) {
+        if (report == null) {
+            return null;
+        }
+
         return transformReport(unmarshallerReport(report));
     }
 

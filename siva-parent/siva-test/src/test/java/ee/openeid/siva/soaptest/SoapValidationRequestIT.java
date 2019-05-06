@@ -1077,11 +1077,12 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * Expected Result: Simple report is returned
      *
-     * File:BdocContainerNoSignature.bdoc
+     * File: testECCDemo.bdoc
      */
     @Test
     public void soapBDOCValidationRequestSimpleReportType() {
-        ValidatableResponse response = post(validationRequestForDocumentReportType("BdocContainerNoSignature.bdoc", REPORT_TYPE_SIMPLE))
+        setTestFilesDirectory("bdoc/test/timemark/");
+        ValidatableResponse response = post(validationRequestForDocumentReportType("testECCDemo.bdoc", REPORT_TYPE_SIMPLE))
                 .then();
         isSimpleReport(response);
     }
@@ -1097,11 +1098,12 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * Expected Result: Simple report is returned
      *
-     * File:BdocContainerNoSignature.bdoc
+     * File: testECCDemo.bdoc
      */
     @Test
     public void soapBDOCValidationRequestDetailedReportType() {
-        ValidatableResponse response = post(validationRequestForDocumentReportType("BdocContainerNoSignature.bdoc", REPORT_TYPE_DETAILED))
+        setTestFilesDirectory("bdoc/test/timemark/");
+        ValidatableResponse response = post(validationRequestForDocumentReportType("testECCDemo.bdoc", REPORT_TYPE_DETAILED))
                 .then();
         isSimpleReport(response);
     }
@@ -1117,11 +1119,12 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * Expected Result: Simple report is returned
      *
-     * File:BdocContainerNoSignature.bdoc
+     * File: testECCDemo.bdoc
      */
     @Test
     public void soapBDOCValidationRequestDiagnosticReportType() {
-        ValidatableResponse response = post(validationRequestForDocumentReportType("BdocContainerNoSignature.bdoc", REPORT_TYPE_DIAGNOSTIC))
+        setTestFilesDirectory("bdoc/test/timemark/");
+        ValidatableResponse response = post(validationRequestForDocumentReportType("testECCDemo.bdoc", REPORT_TYPE_DIAGNOSTIC))
                 .then();
         isSimpleReport(response);
     }
@@ -1137,11 +1140,11 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * Expected Result: Simple report is returned
      *
-     * File:DdocContainerNoSignature.ddoc
+     * File: igasugust1.3.ddoc
      */
     @Test
     public void soapDDOCValidationRequestSimpleReportType() {
-        ValidatableResponse response = post(validationRequestForDocumentReportType("DdocContainerNoSignature.ddoc", REPORT_TYPE_SIMPLE))
+        ValidatableResponse response = post(validationRequestForDocumentReportType("igasugust1.3.ddoc", REPORT_TYPE_SIMPLE))
                 .then();
         isSimpleReport(response);
     }
@@ -1157,11 +1160,11 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * Expected Result: Simple report is returned
      *
-     * File:DdocContainerNoSignature.ddoc
+     * File: igasugust1.3.ddoc
      */
     @Test
     public void soapDDOCValidationRequestDetailedReportType() {
-        ValidatableResponse response = post(validationRequestForDocumentReportType("DdocContainerNoSignature.ddoc", REPORT_TYPE_DETAILED))
+        ValidatableResponse response = post(validationRequestForDocumentReportType("igasugust1.3.ddoc", REPORT_TYPE_DETAILED))
                 .then();
         isSimpleReport(response);
     }
@@ -1177,11 +1180,11 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * Expected Result: Simple report is returned
      *
-     * File:DdocContainerNoSignature.ddoc
+     * File: igasugust1.3.ddoc
      */
     @Test
     public void soapDDOCValidationRequestDiagnosticReportType() {
-        ValidatableResponse response = post(validationRequestForDocumentReportType("DdocContainerNoSignature.ddoc", REPORT_TYPE_DIAGNOSTIC))
+        ValidatableResponse response = post(validationRequestForDocumentReportType("igasugust1.3.ddoc", REPORT_TYPE_DIAGNOSTIC))
                 .then();
         isSimpleReport(response);
     }
@@ -1197,11 +1200,12 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * Expected Result: Simple report is returned
      *
-     * File:AsiceContainerNoSignature.asice
+     * File: Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice
      */
     @Test
     public void soapAsicEValidationRequestSimpleReportType() {
-        ValidatableResponse response = post(validationRequestForDocumentReportType("AsiceContainerNoSignature.asice", REPORT_TYPE_SIMPLE))
+        setTestFilesDirectory("bdoc/test/timestamp/");
+        ValidatableResponse response = post(validationRequestForDocumentReportType("Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice", REPORT_TYPE_SIMPLE))
                 .then();
         isSimpleReport(response);
     }
@@ -1215,15 +1219,16 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * Title: Detailed report is requested
      *
-     * Expected Result: Simple report is returned
+     * Expected Result: Detailed report is returned
      *
-     * File:AsiceContainerNoSignature.asice
+     * File: Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice
      */
     @Test
     public void soapAsicEValidationRequestDetailedReportType() {
-        ValidatableResponse response = post(validationRequestForDocumentReportType("AsiceContainerNoSignature.asice", REPORT_TYPE_DETAILED))
+        setTestFilesDirectory("bdoc/test/timestamp/");
+        ValidatableResponse response = post(validationRequestForDocumentReportType("Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice", REPORT_TYPE_DETAILED))
                 .then();
-        isSimpleReport(response);
+        isDetailedReport(response);
     }
 
     /**
@@ -1235,13 +1240,80 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      *
      * Title: Diagnostic report is requested
      *
-     * Expected Result: Simple report is returned
+     * Expected Result: Diagnostic report is returned
      *
-     * File:AsiceContainerNoSignature.asice
+     * File: Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice
      */
     @Test
     public void soapAsicEValidationRequestDiagnosticReportType() {
-        ValidatableResponse response = post(validationRequestForDocumentReportType("AsiceContainerNoSignature.asice", REPORT_TYPE_DIAGNOSTIC))
+        setTestFilesDirectory("bdoc/test/timestamp/");
+        ValidatableResponse response = post(validationRequestForDocumentReportType("Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice", REPORT_TYPE_DIAGNOSTIC))
+                .then();
+        isDiagnosticReport(response);
+    }
+
+    /**
+     * TestCaseID: Soap-ValidationRequest-XROAD-ReportType-1
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Simple report is requested
+     *
+     * Expected Result: Simple report is returned
+     *
+     * File: xroad-simple.asice
+     */
+    @Test
+    public void soapXROADValidationRequestSimpleReportType() {
+        setTestFilesDirectory("xroad/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
+        ValidatableResponse response = post(validationRequestForDocumentExtendedAll(encodedString, "xroad-simple.asice", REPORT_TYPE_SIMPLE, "XROAD", SIGNATURE_POLICY_1))
+                .then();
+        isSimpleReport(response);
+    }
+
+    /**
+     * TestCaseID: Soap-ValidationRequest-XROAD-ReportType-2
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Detailed report is requested
+     *
+     * Expected Result: Simple report is returned
+     *
+     * File: xroad-simple.asice
+     */
+    @Test
+    public void soapXROADValidationRequestDetailedReportType() {
+        setTestFilesDirectory("xroad/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
+        ValidatableResponse response = post(validationRequestForDocumentExtendedAll(encodedString, "xroad-simple.asice", REPORT_TYPE_DETAILED, "XROAD", SIGNATURE_POLICY_1))
+                .then();
+        isSimpleReport(response);
+    }
+
+    /**
+     * TestCaseID: Soap-ValidationRequest-XROAD-ReportType-3
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     *
+     * Title: Diagnostic report is requested
+     *
+     * Expected Result: Simple report is returned
+     *
+     * File: xroad-simple.asice
+     */
+    @Test
+    public void soapXROADValidationRequestDiagnosticReportType() {
+        setTestFilesDirectory("xroad/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
+        ValidatableResponse response = post(validationRequestForDocumentExtendedAll(encodedString, "xroad-simple.asice", REPORT_TYPE_DIAGNOSTIC, "XROAD", SIGNATURE_POLICY_1))
                 .then();
         isSimpleReport(response);
     }

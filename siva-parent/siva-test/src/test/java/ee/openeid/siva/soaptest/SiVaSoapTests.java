@@ -37,12 +37,11 @@ import javax.xml.bind.Unmarshaller;
 import java.util.Collections;
 import java.util.List;
 
-import static ee.openeid.siva.integrationtest.TestData.SOAP_DETAILED_REPORT_PREFIX;
+import static ee.openeid.siva.integrationtest.TestData.SOAP_DETAILED_DATA_PREFIX;
 import static ee.openeid.siva.integrationtest.TestData.SOAP_DIAGNOSTIC_DATA_PREFIX;
 import static ee.openeid.siva.integrationtest.TestData.SOAP_VALIDATION_CONCLUSION_PREFIX;
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.Matchers.emptyIterable;
+import static org.hamcrest.Matchers.*;
 
 public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
 
@@ -116,6 +115,24 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
                 "</soapenv:Envelope>";
     }
 
+    protected static String createXMLValidationRequestWithAll(String base64Document, String filename, String reportType, String documentType, String signaturePolicy) {
+
+        return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
+                "   <soapenv:Header/>\n" +
+                "   <soapenv:Body>\n" +
+                "      <soap:ValidateDocument>\n" +
+                "         <soap:ValidationRequest>\n" +
+                "            <Document>" + base64Document + "</Document>\n" +
+                "            <Filename>" + filename + "</Filename>\n" +
+                "            <ReportType>" + reportType + "</ReportType>\n" +
+                "            <DocumentType>" + documentType + "</DocumentType>\n" +
+                "            <SignaturePolicy>" + signaturePolicy + "</SignaturePolicy>\n" +
+                "         </soap:ValidationRequest>\n" +
+                "      </soap:ValidateDocument>\n" +
+                "   </soapenv:Body>\n" +
+                "</soapenv:Envelope>";
+    }
+
     protected static String createXMLValidationRequestWithoutDocumentType(String base64Document, String filename, String signaturePolicy) {
 
         return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
@@ -153,6 +170,15 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
         return createXMLValidationRequestExtended(
                 document,
                 filename,
+                documentType,
+                signaturePolicy);
+    }
+
+    protected String validationRequestForDocumentExtendedAll(String document, String filename, String reportType, String documentType, String signaturePolicy) {
+        return createXMLValidationRequestWithAll(
+                document,
+                filename,
+                reportType,
                 documentType,
                 signaturePolicy);
     }
@@ -330,20 +356,20 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
     }
 
     protected static void isSimpleReport(ValidatableResponse response) {
-        response.body(SOAP_VALIDATION_CONCLUSION_PREFIX, anything())
-                .body(SOAP_DETAILED_REPORT_PREFIX, emptyIterable())
+        response.body(SOAP_VALIDATION_CONCLUSION_PREFIX, notNullValue())
+                .body(SOAP_DETAILED_DATA_PREFIX, emptyIterable())
                 .body(SOAP_DIAGNOSTIC_DATA_PREFIX, emptyIterable());
     }
 
     protected static void isDetailedReport(ValidatableResponse response) {
-        response.body(SOAP_VALIDATION_CONCLUSION_PREFIX, anything())
-                .body(SOAP_DETAILED_REPORT_PREFIX, anything())
+        response.body(SOAP_VALIDATION_CONCLUSION_PREFIX, notNullValue())
+                .body(SOAP_DETAILED_DATA_PREFIX, notNullValue())
                 .body(SOAP_DIAGNOSTIC_DATA_PREFIX, emptyIterable());
     }
 
     protected static void isDiagnosticReport(ValidatableResponse response) {
-        response.body(SOAP_VALIDATION_CONCLUSION_PREFIX, anything())
-                .body(SOAP_DETAILED_REPORT_PREFIX, emptyIterable())
-                .body(SOAP_DIAGNOSTIC_DATA_PREFIX, anything());
+        response.body(SOAP_VALIDATION_CONCLUSION_PREFIX, notNullValue())
+                .body(SOAP_DETAILED_DATA_PREFIX, emptyIterable())
+                .body(SOAP_DIAGNOSTIC_DATA_PREFIX, notNullValue());
     }
 }

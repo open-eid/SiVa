@@ -645,6 +645,39 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
+    /**
+     * TestCaseID: Asice-ValidationFail-24
+     * <p>
+     * TestType: Automated
+     * <p>
+     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     * <p>
+     * Title: BDoc with invalid signature, no signing certificate found
+     * <p>
+     * Expected Result: The document should fail the validation
+     * <p>
+     * File: TM-invalid-sig-no-sign-cert.asice
+     */
+    @Test
+    public void asiceInvalidSignatureNoSigningCertificateFound() {
+        setTestFilesDirectory("bdoc/test/timemark/");
+        String fileName = "TM-invalid-sig-no-sign-cert.asice";
+        post(validationRequestFor(fileName))
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].signedBy", Matchers.is("?"))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_T))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].claimedSigningTime", Matchers.is("2013-10-11T11:47:40Z"))
+                .body("signatures[0].errors.content", Matchers.hasItem(LTV_PROCESS_NOT_ACCEPTABLE))
+                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validatedDocument.filename", Matchers.is(fileName))
+                .body("validatedDocument.fileHash", Matchers.is("Eta2H3+TED9BOxatqnvGnMXWz8YfZFQON/KDe5PZ93k="))
+                .body("validatedDocument.hashAlgo", Matchers.is(MOCK_XADES_DATAFILE_HASH_ALGO));
+    }
+
     @Override
     protected String getTestFilesDirectory() {
         return testFilesDirectory;

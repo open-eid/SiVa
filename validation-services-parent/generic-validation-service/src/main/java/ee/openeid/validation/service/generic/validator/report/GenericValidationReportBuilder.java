@@ -127,6 +127,15 @@ public class GenericValidationReportBuilder {
     private SubjectDistinguishedName parseSubjectDistinguishedName(String signatureId) {
         String signingCertificateId = dssReports.getDiagnosticData().getSignatureById(signatureId).getSigningCertificateId();
         CertificateWrapper signingCertificate = dssReports.getDiagnosticData().getUsedCertificateById(signingCertificateId);
+
+        // Due to invalid signature
+        if (signingCertificate == null) {
+            return SubjectDistinguishedName.builder()
+                   .serialNumber("")
+                   .commonName("")
+                   .build();
+        }
+
         return SubjectDistinguishedName.builder()
                .serialNumber(SubjectDNParser.parse(signingCertificate.getCertificateDN(), SubjectDNParser.RDN.SERIALNUMBER))
                .commonName(signingCertificate.getCommonName())

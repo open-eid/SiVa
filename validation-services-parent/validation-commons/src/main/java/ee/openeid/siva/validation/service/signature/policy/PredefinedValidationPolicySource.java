@@ -27,7 +27,7 @@ public class PredefinedValidationPolicySource {
     public static final ValidationPolicy ADES_POLICY = createValidationPolicyPolV3();
 
     private static final String POL_V3_NAME = "POLv3";
-    private static final String POL_V3_URL = "http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv3";
+    private static final String POL_V3_URL = "http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv3";
     private static final String POL_V3_DESCRIPTION = "Policy for validating Electronic Signatures and Electronic Seals regardless " +
             "of the legal type of the signature or seal (according to Regulation (EU) No 910/2014, aka eIDAS), i.e. the fact that " +
             "the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified" +
@@ -37,7 +37,7 @@ public class PredefinedValidationPolicySource {
             "and referred ETSI standards.";
 
     private static final String POL_V4_NAME = "POLv4";
-    private static final String POL_V4_URL = "http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv4";
+    private static final String POL_V4_URL = "http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4";
     private static final String POL_V4_DESCRIPTION = "Policy according most common requirements of Estonian Public Administration, " +
             "to validate Qualified Electronic Signatures and Electronic Seals with Qualified Certificates (according to Regulation " +
             "(EU) No 910/2014, aka eIDAS). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and" +

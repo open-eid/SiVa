@@ -43,7 +43,7 @@ Policy for validating Electronic Signatures and Electronic Seals regardless of t
 ### URL
 
 ```
-http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv3
+http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv3
 ```
 
 ### POLv3 validation constraints
@@ -66,7 +66,7 @@ Policy for validating Qualified Electronic Signatures and Qualified Electronic S
 ### URL
 
 ```
-http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv4
+http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
 ```
 
 ### POLv4 validation constraints

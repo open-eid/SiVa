@@ -46,7 +46,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
      *
      * Title: Asice with single valid signature
      *
@@ -64,7 +64,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
      *
      * Title: Asice TM with multiple valid signatures
      *
@@ -82,7 +82,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
      *
      * Title: Asice One LT signature with certificates from different countries
      *
@@ -106,7 +106,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
      *
      * Title: Asice Baseline-LT file
      *
@@ -131,7 +131,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
      *
      * Title: Asice Baseline-LTA file
      *
@@ -156,7 +156,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
      *
      * Title: Asice file signed with Mobile-ID, ECC-SHA256 signature with prime256v1 key
      *
@@ -180,7 +180,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
      *
      * Title: Asice file with 	ESTEID-SK 2015 certificate chain
      *
@@ -205,7 +205,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
      *
      * Title: Asice file with KLASS3-SK 2010 (EECCRCA) certificate chain
      *
@@ -232,7 +232,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
      *
      * Title: *.sce file with TimeStamp
      *
@@ -261,7 +261,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
      *
      * Title: Asice-TS with special characters in data file
      *
@@ -290,7 +290,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
      * <p>
      * Title: Asice unsigned data files in the container
      * <p>
@@ -316,7 +316,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
      * <p>
      * Title: New Estonian ECC signature
      * <p>

@@ -98,8 +98,8 @@ public abstract class SiVaIntegrationTestsBase {
             " and Seals which are not compliant with ETSI standards (referred by eIDAS) may produce unknown or invalid validation" +
             " result. Validation process is based on eIDAS Article 32 and referred ETSI standards.";
 
-    protected static final String POLICY_3_URL = "http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv3";
-    protected static final String POLICY_4_URL = "http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv4";
+    protected static final String POLICY_3_URL = "http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv3";
+    protected static final String POLICY_4_URL = "http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4";
 
     @Value("${local.server.port}")
     protected int serverPort;

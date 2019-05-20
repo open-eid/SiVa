@@ -832,7 +832,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
      *
      * Title: Datafile has + in name
      *
@@ -857,7 +857,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
      *
      * Title: Datafile has space in name
      *
@@ -882,7 +882,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
      *
      * Title: Datafile has + in name with full API request
      *
@@ -907,7 +907,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
      *
      * Title: Datafile has space in name with full API request
      *

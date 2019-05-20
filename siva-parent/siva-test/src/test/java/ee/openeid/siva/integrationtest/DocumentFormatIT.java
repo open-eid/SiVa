@@ -53,7 +53,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement:  http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     * Requirement:  http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
      *
      * Title: Validation of pdf document acceptance
      *
@@ -73,7 +73,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement:  http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     * Requirement:  http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
      *
      * Title: Validation of bdoc document acceptance
      *
@@ -93,7 +93,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement:  http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     * Requirement:  http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
      *
      * Title: Validation of asice document acceptance
      *
@@ -114,7 +114,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement:  http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     * Requirement:  http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
      *
      * Title: Validation of asics document acceptance
      *
@@ -135,7 +135,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement:  http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     * Requirement:  http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
      *
      * Title: Validation of xades acceptance
      *
@@ -155,7 +155,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement:  http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4
+     * Requirement:  http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
      *
      * Title: Validation of cades acceptance
      *

@@ -14,7 +14,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationFail-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc with single invalid signature
   * Expected Result: The document should fail the validation
   * File: InvalidLiveSignature.asice
@@ -23,7 +23,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationFail-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice with multiple invalid signatures
   * Expected Result: The document should fail the validation
   * File: InvalidMultipleSignatures.bdoc
@@ -32,7 +32,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationFail-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice with multiple signatures both valid and invalid
   * Expected Result: The document should fail the validation
   * File: InvalidAndValidSignatures.asice
@@ -41,7 +41,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationFail-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice with no signatures
   * Expected Result: The document should fail the validation
   * File: AsiceContainerNoSignature.asice
@@ -50,7 +50,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationFail-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Wrong signature timestamp
   * Expected Result: The document should fail the validation
   * File: TS-02_23634_TS_wrong_SignatureValue.asice
@@ -59,7 +59,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationFail-6**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice No non-repudiation key usage value in the certificate, verification of AdES signature level
   * Expected Result: The document should fail the validation
   * File: EE_SER-AEX-B-LT-I-43.asice
@@ -68,7 +68,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationFail-7**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice signers certificate does not have non-repudiation value in the certificates key usage field and it does not contain the QC and SSCD compliance information.
   * Expected Result: The document should fail the validation
   * File: EE_SER-AEX-B-LT-I-26.asice
@@ -77,7 +77,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationFail-8**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: OCSP certificate is not trusted
   * Expected Result: The document should fail the validation
   * File: TM-01_bdoc21-unknown-resp.bdoc
@@ -86,7 +86,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationFail-9**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice TSA certificate is not trusted
   * Expected Result: The document should fail the validation
   * File: TS-05_23634_TS_unknown_TSA.asice
@@ -95,7 +95,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationFail-10**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice OCSP response status is revoked
   * Expected Result: The document should fail the validation
   * File: EE_SER-AEX-B-LT-R-25.asice
@@ -104,7 +104,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationFail-11**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice difference between OCSP and time-stamp issuing times is more than 24 hours
   * Expected Result: The document should fail the validation
   * File: EE_SER-AEX-B-LT-V-20.asice
@@ -113,7 +113,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationFail-12**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice unsigned data files in the container
   * Expected Result: The document should pass the validation with warning
   * File: EE_SER-AEX-B-LT-V-34.asice
@@ -122,7 +122,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationFail-13**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice SignatureValue does not correspond to the SignedInfo block
   * Expected Result: The document should fail the validation
   * File: REF-19_bdoc21-no-sig-asn1-pref.bdoc
@@ -131,7 +131,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationFail-14**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice Baseline-BES file
   * Expected Result: The document should fail the validation
   * File: signWithIdCard_d4j_1.0.4_BES.asice
@@ -140,7 +140,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationFail-15**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice Baseline-EPES file
   * Expected Result: The document should fail the validation
   * File: TM-04_kehtivuskinnituset.4.asice
@@ -149,7 +149,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationFail-16**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice signers certificate is not trusted
   * Expected Result: The document should fail the validation
   * File: SS-4_teadmataCA.4.asice
@@ -158,7 +158,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationFail-17**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice OCSP response status is revoked
   * Expected Result: The document should fail the validation
   * File: TM-15_revoked.4.asice
@@ -167,7 +167,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationFail-18**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice OCSP response status is unknown
   * Expected Result: The document should fail the validation
   * File: TM-16_unknown.4.asice
@@ -176,7 +176,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationFail-19**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice signed data file has been removed from the container
   * Expected Result: The document should fail the validation
   * File: KS-21_fileeemaldatud.4.asice
@@ -185,7 +185,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationFail-20**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice no files in container
   * Expected Result: The document should fail the validation
   * File: KS-02_tyhi.bdoc
@@ -194,7 +194,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationFail-21**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice signed data file(s) don't match the hash values in reference elements
   * Expected Result: The document should fail the validation
   * File: REF-14_filesisumuudetud.4.bdoc
@@ -203,7 +203,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationFail-22**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice Baseline-T signature
   * Expected Result: The document should fail the validation
   * File: TS-06_23634_TS_missing_OCSP.asice
@@ -212,7 +212,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationFail-23**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice certificate's validity time is not in the period of OCSP producedAt time
   * Expected Result: The document should fail the validation
   * File:
@@ -227,7 +227,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationPass-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Asice with single valid signature
   * Expected Result: The document should pass the validation
   * File: ValidLiveSignature.asice
@@ -236,7 +236,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationPass-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Asice TM with multiple valid signatures
   * Expected Result: The document should pass the validation
   * File: BDOC-TS.asice
@@ -245,7 +245,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationPass-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Asice One LT signature with certificates from different countries
   * Expected Result: The document should pass the validation
   * File: EE_SER-AEX-B-LT-V-30.asice
@@ -254,7 +254,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationPass-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Asice Baseline-LT file
   * Expected Result: The document should pass the validation
   * File: EE_SER-AEX-B-LT-V-49.asice
@@ -263,7 +263,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationPass-6**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Asice Baseline-LTA file
   * Expected Result: The document should pass the validation
   * File: EE_SER-AEX-B-LTA-V-24.asice
@@ -272,7 +272,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationPass-7**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Asice file signed with Mobile-ID, ECC-SHA256 signature with prime256v1 key
   * Expected Result: The document should pass the validation
   * File: EE_SER-AEX-B-LT-V-2.asice
@@ -281,7 +281,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationPass-8**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Asice file with 	ESTEID-SK 2015 certificate chain
   * Expected Result: The document should pass the validation
   * File: IB-4270_TS_ESTEID-SK 2015  SK OCSP RESPONDER 2011.asice
@@ -290,7 +290,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationPass-9**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Asice file with KLASS3-SK 2010 (EECCRCA) certificate chain
   * Expected Result: The document should pass the validation
   * File: EE_SER-AEX-B-LT-V-28.asice
@@ -299,7 +299,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationPass-10**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: *.sce file with TimeStamp
   * Expected Result: The document should pass the validation
   * File: ASICE_TS_LTA_content_as_sce.sce
@@ -308,7 +308,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationPass-11**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice-TS with special characters in data file
   * Expected Result: The document should pass the validation with correct signature scope
   * File: Nonconventionalcharacters.asice
@@ -317,7 +317,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationPass-12**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice unsigned data files in the container
   * Expected Result: The document should pass the validation with warning
   * File: EE_SER-AEX-B-LT-V-34.asice
@@ -326,7 +326,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asice-ValidationPass-13**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: New Estonian ECC signature
   * Expected Result: The document should pass the validation
   * File: Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice
@@ -491,7 +491,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationFail-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc with single invalid signature
   * Expected Result: The document should fail the validation
   * File: IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc
@@ -500,7 +500,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationFail-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc with multiple invalid signatures
   * Expected Result: The document should fail the validation
   * File: BdocMultipleSignaturesInvalid.bdoc
@@ -509,7 +509,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationFail-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc with multiple signatures both valid and invalid
   * Expected Result: The document should fail the validation
   * File: BdocMultipleSignaturesMixedWithValidAndInvalid.bdoc
@@ -518,7 +518,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationFail-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc with no signatures
   * Expected Result: The document should fail the validation
   * File: BdocContainerNoSignature.bdoc
@@ -527,7 +527,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationFail-7**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Wrong signature timestamp
   * Expected Result: The document should fail the validation in DD4J
   * File: TS-02_23634_TS_wrong_SignatureValue.asice
@@ -536,7 +536,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationFail-8**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice No non-repudiation key usage value in the certificate, verification of AdES signature level
   * Expected Result: The document should fail the validation in DD4J
   * File: EE_SER-AEX-B-LT-I-43.asice
@@ -545,7 +545,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationFail-9**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice signers certificate does not have non-repudiation value in the certificates key usage field and it does not contain the QC and SSCD compliance information.
   * Expected Result: The document should fail the validation
   * File: EE_SER-AEX-B-LT-I-26.asice
@@ -554,7 +554,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationFail-10**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc OCSP certificate is not trusted
   * Expected Result: The document should fail the validation
   * File: TM-01_bdoc21-unknown-resp.bdoc
@@ -563,7 +563,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationFail-11**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice TSA certificate is not trusted
   * Expected Result: The document should fail the validation in DD4J
   * File: TS-05_23634_TS_unknown_TSA.asice
@@ -572,7 +572,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationFail-12**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice OCSP response status is revoked
   * Expected Result: The document should fail the validation in DD4J
   * File: EE_SER-AEX-B-LT-R-25.asice
@@ -581,7 +581,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationFail-13**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice difference between OCSP and time-stamp issuing times is more than 24 hours
   * Expected Result: The document should fail the validation
   * File: EE_SER-AEX-B-LT-V-20.asice
@@ -590,7 +590,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationFail-15**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc different data file mime-type values in signatures.xml and manifest.xml files
   * Expected Result: The document should return warning regarding the mismatch
   * File: 23613_TM_wrong-manifest-mimetype.bdoc
@@ -599,7 +599,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationFail-16**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc SignatureValue does not correspond to the SignedInfo block
   * Expected Result: The document should fail the validation
   * File: REF-19_bdoc21-no-sig-asn1-pref.bdoc
@@ -608,7 +608,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationFail-17**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc Baseline-BES file
   * Expected Result: The document should fail the validation in DD4J
   * File: signWithIdCard_d4j_1.0.4_BES.asice
@@ -617,7 +617,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationFail-18**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc Baseline-EPES file
   * Expected Result: The document should fail the validation
   * File: TM-04_kehtivuskinnituset.4.asice
@@ -626,7 +626,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationFail-19**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc signers certificate is not trusted
   * Expected Result: The document should fail the validation
   * File: SS-4_teadmataCA.4.asice
@@ -635,7 +635,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationFail-20**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc OCSP response status is revoked
   * Expected Result: The document should fail the validation
   * File: TM-15_revoked.4.asice
@@ -644,7 +644,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationFail-21**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc OCSP response status is unknown
   * Expected Result: The document should fail the validation
   * File: TM-16_unknown.4.asice
@@ -653,7 +653,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationFail-22**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc signed data file has been removed from the container
   * Expected Result: The document should fail the validation in DD4J
   * File: KS-21_fileeemaldatud.4.asice
@@ -662,7 +662,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationFail-23**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc no files in container
   * Expected Result: The document should fail the validation
   * File: KS-02_tyhi.bdoc
@@ -671,7 +671,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationFail-24**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc wrong nonce
   * Expected Result: The document should fail the validation
   * File: TM-10_noncevale.4.asice
@@ -680,7 +680,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationFail-25**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc signed data file(s) don't match the hash values in reference elements
   * Expected Result: The document should fail the validation
   * File: REF-14_filesisumuudetud.4.bdoc
@@ -689,7 +689,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationFail-26**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice Baseline-T signature
   * Expected Result: The document should fail the validation in DD4J
   * File: TS-06_23634_TS_missing_OCSP.asice
@@ -698,7 +698,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationFail-27**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc OCSP response is not the one expected
   * Expected Result: The document should fail the validation
   * File: 23608-bdoc21-TM-ocsp-bad-nonce.bdoc
@@ -707,7 +707,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationFail-28**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc certificate's validity time is not in the period of OCSP producedAt time
   * Expected Result: The document should fail the validation
   * File: 23154_test1-old-sig-sigat-OK-prodat-NOK-1.bdoc
@@ -716,7 +716,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationFail-29**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc 	BDOC-1.0 version container
   * Expected Result: The document should fail the validation
   * File: BDOC-1.0.bdoc
@@ -729,7 +729,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationPass-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Bdoc with single valid signature
   * Expected Result: The document should pass the validation
   * File: Valid_ID_sig.bdoc
@@ -738,7 +738,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationPass-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Bdoc TM with multiple valid signatures
   * Expected Result: The document should pass the validation
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -747,7 +747,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationPass-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Bdoc with warning on signature
   * Expected Result: The document should pass the validation but warning should be returned
   * File: bdoc_weak_warning_sha1.bdoc
@@ -758,7 +758,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationPass-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Asice One LT signature with certificates from different countries
   * Expected Result: The document should pass the validation
   * File: EE_SER-AEX-B-LT-V-30.asice
@@ -767,7 +767,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationPass-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Bdoc signed with Mobile-ID, ECC-SHA256 signature with prime256v1 key
   * Expected Result: The document should pass the validation
   * File: 24050_short_ecdsa_correct_file_mimetype.bdoc
@@ -776,7 +776,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationPass-6**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Asice Baseline-LT file
   * Expected Result: The document should pass the validation in DD4J
   * File: EE_SER-AEX-B-LT-V-49.asice
@@ -785,7 +785,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationPass-7**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Asice QES file
   * Expected Result: The document should pass the validation
   * File: ValidLiveSignature.asice
@@ -794,7 +794,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationPass-8**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Asice Baseline-LTA file
   * Expected Result: The document should pass the validation
   * File: EE_SER-AEX-B-LTA-V-24.asice
@@ -803,7 +803,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationPass-9**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Asice file signed with Mobile-ID, ECC-SHA256 signature with prime256v1 key
   * Expected Result: The document should pass the validation
   * File: EE_SER-AEX-B-LT-V-2.asice
@@ -812,7 +812,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationPass-10**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Asice file with 	ESTEID-SK 2015 certificate chain
   * Expected Result: The document should pass the validation
   * File: IB-4270_TS_ESTEID-SK 2015  SK OCSP RESPONDER 2011.asice
@@ -821,7 +821,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationPass-11**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Asice file with KLASS3-SK 2010 (EECCRCA) certificate chain
   * Expected Result: The document should pass the validation
   * File: EE_SER-AEX-B-LT-V-28.asice
@@ -830,7 +830,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationPass-12**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Bdoc with Baseline-LT_TM and QES signature level and ESTEID-SK 2011 certificate chain with valid signature
   * Expected Result: The document should pass the validation
   * File: BDOC2.1.bdoc
@@ -839,7 +839,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationPass-13**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Bdoc TS with multiple valid signatures
   * Expected Result: The document should pass the validation
   * File: Test_id_aa.asice
@@ -848,7 +848,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationPass-14**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Bdoc-TM with special characters in data file
   * Expected Result: The document should pass the validation
   * File: Šužlikud sõid ühe õuna ära.bdoc
@@ -857,7 +857,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationPass-15**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: *.sce file with TimeMark
   * Expected Result: The document should pass the validation
   * File: BDOC2.1_content_as_sce.sce
@@ -866,7 +866,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationPass-16**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: *.sce file with TimeStamp
   * Expected Result: The document should pass the validation
   * File: ASICE_TS_LTA_content_as_sce.sce
@@ -875,7 +875,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationPass-17**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc-TS with special characters in data file
   * Expected Result: The document should pass the validation with correct signature scope
   * File: Nonconventionalcharacters.asice
@@ -884,7 +884,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationPass-18**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice unsigned data files in the container
   * Expected Result: The document should pass the validation with warning
   * File: EE_SER-AEX-B-LT-V-34.asice
@@ -893,7 +893,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationPass-19**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: ECC signature vith BDOC TM
   * Expected Result: The document should pass the validation
   * File: testECCDemo.bdoc
@@ -902,7 +902,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationPass-20**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: ECC signature vith BDOC TS
   * Expected Result: The document should pass the validation
   * File: Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice
@@ -911,7 +911,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationPass-21**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Asice with wrong slash character ('\') in data file mime-type value
   * Expected Result: The document should pass
   * File: EE_SER-AEX-B-LT-V-33.bdoc
@@ -920,7 +920,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationPass-22**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc with invalid mimetype in manifest
   * Expected Result: The document should pass
   * File: 23147_weak-warning-sha1-invalid-mimetype-in-manifest.bdoc
@@ -1022,7 +1022,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationFail-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Ddoc with single invalid signature
   * Expected Result: The document should fail the validation
   * File: AndmefailiAtribuudidMuudetud.ddoc
@@ -1031,7 +1031,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationFail-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Ddoc with multiple invalid signatures
   * Expected Result: The document should fail the validation
   * File: multipleInvalidSignatures.ddoc
@@ -1040,7 +1040,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationFail-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Ddoc with multiple signatures both valid and invalid
   * Expected Result: The document should fail the validation
   * File: multipleValidAndInvalidSignatures.ddoc
@@ -1049,7 +1049,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationFail-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Ddoc with no signatures
   * Expected Result: The document should fail the validation
   * File: DdocContainerNoSignature.bdoc
@@ -1058,7 +1058,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationFail-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Ddoc signature value has been changed (SignatureValue does not correspond to the SignedInfo block)
   * Expected Result: The document should fail the validation
   * File: test-inv-sig-inf.ddoc
@@ -1067,7 +1067,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationFail-6**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Ddoc Data file(s) don't match the hash values in Reference elements
   * Expected Result: The document should fail the validation
   * File: AndmefailiAtribuudidMuudetud.ddoc
@@ -1076,7 +1076,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationFail-7**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Ddoc Baseline-BES file, no OCSP response
   * Expected Result: The document should fail the validation
   * File: ilma_kehtivuskinnituseta.ddoc
@@ -1085,7 +1085,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationFail-8**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Ddoc no non-repudiation key usage value in the certificate
   * Expected Result: The document should fail the validation
   * File: test-non-repu1.ddoc
@@ -1094,7 +1094,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationFail-8**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Ddoc Signer's certificate is not trusted
   * Expected Result: The document should fail the validation
   * File: Belgia_kandeavaldus_LIV.ddoc
@@ -1103,7 +1103,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationFail-9**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Ddoc OCSP certificate is not trusted
   * Expected Result: The document should fail the validation
   * File: Tundmatu_OCSP_responder.ddoc
@@ -1112,7 +1112,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationFail-10**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Ddoc has unsigned data files in the container
   * Expected Result: The document should fail the validation
   * File: lisatud_andmefail.ddoc
@@ -1121,7 +1121,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationFail-11**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Ddoc signed data file has been removed from the container
   * Expected Result: The document should fail the validation
   * File: faileemald1.ddoc
@@ -1130,7 +1130,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationFail-12**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Ddoc wrong nonce
   * Expected Result: The document should fail the validation
   * File: OCSP nonce vale.ddoc
@@ -1157,7 +1157,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationFail-15**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Ddoc no files in container
   * Expected Result: The document should fail the validation
   * File: KS-02_tyhi.ddoc
@@ -1170,7 +1170,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationPass-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Ddoc v1.0 with valid signatures
   * Expected Result: The document should pass the validation
   * File: SK-XML1.0.ddoc
@@ -1181,7 +1181,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationPass-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Ddoc v1.1 with valid signature
   * Expected Result: The document should pass the validation
   * File: DIGIDOC-XML1.1.ddoc
@@ -1190,7 +1190,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationPass-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Ddoc v1.2 with valid signature
   * Expected Result: The document should pass the validation
   * File: DIGIDOC-XML1.2.ddoc
@@ -1199,7 +1199,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationPass-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Ddoc v1.3 with valid signature with ESTEID-SK 2011 certificate chain
   * Expected Result: The document should pass the validation
   * File: DIGIDOC-XML1.3.ddoc
@@ -1208,7 +1208,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationPass-6**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Ddoc v1.3 with valid signature, signed data file name has special characters and ESTEID-SK certificate chain
   * Expected Result: The document should pass the validation
   * File: susisevad1_3.ddoc
@@ -1217,7 +1217,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationPass-7**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Ddoc v1.3 KLASS3-SK certificate chain with valid signature
   * Expected Result: The document should pass the validation
   * File: KLASS3-SK _ KLASS3-SK OCSP RESPONDER uus.ddoc
@@ -1226,7 +1226,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationPass-8**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Ddoc v1.3 KLASS3-SK 2010 certificate chain with valid signature
   * Expected Result: The document should pass the validation
   * File: KLASS3-SK 2010 _ KLASS3-SK 2010 OCSP RESPONDER.ddoc
@@ -1235,7 +1235,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationPass-9**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Ddoc v1.1 ESTEID-SK 2007 certificate chain with valid signature
   * Expected Result: The document should pass the validation
   * File: vaikesed1.1.ddoc
@@ -1244,7 +1244,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationPass-10**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Ddoc v1.1 ESTEID-SK 2007 certificate chain with valid signature
   * Expected Result: The document should pass the validation
   * File: IB-4270_ESTEID-SK 2015  SK OCSP RESPONDER 2011.ddoc
@@ -1253,7 +1253,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationPass-11**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Ddoc v1.1 ESTEID-SK certificate chain with valid signature
   * Expected Result: The document should pass the validation
   * File: EID-SK _ EID-SK OCSP RESPONDER.ddoc
@@ -1262,7 +1262,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationPass-12**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Ddoc v1.1 ESTEID-SK 2007 and OCSP 2010 certificate chain with valid signature
   * Expected Result: The document should pass the validation
   * File: EID-SK 2007 _ EID-SK 2007 OCSP RESPONDER 2010.ddoc
@@ -1271,7 +1271,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationPass-13**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Ddoc v1.3 ESTEID-SK 2007 and OCSP 2007 certificate chain with valid signature
   * Expected Result: The document should pass the validation
   * File: EID-SK 2007 _ EID-SK 2007 OCSP RESPONDER.ddoc
@@ -1280,7 +1280,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationPass-14**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Ddoc v1.3 ESTEID-SK 2011 and OCSP 2011 certificate chain with valid signature
   * Expected Result: The document should pass the validation
   * File: EID-SK 2011 _ SK OCSP RESPONDER 2011.ddoc
@@ -1289,7 +1289,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationPass-15**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Ddoc with warning should pass
   * Expected Result: Document passes the validation
   * File: 18912.ddoc
@@ -1298,7 +1298,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: DdocHashcode-ValidationPass-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Validation of DDOC Hashcode v1.0
   * Expected Result: Document passes the validation
   * File: SK-XML1.0_hashcode.ddoc
@@ -1309,7 +1309,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: DdocHashcode-ValidationPass-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Validation of DDOC Hashcode v1.1
   * Expected Result: Document passes the validation
   * File: DIGIDOC-XML1.1_hashcode.ddoc
@@ -1320,7 +1320,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: DdocHashcode-ValidationPass-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Validation of DDOC Hashcode v1.2
   * Expected Result: Document passes the validation
   * File: DIGIDOC-XML1.2_hashcode.ddoc
@@ -1331,7 +1331,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: DdocHashcode-ValidationPass-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Validation of DDOC Hashcode v1.3
   * Expected Result: Document passes the validation
   * File: DIGIDOC-XML1.3_hashcode.ddoc
@@ -1346,7 +1346,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: DocumentFormat-1**
 
   * TestType: Automated
-  * Requirement: [ http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4]( http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [ http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4]( http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Validation of pdf document acceptance
   * Expected Result: Pdf is accepted and correct signature validation is given
   * File: hellopades-pades-lt-sha256-sign.pdf
@@ -1355,7 +1355,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: DocumentFormat-2**
 
   * TestType: Automated
-  * Requirement: [ http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4]( http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [ http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4]( http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Validation of bdoc document acceptance
   * Expected Result: Bdoc is accepted and correct signature validation is given
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -1364,7 +1364,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: DocumentFormat-3**
 
   * TestType: Automated
-  * Requirement: [ http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4]( http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [ http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4]( http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Validation of asice document acceptance
   * Expected Result: asice is accepted and correct signature validation is given
   * File: Vbdoc21-TS.asice
@@ -1373,7 +1373,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: DocumentFormat-4**
 
   * TestType: Automated
-  * Requirement: [ http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4]( http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [ http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4]( http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Validation of asics document acceptance
   * Expected Result: asics is accepted and correct signature validation is given
   * File: ValidDDOCinsideAsics.asics
@@ -1382,7 +1382,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: DocumentFormat-5**
 
   * TestType: Automated
-  * Requirement: [ http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4]( http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [ http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4]( http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Validation of xades acceptance
   * Expected Result: xades is accepted and correct signature validation is given
   * File: signatures0.xml
@@ -1391,7 +1391,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: DocumentFormat-6**
 
   * TestType: Automated
-  * Requirement: [ http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4]( http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [ http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4]( http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Validation of cades acceptance
   * Expected Result: cades is accepted and correct signature validation is given
   * File:
@@ -1406,7 +1406,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Document-Validation-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title:Bdoc with two signatures and one unsigned document.
   * Expected Result: The document should fail the validation and warnings should be displayed.
   * File:3f_2s_1f_unsigned.bdoc
@@ -1415,7 +1415,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Document-Validation-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc with two signatures and one document signed by only one signature.
   * Expected Result: The document should fail the validation and warnings should be displayed.
   * File:3f_2s_1partly_signed.bdoc
@@ -1424,7 +1424,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Document-Validation-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc with two signatures and two documents signed by only one signature.
   * Expected Result: The document should fail the validation and warnings should be displayed.
   * File:3f_2s_2partly_signed.bdoc
@@ -1433,7 +1433,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Document-Validation-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc with two signatures, one unsigned and two partly signed documents.
   * Expected Result: The document should fail the validation and warnings should be displayed.
   * File:4f_2s_all_combinations.bdoc
@@ -1442,7 +1442,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Document-Validation-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc with three unsigned documents.
   * Expected Result: The document should pass the validation and warnings should be displayed.
   * File:6f_2s_3unsigned.bdoc
@@ -1451,7 +1451,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Document-Validation-6**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc with deleted document, named in manifest.
   * Expected Result: The document should fail the validation and warning should be displayed.
   * File:2f_2signed_1f_deleted.bdoc
@@ -1460,7 +1460,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Document-Validation-7**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc with deleted document, also removed from manifest.
   * Expected Result: The document should fail the validation without warning.
   * File:2f_2signed_1f_totally_removed.bdoc
@@ -1469,7 +1469,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Document-Validation-8**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc with one unsigned document, named in manifest.
   * Expected Result: The document should fail the validation and warnings should be displayed.
   * File:3f_2signed_1unsigned_all_in_manifest.bdoc
@@ -1478,7 +1478,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Document-Validation-9**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc with one unsigned document, NOT named in manifest.
   * Expected Result: The document should fail the validation and warnings should be displayed.
   * File:3f_2signed_1unsigned_2in_manifest.bdoc
@@ -1487,7 +1487,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Document-Validation-10**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc with signed documents.
   * Expected Result: The document should pass the validation without warning.
   * File:2f_all_signed.bdoc
@@ -1820,7 +1820,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-BaselineProfile-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: The PDF has PAdES-B profile signature polv3
   * Expected Result: Document validation should fail as the profile is not supported with any policy
   * File: hellopades-pades-b-sha256-auth.pdf
@@ -1829,7 +1829,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-BaselineProfile-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: The PDF has PAdES-T profile signature polv3
   * Expected Result: Document validation should fail with any policy
   * File: pades-baseline-t-live-aj.pdf
@@ -1838,7 +1838,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-BaselineProfile-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: The PDF has PAdES-LT profile signature polv3
   * Expected Result: Document validation should pass with any policy
   * File: hellopades-pades-lt-sha256-sign.pdf
@@ -1847,7 +1847,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-BaselineProfile-6**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: The PDF has PAdES-LT profile signature polv4
   * Expected Result: Document validation should pass with any policy
   * File: hellopades-pades-lt-sha256-sign.pdf
@@ -1856,7 +1856,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-BaselineProfile-7**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: The PDF has PAdES-LTA profile signature polv3
   * Expected Result: Document validation should pass with any policy
   * File: pades-baseline-lta-live-aj.pdf
@@ -1865,7 +1865,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-BaselineProfile-8**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: The PDF has PAdES-LTA profile signature polv4
   * Expected Result: Document validation should pass with any policy
   * File: pades-baseline-lta-live-aj.pdf
@@ -1874,7 +1874,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-BaselineProfile-9**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: The PDF has PAdES-LT and B profile signature
   * Expected Result: Document validation should fail
   * File: hellopades-lt-b.pdf
@@ -1883,7 +1883,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-BaselineProfile-10**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: PDF document message digest attribute value does not match calculate value
   * Expected Result: Document validation should fail
   * File: hellopades-lt1-lt2-wrongDigestValue.pdf
@@ -1892,7 +1892,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-BaselineProfile-11**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: PDF file with a serial signature
   * Expected Result: Document signed with multiple signers with serial signatures should pass
   * File: hellopades-lt1-lt2-Serial.pdf
@@ -1905,7 +1905,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-SigCryptoAlg-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: SHA512 algorithms (PAdES Baseline LT)
   * Expected Result: Document signed with SHA512 algorithm should pass
   * File: hellopades-lt-sha512.pdf
@@ -1914,7 +1914,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-SigCryptoAlg-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: SHA1 algorithms (PAdES Baseline LT)
   * Expected Result: Document signed with SHA1 algorithm should pass
   * File: hellopades-lt-sha1.pdf
@@ -1923,7 +1923,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-SigCryptoAlg-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: ECDSA224 algorithms (PAdES Baseline LT)
   * Expected Result: Document signed with ECDSA224 algorithm should pass
   * File: hellopades-lt-sha256-ec224.pdf
@@ -1932,7 +1932,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-SigCryptoAlg-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: ECDSA256 algorithms (PAdES Baseline LT)
   * Expected Result: Document signed with ECDSA256 algorithm should pass
   * File: hellopades-lt-sha256-ec256.pdf
@@ -1941,7 +1941,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-SigCryptoAlg-6**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: RSA1024 algorithms (PAdES Baseline LT)
   * Expected Result: Document signed with RSA1024 algorithm should pass
   * File: hellopades-lt-sha256-rsa1024.pdf
@@ -1950,7 +1950,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-SigCryptoAlg-7**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: RSA1023 algorithms (PAdES Baseline LT)
   * Expected Result: Document signed with RSA1023 algorithm should fail
   * File: hellopades-lt-sha256-rsa1023.pdf
@@ -1959,7 +1959,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-SigCryptoAlg-8**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: RSA2047 algorithms (PAdES Baseline LT)
   * Expected Result: Document signed with RSA2047 algorithm should pass
   * File: hellopades-lt-sha256-rsa2047.pdf
@@ -1968,7 +1968,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-SigCryptoAlg-9**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: RSA2048 algorithms (PAdES Baseline LT)
   * Expected Result: Document signed with RSA2048 algorithm should pass
   * File: PdfValidSingleSignature
@@ -1981,7 +1981,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-ValidationFail-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: The PDF-file has been signed with expired certificate (PAdES Baseline T)
   * Expected Result: Document signed with certificate that is expired should fail.
   * File: hellopades-lt-rsa1024-sha1-expired.pdf
@@ -1990,7 +1990,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-ValidationFail-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: The PDF-file has been signed with revoked certificate (PAdES Baseline LT)
   * Expected Result: Document signed with certificate that is revoked should fail.
   * File: pades_lt_revoked.pdf
@@ -1999,7 +1999,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-ValidationFail-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: The PDF-file has been signed with certificate which has no non repudiation key usage attribute (PAdES Baseline LT)
   * Expected Result: The PDF-file validation should fail with error.
   * File: hellopades-pades-lt-sha256-auth.pdf
@@ -2008,7 +2008,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-ValidationFail-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: hellopadess been signed with an expired certificate, where signing time is within the original validity
   * Expected Result: Document signed with expired certificate should fail
   * File: hellopades-lt-sha256-rsa2048-expired.pdf
@@ -2019,7 +2019,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-ValidationFail-6**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: hellopadess been signed with an expired certificate, where signing time is within the original validity
   * Expected Result: Document signed with expired certificate should fail
   * File: hellopades-lt-sha256-rsa1024-expired2.pdf
@@ -2030,7 +2030,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-ValidationFail-7**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: OCSP is taken more than 24h after TS
   * Expected Result: Document signed with expired certificate should fail
   * File: hellopades-lt-sha256-rsa1024-expired2.pdf
@@ -2039,7 +2039,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-ValidationFail-8**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: CRL is out of thisUpdate and nextUpdate range
   * Expected Result: Validation should fail
   * File: pades-lt-CRL-taken-days-later.pdf
@@ -2052,7 +2052,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-ValidationPass-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: The PDF-file has been signed with certificate that is expired after signing (PAdES Baseline LT)
   * Expected Result: Document signed with certificate that expired after signing should pass.
   * File: hellopades-lt-sha256-rsa1024-not-expired.pdf
@@ -2061,7 +2061,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-ValidationPass-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: The PDF-file has been signed with certificate that will expire in 7 days after signing (PAdES Baseline LT)
   * Expected Result: Document signed with certificate that expired after signing should pass.
   * File: hellopades-lt-sha256-rsa2048-7d.pdf
@@ -2070,7 +2070,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-ValidationPass-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Pdf with single valid signature
   * Expected Result: Document should pass.
   * File: PdfValidSingleSignature.pdf
@@ -2079,7 +2079,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-ValidationPass-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: The PDF-file has OCSP more than 15 minutes after TS but earlier than 24h
   * Expected Result: Warning should be returned but validation should pass
   * File: hellopades-lt-sha256-ocsp-15min1s.pdf
@@ -2088,7 +2088,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-ValidationPass-6**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: The PDF-file has OCSP almost 24h before TS
   * Expected Result: Warning should be returned but validation should pass
   * File: hellopades-lt-sha256-rsa2048-ocsp-before-ts.pdf
@@ -2522,7 +2522,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Xades-Hashcode-Validation-Fail-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Data file hash algorithm do not match signature hash algorithm
   * Expected Result: Validation fails
   * File: Valid_XAdES_LT_TM.xml
@@ -2562,7 +2562,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Xades-Hashcode-Validation-Pass-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: XAdES extracted from ASICE
   * Expected Result: The document should pass the validation
   * File: Valid_XAdES_LT_TS.xml
@@ -2571,7 +2571,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Xades-Hashcode-Validation-Pass-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: XAdES extracted from BDOC
   * Expected Result: The document should pass the validation
   * File: Valid_XAdES_LT_TM.xml
@@ -2580,7 +2580,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Xades-Hashcode-Validation-Pass-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: XAdES extracted from BDOC
   * Expected Result: The document should pass the validation
   * File: Valid_XADES_LT_TS_multiple_datafiles.xml
@@ -2589,7 +2589,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Xades-Hashcode-Validation-Pass-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Datafile has + in name
   * Expected Result: The document should pass the validation
   * File: test+document.xml
@@ -2598,7 +2598,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Xades-Hashcode-Validation-Pass-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Datafile has space in name
   * Expected Result: The document should pass the validation
   * File: spacesInDatafile.xml
@@ -2607,7 +2607,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Xades-Hashcode-Validation-Algorithms-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Datafile digest in SHA1
   * Expected Result: The document should pass the validation
   * File: sha224_TS.xml
@@ -2616,7 +2616,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Xades-Hashcode-Validation-Algorithms-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Datafile digest in SHA224
   * Expected Result: The document should pass the validation
   * File: sha224_TS.xml
@@ -2625,7 +2625,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Xades-Hashcode-Validation-Algorithms-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Datafile digest in SHA256
   * Expected Result: The document should pass the validation
   * File: Valid_XAdES_LT_TS.xml
@@ -2634,7 +2634,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Xades-Hashcode-Validation-Algorithms-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Datafile digest in SHA384
   * Expected Result: The document should pass the validation
   * File: sha384_TS.xml
@@ -2643,7 +2643,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Xades-Hashcode-Validation-Algorithms-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Datafile digest in SHA512
   * Expected Result: The document should pass the validation
   * File: sha512_TS.xml
@@ -2656,7 +2656,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Xroad-ValidationFail-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Simple xroad document with container fault
   * Expected Result: Document should fail validation
   * File: invalid-digest.asice
@@ -2669,7 +2669,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Xroad-ValidationPass-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Simple xroad document
   * Expected Result: Document should pass
   * File: xroad-simple.asice
@@ -2678,7 +2678,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Xroad-ValidationPass-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Batchsignature xroad document
   * Expected Result: Document should pass
   * File: xroad-batchsignature.asice
@@ -2687,7 +2687,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Xroad-ValidationPass-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#common-validation-constraints-polv3-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Attachment xroad document
   * Expected Result: Document should pass
   * File: xroad-attachment.asice
@@ -4718,7 +4718,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Xades-Hashcode-Validation-Special-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Datafile has + in name
   * Expected Result: The document should pass the validation
   * File: test+document.xml
@@ -4727,7 +4727,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Xades-Hashcode-Validation-Special-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Datafile has space in name
   * Expected Result: The document should pass the validation
   * File: spacesInDatafile.xml
@@ -4736,7 +4736,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Xades-Hashcode-Validation-Special-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Datafile has + in name with full API request
   * Expected Result: The document should pass the validation
   * File: test+document.xml
@@ -4745,7 +4745,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Xades-Hashcode-Validation-Special-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-2-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Datafile has space in name with full API request
   * Expected Result: The document should pass the validation
   * File: spacesInDatafile.xml

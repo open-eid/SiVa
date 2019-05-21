@@ -17,6 +17,8 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+import ee.openeid.siva.validation.document.report.SimpleReport;
+import io.restassured.response.Response;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -105,12 +107,16 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * Expected Result: The document should fail the validation
      *
-     * File: DdocContainerNoSignature.bdoc
+     * File: DdocContainerNoSignature.ddoc
      */
     @Test
     public void ddocNoSignatures() {
         setTestFilesDirectory("document_format_test_files/");
-        assertAllSignaturesAreInvalid(postForReport("DdocContainerNoSignature.ddoc"));
+        post(validationRequestFor("DdocContainerNoSignature.ddoc", VALID_SIGNATURE_POLICY_4, null))
+                .then()
+                .body("requestErrors", Matchers.hasSize(1))
+                .body("requestErrors[0].key", Matchers.is("document"))
+                .body("requestErrors[0].message", Matchers.is("Document malformed or not matching documentType"));
     }
 
     /**
@@ -398,6 +404,29 @@ public class DdocValidationFailIT extends SiVaRestTests{
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors", Matchers.hasSize(2));
+    }
+
+    /**
+     * TestCaseID: Ddoc-ValidationFail-16
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
+     *
+     * Title: Ddoc with invalid datafile id
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: 22915-bad-df-id.ddoc
+     */
+    @Test
+    public void ddocBadDatafileId() {
+        setTestFilesDirectory("ddoc/live/timemark/");
+        post(validationRequestFor("22915-bad-df-id.ddoc", VALID_SIGNATURE_POLICY_4, null))
+                .then()
+                .body("requestErrors", Matchers.hasSize(1))
+                .body("requestErrors[0].key", Matchers.is("document"))
+                .body("requestErrors[0].message", Matchers.is("Document malformed or not matching documentType"));
     }
 
     @Override

@@ -594,14 +594,11 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
     @Test
     public void ddocNoSignature() {
         setTestFilesDirectory("document_format_test_files/");
-        post(validationRequestFor("DdocContainerNoSignature.ddoc"))
+        post(validationRequestFor("DdocContainerNoSignature.ddoc", VALID_SIGNATURE_POLICY_4, null))
                 .then()
-                .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
-                .body("validationReport.validationConclusion.signatures", Matchers.isEmptyOrNullString())
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("DdocContainerNoSignature.ddoc"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(0));
+                .body("requestErrors", Matchers.hasSize(1))
+                .body("requestErrors[0].key", Matchers.is("document"))
+                .body("requestErrors[0].message", Matchers.is("Document malformed or not matching documentType"));
     }
 
     /**

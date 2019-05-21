@@ -2,6 +2,7 @@ package ee.openeid.validation.service.timemark.report;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.SignatureScope;
+import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.ValidationWarning;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +24,20 @@ public class DDOCContainerValidationReportBuilder extends TimemarkContainerValid
 
     public DDOCContainerValidationReportBuilder(Container container, ValidationDocument validationDocument, ValidationPolicy validationPolicy, List<DigiDoc4JException> containerErrors, boolean isReportSignatureEnabled) {
         super(container, validationDocument, validationPolicy, containerErrors, isReportSignatureEnabled);
+    }
+
+    @Override
+    List<ValidationWarning> containerValidationWarnings(List<SignatureValidationData> signatureValidationData) {
+        List<ValidationWarning> validationWarnings = super.containerValidationWarnings(signatureValidationData);
+
+        // If validationWarnings contains anything else in addition to DDOC_TIMESTAMP_WARNING, then we can be sure it contains container error(s)
+        // and not signature error(s) and malformed document exception should be thrown.
+        if (validationWarnings.size() > 1) {
+            LOGGER.error("Container has validation error(s): {}", containerErrors);
+            throw new DigiDoc4JException("Container has validation error(s)");
+        }
+
+        return validationWarnings;
     }
 
     @Override

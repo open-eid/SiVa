@@ -117,11 +117,11 @@ public abstract class TimemarkContainerValidationReportBuilder {
         ValidationConclusion validationConclusion = new ValidationConclusion();
         validationConclusion.setPolicy(createReportPolicy(validationPolicy));
         validationConclusion.setValidationTime(getValidationTime());
-
         validationConclusion.setSignatureForm(getSignatureForm());
         validationConclusion.setSignaturesCount(container.getSignatures().size());
-        validationConclusion.setValidationWarnings(containerValidationWarnings());
-        validationConclusion.setSignatures(createSignaturesForReport(container));
+        List<SignatureValidationData> signaturesValidationResult = createSignaturesForReport(container);
+        validationConclusion.setSignatures(signaturesValidationResult);
+        validationConclusion.setValidationWarnings(containerValidationWarnings(signaturesValidationResult));
         validationConclusion.setValidatedDocument(ReportBuilderUtils.createValidatedDocument(isReportSignatureEnabled, validationDocument.getName(), validationDocument.getBytes()));
         validationConclusion.setValidSignaturesCount(
                 validationConclusion.getSignatures()
@@ -132,9 +132,11 @@ public abstract class TimemarkContainerValidationReportBuilder {
         return validationConclusion;
     }
 
-    private List<ValidationWarning> containerValidationWarnings() {
+    List<ValidationWarning> containerValidationWarnings(List<SignatureValidationData> signatureValidationData) {
         List<ValidationWarning> validationWarnings = containerErrors.stream().map(e -> createValidationWarning(e.getMessage())).collect(Collectors.toList());
-        validationWarnings.removeIf(s -> container.getSignatures().stream().anyMatch(sig -> getErrors(sig).stream().anyMatch(err -> err.getContent().equals(s.getContent()))));
+        validationWarnings.removeIf(warning -> signatureValidationData.stream()
+                                                .anyMatch(sig -> sig.getErrors().stream()
+                                                                    .anyMatch(err -> err.getContent().equals(warning.getContent()))));
         addExtraValidationWarnings(validationWarnings);
         return validationWarnings;
     }

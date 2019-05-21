@@ -43,7 +43,7 @@ import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyServic
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.validation.service.generic.GenericValidationService;
 import ee.openeid.validation.service.generic.configuration.GenericSignaturePolicyProperties;
-import ee.openeid.validation.service.timemark.report.TimemarkContainerValidationReportBuilder;
+import ee.openeid.validation.service.timemark.report.DDOCContainerValidationReportBuilder;
 import ee.openeid.validation.service.timestamptoken.TimeStampTokenValidationService;
 import ee.openeid.validation.service.timestamptoken.configuration.TimeStampTokenSignaturePolicyProperties;
 import org.assertj.core.api.Assertions;
@@ -253,7 +253,7 @@ public class ValidationProxyTest {
     public void removeUnnecessaryWarningsFromValidationConclusion() throws Exception {
         ValidationConclusion validationConclusion = new ValidationConclusion();
         ValidationWarning validationWarning = new ValidationWarning();
-        validationWarning.setContent(TimemarkContainerValidationReportBuilder.DDOC_TIMESTAMP_WARNING);
+        validationWarning.setContent(DDOCContainerValidationReportBuilder.DDOC_TIMESTAMP_WARNING);
         validationConclusion.setValidationWarnings(Collections.singletonList(validationWarning));
         validationProxy.removeUnnecessaryWarning(validationConclusion);
         Assert.assertTrue( validationConclusion.getValidationWarnings().isEmpty());

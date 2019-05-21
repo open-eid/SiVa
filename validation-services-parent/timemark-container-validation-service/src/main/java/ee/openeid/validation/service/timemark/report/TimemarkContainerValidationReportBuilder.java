@@ -67,8 +67,6 @@ public abstract class TimemarkContainerValidationReportBuilder {
     protected static final String DDOC_SIGNATURE_FORM_PREFIX = "DIGIDOC_XML_";
     protected static final String DDOC_HASHCODE_SIGNATURE_FORM_SUFFIX = "_hashcode";
     protected static final String HASHCODE_CONTENT_TYPE = "HASHCODE";
-    public static final String DDOC_TIMESTAMP_WARNING = "Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa";
-
 
     Container container;
     private ValidationDocument validationDocument;

@@ -4,10 +4,14 @@ import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.http.RESTProxyService;
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.validation.document.report.Reports;
+import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
+import ee.openeid.siva.validation.document.report.ValidationWarning;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.ValidationService;
-import ee.openeid.validation.service.timemark.report.TimemarkContainerValidationReportBuilder;
+import ee.openeid.validation.service.timemark.report.DDOCContainerValidationReportBuilder;
 import ee.openeid.validation.service.timestamptoken.TimeStampTokenValidationService;
 import eu.europa.esig.dss.InMemoryDocument;
 import org.apache.commons.io.FilenameUtils;
@@ -175,7 +179,7 @@ public class ContainerValidationProxy extends ValidationProxy {
         if (warnings == null || warnings.isEmpty())
             return;
         List<ValidationWarning> newList = new ArrayList<>(warnings);
-        newList.removeIf(s -> TimemarkContainerValidationReportBuilder.DDOC_TIMESTAMP_WARNING.equals(s.getContent()));
+        newList.removeIf(s -> DDOCContainerValidationReportBuilder.DDOC_TIMESTAMP_WARNING.equals(s.getContent()));
         validationConclusion.setValidationWarnings(newList);
     }
 

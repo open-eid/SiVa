@@ -38,7 +38,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The PDF-file is Ades level
      *
@@ -74,7 +74,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The bdoc is Ades level
      *
@@ -108,7 +108,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The bdoc is Ades signature
      *
@@ -140,7 +140,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The asice is Ades signature
      *
@@ -172,7 +172,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The bdoc is Ades seal
      *
@@ -204,7 +204,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The asice is ades seal
      *
@@ -236,7 +236,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The certificate is QC level signature, but do not have SSCD/QSCD compliance
      *
@@ -269,7 +269,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The certificate is QC level signature, but do not have SSCD/QSCD compliance
      *
@@ -300,7 +300,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The certificate is QC level seal, but do not have SSCD/QSCD compliance
      *
@@ -332,7 +332,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The certificate is QC level seal, but do not have SSCD/QSCD compliance
      *
@@ -366,7 +366,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The certificate is QC level, but do not have SSCD/QSCD compliance and type identifier
      *
@@ -399,7 +399,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The certificate is QC level, but do not have SSCD/QSCD compliance and type identifier
      *
@@ -432,7 +432,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The bdoc is QES level signature
      *
@@ -462,7 +462,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The bdoc is QES level signature
      *
@@ -492,7 +492,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The bdoc is QES level seal
      *
@@ -524,7 +524,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The asice is QES level seal
      *
@@ -556,7 +556,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The bdoc is QES level
      *
@@ -587,7 +587,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The asice is QES level
      *
@@ -617,7 +617,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3
      *
      * Title: The PDF-file is Ades level
      *
@@ -652,7 +652,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3
      *
      * Title: The bdoc is Ades level
      *
@@ -686,7 +686,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3
      *
      * Title: The bdoc is ADES level signature
      *
@@ -718,7 +718,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3
      *
      * Title: The asice is Ades level signature
      *
@@ -750,7 +750,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3
      *
      * Title: The bdoc is Ades seal
      *
@@ -782,7 +782,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3
      *
      * Title: The asice is Ades level seal
      *
@@ -814,7 +814,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The certificate is QC level signature, but do not have SSCD/QSCD compliance
      *
@@ -847,7 +847,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The certificate is QC level signature, but do not have SSCD/QSCD compliance
      *
@@ -879,7 +879,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The certificate is QC level seal, but do not have SSCD/QSCD compliance
      *
@@ -914,7 +914,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The certificate is QC level seal, but do not have SSCD/QSCD compliance
      *
@@ -948,7 +948,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The certificate is QC level, but do not have SSCD/QSCD compliance and type identifier
      *
@@ -981,7 +981,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The certificate is QC level, but do not have SSCD/QSCD compliance and type identifier
      *
@@ -1014,7 +1014,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The bdoc is QES level signature
      *
@@ -1044,7 +1044,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The bdoc is QES level signature
      *
@@ -1074,7 +1074,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The bdoc is QES level seal
      *
@@ -1106,7 +1106,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The asice is QES level seal
      *
@@ -1139,7 +1139,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The bdoc is QES level
      *
@@ -1169,7 +1169,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The asice is QES level
      *
@@ -1199,7 +1199,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The PDF-file is missing an OCSP or CRL
      *
@@ -1228,7 +1228,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4
      *
      * Title: The PDF-file with included CRL
      *

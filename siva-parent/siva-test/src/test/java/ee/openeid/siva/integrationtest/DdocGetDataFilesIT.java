@@ -43,7 +43,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/use_cases/#ddoc-data-file-extraction-process
+     * Requirement: http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process
      *
      * Title: Valid DDOC with data file used
      *
@@ -67,7 +67,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/use_cases/#ddoc-data-file-extraction-process
+     * Requirement: http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process
      *
      * Title: Invalid DDOC with data file used
      *
@@ -91,7 +91,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/use_cases/#ddoc-data-file-extraction-process
+     * Requirement: http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process
      *
      * Title:DDOC with xml v1.1 is  used
      *
@@ -116,7 +116,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/use_cases/#ddoc-data-file-extraction-process
+     * Requirement: http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process
      *
      * Title: DDOC with xml v1.2 is  used
      *
@@ -141,7 +141,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/use_cases/#ddoc-data-file-extraction-process
+     * Requirement: http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process
      *
      * Title: DDOC with xml v1.3 is  used
      *
@@ -165,7 +165,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/use_cases/#ddoc-data-file-extraction-process
+     * Requirement: http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process
      *
      * Title: Hashcoded DDOC  is  used
      *
@@ -191,7 +191,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/use_cases/#ddoc-data-file-extraction-process
+     * Requirement: http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process
      *
      * Title: DDOC  with 12 different  files of different types  is  used
      *
@@ -260,7 +260,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/use_cases/#ddoc-data-file-extraction-process
+     * Requirement: http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process
      *
      * Title: BDOC with data file used
      *
@@ -283,7 +283,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/use_cases/#ddoc-data-file-extraction-process
+     * Requirement: http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process
      *
      * Title: PDF file used
      *

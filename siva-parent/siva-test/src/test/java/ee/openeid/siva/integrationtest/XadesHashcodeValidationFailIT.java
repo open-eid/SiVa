@@ -76,7 +76,7 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Hashes do not match
      *
@@ -103,7 +103,7 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Wrong data file name is used
      *
@@ -132,7 +132,7 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Invalid signature in XAdES
      *

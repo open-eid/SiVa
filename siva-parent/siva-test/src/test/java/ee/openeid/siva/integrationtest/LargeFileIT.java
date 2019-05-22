@@ -45,7 +45,7 @@ public class LargeFileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/overview/#main-features-of-siva-validation-service
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
      *
      * Title: 9MB PDF files (PAdES Baseline LT).
      *
@@ -67,7 +67,7 @@ public class LargeFileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/overview/#main-features-of-siva-validation-service
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
      *
      * Title: 9MB ASIC-E file
      *
@@ -90,7 +90,7 @@ public class LargeFileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/overview/#main-features-of-siva-validation-service
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
      *
      * Title: 9MB BDOC-TM
      *
@@ -113,7 +113,7 @@ public class LargeFileIT extends SiVaRestTests{
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/overview/#main-features-of-siva-validation-service
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
      *
      * Title: 9MB DDOC
      *

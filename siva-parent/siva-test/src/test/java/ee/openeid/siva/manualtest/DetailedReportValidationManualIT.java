@@ -64,7 +64,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: ValidationConclusion element
      *
@@ -104,7 +104,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: TL analysis element
      *
@@ -169,7 +169,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: Signatures element
      *
@@ -248,7 +248,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: basicBuildingBlocks element
      *
@@ -317,7 +317,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: BasicBuildingBlocks element
      *
@@ -378,7 +378,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: BasicBuildingBlocks element
      *
@@ -440,7 +440,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: Wrong signature value
      *
@@ -492,7 +492,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: Wrong data file in manifest
      *
@@ -518,7 +518,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: Validate detailed report file hash if ReportSignatureEnabled value true
      *
@@ -541,7 +541,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: Validate detailed report file hash if ReportSignatureEnabled value false
      *

@@ -68,7 +68,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Happy path valid mandatory input test
      *
@@ -89,7 +89,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Happy path valid all input test
      *
@@ -113,7 +113,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Totally empty request body is sent
      *
@@ -136,7 +136,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Input empty values
      *
@@ -164,7 +164,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Request with more parameters than expected is sent
      *
@@ -191,7 +191,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Request has invalid keys (capital letters)
      *
@@ -216,7 +216,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Document parameter is missing
      *
@@ -241,7 +241,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Filename parameter is missing
      *
@@ -267,7 +267,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Happy path valid file encoding format
      *
@@ -289,7 +289,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Happy path valid file encoding format
      *
@@ -312,7 +312,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Request with not base64 string as document
      *
@@ -334,7 +334,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Filename field should be case insensitive
      *
@@ -355,7 +355,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Filename field should ignore spaces
      *
@@ -376,7 +376,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Filename is in allowed length
      *
@@ -400,7 +400,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Filename is over allowed length
      *
@@ -426,7 +426,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: DocumentType parameter is missing
      *
@@ -452,7 +452,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: DocumentType parameter is XROAD
      *
@@ -479,7 +479,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: DocumentType parameter is XROAD
      *
@@ -508,7 +508,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: SignaturePolicy parameter is missing, default is used
      *
@@ -528,7 +528,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: SignaturePolicy is set as POLv3
      *
@@ -548,7 +548,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: SignaturePolicy is set as POLv4
      *
@@ -568,7 +568,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: SignaturePolicy has not allowed value
      *
@@ -590,7 +590,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: ReportType parameter is missing
      *
@@ -616,7 +616,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: ReportType parameter Simple
      *
@@ -638,7 +638,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: ReportType parameter Detailed
      *
@@ -660,7 +660,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: ReportType parameter is invalid
      *
@@ -687,7 +687,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Filename is under allowed length
      *
@@ -718,7 +718,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: SignaturePolicy is under allowed length
      *
@@ -743,7 +743,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      *
      * Expected Result: Error is returned
@@ -767,7 +767,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: ReportType parameter Diagnostic
      *
@@ -789,7 +789,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Mismatch in stated and actual document (bdoc and pdf)
      *
@@ -812,7 +812,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Input random base64 string as bdoc
      *
@@ -835,7 +835,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Acceptance of ASICE as BDOC document type
      *
@@ -857,7 +857,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Input random base64 string as pdf
      *
@@ -879,7 +879,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Mismatch in stated and actual document (ddoc and bdoc)
      *
@@ -902,7 +902,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Input random base64 string as ddoc
      *
@@ -925,7 +925,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Mismatch in stated and actual document (xroad and ddoc)
      *
@@ -948,7 +948,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Input random base64 string as document with xroad document type
      *

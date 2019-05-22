@@ -42,7 +42,7 @@ public class MonitoringIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#service-health-monitoring
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#service-health-monitoring
      *
      * Title: Health monitor response structure
      *

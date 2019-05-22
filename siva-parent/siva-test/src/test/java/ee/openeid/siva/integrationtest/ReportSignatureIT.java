@@ -51,7 +51,7 @@ public class ReportSignatureIT extends SiVaRestTests {
      *
      * TestType: Auto
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: Simple report signature should not be in response
      *
@@ -71,7 +71,7 @@ public class ReportSignatureIT extends SiVaRestTests {
      *
      * TestType: Auto
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: Detailed report signature should be in response
      *
@@ -91,7 +91,7 @@ public class ReportSignatureIT extends SiVaRestTests {
      *
      * TestType: Auto
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: Validate detailed report signature
      *
@@ -135,7 +135,7 @@ public class ReportSignatureIT extends SiVaRestTests {
      *
      * TestType: Auto
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: In simple report reportSignatureEnabled parameter value true
      *
@@ -155,7 +155,7 @@ public class ReportSignatureIT extends SiVaRestTests {
      *
      * TestType: Auto
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: In simple report reportSignatureEnabled parameter value false
      *

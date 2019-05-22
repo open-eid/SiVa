@@ -64,7 +64,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Valid request
      *
@@ -84,7 +84,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Valid request with detailed report
      *
@@ -105,7 +105,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Report type missing
      *
@@ -127,7 +127,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Report type case sensitivity
      *
@@ -149,7 +149,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Report type is invalid
      *
@@ -172,7 +172,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Valid request with report Diagnostic
      *
@@ -193,7 +193,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Signature policy POLv3
      *
@@ -218,7 +218,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Signature policy POLv4
      *
@@ -243,7 +243,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Default policy
      *
@@ -267,7 +267,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Invalid policy asked
      *
@@ -290,7 +290,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Invalid policy format
      *
@@ -313,7 +313,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Too long policy
      *
@@ -336,7 +336,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Signature file missing
      *
@@ -358,7 +358,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Signature file empty
      *
@@ -380,7 +380,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Signature file not Base64
      *
@@ -403,7 +403,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Signature file without signature
      *
@@ -426,7 +426,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Signature file not XML
      *
@@ -449,7 +449,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Request without datafiles
      *
@@ -471,7 +471,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Request with empty data files
      *
@@ -494,7 +494,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Request without datafile filename
      *
@@ -517,7 +517,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Request with empty filename
      *
@@ -540,7 +540,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Request without datafile filename
      *
@@ -563,7 +563,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Request with too long datafile name
      *
@@ -586,7 +586,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Request with invalid hash algorithm
      *
@@ -609,7 +609,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Hash algo small case
      *
@@ -631,7 +631,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Hash algo mismatch
      *
@@ -654,7 +654,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Datafile hash missing
      *
@@ -677,7 +677,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Data file hash empty
      *
@@ -700,7 +700,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Datafile hash not Base64
      *
@@ -722,7 +722,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Multiple data files
      *
@@ -758,7 +758,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Wrong hash
      *
@@ -781,7 +781,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Wrong data file name
      *
@@ -804,7 +804,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Empty request body
      *

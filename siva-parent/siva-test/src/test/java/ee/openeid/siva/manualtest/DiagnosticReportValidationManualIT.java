@@ -58,7 +58,7 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: ValidationConclusion element
      *
@@ -98,7 +98,7 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: Trusted List element
      *
@@ -128,7 +128,7 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: List Of Trusted List element
      *
@@ -158,7 +158,7 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: Signatures element
      *
@@ -228,7 +228,7 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: Used Certificates
      *
@@ -260,7 +260,7 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: Wrong signature value
      *

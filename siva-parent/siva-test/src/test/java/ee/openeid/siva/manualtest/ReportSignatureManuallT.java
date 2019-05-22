@@ -96,7 +96,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: Validate detailed report signature when SignatureLevel XAdES_BASELINE_LTA signed with RSA key.
      *
@@ -141,7 +141,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: Validate detailed report signature when SignatureLevel XAdES_BASELINE_LT signed with RSA key.
      *
@@ -186,7 +186,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: Validate detailed report signature when SignatureLevel XAdES_BASELINE_T signed with RSA key.
      *
@@ -230,7 +230,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: Validate detailed report signature when SignatureLevel XAdES_BASELINE_B signed with RSA key.
      *
@@ -274,7 +274,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: Validate detailed report signature when SignatureLevel XAdES_BASELINE_LTA and signed with ECC key.
      *
@@ -319,7 +319,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: Validate detailed report signature when SignatureLevel XAdES_BASELINE_LT and signed with ECC key.
      *
@@ -364,7 +364,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: Validate detailed report signature when SignatureLevel XAdES_BASELINE_T and signed with ECC key.
      *
@@ -407,7 +407,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: Validate detailed report signature when SignatureLevel XAdES_BASELINE_B and signed with ECC key.
      *
@@ -450,7 +450,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: Validate detailed report signature when configuration parameter OcspUrl empty
      *
@@ -476,7 +476,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: Validate detailed report signature when configuration parameter TspUrl empty
      *
@@ -501,7 +501,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: Validate detailed report signature when configuration parameter Pkcs11 wrong value
      *
@@ -544,7 +544,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: Validate detailed report signature when configuration parameter SignatureLevel empty
      *
@@ -570,7 +570,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
      *
      * Title: Validate detailed report signature when using pks11 to sign
      *

@@ -81,7 +81,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Input correct values for simple report
      *
@@ -101,7 +101,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Input correct values for detailed report
      *
@@ -122,7 +122,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Report type missing
      *
@@ -144,7 +144,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Report type case sensitivity
      *
@@ -166,7 +166,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Report type is invalid
      *
@@ -189,7 +189,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Input correct values for detailed report
      *
@@ -210,7 +210,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Signature policy POLv3
      *
@@ -235,7 +235,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Signature policy POLv4
      *
@@ -260,7 +260,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Signature policy missing
      *
@@ -285,7 +285,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Signature policy is invalid
      *
@@ -308,7 +308,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Incorrect signature policy format
      *
@@ -331,7 +331,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Signature policy is empty
      *
@@ -354,7 +354,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Signature policy too long
      *
@@ -378,7 +378,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Double signature policy
      *
@@ -411,7 +411,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Input missing signature files
      *
@@ -437,7 +437,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Input missing signature file
      *
@@ -461,7 +461,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Input incorrect signature
      *
@@ -483,7 +483,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Input file without signature
      *
@@ -506,7 +506,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Not correct file type
      *
@@ -531,7 +531,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Data files not in request
      *
@@ -552,7 +552,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Empty data files list
      *
@@ -576,7 +576,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Data file filename missing
      *
@@ -601,7 +601,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Data file filename empty
      *
@@ -626,7 +626,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Data file filename too long
      *
@@ -650,7 +650,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Data file invalid hash algorithm
      *
@@ -674,7 +674,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Data file hash algorithm case sensitivity
      *
@@ -696,7 +696,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Data file hash missing
      *
@@ -721,7 +721,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Data file hash empty
      *
@@ -747,7 +747,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Data file hash wrong format
      *
@@ -771,7 +771,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Hash too long
      *
@@ -795,7 +795,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Double fields in datafile object
      *
@@ -836,7 +836,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Excess data files are ignored
      *
@@ -872,7 +872,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Several signatures validated
      *
@@ -900,7 +900,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Several signatures validated with datafile info
      *
@@ -926,7 +926,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
      * Title: Several signatures validated one signature not valid
      *

@@ -17,9 +17,6 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
-import ee.openeid.siva.validation.document.report.SimpleReport;
-import io.restassured.response.Response;
-import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -427,6 +424,80 @@ public class DdocValidationFailIT extends SiVaRestTests{
                 .body("requestErrors", Matchers.hasSize(1))
                 .body("requestErrors[0].key", Matchers.is("document"))
                 .body("requestErrors[0].message", Matchers.is("Document malformed or not matching documentType"));
+    }
+
+    /**
+     * TestCaseID: Ddoc-ValidationFail-17
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
+     *
+     * Title: Validation of DDOC with revoked certificates
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: cert-revoked.ddoc
+     */
+    @Test
+    public void ddocWithRevokedCertificatesShouldFail() {
+        post(validationRequestFor("cert-revoked.ddoc"))
+                .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S0"))
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.hasSize(1))
+                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("70org.digidoc4j.ddoc.DigiDocException; nested exception is: \n" +
+                        "\tERROR: 117 - No certificate for responder: 'byName: C=EE,O=AS Sertifitseerimiskeskus,OU=OCSP,CN=TEST of SK OCSP RESPONDER 2011,E=pki@sk.ee' found in local certificate store!"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("build.xml"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
+                .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2013-05-17T12:15:08Z"))
+                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("cert-revoked.ddoc"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.validationWarnings", Matchers.hasSize(1))
+                .body("validationReport.validationConclusion.validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"));
+    }
+
+    /**
+     * TestCaseID: Ddoc-ValidationFail-18
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
+     *
+     * Title: Validation of DDOC with unknown certificates
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: cert-unknown.ddoc
+     */
+    @Test
+    public void ddocWithUnknownCertificatesShouldFail() {
+        post(validationRequestFor("cert-unknown.ddoc"))
+                .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S0"))
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.hasSize(1))
+                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("70org.digidoc4j.ddoc.DigiDocException; nested exception is: \n" +
+                        "\tERROR: 117 - No certificate for responder: 'byName: C=EE,O=AS Sertifitseerimiskeskus,OU=OCSP,CN=TEST of SK OCSP RESPONDER 2011,E=pki@sk.ee' found in local certificate store!"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("build.xml"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
+                .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2013-05-17T12:20:18Z"))
+                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("cert-unknown.ddoc"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.validationWarnings", Matchers.hasSize(1))
+                .body("validationReport.validationConclusion.validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"));
     }
 
     @Override

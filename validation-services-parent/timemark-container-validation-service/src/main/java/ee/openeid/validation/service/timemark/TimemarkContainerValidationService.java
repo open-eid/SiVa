@@ -61,7 +61,8 @@ public class TimemarkContainerValidationService implements ValidationService {
             xmlEntityAttackValidator.validateAgainstXMLEntityAttacks(validationDocument.getBytes());
         }
         PolicyConfigurationWrapper policyConfiguration = bdocConfigurationService.loadPolicyConfiguration(validationDocument.getSignaturePolicy());
-        policyConfiguration.getConfiguration().loadConfiguration(new ClassPathResource(ddocValidationServiceProperties.getJdigidocConfigurationFile()).getPath(), true);
+        String configurationFilePath = new ClassPathResource(ddocValidationServiceProperties.getJdigidocConfigurationFile(), this.getClass().getClassLoader()).getPath();
+        policyConfiguration.getConfiguration().loadConfiguration(configurationFilePath, true);
         Container container;
         try {
             container = createContainer(validationDocument, policyConfiguration.getConfiguration());

@@ -11,13 +11,12 @@ branches:
   - develop
   - master
 install: true
-script: ./mvnw clean install -q -P\!dependency-check
+script: ./mvnw clean install -P\!dependency-check
 after_success:
 - "./mvnw jacoco:report coveralls:report -q -Dcoveralls.repo.token=$COVERALLS_REPO_TOKEN"
 notifications:
   email:
     recipients:
-    - andres.voll@nortal.com
     - aare.nurm@nortal.com
     - siim.suu@nortal.com
     - jorgen.heinsoo@nortal.com

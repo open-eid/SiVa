@@ -14,7 +14,11 @@ import org.digidoc4j.ddoc.utils.ConfigManager;
 import org.digidoc4j.exceptions.DigiDoc4JException;
 import org.digidoc4j.impl.ddoc.DDocContainer;
 import org.digidoc4j.impl.ddoc.DDocFacade;
+import org.springframework.core.io.ClassPathResource;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,10 +39,23 @@ public class DDOCContainerValidationReportBuilder extends TimemarkContainerValid
         // and not signature error(s) and malformed document exception should be thrown.
         if (validationWarnings.size() > 1) {
             LOGGER.error("Container has validation error(s): {}", containerErrors);
-            ConfigManager instance = ConfigManager.instance();
-            long digidoc_max_datafile_cached = instance.getLongProperty("DIGIDOC_MAX_DATAFILE_CACHED", Long.MAX_VALUE);
-            boolean datafile_hashcode_mode = instance.getBooleanProperty("DATAFILE_HASHCODE_MODE", false);
-            throw new DigiDoc4JException("Container has validation error(s): " + digidoc_max_datafile_cached + " - " + datafile_hashcode_mode);
+
+            String configurationFilePath = new ClassPathResource("/siva-jdigidoc.yaml", this.getClass().getClassLoader()).getPath();
+            FileInputStream file1 = null;
+            FileInputStream file2 = null;
+            try {
+                file1 = new FileInputStream("/siva-jdigidoc.yaml");
+                file2 = new FileInputStream("siva-jdigidoc.yaml");
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            InputStream stream1 = getClass().getResourceAsStream("/siva-jdigidoc.yaml");
+            InputStream stream2 = getClass().getResourceAsStream("siva-jdigidoc.yaml");
+            InputStream stream3 = getClass().getClassLoader().getResourceAsStream("/siva-jdigidoc.yaml");
+            InputStream stream4 = getClass().getClassLoader().getResourceAsStream("siva-jdigidoc.yaml");
+
+            throw new DigiDoc4JException("Container has validation error(s): " configurationFilePath + " - " + file1 + " - " + file2 + " - " + stream1 + " - " + stream2 + " - " + stream3 + " - " + stream4);
         }
 
         return validationWarnings;

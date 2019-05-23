@@ -10,6 +10,7 @@ import org.digidoc4j.Container;
 import org.digidoc4j.DigestDataFile;
 import org.digidoc4j.Signature;
 import org.digidoc4j.SignatureProfile;
+import org.digidoc4j.ddoc.utils.ConfigManager;
 import org.digidoc4j.exceptions.DigiDoc4JException;
 import org.digidoc4j.impl.ddoc.DDocContainer;
 import org.digidoc4j.impl.ddoc.DDocFacade;
@@ -33,9 +34,11 @@ public class DDOCContainerValidationReportBuilder extends TimemarkContainerValid
         // If validationWarnings contains anything else in addition to DDOC_TIMESTAMP_WARNING, then we can be sure it contains container error(s)
         // and not signature error(s) and malformed document exception should be thrown.
         if (validationWarnings.size() > 1) {
-            String errors = containerErrors.stream().map(err -> err.getErrorCode() + err.getMessage()).collect(Collectors.joining(","));
             LOGGER.error("Container has validation error(s): {}", containerErrors);
-            throw new DigiDoc4JException("Container has validation error(s): " + errors);
+            ConfigManager instance = ConfigManager.instance();
+            long digidoc_max_datafile_cached = instance.getLongProperty("DIGIDOC_MAX_DATAFILE_CACHED", Long.MAX_VALUE);
+            boolean datafile_hashcode_mode = instance.getBooleanProperty("DATAFILE_HASHCODE_MODE", false);
+            throw new DigiDoc4JException("Container has validation error(s): " + digidoc_max_datafile_cached + " - " + datafile_hashcode_mode);
         }
 
         return validationWarnings;

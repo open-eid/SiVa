@@ -55,7 +55,7 @@ public class DDOCContainerValidationReportBuilder extends TimemarkContainerValid
             InputStream stream3 = getClass().getClassLoader().getResourceAsStream("/siva-jdigidoc.yaml");
             InputStream stream4 = getClass().getClassLoader().getResourceAsStream("siva-jdigidoc.yaml");
 
-            throw new DigiDoc4JException("Container has validation error(s): " configurationFilePath + " - " + file1 + " - " + file2 + " - " + stream1 + " - " + stream2 + " - " + stream3 + " - " + stream4);
+            throw new DigiDoc4JException("Container has validation error(s): " + configurationFilePath + " - " + file1 + " - " + file2 + " - " + stream1 + " - " + stream2 + " - " + stream3 + " - " + stream4);
         }
 
         return validationWarnings;

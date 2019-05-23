@@ -11,9 +11,9 @@ branches:
   - develop
   - master
 install: true
-script: ./mvnw clean install -P\!dependency-check
+script: ./mvnw clean install -P\!dependency-check -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 after_success:
-- "./mvnw jacoco:report coveralls:report -q -Dcoveralls.repo.token=$COVERALLS_REPO_TOKEN"
+- "./mvnw jacoco:report coveralls:report -Dcoveralls.repo.token=$COVERALLS_REPO_TOKEN"
 notifications:
   email:
     recipients:

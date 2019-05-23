@@ -17,10 +17,8 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
-import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.xml.sax.SAXException;
@@ -28,17 +26,15 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
-import static ee.openeid.siva.integrationtest.TestData.*;
+import static ee.openeid.siva.integrationtest.TestData.HASH_ALGO_SHA224;
+import static ee.openeid.siva.integrationtest.TestData.HASH_ALGO_SHA256;
+import static ee.openeid.siva.integrationtest.TestData.HASH_ALGO_SHA384;
+import static ee.openeid.siva.integrationtest.TestData.HASH_ALGO_SHA512;
 
 @Category(IntegrationTest.class)
 public class XadesHashcodeValidationPassIT extends SiVaRestTests {
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "xades/";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
-
-    @BeforeClass
-    public static void oneTimeSetUp() {
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-    }
 
     @Before
     public void DirectoryBackToDefault() {

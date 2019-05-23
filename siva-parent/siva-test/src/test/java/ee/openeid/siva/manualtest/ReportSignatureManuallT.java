@@ -27,7 +27,6 @@ import io.restassured.response.Response;
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -85,12 +84,6 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
     }
 
-    @BeforeClass
-    public static void oneTimeSetUp() {
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-    }
-
-
     /**
      * TestCaseID: Detailed-Report-Signatures-2
      *
@@ -126,8 +119,6 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
                 .when()
                 .post(VALIDATION_ENDPOINT)
                 .then()
-                .log()
-                .all()
                 .extract()
                 .response();
         assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signaturesCount"), equalTo("1"));
@@ -171,8 +162,6 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
                 .when()
                 .post(VALIDATION_ENDPOINT)
                 .then()
-                .log()
-                .all()
                 .extract()
                 .response();
         assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signaturesCount"), equalTo("1"));
@@ -216,8 +205,6 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
                 .when()
                 .post(VALIDATION_ENDPOINT)
                 .then()
-                .log()
-                .all()
                 .extract()
                 .response();
         assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signaturesCount"), equalTo("1"));
@@ -260,8 +247,6 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
                 .when()
                 .post(VALIDATION_ENDPOINT)
                 .then()
-                .log()
-                .all()
                 .extract()
                 .response();
         assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signaturesCount"), equalTo("1"));
@@ -304,8 +289,6 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
                 .when()
                 .post(VALIDATION_ENDPOINT)
                 .then()
-                .log()
-                .all()
                 .extract()
                 .response();
         assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signaturesCount"), equalTo("1"));
@@ -349,8 +332,6 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
                 .when()
                 .post(VALIDATION_ENDPOINT)
                 .then()
-                .log()
-                .all()
                 .extract()
                 .response();
         assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signaturesCount"), equalTo("1"));
@@ -394,8 +375,6 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
                 .when()
                 .post(VALIDATION_ENDPOINT)
                 .then()
-                .log()
-                .all()
                 .extract()
                 .response();
         assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signaturesCount"), equalTo("1"));
@@ -437,8 +416,6 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
                 .when()
                 .post(VALIDATION_ENDPOINT)
                 .then()
-                .log()
-                .all()
                 .extract()
                 .response();
         assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signaturesCount"), equalTo("1"));
@@ -531,8 +508,6 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
                 .when()
                 .post(VALIDATION_ENDPOINT)
                 .then()
-                .log()
-                .all()
                 .extract()
                 .response();
         assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signaturesCount"), equalTo("1"));
@@ -600,8 +575,6 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
                 .when()
                 .post(validationUrl)
                 .then()
-                .log()
-                .all()
                 .extract()
                 .response();
     }

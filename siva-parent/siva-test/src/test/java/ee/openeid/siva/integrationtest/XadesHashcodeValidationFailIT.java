@@ -17,10 +17,8 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
-import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -31,11 +29,6 @@ import static ee.openeid.siva.integrationtest.TestData.HASH_ALGO_SHA512;
 public class XadesHashcodeValidationFailIT extends SiVaRestTests {
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "xades/";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
-
-    @BeforeClass
-    public static void oneTimeSetUp() {
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-    }
 
     @Before
     public void DirectoryBackToDefault() {

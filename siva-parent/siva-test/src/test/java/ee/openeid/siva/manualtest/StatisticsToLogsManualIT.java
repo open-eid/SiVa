@@ -545,7 +545,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
         setTestFilesDirectory("asics/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("ValidBDOCinsideAsics.asics"));
         post(validationRequestWithValidKeys(encodedString, "ValidBDOCinsideAsics.asics", "POLv4"))
-                .then().log().all()
+                .then()
                 .statusCode(HttpStatus.OK.value());
        /*
         stats" : {
@@ -585,7 +585,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
         setTestFilesDirectory("asics/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("TwoDataFilesAsics.asics"));
         post(validationRequestWithValidKeys(encodedString, "TwoDataFilesAsics.asics", "POLv4"))
-                .then().log().all()
+                .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 

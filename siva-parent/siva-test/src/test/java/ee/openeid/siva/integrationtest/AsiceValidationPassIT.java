@@ -17,24 +17,27 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
-import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import static ee.openeid.siva.integrationtest.TestData.*;
+import static ee.openeid.siva.integrationtest.TestData.ALL_FILES_NOT_SIGNED;
+import static ee.openeid.siva.integrationtest.TestData.CERTIFICATE_DO_NOT_MATCH_TRUST_SERVICE;
+import static ee.openeid.siva.integrationtest.TestData.SIGNATURE_FORMAT_XADES_LT;
+import static ee.openeid.siva.integrationtest.TestData.SIGNATURE_FORMAT_XADES_LTA;
+import static ee.openeid.siva.integrationtest.TestData.SIGNATURE_FORM_ASICE;
+import static ee.openeid.siva.integrationtest.TestData.SIGNATURE_LEVEL_QESIG;
+import static ee.openeid.siva.integrationtest.TestData.SIGNATURE_SCOPE_FULL;
+import static ee.openeid.siva.integrationtest.TestData.TOTAL_PASSED;
+import static ee.openeid.siva.integrationtest.TestData.VALIDATION_CONCLUSION_PREFIX;
+import static ee.openeid.siva.integrationtest.TestData.VALIDATION_LEVEL_ARCHIVAL_DATA;
+import static ee.openeid.siva.integrationtest.TestData.VALID_SIGNATURE_SCOPE_CONTENT_FULL;
 
 @Category(IntegrationTest.class)
 public class AsiceValidationPassIT extends SiVaRestTests {
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "bdoc/live/timestamp/";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
-
-    @BeforeClass
-    public static void oneTimeSetUp() {
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-    }
 
     @Before
     public void DirectoryBackToDefault() {

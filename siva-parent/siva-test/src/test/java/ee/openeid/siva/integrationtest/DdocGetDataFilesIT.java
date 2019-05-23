@@ -104,7 +104,6 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         postForDataFiles(dataFilesRequest("DIGIDOC-XML1.1.ddoc"))
                 .then()
-                .log().ifError()
                 .body("dataFiles[0].filename", Matchers.is("puhkus_urmo_062006.doc"))
                 .body("dataFiles[0].mimeType", Matchers.is("application/msword"))
                 .body("dataFiles[0].base64", Matchers.startsWith("0M8R4KGxGuEAAAAAAAAAAAAAAAAAAAAAPgADAP7/CQAGAAAAAAAAAAAAAAAJAAAA"))
@@ -129,7 +128,6 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         postForDataFiles(dataFilesRequest("DIGIDOC-XML1.2.ddoc"))
                 .then()
-                .log().ifError()
                 .body("dataFiles[0].filename", Matchers.is("RO219559508.pdf"))
                 .body("dataFiles[0].mimeType", Matchers.is("text/text"))
                 .body("dataFiles[0].base64", Matchers.startsWith("JVBERi0xLjMKJeLjz9MKMSAwIG9iajw8L1Byb2R1Y2VyKGh0bWxkb2MgMS44LjIzIENvcHlyaWdodCAxOTk3LTIwMDI"))
@@ -179,7 +177,6 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         postForDataFiles(dataFilesRequest("DIGIDOC-XML1.3_hashcode.ddoc"))
                 .then()
-                .log().ifError()
                 .body("dataFiles[0].filename", Matchers.is("Glitter-rock-4_gallery.jpg"))
                 .body("dataFiles[0].mimeType", Matchers.is("application/octet-stream"))
                 .body("dataFiles[0].base64", Matchers.nullValue())
@@ -204,7 +201,6 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         postForDataFiles(dataFilesRequest("igasugust1.3.ddoc"))
                 .then()
-                .log().ifError()
                 .body("dataFiles[0].filename", Matchers.is("DigiDocService_spec_1_110_est.pdf"))
                 .body("dataFiles[0].mimeType", Matchers.is("application/pdf"))
                 .body("dataFiles[0].base64", Matchers.startsWith("JVBERi0xLjMKJcfsj6IKOCAwIG9iago8PC9MZW5ndGggOSAwIFIvRmlsdGVyIC9G"))
@@ -273,7 +269,6 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
         setTestFilesDirectory("bdoc/live/timestamp/");
         postForDataFiles(dataFilesRequest("BDOC-TS.bdoc"))
                 .then()
-                .log().ifError()
                 .body("requestErrors[0].message", Matchers.is(INVALID_DATA_FILE_FILENAME))
                 .body("requestErrors[0].key", Matchers.is(FILENAME));
     }
@@ -296,7 +291,6 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         postForDataFiles(dataFilesRequest("hellopades-lt-b.pdf"))
                 .then()
-                .log().ifError()
                 .body("requestErrors[0].message", Matchers.is(INVALID_DATA_FILE_FILENAME))
                 .body("requestErrors[0].key", Matchers.is(FILENAME));
     }

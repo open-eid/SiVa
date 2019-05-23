@@ -18,24 +18,16 @@ package ee.openeid.siva.integrationtest;
 
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
-import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.springframework.http.HttpStatus;
 
 @Category(IntegrationTest.class)
 public class BdocValidationPassIT extends SiVaRestTests {
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "bdoc/live/timemark/";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
-
-    @BeforeClass
-    public static void oneTimeSetUp() {
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-    }
 
     @Before
     public void DirectoryBackToDefault() {

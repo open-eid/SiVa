@@ -18,9 +18,7 @@ package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.validation.document.report.SimpleReport;
-import io.restassured.RestAssured;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -41,11 +39,6 @@ public class DocumentFormatIT extends SiVaRestTests {
 
     public void setTestFilesDirectory(String testFilesDirectory) {
         this.testFilesDirectory = testFilesDirectory;
-    }
-
-    @BeforeClass
-    public static void oneTimeSetUp() {
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
     }
 
     /**

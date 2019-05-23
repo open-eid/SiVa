@@ -30,7 +30,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.config.EncoderConfig.encoderConfig;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
 @Category(IntegrationTest.class)
@@ -62,7 +64,7 @@ public class ReportSignatureIT extends SiVaRestTests {
     @Test
     public void whenRequestingSimpleReport_thenValidationReportSignatureShouldNotBeInResponse() {
         post(validationRequestFor("hellopades-pades-lt-sha256-sign.pdf", null, "Simple"))
-                .then().log().all()
+                .then()
                 .body("validationReportSignature", isEmptyOrNullString());
     }
 
@@ -82,7 +84,7 @@ public class ReportSignatureIT extends SiVaRestTests {
     @Test
     public void whenRequestingDetailedReport_thenValidationReportSignatureShouldBeInResponse() {
         post(validationRequestFor("hellopades-pades-lt-sha256-sign.pdf", null, "Detailed"))
-                .then().log().all()
+                .then()
                 .body("validationReportSignature", not(isEmptyOrNullString()));
     }
 
@@ -120,8 +122,6 @@ public class ReportSignatureIT extends SiVaRestTests {
                 .when()
                 .post(VALIDATION_ENDPOINT)
                 .then()
-                .log()
-                .all()
                 .extract()
                 .response();
         assertThat(reportSignatureValidation.jsonPath().getString("validationReport.validationConclusion.signaturesCount"), equalTo("1"));
@@ -146,7 +146,7 @@ public class ReportSignatureIT extends SiVaRestTests {
     @Test
     public void whenRequestingSimpleReport_andreportSignatureEnabledTrue_fileHash_InReport() {
         post(validationRequestFor("hellopades-pades-lt-sha256-sign.pdf", null, "Simple"))
-                .then().log().all()
+                .then()
                 .body("validationReport.validationConclusion.validatedDocument.fileHash", not(isEmptyOrNullString()));
     }
 
@@ -167,7 +167,7 @@ public class ReportSignatureIT extends SiVaRestTests {
     @Test
     public void whenRequestingSimpleReport_andreportSignatureEnabledFalse_fileHash_NotInReport() {
         post(validationRequestFor("hellopades-pades-lt-sha256-sign.pdf", null, "Simple"))
-                .then().log().all()
+                .then()
                 .body("validationReport.validationConclusion.validatedDocument.fileHash", isEmptyOrNullString());
     }
 
@@ -179,8 +179,6 @@ public class ReportSignatureIT extends SiVaRestTests {
                 .when()
                 .post(validationUrl)
                 .then()
-                .log()
-                .all()
                 .extract()
                 .response();
     }

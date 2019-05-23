@@ -37,7 +37,11 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.config.EncoderConfig.encoderConfig;
@@ -71,9 +75,6 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
 
     protected Response postForDataFiles(String request) {
         return given()
-                .log().headers()
-                .log().method()
-                .log().uri()
                 .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
                 .body(request)
                 .contentType(ContentType.JSON)
@@ -83,12 +84,8 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
 
     protected Response postHashcodeValidation(String request) {
         return given()
-                .log().headers()
-                .log().method()
-                .log().uri()
                 .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
                 .body(request)
-                .log().body()
                 .contentType(ContentType.JSON)
                 .when()
                 .post(HASHCODE_VALIDATION_ENDPOINT);

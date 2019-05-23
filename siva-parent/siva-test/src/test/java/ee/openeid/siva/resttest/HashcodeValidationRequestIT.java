@@ -26,7 +26,6 @@ import ee.openeid.siva.validation.service.signature.policy.properties.Validation
 import ee.openeid.siva.webapp.request.Datafile;
 import ee.openeid.siva.webapp.request.JSONHashcodeValidationRequest;
 import ee.openeid.siva.webapp.request.SignatureFile;
-import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,7 +34,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;
 import org.json.JSONObject;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
@@ -47,11 +45,25 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-import static ee.openeid.siva.integrationtest.TestData.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static ee.openeid.siva.integrationtest.TestData.HASH_ALGO_SHA256;
+import static ee.openeid.siva.integrationtest.TestData.HASH_ALGO_SHA384;
+import static ee.openeid.siva.integrationtest.TestData.HASH_ALGO_SHA512;
+import static ee.openeid.siva.integrationtest.TestData.MOCK_XADES_DATAFILE_FILENAME;
+import static ee.openeid.siva.integrationtest.TestData.MOCK_XADES_DATAFILE_HASH;
+import static ee.openeid.siva.integrationtest.TestData.MOCK_XADES_DATAFILE_HASH_ALGO;
+import static ee.openeid.siva.integrationtest.TestData.SIGNATURE_POLICY_1;
+import static ee.openeid.siva.integrationtest.TestData.SIGNATURE_POLICY_2;
+import static ee.openeid.siva.integrationtest.TestData.TOTAL_PASSED;
+import static ee.openeid.siva.integrationtest.TestData.VALIDATION_CONCLUSION_PREFIX;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
 
 @Category(IntegrationTest.class)
 public class HashcodeValidationRequestIT extends SiVaRestTests {
@@ -60,11 +72,6 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
 
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
     private ZonedDateTime testStartDate;
-
-    @BeforeClass
-    public static void oneTimeSetUp() {
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-    }
 
     public static String getFailMessageForKey(String key) {
         return key + " error or corresponding message was not in the response";

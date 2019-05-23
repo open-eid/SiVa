@@ -160,7 +160,7 @@ public class AsicsValidationPassIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(0))
                 .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("TXTinsideAsics.asics"))
-                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("2SMbApVw0qFlMdSU8Jn4mwPzsf8Wo6ERUo2uJLNxEEo=")).log().all();
+                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("2SMbApVw0qFlMdSU8Jn4mwPzsf8Wo6ERUo2uJLNxEEo="));
     }
 
     /**

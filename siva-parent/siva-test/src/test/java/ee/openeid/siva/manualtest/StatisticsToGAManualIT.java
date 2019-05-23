@@ -66,7 +66,7 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades_lt_two_valid_sig.pdf"));
         postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "pades_lt_two_valid_sig.pdf", "POLv3"), "XAuthTest")
-                .then().log().all()
+                .then()
                 .statusCode(HttpStatus.OK.value());
     }
 
@@ -260,7 +260,7 @@ public class StatisticsToGAManualIT extends SiVaRestTests {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades_lt_two_valid_sig.pdf"));
         postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "pades_lt_two_valid_sig.pdf", "POLv3"), "XAuthTest")
-                .then().log().all()
+                .then()
                 .statusCode(HttpStatus.OK.value());
     }
 

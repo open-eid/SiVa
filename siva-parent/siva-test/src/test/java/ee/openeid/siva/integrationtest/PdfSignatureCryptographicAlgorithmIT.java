@@ -84,7 +84,7 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
                 .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1)).log().all();
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
 
     }
 

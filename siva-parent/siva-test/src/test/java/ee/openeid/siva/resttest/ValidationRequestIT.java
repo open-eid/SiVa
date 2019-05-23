@@ -18,13 +18,11 @@ package ee.openeid.siva.resttest;
 
 import ee.openeid.siva.integrationtest.SiVaRestTests;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
-import io.restassured.RestAssured;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;
 import org.json.JSONObject;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
@@ -32,7 +30,10 @@ import org.springframework.http.HttpStatus;
 import java.util.List;
 import java.util.Map;
 
-import static ee.openeid.siva.integrationtest.TestData.*;
+import static ee.openeid.siva.integrationtest.TestData.REPORT_TYPE_DETAILED;
+import static ee.openeid.siva.integrationtest.TestData.REPORT_TYPE_DIAGNOSTIC;
+import static ee.openeid.siva.integrationtest.TestData.REPORT_TYPE_SIMPLE;
+import static ee.openeid.siva.integrationtest.TestData.VALIDATION_CONCLUSION_PREFIX;
 import static io.restassured.path.json.JsonPath.from;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
@@ -43,11 +44,6 @@ public class ValidationRequestIT extends SiVaRestTests {
 
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "document_format_test_files/";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
-
-    @BeforeClass
-    public static void oneTimeSetUp() {
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-    }
 
     static int getRequestErrorsCount(String json, String field, String message) {
         List<Map> errors = from(json).get("requestErrors.findAll { requestError -> requestError.key == '" + field + "' && requestError.message=='" + message + "' }");

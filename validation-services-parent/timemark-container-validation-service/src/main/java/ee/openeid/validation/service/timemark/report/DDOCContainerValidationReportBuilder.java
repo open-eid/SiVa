@@ -33,8 +33,9 @@ public class DDOCContainerValidationReportBuilder extends TimemarkContainerValid
         // If validationWarnings contains anything else in addition to DDOC_TIMESTAMP_WARNING, then we can be sure it contains container error(s)
         // and not signature error(s) and malformed document exception should be thrown.
         if (validationWarnings.size() > 1) {
+            String errors = containerErrors.stream().map(err -> err.getErrorCode() + err.getMessage()).collect(Collectors.joining(","));
             LOGGER.error("Container has validation error(s): {}", containerErrors);
-            throw new DigiDoc4JException("Container has validation error(s)");
+            throw new DigiDoc4JException("Container has validation error(s): " + errors);
         }
 
         return validationWarnings;

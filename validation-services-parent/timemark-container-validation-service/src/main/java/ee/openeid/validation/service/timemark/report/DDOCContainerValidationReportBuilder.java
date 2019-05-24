@@ -13,11 +13,8 @@ import org.digidoc4j.SignatureProfile;
 import org.digidoc4j.exceptions.DigiDoc4JException;
 import org.digidoc4j.impl.ddoc.DDocContainer;
 import org.digidoc4j.impl.ddoc.DDocFacade;
-import org.yaml.snakeyaml.Yaml;
 
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,14 +34,7 @@ public class DDOCContainerValidationReportBuilder extends TimemarkContainerValid
         // and not signature error(s) and malformed document exception should be thrown.
         if (validationWarnings.size() > 1) {
             LOGGER.error("Container has validation error(s): {}", containerErrors);
-            InputStream stream = getClass().getClassLoader().getResourceAsStream("siva-jdigidoc.yaml");
-            Yaml yaml = new Yaml();
-            LinkedHashMap<String, Object> configurationFromFile = (LinkedHashMap) yaml.load(stream);
-            String confParams = configurationFromFile.entrySet().stream()
-                                                  .map(entry -> entry.getKey() + " - " + entry.getValue())
-                                                  .collect(Collectors.joining(", "));
-
-            throw new DigiDoc4JException("Container has validation error(s): " + confParams);
+            throw new DigiDoc4JException("Container has validation error(s)");
         }
 
         return validationWarnings;

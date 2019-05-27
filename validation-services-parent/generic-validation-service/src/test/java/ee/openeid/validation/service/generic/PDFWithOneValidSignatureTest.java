@@ -28,8 +28,9 @@ import eu.europa.esig.dss.jaxb.diagnostic.XmlSignature;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -146,7 +147,9 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
         assertNull(signature.getErrorMessage());
         assertEquals("PAdES-BASELINE-LT", signature.getSignatureFormat());
         assertEquals("application/pdf", signature.getContentType());
-        assertEquals(new GregorianCalendar(2015, 6, 9, 10, 0, 48).getTime(), signature.getDateTime());
+
+        ZonedDateTime expectedDateTimeInUTC = ZonedDateTime.of(2015, 7, 9, 7, 0, 48, 0, ZoneId.of("UTC"));
+        assertEquals(expectedDateTimeInUTC.toInstant(), signature.getDateTime().toInstant());
         assertTrue(signature.getStructuralValidation().isValid());
         assertTrue(signature.getBasicSignature().isSignatureIntact());
         assertTrue(signature.getBasicSignature().isSignatureValid());

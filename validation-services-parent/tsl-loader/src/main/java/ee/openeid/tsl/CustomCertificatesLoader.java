@@ -447,7 +447,10 @@ public class CustomCertificatesLoader implements CertificatesLoader{
         serviceInfo.setStatus(getServiceInfoStatuses(serviceName, certToken, CA_QC, qualifiersAndConditions, statusStartDate));
         serviceInfo.setTlCountryCode("EU");
         serviceInfo.setTspName(serviceName);
-        return Collections.singletonList(serviceInfo);
+
+        List<ServiceInfo> serviceInfoList = new ArrayList<>();
+        serviceInfoList.add(serviceInfo);
+        return serviceInfoList;
     }
 
     private List<ServiceInfo> getCAServiceInfoWithQcConditions(CertificateToken certToken, String serviceName, Date statusStartDate) {
@@ -460,7 +463,9 @@ public class CustomCertificatesLoader implements CertificatesLoader{
         qualifiersAndConditions.put(QC_FOR_ESIG, Collections.singletonList(createNonRepudiationCriteriaListCondition()));
         serviceInfo.setStatus(getServiceInfoStatuses(serviceName, certToken, CA_QC, qualifiersAndConditions, statusStartDate));
 
-        return Collections.singletonList(serviceInfo);
+        List<ServiceInfo> serviceInfoList = new ArrayList<>();
+        serviceInfoList.add(serviceInfo);
+        return serviceInfoList;
     }
 
     private CompositeCondition createNonRepudiationCriteriaListCondition() {
@@ -483,7 +488,9 @@ public class CustomCertificatesLoader implements CertificatesLoader{
         Map<String, List<Condition>> qualifiersAndConditions = new HashMap<>();
         serviceInfo.setStatus(getServiceInfoStatuses(serviceName, certToken, OCSP_QC, qualifiersAndConditions, statusStartDate));
 
-        return Collections.singletonList(serviceInfo);
+        List<ServiceInfo> serviceInfoList = new ArrayList<>();
+        serviceInfoList.add(serviceInfo);
+        return serviceInfoList;
     }
 
     private TimeDependentValues<ServiceInfoStatus> getServiceInfoStatuses(String serviceName, CertificateToken certToken, String type, Map<String, List<Condition>> qualifiersAndConditions, Date statusStartDate) {

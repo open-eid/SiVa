@@ -1,0 +1,1578 @@
+
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+      
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.1.1">
+    
+    
+      
+        <title>6.1 QA Strategy - SiVa 3.2 - Signature Validation Service Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/application.3020aac5.css">
+      
+      
+    
+    
+      <script src="../../assets/javascripts/modernizr.01ccdecf.js"></script>
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
+    
+    
+      <link rel="stylesheet" href="../../override.css">
+    
+    
+      
+    
+    
+  </head>
+  
+    <body dir="ltr">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
+    viewBox="0 0 416 448" id="__github">
+  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
+        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
+        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
+        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
+        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
+        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
+        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
+        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
+        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
+        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
+        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
+        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
+        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
+        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
+        99.5z" />
+</svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#introduction" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../.." title="SiVa 3.2 - Signature Validation Service Documentation" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon"></i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            <span class="md-header-nav__topic">
+              SiVa 3.2 - Signature Validation Service Documentation
+            </span>
+            <span class="md-header-nav__topic">
+              6.1 QA Strategy
+            </span>
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+          
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+<a href="https://github.com/open-eid/SiVa/" title="Go to repository" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../.." title="SiVa 3.2 - Signature Validation Service Documentation" class="md-nav__button md-logo">
+      
+        <i class="md-icon"></i>
+      
+    </a>
+    SiVa 3.2 - Signature Validation Service Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+<a href="https://github.com/open-eid/SiVa/" title="Go to repository" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../version_info/" title="VERSION HISTORY" class="md-nav__link">
+      VERSION HISTORY
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="INTRODUCTION" class="md-nav__link">
+      INTRODUCTION
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../definitions/" title="1. DEFINITIONS" class="md-nav__link">
+      1. DEFINITIONS
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../overview/" title="2. BACKGROUND" class="md-nav__link">
+      2. BACKGROUND
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+    
+    <label class="md-nav__link" for="nav-5">
+      3. STRUCTURE & ACTIVITIES
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        3. STRUCTURE & ACTIVITIES
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../structure_and_activities/" title="3.1 Component model" class="md-nav__link">
+      3.1 Component model
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../use_cases/" title="3.2 Use cases" class="md-nav__link">
+      3.2 Use cases
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../interfaces/" title="4. INTERFACES" class="md-nav__link">
+      4. INTERFACES
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+    
+    <label class="md-nav__link" for="nav-7">
+      5. DEPLOYMENT
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
+        5. DEPLOYMENT
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../deployment/" title="5.1 Deployment model" class="md-nav__link">
+      5.1 Deployment model
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../systemintegrators_guide/" title="5.2 System integrator's guide" class="md-nav__link">
+      5.2 System integrator's guide
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8" checked>
+    
+    <label class="md-nav__link" for="nav-8">
+      6. QUALITY ASSURANCE
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-8">
+        6. QUALITY ASSURANCE
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        6.1 QA Strategy
+      </label>
+    
+    <a href="./" title="6.1 QA Strategy" class="md-nav__link md-nav__link--active">
+      6.1 QA Strategy
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" title="Introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environments-and-infrastructure" title="Environments and infrastructure" class="md-nav__link">
+    Environments and infrastructure
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#analysis" title="Analysis" class="md-nav__link">
+    Analysis
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#development" title="Development" class="md-nav__link">
+    Development
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#development-process" title="Development process" class="md-nav__link">
+    Development process
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-lifecycle" title="Issue lifecycle" class="md-nav__link">
+    Issue lifecycle
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qa-activities-and-quality-criterias-in-the-development" title="QA activities and quality criterias in the development" class="md-nav__link">
+    QA activities and quality criterias in the development
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing" title="Testing" class="md-nav__link">
+    Testing
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#approach" title="Approach" class="md-nav__link">
+    Approach
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-process" title="Testing process" class="md-nav__link">
+    Testing process
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-case-management" title="Test case management" class="md-nav__link">
+    Test case management
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defect-management" title="Defect management" class="md-nav__link">
+    Defect management
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-levels" title="Test levels" class="md-nav__link">
+    Test levels
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../test_plan/" title="6.2 Test Plan" class="md-nav__link">
+      6.2 Test Plan
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../references/" title="7. REFERENCES" class="md-nav__link">
+      7. REFERENCES
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-10" type="checkbox" id="nav-10">
+    
+    <label class="md-nav__link" for="nav-10">
+      8. APPENDICES
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-10">
+        8. APPENDICES
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../appendix/validation_policy/" title="Appendix 1 - Validation Policy" class="md-nav__link">
+      Appendix 1 - Validation Policy
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../appendix/test_cases/" title="Appendix 2 - Test Case Descriptions" class="md-nav__link">
+      Appendix 2 - Test Case Descriptions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../appendix/wsdl/" title="Appendix 3 - WSDL/XSD of SOAP Interface" class="md-nav__link">
+      Appendix 3 - WSDL/XSD of SOAP Interface
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../appendix/known_issues/" title="Appendix 4 - Known Issues" class="md-nav__link">
+      Appendix 4 - Known Issues
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-11" type="checkbox" id="nav-11">
+    
+    <label class="md-nav__link" for="nav-11">
+      9. SIVA 2.0 (Deprecated)
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-11">
+        9. SIVA 2.0 (Deprecated)
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva2/definitions/" title="9.1. DEFINITIONS" class="md-nav__link">
+      9.1. DEFINITIONS
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva2/overview/" title="9.2. BACKGROUND" class="md-nav__link">
+      9.2. BACKGROUND
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-11-3" type="checkbox" id="nav-11-3">
+    
+    <label class="md-nav__link" for="nav-11-3">
+      9.3. STRUCTURE & ACTIVITIES
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-11-3">
+        9.3. STRUCTURE & ACTIVITIES
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva2/structure_and_activities/" title="9.3.1 Component model" class="md-nav__link">
+      9.3.1 Component model
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva2/use_cases/" title="9.3.2 Use cases" class="md-nav__link">
+      9.3.2 Use cases
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva2/interfaces/" title="9.4. INTERFACES" class="md-nav__link">
+      9.4. INTERFACES
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-11-5" type="checkbox" id="nav-11-5">
+    
+    <label class="md-nav__link" for="nav-11-5">
+      9.5. DEPLOYMENT
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-11-5">
+        9.5. DEPLOYMENT
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva2/deployment/" title="9.5.1 Deployment model" class="md-nav__link">
+      9.5.1 Deployment model
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva2/systemintegrators_guide/" title="9.5.2 System integrator's guide" class="md-nav__link">
+      9.5.2 System integrator's guide
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-11-6" type="checkbox" id="nav-11-6">
+    
+    <label class="md-nav__link" for="nav-11-6">
+      9.6. QUALITY ASSURANCE
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-11-6">
+        9.6. QUALITY ASSURANCE
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva2/qa_strategy/" title="9.6.1 QA Strategy" class="md-nav__link">
+      9.6.1 QA Strategy
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva2/test_plan/" title="9.6.2 Test Plan" class="md-nav__link">
+      9.6.2 Test Plan
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva2/references/" title="9.7. REFERENCES" class="md-nav__link">
+      9.7. REFERENCES
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-11-8" type="checkbox" id="nav-11-8">
+    
+    <label class="md-nav__link" for="nav-11-8">
+      9.8. APPENDICES
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-11-8">
+        9.8. APPENDICES
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva2/appendix/validation_policy/" title="Appendix 1 - Validation Policy" class="md-nav__link">
+      Appendix 1 - Validation Policy
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva2/appendix/test_cases/" title="Appendix 2 - Test Case Descriptions" class="md-nav__link">
+      Appendix 2 - Test Case Descriptions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva2/appendix/wsdl/" title="Appendix 3 - WSDL/XSD of SOAP Interface" class="md-nav__link">
+      Appendix 3 - WSDL/XSD of SOAP Interface
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva2/appendix/known_issues/" title="Appendix 4 - Known Issues" class="md-nav__link">
+      Appendix 4 - Known Issues
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-12" type="checkbox" id="nav-12">
+    
+    <label class="md-nav__link" for="nav-12">
+      10. SIVA 1.1 (Deprecated)
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-12">
+        10. SIVA 1.1 (Deprecated)
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/definitions/" title="10.1. DEFINITIONS" class="md-nav__link">
+      10.1. DEFINITIONS
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/overview/" title="10.2. BACKGROUND" class="md-nav__link">
+      10.2. BACKGROUND
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-12-3" type="checkbox" id="nav-12-3">
+    
+    <label class="md-nav__link" for="nav-12-3">
+      10.3. STRUCTURE & ACTIVITIES
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-12-3">
+        10.3. STRUCTURE & ACTIVITIES
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/v2/structure_and_activities/" title="10.3.1 Component model" class="md-nav__link">
+      10.3.1 Component model
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/v2/use_cases/" title="10.3.2 Use cases" class="md-nav__link">
+      10.3.2 Use cases
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/v2/interfaces/" title="10.4. INTERFACES" class="md-nav__link">
+      10.4. INTERFACES
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-12-5" type="checkbox" id="nav-12-5">
+    
+    <label class="md-nav__link" for="nav-12-5">
+      10.5. DEPLOYMENT
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-12-5">
+        10.5. DEPLOYMENT
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/v2/deployment/" title="10.5.1 Deployment model" class="md-nav__link">
+      10.5.1 Deployment model
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/v2/systemintegrators_guide/" title="10.5.2 System integrator's guide" class="md-nav__link">
+      10.5.2 System integrator's guide
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-12-6" type="checkbox" id="nav-12-6">
+    
+    <label class="md-nav__link" for="nav-12-6">
+      10.6. QUALITY ASSURANCE
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-12-6">
+        10.6. QUALITY ASSURANCE
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/qa_strategy/" title="10.6.1 QA Strategy" class="md-nav__link">
+      10.6.1 QA Strategy
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/test_plan/" title="10.6.2 Test Plan" class="md-nav__link">
+      10.6.2 Test Plan
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/references/" title="10.7. REFERENCES" class="md-nav__link">
+      10.7. REFERENCES
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-12-8" type="checkbox" id="nav-12-8">
+    
+    <label class="md-nav__link" for="nav-12-8">
+      10.8. APPENDICES
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-12-8">
+        10.8. APPENDICES
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/appendix/validation_policy/" title="Appendix 1 - Validation Policy" class="md-nav__link">
+      Appendix 1 - Validation Policy
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/appendix/test_cases/" title="Appendix 2 - Test Case Descriptions" class="md-nav__link">
+      Appendix 2 - Test Case Descriptions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/appendix/wsdl/" title="Appendix 3 - WSDL of SOAP Interface" class="md-nav__link">
+      Appendix 3 - WSDL of SOAP Interface
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/appendix/known_issues/" title="Appendix 4 - Known Issues" class="md-nav__link">
+      Appendix 4 - Known Issues
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" title="Introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environments-and-infrastructure" title="Environments and infrastructure" class="md-nav__link">
+    Environments and infrastructure
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#analysis" title="Analysis" class="md-nav__link">
+    Analysis
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#development" title="Development" class="md-nav__link">
+    Development
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#development-process" title="Development process" class="md-nav__link">
+    Development process
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-lifecycle" title="Issue lifecycle" class="md-nav__link">
+    Issue lifecycle
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qa-activities-and-quality-criterias-in-the-development" title="QA activities and quality criterias in the development" class="md-nav__link">
+    QA activities and quality criterias in the development
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing" title="Testing" class="md-nav__link">
+    Testing
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#approach" title="Approach" class="md-nav__link">
+    Approach
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-process" title="Testing process" class="md-nav__link">
+    Testing process
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-case-management" title="Test case management" class="md-nav__link">
+    Test case management
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defect-management" title="Defect management" class="md-nav__link">
+    Defect management
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-levels" title="Test levels" class="md-nav__link">
+    Test levels
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/open-eid/SiVa/edit/master/docs/siva3/qa_strategy.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                  <h1>6.1 QA Strategy</h1>
+                
+                <!--# QA Strategy-->
+
+<h2 id="introduction">Introduction</h2>
+<p>The goal of this document is to give general overview of the used infrastructure, processes, schedule and actions to ensure good quality delivery. The document describes activities in the whole software development process. Analysis, development and testing are separated for the sake of structure and transparency although they are integral parts of the development cycle.
+This is living document and will be constantly updated as the project evolves.</p>
+<h2 id="environments-and-infrastructure">Environments and infrastructure</h2>
+<p><img alt="Enviroment" src="../../img/siva/qa_strategy/siva3/Env.png" /></p>
+<p>There are different test environments for quality assurance, depending on the nature and aim.</p>
+<ol>
+<li>TravisCI environment for public CI - Platform: Linux</li>
+<li>Test environment for local test and load test - Platform: Linux</li>
+</ol>
+<p>Instructions how to set up test enviroment and run tests together with more info can be found in <a href="https://github.com/open-eid/SiVa">SiVa GitHub page</a></p>
+<p>System requirements:</p>
+<ul>
+<li>At least 4GB of RAM on machine where the build is executed</li>
+<li>Minimum required Java version is Java 8</li>
+<li>SiVa project provided Maven Wrapper (./mvnw)</li>
+</ul>
+<p>Tools used:</p>
+<ul>
+<li>TravisCI – is a continuous integration service used to build and test software projects hosted at GitHub</li>
+<li>Jenkins – is an open source continuous integration tool written in Java.</li>
+<li>JMeter – tool for creating and running load tests.</li>
+<li>IntelliJ IDEA – is a Java integrated development environment(IDE) for developing and executing automated tests locally</li>
+<li>Apache Tomcat - is an open source servlet container developed by the Apache Software Foundation.</li>
+<li>Rest-Assured - is a Java DSL(Domain-specific language) for simplifying testing of REST based Services built on top of HTTP Builder.</li>
+</ul>
+<h2 id="analysis">Analysis</h2>
+<p>Analysis will be tagged with identificators to enable cross-reference between requirements and corresponding tests. This includes both functional and non-functional requirements.
+See documents<a href="/siva3/references/">(2) and (3) in References</a></p>
+<h2 id="development">Development</h2>
+<h3 id="development-process">Development process</h3>
+<p>Customized process based on Kanban is used in the development. The process consists of following elements:</p>
+<ul>
+<li>Product backlog is maintained JIRA</li>
+<li>Tasks are maintained through JIRA Kanban board</li>
+<li>Daily team stand-ups are held</li>
+<li>Tasks marked done are developed, tested and ready to be shipped</li>
+<li>Bi-weekly meetings are held to give status on progress and discuss open questions
+<img alt="Development process" src="../../img/siva/qa_strategy/siva3/developmentProcess.png" /></li>
+</ul>
+<h3 id="issue-lifecycle">Issue lifecycle</h3>
+<p>Each ticket in JIRA Kanban board goes through the following states that correspond the development procedure described in previous chapter.
+<img alt="Issue lifecycle" src="../../img/siva/qa_strategy/siva3/taskWorkFlow.png" /></p>
+<p>Description of states:</p>
+<ul>
+<li>Awaiting analysis - ticket to be dealt with, product backlog.</li>
+<li>Awaiting implementation - ticket analysed and ready to be implemented.</li>
+<li>In progress - ticket is being handled (feature coding, document writing, ...).</li>
+<li>In Review - ticket is ready for review</li>
+<li>Resolved - ticket is ready for test</li>
+<li>Closed - ticket has been tested and found ready for release</li>
+</ul>
+<h3 id="qa-activities-and-quality-criterias-in-the-development">QA activities and quality criterias in the development</h3>
+<p><strong>Process improvement</strong></p>
+<p>The development process is constantly monitored and adjusted to the changing situations. Retrospective meetings for process feedback are held.</p>
+<p><strong>Unit tests</strong></p>
+<p>It is responsibility of developer to write, maintain and execute the unit tests on developed features. The code must compile and pass unit tests before it is allowed to be submitted to the code repository. The code of the unit tests is integral part of the source code and is maintained on the same principles.
+Unit tests are also automatically executed on each build, if the unit tests do not pass further test execution is stopped.</p>
+<p><strong>Static testing/code reviews</strong></p>
+<p>All changes (including changes in unit test code) are reviewed by another development team member using GitHub. The code must pass review before it is submitted to testing.
+SonarLint is used to validate code automatically. It integrates both suggested tools mentioned in reference document <a href="/siva3/references/">(3) References</a></p>
+<h2 id="testing">Testing</h2>
+<h3 id="approach">Approach</h3>
+<p>Testing follows the principles described in reference document <a href="/siva3/references/">(1) in References</a>
+The goal is to automate as much of the testing process as possible, however some aspects of the testing will be carried out manually.
+As the development is carried out by the backlog priority the testing follows the same principle. After each feature release test cases, test automation code and test results will be available through GitHub.
+<img alt="Testing schedule" src="../../img/siva/qa_strategy/siva3/testingFlow.png" /></p>
+<h3 id="testing-process">Testing process</h3>
+<p>All automatic tests, except load tests will follow the same execution process. The tests are ran automatically during the project build process by Travis CI after each push in GitHub.
+<img alt="Testing process" src="../../img/siva/qa_strategy/siva3/TestProcess.png" /></p>
+<h3 id="test-case-management">Test case management</h3>
+<p>Test cases are handled as integral part of test automation code. The same applies on manual tests, in manual test cases some portion of automation may be used to execute the tests but the results are verified manually. All the test cases and test code will be maintained in the GitHub.
+Test cases are developed and maintained together with test automation code by the QA specialist for Integration and System Testing.
+Following elements will be present in test cases:</p>
+<ul>
+<li>TestCaseID: unique ID that makes possible to identify specific test case</li>
+<li>TestType: Automated, Automated SoapUI or Manual</li>
+<li>Requirement: Reference to the requirement that is tested</li>
+<li>Title: Description of the test</li>
+<li>Expected Result: expected outcome of the test (pass criteria for the test)</li>
+<li>File: input test file that is used</li>
+</ul>
+<p><strong>Test case sample</strong></p>
+<p>Automatic and manual test cases will have the same description principles (shown below).</p>
+<div class="codehilite"><pre><span></span>/**
+* TestCaseID: Bdoc-ValidationFail-27
+*
+* TestType: Automated
+*
+* Requirement: http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#common-validation-constraints-polv1-polv2
+*
+* Title: Bdoc OCSP response doesn<span class="err">&#39;</span>t correspond to the signers certificate
+*
+* Expected Result: The document should fail the validation
+*
+* File: NS28_WrongSignerCertInOCSPResp.bdoc
+*/
+@Test
+public void bdocWrongSignersCertInOcspResponse<span class="o">()</span> <span class="o">{</span>
+setTestFilesDirectory<span class="o">(</span><span class="s2">&quot;bdoc/live/timemark/&quot;</span><span class="o">)</span><span class="p">;</span>
+post<span class="o">(</span>validationRequestFor<span class="o">(</span><span class="s2">&quot;NS28_WrongSignerCertInOCSPResp.bdoc&quot;</span><span class="o">))</span>
+.then<span class="o">()</span>
+.body<span class="o">(</span><span class="s2">&quot;signatures[0].indication&quot;</span>, Matchers.is<span class="o">(</span><span class="s2">&quot;TOTAL-FAILED&quot;</span><span class="o">))</span>
+.body<span class="o">(</span><span class="s2">&quot;signatures[0].subIndication&quot;</span>, Matchers.is<span class="o">(</span><span class="s2">&quot;TRY_LATER&quot;</span><span class="o">))</span>
+.body<span class="o">(</span><span class="s2">&quot;signatures[0].errors.content&quot;</span>, Matchers.hasItem<span class="o">(</span><span class="s2">&quot;No revocation data for the certificate&quot;</span><span class="o">))</span>
+.body<span class="o">(</span><span class="s2">&quot;validSignaturesCount&quot;</span>, Matchers.is<span class="o">(</span><span class="m">0</span><span class="o">))</span><span class="p">;</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h3 id="defect-management">Defect management</h3>
+<p>All found defects will be reported and handled in Jira. The defect report will follow similar lifecycle in JIRA Kanban board as tasks.
+The report will have at least the following elements:</p>
+<ul>
+<li>Title: Short, precise description of the problem</li>
+<li>Details: Type, Priority, Epic Link</li>
+<li>Description:<ul>
+<li><strong>Steps to reproduce bug</strong> - sequence for reproduction, link to test case if applicable.</li>
+<li><strong>Expected behavior</strong> - expected outcome of the test sequence.</li>
+<li><strong>Actual behavior</strong> - actual result of the test sequence. The description should be thorough enough to enable the debugging of the problem and to give objective base for severity assessment.</li>
+<li><strong>File attachments</strong> - Test files, logs, images, ...</li>
+</ul>
+</li>
+</ul>
+<h3 id="test-levels">Test levels</h3>
+<p><strong>Integration testing</strong></p>
+<p>The scope of the tests is illustrated on the image below. The goal is to test the SiVA application API (both X-Road and REST/JSON) and to test the independent module capability for validation of specific type of file. Both valid and invalid inputs are tested. More info about testing specifics can be found in Test Plan <a href="/siva/test_plan/#integration-test-introduction">Integration testing</a> section.
+<img alt="Integration testing" src="../../img/siva/qa_strategy/siva3/integrationTest.png" /></p>
+<p><strong>System testing</strong></p>
+<p>The scope of the tests is illustrated on the image below. The goal of the test is to test the entire length of signature validation process and to test supportive functions. In addition Demo application is tested. More info about testing specifics can be found in Test Plan <a href="/siva/test_plan/#system-test-introduction">System testing</a> section.
+<img alt="System testing" src="../../img/siva/qa_strategy/siva3/systemTest.png" /></p>
+<p><strong>Regression testing</strong></p>
+<p>Regression testing will consist of two parts:
+Running all automated tests (unit, integration and system tests)
+Manual testing of the areas that are not covered by automatic tests based on the regression test checklist</p>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../systemintegrators_guide/" title="5.2 System integrator's guide" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                5.2 System integrator's guide
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../test_plan/" title="6.2 Test Plan" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                6.2 Test Plan
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/application.dc02f8ce.js"></script>
+      
+      <script>app.initialize({version:"1.0.4",url:{base:"../.."}})</script>
+      
+    
+  </body>
+</html>

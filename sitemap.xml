@@ -1,180 +1,223 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-    
     <url>
-     <loc>/version_info/</loc>
-     <lastmod>2018-03-13</lastmod>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
-    
-
-    
     <url>
-     <loc>/</loc>
-     <lastmod>2018-03-13</lastmod>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
-    
-
-    
     <url>
-     <loc>/siva2/definitions/</loc>
-     <lastmod>2018-03-13</lastmod>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
-    
-
-    
     <url>
-     <loc>/siva2/overview/</loc>
-     <lastmod>2018-03-13</lastmod>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
-    
-
-    
-        
     <url>
-     <loc>/siva2/structure_and_activities/</loc>
-     <lastmod>2018-03-13</lastmod>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
     <url>
-     <loc>/siva2/use_cases/</loc>
-     <lastmod>2018-03-13</lastmod>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
-    
-
-    
     <url>
-     <loc>/siva2/interfaces/</loc>
-     <lastmod>2018-03-13</lastmod>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
-    
-
-    
-        
     <url>
-     <loc>/siva2/deployment/</loc>
-     <lastmod>2018-03-13</lastmod>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
     <url>
-     <loc>/siva2/systemintegrators_guide/</loc>
-     <lastmod>2018-03-13</lastmod>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
-    
-
-    
-        
     <url>
-     <loc>/siva2/qa_strategy/</loc>
-     <lastmod>2018-03-13</lastmod>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
     <url>
-     <loc>/siva2/test_plan/</loc>
-     <lastmod>2018-03-13</lastmod>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
-    
-
-    
     <url>
-     <loc>/siva2/references/</loc>
-     <lastmod>2018-03-13</lastmod>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
-    
-
-    
-        
     <url>
-     <loc>/siva2/appendix/validation_policy/</loc>
-     <lastmod>2018-03-13</lastmod>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
     <url>
-     <loc>/siva2/appendix/test_cases/</loc>
-     <lastmod>2018-03-13</lastmod>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
     <url>
-     <loc>/siva2/appendix/wsdl/</loc>
-     <lastmod>2018-03-13</lastmod>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
     <url>
-     <loc>/siva2/appendix/known_issues/</loc>
-     <lastmod>2018-03-13</lastmod>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
-    
-
-    
-        
     <url>
-     <loc>/siva/definitions/</loc>
-     <lastmod>2018-03-13</lastmod>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
     <url>
-     <loc>/siva/overview/</loc>
-     <lastmod>2018-03-13</lastmod>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
     <url>
-     <loc></loc>
-     <lastmod></lastmod>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
     <url>
-     <loc>/siva/v2/interfaces/</loc>
-     <lastmod>2018-03-13</lastmod>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
     <url>
-     <loc></loc>
-     <lastmod></lastmod>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
     <url>
-     <loc></loc>
-     <lastmod></lastmod>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
     <url>
-     <loc>/siva/references/</loc>
-     <lastmod>2018-03-13</lastmod>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
     <url>
-     <loc></loc>
-     <lastmod></lastmod>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
-    
-
+    <url>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>None</loc>
+     <lastmod>2019-06-26</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
 </urlset>

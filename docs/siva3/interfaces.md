@@ -1279,7 +1279,7 @@ Sample response:
     "health":{
       "status":"UP",
       "webappName":"siva-sample-application",
-      "version":"3.2.0",
+      "version":"3.2.1",
       "buildTime":"2016-10-21T15:56:21Z",
       "startTime":"2016-10-21T15:57:48Z",
       "currentTime":"2016-10-21T15:58:39Z"

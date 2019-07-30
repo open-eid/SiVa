@@ -61,13 +61,13 @@ project by issuing below commands:
 **First start SiVa REST and SOAP web service**
 
 ```bash
-./siva-parent/siva-webapp/target/siva-webapp-3.2.0.jar
+./siva-parent/siva-webapp/target/siva-webapp-3.2.1.jar
 ```
 
 **Second we need to start SiVa XRoad validation service**
 
 ```bash
-./validation-services-parent/xroad-validation-service/target/xroad-validation-service-3.2.0.jar
+./validation-services-parent/xroad-validation-service/target/xroad-validation-service-3.2.1.jar
 ```
 
 The SiVa webapp by default runs on port **8080** and XRoad validation service starts up on port **8081**.
@@ -76,7 +76,7 @@ Easiest way to test out validation is run SiVa demo application.
 **Start SiVa Demo Application**
 
 ```bash
-./siva-parent/siva-sample-application/target/siva-sample-application-3.2.0.jar
+./siva-parent/siva-sample-application/target/siva-sample-application-3.2.1.jar
 ```
 
 Now point Your browser to URL: <http://localhost:9000>
@@ -114,7 +114,7 @@ Now we should build the WAR file. We have created helper script with all the cor
 Final steps would be copying built WAR file into Tomcat `webapps` directory and starting the servlet container.
 
 ```bash
-cp siva-parent/siva-webapp/target/siva-webapp-3.2.0.war apache-tomcat-7.0.70/webapps
+cp siva-parent/siva-webapp/target/siva-webapp-3.2.1.war apache-tomcat-7.0.70/webapps
 ./apache-tomcat-7.0.77/bin/catalina.sh run
 ```
 
@@ -156,7 +156,7 @@ tests, SiVa Web application has to be started before the tests are executed.
 To load trusted test certificates in addition to TSL, "test" spring profile should be activated at startup, for example:
 
 ```bash
-java -Dspring.profiles.active=test -jar siva-webapp-3.2.0.jar
+java -Dspring.profiles.active=test -jar siva-webapp-3.2.1.jar
 ```
 
 To run load tests after unit and integration tests in non GUI mode:

@@ -45,7 +45,7 @@ public class CustomCertificatesLoaderTest {
         CustomCertificatesLoader customCertificatesLoader = new CustomCertificatesLoader();
         customCertificatesLoader.loadExtraCertificates(trustedListSource);
         List<CertificateToken> certTokens = getCertificateTokens();
-        assertEquals(12, certTokens.size());
+        assertEquals(13, certTokens.size());
     }
 
     @Test

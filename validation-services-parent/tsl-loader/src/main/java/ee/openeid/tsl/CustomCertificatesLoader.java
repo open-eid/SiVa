@@ -213,6 +213,49 @@ public class CustomCertificatesLoader implements CertificatesLoader{
 
         tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "TEST of ESTEID-SK 2015", getServiceInfoStartDate("2016-06-30")));
 
+        //TEST of EID-SK 2016
+        certToken = DSSUtils.loadCertificateFromBase64EncodedString(
+                "MIIG+DCCBeCgAwIBAgIQUkCP5k8r59RXxWzfbx+GsjANBgkqhkiG9w0BAQwFADB9\n" +
+                        "MQswCQYDVQQGEwJFRTEiMCAGA1UECgwZQVMgU2VydGlmaXRzZWVyaW1pc2tlc2t1\n" +
+                        "czEwMC4GA1UEAwwnVEVTVCBvZiBFRSBDZXJ0aWZpY2F0aW9uIENlbnRyZSBSb290\n" +
+                        "IENBMRgwFgYJKoZIhvcNAQkBFglwa2lAc2suZWUwIBcNMTYwODMwMTEyNDE1WhgP\n" +
+                        "MjAzMDEyMTcyMzU5NTlaMGgxCzAJBgNVBAYTAkVFMSIwIAYDVQQKDBlBUyBTZXJ0\n" +
+                        "aWZpdHNlZXJpbWlza2Vza3VzMRcwFQYDVQRhDA5OVFJFRS0xMDc0NzAxMzEcMBoG\n" +
+                        "A1UEAwwTVEVTVCBvZiBFSUQtU0sgMjAxNjCCAiIwDQYJKoZIhvcNAQEBBQADggIP\n" +
+                        "ADCCAgoCggIBAOrKOByrJqS1QsKD4tXhqkZafPMd5sfxem6iVbMAAHKpvOs4Ia2o\n" +
+                        "XdSvJ2FjrMl5szeT4lpHyzfECzO3nx7pvRLKHufi6lMwMGjtSI6DK8BiH9z7Lm+k\n" +
+                        "NLunNFdIir0hPijjbIkjg9iwfaeST9Fi5502LsK7duhKuCnH7O0uMrS/MynJ4StA\n" +
+                        "NGY13X2FvPW4qkrtbwsmhdN0Btro72O6/3O+0vbnq/yCWtcQrBGv3+8XEBdCqH5S\n" +
+                        "/Rt0EugKX4UlVy5l0QUc8IrjGtdMsr9KDtvmVwlefXYKoLqkC7guMGOUNf6Y4AYG\n" +
+                        "sPqfY4dG3N5YNp5FHDL7IO93h7TpRV3gyR38LiJsPHk5nES5mdPkNuEkCyg0zEKI\n" +
+                        "7uJ4LUuBbjzZPp2gP7PN8Iqi9GP7V2NCz8vUVN3WpHvctsf0DMvZdV5pxqLY5ojy\n" +
+                        "fhMsU4aMcGSQA9EK8ES3O1zBK1DW+btjbQjUFW1SIwCkB2yofFxge+vvzZGbvt2U\n" +
+                        "GOE8oAL8/JzNxi9FbjTAbycrGWgEMQ0sM1fKc+OsvoaSy9m3ZQGph0+dbsouQpl3\n" +
+                        "kpJvjDMzxxkrMqxdhlVMreLKGCMMxJMAGQEwVS5P93Nnmz8UbkmeomUJr3NrBo4+\n" +
+                        "V9L5S4Kx1vTvD0p72xRYFyfifLOjs8qs7lR3yhkcBPQI78ERqxv31FWDAgMBAAGj\n" +
+                        "ggKFMIICgTAfBgNVHSMEGDAWgBS1NAqdpS8QxechDr7EsWVHGwN2/jAdBgNVHQ4E\n" +
+                        "FgQUrrDq4Tb4JqulzAtmVf46HQK/ErQwDgYDVR0PAQH/BAQDAgEGMIHEBgNVHSAE\n" +
+                        "gbwwgbkwPAYHBACL7EABAjAxMC8GCCsGAQUFBwIBFiNodHRwczovL3d3dy5zay5l\n" +
+                        "ZS9yZXBvc2l0b29yaXVtL0NQUzA8BgcEAIvsQAEAMDEwLwYIKwYBBQUHAgEWI2h0\n" +
+                        "dHBzOi8vd3d3LnNrLmVlL3JlcG9zaXRvb3JpdW0vQ1BTMDsGBgQAj3oBAjAxMC8G\n" +
+                        "CCsGAQUFBwIBFiNodHRwczovL3d3dy5zay5lZS9yZXBvc2l0b29yaXVtL0NQUzAS\n" +
+                        "BgNVHRMBAf8ECDAGAQH/AgEAMCcGA1UdJQQgMB4GCCsGAQUFBwMJBggrBgEFBQcD\n" +
+                        "AgYIKwYBBQUHAwQwfAYIKwYBBQUHAQEEcDBuMCAGCCsGAQUFBzABhhRodHRwOi8v\n" +
+                        "b2NzcC5zay5lZS9DQTBKBggrBgEFBQcwAoY+aHR0cDovL3d3dy5zay5lZS9jZXJ0\n" +
+                        "cy9FRV9DZXJ0aWZpY2F0aW9uX0NlbnRyZV9Sb290X0NBLmRlci5jcnQwQQYDVR0e\n" +
+                        "BDowOKE2MASCAiIiMAqHCAAAAAAAAAAAMCKHIAAAAAAAAAAAAAAAAAAAAAAAAAAA\n" +
+                        "AAAAAAAAAAAAAAAAMCUGCCsGAQUFBwEDBBkwFzAVBggrBgEFBQcLAjAJBgcEAIvs\n" +
+                        "SQEBMEMGA1UdHwQ8MDowOKA2oDSGMmh0dHBzOi8vd3d3LnNrLmVlL3JlcG9zaXRv\n" +
+                        "cnkvY3Jscy90ZXN0X2VlY2NyY2EuY3JsMA0GCSqGSIb3DQEBDAUAA4IBAQAiw1VN\n" +
+                        "xp1Ho7FwcPlFqlLl6zb225IvpNelFX2QMbq1SPe41LuBW7WRZIV4b6bRQug55k8l\n" +
+                        "Am8eX3zEXL9I+4Bzai/IBlMSTYNpqAQGNVImQVwMa64uN8DWo8LNWSYNYYxQzO7s\n" +
+                        "TnqsqxLPWeKZRMkREI0RaVNoIPsciJvid9iBKTcGnMVkbrgyLzlXblLMU4I0pL2R\n" +
+                        "Wlfs2tr+XtCtWAvJPFskM2QZ2NnLjW8WroZr8TooocRA1vl/ruIAPC3FxW7zebKc\n" +
+                        "A2B66j4tW7uyF2kPx4WWA3xgR5QZnn4ePEAYjJdu1eWd9KbeAbxPCfFOST43t0fm\n" +
+                        "20HfV2Wp2PMEq4b2");
+
+        tlCertSource.addCertificate(certToken, getCAServiceInfoWithQcConditions(certToken, "TEST of EID-SK 2016", getServiceInfoStartDate("2016-12-21")));
+
         // Nortal NQSK16 Test Cert Signing
         certToken = DSSUtils.loadCertificateFromBase64EncodedString(
                 "MIIFWjCCA0KgAwIBAgIQWU++Mz4tewZXz+854YWLgzANBgkqhkiG9w0BAQUFADBD\n" +

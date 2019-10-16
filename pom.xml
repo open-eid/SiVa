@@ -105,7 +105,7 @@
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss'Z'</maven.build.timestamp.format>
         <dss.version>5.4.d4j.1</dss.version>
         <bouncycastle.version>1.60</bouncycastle.version>
-        <spring.boot.version>1.5.21.RELEASE</spring.boot.version>
+        <spring.boot.version>1.5.22.RELEASE</spring.boot.version>
         <powermock.version>1.7.4</powermock.version>
     </properties>
 
@@ -240,7 +240,7 @@
                     <plugin>
                         <groupId>org.owasp</groupId>
                         <artifactId>dependency-check-maven</artifactId>
-                        <version>4.0.2</version>
+                        <version>5.2.2</version>
                         <configuration>
                             <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
                             <failOnError>false</failOnError>

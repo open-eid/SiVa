@@ -26,7 +26,7 @@ import java.util.List;
 @ConfigurationProperties(prefix = "siva.tsl.loader")
 public class TSLLoaderConfigurationProperties {
     private boolean loadFromCache = false;
-    private String url = "https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml";
+    private String url = "https://ec.europa.eu/tools/lotl/eu-lotl.xml";
     private String ojUrl = "http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=uriserv:OJ.C_.2016.233.01.0001.01.ENG";
     private String lotlRootSchemeInfoUri = "https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl.html";
     private String code = "EU";

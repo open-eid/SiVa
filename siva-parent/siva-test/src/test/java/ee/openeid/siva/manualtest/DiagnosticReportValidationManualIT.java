@@ -144,7 +144,7 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
                 .then().root(DIAGNOSTIC_DATA_PREFIX)
                 .body("listOfTrustedLists", notNullValue())
                 .body("listOfTrustedLists.countryCode", equalTo("EU"))
-                .body("listOfTrustedLists.url", equalTo("https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml"))
+                .body("listOfTrustedLists.url", equalTo("https://ec.europa.eu/tools/lotl/eu-lotl.xml"))
                 .body("listOfTrustedLists.sequenceNumber", greaterThanOrEqualTo(237))
                 .body("listOfTrustedLists.version", equalTo(5))
                 .body("listOfTrustedLists.lastLoading", notNullValue())

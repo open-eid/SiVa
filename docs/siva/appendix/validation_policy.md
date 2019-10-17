@@ -143,7 +143,7 @@ Legend:
 ### Trust anchor constraints
 1. The signature must contain the certificate of the trust anchor and all certificates necessary for the signature validator to build a certification path up to the trust anchor. This applies to the signer’s certificate and the certificates of trust service providers that have issued the time-stamp token and revocation data that are incorporated in the signature.
 * Trust Anchors are: 
-	* In case of BDOC, PAdES formats: [EU Member State Trusted Lists](https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml). 
+	* In case of BDOC, PAdES formats: [EU Member State Trusted Lists](https://ec.europa.eu/tools/lotl/eu-lotl.xml). 
 	* In case of DIGIDOC-XML 1.0...1.3 and respective hashcode formats: Estonian CA certificates issued by [SK](https://sk.ee/en/repository/certs/), defined in local configuration file.
 	* In case of X-Road ASiC-E signatures, SK issued KLASS3-SK 2010, and KLASS3-SK 2010 OCSP RESPONDER and SK TIMESTAMPING AUTHORITY certificates, defined in local configuration file. 
 

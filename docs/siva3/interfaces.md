@@ -681,7 +681,7 @@ General structure of validation response.
             "lastLoading": 1553524453769,
             "issueDate": 1553151600000,
             "version": 5,
-            "url": "https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml",
+            "url": "https://ec.europa.eu/tools/lotl/eu-lotl.xml",
             "nextUpdate": 1569024000000
         },
         "usedCertificates": [
@@ -786,7 +786,7 @@ General structure of validation response.
             "lastLoading": 1553524453769,
             "issueDate": 1553151600000,
             "version": 5,
-            "url": "https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml",
+            "url": "https://ec.europa.eu/tools/lotl/eu-lotl.xml",
             "nextUpdate": 1569024000000
         }],
         "documentName": "JaakTest.asice",
@@ -1062,7 +1062,7 @@ General structure of validation response.
           <ns5:TrustedLists>
             <ns5:TrustedList>
               <ns5:CountryCode>EU</ns5:CountryCode>
-              <ns5:Url>https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml</ns5:Url>
+              <ns5:Url>https://ec.europa.eu/tools/lotl/eu-lotl.xml</ns5:Url>
               <ns5:SequenceNumber>237</ns5:SequenceNumber>
               <ns5:Version>5</ns5:Version>
               <ns5:LastLoading>2019-03-25T14:34:13</ns5:LastLoading>
@@ -1073,7 +1073,7 @@ General structure of validation response.
           </ns5:TrustedLists>
           <ns5:ListOfTrustedLists>
             <ns5:CountryCode>EU</ns5:CountryCode>
-            <ns5:Url>https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml</ns5:Url>
+            <ns5:Url>https://ec.europa.eu/tools/lotl/eu-lotl.xml</ns5:Url>
             <ns5:SequenceNumber>237</ns5:SequenceNumber>
             <ns5:Version>5</ns5:Version>
             <ns5:LastLoading>2019-03-25T14:34:13</ns5:LastLoading>

@@ -416,7 +416,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         assertEquals("validSignaturesCount is zero", new Integer(0), getValidationReportFromDom(report).getValidationConclusion().getValidSignaturesCount());
         assertEquals("SignatureFormat should match expected", "XAdES_BASELINE_LT", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureFormat());
         assertEquals("Indication should match expected", "TOTAL-FAILED", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getIndication().value());
-        assertEquals("Error message should match expected", "MissingHeaderField: Required field 'protocolVersion' is missing", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getErrors().getError().get(0).getContent());
+        assertEquals("Error message should match expected", "InvalidSignatureValue: Signature is not valid", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getErrors().getError().get(0).getContent());
         assertEquals("SignatureLevel should match expected", "", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureLevel());
         assertTrue("Warnings should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getWarnings().getWarning().isEmpty());
         assertEquals("SignatureForm should match expected","ASiC-E", getValidationReportFromDom(report).getValidationConclusion().getSignatureForm());

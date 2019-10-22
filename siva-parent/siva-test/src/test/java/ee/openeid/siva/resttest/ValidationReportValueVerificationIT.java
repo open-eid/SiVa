@@ -864,7 +864,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("signature"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("MissingHeaderField: Required field 'protocolVersion' is missing"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("InvalidSignatureValue: Signature is not valid"))
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("invalid-digest.asice"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))

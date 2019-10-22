@@ -39,13 +39,6 @@
             <artifactId>siva-monitoring</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.apache.santuario</groupId>
-            <artifactId>xmlsec</artifactId>
-            <version>2.1.2</version>
-        </dependency>
-
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcpkix-jdk15on</artifactId>
@@ -56,12 +49,6 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
@@ -71,20 +58,30 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
         </dependency>
-
         <dependency>
             <groupId>ee.openid.siva</groupId>
             <artifactId>xroad-asice-verifier</artifactId>
-            <version>1.0.5</version>
+            <version>1.0.7</version>
         </dependency>
-
         <dependency>
             <groupId>org.zeroturnaround</groupId>
             <artifactId>zt-zip</artifactId>
             <version>1.13</version>
             <type>jar</type>
         </dependency>
-
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.12.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.santuario</groupId>
+            <artifactId>xmlsec</artifactId>
+        </dependency>
         <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -109,10 +106,10 @@
                 </property>
             </activation>
             <properties>
-                <xroad.jar.base>${project.basedir}/src/main/resources/xroad-jars</xroad.jar.base>
-                <xroad.ext.base>${project.basedir}/src/main/resources/ext-lib</xroad.ext.base>
-                <xroad.orginal.jar>asicverifier-1.0.jar</xroad.orginal.jar>
-                <xroad.output.file>asic-verifier-1.0-mod.jar</xroad.output.file>
+                <xroad.jar.base>${project.basedir}/lib/xroad-jars</xroad.jar.base>
+                <xroad.ext.base>${project.basedir}/lib/ext-lib</xroad.ext.base>
+                <xroad.orginal.jar>asicverifier-1.0.7.jar</xroad.orginal.jar>
+                <xroad.output.file>asicverifier-1.0.7-mod.jar</xroad.output.file>
             </properties>
             <build>
                 <plugins>
@@ -129,33 +126,43 @@
                                 </goals>
                                 <configuration>
                                     <target>
-                                        <unzip src="${xroad.ext.base}/${xroad.orginal.jar}" dest="${project.build.directory}/tmp"/>
+                                        <unzip src="${xroad.ext.base}/${xroad.orginal.jar}"
+                                               dest="${project.build.directory}/tmp"/>
 
                                         <!-- Remove old modified JAR file -->
-                                        <delete file="${xroad.jar.base}/${xroad.output.file}" />
+                                        <delete file="${xroad.jar.base}/${xroad.output.file}"/>
 
                                         <!-- Delete all logging related content -->
-                                        <delete dir="${project.build.directory}/tmp/org/slf4j" />
-                                        <delete dir="${project.build.directory}/tmp/ch" />
-                                        <delete file="${project.build.directory}/tmp/logback.xml" />
+                                        <delete dir="${project.build.directory}/tmp/org/slf4j"/>
+                                        <delete dir="${project.build.directory}/tmp/ch"/>
+                                        <delete file="${project.build.directory}/tmp/logback.xml"/>
 
                                         <!-- Remove meta info about logging -->
-                                        <delete dir="${project.build.directory}/tmp/META-INF/maven/ch.qos.logback" />
-                                        <delete dir="${project.build.directory}/tmp/META-INF/maven/org.slf4j" />
+                                        <delete dir="${project.build.directory}/tmp/META-INF/maven/ch.qos.logback"/>
+                                        <delete dir="${project.build.directory}/tmp/META-INF/maven/org.slf4j"/>
 
                                         <!-- Remove Bouncy Castle from fat JAR -->
-                                        <delete dir="${project.build.directory}/tmp/org/bouncycastle" />
+                                        <delete dir="${project.build.directory}/tmp/org/bouncycastle"/>
 
                                         <!-- Remove servlet from fat JAR -->
-                                        <delete dir="${project.build.directory}/tmp/javax/servlet" />
+                                        <delete dir="${project.build.directory}/tmp/javax/servlet"/>
 
                                         <!-- Remove Jackson -->
-                                        <delete dir="${project.build.directory}/tmp/com/fasterxml/jackson" />
+                                        <delete dir="${project.build.directory}/tmp/com/fasterxml/jackson"/>
+                                        <delete dir="${project.build.directory}/tmp/META-INF/maven/com.fasterxml.jackson.core"/>
+
+                                        <!-- Remove Santuario -->
+                                        <delete dir="${project.build.directory}/tmp/META-INF/maven/org.apache.santuario"/>
+
+                                        <!-- Remove Xerces -->
+                                        <delete dir="${project.build.directory}/tmp/org/apache/xerces"/>
+                                        <delete dir="${project.build.directory}/tmp/META-INF/maven/xerces"/>
 
                                         <!-- Remove Apache XML security from fat JAR -->
-                                        <delete dir="${project.build.directory}/tmp/org/apache/xml/security" />
+                                        <delete dir="${project.build.directory}/tmp/org/apache/xml/security"/>
 
-                                        <zip basedir="${project.build.directory}/tmp" update="true" destfile="${xroad.jar.base}/${xroad.output.file}"/>
+                                        <zip basedir="${project.build.directory}/tmp" update="true"
+                                             destfile="${xroad.jar.base}/${xroad.output.file}"/>
                                     </target>
                                 </configuration>
                             </execution>
@@ -175,14 +182,15 @@
                                 <configuration>
                                     <groupId>${project.groupId}</groupId>
                                     <artifactId>xroad-asice-verifier</artifactId>
-                                    <version>1.0.5</version>
-                                    <localRepositoryPath>${basedir}/external-lib-repository</localRepositoryPath>
+                                    <version>1.0.7</version>
+                                    <localRepositoryPath>${basedir}/lib/repo</localRepositoryPath>
                                     <packaging>jar</packaging>
                                     <file>${xroad.jar.base}/${xroad.output.file}</file>
                                 </configuration>
                             </execution>
                         </executions>
                     </plugin>
+
                 </plugins>
             </build>
         </profile>
@@ -273,38 +281,10 @@
                     </archive>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>com.spotify</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <version>0.4.11</version>
-                <configuration>
-                    <imageName>mihkels/${project.artifactId}</imageName>
-                    <imageTags>
-                        <imageTag>${project.version}</imageTag>
-                        <imageTag>latest</imageTag>
-                    </imageTags>
-                    <env>
-                        <JAVA_OPTS>""</JAVA_OPTS>
-                    </env>
-                    <baseImage>cogniteev/oracle-java:latest</baseImage>
-                    <entryPoint>exec java $JAVA_OPTS -jar /${project.build.finalName}.jar </entryPoint>
-                    <resources>
-                        <resource>
-                            <targetPath>/</targetPath>
-                            <directory>${project.build.directory}</directory>
-                            <include>${project.build.finalName}.jar</include>
-                        </resource>
-                    </resources>
-                    <serverId>docker-hub</serverId>
-                    <retryPushCount>0</retryPushCount>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
-
     <repositories>
         <repository>
-            <id>local-ext-lib-repository</id>
             <releases>
                 <enabled>true</enabled>
                 <checksumPolicy>ignore</checksumPolicy>
@@ -312,7 +292,8 @@
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
-            <url>file://${basedir}/external-lib-repository</url>
+            <id>my-local-repo</id>
+            <url>file:///${project.basedir}/lib/repo</url>
         </repository>
     </repositories>
 

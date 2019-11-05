@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;
 import org.json.JSONObject;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
@@ -595,6 +596,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: TS-11_23634_TS_2_timestamps.asice
      */
     @Test
+    @Ignore("SIVA-119")
     public void validationRequestDefaultReport() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("TS-11_23634_TS_2_timestamps.asice"));
         JSONObject jsonObject = new JSONObject();
@@ -621,6 +623,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: TS-11_23634_TS_2_timestamps.asice
      */
     @Test
+    @Ignore("SIVA-119")
     public void validationRequestSimpleReport() {
         post(validationRequestFor("TS-11_23634_TS_2_timestamps.asice", null, REPORT_TYPE_SIMPLE ))
                 .then()
@@ -643,6 +646,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: TS-11_23634_TS_2_timestamps.asice
      */
     @Test
+    @Ignore("SIVA-119")
     public void validationRequestDetailedReport() {
         post(validationRequestFor("TS-11_23634_TS_2_timestamps.asice", null, REPORT_TYPE_DETAILED ))
                 .then()
@@ -772,6 +776,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: TS-11_23634_TS_2_timestamps.asice
      */
     @Test
+    @Ignore("SIVA-119")
     public void validationRequestDiagnosticReport() {
         post(validationRequestFor("TS-11_23634_TS_2_timestamps.asice", null, REPORT_TYPE_DIAGNOSTIC ))
                 .then()

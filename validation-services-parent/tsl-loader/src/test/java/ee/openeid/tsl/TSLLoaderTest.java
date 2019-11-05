@@ -49,8 +49,6 @@ public class TSLLoaderTest {
     private TrustedListsCertificateSource trustedListSource;
     @Mock
     private KeyStoreCertificateSource keyStoreCertificateSource;
-    @Mock
-    private CertificatesLoader certificatesLoader;
 
     @InjectMocks
     private TSLLoader tslLoader;

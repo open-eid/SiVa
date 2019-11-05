@@ -33,7 +33,6 @@ import javax.annotation.PostConstruct;
 public class TSLLoader {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TSLLoader.class);
-    private CertificatesLoader certificatesLoader;
     private TSLValidationJobFactory tslValidationJobFactory;
     private TSLValidationJob tslValidationJob;
     private TSLLoaderConfigurationProperties configurationProperties;
@@ -57,7 +56,8 @@ public class TSLLoader {
         tslValidationJob.setOjContentKeyStore(keyStoreCertificateSource);
         tslValidationJob.setOjUrl(configurationProperties.getOjUrl());
         tslValidationJob.setLotlRootSchemeInfoUri(configurationProperties.getLotlRootSchemeInfoUri());
-        tslValidationJob.setFilterTerritories(configurationProperties.getTrustedTerritories());
+        if (!configurationProperties.getTrustedTerritories().isEmpty())
+            tslValidationJob.setFilterTerritories(configurationProperties.getTrustedTerritories());
         tslValidationJob.setCheckLOTLSignature(true);
         tslValidationJob.setCheckTSLSignatures(true);
     }
@@ -66,12 +66,10 @@ public class TSLLoader {
         if (configurationProperties.isLoadFromCache()) {
             LOGGER.info("Loading TSL from cache");
             tslValidationJob.initRepository();
-            certificatesLoader.loadExtraCertificates(trustedListSource);
             LOGGER.info("Finished loading TSL from cache");
         } else {
             LOGGER.info("Loading TSL over the network");
             tslValidationJob.refresh();
-            certificatesLoader.loadExtraCertificates(trustedListSource);
             LOGGER.info("Finished loading TSL over the network");
         }
     }
@@ -96,8 +94,4 @@ public class TSLLoader {
         this.trustedListSource = trustedListSource;
     }
 
-    @Autowired
-    public void setCertificatesLoader(CertificatesLoader certificatesLoader) {
-        this.certificatesLoader = certificatesLoader;
-    }
 }

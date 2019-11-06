@@ -1492,19 +1492,19 @@ The last lines of build output should look very similar to below image:</p>
 <p>SiVa project compiles <strong>3 fat executable JAR</strong> files that you can run after successfully building the
 project by issuing below commands:</p>
 <p><strong>First start the Siva webapp</strong></p>
-<div class="codehilite"><pre><span></span>./siva-parent/siva-webapp/target/siva-webapp-3.2.0.jar
+<div class="codehilite"><pre><span></span>./siva-parent/siva-webapp/target/siva-webapp-3.2.2.jar
 </pre></div>
 
 
 <p><strong>Second we need to start X-road validation webapp</strong></p>
-<div class="codehilite"><pre><span></span>./validation-services-parent/xroad-validation-service/target/xroad-validation-service-3.2.0.jar
+<div class="codehilite"><pre><span></span>./validation-services-parent/xroad-validation-service/target/xroad-validation-service-3.2.2.jar
 </pre></div>
 
 
 <p>The SiVa webapp by default runs on port <strong>8080</strong> and XRoad validation service starts up on port <strong>8081</strong>.
 Easiest way to test out validation is run SiVa demo application.</p>
 <p><strong>Start the Demo webapp</strong></p>
-<div class="codehilite"><pre><span></span>./siva-parent/siva-sample-application/target/siva-sample-application-3.2.0.jar
+<div class="codehilite"><pre><span></span>./siva-parent/siva-sample-application/target/siva-sample-application-3.2.2.jar
 </pre></div>
 
 
@@ -1540,14 +1540,14 @@ single JAR file. It makes a lot easier to deploy it into servers.</p>
 
 
 <p>Save and close the <code>siva-webapp.service</code> file.
-Next we need to move <code>siva-webapp-3.2.0.jar</code> into newly created <code>/var/apps</code> directory and rename to
+Next we need to move <code>siva-webapp-3.2.2.jar</code> into newly created <code>/var/apps</code> directory and rename to
 JAR file to <code>siva-webapp.jar</code>. match</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The copied JAR filename must match option <code>ExecStart</code> in  <code>siva-webapp.service</code> file</p>
 </div>
 <div class="codehilite"><pre><span></span>sudo mkdir /var/apps
-sudo cp siva-parent/siva-webapp/target/executable/siva-webapp-3.2.0.jar /var/apps/siva-webapp.jar
+sudo cp siva-parent/siva-webapp/target/executable/siva-webapp-3.2.2.jar /var/apps/siva-webapp.jar
 </pre></div>
 
 
@@ -1613,7 +1613,7 @@ the http connector parameter <code>maxPostSize</code> should be configured with 
 <p><strong>NOTE</strong> The script will skip running the integration tests when building WAR files</p>
 </blockquote>
 <p>Final steps would be copying built WAR file into Tomcat <code>webapps</code> directory and starting the servlet container.</p>
-<div class="codehilite"><pre><span></span>cp siva-parent/siva-webapp/target/siva-webapp-3.2.0.war apache-tomcat-8.5.24/webapps
+<div class="codehilite"><pre><span></span>cp siva-parent/siva-webapp/target/siva-webapp-3.2.2.war apache-tomcat-8.5.24/webapps
 ./apache-tomcat-7.0.77/bin/catalina.sh run
 </pre></div>
 
@@ -1888,7 +1888,7 @@ Default configuration parameters can be overridden by providing custom applicati
 </tr>
 <tr>
 <td><strong>siva.tsl.loader.url</strong></td>
-<td>A url value that points to the external TSL <ul><li>Default: <strong>https://ec.europa.eu/information_society/policy/esignature/trusted-list/tl-mp.xml</strong></li></ul></td>
+<td>A url value that points to the external TSL <ul><li>Default: <strong>https://ec.europa.eu/tools/lotl/eu-lotl.xml</strong></li></ul></td>
 </tr>
 <tr>
 <td><strong>siva.tsl.loader.code</strong></td>

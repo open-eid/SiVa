@@ -1299,19 +1299,19 @@ Changes are described using notation from REST endpoint.
 
 | Endpoint | Parameter | Change | Link | Comment |
 |----------|-----------|--------|------|---------|
-| /validateDocument | reportType | parameter added |  [Link](../siva3/interfaces/#validation-request-parameters) | Diagnostic report type added |
-| /validateHashcode | whole request | request changed |  [Link](../siva3/interfaces/#validation-request-parameters_1) | Request changed to support validation of multiple signatures with one request |
+| /validateDocument | reportType | parameter added |  [Link](../interfaces/#validation-request-parameters) | Diagnostic report type added |
+| /validateHashcode | whole request | request changed |  [Link](../interfaces/#validation-request-parameters_1) | Request changed to support validation of multiple signatures with one request |
 
 ### Changes in response
 
 | Response type | Parameter | Change | Link | Comment |
 |---------------|-----------|--------|------|---------|
-| Simple | validatedDocument | now optional |  [Link](../siva3/interfaces/#validation-response-parameters-simple-report-successful-scenario) | Object now optional |
-| Simple | validatedDocument.filename | now optional |  [Link](../siva3/interfaces/#validation-response-parameters-simple-report-successful-scenario) | String now optional |
-| Simple | validatedDocument.fileHash | changed |  [Link](../siva3/interfaces/#validation-response-parameters-simple-report-successful-scenario) | Previously validatedDocument.fileHashInHex. Now contains Base64 value |
-| Simple | signatures[0].subjectDistinguishedName.serialNumber | added |  [Link](../siva3/interfaces/#validation-response-parameters-simple-report-successful-scenario) | Added signers serial number field |
-| Simple | signatures[0].subjectDistinguishedName.commonName | added |  [Link](../siva3/interfaces/#validation-response-parameters-simple-report-successful-scenario) | Added signers common name field |
-| Simple | signatures[0].signatureScopes[0].hashAlgo | added |  [Link](../siva3/interfaces/#validation-response-parameters-simple-report-successful-scenario) | Added datafile hash algo field for hashcode validation |
-| Simple | signatures[0].signatureScopes[0].hash | added |  [Link](../siva3/interfaces/#validation-response-parameters-simple-report-successful-scenario) | Added datafile hash field for hashcode validation |
-| Diagnostic | whole response | added |  [Link](../siva3/interfaces/#validation-response-parameters-for-diagnostic-data-report-successful-scenario) | New report type added |
+| Simple | validatedDocument | now optional |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | Object now optional |
+| Simple | validatedDocument.filename | now optional |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | String now optional |
+| Simple | validatedDocument.fileHash | changed |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | Previously validatedDocument.fileHashInHex. Now contains Base64 value |
+| Simple | signatures[0].subjectDistinguishedName.serialNumber | added |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | Added signers serial number field |
+| Simple | signatures[0].subjectDistinguishedName.commonName | added |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | Added signers common name field |
+| Simple | signatures[0].signatureScopes[0].hashAlgo | added |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | Added datafile hash algo field for hashcode validation |
+| Simple | signatures[0].signatureScopes[0].hash | added |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | Added datafile hash field for hashcode validation |
+| Diagnostic | whole response | added |  [Link](../interfaces/#validation-response-parameters-for-diagnostic-data-report-successful-scenario) | New report type added |
 

@@ -1,23 +1,5 @@
-endpoints:
-  health:
-    enabled: true
-
-management:
-  security:
-    enabled: false
-
-plugtest:
-  location: url
-
 siva:
-  report:
-    reportSignatureEnabled: true
-  signatureService:
-    signatureLevel: XAdES_BASELINE_LT
-    tspUrl: http://demo.sk.ee/tsa
-    ocspUrl: http://demo.sk.ee/ocsp
-    pkcs12:
-          path: src/test/resources/test.p12
-          password: password
-
-
+  application-context-path: /
+  hostname: localhost
+  port: 8080
+  protocol: http

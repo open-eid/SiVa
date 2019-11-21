@@ -81,29 +81,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("validSignaturesCount", equalTo(2));
     }
 
-    /**
-     * TestCaseID: ValidationRequest-Parameters-2
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
-     *
-     * Title: Happy path valid all input test
-     *
-     * Expected Result: Validation report is returned
-     *
-     * File: xroad-simple.asice
-     */
-    @Test
-    public void validationRequestAllInputs() {
-        setTestFilesDirectory("xroad/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        post(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-simple.asice", "XROAD", "POLv3"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
-                .body("validatedDocument.filename", equalTo("xroad-simple.asice"))
-                .body("policy.policyName", equalTo("POLv3"))
-                .body("validSignaturesCount", equalTo(1));
-    }
+
 
     /**
      * TestCaseID: ValidationRequest-Parameters-3
@@ -442,33 +420,6 @@ public class ValidationRequestIT extends SiVaRestTests {
         post(jsonObject.toString())
                 .then().root(VALIDATION_CONCLUSION_PREFIX)
                 .body("validSignaturesCount", equalTo(2));
-    }
-
-    /**
-     * TestCaseID: ValidationRequest-Parameters-18
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
-     *
-     * Title: DocumentType parameter is XROAD
-     *
-     * Expected Result: Xroad validatior is used for validation and report is returned
-     *
-     * File: xroad-simple.asice
-     */
-    @Test
-    public void validationRequestDocumentTypeXroad() {
-        setTestFilesDirectory("xroad/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put(DOCUMENT, encodedString);
-        jsonObject.put(FILENAME, "xroad-simple.asice");
-        jsonObject.put(DOCUMENT_TYPE, "XROAD");
-
-        post(jsonObject.toString())
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
-                .body("validSignaturesCount", equalTo(1));
     }
 
     /**
@@ -920,53 +871,6 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
-
-    /**
-     * TestCaseID: ValidationRequest-Validator-7
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
-     *
-     * Title: Mismatch in stated and actual document (xroad and ddoc)
-     *
-     * Expected Result: Error is returned
-     *
-     * File: igasugust1.3.ddoc
-     */
-    @Test
-    public void xroadValidationRequestNotMatchingDocumentTypeAndActualFileDdoc() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
-        post(validationRequestWithDocumentTypeValidKeys(encodedString, "igasugust1.3.ddoc", "xroad", "POLv3"))
-                .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
-                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
-    }
-
-    /**
-     * TestCaseID: ValidationRequest-Validator-8
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
-     *
-     * Title: Input random base64 string as document with xroad document type
-     *
-     * Expected Result: Error is returned stating problem in document
-     *
-     * File: not relevant
-     */
-    @Test
-    public void validationRequestRandomInputAsXroadDocument() {
-        String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
-        post(validationRequestWithDocumentTypeValidKeys(encodedString, "some_pdf.asice", "xroad", "POLv3"))
-                .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
-                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
-    }
-
 
 
     @Override

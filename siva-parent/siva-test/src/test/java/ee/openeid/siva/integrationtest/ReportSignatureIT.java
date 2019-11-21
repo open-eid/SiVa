@@ -36,6 +36,7 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
 @Category(IntegrationTest.class)
+@Ignore("SIVA-196")
 public class ReportSignatureIT extends SiVaRestTests {
 
     private static final String TEST_FILES_DIRECTORY = "document_format_test_files/";

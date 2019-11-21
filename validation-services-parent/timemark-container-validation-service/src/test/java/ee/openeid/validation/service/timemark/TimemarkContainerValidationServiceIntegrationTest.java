@@ -177,6 +177,7 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
+    @Ignore("SIVA-119")
     public void vShouldIncludeRequiredFields() throws Exception {
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
         ValidationConclusion validationConclusion = validationResult2Signatures.getValidationConclusion();
@@ -205,6 +206,7 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
+    @Ignore("SIVA-119")
     public void vShouldHaveCorrectSignatureValidationDataForSignature1() throws Exception {
 
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
@@ -233,6 +235,7 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
+    @Ignore("SIVA-119")
     public void vShouldHaveCorrectSignatureValidationDataForSignature2() throws Exception {
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
         SignatureValidationData sig2 = validationResult2Signatures.getValidationConclusion().getSignatures()

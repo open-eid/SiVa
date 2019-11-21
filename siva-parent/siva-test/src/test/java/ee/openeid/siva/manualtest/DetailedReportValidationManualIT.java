@@ -522,6 +522,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
     @Test
+    @Ignore("SIVA-196")
     public void validateFileHashInDetailedReportReportSignatureEnabledTrue() {
         post(validationRequestFor("hellopades-lt-sha256-rsa2048.pdf", null, REPORT_TYPE_DETAILED ))
                 .then()

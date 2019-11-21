@@ -135,7 +135,7 @@ export CATALINA_OPTS="-Dspring.config.location=file:/path/to/application.propert
 
 ## How-to run tests
 
-Unit and integration tests are integral part of the SiVa code base. The tests are automatically executed every
+Unit are integral part of the SiVa code base. The tests are automatically executed every
 time the application is built. The build will fail if any of the tests fail.
 
 To execute the tests from command line after application is built use:
@@ -144,10 +144,14 @@ To execute the tests from command line after application is built use:
 ./mvnw verify
 ```
 
+### How to run integration tests
+Integration tests are disabled by default, but can be enabled with maven parameter `-DrunIntegrationTests=true`. When executing the integration
+tests, SiVa Web application has to be started before the tests are executed. The build will fail if any of the tests fail.
+It is possible to run integration tests without xroad tests `-DrunWithoutXroadIntegrationTests=true`.
+
 ### How to run load tests
 
-Load tests are disabled by default, but can be enabled with maven parameter `-DrunLoadTests=true`. By default all unit
-and integration tests will be executed prior the load tests, but it is possible to skip them. When executing the load
+Load tests are disabled by default, but can be enabled with maven parameter `-DrunLoadTests=true`. When executing the load
 tests, SiVa Web application has to be started before the tests are executed.
 
 > **Note**: PDF load test files contain test certificates. In order for PDF load tests to succeed
@@ -159,7 +163,7 @@ To load trusted test certificates in addition to TSL, "test" spring profile shou
 java -Dspring.profiles.active=test -jar siva-webapp-3.2.2.jar
 ```
 
-To run load tests after unit and integration tests in non GUI mode:
+To run load tests after unit tests in non GUI mode:
 
 ```bash
 ./mvnw verify -DrunLoadTests=true

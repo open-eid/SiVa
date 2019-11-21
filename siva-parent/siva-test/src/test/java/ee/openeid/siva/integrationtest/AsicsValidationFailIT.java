@@ -163,7 +163,6 @@ public class AsicsValidationFailIT extends SiVaRestTests {
                 .then()
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-S"))
                 .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("AsicsTSTsignatureModified.asics"))
-                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("03yjl0LavAS2pXeX35Te6KsvBuCDOr0dxur4zQfiLHw="))
                 .body("validationReport.validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].error[0].content", Matchers.is("Signature not intact"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].signedTime", Matchers.is("2017-08-10T12:40:40Z"));
@@ -209,7 +208,6 @@ public class AsicsValidationFailIT extends SiVaRestTests {
                 .then()
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-S"))
                 .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("DatafileAlteredButStillValid.asics"))
-                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("gNDRgEXiqMQaQZfFQt3eJEqCmj0iHNzysDplarJ7Puo="))
                 .body("validationReport.validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("validationReport.validationConclusion.timeStampTokens[0].error[0].content", Matchers.is("Signature not intact"));
     }

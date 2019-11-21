@@ -18,6 +18,7 @@ package ee.openeid.siva.soaptest;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
@@ -46,6 +47,7 @@ public class ReportSignatureIT extends SiVaSoapTests {
     }
 
     @Test
+    @Ignore("SIVA-196")
     public void whenRequestingDetailedReport_thenValidationReportSignatureShouldBeInResponse() {
         Document report = extractValidateDocumentResponseDom(post(validationRequestForDocumentReportType("hellopades-pades-lt-sha256-sign.pdf", "Detailed")).andReturn().body().asString());
         Assert.assertThat(getValidateDocumentResponseFromDom(report).getValidationReportSignature(), not(isEmptyOrNullString()));

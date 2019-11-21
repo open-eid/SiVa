@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;
 import org.json.JSONObject;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
@@ -80,29 +81,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("validSignaturesCount", equalTo(2));
     }
 
-    /**
-     * TestCaseID: ValidationRequest-Parameters-2
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
-     *
-     * Title: Happy path valid all input test
-     *
-     * Expected Result: Validation report is returned
-     *
-     * File: xroad-simple.asice
-     */
-    @Test
-    public void validationRequestAllInputs() {
-        setTestFilesDirectory("xroad/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        post(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-simple.asice", "XROAD", "POLv3"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
-                .body("validatedDocument.filename", equalTo("xroad-simple.asice"))
-                .body("policy.policyName", equalTo("POLv3"))
-                .body("validSignaturesCount", equalTo(1));
-    }
+
 
     /**
      * TestCaseID: ValidationRequest-Parameters-3
@@ -444,33 +423,6 @@ public class ValidationRequestIT extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: ValidationRequest-Parameters-18
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
-     *
-     * Title: DocumentType parameter is XROAD
-     *
-     * Expected Result: Xroad validatior is used for validation and report is returned
-     *
-     * File: xroad-simple.asice
-     */
-    @Test
-    public void validationRequestDocumentTypeXroad() {
-        setTestFilesDirectory("xroad/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put(DOCUMENT, encodedString);
-        jsonObject.put(FILENAME, "xroad-simple.asice");
-        jsonObject.put(DOCUMENT_TYPE, "XROAD");
-
-        post(jsonObject.toString())
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
-                .body("validSignaturesCount", equalTo(1));
-    }
-
-    /**
      * TestCaseID: ValidationRequest-Parameters-19
      *
      * TestType: Automated
@@ -595,6 +547,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: TS-11_23634_TS_2_timestamps.asice
      */
     @Test
+    @Ignore("SIVA-119")
     public void validationRequestDefaultReport() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("TS-11_23634_TS_2_timestamps.asice"));
         JSONObject jsonObject = new JSONObject();
@@ -621,6 +574,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: TS-11_23634_TS_2_timestamps.asice
      */
     @Test
+    @Ignore("SIVA-119")
     public void validationRequestSimpleReport() {
         post(validationRequestFor("TS-11_23634_TS_2_timestamps.asice", null, REPORT_TYPE_SIMPLE ))
                 .then()
@@ -643,6 +597,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: TS-11_23634_TS_2_timestamps.asice
      */
     @Test
+    @Ignore("SIVA-119")
     public void validationRequestDetailedReport() {
         post(validationRequestFor("TS-11_23634_TS_2_timestamps.asice", null, REPORT_TYPE_DETAILED ))
                 .then()
@@ -772,6 +727,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: TS-11_23634_TS_2_timestamps.asice
      */
     @Test
+    @Ignore("SIVA-119")
     public void validationRequestDiagnosticReport() {
         post(validationRequestFor("TS-11_23634_TS_2_timestamps.asice", null, REPORT_TYPE_DIAGNOSTIC ))
                 .then()
@@ -915,53 +871,6 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
-
-    /**
-     * TestCaseID: ValidationRequest-Validator-7
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
-     *
-     * Title: Mismatch in stated and actual document (xroad and ddoc)
-     *
-     * Expected Result: Error is returned
-     *
-     * File: igasugust1.3.ddoc
-     */
-    @Test
-    public void xroadValidationRequestNotMatchingDocumentTypeAndActualFileDdoc() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
-        post(validationRequestWithDocumentTypeValidKeys(encodedString, "igasugust1.3.ddoc", "xroad", "POLv3"))
-                .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
-                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
-    }
-
-    /**
-     * TestCaseID: ValidationRequest-Validator-8
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
-     *
-     * Title: Input random base64 string as document with xroad document type
-     *
-     * Expected Result: Error is returned stating problem in document
-     *
-     * File: not relevant
-     */
-    @Test
-    public void validationRequestRandomInputAsXroadDocument() {
-        String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
-        post(validationRequestWithDocumentTypeValidKeys(encodedString, "some_pdf.asice", "xroad", "POLv3"))
-                .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
-                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
-    }
-
 
 
     @Override

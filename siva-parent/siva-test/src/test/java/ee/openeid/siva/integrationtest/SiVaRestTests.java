@@ -48,6 +48,8 @@ import static io.restassured.config.EncoderConfig.encoderConfig;
 
 public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
 
+
+
     private static final String VALIDATION_ENDPOINT = "/validate";
     private static final String HASHCODE_VALIDATION_ENDPOINT = "/validateHashcode";
     private static final String DATA_FILES_ENDPOINT = "/getDataFiles";
@@ -60,7 +62,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
                 .body(request)
                 .contentType(ContentType.JSON)
                 .when()
-                .post(VALIDATION_ENDPOINT);
+                .post(createUrl(VALIDATION_ENDPOINT));
     }
 
     protected Response postWithXAuthUsrHeader(String request, String xAuthUser) {
@@ -70,7 +72,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
                 .body(request)
                 .contentType(ContentType.JSON)
                 .when()
-                .post(VALIDATION_ENDPOINT);
+                .post(createUrl(VALIDATION_ENDPOINT));
     }
 
     protected Response postForDataFiles(String request) {
@@ -79,7 +81,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
                 .body(request)
                 .contentType(ContentType.JSON)
                 .when()
-                .post(DATA_FILES_ENDPOINT);
+                .post(createUrl(DATA_FILES_ENDPOINT));
     }
 
     protected Response postHashcodeValidation(String request) {
@@ -88,14 +90,14 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
                 .body(request)
                 .contentType(ContentType.JSON)
                 .when()
-                .post(HASHCODE_VALIDATION_ENDPOINT);
+                .post(createUrl(HASHCODE_VALIDATION_ENDPOINT));
     }
 
     protected Response getMonitoring() {
         return given()
                 .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
                 .when()
-                .get(MONITORING_ENDPOINT);
+                .get(createUrl(MONITORING_ENDPOINT));
     }
 
     /**
@@ -222,7 +224,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         return jsonObject.toString();
     }
 
-    protected String validationRequestHashcodeSimpleMultipleFiles(List <String> signatureFiles, String signaturePolicy, String reportType) {
+    protected String validationRequestHashcodeSimpleMultipleFiles(List<String> signatureFiles, String signaturePolicy, String reportType) {
 
         JSONObject jsonObject = new JSONObject();
         List<SignatureFile> signatureFileList = new ArrayList<>();
@@ -238,11 +240,11 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         return jsonObject.toString();
     }
 
-    protected String validationRequestHashcodeMultipleFiles(List <String> signatureFiles, String signaturePolicy, String reportType) throws ParserConfigurationException, IOException, SAXException {
+    protected String validationRequestHashcodeMultipleFiles(List<String> signatureFiles, String signaturePolicy, String reportType) throws ParserConfigurationException, IOException, SAXException {
         return validationRequestHashcodeMultipleFilesReturnsObject(signatureFiles, signaturePolicy, reportType).toString();
     }
 
-    protected JSONObject validationRequestHashcodeMultipleFilesReturnsObject(List <String> signatureFiles, String signaturePolicy, String reportType) throws ParserConfigurationException, IOException, SAXException {
+    protected JSONObject validationRequestHashcodeMultipleFilesReturnsObject(List<String> signatureFiles, String signaturePolicy, String reportType) throws ParserConfigurationException, IOException, SAXException {
         JSONObject jsonObject = new JSONObject();
         List<SignatureFile> signatureFileList = new ArrayList<>();
         for (String signature : signatureFiles) {
@@ -259,7 +261,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
 
             List<Datafile> datafiles = new ArrayList<>();
 
-            for(int k=0; k<nList.getLength()-1; k++) {
+            for (int k = 0; k < nList.getLength() - 1; k++) {
                 Datafile dataFileObject = new Datafile();
                 dataFileObject.setHash(nList.item(k).getChildNodes().item(1).getFirstChild().getNodeValue());
                 String algorithm = nList.item(k).getChildNodes().item(0).getAttributes().getNamedItem("Algorithm").getNodeValue();
@@ -274,7 +276,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
 
         jsonObject.put(SIGNATURE_POLICY, signaturePolicy);
         jsonObject.put(REPORT_TYPE, reportType);
-        jsonObject.put(SIGNATURE_FILES, signatureFileList );
+        jsonObject.put(SIGNATURE_FILES, signatureFileList);
         return jsonObject;
     }
 
@@ -323,7 +325,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         }
     }
 
-    protected String currentDateTime(String timeZone, String timeFormat){
+    protected String currentDateTime(String timeZone, String timeFormat) {
         final Date currentTime = new Date();
         final SimpleDateFormat sdf = new SimpleDateFormat(timeFormat);
 

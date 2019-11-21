@@ -30,7 +30,6 @@ import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource;
-import ee.openeid.tsl.CustomCertificatesLoader;
 import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.TSLValidationJobFactory;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
@@ -38,7 +37,6 @@ import ee.openeid.validation.service.timemark.configuration.TestDigiDoc4jConfigu
 import ee.openeid.validation.service.timemark.configuration.TimemarkContainerValidationServiceConfiguration;
 import ee.openeid.validation.service.timemark.signature.policy.BDOCConfigurationService;
 import ee.openeid.validation.service.timemark.signature.policy.BDOCSignaturePolicyService;
-import ee.openeid.validation.service.timemark.signature.policy.CertificateConfigurationLoader;
 import eu.europa.esig.dss.tsl.Condition;
 import eu.europa.esig.dss.tsl.ServiceInfo;
 import eu.europa.esig.dss.x509.CertificateToken;
@@ -84,14 +82,12 @@ import static org.junit.Assert.assertTrue;
         TestDigiDoc4jConfiguration.class,
         TSLLoaderConfiguration.class,
         TSLLoader.class,
-        CustomCertificatesLoader.class,
         TSLValidationJobFactory.class,
         TimemarkContainerValidationServiceConfiguration.class,
         TimemarkContainerValidationService.class,
         BDOCSignaturePolicyService.class,
         ConstraintLoadingSignaturePolicyService.class,
         BDOCConfigurationService.class,
-        CertificateConfigurationLoader.class,
         ReportConfigurationProperties.class
 })
 @ActiveProfiles("test")
@@ -181,6 +177,7 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
+    @Ignore("SIVA-119")
     public void vShouldIncludeRequiredFields() throws Exception {
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
         ValidationConclusion validationConclusion = validationResult2Signatures.getValidationConclusion();
@@ -209,6 +206,7 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
+    @Ignore("SIVA-119")
     public void vShouldHaveCorrectSignatureValidationDataForSignature1() throws Exception {
 
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
@@ -237,6 +235,7 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
+    @Ignore("SIVA-119")
     public void vShouldHaveCorrectSignatureValidationDataForSignature2() throws Exception {
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
         SignatureValidationData sig2 = validationResult2Signatures.getValidationConclusion().getSignatures()

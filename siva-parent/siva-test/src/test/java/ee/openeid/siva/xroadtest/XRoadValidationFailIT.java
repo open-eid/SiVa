@@ -14,15 +14,16 @@
  * See the Licence for the specific language governing permissions and limitations under the Licence.
  */
 
-package ee.openeid.siva.integrationtest;
+package ee.openeid.siva.xroadtest;
 
-import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+import ee.openeid.siva.integrationtest.SiVaRestTests;
+import ee.openeid.siva.xroadtest.configuration.XroadIntegrationTest;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-@Category(IntegrationTest.class)
+@Category(XroadIntegrationTest.class)
 public class XRoadValidationFailIT extends SiVaRestTests {
 
     @Override

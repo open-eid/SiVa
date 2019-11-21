@@ -68,8 +68,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-10-11T09:36:10Z"))
                 .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE, TS_PROCESS_NOT_CONCLUSIVE, REFERENCE_DATA_NOT_INTACT))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
-                .body("validSignaturesCount", Matchers.is(0))
-                .body("validatedDocument.fileHash", Matchers.is("+/WJhUuOlP0RDfENTaSzESr+Dbg5D3GYcS3CsqjPm0U="));
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -100,8 +99,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("signatures[1].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE, TS_PROCESS_NOT_CONCLUSIVE, REFERENCE_DATA_NOT_INTACT))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(0))
-                .body("signaturesCount", Matchers.is(2))
-                .body("validatedDocument.fileHash", Matchers.is("s0H0Nsgk5x6FYA+q65kYo8ENIm4ZTMxxSiMjOfNcLqQ="));
+                .body("signaturesCount", Matchers.is(2));
     }
 
     /**
@@ -130,8 +128,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE, TS_PROCESS_NOT_CONCLUSIVE, REFERENCE_DATA_NOT_INTACT))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(1))
-                .body("signaturesCount", Matchers.is(2))
-                .body("validatedDocument.fileHash", Matchers.is("RUVTd2Ch4XitCNk2ntJTCB3aAX+YSke/xbId8IwCJok="));
+                .body("signaturesCount", Matchers.is(2));
     }
 
     /**
@@ -673,9 +670,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1))
-                .body("validatedDocument.filename", Matchers.is(fileName))
-                .body("validatedDocument.fileHash", Matchers.is("Eta2H3+TED9BOxatqnvGnMXWz8YfZFQON/KDe5PZ93k="))
-                .body("validatedDocument.hashAlgo", Matchers.is(MOCK_XADES_DATAFILE_HASH_ALGO));
+                .body("validatedDocument.filename", Matchers.is(fileName));
     }
 
     @Override

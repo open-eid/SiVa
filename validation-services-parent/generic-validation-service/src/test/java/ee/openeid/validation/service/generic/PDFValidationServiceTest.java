@@ -24,8 +24,6 @@ import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.SubjectDistinguishedName;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
-import ee.openeid.tsl.CustomCertificatesLoader;
-import ee.openeid.tsl.CustomTSLLoader;
 import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.TSLValidationJobFactory;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
@@ -45,9 +43,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @SpringBootTest(classes = {PDFValidationServiceTest.TestConfiguration.class})
 @RunWith(SpringRunner.class)
@@ -146,18 +142,13 @@ public class PDFValidationServiceTest {
     public static class TestConfiguration {
         @Bean
         public TSLLoader tslLoader() {
-            return new CustomTSLLoader();
+            return new TSLLoader();
         }
-
-        @Bean
-        public CustomCertificatesLoader customCertificatesLoader() {
-            return new CustomCertificatesLoader();
-        }
-
         @Bean
         public TSLValidationJobFactory tslValidationJobFactory() {
             return new TSLValidationJobFactory();
         }
+
     }
 
 }

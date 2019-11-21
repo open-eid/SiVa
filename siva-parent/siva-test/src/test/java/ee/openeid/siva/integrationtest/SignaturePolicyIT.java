@@ -47,6 +47,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: soft-cert-signature.pdf
      */
     @Test
+    @Ignore("SIVA-119")
     public void pdfDocumentAdesNonSscdCompliantShouldFailWithGivenPolicy() {
         post(validationRequestFor("soft-cert-signature.pdf", VALID_SIGNATURE_POLICY_4, null))
                 .then()
@@ -83,6 +84,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: allkiri_ades.asice
      */
     @Test
+    @Ignore("SIVA-119")
     public void bdocDocumentAdesNonSscdCompliantShouldFailWithGivenPolicy() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestForDD4j("allkiri_ades.asice", VALID_SIGNATURE_POLICY_4, null))
@@ -626,6 +628,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: soft-cert-signature.pdf
      */
     @Test
+    @Ignore("SIVA-119")
     public void pdfDocumentAdesNonSscdCompliantShouldPassWithGivenPolicy() {
         post(validationRequestFor("soft-cert-signature.pdf", VALID_SIGNATURE_POLICY_3, null))
                 .then()
@@ -661,6 +664,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: allkiri_ades.asice
      */
     @Test
+    @Ignore("SIVA-119")
     public void bdocDocumentAdesNonSscdCompliantShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestForDD4j("allkiri_ades.asice", VALID_SIGNATURE_POLICY_3, null))

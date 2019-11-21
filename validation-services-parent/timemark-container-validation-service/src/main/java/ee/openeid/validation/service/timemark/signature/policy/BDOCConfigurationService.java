@@ -40,7 +40,6 @@ public class BDOCConfigurationService {
     private BDOCSignaturePolicyService policyService;
 
     private TrustedListsCertificateSource trustedListSource;
-    private ConfigurationLoader configurationLoader;
 
     @PostConstruct
     protected void loadAllBDOCConfigurations() {
@@ -53,9 +52,7 @@ public class BDOCConfigurationService {
     }
 
     public PolicyConfigurationWrapper loadPolicyConfiguration(String policyName) {
-        PolicyConfigurationWrapper policyConfigurationWrapper = getExistingOrDefaultPolicy(policyName);
-        configurationLoader.reloadTrustedCertificatesIfNecessary(policyConfigurationWrapper.getConfiguration(), trustedListSource);
-        return policyConfigurationWrapper;
+        return getExistingOrDefaultPolicy(policyName);
     }
 
     private PolicyConfigurationWrapper getExistingOrDefaultPolicy(String policyName) {
@@ -84,11 +81,6 @@ public class BDOCConfigurationService {
     @Autowired
     public void setProperties(BDOCSignaturePolicyProperties properties) {
         this.properties = properties;
-    }
-
-    @Autowired
-    public void setConfigurationLoader(ConfigurationLoader configurationLoader) {
-        this.configurationLoader = configurationLoader;
     }
 
     @Autowired

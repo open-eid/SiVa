@@ -16,21 +16,22 @@
 
 package ee.openeid.tsl.configuration;
 
+import ee.openeid.tsl.keystore.DSSKeyStoreFactoryBean;
 import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.x509.KeyStoreCertificateSource;
-
-import ee.openeid.tsl.keystore.DSSKeyStoreFactoryBean;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.EnableScheduling;
+
+import java.util.ArrayList;
 
 @Configuration
 @EnableScheduling
 @EnableConfigurationProperties({
-        TSLLoaderConfigurationProperties.class,
+
         TSLValidationKeystoreProperties.class
 })
 public class TSLLoaderConfiguration {
@@ -43,6 +44,21 @@ public class TSLLoaderConfiguration {
         dssKeyStoreFactoryBean.setKeyStoreFilename(keystoreProperties.getFilename());
         dssKeyStoreFactoryBean.setKeyStorePassword(keystoreProperties.getPassword());
         return dssKeyStoreFactoryBean;
+    }
+
+    @Profile("test")
+    @Bean
+    public TSLLoaderConfigurationProperties tslLoaderConfigurationPropertiesTest() {
+        TSLLoaderConfigurationProperties configurationProperties = new TSLLoaderConfigurationProperties();
+        configurationProperties.setUrl("https://open-eid.github.io/test-TL/tl-mp-test-EE.xml");
+        configurationProperties.setTrustedTerritories(new ArrayList<>());
+        return configurationProperties;
+    }
+
+    @Profile("!test")
+    @Bean
+    public TSLLoaderConfigurationProperties tslLoaderConfigurationPropertiesProd() {
+        return new TSLLoaderConfigurationProperties();
     }
 
     @Bean

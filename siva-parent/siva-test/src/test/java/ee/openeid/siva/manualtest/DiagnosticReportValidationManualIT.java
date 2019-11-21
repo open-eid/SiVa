@@ -137,6 +137,7 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
      * File: pades-baseline-lta-live-aj.pdf
      */
     @Test
+    @Ignore("SIVA-119")
     public  void diagnosticReportAssertLotl(){
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
 
@@ -144,7 +145,7 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
                 .then().root(DIAGNOSTIC_DATA_PREFIX)
                 .body("listOfTrustedLists", notNullValue())
                 .body("listOfTrustedLists.countryCode", equalTo("EU"))
-                .body("listOfTrustedLists.url", equalTo("https://ec.europa.eu/tools/lotl/eu-lotl.xml"))
+                .body("listOfTrustedLists.url", equalTo("http://repo.ria/tsl/trusted-test-mp.xml"))
                 .body("listOfTrustedLists.sequenceNumber", greaterThanOrEqualTo(237))
                 .body("listOfTrustedLists.version", equalTo(5))
                 .body("listOfTrustedLists.lastLoading", notNullValue())

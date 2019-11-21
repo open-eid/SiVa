@@ -19,11 +19,7 @@ import ee.openeid.siva.common.DateTimeMatcher;
 import ee.openeid.siva.integrationtest.SiVaRestTests;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.signature.configuration.SignatureServiceConfigurationProperties;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import org.apache.commons.codec.binary.Base64;
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -34,9 +30,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 import static ee.openeid.siva.integrationtest.TestData.*;
-import static io.restassured.config.EncoderConfig.encoderConfig;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
 
 @Category(IntegrationTest.class)
 
@@ -113,6 +107,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      * File: pades-baseline-lta-live-aj.pdf
      */
     @Test
+    @Ignore("SIVA-119")
     public  void detailedReportAssertValidationProcessTlanalysis(){
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
 
@@ -527,6 +522,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
     @Test
+    @Ignore("SIVA-196")
     public void validateFileHashInDetailedReportReportSignatureEnabledTrue() {
         post(validationRequestFor("hellopades-lt-sha256-rsa2048.pdf", null, REPORT_TYPE_DETAILED ))
                 .then()

@@ -25,7 +25,6 @@ import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource;
-import ee.openeid.tsl.CustomCertificatesLoader;
 import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.TSLValidationJobFactory;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
@@ -33,7 +32,6 @@ import ee.openeid.validation.service.timemark.configuration.TestDigiDoc4jConfigu
 import ee.openeid.validation.service.timemark.configuration.TimemarkContainerValidationServiceConfiguration;
 import ee.openeid.validation.service.timemark.signature.policy.BDOCConfigurationService;
 import ee.openeid.validation.service.timemark.signature.policy.BDOCSignaturePolicyService;
-import ee.openeid.validation.service.timemark.signature.policy.CertificateConfigurationLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.util.encoders.Base64;
 import org.junit.Ignore;
@@ -62,7 +60,6 @@ import static org.junit.Assert.*;
         TestDigiDoc4jConfiguration.class,
         TSLLoaderConfiguration.class,
         TSLLoader.class,
-        CustomCertificatesLoader.class,
         TSLValidationJobFactory.class,
         TimemarkContainerValidationServiceConfiguration.class,
         TimemarkContainerValidationService.class,
@@ -70,7 +67,6 @@ import static org.junit.Assert.*;
         BDOCSignaturePolicyService.class,
         ConstraintLoadingSignaturePolicyService.class,
         BDOCConfigurationService.class,
-        CertificateConfigurationLoader.class,
         ReportConfigurationProperties.class
 })
 @ActiveProfiles("test")

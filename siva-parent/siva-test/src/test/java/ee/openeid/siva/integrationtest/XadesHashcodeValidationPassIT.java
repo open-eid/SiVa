@@ -64,8 +64,7 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.commonName", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2019-02-05T13:27:24Z"))
-                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("VLcbTMyISKcCDPJDQ/Z34/TbBueUeqLMFPOrD9Av+b4="));
+                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2019-02-05T13:27:24Z"));
     }
 
     /**
@@ -91,8 +90,7 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.commonName", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2019-02-05T13:36:23Z"))
-                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("9Rfw5pxkfQyLn7eKnSmTqDQbFKeAEDqUXoRN9Sthyo4="));
+                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2019-02-05T13:36:23Z"));
     }
 
     /**
@@ -116,8 +114,7 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2019-02-05T12:48:26Z"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("9un8fNcRbS462smQM6YW+Od987gc8Cm4wC+CdSjaXAc="));
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
     }
 
     /**
@@ -142,8 +139,7 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2019-02-05T12:43:15Z"))
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("test+document.txt"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("6oZW1I3X0FvX2+6BHFoHXMtYsqF9zmzOuwGihTlWTx8="));
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
     }
 
     /**
@@ -168,8 +164,7 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2019-02-05T13:22:04Z"))
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("Te st in g.txt"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("3dE3KRKNN4IpsgxY9A49M9ib7RELQDyyuKWUCcmEPnU="));
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
     }
 
     /**

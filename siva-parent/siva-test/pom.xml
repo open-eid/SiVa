@@ -14,7 +14,8 @@
   ~ See the Licence for the specific language governing permissions and limitations under the Licence.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>siva-parent</artifactId>
         <groupId>ee.openid.siva</groupId>
@@ -68,74 +69,96 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.25</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.8.1</version>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.22.1</version>
-                <configuration>
-                    <includes>
-                        <include>**/*.java</include>
-                    </includes>
-                    <groups>ee.openeid.siva.integrationtest.configuration.IntegrationTest</groups>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>com.bazaarvoice.maven.plugins</groupId>
-                <artifactId>process-exec-maven-plugin</artifactId>
-                <version>0.7</version>
-                <executions>
-                    <execution>
-                        <id>xroad-validator-application</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>start</goal>
-                        </goals>
-                        <configuration>
-                            <name>xroad-validator</name>
-                            <workingDir>xroad-validator</workingDir>
-                            <waitForInterrupt>false</waitForInterrupt>
-                            <arguments>
-                                <argument>java</argument>
-                                <argument>-jar</argument>
-                                <argument>${basedir}/../../validation-services-parent/xroad-validation-service/target/xroad-validation-service-${project.version}-exec.jar</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>stop-all</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>stop-all</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-        </plugins>
-    </build>
-
     <profiles>
+        <profile>
+            <id>integration-test</id>
+            <activation>
+                <property>
+                    <name>runIntegrationTests</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>3.0.0-M4</version>
+                        <configuration>
+                            <forkCount>1</forkCount>
+                            <reuseForks>true</reuseForks>
+                            <useSystemClassLoader>true</useSystemClassLoader>
+                            <useManifestOnlyJar>false</useManifestOnlyJar>
+                            <includes>
+                                <include>**/*.java</include>
+                            </includes>
+                            <groups>ee.openeid.siva.xroadtest.configuration.XroadIntegrationTest,ee.openeid.siva.integrationtest.configuration.IntegrationTest</groups>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>without-xroad-integration-test</id>
+            <activation>
+                <property>
+                    <name>runWithoutXroadIntegrationTests</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>3.0.0-M4</version>
+                        <configuration>
+                            <forkCount>1</forkCount>
+                            <reuseForks>true</reuseForks>
+                            <useSystemClassLoader>true</useSystemClassLoader>
+                            <useManifestOnlyJar>false</useManifestOnlyJar>
+                            <includes>
+                                <include>**/*.java</include>
+                            </includes>
+                            <groups>ee.openeid.siva.integrationtest.configuration.IntegrationTest</groups>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <id>load-test</id>
             <activation>
@@ -244,13 +267,17 @@
                                             <pluginType>ThroughputVsThreads</pluginType>
                                             <width>950</width>
                                             <height>500</height>
-                                            <outputFilePattern>${project.build.directory}/jmeter/results/reports/%FILENAME%-ThroughputVsThreads.png</outputFilePattern>
+                                            <outputFilePattern>
+                                                ${project.build.directory}/jmeter/results/reports/%FILENAME%-ThroughputVsThreads.png
+                                            </outputFilePattern>
                                         </graph>
                                         <graph>
                                             <pluginType>TimesVsThreads</pluginType>
                                             <width>950</width>
                                             <height>500</height>
-                                            <outputFilePattern>${project.build.directory}/jmeter/results/reports/%FILENAME%-TimesVsThreads.png</outputFilePattern>
+                                            <outputFilePattern>
+                                                ${project.build.directory}/jmeter/results/reports/%FILENAME%-TimesVsThreads.png
+                                            </outputFilePattern>
                                         </graph>
                                     </graphs>
                                 </configuration>

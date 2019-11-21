@@ -16,7 +16,6 @@
 
 package ee.openeid.siva.manualtest;
 
-import ee.openeid.siva.SivaWebApplication;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.signature.configuration.SignatureServiceConfigurationProperties;
 import ee.openeid.siva.soaptest.SiVaSoapTests;
@@ -30,13 +29,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,14 +40,9 @@ import java.nio.file.Paths;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @Category(IntegrationTest.class)
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = SivaWebApplication.class, webEnvironment=RANDOM_PORT)
-@ActiveProfiles("test")
-@TestPropertySource(locations="classpath:application-test.yml")
-
+@Ignore("SIVA-196")
 public class ReportSignatureManuallT  extends SiVaSoapTests {
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "pdf/signature_cryptographic_algorithm_test_files/";
     private static final String VALIDATION_ENDPOINT = "/validate";
@@ -70,14 +58,6 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
 
     @Autowired
     private SignatureServiceConfigurationProperties signatureServiceConfigurationProperties;
-
-    @Value("${local.server.port}")
-    protected int serverPort;
-
-    @Before
-    public void setUp() {
-        RestAssured.port = serverPort;
-    }
 
     @Before
     public void DirectoryBackToDefault() {
@@ -117,7 +97,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
                 .config(RestAssured.config().encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8")))
                 .body(jsonObject.toString())
                 .when()
-                .post(VALIDATION_ENDPOINT)
+                .post(createUrl(VALIDATION_ENDPOINT))
                 .then()
                 .extract()
                 .response();
@@ -160,7 +140,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
                 .config(RestAssured.config().encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8")))
                 .body(jsonObject.toString())
                 .when()
-                .post(VALIDATION_ENDPOINT)
+                .post(createUrl(VALIDATION_ENDPOINT))
                 .then()
                 .extract()
                 .response();
@@ -203,7 +183,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
                 .config(RestAssured.config().encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8")))
                 .body(jsonObject.toString())
                 .when()
-                .post(VALIDATION_ENDPOINT)
+                .post(createUrl(VALIDATION_ENDPOINT))
                 .then()
                 .extract()
                 .response();
@@ -245,7 +225,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
                 .config(RestAssured.config().encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8")))
                 .body(jsonObject.toString())
                 .when()
-                .post(VALIDATION_ENDPOINT)
+                .post(createUrl(VALIDATION_ENDPOINT))
                 .then()
                 .extract()
                 .response();
@@ -287,7 +267,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
                 .config(RestAssured.config().encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8")))
                 .body(jsonObject.toString())
                 .when()
-                .post(VALIDATION_ENDPOINT)
+                .post(createUrl(VALIDATION_ENDPOINT))
                 .then()
                 .extract()
                 .response();
@@ -330,7 +310,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
                 .config(RestAssured.config().encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8")))
                 .body(jsonObject.toString())
                 .when()
-                .post(VALIDATION_ENDPOINT)
+                .post(createUrl(VALIDATION_ENDPOINT))
                 .then()
                 .extract()
                 .response();
@@ -373,7 +353,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
                 .config(RestAssured.config().encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8")))
                 .body(jsonObject.toString())
                 .when()
-                .post(VALIDATION_ENDPOINT)
+                .post(createUrl(VALIDATION_ENDPOINT))
                 .then()
                 .extract()
                 .response();
@@ -414,7 +394,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
                 .config(RestAssured.config().encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8")))
                 .body(jsonObject.toString())
                 .when()
-                .post(VALIDATION_ENDPOINT)
+                .post(createUrl(VALIDATION_ENDPOINT))
                 .then()
                 .extract()
                 .response();
@@ -506,7 +486,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
                 .config(RestAssured.config().encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8")))
                 .body(jsonObject.toString())
                 .when()
-                .post(VALIDATION_ENDPOINT)
+                .post(createUrl(VALIDATION_ENDPOINT))
                 .then()
                 .extract()
                 .response();
@@ -573,7 +553,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
                 .config(RestAssured.config().encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8")))
                 .body(request)
                 .when()
-                .post(validationUrl)
+                .post(createUrl(validationUrl))
                 .then()
                 .extract()
                 .response();

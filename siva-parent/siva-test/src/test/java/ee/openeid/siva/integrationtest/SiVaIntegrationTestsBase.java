@@ -16,34 +16,22 @@
 
 package ee.openeid.siva.integrationtest;
 
-import ee.openeid.siva.SivaWebApplication;
-import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import io.restassured.RestAssured;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertTrue;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
-@Category(IntegrationTest.class)
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = SivaWebApplication.class, webEnvironment=RANDOM_PORT)
-@ActiveProfiles("test")
-@TestPropertySource(locations="classpath:application-test.yml")
 public abstract class SiVaIntegrationTestsBase {
 
     protected static final String DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE = "Document malformed or not matching documentType";
@@ -76,7 +64,7 @@ public abstract class SiVaIntegrationTestsBase {
     protected static final String DATAFILES_HASH = "signatureFiles[0].datafiles[0].hash";
     protected static final String DATAFILES_HASH_ALGO = "signatureFiles[0].datafiles[0].hashAlgo";
 
-    private static final String PROJECT_SUBMODULE_NAME =  "siva-test";
+    private static final String PROJECT_SUBMODULE_NAME = "siva-test";
 
     protected static final String VALID_SIGNATURE_POLICY_3 = "POLv3";
     protected static final String VALID_SIGNATURE_POLICY_4 = "POLv4";
@@ -101,20 +89,27 @@ public abstract class SiVaIntegrationTestsBase {
     protected static final String POLICY_3_URL = "http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv3";
     protected static final String POLICY_4_URL = "http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4";
 
-    @Value("${local.server.port}")
-    protected int serverPort;
-
-    @Before
-    public void setUp() {
-        RestAssured.port = serverPort;
-    }
-
-    @BeforeClass
-    public static void oneTimeSetUp() {
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-    }
-
     protected abstract String getTestFilesDirectory();
+
+    protected static Map<String, Object> yamlMaps;
+
+    static {
+        Yaml yaml = new Yaml();
+        try {
+            ClassLoader classLoader = RequestBuilder.class.getClassLoader();
+            String path = classLoader.getResource("application-test.yml").getPath();
+            yamlMaps = yaml.load(new FileInputStream(new File(path)));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+        RestAssured.useRelaxedHTTPSValidation();
+    }
+
+    public String createUrl(String endpoint) {
+        LinkedHashMap sivaMap = (LinkedHashMap) yamlMaps.get("siva");
+        return sivaMap.get("protocol") + "://" + sivaMap.get("hostname") + ":" + sivaMap.get("port") + endpoint;
+    }
 
     protected byte[] readFileFromTestResources(String filename) {
         String testFilesBase = getProjectBaseDirectory() + "src/test/resources/";
@@ -145,8 +140,9 @@ public abstract class SiVaIntegrationTestsBase {
         String path = Paths.get("").toAbsolutePath().normalize().toString();
         int pathLength = path.lastIndexOf(PROJECT_SUBMODULE_NAME);
         pathLength = pathLength == -1 ? path.length() : pathLength;
-        path = path.substring(0 , pathLength);
+        path = path.substring(0, pathLength);
         return path + File.separator + PROJECT_SUBMODULE_NAME + File.separator;
     }
+
 
 }

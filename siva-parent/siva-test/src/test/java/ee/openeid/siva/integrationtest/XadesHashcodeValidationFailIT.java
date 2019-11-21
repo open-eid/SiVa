@@ -60,8 +60,7 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("47101010033"))
                 .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.commonName", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("9Rfw5pxkfQyLn7eKnSmTqDQbFKeAEDqUXoRN9Sthyo4="));
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -87,8 +86,7 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
                 .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2019-02-05T13:36:23Z"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("9Rfw5pxkfQyLn7eKnSmTqDQbFKeAEDqUXoRN9Sthyo4="));
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -116,8 +114,7 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("47101010033"))
                 .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.commonName", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("VLcbTMyISKcCDPJDQ/Z34/TbBueUeqLMFPOrD9Av+b4="));
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -143,8 +140,7 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
                 .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2019-02-05T13:36:23Z"))
                 .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.validatedDocument.fileHash", Matchers.is("ZbbpVP+ue5TfDdbpzZ93b9LK+++26IfQNb7cjCKV7jE="));
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     @Override

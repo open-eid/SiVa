@@ -108,7 +108,7 @@ public abstract class SiVaIntegrationTestsBase {
 
     public String createUrl(String endpoint) {
         LinkedHashMap sivaMap = (LinkedHashMap) yamlMaps.get("siva");
-        return sivaMap.get("protocol") + "://" + sivaMap.get("hostname") + ":" + sivaMap.get("port") + endpoint;
+        return sivaMap.get("protocol") + "://" + sivaMap.get("hostname") + ":" + sivaMap.get("port") + sivaMap.get("application-context-path") + endpoint;
     }
 
     protected byte[] readFileFromTestResources(String filename) {

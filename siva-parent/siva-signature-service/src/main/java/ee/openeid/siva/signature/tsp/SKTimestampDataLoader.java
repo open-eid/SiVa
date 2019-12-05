@@ -16,8 +16,8 @@
 
 package ee.openeid.siva.signature.tsp;
 
-import eu.europa.esig.dss.DSSException;
-import eu.europa.esig.dss.client.http.NativeHTTPDataLoader;
+import eu.europa.esig.dss.model.DSSException;
+import eu.europa.esig.dss.spi.client.http.NativeHTTPDataLoader;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

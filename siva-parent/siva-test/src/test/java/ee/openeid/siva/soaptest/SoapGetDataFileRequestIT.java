@@ -222,7 +222,7 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
     @Test
     public void soapGetDataFileRequestDocumentValueIsChanged(){
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("ddoc_1_3.xml.ddoc"));
-        String invalidEncodedString = encodedString.replace("PD94bWwgdm", "AAAAAA");
+        String invalidEncodedString = encodedString.replace("2t3RWdZSkt3WUVCUVVITUFFRkJBVX", "AAAAAA");
         postDataFiles(validationRequestForDocumentDataFilesExtended(invalidEncodedString, "test.DDOC"))
                 .then()
                 .statusCode(HttpStatus.OK.value())

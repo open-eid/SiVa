@@ -18,7 +18,7 @@ package ee.openeid.siva.webapp.request.validation;
 
 import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.proxy.document.ReportType;
-import eu.europa.esig.dss.DigestAlgorithm;
+import eu.europa.esig.dss.enumerations.DigestAlgorithm;
 
 import java.util.Arrays;
 import java.util.Collections;

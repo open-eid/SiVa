@@ -32,4 +32,7 @@ public class TSLLoaderConfigurationProperties {
     private String code = "EU";
     private String schedulerCron = "0 0 3 * * ?";
     private List<String> trustedTerritories =   Arrays.asList("AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "GR", "HU", "HR", "IE", "IS", "IT", "LT", "LU", "LV", "LI", "MT", "NO", "NL", "PL", "PT", "RO", "SE", "SI", "SK", "UK");
+    private String sslTruststorePath = "classpath:truststore.p12";
+    private String sslTruststoreType = "PKCS12";
+    private String sslTruststorePassword = "digidoc4j-password";
 }

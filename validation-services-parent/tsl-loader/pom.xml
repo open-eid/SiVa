@@ -29,15 +29,11 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>27.1-jre</version>
+            <version>28.1-jre</version>
         </dependency>
         <dependency>
             <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-service</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.digidoc4j.dss</groupId>
-            <artifactId>dss-tsl-jaxb</artifactId>
         </dependency>
         <dependency>
             <groupId>org.digidoc4j.dss</groupId>

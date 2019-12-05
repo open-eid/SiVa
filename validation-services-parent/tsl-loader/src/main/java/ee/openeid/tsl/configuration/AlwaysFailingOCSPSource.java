@@ -16,9 +16,10 @@
 
 package ee.openeid.tsl.configuration;
 
-import eu.europa.esig.dss.x509.CertificateToken;
-import eu.europa.esig.dss.x509.ocsp.OCSPSource;
-import eu.europa.esig.dss.x509.ocsp.OCSPToken;
+
+import eu.europa.esig.dss.model.x509.CertificateToken;
+import eu.europa.esig.dss.spi.x509.revocation.ocsp.OCSPSource;
+import eu.europa.esig.dss.spi.x509.revocation.ocsp.OCSPToken;
 
 public class AlwaysFailingOCSPSource implements OCSPSource {
 

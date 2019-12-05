@@ -22,20 +22,11 @@ import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
 import ee.openeid.siva.validation.document.report.ValidatedDocument;
 import ee.openeid.siva.webapp.soap.response.Error;
-import ee.openeid.siva.webapp.soap.response.Indication;
-import ee.openeid.siva.webapp.soap.response.Info;
-import ee.openeid.siva.webapp.soap.response.Policy;
-import ee.openeid.siva.webapp.soap.response.SignatureScope;
-import ee.openeid.siva.webapp.soap.response.SignatureValidationData;
-import ee.openeid.siva.webapp.soap.response.SubjectDistinguishedName;
-import ee.openeid.siva.webapp.soap.response.TimeStampTokenData;
-import ee.openeid.siva.webapp.soap.response.ValidatedDocumentData;
-import ee.openeid.siva.webapp.soap.response.ValidationConclusion;
-import ee.openeid.siva.webapp.soap.response.ValidationReport;
-import ee.openeid.siva.webapp.soap.response.ValidationWarning;
-import ee.openeid.siva.webapp.soap.response.Warning;
+import ee.openeid.siva.webapp.soap.response.*;
 import ee.openeid.siva.webapp.soap.transformer.report.DetailedReportTransformer;
 import ee.openeid.siva.webapp.soap.transformer.report.DiagnosticDataTransformer;
+import eu.europa.esig.dss.detailedreport.jaxb.XmlDetailedReport;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlDiagnosticData;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -68,10 +59,12 @@ public class ValidationReportSoapResponseTransformer {
         validationReport.setValidationConclusion(responseValidationConclusion);
 
         if (report instanceof DetailedReport) {
-            validationReport.setValidationProcess(DETAILED_REPORT_TRANSFORMER.transform(((DetailedReport) report).getValidationProcess()));
+            XmlDetailedReport xmlDetailedReport = ((DetailedReport) report).getValidationProcess();
+            validationReport.setValidationProcess(DETAILED_REPORT_TRANSFORMER.transform(xmlDetailedReport));
 
         } else if (report instanceof DiagnosticReport) {
-            validationReport.setDiagnosticData(DIAGNOSTIC_DATA_TRANSFORMER.transform(((DiagnosticReport) report).getDiagnosticData()));
+            XmlDiagnosticData diagnosticData = ((DiagnosticReport) report).getDiagnosticData();
+            validationReport.setDiagnosticData(DIAGNOSTIC_DATA_TRANSFORMER.transform(diagnosticData));
         }
         return validationReport;
     }

@@ -16,8 +16,8 @@
 
 package ee.openeid.tsl.keystore;
 
-import eu.europa.esig.dss.DSSException;
-import eu.europa.esig.dss.x509.KeyStoreCertificateSource;
+import eu.europa.esig.dss.model.DSSException;
+import eu.europa.esig.dss.spi.x509.KeyStoreCertificateSource;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

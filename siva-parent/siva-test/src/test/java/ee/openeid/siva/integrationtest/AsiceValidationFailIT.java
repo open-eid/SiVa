@@ -662,7 +662,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
         post(validationRequestFor(fileName))
                 .then().root(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
-                .body("signatures[0].signedBy", Matchers.is("?"))
+                .body("signatures[0].signedBy", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_T))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
                 .body("signatures[0].claimedSigningTime", Matchers.is("2013-10-11T11:47:40Z"))

@@ -71,7 +71,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timestamp/");
         ZonedDateTime testStartDate = ZonedDateTime.now(ZoneId.of("GMT"));
 
-        post(validationRequestFor("ValidLiveSignature.asice", null, REPORT_TYPE_DETAILED ))
+        post(validationRequestFor("ValidLiveSignature.asice", null, REPORT_TYPE_DETAILED))
                 .then().root(VALIDATION_CONCLUSION_PREFIX)
                 .body("policy.policyDescription", equalTo(POLICY_4_DESCRIPTION))
                 .body("policy.policyName", equalTo(SIGNATURE_POLICY_2))
@@ -108,10 +108,10 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      */
     @Test
     @Ignore("SIVA-119")
-    public  void detailedReportAssertValidationProcessTlanalysis(){
+    public void detailedReportAssertValidationProcessTlanalysis() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
 
-        post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DETAILED ))
+        post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DETAILED))
                 .then().root(VALIDATION_PROCESS_PREFIX)
                 .body("tlanalysis", notNullValue())
                 .body("tlanalysis.constraint", notNullValue())
@@ -173,69 +173,69 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      * File: hellopades-lt-sha256-ec256.pdf
      */
     @Test //TODO: This test misses validationSignatureQualification block
-    public  void detailedReportForPdfValidateSignaturesElement() {
+    public void detailedReportForPdfValidateSignaturesElement() {
         setTestFilesDirectory("pdf/signature_cryptographic_algorithm_test_files/");
 
-        post(validationRequestFor("hellopades-lt-sha256-ec256.pdf", null, REPORT_TYPE_DETAILED ))
+        post(validationRequestFor("hellopades-lt-sha256-ec256.pdf", null, REPORT_TYPE_DETAILED))
                 .then().root(VALIDATION_PROCESS_PREFIX)
-                .body("signatures[0].validationProcessBasicSignatures.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_5))
-                .body("signatures[0].validationProcessBasicSignatures.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_5))
-                .body("signatures[0].validationProcessBasicSignatures.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("signatures[0].validationProcessBasicSignatures.constraint[0].id", notNullValue())
-                .body("signatures[0].validationProcessBasicSignatures.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
-                .body("signatures[0].validationProcessBasicSignatures.conclusion.errors", nullValue())
-                .body("signatures[0].validationProcessTimestamps.constraint", notNullValue())
-                .body("signatures[0].validationProcessTimestamps.constraint.name", notNullValue())
-                .body("signatures[0].validationProcessTimestamps[0].constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_48))
-                .body("signatures[0].validationProcessTimestamps[0].constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_49))
-                .body("signatures[0].validationProcessTimestamps[0].constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("signatures[0].validationProcessTimestamps[0].constraint[0].id", notNullValue())
-                .body("signatures[0].validationProcessTimestamps[0].conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
-                .body("signatures[0].validationProcessTimestamps[0].conclusion.errors", nullValue())
-                .body("signatures[0].validationProcessTimestamps[0].id", notNullValue())
-                .body("signatures[0].validationProcessTimestamps[0].type", equalTo("SIGNATURE_TIMESTAMP"))
-                .body("signatures[0].validationProcessTimestamps[1].constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_48))
-                .body("signatures[0].validationProcessTimestamps[1].constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_49))
-                .body("signatures[0].validationProcessTimestamps[1].constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("signatures[0].validationProcessTimestamps[1].constraint[0].id", notNullValue())
-                .body("signatures[0].validationProcessTimestamps[1].conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
-                .body("signatures[0].validationProcessTimestamps[1].conclusion.errors", nullValue())
-                .body("signatures[0].validationProcessTimestamps[1].id", notNullValue())
-                .body("signatures[0].validationProcessTimestamps[1].type", equalTo("SIGNATURE_TIMESTAMP"))
-                .body("signatures[0].validationProcessLongTermData.constraint[0]", notNullValue())
-                .body("signatures[0].validationProcessLongTermData.constraint[0].name", notNullValue())
-                .body("signatures[0].validationProcessLongTermData.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_6))
-                .body("signatures[0].validationProcessLongTermData.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_6))
-                .body("signatures[0].validationProcessLongTermData.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("signatures[0].validationProcessLongTermData.constraint[1]", notNullValue())
-                .body("signatures[0].validationProcessLongTermData.constraint[1].name", notNullValue())
-                .body("signatures[0].validationProcessLongTermData.constraint[1].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_49))
-                .body("signatures[0].validationProcessLongTermData.constraint[1].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_50))
-                .body("signatures[0].validationProcessLongTermData.constraint[1].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("signatures[0].validationProcessLongTermData.constraint[1].id", notNullValue())
-                .body("signatures[0].validationProcessLongTermData.constraint[2]", notNullValue())
-                .body("signatures[0].validationProcessLongTermData.constraint[2].name", notNullValue())
-                .body("signatures[0].validationProcessLongTermData.constraint[2].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_50))
-                .body("signatures[0].validationProcessLongTermData.constraint[2].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_51))
-                .body("signatures[0].validationProcessLongTermData.constraint[2].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("signatures[0].validationProcessLongTermData.constraint[3]", notNullValue())
-                .body("signatures[0].validationProcessLongTermData.constraint[3].name", notNullValue())
-                .body("signatures[0].validationProcessLongTermData.constraint[3].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_19))
-                .body("signatures[0].validationProcessLongTermData.constraint[3].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_19))
-                .body("signatures[0].validationProcessLongTermData.constraint[3].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("signatures[0].validationProcessLongTermData.constraint[4]", notNullValue())
-                .body("signatures[0].validationProcessLongTermData.constraint[4].name", notNullValue())
-                .body("signatures[0].validationProcessLongTermData.constraint[4].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_51))
-                .body("signatures[0].validationProcessLongTermData.constraint[4].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_52))
-                .body("signatures[0].validationProcessLongTermData.constraint[4].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("signatures[0].validationProcessLongTermData.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
-                .body("signatures[0].validationProcessLongTermData.conclusion.errors", nullValue())
-                .body("signatures[0].validationProcessArchivalData.constraint[0]", notNullValue())
-                .body("signatures[0].validationProcessArchivalData.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_7))
-                .body("signatures[0].validationProcessArchivalData.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_7))
-                .body("signatures[0].validationProcessArchivalData.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("signatures[0].validationProcessArchivalData.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
-                .body("signatures[0].validationProcessArchivalData.conclusion.errors", nullValue());
+                .body("Signatures[0].ValidationProcessBasicSignatures.Constraint[0].Name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_5))
+                .body("Signatures[0].ValidationProcessBasicSignatures.Constraint[0].Name.NameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_5))
+                .body("Signatures[0].ValidationProcessBasicSignatures.Constraint[0].Status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("Signatures[0].ValidationProcessBasicSignatures.Constraint[0].Id", notNullValue())
+                .body("Signatures[0].ValidationProcessBasicSignatures.Conclusion.Indication", equalTo(VALID_INDICATION_VALUE_PASSED))
+                .body("Signatures[0].ValidationProcessBasicSignatures.Conclusion.errors", nullValue())
+                .body("Signatures[0].ValidationProcessTimestamps.Constraint", notNullValue())
+                .body("Signatures[0].ValidationProcessTimestamps.Constraint.Name", notNullValue())
+                .body("Signatures[0].ValidationProcessTimestamps[0].Constraint[0].Name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_48))
+                .body("Signatures[0].ValidationProcessTimestamps[0].Constraint[0].Name.NameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_49))
+                .body("Signatures[0].ValidationProcessTimestamps[0].Constraint[0].Status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("Signatures[0].ValidationProcessTimestamps[0].Constraint[0].Id", notNullValue())
+                .body("Signatures[0].ValidationProcessTimestamps[0].Conclusion.Indication", equalTo(VALID_INDICATION_VALUE_PASSED))
+                .body("Signatures[0].ValidationProcessTimestamps[0].Conclusion.Errors", nullValue())
+                .body("Signatures[0].ValidationProcessTimestamps[0].Id", notNullValue())
+                .body("Signatures[0].ValidationProcessTimestamps[0].Type", equalTo("SIGNATURE_TIMESTAMP"))
+                .body("Signatures[0].ValidationProcessTimestamps[1].Constraint[0].Name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_48))
+                .body("Signatures[0].ValidationProcessTimestamps[1].Constraint[0].Name.NameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_49))
+                .body("Signatures[0].ValidationProcessTimestamps[1].Constraint[0].Status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("Signatures[0].ValidationProcessTimestamps[1].Constraint[0].Id", notNullValue())
+                .body("Signatures[0].ValidationProcessTimestamps[1].Conclusion.Indication", equalTo(VALID_INDICATION_VALUE_PASSED))
+                .body("Signatures[0].ValidationProcessTimestamps[1].Conclusion.Errors", nullValue())
+                .body("Signatures[0].ValidationProcessTimestamps[1].Id", notNullValue())
+                .body("Signatures[0].ValidationProcessTimestamps[1].Type", equalTo("SIGNATURE_TIMESTAMP"))
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[0]", notNullValue())
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[0].Name", notNullValue())
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[0].Name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_6))
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[0].Name.NameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_6))
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[0].Status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[1]", notNullValue())
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[1].Name", notNullValue())
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[1].Name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_49))
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[1].Name.NameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_50))
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[1].Status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[1].Id", notNullValue())
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[2]", notNullValue())
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[2].Name", notNullValue())
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[2].Name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_50))
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[2].Name.NameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_51))
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[2].Status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[3]", notNullValue())
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[3].Name", notNullValue())
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[3].Name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_19))
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[3].Name.NameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_19))
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[3].Status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[4]", notNullValue())
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[4].Name", notNullValue())
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[4].Name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_51))
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[4].Name.NameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_52))
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[4].Status", equalTo(VALID_VALIDATION_PROCESS_STATUS_4))
+                .body("Signatures[0].ValidationProcessLongTermData.Conclusion.Indication", equalTo(VALID_INDICATION_VALUE_PASSED))
+                .body("Signatures[0].ValidationProcessLongTermData.Conclusion.Errors", nullValue())
+                .body("Signatures[0].ValidationProcessArchivalData.Constraint[0]", notNullValue())
+                .body("Signatures[0].ValidationProcessArchivalData.Constraint[0].Name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_7))
+                .body("Signatures[0].ValidationProcessArchivalData.Constraint[0].Name.NameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_7))
+                .body("Signatures[0].ValidationProcessArchivalData.Constraint[0].Status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("Signatures[0].ValidationProcessArchivalData.Conclusion.Indication", equalTo(VALID_INDICATION_VALUE_PASSED))
+                .body("Signatures[0].ValidationProcessArchivalData.Conclusion.Errors", nullValue());
     }
 
     /**
@@ -252,10 +252,11 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      * File: pades-baseline-lta-live-aj.pdf
      */
     @Test
-    public  void detailedReportForPdfAssertBasicBuildingBlocksTypeTimestamp() {
+    @Ignore("SIVA-187 - refactoring needed")
+    public void detailedReportForPdfAssertBasicBuildingBlocksTypeTimestamp() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
 
-        post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DETAILED ))
+        post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DETAILED))
                 .then().root(VALIDATION_PROCESS_PREFIX)
                 .body("basicBuildingBlocks[0].isc.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_9))
                 .body("basicBuildingBlocks[0].isc.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_9))
@@ -321,51 +322,51 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      * File: pades-baseline-lta-live-aj.pdf
      */
     @Test
-    public  void detailedReportForPdfAssertBasicBuildingBlocksTypeRevocation() {
+    @Ignore("SIVA-187 - refactoring needed")
+    public void detailedReportForPdfAssertBasicBuildingBlocksTypeRevocation() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
-
-        post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DETAILED ))
+        post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DETAILED))
                 .then().root(VALIDATION_PROCESS_PREFIX)
-                .body("basicBuildingBlocks[1].isc.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_9))
-                .body("basicBuildingBlocks[1].isc.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_9))
-                .body("basicBuildingBlocks[1].isc.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("basicBuildingBlocks[1].isc.conclusion.", notNullValue())
-                .body("basicBuildingBlocks[1].isc.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
-                .body("basicBuildingBlocks[1].isc.certificateChain.chainItem[0].source", equalTo("TRUSTED_LIST"))
-                .body("basicBuildingBlocks[1].isc.certificateChain.chainItem[0].id", notNullValue())
-                .body("basicBuildingBlocks[1].cv.constraint[0].name", notNullValue())
-                .body("basicBuildingBlocks[1].cv.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_18))
-                .body("basicBuildingBlocks[1].cv.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_18))
-                .body("basicBuildingBlocks[1].cv.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("basicBuildingBlocks[1].cv.conclusion.", notNullValue())
-                .body("basicBuildingBlocks[1].cv.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
-                .body("basicBuildingBlocks[1].sav.constraint[0].name", notNullValue())
-                .body("basicBuildingBlocks[1].sav.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_20))
-                .body("basicBuildingBlocks[1].sav.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_20))
-                .body("basicBuildingBlocks[1].sav.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("basicBuildingBlocks[1].sav.constraint[0].additionalInfo", notNullValue())
-                .body("basicBuildingBlocks[1].sav.conclusion.", notNullValue())
-                .body("basicBuildingBlocks[1].sav.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
-                .body("basicBuildingBlocks[1].xcv.constraint[0]", notNullValue())
-                .body("basicBuildingBlocks[1].xcv.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_21))
-                .body("basicBuildingBlocks[1].xcv.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_21))
-                .body("basicBuildingBlocks[1].xcv.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("basicBuildingBlocks[1].xcv.constraint[1].name", notNullValue())
-                .body("basicBuildingBlocks[1].xcv.constraint[1].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_24))
-                .body("basicBuildingBlocks[1].xcv.constraint[1].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_24))
-                .body("basicBuildingBlocks[1].xcv.constraint[1].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("basicBuildingBlocks[1].xcv.conclusion", notNullValue())
-                .body("basicBuildingBlocks[1].xcv.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
-                .body("basicBuildingBlocks[1].xcv.subXCV[0].conclusion", notNullValue())
-                .body("basicBuildingBlocks[1].xcv.subXCV[0].conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
-                .body("basicBuildingBlocks[1].xcv.subXCV[0].id", notNullValue())
-                .body("basicBuildingBlocks[1].xcv.subXCV[0].trustAnchor", equalTo(true))
-                .body("basicBuildingBlocks[1].certificateChain.chainItem[0].source", equalTo("TRUSTED_LIST"))
-                .body("basicBuildingBlocks[1].certificateChain.chainItem[0].id", notNullValue())
-                .body("basicBuildingBlocks[1].conclusion", notNullValue())
-                .body("basicBuildingBlocks[1].conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
-                .body("basicBuildingBlocks[1].id", notNullValue())
-                .body("basicBuildingBlocks[1].type", equalTo("REVOCATION"));
+                .body("BasicBuildingBlocks[1].ISC.Constraint[0].Name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_9))
+                .body("BasicBuildingBlocks[1].ISC.Constraint[0].Name.NameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_9))
+                .body("BasicBuildingBlocks[1].ISC.Constraint[0].Status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("BasicBuildingBlocks[1].ISC.Conclusion.", notNullValue())
+                .body("BasicBuildingBlocks[1].ISC.Conclusion.Indication", equalTo(VALID_INDICATION_VALUE_PASSED))
+                .body("BasicBuildingBlocks[1].ISC.CertificateChain.ChainItem[0].Source", equalTo("TRUSTED_LIST"))
+                .body("BasicBuildingBlocks[1].ISC.CertificateChain.ChainItem[0].Id", notNullValue())
+                .body("BasicBuildingBlocks[1].CV.Constraint[0].Name", notNullValue())
+                .body("BasicBuildingBlocks[1].CV.Constraint[0].Name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_18))
+                .body("BasicBuildingBlocks[1].CV.Constraint[0].Name.NameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_18))
+                .body("BasicBuildingBlocks[1].CV.Constraint[0].Status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("BasicBuildingBlocks[1].CV.Conclusion.", notNullValue())
+                .body("BasicBuildingBlocks[1].CV.Conclusion.Indication", equalTo(VALID_INDICATION_VALUE_PASSED))
+                .body("BasicBuildingBlocks[1].SAV.Constraint[0].Name", notNullValue())
+                .body("BasicBuildingBlocks[1].SAV.Constraint[0].Name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_20))
+                .body("BasicBuildingBlocks[1].SAV.Constraint[0].Name.NameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_20))
+                .body("BasicBuildingBlocks[1].SAV.Constraint[0].Status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("BasicBuildingBlocks[1].SAV.Constraint[0].AdditionalInfo", notNullValue())
+                .body("BasicBuildingBlocks[1].SAV.Conclusion.", notNullValue())
+                .body("BasicBuildingBlocks[1].SAV.Conclusion.Indication", equalTo(VALID_INDICATION_VALUE_PASSED))
+                .body("BasicBuildingBlocks[1].XCV.Constraint[0]", notNullValue())
+                .body("BasicBuildingBlocks[1].XCV.Constraint[0].Name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_21))
+                .body("BasicBuildingBlocks[1].XCV.Constraint[0].Name.NameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_21))
+                .body("BasicBuildingBlocks[1].XCV.Constraint[0].Status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("BasicBuildingBlocks[1].XCV.Constraint[1].Name", notNullValue())
+                .body("BasicBuildingBlocks[1].XCV.Constraint[1].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_24))
+                .body("BasicBuildingBlocks[1].XCV.Constraint[1].Name.NameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_24))
+                .body("BasicBuildingBlocks[1].XCV.Constraint[1].Status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("BasicBuildingBlocks[1].XCV.Conclusion", notNullValue())
+                .body("BasicBuildingBlocks[1].XCV.Conclusion.Indication", equalTo(VALID_INDICATION_VALUE_PASSED))
+                .body("BasicBuildingBlocks[1].XCV.SubXCV[0].Conclusion", notNullValue())
+                .body("BasicBuildingBlocks[1].XCV.SubXCV[0].Conclusion.Indication", equalTo(VALID_INDICATION_VALUE_PASSED))
+                .body("BasicBuildingBlocks[1].XCV.SubXCV[0].Id", notNullValue())
+                .body("BasicBuildingBlocks[1].XCV.SubXCV[0].TrustAnchor", equalTo(true))
+                .body("BasicBuildingBlocks[1].CertificateChain.ChainItem[0].Source", equalTo("TRUSTED_LIST"))
+                .body("BasicBuildingBlocks[1].CertificateChain.ChainItem[0].Id", notNullValue())
+                .body("BasicBuildingBlocks[1].Conclusion", notNullValue())
+                .body("BasicBuildingBlocks[1].Conclusion.Indication", equalTo(VALID_INDICATION_VALUE_PASSED))
+                .body("BasicBuildingBlocks[1].Id", notNullValue())
+                .body("BasicBuildingBlocks[1].Type", equalTo("REVOCATION"));
     }
 
     /**
@@ -383,10 +384,10 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      */
     @Ignore //TODO: The sequence of blocks changes
     @Test
-    public  void detailedReportForPdfAssertBasicBuildingBlocksTypeSignature() {
+    public void detailedReportForPdfAssertBasicBuildingBlocksTypeSignature() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
 
-        post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DETAILED ))
+        post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DETAILED))
                 .then().root(VALIDATION_PROCESS_PREFIX)
                 .body("basicBuildingBlocks[3].isc.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_9))
                 .body("basicBuildingBlocks[3].isc.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_9))
@@ -444,42 +445,42 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      * File: TS-02_23634_TS_wrong_SignatureValue.asice
      */
     @Test
-    public  void detailedReportWrongSignatureValueAsice() {
+    public void detailedReportWrongSignatureValueAsice() {
         setTestFilesDirectory("bdoc/live/timestamp/");
 
-        post(validationRequestFor("TS-02_23634_TS_wrong_SignatureValue.asice", null, REPORT_TYPE_DETAILED ))
+        post(validationRequestFor("TS-02_23634_TS_wrong_SignatureValue.asice", null, REPORT_TYPE_DETAILED))
                 .then().root(VALIDATION_PROCESS_PREFIX)
-                .body("signatures[0].validationProcessBasicSignatures.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_5))
-                .body("signatures[0].validationProcessBasicSignatures.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_5))
-                .body("signatures[0].validationProcessBasicSignatures.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_1))
-                .body("signatures[0].validationProcessBasicSignatures.constraint[0].error.value", equalTo(VALID_VALIDATION_PROCESS_ERROR_VALUE_1))
-                .body("signatures[0].validationProcessBasicSignatures.constraint[0].error.nameId", equalTo(VALID_VALIDATION_PROCESS_ERROR_NAMEID_1))
-                .body("signatures[0].validationProcessBasicSignatures.constraint[0].id", equalTo("S0"))
-                .body("signatures[0].validationProcessBasicSignatures.conclusion.indication", equalTo(VALID_INDICATION_VALUE_FAILED))
-                .body("signatures[0].validationProcessBasicSignatures.conclusion.subIndication", equalTo(SUB_INDICATION_SIG_CRYPTO_FAILURE))
-                .body("signatures[0].validationProcessBasicSignatures.conclusion.errors[0].value", equalTo(VALID_VALIDATION_PROCESS_ERROR_VALUE_9))
-                .body("signatures[0].validationProcessBasicSignatures.conclusion.errors[0].nameId", equalTo(VALID_VALIDATION_PROCESS_ERROR_NAMEID_8))
-                .body("signatures[0].validationProcessTimestamps[0].constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_49))
-                .body("signatures[0].validationProcessTimestamps[0].constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_48))
-                .body("signatures[0].validationProcessTimestamps[0].constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_1))
-                .body("signatures[0].validationProcessTimestamps[0].constraint[0].error.value", equalTo(TS_PROCESS_NOT_CONCLUSIVE))
-                .body("signatures[0].validationProcessTimestamps[0].constraint[0].error.nameId", equalTo(VALID_VALIDATION_PROCESS_ERROR_NAMEID_9))
-                .body("signatures[0].validationProcessTimestamps[0].constraint[0].id", notNullValue())
-                .body("signatures[0].validationProcessTimestamps[0].conclusion.indication", equalTo(VALID_INDICATION_VALUE_FAILED))
-                .body("signatures[0].validationProcessTimestamps[0].conclusion.subIndication", equalTo(SUB_INDICATION_HASH_FAILURE))
-                .body("signatures[0].validationProcessTimestamps[0].conclusion.errors[0].value", equalTo(TS_PROCESS_NOT_CONCLUSIVE))
-                .body("signatures[0].validationProcessTimestamps[0].conclusion.errors[0].nameId", equalTo(VALID_VALIDATION_PROCESS_ERROR_NAMEID_9))
-                .body("signatures[0].validationProcessTimestamps[0].id", notNullValue())
-                .body("signatures[0].validationProcessTimestamps[0].type", equalTo("SIGNATURE_TIMESTAMP"))
-                .body("signatures[0].validationProcessLongTermData.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_6))
-                .body("signatures[0].validationProcessLongTermData.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_6))
-                .body("signatures[0].validationProcessLongTermData.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_1))
-                .body("signatures[0].validationProcessLongTermData.constraint[0].error.value", equalTo(VALID_VALIDATION_PROCESS_ERROR_VALUE_3))
-                .body("signatures[0].validationProcessLongTermData.constraint[0].error.nameId", equalTo(VALID_VALIDATION_PROCESS_ERROR_NAMEID_3))
-                .body("signatures[0].validationProcessLongTermData.conclusion.indication", equalTo(VALID_INDICATION_VALUE_FAILED))
-                .body("signatures[0].validationProcessLongTermData.conclusion.subIndication", equalTo(SUB_INDICATION_SIG_CRYPTO_FAILURE))
-                .body("signatures[0].validationProcessLongTermData.conclusion.errors[0].nameId", equalTo(VALID_VALIDATION_PROCESS_ERROR_NAMEID_8))
-                .body("signatures[0].validationProcessLongTermData.conclusion.errors[0].value", equalTo(VALID_VALIDATION_PROCESS_ERROR_VALUE_9));
+                .body("Signatures[0].ValidationProcessBasicSignatures.Constraint[0].Name.NameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_5))
+                .body("Signatures[0].ValidationProcessBasicSignatures.Constraint[0].Name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_5))
+                .body("Signatures[0].ValidationProcessBasicSignatures.Constraint[0].Status", equalTo(VALID_VALIDATION_PROCESS_STATUS_1))
+                .body("Signatures[0].ValidationProcessBasicSignatures.Constraint[0].Error.value", equalTo(VALID_VALIDATION_PROCESS_ERROR_VALUE_1))
+                .body("Signatures[0].ValidationProcessBasicSignatures.Constraint[0].Error.NameId", equalTo(VALID_VALIDATION_PROCESS_ERROR_NAMEID_1))
+                .body("Signatures[0].ValidationProcessBasicSignatures.Constraint[0].Id", equalTo("S-226BFC9D7B7C8DA856B070F96B9798F2F675AC6585FD82E23197D2B42E17F24D"))
+                .body("Signatures[0].ValidationProcessBasicSignatures.Conclusion.Indication", equalTo(VALID_INDICATION_VALUE_FAILED))
+                .body("Signatures[0].ValidationProcessBasicSignatures.Conclusion.SubIndication", equalTo(SUB_INDICATION_SIG_CRYPTO_FAILURE))
+                .body("Signatures[0].ValidationProcessBasicSignatures.Conclusion.Errors[0].value", equalTo(VALID_VALIDATION_PROCESS_ERROR_VALUE_9))
+                .body("Signatures[0].ValidationProcessBasicSignatures.Conclusion.Errors[0].NameId", equalTo(VALID_VALIDATION_PROCESS_ERROR_NAMEID_8))
+                .body("Signatures[0].ValidationProcessTimestamps[0].Constraint[0].Name.NameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_49))
+                .body("Signatures[0].ValidationProcessTimestamps[0].Constraint[0].Name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_48))
+                .body("Signatures[0].ValidationProcessTimestamps[0].Constraint[0].Status", equalTo(VALID_VALIDATION_PROCESS_STATUS_1))
+                .body("Signatures[0].ValidationProcessTimestamps[0].Constraint[0].Error.value", equalTo(TS_PROCESS_NOT_CONCLUSIVE))
+                .body("Signatures[0].ValidationProcessTimestamps[0].Constraint[0].Error.NameId", equalTo(VALID_VALIDATION_PROCESS_ERROR_NAMEID_9))
+                .body("Signatures[0].ValidationProcessTimestamps[0].Constraint[0].Id", notNullValue())
+                .body("Signatures[0].ValidationProcessTimestamps[0].Conclusion.Indication", equalTo(VALID_INDICATION_VALUE_FAILED))
+                .body("Signatures[0].ValidationProcessTimestamps[0].Conclusion.SubIndication", equalTo(SUB_INDICATION_HASH_FAILURE))
+                .body("Signatures[0].ValidationProcessTimestamps[0].Conclusion.Errors[0].value", equalTo(TS_PROCESS_NOT_CONCLUSIVE))
+                .body("Signatures[0].ValidationProcessTimestamps[0].Conclusion.Errors[0].NameId", equalTo(VALID_VALIDATION_PROCESS_ERROR_NAMEID_9))
+                .body("Signatures[0].ValidationProcessTimestamps[0].Id", notNullValue())
+                .body("Signatures[0].ValidationProcessTimestamps[0].Type", equalTo("SIGNATURE_TIMESTAMP"))
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[0].Name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_6))
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[0].Name.NameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_6))
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[0].Status", equalTo(VALID_VALIDATION_PROCESS_STATUS_1))
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[0].Error.value", equalTo(VALID_VALIDATION_PROCESS_ERROR_VALUE_3))
+                .body("Signatures[0].ValidationProcessLongTermData.Constraint[0].Error.NameId", equalTo(VALID_VALIDATION_PROCESS_ERROR_NAMEID_3))
+                .body("Signatures[0].ValidationProcessLongTermData.Conclusion.Indication", equalTo(VALID_INDICATION_VALUE_FAILED))
+                .body("Signatures[0].ValidationProcessLongTermData.Conclusion.SubIndication", equalTo(SUB_INDICATION_SIG_CRYPTO_FAILURE))
+                .body("Signatures[0].ValidationProcessLongTermData.Conclusion.Errors[0].NameId", equalTo(VALID_VALIDATION_PROCESS_ERROR_NAMEID_8))
+                .body("Signatures[0].ValidationProcessLongTermData.Conclusion.Errors[0].value", equalTo(VALID_VALIDATION_PROCESS_ERROR_VALUE_9));
     }
 
     /**
@@ -496,9 +497,9 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      * File: WrongDataFileInManifestAsics.asics
      */
     @Test
-    public  void detailedReportForAsicsWrongDataFileInManifestAsics() {
+    public void detailedReportForAsicsWrongDataFileInManifestAsics() {
         setTestFilesDirectory("asics/");
-        post(validationRequestFor("WrongDataFileInManifestAsics.asics", null, REPORT_TYPE_DETAILED ))
+        post(validationRequestFor("WrongDataFileInManifestAsics.asics", null, REPORT_TYPE_DETAILED))
                 .then().root(VALIDATION_CONCLUSION_PREFIX)
                 .body("policy.policyDescription", equalTo(POLICY_4_DESCRIPTION))
                 .body("policy.policyName", equalTo(SIGNATURE_POLICY_2))
@@ -524,10 +525,10 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
     @Test
     @Ignore("SIVA-196")
     public void validateFileHashInDetailedReportReportSignatureEnabledTrue() {
-        post(validationRequestFor("hellopades-lt-sha256-rsa2048.pdf", null, REPORT_TYPE_DETAILED ))
+        post(validationRequestFor("hellopades-lt-sha256-rsa2048.pdf", null, REPORT_TYPE_DETAILED))
                 .then()
                 .body("validationReport.validationConclusion.validatedDocument.filename", equalTo("hellopades-lt-sha256-rsa2048.pdf"))
-                .body("validationReport.validationConclusion.validatedDocument.fileHash", notNullValue() )
+                .body("validationReport.validationConclusion.validatedDocument.fileHash", notNullValue())
                 .body("validationReport.validationConclusion.validatedDocument.hashAlgo", equalTo("SHA256"))
                 .body("validationReportSignature", notNullValue());
     }
@@ -548,7 +549,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
     @Ignore //TODO: Needs possibility to configure report signing in tests
     @Test
     public void validateFileHashInDetailedReportReportSignatureEnabledFalse() {
-        post(validationRequestFor("hellopades-lt-sha256-rsa2048.pdf", null, REPORT_TYPE_DETAILED ))
+        post(validationRequestFor("hellopades-lt-sha256-rsa2048.pdf", null, REPORT_TYPE_DETAILED))
                 .then()
                 .body("validationReport.validationConclusion.validatedDocument.filename", equalTo("hellopades-lt-sha256-rsa2048.pdf"))
                 .body("validationReport.validationConclusion.validatedDocument.fileHash", nullValue())

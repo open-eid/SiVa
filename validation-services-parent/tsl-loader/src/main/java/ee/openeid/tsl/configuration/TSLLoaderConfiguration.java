@@ -17,8 +17,8 @@
 package ee.openeid.tsl.configuration;
 
 import ee.openeid.tsl.keystore.DSSKeyStoreFactoryBean;
-import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
-import eu.europa.esig.dss.x509.KeyStoreCertificateSource;
+import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
+import eu.europa.esig.dss.spi.x509.KeyStoreCertificateSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;

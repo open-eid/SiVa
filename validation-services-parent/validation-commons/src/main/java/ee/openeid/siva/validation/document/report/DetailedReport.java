@@ -16,6 +16,7 @@
 
 package ee.openeid.siva.validation.document.report;
 
+import eu.europa.esig.dss.detailedreport.jaxb.XmlDetailedReport;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -23,12 +24,12 @@ import lombok.EqualsAndHashCode;
 @Data
 public class DetailedReport extends SimpleReport {
 
-    private eu.europa.esig.dss.jaxb.detailedreport.DetailedReport validationProcess;
+    private eu.europa.esig.dss.detailedreport.jaxb.XmlDetailedReport validationProcess;
 
     public DetailedReport() {
     }
 
-    public DetailedReport(ValidationConclusion validationConclusion, eu.europa.esig.dss.jaxb.detailedreport.DetailedReport validationProcess) {
+    public DetailedReport(ValidationConclusion validationConclusion, XmlDetailedReport validationProcess) {
         super(validationConclusion);
         this.validationProcess = validationProcess;
     }

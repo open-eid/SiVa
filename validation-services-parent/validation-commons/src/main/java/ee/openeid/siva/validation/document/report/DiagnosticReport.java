@@ -16,7 +16,7 @@
 
 package ee.openeid.siva.validation.document.report;
 
-import eu.europa.esig.dss.jaxb.diagnostic.DiagnosticData;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlDiagnosticData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -24,12 +24,12 @@ import lombok.EqualsAndHashCode;
 @Data
 public class DiagnosticReport extends SimpleReport {
 
-    private DiagnosticData diagnosticData;
+    private XmlDiagnosticData diagnosticData;
 
     public DiagnosticReport() {
     }
 
-    public DiagnosticReport(ValidationConclusion validationConclusion, DiagnosticData diagnosticData) {
+    public DiagnosticReport(ValidationConclusion validationConclusion, XmlDiagnosticData diagnosticData) {
         super(validationConclusion);
         this.diagnosticData = diagnosticData;
     }

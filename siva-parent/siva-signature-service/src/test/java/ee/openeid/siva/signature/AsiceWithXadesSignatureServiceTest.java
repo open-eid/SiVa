@@ -19,7 +19,7 @@ package ee.openeid.siva.signature;
 import ee.openeid.siva.signature.configuration.Pkcs12Properties;
 import ee.openeid.siva.signature.configuration.SignatureServiceConfigurationProperties;
 import ee.openeid.siva.signature.exception.SignatureServiceException;
-import eu.europa.esig.dss.DSSException;
+import eu.europa.esig.dss.model.DSSException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

@@ -25,7 +25,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import static ee.openeid.siva.integrationtest.TestData.*;
+import static ee.openeid.siva.integrationtest.TestData.SIGNATURE_FORMAT_XADES_LT_TM;
+import static ee.openeid.siva.integrationtest.TestData.SIGNATURE_LEVEL_QESIG;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 
 @Category(IntegrationTest.class)
@@ -66,7 +67,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("Proov.txt"))
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Digest of the document content"))
                 .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2016-05-12T10:09:09Z"))
                 .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2016-05-12T10:09:20Z"))
@@ -103,7 +104,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("Makefile"))
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Digest of the document content"))
                 .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2015-11-20T08:32:39Z"))
                 .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2015-11-20T08:32:42Z"))
@@ -142,7 +143,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("build.xml"))
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Digest of the document content"))
                 .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2014-07-11T14:10:07Z"))
                 .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2011-10-15T14:59:35Z"))
@@ -220,7 +221,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("Baltic MoU digital signing_04112015.docx"))
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Digest of the document content"))
                 .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2015-11-04T10:24:11Z"))
                 .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2015-11-04T10:24:20Z"))
@@ -311,7 +312,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
         post(validationRequestFor("hellopades-lt-sha256-ec256.pdf"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
-                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("id-662a6552d01d2e257fe3098b8c161ba3780e552845d04b66868301a5cf0ed8ba"))
+                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S-81B4822132D3007E46167D86E8C18EF029A66E53F0F993CEB6FFE69BD16D1F03"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("Veiko Sinivee"))
@@ -347,7 +348,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
         post(validationRequestFor("pades_lt_two_valid_sig.pdf"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
-                .body("validationReport.validationConclusion.signatures[1].id", Matchers.is("id-d87b4d9d50061b6f427f6005dcbcdd5d54991a12c73036390788f2a46af27865"))
+                .body("validationReport.validationConclusion.signatures[1].id", Matchers.is("S-4E325FC1EC28358B6A2292007728F5B100657069464B81A5A3E719DA852B5B61"))
                 .body("validationReport.validationConclusion.signatures[1].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[1].signatureLevel", Matchers.is("QESIG"))
                 .body("validationReport.validationConclusion.signatures[1].signedBy", Matchers.is("VOLL,ANDRES,39004170346"))
@@ -384,12 +385,12 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
         post(validationRequestFor("hellopades-lt-b.pdf"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
-                .body("validationReport.validationConclusion.signatures[1].id", Matchers.is("id-4ac118e608b98bb8047a9d1b4e9da1cc8f6be35189324449a69368e9f2fe61ca"))
+                .body("validationReport.validationConclusion.signatures[1].id", Matchers.is("S-664A6BD08A60EF4F3DBEE46F0B0FD880997772A13F00FED58698DD329EF25F54"))
                 .body("validationReport.validationConclusion.signatures[1].signatureFormat", Matchers.is("PAdES_BASELINE_B"))
                 .body("validationReport.validationConclusion.signatures[1].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
                 .body("validationReport.validationConclusion.signatures[1].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
                 .body("validationReport.validationConclusion.signatures[1].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[1].subIndication", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[1].subIndication", Matchers.is("FORMAT_FAILURE"))
                 .body("validationReport.validationConclusion.signatures[1].errors[0].content", Matchers.is("The result of the LTV validation process is not acceptable to continue the process!"))
                 .body("validationReport.validationConclusion.signatures[1].signatureScopes[0].name", Matchers.is("Full PDF"))
                 .body("validationReport.validationConclusion.signatures[1].signatureScopes[0].scope", Matchers.is("FULL"))
@@ -424,7 +425,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
         post(validationRequestFor("hellopades-lt-rsa1024-sha1-expired.pdf"))
                 .then()
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
-                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("id-b6bfcb2c212c7f8630f4396fcaf24eeb780e552845d04b66868301a5cf0ed8ba"))
+                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S-9C94C6D367AA447A45CE12C6B4BA78EF6714642D1E8D8D01B69E2A1888D2454B"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_T"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
                 .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
@@ -495,7 +496,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("Glitter-rock-4_gallery.jpg"))
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Digest of the document content"))
                 .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2012-10-03T07:46:31Z"))
                 .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
@@ -532,7 +533,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].errors", Matchers.hasSize(2))
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("DigiDocService_spec_1_110_est.pdf"))
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Digest of the document content"))
                 .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2009-06-01T10:42:19Z"))
                 .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.1"))
@@ -567,7 +568,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("readme"))
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Digest of the document content"))
                 .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2012-09-21T11:56:53Z"))
                 .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("Bad digest for DataFile: D0 alternate digest matches!"))
                 .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2012-09-21T11:56:55Z"))
@@ -664,7 +665,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[1].name", Matchers.is("Testilood20070320.doc"))
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[1].scope", Matchers.is("FullSignatureScope"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[1].content", Matchers.is("Full document"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[1].content", Matchers.is("Digest of the document content"))
                 .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2009-06-01T10:42:19Z"))
                 .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.1"))
@@ -699,7 +700,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[1].name", Matchers.is("Testilood20070320.doc"))
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[1].scope", Matchers.is("FullSignatureScope"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[1].content", Matchers.is("Full document"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[1].content", Matchers.is("Digest of the document content"))
                 .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2009-06-01T10:45:44Z"))
                 .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.2"))
@@ -734,7 +735,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].errors", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[1].name", Matchers.is("Testilood20070320.doc"))
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[1].scope", Matchers.is("FullSignatureScope"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[1].content", Matchers.is("Full document"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[1].content", Matchers.is("Digest of the document content"))
                 .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2009-06-01T10:46:37Z"))
                 .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.isEmptyOrNullString())
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
@@ -742,7 +743,6 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(3))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(3));
     }
-
 
 
     @Override

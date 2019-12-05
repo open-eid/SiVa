@@ -1,7 +1,7 @@
 package ee.openeid.validation.service.generic;
 
 import ee.openeid.siva.validation.document.Datafile;
-import eu.europa.esig.dss.DigestAlgorithm;
+import eu.europa.esig.dss.enumerations.DigestAlgorithm;
 import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;

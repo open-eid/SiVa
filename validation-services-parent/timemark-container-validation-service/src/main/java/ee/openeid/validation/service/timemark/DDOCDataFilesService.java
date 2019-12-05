@@ -16,7 +16,6 @@
 
 package ee.openeid.validation.service.timemark;
 
-import eu.europa.esig.dss.DSSException;
 
 import ee.openeid.siva.validation.document.DataFilesDocument;
 import ee.openeid.siva.validation.document.report.DataFilesReport;
@@ -24,6 +23,7 @@ import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.DataFilesService;
 import ee.openeid.validation.service.timemark.report.DDOCDataFilesReportBuilder;
 
+import eu.europa.esig.dss.model.DSSException;
 import org.digidoc4j.Container;
 import org.digidoc4j.ContainerBuilder;
 import org.digidoc4j.exceptions.DigiDoc4JException;

@@ -112,15 +112,14 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
 
         post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DIAGNOSTIC ))
                 .then().root(DIAGNOSTIC_DATA_PREFIX)
-                .body("trustedLists", notNullValue())
-                .body("trustedLists[0].countryCode", equalTo("EE"))
-                .body("trustedLists[0].url", equalTo("https://sr.riik.ee/tsl/estonian-tsl.xml"))
-                .body("trustedLists[0].sequenceNumber", greaterThanOrEqualTo(46))
-                .body("trustedLists[0].version", equalTo(5))
-                .body("trustedLists[0].lastLoading", notNullValue())
-                .body("trustedLists[0].issueDate", notNullValue())
-                .body("trustedLists[0].nextUpdate", notNullValue())
-                .body("trustedLists[0].wellSigned", equalTo(true));
+                .body("ListOfTrustedLists", notNullValue())
+                .body("ListOfTrustedLists.Url", notNullValue())
+                .body("ListOfTrustedLists.SequenceNumber", greaterThanOrEqualTo(46))
+                .body("ListOfTrustedLists.Version", equalTo(5))
+                .body("ListOfTrustedLists.LastLoading", notNullValue())
+                .body("ListOfTrustedLists.IssueDate", notNullValue())
+                .body("ListOfTrustedLists.NextUpdate", notNullValue())
+                .body("ListOfTrustedLists.WellSigned", notNullValue());
     }
 
     /**
@@ -137,21 +136,21 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
      * File: pades-baseline-lta-live-aj.pdf
      */
     @Test
-    @Ignore("SIVA-119")
+
     public  void diagnosticReportAssertLotl(){
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
 
         post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DIAGNOSTIC ))
                 .then().root(DIAGNOSTIC_DATA_PREFIX)
-                .body("listOfTrustedLists", notNullValue())
-                .body("listOfTrustedLists.countryCode", equalTo("EU"))
-                .body("listOfTrustedLists.url", equalTo("http://repo.ria/tsl/trusted-test-mp.xml"))
-                .body("listOfTrustedLists.sequenceNumber", greaterThanOrEqualTo(237))
-                .body("listOfTrustedLists.version", equalTo(5))
-                .body("listOfTrustedLists.lastLoading", notNullValue())
-                .body("listOfTrustedLists.issueDate", notNullValue())
-                .body("listOfTrustedLists.nextUpdate", notNullValue())
-                .body("listOfTrustedLists.wellSigned", equalTo(true));
+                .body("ListOfTrustedLists", notNullValue())
+                .body("ListOfTrustedLists.CountryCode", equalTo("EU"))
+                .body("ListOfTrustedLists.Url", equalTo("http://repo.ria/tsl/trusted-test-mp.xml"))
+                .body("ListOfTrustedLists.SequenceNumber", greaterThanOrEqualTo(237))
+                .body("ListOfTrustedLists.Version", equalTo(5))
+                .body("ListOfTrustedLists.LastLoading", notNullValue())
+                .body("ListOfTrustedLists.IssueDate", notNullValue())
+                .body("ListOfTrustedLists.NextUpdate", notNullValue())
+                .body("ListOfTrustedLists.WellSigned", notNullValue());
     }
 
     /**
@@ -173,55 +172,45 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
 
         post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DIAGNOSTIC))
                 .then().root(DIAGNOSTIC_DATA_PREFIX)
-                .body("signatures[0]", notNullValue())
-                .body("signatures[0].signatureFilename", equalTo("pades-baseline-lta-live-aj.pdf"))
-                .body("signatures[0].dateTime", notNullValue())
-                .body("signatures[0].signatureFormat", equalTo("PAdES-BASELINE-LTA"))
-                .body("signatures[0].contentType", equalTo("application/pdf"))
-                .body("signatures[0].structuralValidation.valid", equalTo(true))
-                .body("signatures[0].digestMatchers[0].digestMethod", equalTo(HASH_ALGO_SHA256))
-                .body("signatures[0].digestMatchers[0].digestValue", equalTo("7UlS2NYiVo7OhneOHdb6gsTuA1HLM433vrBKSYnI46c="))
-                .body("signatures[0].digestMatchers[0].dataFound", equalTo(true))
-                .body("signatures[0].digestMatchers[0].dataIntact", equalTo(true))
-                .body("signatures[0].digestMatchers[0].type", equalTo("MESSAGE_DIGEST"))
-                .body("signatures[0].basicSignature.encryptionAlgoUsedToSignThisToken", equalTo("RSA"))
-                .body("signatures[0].basicSignature.keyLengthUsedToSignThisToken", equalTo("2048"))
-                .body("signatures[0].basicSignature.digestAlgoUsedToSignThisToken", equalTo(HASH_ALGO_SHA256))
-                .body("signatures[0].basicSignature.signatureIntact", equalTo(true))
-                .body("signatures[0].basicSignature.signatureValid", equalTo(true))
-                .body("signatures[0].signingCertificate.attributePresent", equalTo(true))
-                .body("signatures[0].signingCertificate.digestValuePresent", equalTo(true))
-                .body("signatures[0].signingCertificate.digestValueMatch", equalTo(true))
-                .body("signatures[0].signingCertificate.issuerSerialMatch", equalTo(true))
-                .body("signatures[0].signingCertificate.id", notNullValue())
-                .body("signatures[0].certificateChain[0].source", equalTo("SIGNATURE"))
-                .body("signatures[0].certificateChain[0].id", equalTo("F014C7DF249D8734DF273D937EE5EBF0F8166BE0775C47A80608F1A14EB23F4C"))
-                .body("signatures[0].certificateChain[1].source", equalTo("TRUSTED_LIST"))
-                .body("signatures[0].certificateChain[1].id", equalTo("74D992D3910BCF7E34B8B5CD28F91EAEB4F41F3DA6394D78B8C43672D43F4F0F"))
-                .body("signatures[0].timestamps[0].productionTime", notNullValue())
-                .body("signatures[0].timestamps[0].id", equalTo("6D7FCB82BA440E0BFE8E0349C94EB54CAA6714BC68492C66A9279252CA07B33C"))
-                .body("signatures[0].timestamps[0].type", equalTo("SIGNATURE_TIMESTAMP"))
-                .body("signatures[0].timestamps[0].digestMatcher.digestMethod", equalTo(HASH_ALGO_SHA256))
-                .body("signatures[0].timestamps[0].digestMatcher.digestValue", equalTo("7DhYQqR1MqVR3yDAY3HgnjvVjYmQpJPI9Afhqe8usmA="))
-                .body("signatures[0].timestamps[0].digestMatcher.dataFound", equalTo(true))
-                .body("signatures[0].timestamps[0].digestMatcher.dataIntact", equalTo(true))
-                .body("signatures[0].timestamps[0].digestMatcher.type", equalTo("MESSAGE_IMPRINT"))
-                .body("signatures[0].timestamps[0].basicSignature.encryptionAlgoUsedToSignThisToken", equalTo("RSA"))
-                .body("signatures[0].timestamps[0].basicSignature.keyLengthUsedToSignThisToken", equalTo("2048"))
-                .body("signatures[0].timestamps[0].basicSignature.digestAlgoUsedToSignThisToken", equalTo(HASH_ALGO_SHA256))
-                .body("signatures[0].timestamps[0].basicSignature.signatureIntact", equalTo(true))
-                .body("signatures[0].timestamps[0].basicSignature.signatureValid", equalTo(true))
-                .body("signatures[0].timestamps[0].signingCertificate.id", equalTo("1E49F497D89D430AAD534B622D82BD9B9D0D4AFDB7B7D36986C5DF0981D9067D"))
-                .body("signatures[0].timestamps[0].certificateChain[0].source", equalTo("TRUSTED_LIST"))
-                .body("signatures[0].timestamps[0].certificateChain[0].id", equalTo("1E49F497D89D430AAD534B622D82BD9B9D0D4AFDB7B7D36986C5DF0981D9067D"))
-                .body("signatures[0].timestamps[0].timestampedObjects[0].category", equalTo("SIGNATURE"))
-                .body("signatures[0].timestamps[0].timestampedObjects[0].id", equalTo("id-1328da20a3b04fdd7f5d1b5b88e4e66009e001ac0e724e93c33e6b5b7401b470"))
-                .body("signatures[0].timestamps[0].timestampedObjects[1].digestAlgoAndValue.digestMethod", equalTo(HASH_ALGO_SHA256))
-                .body("signatures[0].timestamps[0].timestampedObjects[1].digestAlgoAndValue.digestValue", equalTo("8BTH3ySdhzTfJz2TfuXr8PgWa+B3XEeoBgjxoU6yP0w="))
-                .body("signatures[0].timestamps[0].timestampedObjects[1].category", equalTo("CERTIFICATE"))
-                .body("signatures[0].signatureScopes[0].value", equalTo("The document byte range: [0, 9136, 28082, 26387]"))
-                .body("signatures[0].signatureScopes[0].name", equalTo("PDF previous version #1"))
-                .body("signatures[0].signatureScopes[0].scope", equalTo("PARTIAL"));
+                .body("Signature[0]", notNullValue())
+                .body("Signature[0].SignatureFilename", equalTo("pades-baseline-lta-live-aj.pdf"))
+                .body("Signature[0].DateTime", notNullValue())
+                .body("Signature[0].SignatureFormat", equalTo("PAdES-BASELINE-LTA"))
+//                .body("Signature[0].ContentType", equalTo("application/pdf"))
+                .body("Signature[0].StructuralValidation.Valid", equalTo(true))
+                .body("Signature[0].DigestMatcher[0].DigestMethod", equalTo(HASH_ALGO_SHA256))
+                .body("Signature[0].DigestMatcher[0].DigestValue", equalTo("7UlS2NYiVo7OhneOHdb6gsTuA1HLM433vrBKSYnI46c="))
+                .body("Signature[0].DigestMatcher[0].DataFound", equalTo(true))
+                .body("Signature[0].DigestMatcher[0].DataIntact", equalTo(true))
+                .body("Signature[0].DigestMatcher[0].type", equalTo("MESSAGE_DIGEST"))
+                .body("Signature[0].BasicSignature.EncryptionAlgoUsedToSignThisToken", equalTo("RSA"))
+                .body("Signature[0].BasicSignature.KeyLengthUsedToSignThisToken", equalTo("2048"))
+                .body("Signature[0].BasicSignature.DigestAlgoUsedToSignThisToken", equalTo(HASH_ALGO_SHA256))
+                .body("Signature[0].BasicSignature.SignatureIntact", equalTo(true))
+                .body("Signature[0].BasicSignature.SignatureValid", equalTo(true))
+                .body("Signature[0].SigningCertificate.AttributePresent", equalTo(true))
+                .body("Signature[0].SigningCertificate.DigestValuePresent", equalTo(true))
+                .body("Signature[0].SigningCertificate.DigestValueMatch", equalTo(true))
+                .body("Signature[0].SigningCertificate.IssuerSerialMatch", equalTo(true))
+                .body("Timestamp[0].ProductionTime", notNullValue())
+                .body("Timestamp[0].Id", equalTo("T-986BB33B29274A85EF94B7EC0FB89C3427910D59C40A233FD588FBCB2A0E4A84"))
+                .body("Timestamp[0].Type", equalTo("SIGNATURE_TIMESTAMP"))
+                .body("Timestamp[0].DigestMatcher.DigestMethod", equalTo(HASH_ALGO_SHA256))
+                .body("Timestamp[0].DigestMatcher.DigestValue", equalTo("7DhYQqR1MqVR3yDAY3HgnjvVjYmQpJPI9Afhqe8usmA="))
+                .body("Timestamp[0].DigestMatcher.DataFound", equalTo(true))
+                .body("Timestamp[0].DigestMatcher.DataIntact", equalTo(true))
+                .body("Timestamp[0].DigestMatcher.type", equalTo("MESSAGE_IMPRINT"))
+                .body("Timestamp[0].BasicSignature.EncryptionAlgoUsedToSignThisToken", equalTo("RSA"))
+                .body("Timestamp[0].BasicSignature.KeyLengthUsedToSignThisToken", equalTo("2048"))
+                .body("Timestamp[0].BasicSignature.DigestAlgoUsedToSignThisToken", equalTo(HASH_ALGO_SHA512))
+                .body("Timestamp[0].BasicSignature.SignatureIntact", equalTo(true))
+                .body("Timestamp[0].BasicSignature.SignatureValid", equalTo(true))
+                .body("Timestamp[0].TimestampedObject[1].Category", equalTo("SIGNATURE"))
+                .body("Timestamp[0].DigestAlgoAndValue.DigestMethod", equalTo(HASH_ALGO_SHA256))
+//                .body("Timestamp[0].DigestAlgoAndValue.DigestValue", equalTo("8BTH3ySdhzTfJz2TfuXr8PgWa+B3XEeoBgjxoU6yP0w="))
+                .body("Signature[0].SignatureScope[0].Description", equalTo("The document byte range: [0, 9136, 28082, 26387]"))
+                .body("Signature[0].SignatureScope[0].Name", equalTo("PDF previous version #1"))
+                .body("Signature[0].SignatureScope[0].Scope", equalTo("PARTIAL"));
     }
 
     /**
@@ -270,16 +259,16 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
      * File: TS-02_23634_TS_wrong_SignatureValue.asice
      */
     @Test
-    public  void detailedReportWrongSignatureValueAsice() {
+    public  void diagnosticReportWrongSignatureValueAsice() {
         setTestFilesDirectory("bdoc/live/timestamp/");
 
         post(validationRequestFor("TS-02_23634_TS_wrong_SignatureValue.asice", null, REPORT_TYPE_DIAGNOSTIC))
                 .then().root(DIAGNOSTIC_DATA_PREFIX)
-                .body("signatures[0].basicSignature.encryptionAlgoUsedToSignThisToken", equalTo("RSA"))
-                .body("signatures[0].basicSignature.keyLengthUsedToSignThisToken", equalTo("2048"))
-                .body("signatures[0].basicSignature.digestAlgoUsedToSignThisToken", equalTo(HASH_ALGO_SHA256))
-                .body("signatures[0].basicSignature.signatureIntact", equalTo(false))
-                .body("signatures[0].basicSignature.signatureValid", equalTo(false));
+                .body("Signature[0].BasicSignature.EncryptionAlgoUsedToSignThisToken", equalTo("RSA"))
+                .body("Signature[0].BasicSignature.KeyLengthUsedToSignThisToken", equalTo("2048"))
+                .body("Signature[0].BasicSignature.DigestAlgoUsedToSignThisToken", equalTo(HASH_ALGO_SHA256))
+                .body("Signature[0].BasicSignature.SignatureIntact", equalTo(false))
+                .body("Signature[0].BasicSignature.SignatureValid", equalTo(false));
     }
 
     @Override

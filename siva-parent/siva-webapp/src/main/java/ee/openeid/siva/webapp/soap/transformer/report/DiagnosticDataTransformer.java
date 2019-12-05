@@ -16,9 +16,14 @@
 
 package ee.openeid.siva.webapp.soap.transformer.report;
 
+import eu.europa.esig.dss.diagnostic.DiagnosticDataXmlDefiner;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlDiagnosticData;
+
+import javax.xml.bind.JAXBElement;
+
 public class DiagnosticDataTransformer
         extends ReportTransformer<
-            eu.europa.esig.dss.jaxb.diagnostic.DiagnosticData,
+            eu.europa.esig.dss.diagnostic.jaxb.XmlDiagnosticData,
             eu.europa.esig.dss.validation.diagnostic.DiagnosticData,
             ee.openeid.siva.webapp.soap.response.DiagnosticData
         > {
@@ -26,7 +31,7 @@ public class DiagnosticDataTransformer
     private static final String EU_DIAGNOSTIC_DATA_PACKAGE = "eu.europa.esig.dss.validation.diagnostic";
 
     public DiagnosticDataTransformer() {
-        super(eu.europa.esig.dss.jaxb.diagnostic.DiagnosticData.class, EU_DIAGNOSTIC_DATA_PACKAGE);
+        super(eu.europa.esig.dss.diagnostic.jaxb.XmlDiagnosticData.class, EU_DIAGNOSTIC_DATA_PACKAGE);
     }
 
     @Override
@@ -40,5 +45,10 @@ public class DiagnosticDataTransformer
         diagnosticData.setTrustedLists(dssDiagnosticData.getTrustedLists());
         diagnosticData.setListOfTrustedLists(dssDiagnosticData.getListOfTrustedLists());
         return diagnosticData;
+    }
+
+    @Override
+    protected JAXBElement<XmlDiagnosticData> wrap(XmlDiagnosticData xmlDiagnosticData) {
+        return DiagnosticDataXmlDefiner.OBJECT_FACTORY.createDiagnosticData(xmlDiagnosticData);
     }
 }

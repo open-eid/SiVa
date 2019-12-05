@@ -17,11 +17,11 @@
 package ee.openeid.tsl;
 
 import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
-import eu.europa.esig.dss.client.http.commons.CommonsDataLoader;
-import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
+import eu.europa.esig.dss.service.http.commons.CommonsDataLoader;
+import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
+import eu.europa.esig.dss.spi.x509.KeyStoreCertificateSource;
 import eu.europa.esig.dss.tsl.service.TSLRepository;
 import eu.europa.esig.dss.tsl.service.TSLValidationJob;
-import eu.europa.esig.dss.x509.KeyStoreCertificateSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +47,7 @@ public class TSLLoader {
 
     private void initTslValidationJob() {
         tslValidationJob = tslValidationJobFactory.createValidationJob();
-        tslValidationJob.setDataLoader(new CommonsDataLoader());
+        tslValidationJob.setDataLoader(createCommonsDataLoader());
         TSLRepository tslRepository = new TSLRepository();
         tslRepository.setTrustedListsCertificateSource(trustedListSource);
         tslValidationJob.setRepository(tslRepository);
@@ -55,7 +55,6 @@ public class TSLLoader {
         tslValidationJob.setLotlCode(configurationProperties.getCode());
         tslValidationJob.setOjContentKeyStore(keyStoreCertificateSource);
         tslValidationJob.setOjUrl(configurationProperties.getOjUrl());
-        tslValidationJob.setLotlRootSchemeInfoUri(configurationProperties.getLotlRootSchemeInfoUri());
         if (!configurationProperties.getTrustedTerritories().isEmpty())
             tslValidationJob.setFilterTerritories(configurationProperties.getTrustedTerritories());
         tslValidationJob.setCheckLOTLSignature(true);
@@ -72,6 +71,14 @@ public class TSLLoader {
             tslValidationJob.refresh();
             LOGGER.info("Finished loading TSL over the network");
         }
+    }
+
+    private CommonsDataLoader createCommonsDataLoader() {
+        CommonsDataLoader commonsDataLoader = new CommonsDataLoader();
+        commonsDataLoader.setSslTruststorePath(configurationProperties.getSslTruststorePath());
+        commonsDataLoader.setSslTruststoreType(configurationProperties.getSslTruststoreType());
+        commonsDataLoader.setSslTruststorePassword(configurationProperties.getSslTruststorePassword());
+        return commonsDataLoader;
     }
 
     @Autowired

@@ -55,12 +55,14 @@ abstract class ReportTransformer<D, I, F> {
 
     abstract F transformReport(I report);
 
+    abstract JAXBElement<D> wrap(D jaxbObject);
+
     private I unmarshallerReport(D report) {
         try {
             Marshaller marshaller = marshallerContext.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             StringWriter writer = new StringWriter();
-            marshaller.marshal(report, writer);
+            marshaller.marshal(wrap(report), writer);
             String requestString = writer.toString();
             StringReader reader = new StringReader(requestString);
             Unmarshaller unmarshaller = unMarshallerContext.createUnmarshaller();
@@ -69,4 +71,5 @@ abstract class ReportTransformer<D, I, F> {
             throw new IllegalStateException("Failed to un-marshal report", e);
         }
     }
+
 }

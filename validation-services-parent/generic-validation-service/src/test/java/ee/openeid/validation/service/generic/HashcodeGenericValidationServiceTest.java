@@ -24,7 +24,7 @@ import ee.openeid.siva.validation.document.report.SignatureScope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.validation.service.generic.configuration.GenericSignaturePolicyProperties;
-import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
+import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

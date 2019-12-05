@@ -23,17 +23,11 @@ import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.validation.service.generic.validator.report.GenericValidationReportBuilder;
-import eu.europa.esig.dss.jaxb.diagnostic.DiagnosticData;
-import eu.europa.esig.dss.jaxb.diagnostic.XmlCertificate;
-import eu.europa.esig.dss.jaxb.diagnostic.XmlContainerInfo;
-import eu.europa.esig.dss.jaxb.diagnostic.XmlDistinguishedName;
-import eu.europa.esig.dss.jaxb.diagnostic.XmlPolicy;
-import eu.europa.esig.dss.jaxb.diagnostic.XmlSignature;
-import eu.europa.esig.dss.jaxb.diagnostic.XmlSignatureScope;
-import eu.europa.esig.dss.jaxb.diagnostic.XmlSigningCertificate;
-import eu.europa.esig.dss.jaxb.diagnostic.XmlTimestamp;
+import eu.europa.esig.dss.diagnostic.jaxb.*;
+import eu.europa.esig.dss.enumerations.Indication;
+import eu.europa.esig.dss.enumerations.SignatureLevel;
+import eu.europa.esig.dss.simplereport.jaxb.XmlSimpleReport;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
-import eu.europa.esig.dss.validation.policy.rules.Indication;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,7 +49,7 @@ public class GenericValidationReportBuilderTest {
     }
 
     @Test
-    public void totalPassedIndicationTimeMarkReportBuild(){
+    public void totalPassedIndicationTimeMarkReportBuild() {
         Reports reports = new GenericValidationReportBuilder(getDssReports("1.3.6.1.4.1.10015.1000.3.2.1"), ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
         Assert.assertEquals(new Integer(1), reports.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
         Assert.assertEquals("TOTAL-PASSED", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getIndication());
@@ -84,9 +78,10 @@ public class GenericValidationReportBuilderTest {
 
     @Test
     public void signatureMissingSigningCertificateResultsWithEmptySubjectDN() {
-        DiagnosticData diagnosticData = getDiagnosticDataJaxb("");
+        XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
+
         diagnosticData.getSignatures().get(0).setSigningCertificate(null);
-        eu.europa.esig.dss.validation.reports.Reports dssReports = new eu.europa.esig.dss.validation.reports.Reports(diagnosticData , null, getSimpleReport());
+        eu.europa.esig.dss.validation.reports.Reports dssReports = new eu.europa.esig.dss.validation.reports.Reports(diagnosticData, null, getSimpleReport(), null);
         Reports reports = new GenericValidationReportBuilder(dssReports, ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
 
         SubjectDistinguishedName subjectDN = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getSubjectDistinguishedName();
@@ -110,11 +105,11 @@ public class GenericValidationReportBuilderTest {
     }
 
     private eu.europa.esig.dss.validation.reports.Reports getDssReports(String policyId) {
-        return new eu.europa.esig.dss.validation.reports.Reports(getDiagnosticDataJaxb(policyId), null, getSimpleReport());
+        return new eu.europa.esig.dss.validation.reports.Reports(getDiagnosticDataJaxb(policyId), null, getSimpleReport(), null);
     }
 
-    private DiagnosticData getDiagnosticDataJaxb(String policyId) {
-        DiagnosticData diagnosticData = new DiagnosticData();
+    private XmlDiagnosticData getDiagnosticDataJaxb(String policyId) {
+        XmlDiagnosticData diagnosticData = new XmlDiagnosticData();
         XmlContainerInfo xmlContainerInfo = new XmlContainerInfo();
         xmlContainerInfo.setContainerType("ASIC-E");
         diagnosticData.setContainerInfo(xmlContainerInfo);
@@ -122,20 +117,26 @@ public class GenericValidationReportBuilderTest {
         XmlSignatureScope xmlSignatureScope = new XmlSignatureScope();
         xmlSignature.setSignatureScopes(Collections.singletonList(xmlSignatureScope));
         xmlSignature.setId("SIG-id");
-        xmlSignature.setTimestamps(Collections.singletonList(new XmlTimestamp()));
+
+        XmlFoundTimestamp xmlFoundTimestamp = new XmlFoundTimestamp();
+        xmlFoundTimestamp.setTimestamp(new XmlTimestamp());
+        xmlSignature.setFoundTimestamps(Collections.singletonList(xmlFoundTimestamp));
 
         XmlPolicy xmlPolicy = new XmlPolicy();
         xmlPolicy.setId(policyId);
         xmlSignature.setPolicy(xmlPolicy);
 
         XmlSigningCertificate signingCertificate = new XmlSigningCertificate();
-        signingCertificate.setId("SIG-CERT-id");
+        XmlCertificate certificate = new XmlCertificate();
+        certificate.setId("SIG-CERT-id");
+        signingCertificate.setCertificate(certificate);
+
         xmlSignature.setSigningCertificate(signingCertificate);
 
         diagnosticData.setSignatures(Collections.singletonList(xmlSignature));
 
         XmlCertificate xmlCertificate = new XmlCertificate();
-        xmlCertificate.setId(signingCertificate.getId());
+        xmlCertificate.setId(signingCertificate.getCertificate().getId());
         XmlDistinguishedName distinguishedName = new XmlDistinguishedName();
         distinguishedName.setFormat("RFC2253");
         distinguishedName.setValue("2.5.4.5=#130b3437313031303130303333,2.5.4.42=#0c05504552454e494d49,2.5.4.4=#0c074545534e494d49,CN=PERENIMI\\,EESNIMI\\,47101010033,OU=digital signature,O=ESTEID,C=EE");
@@ -145,17 +146,18 @@ public class GenericValidationReportBuilderTest {
         return diagnosticData;
     }
 
-    private eu.europa.esig.dss.jaxb.simplereport.SimpleReport getSimpleReport() {
-        eu.europa.esig.dss.jaxb.simplereport.SimpleReport simpleReport = new eu.europa.esig.dss.jaxb.simplereport.SimpleReport();
+    private XmlSimpleReport getSimpleReport() {
+        XmlSimpleReport simpleReport = new XmlSimpleReport();
         XmlSigningCertificate xmlSigningCertificate = new XmlSigningCertificate();
-        xmlSigningCertificate.setId("CERT-id");
+        XmlCertificate certificate = new XmlCertificate();
+        certificate.setId("CERT-id");
+        xmlSigningCertificate.setCertificate(certificate);
 
-        eu.europa.esig.dss.jaxb.simplereport.XmlSignature xmlSignature = new eu.europa.esig.dss.jaxb.simplereport.XmlSignature();
+        eu.europa.esig.dss.simplereport.jaxb.XmlSignature xmlSignature = new eu.europa.esig.dss.simplereport.jaxb.XmlSignature();
         xmlSignature.setId("SIG-id");
         xmlSignature.setIndication(Indication.TOTAL_PASSED);
-        xmlSignature.setSignatureFormat("XAdES-BASELINE-LT");
+        xmlSignature.setSignatureFormat(SignatureLevel.XAdES_BASELINE_LT);
         simpleReport.getSignature().add(xmlSignature);
-
         return simpleReport;
     }
 }

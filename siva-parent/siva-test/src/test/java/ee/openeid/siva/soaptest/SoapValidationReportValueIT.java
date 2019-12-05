@@ -360,7 +360,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         assertTrue("validSignaturesCount should be zero", getValidationReportFromDom(report).getValidationConclusion().getValidSignaturesCount()==0);
         assertEquals("SignatureFormat should match expected", "PAdES_BASELINE_B", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureFormat());
         assertEquals("Indication should match expected", "TOTAL-FAILED", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getIndication().value());
-        assertEquals("SubIndication should match expected", "", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSubIndication());
+        assertEquals("SubIndication should match expected", "FORMAT_FAILURE", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSubIndication());
         assertEquals("SignatureLevel should match expected", "NOT_ADES_QC_QSCD", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureLevel());
         assertEquals("SignatureScopes should match expected", "FULL", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
     }

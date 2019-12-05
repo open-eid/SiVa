@@ -16,12 +16,12 @@
 
 package ee.openeid.siva.signature.ocsp;
 
-import eu.europa.esig.dss.DSSException;
-import eu.europa.esig.dss.DSSRevocationUtils;
-import eu.europa.esig.dss.x509.CertificateToken;
-import eu.europa.esig.dss.x509.ocsp.OCSPRespStatus;
-import eu.europa.esig.dss.x509.ocsp.OCSPSource;
-import eu.europa.esig.dss.x509.ocsp.OCSPToken;
+import eu.europa.esig.dss.model.DSSException;
+import eu.europa.esig.dss.model.x509.CertificateToken;
+import eu.europa.esig.dss.spi.DSSRevocationUtils;
+import eu.europa.esig.dss.spi.x509.revocation.ocsp.OCSPRespStatus;
+import eu.europa.esig.dss.spi.x509.revocation.ocsp.OCSPSource;
+import eu.europa.esig.dss.spi.x509.revocation.ocsp.OCSPToken;
 import org.bouncycastle.asn1.DEROctetString;
 import org.bouncycastle.asn1.ocsp.OCSPObjectIdentifiers;
 import org.bouncycastle.asn1.x509.Extension;

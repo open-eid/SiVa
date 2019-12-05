@@ -16,11 +16,10 @@
 
 package ee.openeid.siva.signature.ocsp;
 
-import eu.europa.esig.dss.DSSException;
-import eu.europa.esig.dss.client.http.commons.OCSPDataLoader;
+import eu.europa.esig.dss.model.DSSException;
+import eu.europa.esig.dss.service.http.commons.OCSPDataLoader;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.BufferedHttpEntity;
@@ -37,6 +36,8 @@ import java.net.URI;
 public class SkOcspDataLoader extends OCSPDataLoader {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SkOcspDataLoader.class);
+
+    private static final String CONTENT_TYPE = "Content-Type";
 
     @Override
     public byte[] post(final String url, final byte[] content) throws DSSException {

@@ -81,8 +81,10 @@ public class TestData {
     public static final String SUB_INDICATION_SIGNED_DATA_NOT_FOUND = "SIGNED_DATA_NOT_FOUND";
 
     public static final String VALID_SIGNATURE_SCOPE_CONTENT_FULL = "Full document";
+    public static final String VALID_SIGNATURE_SCOPE_CONTENT_DIGEST = "Digest of the document content";
     public static final String VALID_SIGNATURE_SCOPE_CONTENT_2 = "The document byte range: [0, 14153, 52047, 491]";
     public static final String SIGNATURE_SCOPE_FULL = "FULL";
+    public static final String SIGNATURE_SCOPE_DIGEST = "DIGEST";
     public static final String VALID_SIGNATURE_SCOPE_VALUE_2 = "PdfByteRangeSignatureScope";
 
     public static final String VALID_VALIDATION_PROCESS_NAMEID_1 = "QUAL_TL_FRESH";
@@ -223,9 +225,10 @@ public class TestData {
     public static final String VALID_VALIDATION_PROCESS_ERROR_NAMEID_9 = "ADEST_ROTVPIIC_ANS";
 
 
-    public static final String VALID_VALIDATION_PROCESS_STATUS_1 = "NOT_OK";
+    public static final String VALID_VALIDATION_PROCESS_STATUS_1 = "NOT OK";
     public static final String VALID_VALIDATION_PROCESS_STATUS_2 = "OK";
     public static final String VALID_VALIDATION_PROCESS_STATUS_3 = "WARNING";
+    public static final String VALID_VALIDATION_PROCESS_STATUS_4 = "IGNORED";
 
     public static final String VALIDATION_LEVEL_ARCHIVAL_DATA = "ARCHIVAL_DATA";
 

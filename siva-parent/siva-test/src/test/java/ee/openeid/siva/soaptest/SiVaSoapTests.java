@@ -200,7 +200,7 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
                 contentType("text/xml;charset=UTF-8").
                 body(request).
                 when().
-                post(SOAP_ENDPOINT);
+                post(createUrl(SOAP_ENDPOINT));
     }
 
     protected Response postDataFiles(String request) {
@@ -208,7 +208,7 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
                 contentType("text/xml;charset=UTF-8").
                 body(request).
                 when().
-                post(SOAP_DATA_FILES_ENDPOINT);
+                post(createUrl(SOAP_DATA_FILES_ENDPOINT));
     }
 
     protected Response postHashcodeValidation(JSONHashcodeValidationRequest request) {
@@ -220,7 +220,7 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
                 contentType("text/xml;charset=UTF-8").
                 body(request).
                 when().
-                post(SOAP_HASHCODE_VALIDATION_ENDPOINT);
+                post(createUrl(SOAP_HASHCODE_VALIDATION_ENDPOINT));
     }
 
     protected static String createXMLHashcodeValidationRequest(JSONHashcodeValidationRequest request) {

@@ -47,7 +47,7 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
 
     private static final String SOAP_ENDPOINT = "/soap/validationWebService";
     private static final String SOAP_HASHCODE_VALIDATION_ENDPOINT = "/soap/hashcodeValidationWebService";
-    private static final String SOAP_DATA_FILES_ENDPOINT = "soap/dataFilesWebService";
+    private static final String SOAP_DATA_FILES_ENDPOINT = "/soap/dataFilesWebService";
 
     protected static final String CLIENT_FAULT = "soap:Client";
     protected static final String SERVER_FAULT = "soap:Server";

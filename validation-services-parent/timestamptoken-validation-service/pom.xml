@@ -82,7 +82,7 @@
         <dependency>
             <groupId>org.digidoc4j</groupId>
             <artifactId>digidoc4j</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
+            <version>4.0.0-RC.1</version>
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>

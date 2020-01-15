@@ -1,0 +1,6 @@
+server.max-http-post-size: 13981016 # 10 MB + base64 overhead (ceil(10MB / 3) * 4)
+
+siva:
+  tsl:
+    loader:
+      sslTruststorePath:

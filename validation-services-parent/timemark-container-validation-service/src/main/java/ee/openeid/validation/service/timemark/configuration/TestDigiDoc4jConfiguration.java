@@ -3,6 +3,7 @@ package ee.openeid.validation.service.timemark.configuration;
 
 import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
 import org.digidoc4j.Configuration;
+import org.digidoc4j.ExternalConnectionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
@@ -18,9 +19,9 @@ public class TestDigiDoc4jConfiguration {
     private org.digidoc4j.Configuration getConfiguration() {
         org.digidoc4j.Configuration configuration = new org.digidoc4j.Configuration(Configuration.Mode.TEST);
         configuration.setTrustedTerritories();
-        configuration.setSslTruststorePath(tslLoaderConfigurationProperties.getSslTruststorePath());
-        configuration.setSslTruststorePassword(tslLoaderConfigurationProperties.getSslTruststorePassword());
-        configuration.setSslTruststoreType(tslLoaderConfigurationProperties.getSslTruststoreType());
+        configuration.setSslTruststorePathFor(ExternalConnectionType.TSL, tslLoaderConfigurationProperties.getSslTruststorePath());
+        configuration.setSslTruststorePasswordFor(ExternalConnectionType.TSL, tslLoaderConfigurationProperties.getSslTruststorePassword());
+        configuration.setSslTruststoreTypeFor(ExternalConnectionType.TSL, tslLoaderConfigurationProperties.getSslTruststoreType());
         configuration.setTslLocation(tslLoaderConfigurationProperties.getUrl());
         return configuration;
     }

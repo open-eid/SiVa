@@ -16,9 +16,10 @@
 
 package ee.openeid.tsl.configuration;
 
-import eu.europa.esig.dss.x509.CertificateToken;
-import eu.europa.esig.dss.x509.crl.CRLSource;
-import eu.europa.esig.dss.x509.crl.CRLToken;
+import eu.europa.esig.dss.model.x509.CertificateToken;
+import eu.europa.esig.dss.spi.x509.revocation.crl.CRLSource;
+import eu.europa.esig.dss.spi.x509.revocation.crl.CRLToken;
+
 
 public class AlwaysFailingCRLSource implements CRLSource {
     @Override

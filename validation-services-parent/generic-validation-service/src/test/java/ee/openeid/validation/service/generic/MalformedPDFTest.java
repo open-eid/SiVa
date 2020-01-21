@@ -16,9 +16,9 @@
 
 package ee.openeid.validation.service.generic;
 
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
+import org.bouncycastle.util.encoders.Base64;
 import org.junit.Ignore;
 import org.junit.Test;
 

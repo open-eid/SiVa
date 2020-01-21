@@ -29,6 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.junit.Assert.assertTrue;
 
@@ -108,7 +109,8 @@ public abstract class SiVaIntegrationTestsBase {
 
     public String createUrl(String endpoint) {
         LinkedHashMap sivaMap = (LinkedHashMap) yamlMaps.get("siva");
-        return sivaMap.get("protocol") + "://" + sivaMap.get("hostname") + ":" + sivaMap.get("port") + sivaMap.get("application-context-path") + endpoint;
+        String contextPath = Optional.ofNullable((String) sivaMap.get("application-context-path")).orElse("");
+        return sivaMap.get("protocol") + "://" + sivaMap.get("hostname") + ":" + sivaMap.get("port") + contextPath + endpoint;
     }
 
     protected byte[] readFileFromTestResources(String filename) {

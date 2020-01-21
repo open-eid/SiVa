@@ -16,6 +16,7 @@
 
 package ee.openeid.validation.service.generic;
 
+import com.google.common.io.BaseEncoding;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Reports;
@@ -28,19 +29,19 @@ import ee.openeid.siva.validation.service.signature.policy.properties.Constraint
 import ee.openeid.tsl.configuration.AlwaysFailingCRLSource;
 import ee.openeid.tsl.configuration.AlwaysFailingOCSPSource;
 import ee.openeid.validation.service.generic.validator.report.GenericValidationReportBuilder;
-import eu.europa.esig.dss.DSSDocument;
-import eu.europa.esig.dss.DSSException;
-import eu.europa.esig.dss.InMemoryDocument;
-import eu.europa.esig.dss.MimeType;
-import eu.europa.esig.dss.client.http.commons.CommonsDataLoader;
-import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
+import eu.europa.esig.dss.diagnostic.CertificateWrapper;
+import eu.europa.esig.dss.diagnostic.DiagnosticData;
+import eu.europa.esig.dss.diagnostic.SignatureWrapper;
+import eu.europa.esig.dss.diagnostic.TimestampWrapper;
+import eu.europa.esig.dss.model.DSSDocument;
+import eu.europa.esig.dss.model.DSSException;
+import eu.europa.esig.dss.model.InMemoryDocument;
+import eu.europa.esig.dss.model.MimeType;
+import eu.europa.esig.dss.service.http.commons.CommonsDataLoader;
+import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
-import eu.europa.esig.dss.validation.reports.wrapper.CertificateWrapper;
-import eu.europa.esig.dss.validation.reports.wrapper.DiagnosticData;
-import eu.europa.esig.dss.validation.reports.wrapper.SignatureWrapper;
-import eu.europa.esig.dss.validation.reports.wrapper.TimestampWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +63,7 @@ public class GenericValidationService implements ValidationService {
     private static final int REVOCATION_FRESHNESS_DAY_DIFFERENCE = 86400000;
     private static final int REVOCATION_FRESHNESS_FIFTEEN_MINUTES_DIFFERENCE = 900000;
     private static final String REVOCATION_FRESHNESS_FAULT = "The revocation information is not considered as 'fresh'.";
-    private static final String CRL_REVOCATION_SOURCE = "CRLToken";
+    private static final String CRL_REVOCATION_SOURCE = "CRL";
 
     private TrustedListsCertificateSource trustedListsCertificateSource;
     private ConstraintLoadingSignaturePolicyService signaturePolicyService;
@@ -116,7 +117,11 @@ public class GenericValidationService implements ValidationService {
             endExceptionally(e);
             throw constructMalformedDocumentException(e);
         } catch (Exception e) {
+
             endExceptionally(e);
+            if (e.getCause() instanceof BaseEncoding.DecodingException) {
+                throw constructMalformedDocumentException(e);
+            }
             throw new ValidationServiceException(getClass().getSimpleName(), e);
         }
     }
@@ -135,28 +140,35 @@ public class GenericValidationService implements ValidationService {
     }
 
     void validateRevocationFreshness(eu.europa.esig.dss.validation.reports.Reports reports) {
-
         DiagnosticData diagnosticData = reports.getDiagnosticData();
-
+        if (diagnosticData.getFirstSignatureId() == null) {
+            return;
+        }
         if (diagnosticData.getUsedCertificates() != null && diagnosticData.getFirstSigningCertificateId() != null) {
             for (CertificateWrapper certificateWrapper : diagnosticData.getUsedCertificates()) {
                 for (SignatureWrapper signatureWrapper : diagnosticData.getSignatures()) {
-                    if (certificateWrapper.getId().equals(signatureWrapper.getSigningCertificateId()) && !signatureWrapper.getTimestampList().isEmpty()) {
+                    if (signatureWrapper.getSigningCertificate() == null)
+                        return;
+                    if (certificateWrapper.getId().equals(signatureWrapper.getSigningCertificate().getId()) && !signatureWrapper.getTimestampList().isEmpty()) {
                         TimestampWrapper timeStampWrapper = getFirstTimestamp(signatureWrapper.getTimestampList());
                         if (timeStampWrapper.getProductionTime() == null)
                             return;
-                        boolean revocationFreshnessCheckInvokeError = isRevocationFreshnessCheckInvalid(certificateWrapper, timeStampWrapper);
-                        if (revocationFreshnessCheckInvokeError) {
-                            reports.getSimpleReport().getErrors(signatureWrapper.getId()).add(REVOCATION_FRESHNESS_FAULT);
-                        } else {
-                            boolean revocationFreshnessCheckInvokeWarning = certificateWrapper.getRevocationData().stream().anyMatch(
-                                    r -> !CRL_REVOCATION_SOURCE.equals(r.getSource()) && isInRangeMillis(r.getProductionDate(), timeStampWrapper.getProductionTime(), REVOCATION_FRESHNESS_FIFTEEN_MINUTES_DIFFERENCE));
-                            if (revocationFreshnessCheckInvokeWarning) {
-                                reports.getSimpleReport().getWarnings(signatureWrapper.getId()).add(REVOCATION_FRESHNESS_FAULT);
-                            }
-                        }
+                        invokeRevocationFreshnessCheckIfNeeded(reports, certificateWrapper, signatureWrapper, timeStampWrapper);
                     }
                 }
+            }
+        }
+    }
+
+    private void invokeRevocationFreshnessCheckIfNeeded(eu.europa.esig.dss.validation.reports.Reports reports, CertificateWrapper certificateWrapper, SignatureWrapper signatureWrapper, TimestampWrapper timeStampWrapper) {
+        boolean revocationFreshnessCheckInvokeError = isRevocationFreshnessCheckInvalid(certificateWrapper, timeStampWrapper);
+        if (revocationFreshnessCheckInvokeError) {
+            reports.getSimpleReport().getErrors(signatureWrapper.getId()).add(REVOCATION_FRESHNESS_FAULT);
+        } else {
+            boolean revocationFreshnessCheckInvokeWarning = certificateWrapper.getCertificateRevocationData().stream().anyMatch(
+                    r -> !CRL_REVOCATION_SOURCE.equals(r.getRevocationType().name()) && isInRangeMillis(r.getProductionDate(), timeStampWrapper.getProductionTime(), REVOCATION_FRESHNESS_FIFTEEN_MINUTES_DIFFERENCE));
+            if (revocationFreshnessCheckInvokeWarning) {
+                reports.getSimpleReport().getWarnings(signatureWrapper.getId()).add(REVOCATION_FRESHNESS_FAULT);
             }
         }
     }
@@ -173,9 +185,9 @@ public class GenericValidationService implements ValidationService {
     }
 
     private boolean isRevocationFreshnessCheckInvalid(CertificateWrapper certificateWrapper, TimestampWrapper timeStampWrapper) {
-        return certificateWrapper.getRevocationData().stream().anyMatch(
+        return certificateWrapper.getCertificateRevocationData().stream().anyMatch(
                 r -> {
-                    if (CRL_REVOCATION_SOURCE.equals(r.getSource())) {
+                    if (CRL_REVOCATION_SOURCE.equals(r.getRevocationType().name())) {
                         return !(timeStampWrapper.getProductionTime().after(r.getThisUpdate()) && timeStampWrapper.getProductionTime().before(r.getNextUpdate()));
                     }
                     return isInRangeMillis(r.getProductionDate(), timeStampWrapper.getProductionTime(), REVOCATION_FRESHNESS_DAY_DIFFERENCE);
@@ -190,7 +202,7 @@ public class GenericValidationService implements ValidationService {
         return certificateVerifier.getTrustedCertSource().getCertificatePool().getNumberOfCertificates();
     }
 
-    protected RuntimeException constructMalformedDocumentException(RuntimeException cause) {
+    protected RuntimeException constructMalformedDocumentException(Exception cause) {
         return new MalformedDocumentException(cause);
     }
 

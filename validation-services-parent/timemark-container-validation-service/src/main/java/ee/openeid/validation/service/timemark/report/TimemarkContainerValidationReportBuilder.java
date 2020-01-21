@@ -31,8 +31,8 @@ import ee.openeid.siva.validation.document.report.ValidationWarning;
 import ee.openeid.siva.validation.document.report.Warning;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
-import eu.europa.esig.dss.validation.SignatureQualification;
-import eu.europa.esig.dss.validation.policy.rules.SubIndication;
+import eu.europa.esig.dss.enumerations.SignatureQualification;
+import eu.europa.esig.dss.enumerations.SubIndication;
 import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.Container;
 import org.digidoc4j.DataFile;
@@ -60,7 +60,7 @@ public abstract class TimemarkContainerValidationReportBuilder {
     protected static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(TimemarkContainerValidationReportBuilder.class);
 
     protected static final String FULL_SIGNATURE_SCOPE = "FullSignatureScope";
-    protected static final String FULL_DOCUMENT = "Full document";
+    protected static final String FULL_DOCUMENT = "Digest of the document content";
     protected static final String XADES_FORMAT_PREFIX = "XAdES_BASELINE_";
     private static final String REPORT_INDICATION_INDETERMINATE = "INDETERMINATE";
     protected static final String BDOC_SIGNATURE_FORM = "ASiC-E";
@@ -179,13 +179,13 @@ public abstract class TimemarkContainerValidationReportBuilder {
 
     private String getSignatureLevel(Signature signature) {
         if (signature instanceof AsicESignature) {
-            SignatureQualification signatureLevel = getDssSimpleReport((AsicESignature) signature).getSignatureQualification(signature.getId());
+            SignatureQualification signatureLevel = getDssSimpleReport((AsicESignature) signature).getSignatureQualification(signature.getUniqueId());
             return signatureLevel != null ? signatureLevel.name() : "";
         }
         return null;
     }
 
-    private eu.europa.esig.dss.validation.reports.SimpleReport getDssSimpleReport(AsicESignature bDocSignature) {
+    private eu.europa.esig.dss.simplereport.SimpleReport getDssSimpleReport(AsicESignature bDocSignature) {
         return bDocSignature.getDssValidationReport().getReports().getSimpleReport();
     }
 
@@ -193,7 +193,7 @@ public abstract class TimemarkContainerValidationReportBuilder {
         ValidationResult validationResult = signature.validateSignature();
         if (validationResult.isValid()) {
             return SignatureValidationData.Indication.TOTAL_PASSED;
-        } else if (signature instanceof AsicESignature && REPORT_INDICATION_INDETERMINATE.equals(getDssSimpleReport((AsicESignature) signature).getIndication(signature.getId()).name())) {
+        } else if (signature instanceof AsicESignature && REPORT_INDICATION_INDETERMINATE.equals(getDssSimpleReport((AsicESignature) signature).getIndication(signature.getUniqueId()).name())) {
             return SignatureValidationData.Indication.INDETERMINATE;
         } else {
             return SignatureValidationData.Indication.TOTAL_FAILED;
@@ -205,7 +205,7 @@ public abstract class TimemarkContainerValidationReportBuilder {
             if (getIndication(signature) == SignatureValidationData.Indication.TOTAL_PASSED) {
                 return "";
             }
-            SubIndication subindication = getDssSimpleReport((AsicESignature) signature).getSubIndication(signature.getId());
+            SubIndication subindication = getDssSimpleReport((AsicESignature) signature).getSubIndication(signature.getUniqueId());
             return subindication != null ? subindication.name() : "";
         }
         return "";

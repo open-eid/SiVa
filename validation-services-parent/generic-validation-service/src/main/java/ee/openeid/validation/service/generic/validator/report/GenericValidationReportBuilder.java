@@ -23,16 +23,16 @@ import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.siva.validation.util.SubjectDNParser;
-import eu.europa.esig.dss.jaxb.diagnostic.XmlSignatureScope;
+import eu.europa.esig.dss.diagnostic.CertificateWrapper;
+import eu.europa.esig.dss.diagnostic.RevocationWrapper;
+import eu.europa.esig.dss.diagnostic.SignatureWrapper;
+import eu.europa.esig.dss.diagnostic.TimestampWrapper;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlSignatureScope;
+import eu.europa.esig.dss.enumerations.Indication;
+import eu.europa.esig.dss.enumerations.SubIndication;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
-import eu.europa.esig.dss.validation.policy.rules.Indication;
-import eu.europa.esig.dss.validation.policy.rules.SubIndication;
-import eu.europa.esig.dss.validation.reports.wrapper.CertificateWrapper;
-import eu.europa.esig.dss.validation.reports.wrapper.RevocationWrapper;
-import eu.europa.esig.dss.validation.reports.wrapper.SignatureWrapper;
-import eu.europa.esig.dss.validation.reports.wrapper.TimestampWrapper;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.Date;
@@ -108,10 +108,10 @@ public class GenericValidationReportBuilder {
 
     private SignatureValidationData buildSignatureValidationData(String signatureId) {
         SignatureValidationData signatureValidationData = new SignatureValidationData();
-        signatureValidationData.setId(signatureId);
-        signatureValidationData.setSignatureFormat(changeAndValidateSignatureFormat(dssReports.getSimpleReport().getSignatureFormat(signatureId), signatureId));
+        signatureValidationData.setId(getSignatureId(signatureId));
+        signatureValidationData.setSignatureFormat(changeAndValidateSignatureFormat(dssReports.getSimpleReport().getSignatureFormat(signatureId).toString(), signatureId));
         signatureValidationData.setSignatureLevel(dssReports.getSimpleReport().getSignatureQualification(signatureId).name());
-        signatureValidationData.setSignedBy(parseSignedBy(signatureId));
+        signatureValidationData.setSignedBy(parseSubjectDistinguishedName(signatureId).getCommonName());
         signatureValidationData.setSubjectDistinguishedName(parseSubjectDistinguishedName(signatureId));
         signatureValidationData.setClaimedSigningTime(parseClaimedSigningTime(signatureId));
         signatureValidationData.setSignatureScopes(parseSignatureScopes(signatureId));
@@ -124,22 +124,29 @@ public class GenericValidationReportBuilder {
         return signatureValidationData;
     }
 
+    private String getSignatureId(String signatureId) {
+        String DAIdentifier = dssReports.getDiagnosticData().getSignatureById(signatureId).getDAIdentifier();
+        if (StringUtils.isNotBlank(DAIdentifier)) {
+            return DAIdentifier;
+        }
+        return signatureId;
+    }
+
     private SubjectDistinguishedName parseSubjectDistinguishedName(String signatureId) {
-        String signingCertificateId = dssReports.getDiagnosticData().getSignatureById(signatureId).getSigningCertificateId();
-        CertificateWrapper signingCertificate = dssReports.getDiagnosticData().getUsedCertificateById(signingCertificateId);
+        CertificateWrapper signingCertificate = dssReports.getDiagnosticData().getSignatureById(signatureId).getSigningCertificate();
 
         // Due to invalid signature
         if (signingCertificate == null) {
             return SubjectDistinguishedName.builder()
-                   .serialNumber("")
-                   .commonName("")
-                   .build();
+                    .serialNumber("")
+                    .commonName("")
+                    .build();
         }
 
         return SubjectDistinguishedName.builder()
-               .serialNumber(SubjectDNParser.parse(signingCertificate.getCertificateDN(), SubjectDNParser.RDN.SERIALNUMBER))
-               .commonName(signingCertificate.getCommonName())
-               .build();
+                .serialNumber(SubjectDNParser.parse(signingCertificate.getCertificateDN(), SubjectDNParser.RDN.SERIALNUMBER))
+                .commonName(signingCertificate.getCommonName())
+                .build();
     }
 
     private String changeAndValidateSignatureFormat(String signatureFormat, String signatureId) {
@@ -215,11 +222,11 @@ public class GenericValidationReportBuilder {
 
     private SignatureScope parseSignatureScope(XmlSignatureScope dssSignatureScope) {
         SignatureScope signatureScope = new SignatureScope();
-        signatureScope.setContent(emptyWhenNull(dssSignatureScope.getValue()));
+        signatureScope.setContent(emptyWhenNull(dssSignatureScope.getDescription()));
         signatureScope.setName(emptyWhenNull(dssSignatureScope.getName()));
         if (dssSignatureScope.getScope() != null)
             signatureScope.setScope(emptyWhenNull(dssSignatureScope.getScope().name()));
-        if (CollectionUtils.isNotEmpty(validationDocument.getDatafiles())) {
+        if (!CollectionUtils.isEmpty(validationDocument.getDatafiles())) {
             Optional<Datafile> dataFile = validationDocument.getDatafiles()
                     .stream()
                     .filter(datafile -> datafile.getFilename().equals(dssSignatureScope.getName()))
@@ -258,16 +265,14 @@ public class GenericValidationReportBuilder {
         return subindication != null ? subindication.name() : "";
     }
 
-    private String parseSignedBy(String signatureId) {
-        return emptyWhenNull(dssReports.getSimpleReport().getSignedBy(signatureId));
-    }
-
     private String getCountryCode(String signatureId) {
-        String signingCertId = dssReports.getDiagnosticData().getSigningCertificateId(signatureId);
-        Optional<String> countryCode = dssReports.getDiagnosticData().getUsedCertificates().stream()
-                .filter(cert -> cert.getId().equals(signingCertId))
-                .map(CertificateWrapper::getCountryName)
-                .findFirst();
-        return countryCode.orElse(null);
+        Optional<SignatureWrapper> signature = Optional.ofNullable(dssReports.getDiagnosticData().getSignatureById(signatureId));
+        if (signature.isPresent()) {
+            Optional<CertificateWrapper> signingCertificate = Optional.ofNullable(signature.get().getSigningCertificate());
+            if (signingCertificate.isPresent()) {
+                return signingCertificate.get().getCountryName();
+            }
+        }
+        return null;
     }
 }

@@ -27,9 +27,9 @@ import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.validation.service.timestamptoken.validator.report.TimeStampTokenValidationReportBuilder;
-import eu.europa.esig.dss.DSSUtils;
-import eu.europa.esig.dss.DigestAlgorithm;
-import eu.europa.esig.dss.InMemoryDocument;
+import eu.europa.esig.dss.enumerations.DigestAlgorithm;
+import eu.europa.esig.dss.model.InMemoryDocument;
+import eu.europa.esig.dss.spi.DSSUtils;
 import org.bouncycastle.asn1.ASN1Encodable;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
@@ -42,15 +42,22 @@ import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoVerifierBuilder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.tsp.TSPException;
 import org.bouncycastle.tsp.TimeStampToken;
+import org.digidoc4j.utils.ZipEntryInputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.security.Security;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -59,6 +66,11 @@ import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUt
 
 @Service
 public class TimeStampTokenValidationService implements ValidationService {
+
+    static {
+        Security.addProvider(new BouncyCastleProvider());
+    }
+
     private static final String TIMESTAMP_FILE = "TIMESTAMP.TST";
     private static final String META_INF_FOLDER = "META-INF/";
     private static final String MIME_TYPE = "mimetype";
@@ -197,11 +209,13 @@ public class TimeStampTokenValidationService implements ValidationService {
 
     private List<InMemoryDocument> getFilesFromContainer(ValidationDocument validationDocument) {
         List<InMemoryDocument> documents = new ArrayList<>();
-        try (ZipInputStream zipStream = new ZipInputStream(new ByteArrayInputStream(validationDocument.getBytes()));) {
+        try (ZipInputStream zipStream = new ZipInputStream(new ByteArrayInputStream(validationDocument.getBytes()))) {
 
             ZipEntry entry;
             while ((entry = zipStream.getNextEntry()) != null) {
-                documents.add(new InMemoryDocument(zipStream, entry.getName()));
+                try (ZipEntryInputStream zipEntryInputStream = new ZipEntryInputStream(zipStream)) {
+                    documents.add(new InMemoryDocument(zipEntryInputStream, entry.getName()));
+                }
             }
         } catch (IOException e) {
             throw new MalformedDocumentException(e);

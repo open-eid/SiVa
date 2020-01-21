@@ -19,7 +19,8 @@ package ee.openeid.siva.validation.document.report.builder;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
-import eu.europa.esig.dss.validation.SignatureQualification;
+
+import eu.europa.esig.dss.enumerations.SignatureQualification;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 

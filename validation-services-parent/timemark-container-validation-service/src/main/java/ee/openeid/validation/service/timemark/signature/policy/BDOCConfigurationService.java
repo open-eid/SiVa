@@ -18,7 +18,7 @@ package ee.openeid.validation.service.timemark.signature.policy;
 
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import ee.openeid.validation.service.timemark.configuration.BDOCSignaturePolicyProperties;
-import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
+import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.Configuration;
 import org.slf4j.Logger;

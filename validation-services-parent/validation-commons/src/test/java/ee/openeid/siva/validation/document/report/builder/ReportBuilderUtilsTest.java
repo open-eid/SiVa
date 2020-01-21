@@ -18,7 +18,7 @@ package ee.openeid.siva.validation.document.report.builder;
 
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
-import eu.europa.esig.dss.validation.SignatureQualification;
+import eu.europa.esig.dss.enumerations.SignatureQualification;
 import org.junit.Assert;
 import org.junit.Test;
 

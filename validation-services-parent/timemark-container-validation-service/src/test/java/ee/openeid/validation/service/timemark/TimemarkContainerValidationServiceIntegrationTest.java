@@ -18,14 +18,7 @@ package ee.openeid.validation.service.timemark;
 
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.report.Policy;
-import ee.openeid.siva.validation.document.report.Reports;
-import ee.openeid.siva.validation.document.report.SignatureScope;
-import ee.openeid.siva.validation.document.report.SignatureValidationData;
-import ee.openeid.siva.validation.document.report.SimpleReport;
-import ee.openeid.siva.validation.document.report.SubjectDistinguishedName;
-import ee.openeid.siva.validation.document.report.ValidationConclusion;
-import ee.openeid.siva.validation.document.report.ValidationWarning;
+import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
@@ -37,9 +30,9 @@ import ee.openeid.validation.service.timemark.configuration.TestDigiDoc4jConfigu
 import ee.openeid.validation.service.timemark.configuration.TimemarkContainerValidationServiceConfiguration;
 import ee.openeid.validation.service.timemark.signature.policy.BDOCConfigurationService;
 import ee.openeid.validation.service.timemark.signature.policy.BDOCSignaturePolicyService;
-import eu.europa.esig.dss.tsl.Condition;
-import eu.europa.esig.dss.tsl.ServiceInfo;
-import eu.europa.esig.dss.x509.CertificateToken;
+import eu.europa.esig.dss.model.x509.CertificateToken;
+import eu.europa.esig.dss.spi.tsl.Condition;
+import eu.europa.esig.dss.spi.tsl.ServiceInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.TSLCertificateSource;
 import org.junit.Ignore;
@@ -57,25 +50,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static ee.openeid.validation.service.timemark.BDOCTestUtils.ASICE_CRL_ONLY;
-import static ee.openeid.validation.service.timemark.BDOCTestUtils.BDOC_TEST_FILE_ALL_SIGNED;
-import static ee.openeid.validation.service.timemark.BDOCTestUtils.BDOC_TEST_FILE_UNSIGNED;
-import static ee.openeid.validation.service.timemark.BDOCTestUtils.BDOC_TEST_OF_KLASS3_CHAIN;
-import static ee.openeid.validation.service.timemark.BDOCTestUtils.VALID_BALTIC_EST_LT;
-import static ee.openeid.validation.service.timemark.BDOCTestUtils.VALID_BDOC_TM_2_SIGNATURES;
-import static ee.openeid.validation.service.timemark.BDOCTestUtils.VALID_ID_CARD_MOB_ID;
-import static ee.openeid.validation.service.timemark.BDOCTestUtils.XROAD_BATCHSIGNATURE_CONTAINER;
-import static ee.openeid.validation.service.timemark.BDOCTestUtils.XROAD_SIMPLE_CONTAINER;
-import static ee.openeid.validation.service.timemark.BDOCTestUtils.buildValidationDocument;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static ee.openeid.validation.service.timemark.BDOCTestUtils.*;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {

@@ -62,6 +62,10 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.digidoc4j.dss</groupId>
+            <artifactId>dss-service</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

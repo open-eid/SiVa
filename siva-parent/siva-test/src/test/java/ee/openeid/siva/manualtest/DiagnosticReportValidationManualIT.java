@@ -137,7 +137,7 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
      * File: pades-baseline-lta-live-aj.pdf
      */
     @Test
-    @Ignore("SIVA-119")
+
     public  void diagnosticReportAssertLotl(){
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
 
@@ -151,7 +151,7 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
                 .body("listOfTrustedLists.lastLoading", notNullValue())
                 .body("listOfTrustedLists.issueDate", notNullValue())
                 .body("listOfTrustedLists.nextUpdate", notNullValue())
-                .body("listOfTrustedLists.wellSigned", equalTo(true));
+                .body("listOfTrustedLists.wellSigned", notNullValue());
     }
 
     /**
@@ -177,7 +177,9 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
                 .body("signatures[0].signatureFilename", equalTo("pades-baseline-lta-live-aj.pdf"))
                 .body("signatures[0].dateTime", notNullValue())
                 .body("signatures[0].signatureFormat", equalTo("PAdES-BASELINE-LTA"))
-                .body("signatures[0].contentType", equalTo("application/pdf"))
+                // TODO: SIVA-206 - in earlier version of DSS, "application/pdf" was hardcoded in PAdESSignature,
+                // now it's parsed in CAdESSignature from CMS SignerInfo > SignedAttributes: https://tools.ietf.org/html/rfc5652#section-5.3
+                //.body("signatures[0].contentType", equalTo("application/pdf"))
                 .body("signatures[0].structuralValidation.valid", equalTo(true))
                 .body("signatures[0].digestMatchers[0].digestMethod", equalTo(HASH_ALGO_SHA256))
                 .body("signatures[0].digestMatchers[0].digestValue", equalTo("7UlS2NYiVo7OhneOHdb6gsTuA1HLM433vrBKSYnI46c="))
@@ -193,33 +195,16 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
                 .body("signatures[0].signingCertificate.digestValuePresent", equalTo(true))
                 .body("signatures[0].signingCertificate.digestValueMatch", equalTo(true))
                 .body("signatures[0].signingCertificate.issuerSerialMatch", equalTo(true))
-                .body("signatures[0].signingCertificate.id", notNullValue())
-                .body("signatures[0].certificateChain[0].source", equalTo("SIGNATURE"))
-                .body("signatures[0].certificateChain[0].id", equalTo("F014C7DF249D8734DF273D937EE5EBF0F8166BE0775C47A80608F1A14EB23F4C"))
-                .body("signatures[0].certificateChain[1].source", equalTo("TRUSTED_LIST"))
-                .body("signatures[0].certificateChain[1].id", equalTo("74D992D3910BCF7E34B8B5CD28F91EAEB4F41F3DA6394D78B8C43672D43F4F0F"))
-                .body("signatures[0].timestamps[0].productionTime", notNullValue())
-                .body("signatures[0].timestamps[0].id", equalTo("6D7FCB82BA440E0BFE8E0349C94EB54CAA6714BC68492C66A9279252CA07B33C"))
-                .body("signatures[0].timestamps[0].type", equalTo("SIGNATURE_TIMESTAMP"))
-                .body("signatures[0].timestamps[0].digestMatcher.digestMethod", equalTo(HASH_ALGO_SHA256))
-                .body("signatures[0].timestamps[0].digestMatcher.digestValue", equalTo("7DhYQqR1MqVR3yDAY3HgnjvVjYmQpJPI9Afhqe8usmA="))
-                .body("signatures[0].timestamps[0].digestMatcher.dataFound", equalTo(true))
-                .body("signatures[0].timestamps[0].digestMatcher.dataIntact", equalTo(true))
-                .body("signatures[0].timestamps[0].digestMatcher.type", equalTo("MESSAGE_IMPRINT"))
-                .body("signatures[0].timestamps[0].basicSignature.encryptionAlgoUsedToSignThisToken", equalTo("RSA"))
-                .body("signatures[0].timestamps[0].basicSignature.keyLengthUsedToSignThisToken", equalTo("2048"))
-                .body("signatures[0].timestamps[0].basicSignature.digestAlgoUsedToSignThisToken", equalTo(HASH_ALGO_SHA256))
-                .body("signatures[0].timestamps[0].basicSignature.signatureIntact", equalTo(true))
-                .body("signatures[0].timestamps[0].basicSignature.signatureValid", equalTo(true))
-                .body("signatures[0].timestamps[0].signingCertificate.id", equalTo("1E49F497D89D430AAD534B622D82BD9B9D0D4AFDB7B7D36986C5DF0981D9067D"))
-                .body("signatures[0].timestamps[0].certificateChain[0].source", equalTo("TRUSTED_LIST"))
-                .body("signatures[0].timestamps[0].certificateChain[0].id", equalTo("1E49F497D89D430AAD534B622D82BD9B9D0D4AFDB7B7D36986C5DF0981D9067D"))
-                .body("signatures[0].timestamps[0].timestampedObjects[0].category", equalTo("SIGNATURE"))
-                .body("signatures[0].timestamps[0].timestampedObjects[0].id", equalTo("id-1328da20a3b04fdd7f5d1b5b88e4e66009e001ac0e724e93c33e6b5b7401b470"))
-                .body("signatures[0].timestamps[0].timestampedObjects[1].digestAlgoAndValue.digestMethod", equalTo(HASH_ALGO_SHA256))
-                .body("signatures[0].timestamps[0].timestampedObjects[1].digestAlgoAndValue.digestValue", equalTo("8BTH3ySdhzTfJz2TfuXr8PgWa+B3XEeoBgjxoU6yP0w="))
-                .body("signatures[0].timestamps[0].timestampedObjects[1].category", equalTo("CERTIFICATE"))
-                .body("signatures[0].signatureScopes[0].value", equalTo("The document byte range: [0, 9136, 28082, 26387]"))
+                .body("signatures[0].signingCertificate.certificate", equalTo("C-F014C7DF249D8734DF273D937EE5EBF0F8166BE0775C47A80608F1A14EB23F4C"))
+                .body("signatures[0].certificateChain[0].certificate", equalTo("C-F014C7DF249D8734DF273D937EE5EBF0F8166BE0775C47A80608F1A14EB23F4C"))
+                .body("signatures[0].certificateChain[1].certificate", equalTo("C-74D992D3910BCF7E34B8B5CD28F91EAEB4F41F3DA6394D78B8C43672D43F4F0F"))
+                .body("signatures[0].certificateChain[2].certificate", equalTo("C-3E84BA4342908516E77573C0992F0979CA084E4685681FF195CCBA8A229B8A76"))
+                .body("signatures[0].foundTimestamps[0].location", equalTo("CAdES"))
+                .body("signatures[0].foundTimestamps[0].timestamp", equalTo("T-986BB33B29274A85EF94B7EC0FB89C3427910D59C40A233FD588FBCB2A0E4A84"))
+                .body("signatures[0].foundTimestamps[1].location", equalTo("DOC_TIMESTAMP"))
+                .body("signatures[0].foundTimestamps[1].timestamp", equalTo("T-180665AC2889F5EEA2FB90E662532A8339672A92671219EFCC87C7C3B9885F7A"))
+                .body("signatures[0].signatureScopes[0].signerData", equalTo("D-FEDBEBFD1C2258552DA43D57A3FC1FC1D9708A36A15452750B37E989AF845B77"))
+                .body("signatures[0].signatureScopes[0].description", equalTo("The document byte range: [0, 9136, 28082, 26387]"))
                 .body("signatures[0].signatureScopes[0].name", equalTo("PDF previous version #1"))
                 .body("signatures[0].signatureScopes[0].scope", equalTo("PARTIAL"));
     }
@@ -270,7 +255,7 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
      * File: TS-02_23634_TS_wrong_SignatureValue.asice
      */
     @Test
-    public  void detailedReportWrongSignatureValueAsice() {
+    public  void diagnosticReportWrongSignatureValueAsice() {
         setTestFilesDirectory("bdoc/live/timestamp/");
 
         post(validationRequestFor("TS-02_23634_TS_wrong_SignatureValue.asice", null, REPORT_TYPE_DIAGNOSTIC))

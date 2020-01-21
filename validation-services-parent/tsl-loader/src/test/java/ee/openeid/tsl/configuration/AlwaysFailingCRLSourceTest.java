@@ -16,7 +16,8 @@
 
 package ee.openeid.tsl.configuration;
 
-import eu.europa.esig.dss.x509.crl.CRLSource;
+
+import eu.europa.esig.dss.spi.x509.revocation.crl.CRLSource;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNull;

@@ -16,9 +16,14 @@
 
 package ee.openeid.siva.webapp.soap.transformer.report;
 
+import eu.europa.esig.dss.detailedreport.DetailedReportXmlDefiner;
+import eu.europa.esig.dss.detailedreport.jaxb.XmlDetailedReport;
+
+import javax.xml.bind.JAXBElement;
+
 public class DetailedReportTransformer
         extends ReportTransformer<
-            eu.europa.esig.dss.jaxb.detailedreport.DetailedReport,
+            eu.europa.esig.dss.detailedreport.jaxb.XmlDetailedReport,
             eu.europa.esig.dss.validation.detailed_report.DetailedReport,
             ee.openeid.siva.webapp.soap.response.DetailedReport
         > {
@@ -26,10 +31,11 @@ public class DetailedReportTransformer
     private static final String EU_DETAILED_REPORT_PACKAGE = "eu.europa.esig.dss.validation.detailed_report";
 
     public DetailedReportTransformer() {
-        super(eu.europa.esig.dss.jaxb.detailedreport.DetailedReport.class, EU_DETAILED_REPORT_PACKAGE);
+        super(eu.europa.esig.dss.detailedreport.jaxb.XmlDetailedReport.class, EU_DETAILED_REPORT_PACKAGE);
     }
 
     @Override
+
     ee.openeid.siva.webapp.soap.response.DetailedReport transformReport(eu.europa.esig.dss.validation.detailed_report.DetailedReport dssDetailReport) {
         ee.openeid.siva.webapp.soap.response.DetailedReport detailedReport = new ee.openeid.siva.webapp.soap.response.DetailedReport();
         detailedReport.getTLAnalysis().addAll(dssDetailReport.getTLAnalysis());
@@ -37,5 +43,10 @@ public class DetailedReportTransformer
         detailedReport.setCertificate(detailedReport.getCertificate());
         detailedReport.getBasicBuildingBlocks().addAll(dssDetailReport.getBasicBuildingBlocks());
         return detailedReport;
+    }
+
+    @Override
+    JAXBElement<XmlDetailedReport> wrap(XmlDetailedReport xmlDetailedReport) {
+        return DetailedReportXmlDefiner.OBJECT_FACTORY.createDetailedReport(xmlDetailedReport);
     }
 }

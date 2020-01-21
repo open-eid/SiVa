@@ -17,9 +17,9 @@
 package ee.openeid.tsl;
 
 import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
-import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
+import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
+import eu.europa.esig.dss.spi.x509.KeyStoreCertificateSource;
 import eu.europa.esig.dss.tsl.service.TSLValidationJob;
-import eu.europa.esig.dss.x509.KeyStoreCertificateSource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

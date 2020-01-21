@@ -81,8 +81,10 @@ public class TestData {
     public static final String SUB_INDICATION_SIGNED_DATA_NOT_FOUND = "SIGNED_DATA_NOT_FOUND";
 
     public static final String VALID_SIGNATURE_SCOPE_CONTENT_FULL = "Full document";
+    public static final String VALID_SIGNATURE_SCOPE_CONTENT_DIGEST = "Digest of the document content";
     public static final String VALID_SIGNATURE_SCOPE_CONTENT_2 = "The document byte range: [0, 14153, 52047, 491]";
     public static final String SIGNATURE_SCOPE_FULL = "FULL";
+    public static final String SIGNATURE_SCOPE_DIGEST = "DIGEST";
     public static final String VALID_SIGNATURE_SCOPE_VALUE_2 = "PdfByteRangeSignatureScope";
 
     public static final String VALID_VALIDATION_PROCESS_NAMEID_1 = "QUAL_TL_FRESH";
@@ -138,6 +140,8 @@ public class TestData {
     public static final String VALID_VALIDATION_PROCESS_NAMEID_51 = "TSV_ASTPTCT";
     public static final String VALID_VALIDATION_PROCESS_NAMEID_52 = "ADEST_ISTPTDABST";
     public static final String VALID_VALIDATION_PROCESS_NAMEID_53 = "QUAL_UNIQUE_CERT";
+    public static final String VALID_VALIDATION_PROCESS_NAMEID_54 = "ATCCM";
+    public static final String VALID_VALIDATION_PROCESS_NAMEID_55 = "ARCCM";
 
 
     public static final String VALID_VALIDATION_PROCESS_VALUE_1 = "Is the trusted list fresh ?";
@@ -192,6 +196,8 @@ public class TestData {
     public static final String VALID_VALIDATION_PROCESS_VALUE_50 = "Are timestamps in the right order?";
     public static final String VALID_VALIDATION_PROCESS_VALUE_51 = "Is the signing-time plus the timestamp delay after the best-signature-time?";
     public static final String VALID_VALIDATION_PROCESS_VALUE_52 = "Is the certificate unique ?";
+    public static final String VALID_VALIDATION_PROCESS_VALUE_53 = "Are timestamp cryptographic constraints met?";
+    public static final String VALID_VALIDATION_PROCESS_VALUE_54 = "Are revocation cryptographic constraints met?";
 
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_1 = "The result of the Basic validation process is not conclusive!";
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_2 = "The expected format is not found!";
@@ -226,6 +232,7 @@ public class TestData {
     public static final String VALID_VALIDATION_PROCESS_STATUS_1 = "NOT_OK";
     public static final String VALID_VALIDATION_PROCESS_STATUS_2 = "OK";
     public static final String VALID_VALIDATION_PROCESS_STATUS_3 = "WARNING";
+    public static final String VALID_VALIDATION_PROCESS_STATUS_4 = "IGNORED";
 
     public static final String VALIDATION_LEVEL_ARCHIVAL_DATA = "ARCHIVAL_DATA";
 

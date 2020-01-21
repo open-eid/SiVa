@@ -18,22 +18,15 @@ package ee.openeid.validation.service.generic;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Reports;
-import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
-import eu.europa.esig.dss.jaxb.diagnostic.DiagnosticData;
-import eu.europa.esig.dss.jaxb.diagnostic.XmlSignature;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlDiagnosticData;
 import org.junit.Test;
 
 import java.util.Date;
-import java.util.GregorianCalendar;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class PDFWithNoSignaturesTest extends PDFValidationServiceTest {
 
@@ -46,8 +39,8 @@ public class PDFWithNoSignaturesTest extends PDFValidationServiceTest {
         assertNotNull(report);
         ValidationConclusion validationConclusion = report.getValidationConclusion();
         assertEquals(PDF_WITH_NO_SIGNATURES, validationConclusion.getValidatedDocument().getFilename());
-        assertTrue(validationConclusion.getValidSignaturesCount() == 0);
-        assertTrue(validationConclusion.getSignaturesCount() == 0);
+        assertEquals(0, (int) validationConclusion.getValidSignaturesCount());
+        assertEquals(0, (int) validationConclusion.getSignaturesCount());
         assertTrue(validationConclusion.getSignatures().isEmpty());
         assertEquals(VALIDATION_LEVEL, validationConclusion.getValidationLevel());
         assertNotNull(validationConclusion.getValidationTime());
@@ -59,7 +52,7 @@ public class PDFWithNoSignaturesTest extends PDFValidationServiceTest {
 
         ValidationDocument validationDocument = buildValidationDocument(PDF_WITH_NO_SIGNATURES);
         Reports reports = validateAndAssertReports(validationDocument);
-        DiagnosticData diagnosticData = reports.getDiagnosticReport().getDiagnosticData();
+        XmlDiagnosticData diagnosticData = reports.getDiagnosticReport().getDiagnosticData();
 
         assertValidationDate(validationStartDate, diagnosticData.getValidationDate());
         assertNull(diagnosticData.getContainerInfo());

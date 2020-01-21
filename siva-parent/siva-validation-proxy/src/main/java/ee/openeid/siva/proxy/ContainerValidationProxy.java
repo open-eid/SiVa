@@ -13,9 +13,10 @@ import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.validation.service.timemark.report.DDOCContainerValidationReportBuilder;
 import ee.openeid.validation.service.timestamptoken.TimeStampTokenValidationService;
-import eu.europa.esig.dss.InMemoryDocument;
+import eu.europa.esig.dss.model.InMemoryDocument;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.digidoc4j.utils.ZipEntryInputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -151,10 +152,12 @@ public class ContainerValidationProxy extends ValidationProxy {
             boolean isAsicsMimeType = false;
             boolean isTimeStampExtension = false;
             while ((entry = zipStream.getNextEntry()) != null) {
-                if (isAsicsMimeType(entry, zipStream)) {
-                    isAsicsMimeType = true;
-                } else if (entry.getName().toUpperCase().endsWith(TIMESTAMP_EXTENSION)) {
-                    isTimeStampExtension = true;
+                try (ZipEntryInputStream zipEntryInputStream = new ZipEntryInputStream(zipStream)) {
+                    if (isAsicsMimeType(entry, zipEntryInputStream)) {
+                        isAsicsMimeType = true;
+                    } else if (entry.getName().toUpperCase().endsWith(TIMESTAMP_EXTENSION)) {
+                        isTimeStampExtension = true;
+                    }
                 }
             }
 
@@ -183,7 +186,7 @@ public class ContainerValidationProxy extends ValidationProxy {
         validationConclusion.setValidationWarnings(newList);
     }
 
-    private boolean isAsicsMimeType(ZipEntry entry, ZipInputStream zipStream) {
+    private boolean isAsicsMimeType(ZipEntry entry, ZipEntryInputStream zipStream) {
         return entry.getName().equals(MIME_TYPE_FILE_NAME) && ASICS_MIME_TYPE.equals(new String(new InMemoryDocument(zipStream, entry.getName()).getBytes()));
     }
 

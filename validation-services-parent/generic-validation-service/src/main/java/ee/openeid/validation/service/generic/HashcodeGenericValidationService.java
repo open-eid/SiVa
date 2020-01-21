@@ -22,13 +22,13 @@ import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.exception.MalformedSignatureFileException;
 import ee.openeid.siva.validation.security.SecureSAXParsers;
-import eu.europa.esig.dss.DSSDocument;
-import eu.europa.esig.dss.DigestAlgorithm;
-import eu.europa.esig.dss.DigestDocument;
-import eu.europa.esig.dss.InMemoryDocument;
+import eu.europa.esig.dss.enumerations.DigestAlgorithm;
+import eu.europa.esig.dss.model.DSSDocument;
+import eu.europa.esig.dss.model.DigestDocument;
+import eu.europa.esig.dss.model.InMemoryDocument;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.xml.parsers.SAXParser;
 import java.io.ByteArrayInputStream;
@@ -46,7 +46,7 @@ public class HashcodeGenericValidationService extends GenericValidationService {
     @Override
     protected SignedDocumentValidator createValidatorFromDocument(final ValidationDocument validationDocument) {
         List<Datafile> datafiles = getDataFileInfoIfNeeded(validationDocument);
-        if(CollectionUtils.isNotEmpty(datafiles)){
+        if(!CollectionUtils.isEmpty(datafiles)){
             validationDocument.setDatafiles(datafiles);
         }
         SignedDocumentValidator validator = super.createValidatorFromDocument(validationDocument);
@@ -56,7 +56,7 @@ public class HashcodeGenericValidationService extends GenericValidationService {
     }
 
     private List<Datafile> getDataFileInfoIfNeeded(ValidationDocument validationDocument) {
-        if (CollectionUtils.isNotEmpty(validationDocument.getDatafiles())) {
+        if (!CollectionUtils.isEmpty(validationDocument.getDatafiles())) {
             return null;
         } else {
             try {
@@ -71,7 +71,7 @@ public class HashcodeGenericValidationService extends GenericValidationService {
     }
 
     @Override
-    protected RuntimeException constructMalformedDocumentException(RuntimeException cause) {
+    protected RuntimeException constructMalformedDocumentException(Exception cause) {
         return new MalformedSignatureFileException(cause, "Signature file malformed");
     }
 

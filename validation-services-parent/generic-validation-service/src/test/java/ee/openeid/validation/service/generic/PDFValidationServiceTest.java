@@ -29,7 +29,7 @@ import ee.openeid.tsl.TSLValidationJobFactory;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
 import ee.openeid.validation.service.generic.configuration.GenericSignaturePolicyProperties;
 import ee.openeid.validation.service.generic.configuration.GenericValidationServiceConfiguration;
-import eu.europa.esig.dss.tsl.TrustedListsCertificateSource;
+import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

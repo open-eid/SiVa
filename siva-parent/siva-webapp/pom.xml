@@ -14,7 +14,8 @@
   ~ See the Licence for the specific language governing permissions and limitations under the Licence.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>siva-parent</artifactId>
         <groupId>ee.openid.siva</groupId>
@@ -57,7 +58,11 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-jaxb-annotations</artifactId>
+            <version>2.10.1</version>
+        </dependency>
         <!-- Apache CXF -->
         <dependency>
             <groupId>org.apache.cxf</groupId>
@@ -137,7 +142,7 @@
                         <JAVA_OPTS>""</JAVA_OPTS>
                     </env>
                     <baseImage>cogniteev/oracle-java:latest</baseImage>
-                    <entryPoint>exec java $JAVA_OPTS -jar /${project.build.finalName}.jar </entryPoint>
+                    <entryPoint>exec java $JAVA_OPTS -jar /${project.build.finalName}.jar</entryPoint>
                     <resources>
                         <resource>
                             <targetPath>/</targetPath>
@@ -182,9 +187,27 @@
                             <goal>wsimport</goal>
                         </goals>
                         <configuration>
+
                             <wsdlUrls>
                                 <wsdlUrl>src/main/resources/wsdl/siva.wsdl</wsdlUrl>
                                 <wsdlUrl>src/main/resources/wsdl/siva-hashcode-validation.wsdl</wsdlUrl>
+                            </wsdlUrls>
+                            <bindingDirectory>src/main/resources/wsdl/</bindingDirectory>
+                            <bindingFiles>diagnostic_binding.xml,details_binding.xml</bindingFiles>
+                            <sourceDestDir>target/generated-sources/wsdlimport/siva</sourceDestDir>
+                            <vmArgs>
+                                <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
+                            </vmArgs>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>wsimport2</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                        <configuration>
+                            <wsdlUrls>
                                 <wsdlUrl>src/main/resources/wsdl/siva-datafiles.wsdl</wsdlUrl>
                             </wsdlUrls>
                             <sourceDestDir>target/generated-sources/wsdlimport/siva</sourceDestDir>

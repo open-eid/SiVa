@@ -71,7 +71,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timestamp/");
         ZonedDateTime testStartDate = ZonedDateTime.now(ZoneId.of("GMT"));
 
-        post(validationRequestFor("ValidLiveSignature.asice", null, REPORT_TYPE_DETAILED ))
+        post(validationRequestFor("ValidLiveSignature.asice", null, REPORT_TYPE_DETAILED))
                 .then().root(VALIDATION_CONCLUSION_PREFIX)
                 .body("policy.policyDescription", equalTo(POLICY_4_DESCRIPTION))
                 .body("policy.policyName", equalTo(SIGNATURE_POLICY_2))
@@ -108,10 +108,10 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      */
     @Test
     @Ignore("SIVA-119")
-    public  void detailedReportAssertValidationProcessTlanalysis(){
+    public void detailedReportAssertValidationProcessTlanalysis() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
 
-        post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DETAILED ))
+        post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DETAILED))
                 .then().root(VALIDATION_PROCESS_PREFIX)
                 .body("tlanalysis", notNullValue())
                 .body("tlanalysis.constraint", notNullValue())
@@ -173,10 +173,10 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      * File: hellopades-lt-sha256-ec256.pdf
      */
     @Test //TODO: This test misses validationSignatureQualification block
-    public  void detailedReportForPdfValidateSignaturesElement() {
+    public void detailedReportForPdfValidateSignaturesElement() {
         setTestFilesDirectory("pdf/signature_cryptographic_algorithm_test_files/");
 
-        post(validationRequestFor("hellopades-lt-sha256-ec256.pdf", null, REPORT_TYPE_DETAILED ))
+        post(validationRequestFor("hellopades-lt-sha256-ec256.pdf", null, REPORT_TYPE_DETAILED))
                 .then().root(VALIDATION_PROCESS_PREFIX)
                 .body("signatures[0].validationProcessBasicSignatures.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_5))
                 .body("signatures[0].validationProcessBasicSignatures.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_5))
@@ -227,7 +227,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
                 .body("signatures[0].validationProcessLongTermData.constraint[4].name", notNullValue())
                 .body("signatures[0].validationProcessLongTermData.constraint[4].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_51))
                 .body("signatures[0].validationProcessLongTermData.constraint[4].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_52))
-                .body("signatures[0].validationProcessLongTermData.constraint[4].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("signatures[0].validationProcessLongTermData.constraint[4].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_4))
                 .body("signatures[0].validationProcessLongTermData.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
                 .body("signatures[0].validationProcessLongTermData.conclusion.errors", nullValue())
                 .body("signatures[0].validationProcessArchivalData.constraint[0]", notNullValue())
@@ -252,59 +252,59 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      * File: pades-baseline-lta-live-aj.pdf
      */
     @Test
-    public  void detailedReportForPdfAssertBasicBuildingBlocksTypeTimestamp() {
+    public void detailedReportForPdfAssertBasicBuildingBlocksTypeTimestamp() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
 
-        post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DETAILED ))
+        post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DETAILED))
                 .then().root(VALIDATION_PROCESS_PREFIX)
-                .body("basicBuildingBlocks[0].isc.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_9))
-                .body("basicBuildingBlocks[0].isc.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_9))
-                .body("basicBuildingBlocks[0].isc.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("basicBuildingBlocks[0].isc.conclusion.", notNullValue())
-                .body("basicBuildingBlocks[0].isc.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
-                .body("basicBuildingBlocks[0].isc.certificateChain.chainItem[0].source", equalTo("TRUSTED_LIST"))
-                .body("basicBuildingBlocks[0].isc.certificateChain.chainItem[0].id", notNullValue())
-                .body("basicBuildingBlocks[0].cv.constraint[0].name", notNullValue())
-                .body("basicBuildingBlocks[0].cv.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_16))
-                .body("basicBuildingBlocks[0].cv.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_16))
-                .body("basicBuildingBlocks[0].cv.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("basicBuildingBlocks[0].cv.constraint[1].name", notNullValue())
-                .body("basicBuildingBlocks[0].cv.constraint[1].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_17))
-                .body("basicBuildingBlocks[0].cv.constraint[1].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_17))
-                .body("basicBuildingBlocks[0].cv.constraint[1].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("basicBuildingBlocks[0].cv.constraint[2].name", notNullValue())
-                .body("basicBuildingBlocks[0].cv.constraint[2].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_18))
-                .body("basicBuildingBlocks[0].cv.constraint[2].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_18))
-                .body("basicBuildingBlocks[0].cv.constraint[2].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("basicBuildingBlocks[0].cv.conclusion.", notNullValue())
-                .body("basicBuildingBlocks[0].cv.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
-                .body("basicBuildingBlocks[0].sav.constraint[0].name", notNullValue())
-                .body("basicBuildingBlocks[0].sav.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_20))
-                .body("basicBuildingBlocks[0].sav.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_20))
-                .body("basicBuildingBlocks[0].sav.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("basicBuildingBlocks[0].sav.constraint[0].additionalInfo", notNullValue())
-                .body("basicBuildingBlocks[0].sav.conclusion.", notNullValue())
-                .body("basicBuildingBlocks[0].sav.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
-                .body("basicBuildingBlocks[0].xcv.constraint.name", notNullValue())
-                .body("basicBuildingBlocks[0].xcv.constraint.name[0].value", equalTo(VALID_VALIDATION_PROCESS_VALUE_21))
-                .body("basicBuildingBlocks[0].xcv.constraint.name[0].nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_21))
-                .body("basicBuildingBlocks[0].xcv.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("basicBuildingBlocks[0].xcv.constraint.name", notNullValue())
-                .body("basicBuildingBlocks[0].xcv.constraint.name[1].value", equalTo(VALID_VALIDATION_PROCESS_VALUE_24))
-                .body("basicBuildingBlocks[0].xcv.constraint.name[1].nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_24))
-                .body("basicBuildingBlocks[0].xcv.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("basicBuildingBlocks[0].xcv.conclusion", notNullValue())
-                .body("basicBuildingBlocks[0].xcv.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
-                .body("basicBuildingBlocks[0].xcv.subXCV[0].conclusion", notNullValue())
-                .body("basicBuildingBlocks[0].xcv.subXCV[0].conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
-                .body("basicBuildingBlocks[0].xcv.subXCV[0].id", notNullValue())
-                .body("basicBuildingBlocks[0].xcv.subXCV[0].trustAnchor", equalTo(true))
-                .body("basicBuildingBlocks[0].certificateChain.chainItem[0].source", equalTo("TRUSTED_LIST"))
-                .body("basicBuildingBlocks[0].certificateChain.chainItem[0].id", notNullValue())
-                .body("basicBuildingBlocks[0].conclusion", notNullValue())
-                .body("basicBuildingBlocks[0].conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
-                .body("basicBuildingBlocks[0].id", notNullValue())
-                .body("basicBuildingBlocks[0].type", equalTo("TIMESTAMP"));
+                .body("basicBuildingBlocks[1].isc.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_9))
+                .body("basicBuildingBlocks[1].isc.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_9))
+                .body("basicBuildingBlocks[1].isc.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("basicBuildingBlocks[1].isc.conclusion.", notNullValue())
+                .body("basicBuildingBlocks[1].isc.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
+                .body("basicBuildingBlocks[1].isc.certificateChain.chainItem[0].source", equalTo("TRUSTED_LIST"))
+                .body("basicBuildingBlocks[1].isc.certificateChain.chainItem[0].id", notNullValue())
+                .body("basicBuildingBlocks[1].cv.constraint[0].name", notNullValue())
+                .body("basicBuildingBlocks[1].cv.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_16))
+                .body("basicBuildingBlocks[1].cv.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_16))
+                .body("basicBuildingBlocks[1].cv.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("basicBuildingBlocks[1].cv.constraint[1].name", notNullValue())
+                .body("basicBuildingBlocks[1].cv.constraint[1].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_17))
+                .body("basicBuildingBlocks[1].cv.constraint[1].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_17))
+                .body("basicBuildingBlocks[1].cv.constraint[1].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("basicBuildingBlocks[1].cv.constraint[2].name", notNullValue())
+                .body("basicBuildingBlocks[1].cv.constraint[2].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_18))
+                .body("basicBuildingBlocks[1].cv.constraint[2].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_18))
+                .body("basicBuildingBlocks[1].cv.constraint[2].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("basicBuildingBlocks[1].cv.conclusion.", notNullValue())
+                .body("basicBuildingBlocks[1].cv.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
+                .body("basicBuildingBlocks[1].sav.constraint[0].name", notNullValue())
+                .body("basicBuildingBlocks[1].sav.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_53))
+                .body("basicBuildingBlocks[1].sav.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_54))
+                .body("basicBuildingBlocks[1].sav.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("basicBuildingBlocks[1].sav.constraint[0].additionalInfo", notNullValue())
+                .body("basicBuildingBlocks[1].sav.conclusion.", notNullValue())
+                .body("basicBuildingBlocks[1].sav.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
+                .body("basicBuildingBlocks[1].xcv.constraint.name", notNullValue())
+                .body("basicBuildingBlocks[1].xcv.constraint.name[0].value", equalTo(VALID_VALIDATION_PROCESS_VALUE_21))
+                .body("basicBuildingBlocks[1].xcv.constraint.name[0].nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_21))
+                .body("basicBuildingBlocks[1].xcv.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("basicBuildingBlocks[1].xcv.constraint.name", notNullValue())
+                .body("basicBuildingBlocks[1].xcv.constraint.name[1].value", equalTo(VALID_VALIDATION_PROCESS_VALUE_22))
+                .body("basicBuildingBlocks[1].xcv.constraint.name[1].nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_22))
+                .body("basicBuildingBlocks[1].xcv.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("basicBuildingBlocks[1].xcv.conclusion", notNullValue())
+                .body("basicBuildingBlocks[1].xcv.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
+                .body("basicBuildingBlocks[1].xcv.subXCV[0].conclusion", notNullValue())
+                .body("basicBuildingBlocks[1].xcv.subXCV[0].conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
+                .body("basicBuildingBlocks[1].xcv.subXCV[0].id", notNullValue())
+                .body("basicBuildingBlocks[1].xcv.subXCV[0].trustAnchor", equalTo(true))
+                .body("basicBuildingBlocks[1].certificateChain.chainItem[0].source", equalTo("TRUSTED_LIST"))
+                .body("basicBuildingBlocks[1].certificateChain.chainItem[0].id", notNullValue())
+                .body("basicBuildingBlocks[1].conclusion", notNullValue())
+                .body("basicBuildingBlocks[1].conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
+                .body("basicBuildingBlocks[1].id", notNullValue())
+                .body("basicBuildingBlocks[1].type", equalTo("TIMESTAMP"));
     }
 
     /**
@@ -321,51 +321,50 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      * File: pades-baseline-lta-live-aj.pdf
      */
     @Test
-    public  void detailedReportForPdfAssertBasicBuildingBlocksTypeRevocation() {
+    public void detailedReportForPdfAssertBasicBuildingBlocksTypeRevocation() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
-
-        post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DETAILED ))
+        post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DETAILED))
                 .then().root(VALIDATION_PROCESS_PREFIX)
-                .body("basicBuildingBlocks[1].isc.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_9))
-                .body("basicBuildingBlocks[1].isc.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_9))
-                .body("basicBuildingBlocks[1].isc.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("basicBuildingBlocks[1].isc.conclusion.", notNullValue())
-                .body("basicBuildingBlocks[1].isc.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
-                .body("basicBuildingBlocks[1].isc.certificateChain.chainItem[0].source", equalTo("TRUSTED_LIST"))
-                .body("basicBuildingBlocks[1].isc.certificateChain.chainItem[0].id", notNullValue())
-                .body("basicBuildingBlocks[1].cv.constraint[0].name", notNullValue())
-                .body("basicBuildingBlocks[1].cv.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_18))
-                .body("basicBuildingBlocks[1].cv.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_18))
-                .body("basicBuildingBlocks[1].cv.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("basicBuildingBlocks[1].cv.conclusion.", notNullValue())
-                .body("basicBuildingBlocks[1].cv.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
-                .body("basicBuildingBlocks[1].sav.constraint[0].name", notNullValue())
-                .body("basicBuildingBlocks[1].sav.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_20))
-                .body("basicBuildingBlocks[1].sav.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_20))
-                .body("basicBuildingBlocks[1].sav.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("basicBuildingBlocks[1].sav.constraint[0].additionalInfo", notNullValue())
-                .body("basicBuildingBlocks[1].sav.conclusion.", notNullValue())
-                .body("basicBuildingBlocks[1].sav.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
-                .body("basicBuildingBlocks[1].xcv.constraint[0]", notNullValue())
-                .body("basicBuildingBlocks[1].xcv.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_21))
-                .body("basicBuildingBlocks[1].xcv.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_21))
-                .body("basicBuildingBlocks[1].xcv.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("basicBuildingBlocks[1].xcv.constraint[1].name", notNullValue())
-                .body("basicBuildingBlocks[1].xcv.constraint[1].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_24))
-                .body("basicBuildingBlocks[1].xcv.constraint[1].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_24))
-                .body("basicBuildingBlocks[1].xcv.constraint[1].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("basicBuildingBlocks[1].xcv.conclusion", notNullValue())
-                .body("basicBuildingBlocks[1].xcv.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
-                .body("basicBuildingBlocks[1].xcv.subXCV[0].conclusion", notNullValue())
-                .body("basicBuildingBlocks[1].xcv.subXCV[0].conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
-                .body("basicBuildingBlocks[1].xcv.subXCV[0].id", notNullValue())
-                .body("basicBuildingBlocks[1].xcv.subXCV[0].trustAnchor", equalTo(true))
-                .body("basicBuildingBlocks[1].certificateChain.chainItem[0].source", equalTo("TRUSTED_LIST"))
-                .body("basicBuildingBlocks[1].certificateChain.chainItem[0].id", notNullValue())
-                .body("basicBuildingBlocks[1].conclusion", notNullValue())
-                .body("basicBuildingBlocks[1].conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
-                .body("basicBuildingBlocks[1].id", notNullValue())
-                .body("basicBuildingBlocks[1].type", equalTo("REVOCATION"));
+                .body("basicBuildingBlocks[0].isc.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_9))
+                .body("basicBuildingBlocks[0].isc.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_9))
+                .body("basicBuildingBlocks[0].isc.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("basicBuildingBlocks[0].isc.conclusion.", notNullValue())
+                .body("basicBuildingBlocks[0].isc.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
+                .body("basicBuildingBlocks[0].isc.certificateChain.chainItem[0].source", equalTo("TRUSTED_LIST"))
+                .body("basicBuildingBlocks[0].isc.certificateChain.chainItem[0].id", notNullValue())
+                .body("basicBuildingBlocks[0].cv.constraint[0].name", notNullValue())
+                .body("basicBuildingBlocks[0].cv.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_18))
+                .body("basicBuildingBlocks[0].cv.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_18))
+                .body("basicBuildingBlocks[0].cv.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("basicBuildingBlocks[0].cv.conclusion.", notNullValue())
+                .body("basicBuildingBlocks[0].cv.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
+                .body("basicBuildingBlocks[0].sav.constraint[0].name", notNullValue())
+                .body("basicBuildingBlocks[0].sav.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_54))
+                .body("basicBuildingBlocks[0].sav.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_55))
+                .body("basicBuildingBlocks[0].sav.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("basicBuildingBlocks[0].sav.constraint[0].additionalInfo", notNullValue())
+                .body("basicBuildingBlocks[0].sav.conclusion.", notNullValue())
+                .body("basicBuildingBlocks[0].sav.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
+                .body("basicBuildingBlocks[0].xcv.constraint[0]", notNullValue())
+                .body("basicBuildingBlocks[0].xcv.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_21))
+                .body("basicBuildingBlocks[0].xcv.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_21))
+                .body("basicBuildingBlocks[0].xcv.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("basicBuildingBlocks[0].xcv.constraint[1].name", notNullValue())
+                .body("basicBuildingBlocks[0].xcv.constraint[1].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_22))
+                .body("basicBuildingBlocks[0].xcv.constraint[1].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_22))
+                .body("basicBuildingBlocks[0].xcv.constraint[1].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("basicBuildingBlocks[0].xcv.conclusion", notNullValue())
+                .body("basicBuildingBlocks[0].xcv.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
+                .body("basicBuildingBlocks[0].xcv.subXCV[0].conclusion", notNullValue())
+                .body("basicBuildingBlocks[0].xcv.subXCV[0].conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
+                .body("basicBuildingBlocks[0].xcv.subXCV[0].id", notNullValue())
+                .body("basicBuildingBlocks[0].xcv.subXCV[0].trustAnchor", equalTo(true))
+                .body("basicBuildingBlocks[0].certificateChain.chainItem[0].source", equalTo("TRUSTED_LIST"))
+                .body("basicBuildingBlocks[0].certificateChain.chainItem[0].id", notNullValue())
+                .body("basicBuildingBlocks[0].conclusion", notNullValue())
+                .body("basicBuildingBlocks[0].conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
+                .body("basicBuildingBlocks[0].id", notNullValue())
+                .body("basicBuildingBlocks[0].type", equalTo("REVOCATION"));
     }
 
     /**
@@ -381,53 +380,56 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      *
      * File: pades-baseline-lta-live-aj.pdf
      */
-    @Ignore //TODO: The sequence of blocks changes
     @Test
-    public  void detailedReportForPdfAssertBasicBuildingBlocksTypeSignature() {
+    public void detailedReportForPdfAssertBasicBuildingBlocksTypeSignature() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
 
-        post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DETAILED ))
+        post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DETAILED))
                 .then().root(VALIDATION_PROCESS_PREFIX)
                 .body("basicBuildingBlocks[3].isc.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_9))
                 .body("basicBuildingBlocks[3].isc.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_9))
                 .body("basicBuildingBlocks[3].isc.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
                 .body("basicBuildingBlocks[3].isc.conclusion.", notNullValue())
                 .body("basicBuildingBlocks[3].isc.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
-                .body("basicBuildingBlocks[3].isc.certificateChain.chainItem[0].source", equalTo("TRUSTED_LIST"))
+                .body("basicBuildingBlocks[3].isc.certificateChain.chainItem[0].source", equalTo("SIGNATURE"))
                 .body("basicBuildingBlocks[3].isc.certificateChain.chainItem[0].id", notNullValue())
                 .body("basicBuildingBlocks[3].cv.constraint[0].name", notNullValue())
-                .body("basicBuildingBlocks[3].cv.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_18))
-                .body("basicBuildingBlocks[3].cv.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_18))
+                .body("basicBuildingBlocks[3].cv.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_16))
+                .body("basicBuildingBlocks[3].cv.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_16))
                 .body("basicBuildingBlocks[3].cv.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
                 .body("basicBuildingBlocks[3].cv.conclusion.", notNullValue())
                 .body("basicBuildingBlocks[3].cv.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
                 .body("basicBuildingBlocks[3].sav.constraint[0].name", notNullValue())
-                .body("basicBuildingBlocks[3].sav.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_20))
-                .body("basicBuildingBlocks[3].sav.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_20))
+                .body("basicBuildingBlocks[3].sav.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_19))
+                .body("basicBuildingBlocks[3].sav.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_19))
                 .body("basicBuildingBlocks[3].sav.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("basicBuildingBlocks[3].sav.constraint[0].additionalInfo", notNullValue())
+                .body("basicBuildingBlocks[3].sav.constraint[1].name", notNullValue())
+                .body("basicBuildingBlocks[3].sav.constraint[1].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_20))
+                .body("basicBuildingBlocks[3].sav.constraint[1].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_20))
+                .body("basicBuildingBlocks[3].sav.constraint[1].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("basicBuildingBlocks[3].sav.constraint[1].additionalInfo", notNullValue())
                 .body("basicBuildingBlocks[3].sav.conclusion.", notNullValue())
                 .body("basicBuildingBlocks[3].sav.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
                 .body("basicBuildingBlocks[3].xcv.constraint[0]", notNullValue())
                 .body("basicBuildingBlocks[3].xcv.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_21))
                 .body("basicBuildingBlocks[3].xcv.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_21))
                 .body("basicBuildingBlocks[3].xcv.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("basicBuildingBlocks[3].xcv.constraint[3].name", notNullValue())
+                .body("basicBuildingBlocks[3].xcv.constraint[2].name", notNullValue())
                 .body("basicBuildingBlocks[3].xcv.constraint[1].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_24))
                 .body("basicBuildingBlocks[3].xcv.constraint[1].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_24))
                 .body("basicBuildingBlocks[3].xcv.constraint[1].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
                 .body("basicBuildingBlocks[3].xcv.conclusion", notNullValue())
                 .body("basicBuildingBlocks[3].xcv.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
-                .body("basicBuildingBlocks[3].xcv.subXCV[0].conclusion", notNullValue())
-                .body("basicBuildingBlocks[3].xcv.subXCV[0].conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
-                .body("basicBuildingBlocks[3].xcv.subXCV[0].id", notNullValue())
-                .body("basicBuildingBlocks[3].xcv.subXCV[0].trustAnchor", equalTo(true))
-                .body("basicBuildingBlocks[3].certificateChain.chainItem[0].source", equalTo("TRUSTED_LIST"))
+                .body("basicBuildingBlocks[3].xcv.subXCV[1].conclusion", notNullValue())
+                .body("basicBuildingBlocks[3].xcv.subXCV[1].conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
+                .body("basicBuildingBlocks[3].xcv.subXCV[1].id", notNullValue())
+                .body("basicBuildingBlocks[3].xcv.subXCV[1].trustAnchor", equalTo(true))
+                .body("basicBuildingBlocks[3].certificateChain.chainItem[0].source", equalTo("SIGNATURE"))
                 .body("basicBuildingBlocks[3].certificateChain.chainItem[0].id", notNullValue())
                 .body("basicBuildingBlocks[3].conclusion", notNullValue())
                 .body("basicBuildingBlocks[3].conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
                 .body("basicBuildingBlocks[3].id", notNullValue())
-                .body("basicBuildingBlocks[3].type", equalTo("REVOCATION"));
+                .body("basicBuildingBlocks[3].type", equalTo("SIGNATURE"));
     }
 
     /**
@@ -444,17 +446,17 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      * File: TS-02_23634_TS_wrong_SignatureValue.asice
      */
     @Test
-    public  void detailedReportWrongSignatureValueAsice() {
+    public void detailedReportWrongSignatureValueAsice() {
         setTestFilesDirectory("bdoc/live/timestamp/");
 
-        post(validationRequestFor("TS-02_23634_TS_wrong_SignatureValue.asice", null, REPORT_TYPE_DETAILED ))
+        post(validationRequestFor("TS-02_23634_TS_wrong_SignatureValue.asice", null, REPORT_TYPE_DETAILED))
                 .then().root(VALIDATION_PROCESS_PREFIX)
                 .body("signatures[0].validationProcessBasicSignatures.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_5))
                 .body("signatures[0].validationProcessBasicSignatures.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_5))
                 .body("signatures[0].validationProcessBasicSignatures.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_1))
                 .body("signatures[0].validationProcessBasicSignatures.constraint[0].error.value", equalTo(VALID_VALIDATION_PROCESS_ERROR_VALUE_1))
                 .body("signatures[0].validationProcessBasicSignatures.constraint[0].error.nameId", equalTo(VALID_VALIDATION_PROCESS_ERROR_NAMEID_1))
-                .body("signatures[0].validationProcessBasicSignatures.constraint[0].id", equalTo("S0"))
+                .body("signatures[0].validationProcessBasicSignatures.constraint[0].id", equalTo("S-226BFC9D7B7C8DA856B070F96B9798F2F675AC6585FD82E23197D2B42E17F24D"))
                 .body("signatures[0].validationProcessBasicSignatures.conclusion.indication", equalTo(VALID_INDICATION_VALUE_FAILED))
                 .body("signatures[0].validationProcessBasicSignatures.conclusion.subIndication", equalTo(SUB_INDICATION_SIG_CRYPTO_FAILURE))
                 .body("signatures[0].validationProcessBasicSignatures.conclusion.errors[0].value", equalTo(VALID_VALIDATION_PROCESS_ERROR_VALUE_9))
@@ -496,9 +498,9 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      * File: WrongDataFileInManifestAsics.asics
      */
     @Test
-    public  void detailedReportForAsicsWrongDataFileInManifestAsics() {
+    public void detailedReportForAsicsWrongDataFileInManifestAsics() {
         setTestFilesDirectory("asics/");
-        post(validationRequestFor("WrongDataFileInManifestAsics.asics", null, REPORT_TYPE_DETAILED ))
+        post(validationRequestFor("WrongDataFileInManifestAsics.asics", null, REPORT_TYPE_DETAILED))
                 .then().root(VALIDATION_CONCLUSION_PREFIX)
                 .body("policy.policyDescription", equalTo(POLICY_4_DESCRIPTION))
                 .body("policy.policyName", equalTo(SIGNATURE_POLICY_2))
@@ -524,10 +526,10 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
     @Test
     @Ignore("SIVA-196")
     public void validateFileHashInDetailedReportReportSignatureEnabledTrue() {
-        post(validationRequestFor("hellopades-lt-sha256-rsa2048.pdf", null, REPORT_TYPE_DETAILED ))
+        post(validationRequestFor("hellopades-lt-sha256-rsa2048.pdf", null, REPORT_TYPE_DETAILED))
                 .then()
                 .body("validationReport.validationConclusion.validatedDocument.filename", equalTo("hellopades-lt-sha256-rsa2048.pdf"))
-                .body("validationReport.validationConclusion.validatedDocument.fileHash", notNullValue() )
+                .body("validationReport.validationConclusion.validatedDocument.fileHash", notNullValue())
                 .body("validationReport.validationConclusion.validatedDocument.hashAlgo", equalTo("SHA256"))
                 .body("validationReportSignature", notNullValue());
     }
@@ -548,7 +550,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
     @Ignore //TODO: Needs possibility to configure report signing in tests
     @Test
     public void validateFileHashInDetailedReportReportSignatureEnabledFalse() {
-        post(validationRequestFor("hellopades-lt-sha256-rsa2048.pdf", null, REPORT_TYPE_DETAILED ))
+        post(validationRequestFor("hellopades-lt-sha256-rsa2048.pdf", null, REPORT_TYPE_DETAILED))
                 .then()
                 .body("validationReport.validationConclusion.validatedDocument.filename", equalTo("hellopades-lt-sha256-rsa2048.pdf"))
                 .body("validationReport.validationConclusion.validatedDocument.fileHash", nullValue())

@@ -52,6 +52,7 @@ public class TSLLoaderConfiguration {
         TSLLoaderConfigurationProperties configurationProperties = new TSLLoaderConfigurationProperties();
         configurationProperties.setUrl("https://open-eid.github.io/test-TL/tl-mp-test-EE.xml");
         configurationProperties.setTrustedTerritories(new ArrayList<>());
+        configurationProperties.setSslTruststorePath(null);
         return configurationProperties;
     }
 

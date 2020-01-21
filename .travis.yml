@@ -19,6 +19,6 @@ notifications:
     recipients:
     - aare.nurm@nortal.com
     - siim.suu@nortal.com
-    - jorgen.heinsoo@nortal.com
+    - risto.seene@nortal.com
     on_success: change
     on_failure: always

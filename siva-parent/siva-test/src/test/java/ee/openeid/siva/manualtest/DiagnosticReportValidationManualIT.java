@@ -177,9 +177,7 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
                 .body("signatures[0].signatureFilename", equalTo("pades-baseline-lta-live-aj.pdf"))
                 .body("signatures[0].dateTime", notNullValue())
                 .body("signatures[0].signatureFormat", equalTo("PAdES-BASELINE-LTA"))
-                // TODO: SIVA-206 - in earlier version of DSS, "application/pdf" was hardcoded in PAdESSignature,
-                // now it's parsed in CAdESSignature from CMS SignerInfo > SignedAttributes: https://tools.ietf.org/html/rfc5652#section-5.3
-                //.body("signatures[0].contentType", equalTo("application/pdf"))
+                .body("signatures[0].contentType", equalTo("1.2.840.113549.1.7.1"))
                 .body("signatures[0].structuralValidation.valid", equalTo(true))
                 .body("signatures[0].digestMatchers[0].digestMethod", equalTo(HASH_ALGO_SHA256))
                 .body("signatures[0].digestMatchers[0].digestValue", equalTo("7UlS2NYiVo7OhneOHdb6gsTuA1HLM433vrBKSYnI46c="))

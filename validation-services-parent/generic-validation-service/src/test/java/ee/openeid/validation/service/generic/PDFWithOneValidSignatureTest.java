@@ -128,7 +128,6 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
     }
 
     @Test
-    @Ignore("SIVA-187")
     public void assertPdfSignedWithOneValidSignatureDiagnosticData() {
         Date validationStartDate = new Date();
 
@@ -144,7 +143,7 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
         assertEquals(validationDocument.getName(), signature.getSignatureFilename());
         assertNull(signature.getErrorMessage());
         assertEquals(SignatureLevel.PAdES_BASELINE_LT, signature.getSignatureFormat());
-//        assertEquals("application/pdf", signature.getContentType());
+        assertEquals("1.2.840.113549.1.7.1", signature.getContentType());
 
         ZonedDateTime expectedDateTimeInUTC = ZonedDateTime.of(2015, 7, 9, 7, 0, 48, 0, ZoneId.of("UTC"));
         assertEquals(expectedDateTimeInUTC.toInstant(), signature.getDateTime().toInstant());

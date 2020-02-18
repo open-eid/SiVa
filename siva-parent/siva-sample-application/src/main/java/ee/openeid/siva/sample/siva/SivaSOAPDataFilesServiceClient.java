@@ -16,8 +16,6 @@
 
 package ee.openeid.siva.sample.siva;
 
-import rx.Observable;
-
 import ee.openeid.siva.sample.cache.UploadedFile;
 import ee.openeid.siva.sample.configuration.SivaRESTWebServiceConfigurationProperties;
 
@@ -36,12 +34,12 @@ public class SivaSOAPDataFilesServiceClient implements DataFilesService {
     private RestTemplate restTemplate;
 
     @Override
-    public Observable<String> getDataFiles(UploadedFile file) throws IOException {
+    public String getDataFiles(UploadedFile file) throws IOException {
         if (file == null) {
             throw new IOException("File not found");
         }
         String requestBody = createXMLDataFilesRequest(file.getEncodedFile(), file.getFilename());
-        return Observable.just(XMLTransformer.formatXML(restTemplate.postForObject(properties.getServiceHost() + properties.getSoapDataFilesServicePath(), requestBody, String.class)));
+        return XMLTransformer.formatXML(restTemplate.postForObject(properties.getServiceHost() + properties.getSoapDataFilesServicePath(), requestBody, String.class));
     }
 
     private static String createXMLDataFilesRequest(String base64Document, String filename) {

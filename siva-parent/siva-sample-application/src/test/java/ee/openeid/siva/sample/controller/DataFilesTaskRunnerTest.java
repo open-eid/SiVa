@@ -36,13 +36,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
-import rx.Observable;
 
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.verify;
 
 @SpringBootTest
@@ -70,10 +69,10 @@ public class DataFilesTaskRunnerTest {
         logger.addAppender(mockAppender);
 
         given(jsonDataFilesService.getDataFiles(any(UploadedFile.class)))
-                .willReturn(Observable.just("{}"));
+                .willReturn("{}");
 
         given(soapDataFilesService.getDataFiles(any(UploadedFile.class)))
-                .willReturn(Observable.just("<soap></soap>"));
+                .willReturn("<soap></soap>");
     }
 
     @After

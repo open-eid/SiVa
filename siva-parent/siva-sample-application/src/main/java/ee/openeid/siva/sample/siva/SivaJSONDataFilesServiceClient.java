@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
-import rx.Observable;
 
 import java.io.IOException;
 
@@ -37,7 +36,7 @@ public class SivaJSONDataFilesServiceClient implements DataFilesService {
     private SivaValidationServiceErrorHandler errorHandler;
 
     @Override
-    public Observable<String> getDataFiles(UploadedFile file) throws IOException {
+    public String getDataFiles(UploadedFile file) throws IOException {
         if (file == null) {
             throw new IOException("Invalid file object given");
         }
@@ -49,10 +48,10 @@ public class SivaJSONDataFilesServiceClient implements DataFilesService {
         dataFilesRequest.setFilename(file.getFilename());
         try {
             restTemplate.setErrorHandler(errorHandler);
-            return Observable.just(restTemplate.postForObject(properties.getServiceHost() + properties.getJsonDataFilesServicePath(), dataFilesRequest, String.class));
+            return restTemplate.postForObject(properties.getServiceHost() + properties.getJsonDataFilesServicePath(), dataFilesRequest, String.class);
         } catch (ResourceAccessException ce) {
             String errorMessage = "Connection to web service failed. Make sure You have configured SiVa web service correctly";
-            return Observable.just(new ObjectMapper().writer().writeValueAsString(new ServiceError(GENERIC_ERROR_CODE, errorMessage)));
+            return new ObjectMapper().writer().writeValueAsString(new ServiceError(GENERIC_ERROR_CODE, errorMessage));
         }
     }
 

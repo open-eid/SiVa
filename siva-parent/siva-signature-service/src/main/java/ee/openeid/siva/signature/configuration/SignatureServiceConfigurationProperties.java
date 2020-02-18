@@ -20,7 +20,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Data
-@ConfigurationProperties("siva.signatureService")
+@ConfigurationProperties("siva.signature-service")
 public class SignatureServiceConfigurationProperties {
     private String signatureLevel;
     private String tspUrl;

@@ -33,20 +33,10 @@
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
 
-        <!-- RxJava -->
-        <dependency>
-            <groupId>io.jmnarloch</groupId>
-            <artifactId>rxjava-spring-boot-starter</artifactId>
-        </dependency>
-
         <!--Monitoring -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-actuator-docs</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.hateoas</groupId>
@@ -65,7 +55,7 @@
         <!-- Spring Boot Jade -->
         <dependency>
             <groupId>com.domingosuarez.boot</groupId>
-            <artifactId>spring-boot-starter-jade4j</artifactId>
+            <artifactId>jade4j-spring-boot-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>de.neuland-bfi</groupId>

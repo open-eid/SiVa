@@ -79,15 +79,15 @@ public class ServletConfiguration extends MonitoringConfiguration {
     }
 
     @Bean
-    public ServletRegistrationBean wsRegistrationBean() {
-        return new ServletRegistrationBean(new CXFServlet(), URL_MAPPING);
+    public ServletRegistrationBean<CXFServlet> wsRegistrationBean() {
+        return new ServletRegistrationBean<>(new CXFServlet(), URL_MAPPING);
     }
 
     @Bean
-    public ServletRegistrationBean rsRegistrationBean(ApplicationContext applicationContext) {
+    public ServletRegistrationBean<DispatcherServlet> rsRegistrationBean(ApplicationContext applicationContext) {
         DispatcherServlet servlet = new DispatcherServlet();
         servlet.setApplicationContext(applicationContext);
-        return new ServletRegistrationBean(servlet);
+        return new ServletRegistrationBean<>(servlet);
     }
 
     @Bean

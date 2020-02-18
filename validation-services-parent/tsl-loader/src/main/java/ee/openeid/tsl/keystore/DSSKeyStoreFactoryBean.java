@@ -58,17 +58,13 @@ public class DSSKeyStoreFactoryBean extends AbstractFactoryBean<KeyStoreCertific
             KEY_STORE_LOGGER.info("Keystore file not found on server");
             KEY_STORE_LOGGER.info("Copying keystore file from the war");
 
-            InputStream is = null;
-            OutputStream os = null;
-            try {
-                is = DSSKeyStoreFactoryBean.class.getResourceAsStream("/" + keyStoreFilename);
-                os = new FileOutputStream(keystoreFile);
+            try (
+                    InputStream is = DSSKeyStoreFactoryBean.class.getResourceAsStream("/" + keyStoreFilename);
+                    OutputStream os = new FileOutputStream(keystoreFile);
+            ) {
                 IOUtils.copy(is, os);
             } catch (Exception e) {
                 throw new DSSException("Unable to create the keystore on the server : " + e.getMessage(), e);
-            } finally {
-                IOUtils.closeQuietly(is);
-                IOUtils.closeQuietly(os);
             }
         }
         return new KeyStoreCertificateSource(keystoreFile, keyStoreType, keyStorePassword);

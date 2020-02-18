@@ -52,7 +52,6 @@ import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
@@ -127,7 +126,7 @@ public class UploadControllerTest {
                 "bdoc content".getBytes()
         );
 
-        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/upload").file(uploadFile)
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/upload").file(uploadFile)
                 .param("policy", "")
                 .param("encodedFilename", "ranodom.bdoc")
                 .param("returnDataFiles", "false")
@@ -149,7 +148,7 @@ public class UploadControllerTest {
                 "bdoc content".getBytes()
         );
 
-        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/upload").file(uploadFile)
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/upload").file(uploadFile)
                 .param("policy", "")
                 .param("encodedFilename", "ranodom.bdoc")
                 .param("returnDataFiles", "false")
@@ -167,7 +166,7 @@ public class UploadControllerTest {
                 "".getBytes()
         );
 
-        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/upload").file(uploadFile)
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/upload").file(uploadFile)
                 .param("policy", "")
                 .param("encodedFilename", "ranodom.bdoc")
                 .param("returnDataFiles", "false")
@@ -186,7 +185,7 @@ public class UploadControllerTest {
                 "bdoc content".getBytes()
         );
 
-        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/upload").file(uploadFile)
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/upload").file(uploadFile)
                 .param("policy", "")
                 .param("encodedFilename", "ranodom.bdoc")
                 .param("returnDataFiles", "false")

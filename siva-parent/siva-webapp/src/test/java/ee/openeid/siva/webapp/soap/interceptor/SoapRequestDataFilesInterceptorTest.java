@@ -19,12 +19,11 @@ package ee.openeid.siva.webapp.soap.interceptor;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.binding.soap.interceptor.SoapInterceptor;
 import org.apache.cxf.interceptor.Fault;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -35,7 +34,6 @@ import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -67,11 +65,6 @@ public class SoapRequestDataFilesInterceptorTest {
 
     @InjectMocks
     private SoapRequestDataFilesInterceptor dataFilesInterceptor = new SoapRequestDataFilesInterceptor();
-
-    @Before
-    public void setUp() {
-        doNothing().when(mockSaajIn).handleMessage(any());
-    }
 
     @Test
     public void whenSoapMessageIsNullThenFaultIsThrownWithInvalidRequestMessage() {

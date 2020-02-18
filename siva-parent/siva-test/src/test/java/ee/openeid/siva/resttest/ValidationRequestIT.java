@@ -37,7 +37,7 @@ import static ee.openeid.siva.integrationtest.TestData.REPORT_TYPE_SIMPLE;
 import static ee.openeid.siva.integrationtest.TestData.VALIDATION_CONCLUSION_PREFIX;
 import static io.restassured.path.json.JsonPath.from;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.junit.Assert.assertTrue;
 
 @Category(IntegrationTest.class)
@@ -556,7 +556,7 @@ public class ValidationRequestIT extends SiVaRestTests {
 
         post(jsonObject.toString())
                 .then()
-                .body("validationReport.validationProcess", isEmptyOrNullString())
+                .body("validationReport.validationProcess", emptyOrNullString())
                 .body("validationReport.validationConclusion.validSignaturesCount", equalTo(1));
     }
 
@@ -578,8 +578,8 @@ public class ValidationRequestIT extends SiVaRestTests {
     public void validationRequestSimpleReport() {
         post(validationRequestFor("TS-11_23634_TS_2_timestamps.asice", null, REPORT_TYPE_SIMPLE ))
                 .then()
-                .body("validationReport.validationProcess", isEmptyOrNullString())
-                .body("validationReport.diagnosticData", isEmptyOrNullString())
+                .body("validationReport.validationProcess", emptyOrNullString())
+                .body("validationReport.diagnosticData", emptyOrNullString())
                 .body("validationReport.validationConclusion.validSignaturesCount", equalTo(1));
     }
 
@@ -601,7 +601,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     public void validationRequestDetailedReport() {
         post(validationRequestFor("TS-11_23634_TS_2_timestamps.asice", null, REPORT_TYPE_DETAILED ))
                 .then()
-                .body("validationReport.diagnosticData", isEmptyOrNullString())
+                .body("validationReport.diagnosticData", emptyOrNullString())
                 .body("validationReport.validationProcess.signatures[0].validationSignatureQualification.signatureQualification", equalTo("QESIG"))
                 .body("validationReport.validationConclusion.validSignaturesCount", equalTo(1));
     }
@@ -657,9 +657,9 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .statusCode(HttpStatus.BAD_REQUEST.value())
 
                 .body("requestErrors[0].key", Matchers.is(FILENAME))
-                .body("requestErrors[0].message", Matchers.isOneOf(INVALID_FILENAME_SIZE, MAY_NOT_BE_EMPTY))
+                .body("requestErrors[0].message", Matchers.oneOf(INVALID_FILENAME_SIZE, MAY_NOT_BE_EMPTY))
                 .body("requestErrors[1].key", Matchers.is(FILENAME))
-                .body("requestErrors[1].message", Matchers.isOneOf(INVALID_FILENAME_SIZE, MAY_NOT_BE_EMPTY));
+                .body("requestErrors[1].message", Matchers.oneOf(INVALID_FILENAME_SIZE, MAY_NOT_BE_EMPTY));
 
 
     }
@@ -731,7 +731,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     public void validationRequestDiagnosticReport() {
         post(validationRequestFor("TS-11_23634_TS_2_timestamps.asice", null, REPORT_TYPE_DIAGNOSTIC ))
                 .then()
-                .body("validationReport.validationProcess", isEmptyOrNullString())
+                .body("validationReport.validationProcess", emptyOrNullString())
                 .body("validationReport.diagnosticData.documentName", equalTo("TS-11_23634_TS_2_timestamps.asice"))
                 .body("validationReport.validationConclusion.validSignaturesCount", equalTo(1));
     }

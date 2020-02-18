@@ -33,7 +33,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-@ConfigurationProperties(prefix = "siva.ddoc.xmlEntityAttack")
+@ConfigurationProperties(prefix = "siva.ddoc.xml-entity-attack")
 public class XMLEntityAttackValidator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(XMLEntityAttackValidator.class);

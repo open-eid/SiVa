@@ -1,4 +1,7 @@
 server.max-http-post-size: 13981016 # 10 MB + base64 overhead (ceil(10MB / 3) * 4)
+spring.http.encoding.charset: UTF-8 # Charset of HTTP requests and responses. Added to the "Content-Type" header if not set explicitly.
+spring.http.encoding.enabled: true # Enable http encoding support.
+spring.http.encoding.force: true # Force the encoding to the configured charset on HTTP requests and responses.
 
 siva:
   proxy:

@@ -130,7 +130,7 @@ public class ConstraintLoadingSignaturePolicyServiceTest {
     private ConstraintLoadingSignaturePolicyService createSignaturePolicyService(String defaultPolicy, ConstraintDefinedPolicy... policyPaths) {
         List<ConstraintDefinedPolicy> policies = new ArrayList<>();
         stream(policyPaths).forEach(policies::add);
-        SignaturePolicyProperties signaturePolicyProperties = new SignaturePolicyProperties();
+        SignaturePolicyProperties<ConstraintDefinedPolicy> signaturePolicyProperties = new SignaturePolicyProperties<>();
         signaturePolicyProperties.setAbstractPolicies(policies);
         signaturePolicyProperties.setAbstractDefaultPolicy(defaultPolicy);
         return new SignaturePolicyServiceImpl(signaturePolicyProperties);
@@ -160,7 +160,7 @@ public class ConstraintLoadingSignaturePolicyServiceTest {
     }
 
     private class SignaturePolicyServiceImpl extends ConstraintLoadingSignaturePolicyService {
-        public SignaturePolicyServiceImpl(SignaturePolicyProperties signaturePolicyProperties) {
+        public SignaturePolicyServiceImpl(SignaturePolicyProperties<ConstraintDefinedPolicy> signaturePolicyProperties) {
             super(signaturePolicyProperties);
         }
     }

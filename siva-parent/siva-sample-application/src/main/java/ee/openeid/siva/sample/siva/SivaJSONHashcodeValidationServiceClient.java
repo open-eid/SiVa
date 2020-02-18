@@ -25,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
-import rx.Observable;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -40,7 +39,7 @@ public class SivaJSONHashcodeValidationServiceClient implements HashcodeValidati
     private SivaValidationServiceErrorHandler errorHandler;
 
     @Override
-    public Observable<String> validateDocument(String policy, String report, UploadedFile file) throws IOException {
+    public String validateDocument(String policy, String report, UploadedFile file) throws IOException {
         HashcodeValidationRequest validationRequest = new HashcodeValidationRequest();
         final String base64EncodedFile = file.getEncodedFile();
         if (StringUtils.isNotBlank(policy))
@@ -54,10 +53,10 @@ public class SivaJSONHashcodeValidationServiceClient implements HashcodeValidati
         try {
             restTemplate.setErrorHandler(errorHandler);
             String fullUrl = properties.getServiceHost() + properties.getJsonHashcodeServicePath();
-            return Observable.just(restTemplate.postForObject(fullUrl, validationRequest, String.class));
+            return restTemplate.postForObject(fullUrl, validationRequest, String.class);
         } catch (ResourceAccessException ce) {
             String errorMessage = "Connection to web service failed. Make sure You have configured SiVa web service correctly";
-            return Observable.just(new ObjectMapper().writer().writeValueAsString(new ServiceError(GENERIC_ERROR_CODE, errorMessage)));
+            return new ObjectMapper().writer().writeValueAsString(new ServiceError(GENERIC_ERROR_CODE, errorMessage));
         }
     }
 

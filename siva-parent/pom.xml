@@ -96,7 +96,7 @@
             <dependency>
                 <groupId>eu.michael-simons</groupId>
                 <artifactId>wro4j-spring-boot-starter</artifactId>
-                <version>0.1.1</version>
+                <version>0.6.2</version>
             </dependency>
 
             <!-- Apache CXF -->
@@ -153,18 +153,11 @@
                 <version>${project.version}</version>
             </dependency>
 
-            <!-- RxJava for Spring Boot -->
-            <dependency>
-                <groupId>io.jmnarloch</groupId>
-                <artifactId>rxjava-spring-boot-starter</artifactId>
-                <version>1.0.0</version>
-            </dependency>
-
             <!-- Front-end development -->
             <dependency>
                 <groupId>com.domingosuarez.boot</groupId>
-                <artifactId>spring-boot-starter-jade4j</artifactId>
-                <version>0.3.0</version>
+                <artifactId>jade4j-spring-boot-starter</artifactId>
+                <version>2.0.4.RELEASE</version>
                 <exclusions>
                     <exclusion>
                         <groupId>de.neuland-bfi</groupId>
@@ -175,12 +168,12 @@
             <dependency>
                 <groupId>de.neuland-bfi</groupId>
                 <artifactId>spring-jade4j</artifactId>
-                <version>1.2.3</version>
+                <version>1.2.7</version>
             </dependency>
             <dependency>
                 <groupId>de.neuland-bfi</groupId>
                 <artifactId>jade4j</artifactId>
-                <version>1.2.3</version>
+                <version>1.2.7</version>
             </dependency>
 
             <!-- Webjars -->
@@ -308,7 +301,7 @@
             </dependency>
             <dependency>
                 <groupId>org.powermock</groupId>
-                <artifactId>powermock-api-mockito</artifactId>
+                <artifactId>powermock-api-mockito2</artifactId>
                 <version>${powermock.version}</version>
                 <scope>test</scope>
             </dependency>
@@ -347,7 +340,7 @@
         </repository>
         <repository>
             <id>jCenter</id>
-            <url>http://jcenter.bintray.com/</url>
+            <url>https://jcenter.bintray.com/</url>
         </repository>
         <repository>
             <id>apache.snapshots</id>

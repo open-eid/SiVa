@@ -41,7 +41,7 @@ public class DocumentValidationIT extends SiVaRestTests{
         this.testFilesDirectory = testFilesDirectory;
     }
 
-   /**
+    /**
      * TestCaseID: Document-Validation-1
      *
      * TestType: Automated
@@ -238,7 +238,7 @@ public class DocumentValidationIT extends SiVaRestTests{
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIGNED_DATA_NOT_FOUND"))
                 .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.validationWarnings", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.validationWarnings", Matchers.emptyOrNullString())
         ;
 
     }
@@ -349,7 +349,7 @@ public class DocumentValidationIT extends SiVaRestTests{
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.validationWarnings", Matchers.isEmptyOrNullString());
+                .body("validationReport.validationConclusion.validationWarnings", Matchers.emptyOrNullString());
 
     }
 

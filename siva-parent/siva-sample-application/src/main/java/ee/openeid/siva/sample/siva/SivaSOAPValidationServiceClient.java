@@ -22,7 +22,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import rx.Observable;
 
 import java.io.IOException;
 
@@ -34,7 +33,7 @@ public class SivaSOAPValidationServiceClient implements ValidationService {
     private RestTemplate restTemplate;
 
     @Override
-    public Observable<String> validateDocument(String policy, String report, UploadedFile file) throws IOException {
+    public String validateDocument(String policy, String report, UploadedFile file) throws IOException {
         if (file == null) {
             throw new IOException("File not found");
         }
@@ -43,7 +42,7 @@ public class SivaSOAPValidationServiceClient implements ValidationService {
         String requestBody = createXMLValidationRequest(file.getEncodedFile(), serviceType, file.getFilename(), report, policy);
 
         String fullUrl = properties.getServiceHost() + properties.getSoapServicePath();
-        return Observable.just(XMLTransformer.formatXML(restTemplate.postForObject(fullUrl, requestBody, String.class)));
+        return XMLTransformer.formatXML(restTemplate.postForObject(fullUrl, requestBody, String.class));
     }
 
     static String createXMLValidationRequest(String base64Document, FileType fileType, String filename, String report, String policy) {

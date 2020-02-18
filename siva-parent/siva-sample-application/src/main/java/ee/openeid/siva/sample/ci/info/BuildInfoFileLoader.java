@@ -16,8 +16,6 @@
 
 package ee.openeid.siva.sample.ci.info;
 
-import rx.Observable;
-
 import java.io.IOException;
 
 /**
@@ -26,5 +24,5 @@ import java.io.IOException;
  */
 @FunctionalInterface
 public interface BuildInfoFileLoader {
-    Observable<BuildInfo> loadBuildInfo() throws IOException;
+    BuildInfo loadBuildInfo() throws IOException;
 }

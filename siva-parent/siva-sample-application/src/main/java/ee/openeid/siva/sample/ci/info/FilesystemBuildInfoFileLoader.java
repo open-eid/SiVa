@@ -25,7 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import rx.Observable;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,9 +46,9 @@ public class FilesystemBuildInfoFileLoader implements BuildInfoFileLoader {
     private BuildInfoProperties properties;
 
     @Override
-    public Observable<BuildInfo> loadBuildInfo() throws IOException {
+    public BuildInfo loadBuildInfo() throws IOException {
         byte[] yamlFile = loadYamlFile();
-        return Observable.just(mapToBuildInfo(yamlFile));
+        return mapToBuildInfo(yamlFile);
     }
 
     private static BuildInfo mapToBuildInfo(byte[] yamlFile) throws IOException {

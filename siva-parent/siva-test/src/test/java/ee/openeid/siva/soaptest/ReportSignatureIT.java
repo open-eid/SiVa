@@ -22,7 +22,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
-import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.not;
 
 public class ReportSignatureIT extends SiVaSoapTests {
@@ -43,14 +43,14 @@ public class ReportSignatureIT extends SiVaSoapTests {
     @Test
     public void whenRequestingSimpleReport_thenValidationReportSignatureShouldNotBeInResponse() {
         Document report = extractValidateDocumentResponseDom(post(validationRequestForDocument("hellopades-pades-lt-sha256-sign.pdf")).andReturn().body().asString());
-        Assert.assertThat(getValidateDocumentResponseFromDom(report).getValidationReportSignature(), isEmptyOrNullString());
+        Assert.assertThat(getValidateDocumentResponseFromDom(report).getValidationReportSignature(), emptyOrNullString());
     }
 
     @Test
     @Ignore("SIVA-196")
     public void whenRequestingDetailedReport_thenValidationReportSignatureShouldBeInResponse() {
         Document report = extractValidateDocumentResponseDom(post(validationRequestForDocumentReportType("hellopades-pades-lt-sha256-sign.pdf", "Detailed")).andReturn().body().asString());
-        Assert.assertThat(getValidateDocumentResponseFromDom(report).getValidationReportSignature(), not(isEmptyOrNullString()));
+        Assert.assertThat(getValidateDocumentResponseFromDom(report).getValidationReportSignature(), not(emptyOrNullString()));
     }
 
     @Override

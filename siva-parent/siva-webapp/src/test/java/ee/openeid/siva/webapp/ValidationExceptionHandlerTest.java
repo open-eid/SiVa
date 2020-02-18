@@ -41,7 +41,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.MessageSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -56,7 +56,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static org.hamcrest.Matchers.*;
-import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -104,7 +104,7 @@ public class ValidationExceptionHandlerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestWithInvalidDocumentType().toString().getBytes()))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors", hasSize(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].key", is("documentType")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].message", containsString("Invalid document type")))
@@ -117,7 +117,7 @@ public class ValidationExceptionHandlerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestWithInvalidReportType().toString().getBytes()))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors", hasSize(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].key", is("reportType")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].message", containsString("Invalid report type")))
@@ -130,7 +130,7 @@ public class ValidationExceptionHandlerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestWithInvalidDataFileFilename().toString().getBytes()))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors", hasSize(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].key", is("filename")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].message", containsString("Invalid filename. Can only return data files for DDOC type containers.")))
@@ -283,7 +283,7 @@ public class ValidationExceptionHandlerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestWithInvalidFormatSignatureFile().toString().getBytes()))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors", hasSize(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].key", is("signatureFiles.signature")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].message", containsString("Signature file malformed")))

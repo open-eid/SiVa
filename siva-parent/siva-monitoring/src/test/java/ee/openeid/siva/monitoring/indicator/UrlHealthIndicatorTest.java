@@ -21,7 +21,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.Status;
 import org.springframework.web.client.RestClientException;
@@ -35,7 +35,7 @@ public class UrlHealthIndicatorTest {
 
     public static final String TEST_LINK_NAME = "someLinkToExternalSystem";
     public static final String TEST_LINK_URL = "http://localhost:8080";
-    public static final int TEST_TIMEOUT = 100;
+
     @Mock
     private RestTemplate restTemplate;
 
@@ -49,7 +49,6 @@ public class UrlHealthIndicatorTest {
     public void setUp() {
         Mockito.when(externalLink.getName()).thenReturn(TEST_LINK_NAME);
         Mockito.when(externalLink.getUrl()).thenReturn(TEST_LINK_URL);
-        Mockito.when(externalLink.getTimeout()).thenReturn(TEST_TIMEOUT);
     }
 
     @Test

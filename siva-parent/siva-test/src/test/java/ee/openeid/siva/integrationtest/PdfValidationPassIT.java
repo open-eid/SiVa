@@ -51,7 +51,7 @@ public class PdfValidationPassIT extends SiVaRestTests {
     public void validSignaturesRemainValidAfterSigningCertificateExpires() {
         post(validationRequestFor("hellopades-lt-sha256-rsa1024-not-expired.pdf", VALID_SIGNATURE_POLICY_3, null))
                 .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatureForm", Matchers.emptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -77,7 +77,7 @@ public class PdfValidationPassIT extends SiVaRestTests {
     public void certificateExpired7DaysAfterDocumentSigningShouldPass() {
         post(validationRequestFor("hellopades-lt-sha256-rsa2048-7d.pdf", VALID_SIGNATURE_POLICY_3, null))
                 .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatureForm", Matchers.emptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -123,7 +123,7 @@ public class PdfValidationPassIT extends SiVaRestTests {
         setTestFilesDirectory("pdf/signature_revocation_value_test_files/");
         post(validationRequestFor("hellopades-lt-sha256-ocsp-15min1s.pdf"))
                 .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatureForm", Matchers.emptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -153,7 +153,7 @@ public class PdfValidationPassIT extends SiVaRestTests {
         setTestFilesDirectory("pdf/signature_revocation_value_test_files/");
         post(validationRequestFor("hellopades-lt-sha256-rsa2048-ocsp-before-ts.pdf"))
                 .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.isEmptyOrNullString())
+                .body("validationReport.validationConclusion.signatureForm", Matchers.emptyOrNullString())
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))

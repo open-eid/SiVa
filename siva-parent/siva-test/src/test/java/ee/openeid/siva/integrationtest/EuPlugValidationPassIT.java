@@ -632,7 +632,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2016-04-11T13:33:49Z"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
                 .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.validationWarnings", Matchers.isEmptyOrNullString());
+                .body("validationReport.validationConclusion.validationWarnings", Matchers.emptyOrNullString());
     }
 
     /**

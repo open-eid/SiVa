@@ -35,9 +35,6 @@ public class SKTimestampDataLoader extends NativeHTTPDataLoader {
     @Override
     public byte[] post(String url, byte[] content) {
         LOGGER.info("Getting timestamp from " + url);
-        OutputStream out = null;
-        InputStream inputStream = null;
-        byte[] result;
         try {
             URLConnection connection = new URL(url).openConnection();
 
@@ -48,16 +45,14 @@ public class SKTimestampDataLoader extends NativeHTTPDataLoader {
             connection.setRequestProperty("Content-Type", "application/timestamp-query");
             connection.setRequestProperty("Content-Transfer-Encoding", "binary");
 
-            out = connection.getOutputStream();
-            IOUtils.write(content, out);
-            inputStream = connection.getInputStream();
-            result = IOUtils.toByteArray(inputStream);
+            try (OutputStream out = connection.getOutputStream()){
+                IOUtils.write(content, out);
+            }
+            try (InputStream in = connection.getInputStream()){
+                return IOUtils.toByteArray(in);
+            }
         } catch (IOException e) {
             throw new DSSException("An error occured while HTTP POST for url '" + url + "' : " + e.getMessage(), e);
-        } finally {
-            IOUtils.closeQuietly(out);
-            IOUtils.closeQuietly(inputStream);
         }
-        return result;
     }
 }

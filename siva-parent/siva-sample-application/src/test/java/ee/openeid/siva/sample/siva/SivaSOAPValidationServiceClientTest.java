@@ -32,8 +32,8 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -41,7 +41,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
-import rx.Observable;
 
 import java.io.IOException;
 
@@ -92,10 +91,10 @@ public class SivaSOAPValidationServiceClientTest {
         serverMockResponse(response);
         UploadedFile uploadedFile = TestFileUtils.generateUploadFile(testingFolder, "hello.bdoc", "Valid document");
 
-        Observable<String> validatedDocument = validationService.validateDocument("", "", uploadedFile);
-        assertThat(validatedDocument.toBlocking().first()).isEqualTo(response);
+        String validatedDocument = validationService.validateDocument("", "", uploadedFile);
+        assertThat(validatedDocument).isEqualTo(response);
 
-        verify(restTemplate).postForObject(Matchers.anyString(), validationRequestCaptor.capture(), Matchers.any());
+        verify(restTemplate).postForObject(Mockito.anyString(), validationRequestCaptor.capture(), Mockito.any());
         assertThat(validationRequestCaptor.getValue()).contains("<Filename>hello.bdoc</Filename>");
 
     }
@@ -104,9 +103,9 @@ public class SivaSOAPValidationServiceClientTest {
     public void givenValidRequestReturnsInvalidXMLReturnsEmptyString() throws Exception {
         serverMockResponse(StringUtils.EMPTY);
         UploadedFile uploadedFile = TestFileUtils.generateUploadFile(testingFolder, "hello.bdoc", "Valid document");
-        Observable<String> validatedDocument = validationService.validateDocument("", "", uploadedFile);
+        String validatedDocument = validationService.validateDocument("", "", uploadedFile);
 
-        assertThat(validatedDocument.toBlocking().first()).isEqualTo(StringUtils.EMPTY);
+        assertThat(validatedDocument).isEqualTo(StringUtils.EMPTY);
         verify(mockAppender).doAppend(captorLoggingEvent.capture());
 
         final LoggingEvent loggingEvent = captorLoggingEvent.getValue();
@@ -142,7 +141,7 @@ public class SivaSOAPValidationServiceClientTest {
     }
 
     private void serverMockResponse(String response) {
-        when(restTemplate.postForObject(Matchers.anyString(), Matchers.anyString(), Matchers.anyObject()))
+        when(restTemplate.postForObject(Mockito.anyString(), Mockito.anyString(), Mockito.any()))
                 .thenReturn(response);
     }
 }

@@ -35,13 +35,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
-import rx.Observable;
 
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.verify;
 
 @RunWith(SpringRunner.class)
@@ -68,8 +67,8 @@ public class SivaJSONValidationServiceClientTest {
         final String filename = "testing.bdoc";
         final UploadedFile inputFile = TestFileUtils.generateUploadFile(testingFolder, filename, fileContents);
 
-        final Observable<String> result = validationService.validateDocument("", "", inputFile);
-        assertEquals(mockResponse, result.toBlocking().first());
+        final String result = validationService.validateDocument("", "", inputFile);
+        assertEquals(mockResponse, result);
 
         verify(restTemplate).postForObject(anyString(), validationRequestCaptor.capture(), any());
 
@@ -102,11 +101,11 @@ public class SivaJSONValidationServiceClientTest {
         BDDMockito.given(restTemplate.postForObject(anyString(), any(ValidationRequest.class), any()))
                 .willThrow(new ResourceAccessException("Failed to connect to SiVa REST"));
 
-        Observable<String> result = validationService.validateDocument("", "", file);
+        String result = validationService.validateDocument("", "", file);
         verify(restTemplate).postForObject(anyString(), validationRequestCaptor.capture(), any());
 
-        Assertions.assertThat(result.toBlocking().first()).contains("errorCode");
-        Assertions.assertThat(result.toBlocking().first()).contains("errorMessage");
+        Assertions.assertThat(result).contains("errorCode");
+        Assertions.assertThat(result).contains("errorMessage");
     }
 
     private String mockServiceResponse() {

@@ -46,7 +46,7 @@ public abstract class SiVaIntegrationTestsBase {
     protected static final String INVALID_REPORT_TYPE = "Invalid report type";
     protected static final String INVALID_HASH_ALGO = "Invalid hash algorithm";
     protected static final String MAY_NOT_BE_EMPTY = "may not be empty";
-    protected static final String MAY_NOT_BE_NULL = "may not be null";
+    protected static final String MUST_NOT_BE_NULL = "must not be null";
     protected static final String INVALID_BASE_64 = "Document is not encoded in a valid base64 string";
     protected static final String SIGNATURE_FILE_NOT_BASE64_ENCODED = "Signature file is not valid base64 encoded string";
     protected static final String SIGNATURE_MALFORMED = "Signature file malformed";

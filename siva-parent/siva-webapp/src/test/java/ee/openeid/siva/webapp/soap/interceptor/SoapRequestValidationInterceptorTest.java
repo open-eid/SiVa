@@ -18,14 +18,12 @@ package ee.openeid.siva.webapp.soap.interceptor;
 
 import ee.openeid.siva.proxy.document.DocumentType;
 import org.apache.cxf.binding.soap.SoapMessage;
-import org.apache.cxf.binding.soap.interceptor.SoapInterceptor;
 import org.apache.cxf.interceptor.Fault;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -39,8 +37,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -76,16 +73,8 @@ public class SoapRequestValidationInterceptorTest {
     private NodeList documentTypeNodeList;
     private NodeList policyNodeList;
 
-    @Mock
-    private SoapInterceptor mockSaajIn;
-
     @InjectMocks
     private SoapRequestValidationInterceptor validationInterceptor = new SoapRequestValidationInterceptor();
-
-    @Before
-    public void setUp() {
-        doNothing().when(mockSaajIn).handleMessage(any());
-    }
 
     @Test
     public void whenSoapMessageIsNullThenFaultIsThrownWithInvalidRequestMessage() {
@@ -192,7 +181,6 @@ public class SoapRequestValidationInterceptorTest {
 
     private void mockNode(Node node, NodeList nodeList, String tagName, String value) {
         nodeList = new MockNodeList(node);
-        doReturn(node).when(node).getFirstChild();
         doReturn(value).when(node).getNodeValue();
         doReturn(nodeList).when(body).getElementsByTagName(tagName);
     }

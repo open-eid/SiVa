@@ -24,29 +24,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
-import rx.Observable;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
 
 @Configuration
 @EnableConfigurationProperties({
-    SivaRESTWebServiceConfigurationProperties.class,
-    BuildInfoProperties.class,
-    GoogleAnalyticsProperties.class
+        SivaRESTWebServiceConfigurationProperties.class,
+        BuildInfoProperties.class,
+        GoogleAnalyticsProperties.class
 })
 public class DemoApplicationConfiguration extends MonitoringConfiguration {
     private BuildInfoProperties properties;
     private SivaRESTWebServiceConfigurationProperties proxyProperties;
 
-    public List<UrlHealthIndicator.ExternalLink> getDefaultExternalLinks() {
-        return new ArrayList<UrlHealthIndicator.ExternalLink>() {{
-            add(new UrlHealthIndicator.ExternalLink("sivaService", proxyProperties.getServiceHost() + DEFAULT_MONITORING_ENDPOINT, DEFAULT_TIMEOUT * 2));
-        }};
+    @Bean
+    public UrlHealthIndicator link1() {
+        UrlHealthIndicator.ExternalLink link = new UrlHealthIndicator.ExternalLink("sivaService", proxyProperties.getServiceHost() + DEFAULT_MONITORING_ENDPOINT, DEFAULT_TIMEOUT * 2);
+        UrlHealthIndicator indicator = new UrlHealthIndicator();
+        indicator.setExternalLink(link);
+        RestTemplate restTemplate = new RestTemplate();
+        ((SimpleClientHttpRequestFactory) restTemplate.getRequestFactory()).setConnectTimeout(link.getTimeout());
+        ((SimpleClientHttpRequestFactory) restTemplate.getRequestFactory()).setReadTimeout(link.getTimeout());
+        indicator.setRestTemplate(restTemplate);
+        return indicator;
     }
 
     @Bean
@@ -59,7 +63,7 @@ public class DemoApplicationConfiguration extends MonitoringConfiguration {
     }
 
     @Bean
-    public Observable<BuildInfo> displayBuildInfo() throws IOException {
+    public BuildInfo displayBuildInfo() throws IOException {
         final FilesystemBuildInfoFileLoader buildInfoFileLoader = new FilesystemBuildInfoFileLoader();
         buildInfoFileLoader.setProperties(properties);
         return buildInfoFileLoader.loadBuildInfo();

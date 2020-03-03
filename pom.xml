@@ -105,8 +105,8 @@
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss'Z'</maven.build.timestamp.format>
         <dss.version>5.5.d4j.1</dss.version>
         <bouncycastle.version>1.64</bouncycastle.version>
-        <spring.boot.version>1.5.22.RELEASE</spring.boot.version>
-        <powermock.version>1.7.4</powermock.version>
+        <spring.boot.version>2.2.4.RELEASE</spring.boot.version>
+        <powermock.version>2.0.4</powermock.version>
     </properties>
 
     <reporting>
@@ -172,7 +172,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.2</version>
+                <version>0.8.5</version>
                 <configuration>
                     <excludes>
                         <exclude>**/*Application.*</exclude>
@@ -202,7 +202,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.1</version>
+                <version>3.0.0-M4</version>
                 <configuration>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                     <argLine>${argLine} -Dfile.encoding=UTF-8 -Xmx1024m</argLine>

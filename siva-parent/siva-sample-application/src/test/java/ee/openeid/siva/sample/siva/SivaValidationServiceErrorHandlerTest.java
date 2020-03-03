@@ -29,7 +29,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
@@ -95,7 +95,7 @@ public class SivaValidationServiceErrorHandlerTest {
         final LoggingEvent loggingEvent = captorLoggingEvent.getValue();
 
         Assertions.assertThat(loggingEvent.getLevel()).isEqualTo(Level.ERROR);
-        Assertions.assertThat(loggingEvent.getFormattedMessage()).contains("400 Bad Request");
+        Assertions.assertThat(loggingEvent.getFormattedMessage()).contains("400 BAD_REQUEST Bad Request");
     }
 
     private ClientHttpResponse createResponse(HttpStatus status) throws IOException {

@@ -25,7 +25,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.BDDMockito;
-import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -93,7 +92,7 @@ public class GoogleAnalyticsMeasurementProtocolClientTest {
 
         RestTemplate restTemplateMock = mock(RestTemplate.class);
         gaClient.setRestTemplate(restTemplateMock);
-        Mockito.verify(restTemplateMock, Mockito.never()).postForObject(Matchers.any(String.class), Matchers.any(HttpEntity.class), Matchers.any());
+        Mockito.verify(restTemplateMock, Mockito.never()).postForObject(Mockito.any(String.class), Mockito.any(HttpEntity.class), Mockito.any());
 
         gaClient.sendStatisticalData(report);
     }

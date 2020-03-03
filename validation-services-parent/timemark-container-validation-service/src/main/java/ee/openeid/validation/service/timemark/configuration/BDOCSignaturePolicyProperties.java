@@ -35,7 +35,7 @@ import static ee.openeid.siva.validation.service.signature.policy.PredefinedVali
 
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "siva.bdoc.signaturePolicy")
+@ConfigurationProperties(prefix = "siva.bdoc.signature-policy")
 public class BDOCSignaturePolicyProperties extends SignaturePolicyProperties<ConstraintDefinedPolicy> {
 
     private static final String QES_BDOC_CONSTRAINT = "bdoc_constraint_qes.xml";

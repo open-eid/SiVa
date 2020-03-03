@@ -35,7 +35,7 @@ import static ee.openeid.siva.validation.service.signature.policy.PredefinedVali
 
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "siva.timestamp.signaturePolicy")
+@ConfigurationProperties(prefix = "siva.timestamp.signature-policy")
 public class TimeStampTokenSignaturePolicyProperties extends SignaturePolicyProperties<ValidationPolicy> {
 
     private String defaultPolicy;

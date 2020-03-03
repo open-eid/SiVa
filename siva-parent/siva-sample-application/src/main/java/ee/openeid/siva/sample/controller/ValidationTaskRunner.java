@@ -75,10 +75,7 @@ class ValidationTaskRunner {
             String policy
     ) {
         try {
-            String validationResult = validationService.validateDocument(policy, report,uploadedFile)
-                    .toBlocking()
-                    .first();
-
+            String validationResult = validationService.validateDocument(policy, report,uploadedFile);
             validationResults.put(resultType, validationResult);
         } catch (IOException e) {
             LOGGER.warn("Uploaded file validation failed with error: {}", e.getMessage(), e);

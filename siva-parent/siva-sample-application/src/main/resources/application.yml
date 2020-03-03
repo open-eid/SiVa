@@ -13,25 +13,20 @@ spring:
     caffeine:
       spec: maximumSize=100,expireAfterAccess=20s
 management:
-  context-path: /monitoring
-  security:
-    enabled: false
   health:
     diskspace:
       enabled: false
-security:
-  basic:
-    path: /monitoring/**
-  headers:
-    cache: false
+  endpoints:
+    web:
+      exposure:
+        include: health
+      base-path: /monitoring
+  endpoint:
+    health:
+      show-details: "ALWAYS"
+
 wro4j:
   filterUrl: /owr
-#  cacheName: owr
+  #  cacheName: owr
   managerFactory:
     preProcessors: removeSourceMaps, cssUrlRewriting, cssImport, cssMinJawr, semicolonAppender
-endpoints:
-  enabled: false
-  sensitive: true
-  health:
-    enabled: true
-    sensitive: true

@@ -73,10 +73,7 @@ public class DataFilesTaskRunner {
             UploadedFile uploadedFile
     ) {
         try {
-            String dataFilesResult = dataFilesService.getDataFiles(uploadedFile)
-                    .toBlocking()
-                    .first();
-
+            String dataFilesResult = dataFilesService.getDataFiles(uploadedFile);
             dataFilesResults.put(resultType, dataFilesResult);
         } catch (IOException e) {
             LOGGER.warn("Uploaded file data files extraction failed with error: {}", e.getMessage(), e);

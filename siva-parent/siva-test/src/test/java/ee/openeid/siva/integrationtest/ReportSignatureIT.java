@@ -31,7 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static io.restassured.RestAssured.given;
 import static io.restassured.config.EncoderConfig.encoderConfig;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
@@ -66,7 +66,7 @@ public class ReportSignatureIT extends SiVaRestTests {
     public void whenRequestingSimpleReport_thenValidationReportSignatureShouldNotBeInResponse() {
         post(validationRequestFor("hellopades-pades-lt-sha256-sign.pdf", null, "Simple"))
                 .then()
-                .body("validationReportSignature", isEmptyOrNullString());
+                .body("validationReportSignature", emptyOrNullString());
     }
 
     /**
@@ -86,7 +86,7 @@ public class ReportSignatureIT extends SiVaRestTests {
     public void whenRequestingDetailedReport_thenValidationReportSignatureShouldBeInResponse() {
         post(validationRequestFor("hellopades-pades-lt-sha256-sign.pdf", null, "Detailed"))
                 .then()
-                .body("validationReportSignature", not(isEmptyOrNullString()));
+                .body("validationReportSignature", not(emptyOrNullString()));
     }
 
     /**
@@ -148,7 +148,7 @@ public class ReportSignatureIT extends SiVaRestTests {
     public void whenRequestingSimpleReport_andreportSignatureEnabledTrue_fileHash_InReport() {
         post(validationRequestFor("hellopades-pades-lt-sha256-sign.pdf", null, "Simple"))
                 .then()
-                .body("validationReport.validationConclusion.validatedDocument.fileHash", not(isEmptyOrNullString()));
+                .body("validationReport.validationConclusion.validatedDocument.fileHash", not(emptyOrNullString()));
     }
 
     /**
@@ -169,7 +169,7 @@ public class ReportSignatureIT extends SiVaRestTests {
     public void whenRequestingSimpleReport_andreportSignatureEnabledFalse_fileHash_NotInReport() {
         post(validationRequestFor("hellopades-pades-lt-sha256-sign.pdf", null, "Simple"))
                 .then()
-                .body("validationReport.validationConclusion.validatedDocument.fileHash", isEmptyOrNullString());
+                .body("validationReport.validationConclusion.validatedDocument.fileHash", emptyOrNullString());
     }
 
     private Response validateRequestForDetailedReport(String request, String validationUrl) {

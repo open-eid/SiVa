@@ -63,7 +63,6 @@ import static ee.openeid.siva.integrationtest.TestData.VALIDATION_CONCLUSION_PRE
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
 
 @Category(IntegrationTest.class)
 public class HashcodeValidationRequestIT extends SiVaRestTests {
@@ -435,7 +434,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertErrorResponse(response,
                 new RequestError(SIGNATURE_FILES, MAY_NOT_BE_EMPTY),
-                new RequestError(SIGNATURE_FILES, MAY_NOT_BE_NULL)
+                new RequestError(SIGNATURE_FILES, MUST_NOT_BE_NULL)
         );
     }
 
@@ -994,7 +993,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         assertValidationConclusion(response, request);
         response
                 .root(VALIDATION_CONCLUSION_PREFIX)
-                .body("signatures", isEmptyOrNullString())
+                .body("signatures", Matchers.emptyOrNullString())
                 .body("validSignaturesCount", is(0))
                 .body("signaturesCount", is(0));
     }
@@ -1046,7 +1045,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
                 .body("signatures[0].signatureScopes[0].hash", is(TestData.MOCK_XADES_DATAFILE_HASH))
                 .body("signatures[0].claimedSigningTime", is(TestData.MOCK_XADES_SIGNATURE_CLAIMED_SIGNING_TIME))
                 .body("signatures[0].info.bestSignatureTime", is(TestData.MOCK_XADES_SIGNATURE_BEST_SIGNATURE_TIME))
-                .body("signatures[0].errors", Matchers.isEmptyOrNullString())
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
                 .body("validSignaturesCount", is(1))
                 .body("signaturesCount", is(1));
     }

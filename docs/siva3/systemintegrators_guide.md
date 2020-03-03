@@ -314,39 +314,21 @@ SiVa webapps provide an endpoint for external monitoring tools to periodically c
     Note that this endpoint is disabled by default.
 
 
-The url for accessing JSON formatted health information with HTTP GET is `/monitoring/health` or `/monitoring/health.json`. See the [Interfaces section](/siva/v2/interfaces.md#service-health-monitoring) for response structure and details.
+The url for accessing JSON formatted health information with HTTP GET is `/monitoring/health` . See the [Interfaces section](/siva/v3/interfaces.md#service-health-monitoring) for response structure and details.
 
 * **Enabling and disabling the monitoring endpoint**
 
 To enable the endpoint, use the following configuration parameter:
 ```bash
-endpoints.health.enabled=true
+management.endpoints.web.exposure.include=health
 ```
 
-* **Customizing external service health indicators**
+* **External service health indicators**
 
 The endpoint is implemented as a customized Spring boot [health endpoint](http://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html#production-ready-health), which allows to add custom health indicators.
 
-Demo webapp and Siva webapp also include additional information about the health of their dependent services.
+Demo webapp and Siva webapp include additional information about the health of their dependent services.
 These links to dependent web services have been preconfigured. For example, the Demo webapp is preset to check whether the Siva webapp is accessible from the following url (parameter `siva.service.serviceHost` value)/monitoring/health and the Siva webapp verifies that the X-road validation service webapp is accessible by checking the default url (configured by parameter `siva.proxy.xroadUrl` value)/monitoring/health url.
-
-However, using the following parameters, these links can be overridden:
-
-| Property | Description |
-| -------- | ----------- |
-|**endpoints.health.links[index].name**| A short link name <ul><li>Default: **N/A**</li></ul>|
-|**endpoints.health.links[index].url**| URL to another monitoring endpoint that produces Spring boot [health endpoint](http://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html#production-ready-health) compatible JSON object as a response to HTTP GET. <ul><li>Default: **N/A**</li></ul>|
-|**endpoints.health.links[index].timeout**| Connection timeout (in milliseconds)<ul><li>Default: **N/A**</li></ul>|
-
-For example:
-```bash
-endpoints.health.links[0].name=linkToXroad
-endpoints.health.links[0].url=http://localhost:7777/monitoring/health
-endpoints.health.links[0].timeout=1000
-```
-
-!!! note
-    The external link configuration must be explicitly set when the monitoring service on the target machine is configured to run on a different port as the target service itself(ie using the  `management.port` option in configuration) .
 
 
 ## Validation Report Signature

@@ -122,7 +122,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .then()
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.validationWarnings", Matchers.isEmptyOrNullString());
+                .body("validationReport.validationConclusion.validationWarnings", Matchers.emptyOrNullString());
     }
 
     /**

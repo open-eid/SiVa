@@ -17,7 +17,6 @@
 package ee.openeid.siva.sample.cache;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.Charsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheConfig;
@@ -30,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 @Service
 @CacheConfig(cacheNames = "file")
@@ -53,7 +53,7 @@ public class AbstractUploadFileCacheService implements UploadFileCacheService {
     }
 
     private static void setFilename(String file, UploadedFile uploadedFile) throws UnsupportedEncodingException {
-        final String filename = file  == null ? "" : URLDecoder.decode(file, Charsets.UTF_8.displayName());
+        final String filename = file  == null ? "" : URLDecoder.decode(file, StandardCharsets.UTF_8.displayName());
         uploadedFile.setFilename(filename);
     }
 

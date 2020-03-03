@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
-import rx.Observable;
 
 import java.io.IOException;
 
@@ -37,7 +36,7 @@ public class SivaJSONValidationServiceClient implements ValidationService {
     private SivaValidationServiceErrorHandler errorHandler;
 
     @Override
-    public Observable<String> validateDocument(final String policy, final String report, final UploadedFile file) throws IOException {
+    public String validateDocument(final String policy, final String report, final UploadedFile file) throws IOException {
         if (file == null) {
             throw new IOException("Invalid file object given");
         }
@@ -57,10 +56,10 @@ public class SivaJSONValidationServiceClient implements ValidationService {
         try {
             restTemplate.setErrorHandler(errorHandler);
             String fullUrl = properties.getServiceHost() + properties.getJsonServicePath();
-            return Observable.just(restTemplate.postForObject(fullUrl, validationRequest, String.class));
+            return restTemplate.postForObject(fullUrl, validationRequest, String.class);
         } catch (ResourceAccessException ce) {
             String errorMessage = "Connection to web service failed. Make sure You have configured SiVa web service correctly";
-            return Observable.just(new ObjectMapper().writer().writeValueAsString(new ServiceError(GENERIC_ERROR_CODE, errorMessage)));
+            return new ObjectMapper().writer().writeValueAsString(new ServiceError(GENERIC_ERROR_CODE, errorMessage));
         }
     }
 

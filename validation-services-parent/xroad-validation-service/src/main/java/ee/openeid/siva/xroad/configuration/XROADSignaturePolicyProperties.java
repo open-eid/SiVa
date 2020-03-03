@@ -33,7 +33,7 @@ import static ee.openeid.siva.validation.service.signature.policy.PredefinedVali
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
-@ConfigurationProperties(prefix = "siva.xroad.signaturePolicy")
+@ConfigurationProperties(prefix = "siva.xroad.signature-policy")
 public class XROADSignaturePolicyProperties extends SignaturePolicyProperties<ValidationPolicy> {
 
     private String defaultPolicy;

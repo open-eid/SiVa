@@ -935,7 +935,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
     private void assertSimpleReportWithoutSignature(ValidatableResponse response, JSONHashcodeValidationRequest request) {
         assertValidationConclusion(response, request);
         response
-                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures", isEmptyOrNullString())
+                .body(VALIDATION_CONCLUSION_PREFIX + "Signatures", emptyOrNullString())
                 .body(VALIDATION_CONCLUSION_PREFIX + "ValidSignaturesCount", is("0"))
                 .body(VALIDATION_CONCLUSION_PREFIX + "SignaturesCount", is("0"));
     }
@@ -982,7 +982,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
                 .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Content", is(VALID_SIGNATURE_SCOPE_CONTENT_DIGEST))
                 .body("Signatures.Signature[0].ClaimedSigningTime", is(TestData.MOCK_XADES_SIGNATURE_CLAIMED_SIGNING_TIME))
                 .body("Signatures.Signature[0].Info.BestSignatureTime", is(TestData.MOCK_XADES_SIGNATURE_BEST_SIGNATURE_TIME))
-                .body("Signatures.Signature[0].Errors", isEmptyOrNullString())
+                .body("Signatures.Signature[0].Errors", emptyOrNullString())
                 .body("ValidSignaturesCount", is("1"))
                 .body("SignaturesCount", is("1"));
     }

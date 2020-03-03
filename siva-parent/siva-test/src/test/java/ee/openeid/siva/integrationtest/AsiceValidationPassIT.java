@@ -336,7 +336,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
                 .then().root(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
-                .body("signatures[0].warnings", Matchers.isEmptyOrNullString())
+                .body("signatures[0].warnings", Matchers.emptyOrNullString())
                 .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
                 .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("47101010033"))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))

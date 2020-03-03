@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import ee.openeid.siva.sample.configuration.BuildInfoProperties;
+import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,9 @@ public class FilesystemBuildInfoFileLoader implements BuildInfoFileLoader {
     }
 
     private static BuildInfo mapToBuildInfo(byte[] yamlFile) throws IOException {
+        if (ArrayUtils.isEmpty(yamlFile)) {
+            return new BuildInfo();
+        }
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 

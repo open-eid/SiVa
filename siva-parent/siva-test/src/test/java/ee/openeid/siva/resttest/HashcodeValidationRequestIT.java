@@ -434,7 +434,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertErrorResponse(response,
                 new RequestError(SIGNATURE_FILES, MAY_NOT_BE_EMPTY),
-                new RequestError(SIGNATURE_FILES, MAY_NOT_BE_NULL)
+                new RequestError(SIGNATURE_FILES, MUST_NOT_BE_NULL)
         );
     }
 

@@ -17,16 +17,12 @@
 package ee.openeid.siva.xroad.configuration;
 
 import ee.openeid.siva.monitoring.configuration.MonitoringConfiguration;
-import ee.openeid.siva.monitoring.indicator.UrlHealthIndicator;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Configuration
 @EnableConfigurationProperties({XROADValidationServiceProperties.class, XROADSignaturePolicyProperties.class, ReportConfigurationProperties.class})
@@ -35,10 +31,5 @@ public class XROADValidationServiceConfiguration extends MonitoringConfiguration
     @Bean(name = "XROADPolicyService")
     public SignaturePolicyService<ValidationPolicy> signaturePolicyService(XROADSignaturePolicyProperties properties) {
         return new SignaturePolicyService<>(properties);
-    }
-
-    @Override
-    public List<UrlHealthIndicator.ExternalLink> getDefaultExternalLinks() {
-        return new ArrayList<>();
     }
 }

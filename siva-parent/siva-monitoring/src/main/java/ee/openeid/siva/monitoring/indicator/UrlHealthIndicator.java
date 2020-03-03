@@ -18,7 +18,6 @@ package ee.openeid.siva.monitoring.indicator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.Status;
@@ -29,10 +28,8 @@ public class UrlHealthIndicator extends AbstractHealthIndicator {
     private static final Logger LOGGER = LoggerFactory.getLogger(UrlHealthIndicator.class);
     public static final String RESPONSE_PARAM_NAME = "name";
 
-    @Autowired
     private ExternalLink externalLink;
 
-    @Autowired
     private RestTemplate restTemplate;
 
     public UrlHealthIndicator() { }

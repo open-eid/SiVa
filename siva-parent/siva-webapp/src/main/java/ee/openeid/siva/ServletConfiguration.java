@@ -47,7 +47,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.xml.namespace.QName;
@@ -142,6 +144,18 @@ public class ServletConfiguration extends MonitoringConfiguration {
         return constructDataFilesEndpoint(springBus, dataFilesWebService, "XRoadDataFilesWebService", "XRoad");
     }
 
+    @Bean
+    public UrlHealthIndicator link1() {
+        UrlHealthIndicator.ExternalLink link =new UrlHealthIndicator.ExternalLink("xRoadService", proxyProperties.getXroadUrl() + DEFAULT_MONITORING_ENDPOINT, DEFAULT_TIMEOUT);
+        UrlHealthIndicator indicator = new UrlHealthIndicator();
+        indicator.setExternalLink(link);
+        RestTemplate restTemplate = new RestTemplate();
+        ((SimpleClientHttpRequestFactory) restTemplate.getRequestFactory()).setConnectTimeout(link.getTimeout());
+        ((SimpleClientHttpRequestFactory) restTemplate.getRequestFactory()).setReadTimeout(link.getTimeout());
+        indicator.setRestTemplate(restTemplate);
+        return indicator;
+    }
+
     private EndpointImpl constructValidationEndpoint(SpringBus springBus, ValidationWebService validationWebService, String serviceName, String endpointPathExtra) {
         EndpointImpl endpoint = new EndpointImpl(springBus, validationWebService);
         endpoint.setWsdlLocation("wsdl/siva.wsdl");
@@ -195,12 +209,6 @@ public class ServletConfiguration extends MonitoringConfiguration {
 
     private String constructPublishingPath(String endpointPath, String endpointPathExtra) {
         return endpointPath + (StringUtils.isNotBlank(endpointPathExtra) ? endpointPathExtra : "");
-    }
-
-    public List<UrlHealthIndicator.ExternalLink> getDefaultExternalLinks() {
-        return new ArrayList<UrlHealthIndicator.ExternalLink>() {{
-            add(new UrlHealthIndicator.ExternalLink("xRoadService", proxyProperties.getXroadUrl() + DEFAULT_MONITORING_ENDPOINT, DEFAULT_TIMEOUT));
-        }};
     }
 
     private List<AbstractSoapInterceptor> commonEndpointOutInterceptors() {

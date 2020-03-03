@@ -133,7 +133,7 @@ public class UploadControllerTest {
                 .param("type", "")
                 .param("report", ""))
                 .andExpect(MockMvcResultMatchers.status().is(200))
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8));
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE));
     }
 
     @Test

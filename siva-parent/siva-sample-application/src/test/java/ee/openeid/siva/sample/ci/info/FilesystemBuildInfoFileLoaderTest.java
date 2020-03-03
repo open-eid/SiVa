@@ -104,7 +104,7 @@ public class FilesystemBuildInfoFileLoaderTest {
         loader.setProperties(properties);
         BuildInfo buildInfo = loader.loadBuildInfo();
 
-        verify(mockAppender, times(2)).doAppend(captorLoggingEvent.capture());
+        verify(mockAppender, times(1)).doAppend(captorLoggingEvent.capture());
         final List<LoggingEvent> loggingEvent = captorLoggingEvent.getAllValues();
 
         assertThat(loggingEvent.get(0).getLevel()).isEqualTo(Level.WARN);

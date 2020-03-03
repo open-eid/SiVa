@@ -2,13 +2,14 @@ server:
   port: 8081
 
 management:
-  context-path: /monitoring
-  security:
-    enabled: false
   health:
     diskspace:
       enabled: false
-
-endpoints:
-  enabled: false
-  sensitive: true
+  endpoints:
+    web:
+      exposure:
+        include: health
+      base-path: /monitoring
+  endpoint:
+    health:
+      show-details: "ALWAYS"

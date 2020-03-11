@@ -24,7 +24,6 @@ import org.junit.experimental.categories.Category;
 
 import static ee.openeid.siva.integrationtest.TestData.HASH_ALGO_SHA256;
 import static ee.openeid.siva.integrationtest.TestData.HASH_ALGO_SHA512;
-import static org.hamcrest.Matchers.equalTo;
 
 @Category(IntegrationTest.class)
 public class XadesHashcodeValidationFailIT extends SiVaRestTests {
@@ -151,7 +150,7 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
      *
      * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
-     * Title: Invalid base64 signature in XAdES
+     * Title: Invalid signature in XAdES
      *
      * Expected Result: Error is given
      *
@@ -161,8 +160,13 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
     public void invalidBase64Signature() {
         postHashcodeValidation(validationRequestHashcode("Invalid_base64_XAdES_LT_TM.xml", null, null, "test.txt", HASH_ALGO_SHA256, "RnKZobNWVy8u92sDL4S2j1BUzMT5qTgt6hm90TfAGRo="))
                 .then()
-                .body("requestErrors[0].key", equalTo("signatureFiles.signature"))
-                .body("requestErrors[0].message", equalTo("Signature file malformed"));
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2019-02-05T13:36:23Z"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     @Override

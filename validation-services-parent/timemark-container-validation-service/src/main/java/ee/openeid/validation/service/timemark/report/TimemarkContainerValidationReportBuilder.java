@@ -17,42 +17,24 @@
 package ee.openeid.validation.service.timemark.report;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.report.DetailedReport;
-import ee.openeid.siva.validation.document.report.DiagnosticReport;
 import ee.openeid.siva.validation.document.report.Error;
-import ee.openeid.siva.validation.document.report.Info;
-import ee.openeid.siva.validation.document.report.Reports;
-import ee.openeid.siva.validation.document.report.SignatureScope;
-import ee.openeid.siva.validation.document.report.SignatureValidationData;
-import ee.openeid.siva.validation.document.report.SimpleReport;
-import ee.openeid.siva.validation.document.report.SubjectDistinguishedName;
-import ee.openeid.siva.validation.document.report.ValidationConclusion;
-import ee.openeid.siva.validation.document.report.ValidationWarning;
-import ee.openeid.siva.validation.document.report.Warning;
+import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import eu.europa.esig.dss.enumerations.SignatureQualification;
 import eu.europa.esig.dss.enumerations.SubIndication;
 import org.apache.commons.lang3.StringUtils;
-import org.digidoc4j.Container;
-import org.digidoc4j.DataFile;
-import org.digidoc4j.Signature;
-import org.digidoc4j.SignatureProfile;
-import org.digidoc4j.ValidationResult;
-import org.digidoc4j.X509Cert;
+import org.digidoc4j.*;
 import org.digidoc4j.exceptions.DigiDoc4JException;
 import org.digidoc4j.impl.asic.asice.AsicESignature;
 import org.digidoc4j.impl.ddoc.DDocContainer;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.getValidationTime;
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.processSignatureIndications;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.*;
 import static org.digidoc4j.X509Cert.SubjectName.CN;
 
 public abstract class TimemarkContainerValidationReportBuilder {
@@ -71,21 +53,24 @@ public abstract class TimemarkContainerValidationReportBuilder {
     Container container;
     private ValidationDocument validationDocument;
     private ValidationPolicy validationPolicy;
-    List<DigiDoc4JException> containerErrors;
+    ValidationResult validationResult;
     private boolean isReportSignatureEnabled;
+    private Map<String, ValidationResult> signatureValidationResults;
 
-    public TimemarkContainerValidationReportBuilder(Container container, ValidationDocument validationDocument, ValidationPolicy validationPolicy, List<DigiDoc4JException> containerErrors, boolean isReportSignatureEnabled) {
+    public TimemarkContainerValidationReportBuilder(Container container, ValidationDocument validationDocument, ValidationPolicy validationPolicy, ValidationResult validationResult, boolean isReportSignatureEnabled) {
         this.container = container;
         this.validationDocument = validationDocument;
         this.validationPolicy = validationPolicy;
-        this.containerErrors = containerErrors;
+        this.signatureValidationResults = validateAllSignatures(container);
+        removeSignatureResults(validationResult);
+        this.validationResult = validationResult;
         this.isReportSignatureEnabled = isReportSignatureEnabled;
     }
 
-    static ValidationWarning createValidationWarning(String content) {
-        ValidationWarning validationWarning = new ValidationWarning();
-        validationWarning.setContent(emptyWhenNull(content));
-        return validationWarning;
+    static Warning createWarning(String content) {
+        Warning warning = new Warning();
+        warning.setContent(emptyWhenNull(content));
+        return warning;
     }
 
     private static Warning mapDigidoc4JWarning(DigiDoc4JException digiDoc4JException) {
@@ -111,6 +96,31 @@ public abstract class TimemarkContainerValidationReportBuilder {
         return new Reports(simpleReport, detailedReport, diagnosticReport);
     }
 
+    private void removeSignatureResults(ValidationResult validationResult) {
+        removeSignatureErrors(validationResult);
+        removeSignatureWarning(validationResult);
+    }
+
+    private void removeSignatureErrors(ValidationResult validationResult) {
+        validationResult.getErrors().removeIf(exception -> signatureValidationResults.values().stream()
+                .anyMatch(sigResult -> sigResult.getErrors().stream()
+                        .anyMatch(e -> e.getMessage().equals(exception.getMessage()))));
+    }
+
+    private void removeSignatureWarning(ValidationResult validationResult) {
+        validationResult.getWarnings().removeIf(exception -> signatureValidationResults.values().stream()
+                .anyMatch(sigResult -> sigResult.getWarnings().stream()
+                        .anyMatch(e -> e.getMessage().equals(exception.getMessage()))));
+    }
+
+    private Map<String, ValidationResult> validateAllSignatures(Container container) {
+        Map<String, ValidationResult> results = new HashMap<>();
+        for (Signature signature : container.getSignatures()) {
+            results.put(signature.getUniqueId(), signature.validateSignature());
+        }
+        return results;
+    }
+
     private ValidationConclusion getValidationConclusion() {
         ValidationConclusion validationConclusion = new ValidationConclusion();
         validationConclusion.setPolicy(createReportPolicy(validationPolicy));
@@ -119,24 +129,18 @@ public abstract class TimemarkContainerValidationReportBuilder {
         validationConclusion.setSignaturesCount(container.getSignatures().size());
         List<SignatureValidationData> signaturesValidationResult = createSignaturesForReport(container);
         validationConclusion.setSignatures(signaturesValidationResult);
-        validationConclusion.setValidationWarnings(containerValidationWarnings(signaturesValidationResult));
+        validationConclusion.setValidationWarnings(containerValidationWarnings());
         validationConclusion.setValidatedDocument(ReportBuilderUtils.createValidatedDocument(isReportSignatureEnabled, validationDocument.getName(), validationDocument.getBytes()));
         validationConclusion.setValidSignaturesCount(
-                validationConclusion.getSignatures()
+                (int) validationConclusion.getSignatures()
                         .stream()
                         .filter(vd -> StringUtils.equals(vd.getIndication(), SignatureValidationData.Indication.TOTAL_PASSED.toString()))
-                        .collect(Collectors.toList())
-                        .size());
+                        .count());
         return validationConclusion;
     }
 
-    List<ValidationWarning> containerValidationWarnings(List<SignatureValidationData> signatureValidationData) {
-        List<ValidationWarning> validationWarnings = containerErrors.stream().map(e -> createValidationWarning(e.getMessage())).collect(Collectors.toList());
-        validationWarnings.removeIf(warning -> signatureValidationData.stream()
-                                                .anyMatch(sig -> sig.getErrors().stream()
-                                                                    .anyMatch(err -> err.getContent().equals(warning.getContent()))));
-        addExtraValidationWarnings(validationWarnings);
-        return validationWarnings;
+    List<ValidationWarning> containerValidationWarnings() {
+        return getExtraValidationWarnings();
     }
 
     private List<SignatureValidationData> createSignaturesForReport(Container container) {
@@ -168,9 +172,9 @@ public abstract class TimemarkContainerValidationReportBuilder {
         String serialNumber = signingCertificate.getSubjectName(X509Cert.SubjectName.SERIALNUMBER);
         String commonName = signingCertificate.getSubjectName(CN);
         return SubjectDistinguishedName.builder()
-               .serialNumber(serialNumber != null ? removeQuotes(serialNumber) : null)
-               .commonName(commonName != null ? removeQuotes(commonName) : null)
-               .build();
+                .serialNumber(serialNumber != null ? removeQuotes(serialNumber) : null)
+                .commonName(commonName != null ? removeQuotes(commonName) : null)
+                .build();
     }
 
     String removeQuotes(String subjectName) {
@@ -190,10 +194,12 @@ public abstract class TimemarkContainerValidationReportBuilder {
     }
 
     private SignatureValidationData.Indication getIndication(Signature signature) {
-        ValidationResult validationResult = signature.validateSignature();
-        if (validationResult.isValid()) {
+        ValidationResult signatureValidationResult = signatureValidationResults.get(signature.getUniqueId());
+        if (signatureValidationResult.isValid() && validationResult.getErrors().isEmpty()) {
             return SignatureValidationData.Indication.TOTAL_PASSED;
-        } else if (signature instanceof AsicESignature && REPORT_INDICATION_INDETERMINATE.equals(getDssSimpleReport((AsicESignature) signature).getIndication(signature.getUniqueId()).name())) {
+        } else if (signature instanceof AsicESignature
+                && REPORT_INDICATION_INDETERMINATE.equals(getDssSimpleReport((AsicESignature) signature).getIndication(signature.getUniqueId()).name())
+                && validationResult.getErrors().isEmpty()) {
             return SignatureValidationData.Indication.INDETERMINATE;
         } else {
             return SignatureValidationData.Indication.TOTAL_FAILED;
@@ -223,15 +229,21 @@ public abstract class TimemarkContainerValidationReportBuilder {
     }
 
     private List<Warning> getWarnings(Signature signature) {
-        return signature.validateSignature().getWarnings()
-                .stream()
+        ValidationResult signatureValidationResult = signatureValidationResults.get(signature.getUniqueId());
+        List<Warning> warnings = Stream.of(signatureValidationResult.getWarnings(), this.validationResult.getWarnings())
+                .flatMap(Collection::stream)
+                .distinct()
                 .map(TimemarkContainerValidationReportBuilder::mapDigidoc4JWarning)
                 .collect(Collectors.toList());
+        warnings.addAll(getExtraWarnings(signature));
+        return warnings;
     }
 
     private List<Error> getErrors(Signature signature) {
-        return signature.validateSignature().getErrors()
-                .stream()
+        ValidationResult signatureValidationResult = signatureValidationResults.get(signature.getUniqueId());
+        return Stream.of(signatureValidationResult.getErrors(), this.validationResult.getErrors())
+                .flatMap(Collection::stream)
+                .distinct()
                 .map(TimemarkContainerValidationReportBuilder::mapDigidoc4JException)
                 .collect(Collectors.toList());
     }
@@ -240,9 +252,9 @@ public abstract class TimemarkContainerValidationReportBuilder {
         return signature.getSigningCertificate().getSubjectName(X509Cert.SubjectName.C);
     }
 
-    abstract void addExtraValidationWarnings(List<ValidationWarning> validationWarnings);
+    abstract List<Warning> getExtraWarnings(Signature signature);
 
-    abstract List<ValidationWarning> getValidationWarningsForUnsignedDataFiles();
+    abstract List<ValidationWarning> getExtraValidationWarnings();
 
     abstract List<SignatureScope> getSignatureScopes(Signature signature, List<String> dataFilenames);
 

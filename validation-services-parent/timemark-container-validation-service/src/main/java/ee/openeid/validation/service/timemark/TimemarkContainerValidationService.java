@@ -74,9 +74,9 @@ public class TimemarkContainerValidationService implements ValidationService {
         try {
             ValidationResult validationResult = container.validate();
             if (container instanceof DDocContainer) {
-                return new DDOCContainerValidationReportBuilder(container, validationDocument, policyConfiguration.getPolicy(), validationResult.getErrors(), reportConfigurationProperties.isReportSignatureEnabled()).build();
+                return new DDOCContainerValidationReportBuilder(container, validationDocument, policyConfiguration.getPolicy(), validationResult, reportConfigurationProperties.isReportSignatureEnabled()).build();
             } else {
-                return new AsicContainerValidationReportBuilder(container, validationDocument, policyConfiguration.getPolicy(), validationResult.getErrors(), reportConfigurationProperties.isReportSignatureEnabled()).build();
+                return new AsicContainerValidationReportBuilder(container, validationDocument, policyConfiguration.getPolicy(), validationResult, reportConfigurationProperties.isReportSignatureEnabled()).build();
             }
         } catch (DigiDoc4JException e) {
             throw new MalformedDocumentException(e);

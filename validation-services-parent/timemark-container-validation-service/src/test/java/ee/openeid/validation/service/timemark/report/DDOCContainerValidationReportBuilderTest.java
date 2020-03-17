@@ -8,14 +8,16 @@ import ee.openeid.siva.validation.service.signature.policy.properties.Validation
 import org.digidoc4j.Container;
 import org.digidoc4j.ContainerBuilder;
 import org.digidoc4j.ContainerValidationResult;
+import org.digidoc4j.ddoc.DigiDocException;
 import org.digidoc4j.exceptions.DigiDoc4JException;
+import org.digidoc4j.impl.ddoc.DDocSignatureValidationResult;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.io.ByteArrayInputStream;
 import java.util.Collections;
-import java.util.List;
 
 import static org.junit.Assert.assertSame;
 
@@ -30,11 +32,11 @@ public class DDOCContainerValidationReportBuilderTest {
     public void validDDOCReturnsSuccessfulResult() {
         ValidationDocument validationDocument = validationDocument();
         Container container = ContainerBuilder.aContainer()
-                  .fromStream(new ByteArrayInputStream(validationDocument.getBytes()))
-                  .build();
+                .fromStream(new ByteArrayInputStream(validationDocument.getBytes()))
+                .build();
 
         ContainerValidationResult validationResult = container.validate();
-        Reports reports = new DDOCContainerValidationReportBuilder(container, validationDocument, new ValidationPolicy(), validationResult.getErrors(), true).build();
+        Reports reports = new DDOCContainerValidationReportBuilder(container, validationDocument, new ValidationPolicy(), validationResult, true).build();
 
         ValidationConclusion validationConclusion = reports.getSimpleReport().getValidationConclusion();
         assertSame(validationConclusion.getSignatures().size(), validationConclusion.getValidSignaturesCount());
@@ -42,16 +44,16 @@ public class DDOCContainerValidationReportBuilderTest {
 
     @Test
     public void ifThereAreContainerErrorsThatAreNotPresentUnderSignaturesErrorsThenExceptionIsThrown() {
-        expectedException.expect(DigiDoc4JException.class);
-        expectedException.expectMessage("Container has validation error(s)");
 
         ValidationDocument validationDocument = validationDocument();
         Container container = ContainerBuilder.aContainer()
-                  .fromStream(new ByteArrayInputStream(validationDocument.getBytes()))
-                  .build();
+                .fromStream(new ByteArrayInputStream(validationDocument.getBytes()))
+                .build();
+        ContainerValidationResult validationResult = new DDocSignatureValidationResult(Collections.singletonList(new DigiDocException(100, "Container level error", new RuntimeException())), "DIGIDOC-XML");
+        validationResult.getContainerErrors().add(new DigiDoc4JException("Container level error"));
 
-        List<DigiDoc4JException> validationErrors = Collections.singletonList(new DigiDoc4JException("Container level error"));
-        new DDOCContainerValidationReportBuilder(container, validationDocument, new ValidationPolicy(), validationErrors, true).build();
+        Reports reports = new DDOCContainerValidationReportBuilder(container, validationDocument, new ValidationPolicy(), validationResult, true).build();
+        Assert.assertEquals(1, reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getErrors().size());
     }
 
     private ValidationDocument validationDocument() {

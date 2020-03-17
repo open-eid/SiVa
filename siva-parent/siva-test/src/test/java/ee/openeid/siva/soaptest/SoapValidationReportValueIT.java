@@ -249,7 +249,8 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         assertEquals("Indication should match expected", "TOTAL-PASSED", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getIndication().value());
         assertEquals("SignatureScopes should match expected", "FullSignatureScope", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
         assertTrue("Errors should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getErrors().getError().isEmpty());
-        assertTrue("Warnings should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getWarnings().getWarning().isEmpty());
+        assertEquals("Warnings size match expected", 1, getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getWarnings().getWarning().size());
+        assertEquals("Warning should match expected", "Old and unsupported format: DIGIDOC-XML version: 1.1", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getWarnings().getWarning().get(0).getContent());
         assertEquals("SignatureForm should match expected", "DIGIDOC_XML_1.1", getValidationReportFromDom(report).getValidationConclusion().getSignatureForm());
     }
 
@@ -277,7 +278,8 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         assertEquals("Indication should match expected", "TOTAL-PASSED", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getIndication().value());
         assertEquals("SignatureScopes should match expected", "FullSignatureScope", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
         assertTrue("Errors should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getErrors().getError().isEmpty());
-        assertTrue("Warnings should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getWarnings().getWarning().isEmpty());
+        assertEquals("Warnings size match expected", 1, getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getWarnings().getWarning().size());
+        assertEquals("Warning should match expected", "Old and unsupported format: DIGIDOC-XML version: 1.2", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getWarnings().getWarning().get(0).getContent());
         assertEquals("SignatureForm should match expected", "DIGIDOC_XML_1.2", getValidationReportFromDom(report).getValidationConclusion().getSignatureForm());
     }
 

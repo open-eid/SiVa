@@ -95,29 +95,6 @@ public class DdocValidationFailIT extends SiVaRestTests{
     }
 
     /**
-     * TestCaseID: Ddoc-ValidationFail-4
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
-     *
-     * Title: Ddoc with no signatures
-     *
-     * Expected Result: The document should fail the validation
-     *
-     * File: DdocContainerNoSignature.ddoc
-     */
-    @Test
-    public void ddocNoSignatures() {
-        setTestFilesDirectory("document_format_test_files/");
-        post(validationRequestFor("DdocContainerNoSignature.ddoc", VALID_SIGNATURE_POLICY_4, null))
-                .then()
-                .body("requestErrors", Matchers.hasSize(1))
-                .body("requestErrors[0].key", Matchers.is("document"))
-                .body("requestErrors[0].message", Matchers.is("Document malformed or not matching documentType"));
-    }
-
-    /**
      * TestCaseID: Ddoc-ValidationFail-5
      *
      * TestType: Automated
@@ -422,9 +399,24 @@ public class DdocValidationFailIT extends SiVaRestTests{
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("22915-bad-df-id.ddoc", VALID_SIGNATURE_POLICY_4, null))
                 .then()
-                .body("requestErrors", Matchers.hasSize(1))
-                .body("requestErrors[0].key", Matchers.is("document"))
-                .body("requestErrors[0].message", Matchers.is("Document malformed or not matching documentType"));
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S0"))
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.hasSize(1))
+                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("Id attribute value has to be in form D<number> or DO"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("build.xml"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
+                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Digest of the document content"))
+                .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2013-05-09T18:15:42Z"))
+                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("X509IssuerName has none or invalid namespace: null"))
+                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("X509SerialNumber has none or invalid namespace: null"))
+                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("22915-bad-df-id.ddoc"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.validationWarnings", Matchers.hasSize(1))
+                .body("validationReport.validationConclusion.validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"));
     }
 
     /**

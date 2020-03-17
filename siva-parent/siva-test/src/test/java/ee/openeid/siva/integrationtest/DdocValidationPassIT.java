@@ -27,6 +27,11 @@ public class DdocValidationPassIT extends SiVaRestTests {
 
     private static final String TEST_FILES_DIRECTORY = "ddoc/live/timemark/";
 
+    private String testFilesDirectory = TEST_FILES_DIRECTORY;
+
+    public void setTestFilesDirectory(String testFilesDirectory) {
+        this.testFilesDirectory = testFilesDirectory;
+    }
     /**
      * TestCaseID: Ddoc-ValidationPass-2
      *
@@ -301,6 +306,31 @@ public class DdocValidationPassIT extends SiVaRestTests {
     }
 
     /**
+     * TestCaseID: Ddoc-ValidationPass-16
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
+     *
+     * Title: Ddoc with no signatures
+     *
+     * Expected Result: Document passes the validation
+     *
+     * File: DdocContainerNoSignature.ddoc
+     */
+    @Test
+    public void ddocNoSignatures() {
+        setTestFilesDirectory("document_format_test_files/");
+        post(validationRequestFor("DdocContainerNoSignature.ddoc", VALID_SIGNATURE_POLICY_4, null))
+                .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("DdocContainerNoSignature.ddoc"))
+                .body("validationReport.validationConclusion.validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(0));
+    }
+
+    /**
      * TestCaseID: DdocHashcode-ValidationPass-1
      *
      * TestType: Automated
@@ -450,6 +480,6 @@ public class DdocValidationPassIT extends SiVaRestTests {
 
     @Override
     protected String getTestFilesDirectory() {
-        return TEST_FILES_DIRECTORY;
+        return testFilesDirectory;
     }
 }

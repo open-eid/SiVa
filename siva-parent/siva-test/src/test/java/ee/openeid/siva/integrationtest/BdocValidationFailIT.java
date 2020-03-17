@@ -321,9 +321,9 @@ public class BdocValidationFailIT extends SiVaRestTests {
         post(validationRequestFor("23613_TM_wrong-manifest-mimetype.bdoc"))
                 .then()
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.validationWarnings.content", Matchers.hasItems("Manifest file has an entry for file <test.txt> with mimetype <application/binary> but the signature file for signature S0 indicates the mimetype is <application/octet-stream>"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Manifest file has an entry for file <test.txt> with mimetype <application/binary> but the signature file for signature S0 indicates the mimetype is <application/octet-stream>"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -670,6 +670,33 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("requestErrors[0].key", Matchers.is(DOCUMENT))
                 .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
+    }
+
+    /**
+     * TestCaseID: Bdoc-ValidationFail-30
+     * <p>
+     * TestType: Automated
+     * <p>
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
+     * <p>
+     * Title: Asice unsigned data files in the container
+     * <p>
+     * Expected Result: The document should fail the validation
+     * <p>
+     * File: EE_SER-AEX-B-LT-V-34.asice
+     */
+    @Test
+    public void asiceUnsignedDataFiles() {
+        setTestFilesDirectory("bdoc/live/timestamp/");
+        post(validationRequestForDD4j("EE_SER-AEX-B-LT-V-34.asice", null, null))
+                .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("Manifest file has an entry for file <unsigned.txt> with mimetype <text/plain> but the signature file for signature S0 does not have an entry for this file"))
+                .body("validationReport.validationConclusion.signatures[0].errors[1].content", Matchers.is("Container contains a file named <unsigned.txt> which is not found in the signature file"))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+
     }
 
     @Override

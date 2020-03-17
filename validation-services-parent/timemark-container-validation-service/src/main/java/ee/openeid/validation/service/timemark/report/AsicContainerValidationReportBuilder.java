@@ -3,35 +3,37 @@ package ee.openeid.validation.service.timemark.report;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.SignatureScope;
 import ee.openeid.siva.validation.document.report.ValidationWarning;
+import ee.openeid.siva.validation.document.report.Warning;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
-import org.digidoc4j.Container;
-import org.digidoc4j.DataFile;
-import org.digidoc4j.Signature;
-import org.digidoc4j.SignatureProfile;
-import org.digidoc4j.exceptions.DigiDoc4JException;
+import org.digidoc4j.*;
 import org.digidoc4j.impl.asic.asice.AsicESignature;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static org.digidoc4j.X509Cert.SubjectName.CN;
 
 public class AsicContainerValidationReportBuilder extends TimemarkContainerValidationReportBuilder {
-    public AsicContainerValidationReportBuilder(Container container, ValidationDocument validationDocument, ValidationPolicy validationPolicy, List<DigiDoc4JException> containerErrors, boolean isReportSignatureEnabled) {
-        super(container, validationDocument, validationPolicy, containerErrors, isReportSignatureEnabled);
+    public AsicContainerValidationReportBuilder(Container container, ValidationDocument validationDocument, ValidationPolicy validationPolicy, ValidationResult validationResult, boolean isReportSignatureEnabled) {
+        super(container, validationDocument, validationPolicy, validationResult, isReportSignatureEnabled);
     }
 
     @Override
-    List<ValidationWarning> getValidationWarningsForUnsignedDataFiles() {
+    List<Warning> getExtraWarnings(Signature signature) {
         List<String> dataFilenames = container.getDataFiles().stream().map(DataFile::getName).collect(Collectors.toList());
-        return container.getSignatures()
-                .stream()
-                .map(signature -> createValidationWarning(signature, getUnsignedFiles((AsicESignature) signature, dataFilenames)))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+        Warning warning = createValidationWarning(signature, getUnsignedFiles((AsicESignature) signature, dataFilenames));
+        if (warning == null) {
+            return Collections.emptyList();
+        }
+        return Collections.singletonList(warning);
+    }
+
+    @Override
+    List<ValidationWarning> getExtraValidationWarnings() {
+        return Collections.emptyList();
     }
 
     @Override
@@ -55,11 +57,6 @@ public class AsicContainerValidationReportBuilder extends TimemarkContainerValid
         return XADES_FORMAT_PREFIX + profile.toString();
     }
 
-    @Override
-    void addExtraValidationWarnings(List<ValidationWarning> validationWarnings) {
-        validationWarnings.addAll(getValidationWarningsForUnsignedDataFiles());
-    }
-
     private static SignatureScope createFullSignatureScopeForDataFile(String filename) {
         SignatureScope signatureScope = new SignatureScope();
         signatureScope.setName(filename);
@@ -77,14 +74,14 @@ public class AsicContainerValidationReportBuilder extends TimemarkContainerValid
         }
     }
 
-    private ValidationWarning createValidationWarning(Signature signature, List<String> unsignedFiles) {
+    private Warning createValidationWarning(Signature signature, List<String> unsignedFiles) {
         if (unsignedFiles.isEmpty()) {
             return null;
         }
         String signedBy = removeQuotes(signature.getSigningCertificate().getSubjectName(CN));
-        String commaSeparated = unsignedFiles.stream().collect(Collectors.joining(", "));
+        String commaSeparated = String.join(", ", unsignedFiles);
         String content = String.format("Signature %s has unsigned files: %s", signedBy, commaSeparated);
-        return createValidationWarning(content);
+        return createWarning(content);
     }
 
     private List<String> getUnsignedFiles(AsicESignature bDocSignature, List<String> dataFilenames) {

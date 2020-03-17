@@ -2,19 +2,19 @@ package ee.openeid.validation.service.timemark.report;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.SignatureScope;
-import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.ValidationWarning;
+import ee.openeid.siva.validation.document.report.Warning;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.Container;
 import org.digidoc4j.DigestDataFile;
 import org.digidoc4j.Signature;
 import org.digidoc4j.SignatureProfile;
-import org.digidoc4j.exceptions.DigiDoc4JException;
+import org.digidoc4j.ValidationResult;
 import org.digidoc4j.impl.ddoc.DDocContainer;
 import org.digidoc4j.impl.ddoc.DDocFacade;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,34 +22,20 @@ public class DDOCContainerValidationReportBuilder extends TimemarkContainerValid
 
     public static final String DDOC_TIMESTAMP_WARNING = "Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa";
 
-    public DDOCContainerValidationReportBuilder(Container container, ValidationDocument validationDocument, ValidationPolicy validationPolicy, List<DigiDoc4JException> containerErrors, boolean isReportSignatureEnabled) {
-        super(container, validationDocument, validationPolicy, containerErrors, isReportSignatureEnabled);
+    public DDOCContainerValidationReportBuilder(Container container, ValidationDocument validationDocument, ValidationPolicy validationPolicy, ValidationResult validationResult, boolean isReportSignatureEnabled) {
+        super(container, validationDocument, validationPolicy, validationResult, isReportSignatureEnabled);
     }
 
     @Override
-    List<ValidationWarning> containerValidationWarnings(List<SignatureValidationData> signatureValidationData) {
-        List<ValidationWarning> validationWarnings = super.containerValidationWarnings(signatureValidationData);
-
-        // If validationWarnings contains anything else in addition to DDOC_TIMESTAMP_WARNING, then we can be sure it contains container error(s)
-        // and not signature error(s) and malformed document exception should be thrown.
-        if (validationWarnings.size() > 1) {
-            LOGGER.error("Container has validation error(s): {}", containerErrors);
-            throw new DigiDoc4JException("Container has validation error(s)");
-        }
-
-        return validationWarnings;
+    List<Warning> getExtraWarnings(Signature signature) {
+        return Collections.emptyList();
     }
 
     @Override
-    void addExtraValidationWarnings(List<ValidationWarning> validationWarnings) {
+    List<ValidationWarning> getExtraValidationWarnings() {
         ValidationWarning timestampValidationWarning = new ValidationWarning();
         timestampValidationWarning.setContent(DDOC_TIMESTAMP_WARNING);
-        validationWarnings.add(timestampValidationWarning);
-    }
-
-    @Override
-    List<ValidationWarning> getValidationWarningsForUnsignedDataFiles() {
-        return new ArrayList<>();
+        return Collections.singletonList(timestampValidationWarning);
     }
 
     @Override

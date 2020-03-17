@@ -445,31 +445,6 @@ public class BdocValidationPassIT extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: Bdoc-ValidationPass-18
-     * <p>
-     * TestType: Automated
-     * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
-     * <p>
-     * Title: Asice unsigned data files in the container
-     * <p>
-     * Expected Result: The document should pass the validation with warning
-     * <p>
-     * File: EE_SER-AEX-B-LT-V-34.asice
-     */
-    @Test
-    public void asiceUnsignedDataFiles() {
-        setTestFilesDirectory("bdoc/live/timestamp/");
-        post(validationRequestForDD4j("EE_SER-AEX-B-LT-V-34.asice", null, null))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.validationWarnings[1].content", Matchers.is("Container contains a file named <unsigned.txt> which is not found in the signature file"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
-
-    }
-
-    /**
      * TestCaseID: Bdoc-ValidationPass-19
      *
      * TestType: Automated

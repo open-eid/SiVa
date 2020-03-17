@@ -535,7 +535,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Digest of the document content"))
                 .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2009-06-01T10:42:19Z"))
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.emptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("Old and unsupported format: DIGIDOC-XML version: 1.1"))
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.1"))
                 .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("multipleInvalidSignatures.ddoc"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
@@ -597,9 +597,11 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
         setTestFilesDirectory("document_format_test_files/");
         post(validationRequestFor("DdocContainerNoSignature.ddoc", VALID_SIGNATURE_POLICY_4, null))
                 .then()
-                .body("requestErrors", Matchers.hasSize(1))
-                .body("requestErrors[0].key", Matchers.is("document"))
-                .body("requestErrors[0].message", Matchers.is("Document malformed or not matching documentType"));
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("DdocContainerNoSignature.ddoc"))
+                .body("validationReport.validationConclusion.validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(0));
     }
 
     /**
@@ -667,7 +669,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[1].scope", Matchers.is("FullSignatureScope"))
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[1].content", Matchers.is("Digest of the document content"))
                 .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2009-06-01T10:42:19Z"))
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.emptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("Old and unsupported format: DIGIDOC-XML version: 1.1"))
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.1"))
                 .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("igasugust1.1.ddoc"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(3))
@@ -702,7 +704,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[1].scope", Matchers.is("FullSignatureScope"))
                 .body("validationReport.validationConclusion.signatures[0].signatureScopes[1].content", Matchers.is("Digest of the document content"))
                 .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2009-06-01T10:45:44Z"))
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.emptyOrNullString())
+                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("Old and unsupported format: DIGIDOC-XML version: 1.2"))
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.2"))
                 .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("igasugust1.2.ddoc"))
                 .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(3))

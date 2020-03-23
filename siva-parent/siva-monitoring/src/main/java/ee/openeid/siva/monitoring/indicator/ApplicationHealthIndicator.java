@@ -64,7 +64,6 @@ public class ApplicationHealthIndicator implements HealthIndicator {
             return null;
         }
         ZonedDateTime dateTime = date.atZone(ZoneId.of("UTC"));
-        dateTime.toInstant();
         return dateTime.withZoneSameInstant(ZoneId.systemDefault());
     }
 

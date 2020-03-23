@@ -22,6 +22,7 @@ import ee.openeid.siva.statistics.model.SimpleSignatureReport;
 import ee.openeid.siva.statistics.model.SimpleValidationReport;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.BDDMockito;
@@ -47,6 +48,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 
 @PrepareForTest({ UUID.class, GoogleAnalyticsMeasurementProtocolClient.class })
 @RunWith(PowerMockRunner.class)
+@Ignore("Not needed. Feature will be deleted soon")
 public class GoogleAnalyticsMeasurementProtocolClientTest {
 
     private static final String CONTAINER_TYPE = "some container type";

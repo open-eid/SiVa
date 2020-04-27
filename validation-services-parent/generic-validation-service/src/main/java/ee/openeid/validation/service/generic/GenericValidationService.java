@@ -29,6 +29,9 @@ import ee.openeid.siva.validation.service.signature.policy.properties.Constraint
 import ee.openeid.tsl.configuration.AlwaysFailingCRLSource;
 import ee.openeid.tsl.configuration.AlwaysFailingOCSPSource;
 import ee.openeid.validation.service.generic.validator.report.GenericValidationReportBuilder;
+import eu.europa.esig.dss.crl.CRLUtils;
+import eu.europa.esig.dss.crl.CRLValidity;
+import eu.europa.esig.dss.crl.x509.impl.X509CRLValidity;
 import eu.europa.esig.dss.diagnostic.CertificateWrapper;
 import eu.europa.esig.dss.diagnostic.DiagnosticData;
 import eu.europa.esig.dss.diagnostic.SignatureWrapper;
@@ -37,21 +40,24 @@ import eu.europa.esig.dss.model.DSSDocument;
 import eu.europa.esig.dss.model.DSSException;
 import eu.europa.esig.dss.model.InMemoryDocument;
 import eu.europa.esig.dss.model.MimeType;
+import eu.europa.esig.dss.model.identifier.EncapsulatedRevocationTokenIdentifier;
 import eu.europa.esig.dss.service.http.commons.CommonsDataLoader;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
+import eu.europa.esig.dss.spi.x509.revocation.RevocationToken;
+import eu.europa.esig.dss.spi.x509.revocation.ocsp.OCSPResponseBinary;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
+import eu.europa.esig.dss.xades.validation.XAdESSignature;
+import org.bouncycastle.cert.ocsp.BasicOCSPResp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.time.DateUtils.addMilliseconds;
 
@@ -60,10 +66,6 @@ public class GenericValidationService implements ValidationService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GenericValidationService.class);
     private static final ValidationLevel VALIDATION_LEVEL = ValidationLevel.ARCHIVAL_DATA;
-    private static final int REVOCATION_FRESHNESS_DAY_DIFFERENCE = 86400000;
-    private static final int REVOCATION_FRESHNESS_FIFTEEN_MINUTES_DIFFERENCE = 900000;
-    private static final String REVOCATION_FRESHNESS_FAULT = "The revocation information is not considered as 'fresh'.";
-    private static final String CRL_REVOCATION_SOURCE = "CRL";
 
     private TrustedListsCertificateSource trustedListsCertificateSource;
     private ConstraintLoadingSignaturePolicyService signaturePolicyService;
@@ -90,8 +92,9 @@ public class GenericValidationService implements ValidationService {
             final ConstraintDefinedPolicy policy = signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy());
 
             final eu.europa.esig.dss.validation.reports.Reports reports = validator.validateDocument(policy.getConstraintDataStream());
-
-            validateRevocationFreshness(reports);
+            
+            RevocationFreshnessValidator revocationFreshnessValidator = new RevocationFreshnessValidator(reports, validator.getSignatures());
+            revocationFreshnessValidator.validate();
 
             if (LOGGER.isInfoEnabled()) {
                 LOGGER.info(
@@ -139,40 +142,6 @@ public class GenericValidationService implements ValidationService {
         return validator;
     }
 
-    void validateRevocationFreshness(eu.europa.esig.dss.validation.reports.Reports reports) {
-        DiagnosticData diagnosticData = reports.getDiagnosticData();
-        if (diagnosticData.getFirstSignatureId() == null) {
-            return;
-        }
-        if (diagnosticData.getUsedCertificates() != null && diagnosticData.getFirstSigningCertificateId() != null) {
-            for (CertificateWrapper certificateWrapper : diagnosticData.getUsedCertificates()) {
-                for (SignatureWrapper signatureWrapper : diagnosticData.getSignatures()) {
-                    if (signatureWrapper.getSigningCertificate() == null)
-                        return;
-                    if (certificateWrapper.getId().equals(signatureWrapper.getSigningCertificate().getId()) && !signatureWrapper.getTimestampList().isEmpty()) {
-                        TimestampWrapper timeStampWrapper = getFirstTimestamp(signatureWrapper.getTimestampList());
-                        if (timeStampWrapper.getProductionTime() == null)
-                            return;
-                        invokeRevocationFreshnessCheckIfNeeded(reports, certificateWrapper, signatureWrapper, timeStampWrapper);
-                    }
-                }
-            }
-        }
-    }
-
-    private void invokeRevocationFreshnessCheckIfNeeded(eu.europa.esig.dss.validation.reports.Reports reports, CertificateWrapper certificateWrapper, SignatureWrapper signatureWrapper, TimestampWrapper timeStampWrapper) {
-        boolean revocationFreshnessCheckInvokeError = isRevocationFreshnessCheckInvalid(certificateWrapper, timeStampWrapper);
-        if (revocationFreshnessCheckInvokeError) {
-            reports.getSimpleReport().getErrors(signatureWrapper.getId()).add(REVOCATION_FRESHNESS_FAULT);
-        } else {
-            boolean revocationFreshnessCheckInvokeWarning = certificateWrapper.getCertificateRevocationData().stream().anyMatch(
-                    r -> !CRL_REVOCATION_SOURCE.equals(r.getRevocationType().name()) && isInRangeMillis(r.getProductionDate(), timeStampWrapper.getProductionTime(), REVOCATION_FRESHNESS_FIFTEEN_MINUTES_DIFFERENCE));
-            if (revocationFreshnessCheckInvokeWarning) {
-                reports.getSimpleReport().getWarnings(signatureWrapper.getId()).add(REVOCATION_FRESHNESS_FAULT);
-            }
-        }
-    }
-
     DSSDocument createDssDocument(final ValidationDocument validationDocument) {
         if (validationDocument == null) {
             return null;
@@ -182,16 +151,6 @@ public class GenericValidationService implements ValidationService {
         dssDocument.setMimeType(MimeType.fromFileName(validationDocument.getName()));
 
         return dssDocument;
-    }
-
-    private boolean isRevocationFreshnessCheckInvalid(CertificateWrapper certificateWrapper, TimestampWrapper timeStampWrapper) {
-        return certificateWrapper.getCertificateRevocationData().stream().anyMatch(
-                r -> {
-                    if (CRL_REVOCATION_SOURCE.equals(r.getRevocationType().name())) {
-                        return !(timeStampWrapper.getProductionTime().after(r.getThisUpdate()) && timeStampWrapper.getProductionTime().before(r.getNextUpdate()));
-                    }
-                    return isInRangeMillis(r.getProductionDate(), timeStampWrapper.getProductionTime(), REVOCATION_FRESHNESS_DAY_DIFFERENCE);
-                });
     }
 
     private TimestampWrapper getFirstTimestamp(List<TimestampWrapper> timestamps) {

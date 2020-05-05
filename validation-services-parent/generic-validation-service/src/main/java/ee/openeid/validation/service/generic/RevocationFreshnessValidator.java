@@ -14,15 +14,15 @@ import eu.europa.esig.dss.validation.reports.Reports;
 import lombok.SneakyThrows;
 import org.bouncycastle.cert.ocsp.BasicOCSPResp;
 
+import java.time.Duration;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.apache.commons.lang3.time.DateUtils.addMilliseconds;
-
 public class RevocationFreshnessValidator {
 
-    private static final int REVOCATION_FRESHNESS_DAY_DIFFERENCE = 86400000;
-    private static final int REVOCATION_FRESHNESS_FIFTEEN_MINUTES_DIFFERENCE = 900000;
+    private static final Duration REVOCATION_FRESHNESS_FIFTEEN_MINUTES_DIFFERENCE = Duration.ofMinutes(15);
+    private static final Duration REVOCATION_FRESHNESS_DAY_DIFFERENCE = Duration.ofDays(1);
+
     private static final String REVOCATION_FRESHNESS_FAULT = "The revocation information is not considered as 'fresh'.";
 
     private final Reports reports;
@@ -41,24 +41,28 @@ public class RevocationFreshnessValidator {
                 if (signatureWrapper.getSigningCertificate() == null) {
                     return;
                 }
-                if (certificateWrapper.getId().equals(signatureWrapper.getSigningCertificate().getId())
-                        && !signatureWrapper.getTimestampList().isEmpty()) {
-
-                    CRLValidity crlValidity = findCRLValidity(signatureWrapper.getId(), certificateWrapper.getId());
-                    Date ocspProducedAt = findOcspProducedAt(signatureWrapper.getId());
-
-                    if (ocspProducedAt == null && crlValidity == null) {
-                        return;
-                    }
-                    Date timestampProductionTime = getFirstTimestampProductionTime(signatureWrapper.getTimestampList());
-                    if (timestampProductionTime == null) {
-                        return;
-                    }
-
-                    invokeRevocationFreshnessCheckIfNeeded(signatureWrapper.getId(), ocspProducedAt, crlValidity, timestampProductionTime);
-                }
+                validate(certificateWrapper, signatureWrapper);
             }
         }
+    }
+
+    private void validate(CertificateWrapper certificateWrapper, SignatureWrapper signatureWrapper) {
+        if (!certificateWrapper.getId().equals(signatureWrapper.getSigningCertificate().getId())
+                || signatureWrapper.getTimestampList().isEmpty()) {
+            return;
+        }
+        CRLValidity crlValidity = findCRLValidity(signatureWrapper.getId(), certificateWrapper.getId());
+        Date ocspProducedAt = findOcspProducedAt(signatureWrapper.getId());
+
+        if (ocspProducedAt == null && crlValidity == null) {
+            return;
+        }
+        Date timestampProductionTime = getFirstTimestampProductionTime(signatureWrapper.getTimestampList());
+        if (timestampProductionTime == null) {
+            return;
+        }
+
+        invokeRevocationFreshnessCheckIfNeeded(signatureWrapper.getId(), ocspProducedAt, crlValidity, timestampProductionTime);
     }
 
     private CRLValidity findCRLValidity(String signatureId, String certificateId) {
@@ -117,7 +121,7 @@ public class RevocationFreshnessValidator {
             if (ocspProducedAt == null) {
                 return;
             }
-            boolean revocationFreshnessCheckInvokeWarning = isInRangeMillis(ocspProducedAt, timeStampProductionTime, REVOCATION_FRESHNESS_FIFTEEN_MINUTES_DIFFERENCE);
+            boolean revocationFreshnessCheckInvokeWarning = areNotWithinRange(ocspProducedAt, timeStampProductionTime, REVOCATION_FRESHNESS_FIFTEEN_MINUTES_DIFFERENCE);
             if (revocationFreshnessCheckInvokeWarning) {
                 reports.getSimpleReport().getWarnings(signatureId).add(REVOCATION_FRESHNESS_FAULT);
             }
@@ -128,14 +132,12 @@ public class RevocationFreshnessValidator {
         if (crlValidity != null) {
             return !(timeStampProductionTime.after(crlValidity.getThisUpdate()) && timeStampProductionTime.before(crlValidity.getNextUpdate()));
         }
-        return isInRangeMillis(ocspProducedAt, timeStampProductionTime, REVOCATION_FRESHNESS_DAY_DIFFERENCE);
+        return areNotWithinRange(ocspProducedAt, timeStampProductionTime, REVOCATION_FRESHNESS_DAY_DIFFERENCE);
 
     }
 
-    private static boolean isInRangeMillis(Date date1, Date date2, int rangeInMillis) {
-        Date latestTime = addMilliseconds(date2, rangeInMillis);
-        Date earliestTime = addMilliseconds(date2, -rangeInMillis);
-        return !date1.before(latestTime) || !date1.after(earliestTime);
+    private static boolean areNotWithinRange(Date date1, Date date2, Duration range) {
+        Duration timeBetweenDates = Duration.between(date1.toInstant(), date2.toInstant()).abs();
+        return timeBetweenDates.compareTo(range) > 0;
     }
-
 }

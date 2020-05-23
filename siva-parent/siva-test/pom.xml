@@ -26,6 +26,10 @@
     <artifactId>siva-test</artifactId>
     <name>SiVa Web Service integration tests</name>
 
+    <properties>
+        <restassured.version>4.2.0</restassured.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>ee.openid.siva</groupId>
@@ -53,19 +57,37 @@
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
-            <version>2.4.16</version>
-            <scope>test</scope>
+            <version>3.0.4</version>
+            <type>pom</type>
         </dependency>
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
-            <version>3.3.0</version>
+            <version>${restassured.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>xml-path</artifactId>
+            <version>${restassured.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>json-path</artifactId>
+            <version>${restassured.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured-common</artifactId>
+            <version>${restassured.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>json-schema-validator</artifactId>
-            <version>3.3.0</version>
+            <version>${restassured.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -17,6 +17,7 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.validation.document.report.SimpleReport;
+import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.yaml.snakeyaml.Yaml;
@@ -105,6 +106,7 @@ public abstract class SiVaIntegrationTestsBase {
         }
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         RestAssured.useRelaxedHTTPSValidation();
+        RestAssured.filters(new AllureRestAssured());
     }
 
     public String createUrl(String endpoint) {

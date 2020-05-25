@@ -46,8 +46,8 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File: soft-cert-signature.pdf
      */
+    @Ignore //TODO: New test file is needed
     @Test
-    @Ignore("SIVA-119")
     public void pdfDocumentAdesNonSscdCompliantShouldFailWithGivenPolicy() {
         post(validationRequestFor("soft-cert-signature.pdf", VALID_SIGNATURE_POLICY_4, null))
                 .then()
@@ -81,13 +81,13 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * Expected Result: Signatures are invalid according to policy
      *
-     * File: allkiri_ades.asice
+     * File:
      */
+    @Ignore //TODO: test file needed
     @Test
-    @Ignore("SIVA-119")
     public void bdocDocumentAdesNonSscdCompliantShouldFailWithGivenPolicy() {
         setTestFilesDirectory("bdoc/test/timestamp/");
-        post(validationRequestForDD4j("allkiri_ades.asice", VALID_SIGNATURE_POLICY_4, null))
+        post(validationRequestForDD4j("", VALID_SIGNATURE_POLICY_4, null))
                 .then()
                 .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
                 .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
@@ -628,7 +628,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: soft-cert-signature.pdf
      */
     @Test
-    @Ignore("SIVA-119")
+    @Ignore //TODO: New testfile is needed
     public void pdfDocumentAdesNonSscdCompliantShouldPassWithGivenPolicy() {
         post(validationRequestFor("soft-cert-signature.pdf", VALID_SIGNATURE_POLICY_3, null))
                 .then()
@@ -664,7 +664,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: allkiri_ades.asice
      */
     @Test
-    @Ignore("SIVA-119")
+    @Ignore //TODO: New testfile is needed
     public void bdocDocumentAdesNonSscdCompliantShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestForDD4j("allkiri_ades.asice", VALID_SIGNATURE_POLICY_3, null))

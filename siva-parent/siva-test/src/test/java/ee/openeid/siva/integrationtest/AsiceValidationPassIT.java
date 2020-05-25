@@ -95,7 +95,6 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      * File: EE_SER-AEX-B-LT-V-30.asice
      */
     @Test
-    @Ignore("SIVA-119")
     public void asiceDifferentCertificateCountries() {
         post(validationRequestFor("EE_SER-AEX-B-LT-V-30.asice"))
                 .then().root(VALIDATION_CONCLUSION_PREFIX)

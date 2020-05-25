@@ -107,29 +107,25 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
      *
      * @return
      */
-    @Step("Should Print Response")
     protected boolean shouldPrintResponse() {
         return PRINT_RESPONSE;
     }
 
-    @Step("Post For Report (file, signaturePolicy)")
     protected SimpleReport postForReport(String file, String signaturePolicy) {
         if (shouldPrintResponse()) {
             return postForReportAndPrintResponse(file, signaturePolicy);
         }
         return mapToReport(post(validationRequestFor(file, signaturePolicy, null)).andReturn().body().asString()).getValidationReport();
     }
-    @Step("Post For Report (file)")
+
     protected SimpleReport postForReport(String file) {
         return postForReport(file, VALID_SIGNATURE_POLICY_4);
     }
 
-    @Step("Post For Report And Print Response")
     protected SimpleReport postForReportAndPrintResponse(String file, String signaturePolicy) {
         return mapToReport(post(validationRequestFor(file, signaturePolicy, null)).andReturn().body().prettyPrint()).getValidationReport();
     }
 
-    @Step("Validation Request For (file, signaturePolicy, reportType")
     protected String validationRequestFor(String file, String signaturePolicy, String reportType) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("document", Base64.encodeBase64String(readFileFromTestResources(file)));
@@ -142,7 +138,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         }
         return jsonObject.toString();
     }
-    @Step("Validation Request For DD4j")
+
     protected String validationRequestForDD4j(String file, String signaturePolicy, String reportType) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(DOCUMENT, Base64.encodeBase64String(readFileFromTestResources(file)));
@@ -157,7 +153,6 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         return jsonObject.toString();
     }
 
-    @Step("Validation Request For DDS")
     protected String validationRequestForDSS(String file, String signaturePolicy, String reportType) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(DOCUMENT, Base64.encodeBase64String(readFileFromTestResources(file)));
@@ -172,12 +167,10 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         return jsonObject.toString();
     }
 
-    @Step("Validation Request For (file)")
     protected String validationRequestFor(String file) {
         return validationRequestFor(file, null, null);
     }
 
-    @Step("Data Files Request")
     protected String dataFilesRequest(String file) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("document", Base64.encodeBase64String(readFileFromTestResources(file)));
@@ -185,7 +178,6 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         return jsonObject.toString();
     }
 
-    @Step("Data Files Request - Invalid Values")
     protected String dataFilesRequestInvalidValues(String document, String filename) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("document", document);
@@ -193,7 +185,6 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         return jsonObject.toString();
     }
 
-    @Step("Data Files Request Extended")
     protected String dataFilesRequestExtended(String file, String filename) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("document", Base64.encodeBase64String(readFileFromTestResources(file)));
@@ -201,7 +192,6 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         return jsonObject.toString();
     }
 
-    @Step("Validation Request Hashcode")
     protected String validationRequestHashcode(String signature, String signaturePolicy, String reportType, String dataFile, String hashAlgo, String hash) {
 
         JSONObject jsonObject = new JSONObject();
@@ -222,7 +212,6 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         return jsonObject.toString();
     }
 
-    @Step("Validation Request Hashcode Simple")
     protected String validationRequestHashcodeSimple(String signature, String signaturePolicy, String reportType) {
 
         JSONObject jsonObject = new JSONObject();
@@ -237,7 +226,6 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         return jsonObject.toString();
     }
 
-    @Step("Validation Request Hashcode Simple Multiple Files")
     protected String validationRequestHashcodeSimpleMultipleFiles(List<String> signatureFiles, String signaturePolicy, String reportType) {
 
         JSONObject jsonObject = new JSONObject();
@@ -254,12 +242,10 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         return jsonObject.toString();
     }
 
-    @Step("Validation Request Hashcode Multiple Files")
     protected String validationRequestHashcodeMultipleFiles(List<String> signatureFiles, String signaturePolicy, String reportType) throws ParserConfigurationException, IOException, SAXException {
         return validationRequestHashcodeMultipleFilesReturnsObject(signatureFiles, signaturePolicy, reportType).toString();
     }
 
-    @Step("Validation Request Hashcode Multiple Files Returns Object")
     protected JSONObject validationRequestHashcodeMultipleFilesReturnsObject(List<String> signatureFiles, String signaturePolicy, String reportType) throws ParserConfigurationException, IOException, SAXException {
         JSONObject jsonObject = new JSONObject();
         List<SignatureFile> signatureFileList = new ArrayList<>();
@@ -296,7 +282,6 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         return jsonObject;
     }
 
-    @Step("Validation Request For Extended")
     protected String validationRequestForExtended(String documentKey, String encodedDocument,
                                                   String filenameKey, String file,
                                                   String signaturePolicyKey, String signaturePolicy) {
@@ -307,7 +292,6 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         return jsonObject.toString();
     }
 
-    @Step("Validation Request Document Type Extended")
     protected String validationRequestDocumentTypeExtended(String documentKey, String encodedDocument,
                                                            String filenameKey, String file,
                                                            String documentTypeKey, String documentType,
@@ -320,7 +304,6 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         return jsonObject.toString();
     }
 
-    @Step("Validation Request With Valid Keys")
     protected String validationRequestWithValidKeys(String encodedString, String filename, String signaturePolicy) {
         return validationRequestForExtended(
                 DOCUMENT, encodedString,
@@ -328,7 +311,6 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
                 SIGNATURE_POLICY, signaturePolicy);
     }
 
-    @Step("Validation Request With Document Type Valid Keys")
     protected String validationRequestWithDocumentTypeValidKeys(String encodedString, String filename, String documentType, String signaturePolicy) {
         return validationRequestDocumentTypeExtended(
                 DOCUMENT, encodedString,
@@ -337,7 +319,6 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
                 SIGNATURE_POLICY, signaturePolicy);
     }
 
-    @Step("Map To Report")
     protected ValidationResponse mapToReport(String json) {
         try {
             return new ObjectMapper().readValue(json, ValidationResponse.class);
@@ -346,7 +327,6 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         }
     }
 
-    @Step("Current Date Time")
     protected String currentDateTime(String timeZone, String timeFormat) {
         final Date currentTime = new Date();
         final SimpleDateFormat sdf = new SimpleDateFormat(timeFormat);

@@ -144,7 +144,7 @@ Validation request parameters for JSON interface are described in the table belo
 	"signatureFiles": [
 		{
 			"signature": "PD94bWwgdmVyc2lvbj...",
-			"dataFiles": [
+			"datafiles": [
 				{
 					"filename": "leping.pdf",
 					"hashAlgo": "SHA256",
@@ -159,7 +159,7 @@ Validation request parameters for JSON interface are described in the table belo
 		},
 		{
 			"signature": "PDadw4mVyc2lvbj...",
-			"dataFiles": [
+			"datafiles": [
 				{
 					"filename": "leping.pdf",
 					"hashAlgo": "SHA256",

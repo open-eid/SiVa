@@ -16,9 +16,9 @@
 
 package ee.openeid.siva.integrationtest;
 
-import ee.openeid.siva.validation.document.report.SimpleReport;
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
+import io.restassured.response.Response;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.yaml.snakeyaml.Yaml;
 
@@ -120,16 +120,16 @@ public abstract class SiVaIntegrationTestsBase {
         return readFileFromPath(testFilesBase + getTestFilesDirectory() + filename);
     }
 
-    protected void assertAllSignaturesAreValid(SimpleReport report) {
-        assertTrue(report.getValidationConclusion().getSignaturesCount().equals(report.getValidationConclusion().getValidSignaturesCount()));
+    protected void assertAllSignaturesAreValid(Response report) {
+        assertTrue(report.getBody().path("validationReport.validationConclusion.validSignaturesCount").equals(report.getBody().path("validationReport.validationConclusion.signaturesCount")));
     }
 
-    protected void assertSomeSignaturesAreValid(SimpleReport report, int expectedValidSignatures) {
-        assertTrue(expectedValidSignatures == report.getValidationConclusion().getValidSignaturesCount());
+    protected void assertSomeSignaturesAreValid(Response report, int expectedValidSignatures) {
+        assertTrue(report.getBody().path("validationReport.validationConclusion.validSignaturesCount").equals(expectedValidSignatures));
     }
 
-    protected void assertAllSignaturesAreInvalid(SimpleReport report) {
-        assertTrue(report.getValidationConclusion().getValidSignaturesCount() == 0);
+    protected void assertAllSignaturesAreInvalid(Response report) {
+        assertTrue(report.getBody().path("validationReport.validationConclusion.validSignaturesCount").equals(0));
     }
 
     protected static byte[] readFileFromPath(String pathName) {

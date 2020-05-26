@@ -18,6 +18,7 @@ package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.validation.document.report.SimpleReport;
+import io.restassured.response.Response;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -58,10 +59,11 @@ public class BdocValidationFailIT extends SiVaRestTests {
      */
     @Test
     public void bdocInvalidSingleSignature() {
-        SimpleReport report = postForReport("IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc");
-        assertAllSignaturesAreInvalid(report);
-        assertEquals("The result of the LTV validation process is not acceptable to continue the process!", report.getValidationConclusion().getSignatures().get(0).getErrors().get(0).getContent());
-        assertEquals(4, report.getValidationConclusion().getSignatures().get(0).getErrors().size());
+        post(validationRequestFor("IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc"))
+                .then()
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
     }
 
     /**

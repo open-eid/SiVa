@@ -16,17 +16,13 @@
 
 package ee.openeid.siva.integrationtest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import ee.openeid.siva.validation.document.report.SimpleReport;
-import ee.openeid.siva.webapp.request.Datafile;
-import ee.openeid.siva.webapp.request.SignatureFile;
-import ee.openeid.siva.webapp.response.ValidationResponse;
 import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FilenameUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -38,8 +34,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -111,19 +105,19 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
         return PRINT_RESPONSE;
     }
 
-    protected SimpleReport postForReport(String file, String signaturePolicy) {
+    protected Response postForReport(String file, String signaturePolicy) {
         if (shouldPrintResponse()) {
             return postForReportAndPrintResponse(file, signaturePolicy);
         }
-        return mapToReport(post(validationRequestFor(file, signaturePolicy, null)).andReturn().body().asString()).getValidationReport();
+        return post(validationRequestFor(file, signaturePolicy, null));
     }
 
-    protected SimpleReport postForReport(String file) {
+    protected Response postForReport(String file) {
         return postForReport(file, VALID_SIGNATURE_POLICY_4);
     }
 
-    protected SimpleReport postForReportAndPrintResponse(String file, String signaturePolicy) {
-        return mapToReport(post(validationRequestFor(file, signaturePolicy, null)).andReturn().body().prettyPrint()).getValidationReport();
+    protected Response postForReportAndPrintResponse(String file, String signaturePolicy) {
+        return post(validationRequestFor(file, signaturePolicy, null));
     }
 
     protected String validationRequestFor(String file, String signaturePolicy, String reportType) {
@@ -194,52 +188,64 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
 
     protected String validationRequestHashcode(String signature, String signaturePolicy, String reportType, String dataFile, String hashAlgo, String hash) {
 
-        JSONObject jsonObject = new JSONObject();
+        JSONObject hascodeValidationRequest = new JSONObject();
+        JSONArray dataFilesArray = new JSONArray();
+        JSONObject dataFileObject = new JSONObject();
+        JSONArray signatureFilesArray = new JSONArray();
+        JSONObject signatureFileObject = new JSONObject();
 
-        Datafile dataFileObject = new Datafile();
-        dataFileObject.setHash(hash);
-        dataFileObject.setHashAlgo(hashAlgo);
-        dataFileObject.setFilename(dataFile);
+        dataFileObject.put("filename", dataFile );
+        dataFileObject.put("hashAlgo", hashAlgo);
+        dataFileObject.put("hash", hash);
 
-        SignatureFile signatureFile = new SignatureFile();
-        signatureFile.setSignature(Base64.encodeBase64String(readFileFromTestResources(signature)));
-        signatureFile.setDatafiles(Collections.singletonList(dataFileObject));
+        dataFilesArray.put(dataFileObject);
 
-        jsonObject.put(SIGNATURE_FILES, Collections.singletonList(signatureFile));
-        jsonObject.put(SIGNATURE_POLICY, signaturePolicy);
-        jsonObject.put(REPORT_TYPE, reportType);
+        signatureFileObject.put("signature", Base64.encodeBase64String(readFileFromTestResources(signature)));
+        signatureFileObject.put("datafiles", dataFilesArray);
 
-        return jsonObject.toString();
+        signatureFilesArray.put(signatureFileObject);
+
+        hascodeValidationRequest.put(SIGNATURE_FILES, signatureFilesArray);
+        hascodeValidationRequest.put(SIGNATURE_POLICY, signaturePolicy);
+        hascodeValidationRequest.put(REPORT_TYPE, reportType);
+
+        return hascodeValidationRequest.toString();
     }
 
     protected String validationRequestHashcodeSimple(String signature, String signaturePolicy, String reportType) {
 
-        JSONObject jsonObject = new JSONObject();
+        JSONObject hascodeValidationRequest = new JSONObject();
+        JSONArray signatureFilesArray = new JSONArray();
+        JSONObject signatureFileObject = new JSONObject();
 
-        SignatureFile signatureFile = new SignatureFile();
-        signatureFile.setSignature(Base64.encodeBase64String(readFileFromTestResources(signature)));
+        signatureFileObject.put("signature", Base64.encodeBase64String(readFileFromTestResources(signature)));
 
-        jsonObject.put(SIGNATURE_FILES, Collections.singletonList(signatureFile));
-        jsonObject.put(SIGNATURE_POLICY, signaturePolicy);
-        jsonObject.put(REPORT_TYPE, reportType);
+        signatureFilesArray.put(signatureFileObject);
 
-        return jsonObject.toString();
+        hascodeValidationRequest.put(SIGNATURE_FILES, signatureFilesArray);
+        hascodeValidationRequest.put(SIGNATURE_POLICY, signaturePolicy);
+        hascodeValidationRequest.put(REPORT_TYPE, reportType);
+
+        return hascodeValidationRequest.toString();
     }
 
     protected String validationRequestHashcodeSimpleMultipleFiles(List<String> signatureFiles, String signaturePolicy, String reportType) {
 
-        JSONObject jsonObject = new JSONObject();
-        List<SignatureFile> signatureFileList = new ArrayList<>();
-        for (String signature : signatureFiles) {
-            SignatureFile signatureFile = new SignatureFile();
-            signatureFile.setSignature(Base64.encodeBase64String(readFileFromTestResources(signature)));
-            signatureFileList.add(signatureFile);
-        }
-        jsonObject.put(SIGNATURE_FILES, signatureFileList);
-        jsonObject.put(SIGNATURE_POLICY, signaturePolicy);
-        jsonObject.put(REPORT_TYPE, reportType);
+        JSONObject hascodeValidationRequest = new JSONObject();
+        JSONArray signatureFilesArray = new JSONArray();
 
-        return jsonObject.toString();
+
+        for (String signature : signatureFiles) {
+            JSONObject signatureFileObject = new JSONObject();
+            signatureFileObject.put("signature", Base64.encodeBase64String(readFileFromTestResources(signature)));
+            signatureFilesArray.put(signatureFileObject);
+        }
+
+        hascodeValidationRequest.put(SIGNATURE_FILES, signatureFilesArray);
+        hascodeValidationRequest.put(SIGNATURE_POLICY, signaturePolicy);
+        hascodeValidationRequest.put(REPORT_TYPE, reportType);
+
+        return hascodeValidationRequest.toString();
     }
 
     protected String validationRequestHashcodeMultipleFiles(List<String> signatureFiles, String signaturePolicy, String reportType) throws ParserConfigurationException, IOException, SAXException {
@@ -247,12 +253,15 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
     }
 
     protected JSONObject validationRequestHashcodeMultipleFilesReturnsObject(List<String> signatureFiles, String signaturePolicy, String reportType) throws ParserConfigurationException, IOException, SAXException {
-        JSONObject jsonObject = new JSONObject();
-        List<SignatureFile> signatureFileList = new ArrayList<>();
+        JSONObject hascodeValidationRequest = new JSONObject();
+
+        JSONArray signatureFilesArray = new JSONArray();
+
         for (String signature : signatureFiles) {
 
-            SignatureFile signatureFile = new SignatureFile();
-            signatureFile.setSignature(Base64.encodeBase64String(readFileFromTestResources(signature)));
+            JSONObject signatureFileObject = new JSONObject();
+            signatureFileObject.put("signature", Base64.encodeBase64String(readFileFromTestResources(signature)));
+
             String testFilesBase = getProjectBaseDirectory() + "src/test/resources/" + getTestFilesDirectory() + signature;
 
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -261,25 +270,24 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
             document.getDocumentElement().normalize();
             NodeList nList = document.getElementsByTagName("ds:Reference");
 
-            List<Datafile> datafiles = new ArrayList<>();
+            JSONArray dataFilesArray = new JSONArray();
 
             for (int k = 0; k < nList.getLength() - 1; k++) {
-                Datafile dataFileObject = new Datafile();
-                dataFileObject.setHash(nList.item(k).getChildNodes().item(1).getFirstChild().getNodeValue());
+                JSONObject dataFileObject = new JSONObject();
+                dataFileObject.put("filename", nList.item(k).getAttributes().getNamedItem("URI").getNodeValue() );
                 String algorithm = nList.item(k).getChildNodes().item(0).getAttributes().getNamedItem("Algorithm").getNodeValue();
-                dataFileObject.setHashAlgo(algorithm.substring(algorithm.lastIndexOf("#") + 1));
-                dataFileObject.setFilename(nList.item(k).getAttributes().getNamedItem("URI").getNodeValue());
-                datafiles.add(dataFileObject);
+                dataFileObject.put("hashAlgo", algorithm.substring(algorithm.lastIndexOf("#") + 1));
+                dataFileObject.put("hash", nList.item(k).getChildNodes().item(1).getFirstChild().getNodeValue());
+                dataFilesArray.put(dataFileObject);
             }
-            signatureFile.setDatafiles(datafiles);
-
-            signatureFileList.add(signatureFile);
+            signatureFileObject.put("datafiles", dataFilesArray);
+            signatureFilesArray.put(signatureFileObject);
         }
 
-        jsonObject.put(SIGNATURE_POLICY, signaturePolicy);
-        jsonObject.put(REPORT_TYPE, reportType);
-        jsonObject.put(SIGNATURE_FILES, signatureFileList);
-        return jsonObject;
+        hascodeValidationRequest.put(SIGNATURE_POLICY, signaturePolicy);
+        hascodeValidationRequest.put(REPORT_TYPE, reportType);
+        hascodeValidationRequest.put(SIGNATURE_FILES, signatureFilesArray);
+        return hascodeValidationRequest;
     }
 
     protected String validationRequestForExtended(String documentKey, String encodedDocument,
@@ -317,14 +325,6 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
                 FILENAME, filename,
                 DOCUMENT_TYPE, documentType,
                 SIGNATURE_POLICY, signaturePolicy);
-    }
-
-    protected ValidationResponse mapToReport(String json) {
-        try {
-            return new ObjectMapper().readValue(json, ValidationResponse.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     protected String currentDateTime(String timeZone, String timeFormat) {

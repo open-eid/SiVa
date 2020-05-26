@@ -60,6 +60,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
                 .when()
                 .post(createUrl(VALIDATION_ENDPOINT));
     }
+
     @Step("Post With XAuth User Header")
     protected Response postWithXAuthUsrHeader(String request, String xAuthUser) {
         return given()
@@ -70,6 +71,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
                 .when()
                 .post(createUrl(VALIDATION_ENDPOINT));
     }
+
     @Step("Post For Data Files")
     protected Response postForDataFiles(String request) {
         return given()
@@ -79,6 +81,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
                 .when()
                 .post(createUrl(DATA_FILES_ENDPOINT));
     }
+
     @Step("Post Hashcode Validation")
     protected Response postHashcodeValidation(String request) {
         return given()
@@ -88,6 +91,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
                 .when()
                 .post(createUrl(HASHCODE_VALIDATION_ENDPOINT));
     }
+    
     @Step("Get Monitoring")
     protected Response getMonitoring() {
         return given()

@@ -150,7 +150,6 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
-    @Ignore("SIVA-119")
     public void vShouldIncludeRequiredFields() throws Exception {
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
         ValidationConclusion validationConclusion = validationResult2Signatures.getValidationConclusion();
@@ -179,7 +178,6 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
-    @Ignore("SIVA-119")
     public void vShouldHaveCorrectSignatureValidationDataForSignature1() throws Exception {
 
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
@@ -201,14 +199,13 @@ public class TimemarkContainerValidationServiceIntegrationTest {
         assertTrue(sig1.getSignatureScopes().size() == 1);
         SignatureScope scope = sig1.getSignatureScopes().get(0);
         assertEquals("chrome-signing.log", scope.getName());
-        assertEquals("Full document", scope.getContent());
+        assertEquals("Digest of the document content", scope.getContent());
         assertEquals("FullSignatureScope", scope.getScope());
         assertEquals("2016-05-04T08:43:55Z", sig1.getClaimedSigningTime());
         assertEquals("2016-05-04T08:44:23Z", sig1.getInfo().getBestSignatureTime());
     }
 
     @Test
-    @Ignore("SIVA-119")
     public void vShouldHaveCorrectSignatureValidationDataForSignature2() throws Exception {
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
         SignatureValidationData sig2 = validationResult2Signatures.getValidationConclusion().getSignatures()
@@ -229,7 +226,7 @@ public class TimemarkContainerValidationServiceIntegrationTest {
         assertTrue(sig2.getSignatureScopes().size() == 1);
         SignatureScope scope = sig2.getSignatureScopes().get(0);
         assertEquals("chrome-signing.log", scope.getName());
-        assertEquals("Full document", scope.getContent());
+        assertEquals("Digest of the document content", scope.getContent());
         assertEquals("FullSignatureScope", scope.getScope());
         assertEquals("2016-05-04T11:14:23Z", sig2.getClaimedSigningTime());
         assertEquals("2016-05-04T11:14:32Z", sig2.getInfo().getBestSignatureTime());

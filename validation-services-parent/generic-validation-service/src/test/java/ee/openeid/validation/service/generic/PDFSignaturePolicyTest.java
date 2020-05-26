@@ -35,7 +35,7 @@ public class PDFSignaturePolicyTest extends PDFValidationServiceTest {
     private static final String PDF_WITH_SOFT_CERT_SIGNATURE = "soft-cert-signature.pdf";
 
     @Test
-    @Ignore("SIVA-119")
+    @Ignore //TODO: New test file is needed
     public void softCertSignatureShouldBeValidWithNoTypePolicy() throws Exception {
         SimpleReport report = validateWithPolicy("POLv3", PDF_WITH_SOFT_CERT_SIGNATURE);
         ValidationConclusion validationConclusion = report.getValidationConclusion();

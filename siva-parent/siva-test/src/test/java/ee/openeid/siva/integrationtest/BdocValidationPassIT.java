@@ -539,7 +539,6 @@ public class BdocValidationPassIT extends SiVaRestTests {
      * File: 23147_weak-warning-sha1-invalid-mimetype-in-manifest.bdoc
      */
     @Test
-    // @Ignore("https://jira.ria.ee/browse/DD4J-161")
     public void bdocMalformedBdocWithInvalidMimetypeInManifestShouldPass() {
         post(validationRequestFor("23147_weak-warning-sha1-invalid-mimetype-in-manifest.bdoc"))
                 .then()

@@ -343,7 +343,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
      *
      * File: SK-XML1.0_hashcode.ddoc
      */
-    @Ignore
+    @Ignore //TODO: https://jira.ria.ee/browse/DD4J-561
     @Test
     public void ddocV1_0HashcodeShouldPass() {
         post(validationRequestFor("SK-XML1_0_hashcode.ddoc"))

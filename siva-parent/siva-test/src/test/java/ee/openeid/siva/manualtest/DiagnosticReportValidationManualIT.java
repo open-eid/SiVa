@@ -220,8 +220,8 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
      *
      * File: pades-baseline-lta-live-aj.pdf
      */
-    @Ignore
-    @Test //TODO: This test is flaky, we need a mechanism to cover elements changing their order
+    @Ignore //TODO: This test is flaky, we need a mechanism to cover elements changing their order
+    @Test
     public  void diagnosticReportAssertUsedCertificates(){
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
 

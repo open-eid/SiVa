@@ -60,7 +60,15 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void validAsiceSingleSignature() {
-        assertAllSignaturesAreValid(postForReport("ValidLiveSignature.asice"));
+        post(validationRequestFor("ValidLiveSignature.asice"))
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-10-11T09:36:10Z"))
+                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(1));
     }
 
     /**
@@ -78,7 +86,16 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void validAsiceMultipleSignatures() {
-        assertAllSignaturesAreValid(postForReport("BDOC-TS.asice"));
+        post(validationRequestFor("BDOC-TS.asice"))
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[1].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
+                .body("signatures[1].indication", Matchers.is(TOTAL_PASSED))
+                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("signaturesCount", Matchers.is(2))
+                .body("validSignaturesCount", Matchers.is(2));
     }
 
     /**

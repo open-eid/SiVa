@@ -55,7 +55,13 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      */
     @Test
     public void documentSignedWithSha512CertificateShouldPass() {
-        assertAllSignaturesAreValid(postForReport("hellopades-lt-sha512.pdf"));
+        post(validationRequestFor("hellopades-lt-sha512.pdf"))
+                .then()
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -103,7 +109,13 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      */
     @Test
     public void documentSignedWithSha256Ec224AlgoShouldPass() {
-        assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-ec224.pdf"));
+        post(validationRequestFor("hellopades-lt-sha256-ec224.pdf"))
+                .then()
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -121,7 +133,13 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      */
     @Test
     public void documentSignedWithSha256Ec256AlgoShouldPass() {
-        assertAllSignaturesAreValid(postForReport("hellopades-lt-sha256-ec256.pdf"));
+        post(validationRequestFor("hellopades-lt-sha256-ec256.pdf"))
+                .then()
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -214,7 +232,13 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
     @Test
     public void documentSignedWithRsa2048AlgoShouldPass() {
         setTestFilesDirectory("document_format_test_files/");
-        assertAllSignaturesAreValid(postForReport("PdfValidSingleSignature.pdf"));
+        post(validationRequestFor("PdfValidSingleSignature.pdf"))
+                .then()
+                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
     }
 
     @Override

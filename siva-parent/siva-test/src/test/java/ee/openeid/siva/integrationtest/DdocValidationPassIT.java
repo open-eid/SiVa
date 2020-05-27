@@ -22,6 +22,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import static ee.openeid.siva.integrationtest.TestData.*;
+
 @Category(IntegrationTest.class)
 public class DdocValidationPassIT extends SiVaRestTests {
 
@@ -32,6 +34,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
     public void setTestFilesDirectory(String testFilesDirectory) {
         this.testFilesDirectory = testFilesDirectory;
     }
+
     /**
      * TestCaseID: Ddoc-ValidationPass-2
      *
@@ -48,7 +51,15 @@ public class DdocValidationPassIT extends SiVaRestTests {
     @Ignore //TODO: DDOC 1.0 fails in Travis CI. Needs investigation
     @Test
     public void ddocValidMultipleSignaturesV1_0() {
-        assertAllSignaturesAreValid(postForReport("SK-XML1.0.ddoc"));
+        post(validationRequestFor("SK-XML1.0.ddoc"))
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_10))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_SK_XML))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[1].signatureFormat", Matchers.is(SIGNATURE_FORMAT_SK_XML))
+                .body("signatures[1].indication", Matchers.is(TOTAL_PASSED))
+                .body("signaturesCount", Matchers.is(2))
+                .body("validSignaturesCount", Matchers.is(2));
     }
 
     /**
@@ -66,7 +77,13 @@ public class DdocValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void ddocValidSignatureV1_1() {
-        assertAllSignaturesAreValid(postForReport("DIGIDOC-XML1.1.ddoc"));
+        post(validationRequestFor("DIGIDOC-XML1.1.ddoc"))
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_11))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_11))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(1));
     }
 
     /**
@@ -84,7 +101,13 @@ public class DdocValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void ddocValidSignatureV1_2() {
-        assertAllSignaturesAreValid(postForReport("DIGIDOC-XML1.2.ddoc"));
+        post(validationRequestFor("DIGIDOC-XML1.2.ddoc"))
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_12))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_12))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(1));
     }
 
     /**
@@ -102,7 +125,13 @@ public class DdocValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void ddocValidSignatureV1_3() {
-        assertAllSignaturesAreValid(postForReport("DIGIDOC-XML1.3.ddoc"));
+        post(validationRequestFor("DIGIDOC-XML1.3.ddoc"))
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_13))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(1));
     }
 
     /**
@@ -120,7 +149,13 @@ public class DdocValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void ddocSpecialCharactersInDataFileValidSignature() {
-        assertAllSignaturesAreValid(postForReport("susisevad1_3.ddoc"));
+        post(validationRequestFor("susisevad1_3.ddoc"))
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_13))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(1));
     }
 
     /**
@@ -138,7 +173,13 @@ public class DdocValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void ddocKlass3SkCertificateChainValidSignature() {
-        assertAllSignaturesAreValid(postForReport("KLASS3-SK _ KLASS3-SK OCSP RESPONDER uus.ddoc"));
+        post(validationRequestFor("KLASS3-SK _ KLASS3-SK OCSP RESPONDER uus.ddoc"))
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_13))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(1));
     }
 
     /**
@@ -156,7 +197,13 @@ public class DdocValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void ddocKlass3Sk2010CertificateChainValidSignature() {
-        assertAllSignaturesAreValid(postForReport("KLASS3-SK 2010 _ KLASS3-SK 2010 OCSP RESPONDER.ddoc"));
+        post(validationRequestFor("KLASS3-SK 2010 _ KLASS3-SK 2010 OCSP RESPONDER.ddoc"))
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_13))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(1));
     }
 
     /**
@@ -174,7 +221,13 @@ public class DdocValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void ddocEsteidSk2007CertificateChainValidSignature() {
-        assertAllSignaturesAreValid(postForReport("vaikesed1.1.ddoc"));
+        post(validationRequestFor("vaikesed1.1.ddoc"))
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_11))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_11))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(1));
     }
 
     /**
@@ -192,7 +245,13 @@ public class DdocValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void ddocEsteidSk2015CertificateChainValidSignature() {
-        assertAllSignaturesAreValid(postForReport("IB-4270_ESTEID-SK 2015  SK OCSP RESPONDER 2011.ddoc"));
+        post(validationRequestFor("IB-4270_ESTEID-SK 2015  SK OCSP RESPONDER 2011.ddoc"))
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_13))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(1));
     }
 
     /**
@@ -210,7 +269,13 @@ public class DdocValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void ddocEsteidSkCertificateChainValidSignature() {
-        assertAllSignaturesAreValid(postForReport("EID-SK _ EID-SK OCSP RESPONDER.ddoc"));
+        post(validationRequestFor("EID-SK _ EID-SK OCSP RESPONDER.ddoc"))
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_11))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_11))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(1));
     }
 
     /**
@@ -228,7 +293,15 @@ public class DdocValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void ddocEsteidSk2007Ocsp2010CertificateChainValidSignature() {
-        assertAllSignaturesAreValid(postForReport("EID-SK 2007 _ EID-SK 2007 OCSP RESPONDER 2010.ddoc"));
+        post(validationRequestFor("EID-SK 2007 _ EID-SK 2007 OCSP RESPONDER 2010.ddoc"))
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_13))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[1].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_13))
+                .body("signatures[1].indication", Matchers.is(TOTAL_PASSED))
+                .body("signaturesCount", Matchers.is(2))
+                .body("validSignaturesCount", Matchers.is(2));
     }
 
     /**
@@ -246,7 +319,13 @@ public class DdocValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void ddocEsteidSk2007Ocsp2007CertificateChainValidSignature() {
-        assertAllSignaturesAreValid(postForReport("EID-SK 2007 _ EID-SK 2007 OCSP RESPONDER.ddoc"));
+        post(validationRequestFor("EID-SK 2007 _ EID-SK 2007 OCSP RESPONDER.ddoc"))
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_13))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(1));
     }
 
     /**
@@ -264,7 +343,13 @@ public class DdocValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void ddocEsteidSk2011Ocsp2011CertificateChainValidSignature() {
-        assertAllSignaturesAreValid(postForReport("EID-SK 2011 _ SK OCSP RESPONDER 2011.ddoc"));
+        post(validationRequestFor("EID-SK 2011 _ SK OCSP RESPONDER 2011.ddoc"))
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_13))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(1));
     }
 
     /**

@@ -24,6 +24,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import static ee.openeid.siva.integrationtest.TestData.*;
+
 @Category(IntegrationTest.class)
 public class BdocValidationPassIT extends SiVaRestTests {
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "bdoc/live/timemark/";
@@ -49,7 +51,13 @@ public class BdocValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void validSignature() {
-        assertAllSignaturesAreValid(postForReport("Valid_ID_sig.bdoc"));
+        post(validationRequestFor("Valid_ID_sig.bdoc"))
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT_TM))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(1));
     }
 
     /**
@@ -67,7 +75,16 @@ public class BdocValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void validMultipleSignatures() {
-        assertAllSignaturesAreValid(postForReport("Valid_IDCard_MobID_signatures.bdoc"));
+        post(validationRequestFor("Valid_IDCard_MobID_signatures.bdoc"))
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT_TM))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[1].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT_TM))
+                .body("signatures[1].indication", Matchers.is(TOTAL_PASSED))
+                .body("signaturesCount", Matchers.is(2))
+                .body("validSignaturesCount", Matchers.is(2));
+
     }
 
     /**
@@ -134,7 +151,13 @@ public class BdocValidationPassIT extends SiVaRestTests {
      */
     @Test
     public void bdocEccSha256signature() {
-        assertAllSignaturesAreValid(postForReport("24050_short_ecdsa_correct_file_mimetype.bdoc"));
+        post(validationRequestFor("24050_short_ecdsa_correct_file_mimetype.bdoc"))
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT_TM))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(1));
     }
 
     /**

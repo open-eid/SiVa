@@ -49,7 +49,6 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
     private static final String HASHCODE_VALIDATION_ENDPOINT = "/validateHashcode";
     private static final String DATA_FILES_ENDPOINT = "/getDataFiles";
     private static final String MONITORING_ENDPOINT = "/monitoring/health";
-    private static final boolean PRINT_RESPONSE = false;
 
     @Step("Post")
     protected Response post(String request) {
@@ -91,37 +90,13 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
                 .when()
                 .post(createUrl(HASHCODE_VALIDATION_ENDPOINT));
     }
-    
+
     @Step("Get Monitoring")
     protected Response getMonitoring() {
         return given()
                 .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
                 .when()
                 .get(createUrl(MONITORING_ENDPOINT));
-    }
-
-    /**
-     * Override to enable/disable printing the response per class
-     *
-     * @return
-     */
-    protected boolean shouldPrintResponse() {
-        return PRINT_RESPONSE;
-    }
-
-    protected Response postForReport(String file, String signaturePolicy) {
-        if (shouldPrintResponse()) {
-            return postForReportAndPrintResponse(file, signaturePolicy);
-        }
-        return post(validationRequestFor(file, signaturePolicy, null));
-    }
-
-    protected Response postForReport(String file) {
-        return postForReport(file, VALID_SIGNATURE_POLICY_4);
-    }
-
-    protected Response postForReportAndPrintResponse(String file, String signaturePolicy) {
-        return post(validationRequestFor(file, signaturePolicy, null));
     }
 
     protected String validationRequestFor(String file, String signaturePolicy, String reportType) {

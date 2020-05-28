@@ -18,13 +18,7 @@ package ee.openeid.siva.validation.document.report;
 
 import lombok.Data;
 
-import java.util.List;
-
 @Data
-public class Info {
-
-    private String bestSignatureTime;
-    private List<SignerRole> signerRole;
-    private SignatureProductionPlace signatureProductionPlace;
-
+public class SignerRole {
+    private String role;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Riigi Infosüsteemide Amet
+ * Copyright 2020 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -18,7 +18,9 @@ package ee.openeid.siva.webapp.soap.transformer;
 
 import ee.openeid.siva.validation.document.report.DetailedReport;
 import ee.openeid.siva.validation.document.report.DiagnosticReport;
+import ee.openeid.siva.validation.document.report.SignatureProductionPlace;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.SignerRole;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.SubjectDistinguishedName;
 import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
@@ -146,10 +148,16 @@ public class ValidationReportSoapResponseTransformerTest {
         assertEquals(dssSignature.getId(), responseSignature.getId());
         assertEquals(dssSignature.getIndication(), responseSignature.getIndication().value());
         assertEquals(dssSignature.getSignatureFormat(), responseSignature.getSignatureFormat());
+        assertEquals(dssSignature.getSignatureMethod(), responseSignature.getSignatureMethod());
         assertEquals(dssSignature.getSignatureLevel(), responseSignature.getSignatureLevel());
         assertEquals(dssSignature.getSignedBy(), responseSignature.getSignedBy());
         assertEquals(dssSignature.getSubIndication(), responseSignature.getSubIndication());
         assertEquals(dssSignature.getInfo().getBestSignatureTime(), responseSignature.getInfo().getBestSignatureTime());
+        assertEquals(dssSignature.getInfo().getSignerRole().get(0).getRole(), responseSignature.getInfo().getSignerRole().get(0).getRole());
+        assertEquals(dssSignature.getInfo().getSignatureProductionPlace().getCountryName(), responseSignature.getInfo().getSignatureProductionPlace().getCountryName());
+        assertEquals(dssSignature.getInfo().getSignatureProductionPlace().getCity(), responseSignature.getInfo().getSignatureProductionPlace().getCity());
+        assertEquals(dssSignature.getInfo().getSignatureProductionPlace().getPostalCode(), responseSignature.getInfo().getSignatureProductionPlace().getPostalCode());
+        assertEquals(dssSignature.getInfo().getSignatureProductionPlace().getStateOrProvince(), responseSignature.getInfo().getSignatureProductionPlace().getStateOrProvince());
         assertEquals(dssSignature.getErrors().get(0).getContent(), responseSignature.getErrors().getError().get(0).getContent());
         assertEquals(dssSignature.getWarnings().get(0).getContent(), responseSignature.getWarnings().getWarning().get(0).getContent());
         assertEquals(dssSignature.getSignatureScopes().get(0).getContent(), responseSignature.getSignatureScopes().getSignatureScope().get(0).getContent());
@@ -400,6 +408,7 @@ public class ValidationReportSoapResponseTransformerTest {
         signature.setIndication(ee.openeid.siva.validation.document.report.SignatureValidationData.Indication.TOTAL_FAILED);
         signature.setClaimedSigningTime("2016-09-21T14:00:00Z");
         signature.setSignatureFormat("PAdES_LT");
+        signature.setSignatureMethod("http://www.w3.org/2001/04/xmldsig-more#rsa-sha224");
         signature.setSignatureLevel("QES");
         signature.setSignedBy("nobody");
         SubjectDistinguishedName subjectDistinguishedName = new SubjectDistinguishedName();
@@ -425,6 +434,15 @@ public class ValidationReportSoapResponseTransformerTest {
     private ee.openeid.siva.validation.document.report.Info createMockedSignatureInfo() {
         ee.openeid.siva.validation.document.report.Info info = new ee.openeid.siva.validation.document.report.Info();
         info.setBestSignatureTime("2016-09-21T14:00:00Z");
+        SignerRole signerRole1 = new SignerRole();
+        signerRole1.setRole("role1");
+        info.setSignerRole(Collections.singletonList(signerRole1));
+        SignatureProductionPlace signatureProductionPlace = new SignatureProductionPlace();
+        signatureProductionPlace.setPostalCode("12345");
+        signatureProductionPlace.setCity("Tallinn");
+        signatureProductionPlace.setStateOrProvince("Harjumaa");
+        signatureProductionPlace.setCountryName("Estonia");
+        info.setSignatureProductionPlace(signatureProductionPlace);
         return info;
     }
 

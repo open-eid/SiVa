@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Riigi Infosüsteemide Amet
+ * Copyright 2020 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -20,8 +20,10 @@ import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.Datafile;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Reports;
+import ee.openeid.siva.validation.document.report.SignatureProductionPlace;
 import ee.openeid.siva.validation.document.report.SignatureScope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.SignerRole;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.validation.service.generic.configuration.GenericSignaturePolicyProperties;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
@@ -112,11 +114,42 @@ public class HashcodeGenericValidationServiceTest {
         assertEquals("PAULIUS PODOLSKIS", signature.getSubjectDistinguishedName().getCommonName());
     }
 
+    @Test
+    public void populatesSignerRole() throws IOException, URISyntaxException {
+        Reports reports = validationService.validate(getValidationDocumentSingletonList());
+        List<SignerRole> signerRole = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getSignerRole();
+        assertEquals(1, signerRole.size());
+        assertEquals("Direktorius", signerRole.get(0).getRole());
+    }
+
+    @Test
+    public void populatesSignatureProductionPlace() throws IOException, URISyntaxException {
+        Reports reports = validationService.validate(getValidationDocumentSingletonList("test-files/signatures_with_sig_production_place.xml"));
+        SignatureProductionPlace signatureProductionPlace = reports.getSimpleReport().getValidationConclusion()
+                .getSignatures().get(0).getInfo().getSignatureProductionPlace();
+
+        assertEquals("Tallinn", signatureProductionPlace.getCity());
+        assertEquals("Harjumaa", signatureProductionPlace.getStateOrProvince());
+        assertEquals("12345", signatureProductionPlace.getPostalCode());
+        assertEquals("Eesti", signatureProductionPlace.getCountryName());
+    }
+
+    @Test
+    public void populatesSignatureMethod() throws IOException, URISyntaxException {
+        Reports reports = validationService.validate(getValidationDocumentSingletonList("test-files/signatures_with_sig_production_place.xml"));
+        assertEquals("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256",
+                reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getSignatureMethod());
+    }
+
     private List<ValidationDocument> getValidationDocumentSingletonList() throws URISyntaxException, IOException {
+        return getValidationDocumentSingletonList("test-files/signatures.xml");
+    }
+
+    private List<ValidationDocument> getValidationDocumentSingletonList(String signatureTestFile) throws URISyntaxException, IOException {
         List<ValidationDocument> validationDocuments = new ArrayList<>();
         ValidationDocument validationDocument = new ValidationDocument();
         validationDocument.setDatafiles(Collections.singletonList(getDataFile()));
-        Path documentPath = Paths.get(getClass().getClassLoader().getResource("test-files/signatures.xml").toURI());
+        Path documentPath = Paths.get(getClass().getClassLoader().getResource(signatureTestFile).toURI());
         validationDocument.setBytes(Files.readAllBytes(documentPath));
         validationDocument.setSignaturePolicy("POLv3");
         validationDocuments.add(validationDocument);

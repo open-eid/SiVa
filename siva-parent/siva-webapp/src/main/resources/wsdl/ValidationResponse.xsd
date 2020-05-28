@@ -94,6 +94,7 @@
         <xs:sequence>
             <xs:element name="Id" type="xs:string"/>
             <xs:element name="SignatureFormat" type="xs:string"/>
+            <xs:element name="SignatureMethod" minOccurs="0" type="xs:string"/>
             <xs:element name="SignatureLevel" minOccurs="0" type="xs:string"/>
             <xs:element name="SignedBy" type="xs:string"/>
             <xs:element name="SubjectDistinguishedName" minOccurs="0"  type="tns:SubjectDistinguishedName"/>
@@ -156,6 +157,23 @@
     <xs:complexType name="Info">
         <xs:sequence>
             <xs:element minOccurs="0" name="BestSignatureTime" type="xs:string"/>
+            <xs:element name="SignerRole" minOccurs="0" maxOccurs="unbounded" type="tns:SignerRole"/>
+            <xs:element minOccurs="0" name="SignatureProductionPlace" type="tns:SignatureProductionPlace"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="SignerRole">
+        <xs:sequence>
+            <xs:element name="Role" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="SignatureProductionPlace">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="CountryName" type="xs:string"/>
+            <xs:element minOccurs="0" name="StateOrProvince" type="xs:string"/>
+            <xs:element minOccurs="0" name="City" type="xs:string"/>
+            <xs:element minOccurs="0" name="PostalCode" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 

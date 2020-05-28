@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Riigi Infosüsteemide Amet
+ * Copyright 2020 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -20,7 +20,9 @@ import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
 import ee.openeid.siva.validation.document.report.Reports;
+import ee.openeid.siva.validation.document.report.SignatureProductionPlace;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.SubjectDistinguishedName;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
@@ -50,6 +52,7 @@ import static org.junit.Assert.*;
 public class PDFValidationServiceTest {
 
     private static final String TEST_FILES_LOCATION = "test-files/";
+    private static final String PDF_WITH_REASON_AND_LOCATION = "pdf_with_reason_and_location.pdf";
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
@@ -84,6 +87,25 @@ public class PDFValidationServiceTest {
     public void givenInvalidPDFFileShouldThrowServiceException() throws Exception {
         expectedException.expect(ValidationServiceException.class);
         validationService.validateDocument(new ValidationDocument());
+    }
+
+    @Test
+    public void populatesLocationAsCountryName() {
+        SimpleReport report = validateAndAssertReports(buildValidationDocument(PDF_WITH_REASON_AND_LOCATION)).getSimpleReport();
+        SignatureProductionPlace signatureProductionPlace = report.getValidationConclusion().getSignatures().get(0)
+                .getInfo().getSignatureProductionPlace();
+        assertEquals("Narva", signatureProductionPlace.getCountryName());
+        assertEquals("", signatureProductionPlace.getPostalCode());
+        assertEquals("", signatureProductionPlace.getStateOrProvince());
+        assertEquals("", signatureProductionPlace.getCity());
+    }
+
+    @Test
+    public void populatesSignatureMethod() {
+        SimpleReport report = validateAndAssertReports(buildValidationDocument(PDF_WITH_REASON_AND_LOCATION)).getSimpleReport();
+        assertEquals("http://www.w3.org/2001/04/xmldsig-more#rsa-sha512",
+                report.getValidationConclusion().getSignatures().get(0).getSignatureMethod());
+
     }
 
     void assertNoErrors(SignatureValidationData signatureValidationData) {

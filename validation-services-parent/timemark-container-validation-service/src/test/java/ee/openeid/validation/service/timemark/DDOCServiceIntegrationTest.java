@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Riigi Infosüsteemide Amet
+ * Copyright 2020 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -162,6 +162,7 @@ public class DDOCServiceIntegrationTest {
                 .get();
 
         assertEquals("DIGIDOC_XML_1.3", sig1.getSignatureFormat());
+        assertEquals("http://www.w3.org/2000/09/xmldsig#rsa-sha1", sig1.getSignatureMethod());
         assertTrue(StringUtils.isEmpty(sig1.getSignatureLevel()));
         assertEquals("KESKEL,URMO,38002240232", sig1.getSignedBy());
         assertEquals("KESKEL,URMO,38002240232", sig1.getSubjectDistinguishedName().getCommonName());
@@ -173,6 +174,12 @@ public class DDOCServiceIntegrationTest {
         SignatureScope scope = sig1.getSignatureScopes().get(0);
         assertEquals("Šužlikud sõid ühe õuna ära.txt", scope.getName());
         assertEquals("2005-02-11T16:23:43Z", sig1.getInfo().getBestSignatureTime());
+        assertEquals(1, sig1.getInfo().getSignerRole().size());
+        assertEquals("Sušlik", sig1.getInfo().getSignerRole().get(0).getRole());
+        assertEquals("Kurežžaare", sig1.getInfo().getSignatureProductionPlace().getCity());
+        assertEquals("Hõrjumaa", sig1.getInfo().getSignatureProductionPlace().getStateOrProvince());
+        assertEquals("123", sig1.getInfo().getSignatureProductionPlace().getPostalCode());
+        assertEquals("Šveits", sig1.getInfo().getSignatureProductionPlace().getCountryName());
         assertEquals("Digest of the document content", scope.getContent());
         assertEquals("FullSignatureScope", scope.getScope());
         assertEquals("2005-02-11T16:23:21Z", sig1.getClaimedSigningTime());
@@ -188,6 +195,7 @@ public class DDOCServiceIntegrationTest {
                 .get();
 
         assertEquals("DIGIDOC_XML_1.3", sig2.getSignatureFormat());
+        assertEquals("http://www.w3.org/2000/09/xmldsig#rsa-sha1", sig2.getSignatureMethod());
         assertTrue(StringUtils.isEmpty(sig2.getSignatureLevel()));
         assertEquals("JALUKSE,KRISTJAN,38003080336", sig2.getSignedBy());
         assertEquals("JALUKSE,KRISTJAN,38003080336", sig2.getSubjectDistinguishedName().getCommonName());
@@ -202,6 +210,11 @@ public class DDOCServiceIntegrationTest {
         assertEquals("FullSignatureScope", scope.getScope());
         assertEquals("2009-02-13T09:22:58Z", sig2.getInfo().getBestSignatureTime());
         assertEquals("2009-02-13T09:22:49Z", sig2.getClaimedSigningTime());
+        assertTrue(sig2.getInfo().getSignerRole().isEmpty());
+        assertEquals(" ", sig2.getInfo().getSignatureProductionPlace().getCity());
+        assertEquals(" ", sig2.getInfo().getSignatureProductionPlace().getStateOrProvince());
+        assertEquals(" ", sig2.getInfo().getSignatureProductionPlace().getPostalCode());
+        assertEquals(" ", sig2.getInfo().getSignatureProductionPlace().getCountryName());
     }
 
     @Test

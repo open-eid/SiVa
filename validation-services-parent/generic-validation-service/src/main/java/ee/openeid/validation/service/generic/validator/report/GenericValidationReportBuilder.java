@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Riigi Infosüsteemide Amet
+ * Copyright 2020 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -28,7 +28,12 @@ import eu.europa.esig.dss.diagnostic.RevocationWrapper;
 import eu.europa.esig.dss.diagnostic.SignatureWrapper;
 import eu.europa.esig.dss.diagnostic.TimestampWrapper;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlSignatureScope;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlSignerRole;
+import eu.europa.esig.dss.enumerations.DigestAlgorithm;
+import eu.europa.esig.dss.enumerations.EncryptionAlgorithm;
 import eu.europa.esig.dss.enumerations.Indication;
+import eu.europa.esig.dss.enumerations.MaskGenerationFunction;
+import eu.europa.esig.dss.enumerations.SignatureAlgorithm;
 import eu.europa.esig.dss.enumerations.SubIndication;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
 import org.apache.commons.lang3.StringUtils;
@@ -110,6 +115,7 @@ public class GenericValidationReportBuilder {
         SignatureValidationData signatureValidationData = new SignatureValidationData();
         signatureValidationData.setId(getSignatureId(signatureId));
         signatureValidationData.setSignatureFormat(changeAndValidateSignatureFormat(dssReports.getSimpleReport().getSignatureFormat(signatureId).toString(), signatureId));
+        signatureValidationData.setSignatureMethod(parseSignatureMethod(signatureId));
         signatureValidationData.setSignatureLevel(dssReports.getSimpleReport().getSignatureQualification(signatureId).name());
         signatureValidationData.setSignedBy(parseSubjectDistinguishedName(signatureId).getCommonName());
         signatureValidationData.setSubjectDistinguishedName(parseSubjectDistinguishedName(signatureId));
@@ -167,10 +173,20 @@ public class GenericValidationReportBuilder {
                 && !signatureFormat.equals(LT_TM_XAdES_SIGNATURE_FORMAT);
     }
 
+    private String parseSignatureMethod(String signatureId) {
+        DigestAlgorithm digestAlgorithm = dssReports.getDiagnosticData().getSignatureDigestAlgorithm(signatureId);
+        EncryptionAlgorithm encryptionAlgorithm = dssReports.getDiagnosticData().getSignatureEncryptionAlgorithm(signatureId);
+        MaskGenerationFunction maskGenerationFunction = dssReports.getDiagnosticData().getSignatureMaskGenerationFunction(signatureId);
+        SignatureAlgorithm algorithm = SignatureAlgorithm.getAlgorithm(encryptionAlgorithm, digestAlgorithm, maskGenerationFunction);
+        return algorithm == null ? "" : StringUtils.defaultString(algorithm.getUri());
+    }
+
     private Info parseSignatureInfo(String signatureFormat, String signatureId) {
         Date bestSignatureTime = getBestSignatureTime(signatureFormat, signatureId);
         Info info = new Info();
         info.setBestSignatureTime(bestSignatureTime == null ? "" : ReportBuilderUtils.getDateFormatterWithGMTZone().format(bestSignatureTime));
+        info.setSignerRole(parseSignerRole(signatureId));
+        info.setSignatureProductionPlace(parseSignatureProductionPlace(signatureId));
         return info;
     }
 
@@ -185,6 +201,37 @@ public class GenericValidationReportBuilder {
             return timeStamps.isEmpty() ? null : timeStamps.get(0).getProductionTime();
         }
         return null;
+    }
+
+    private List<SignerRole> parseSignerRole(String signatureId) {
+        return dssReports.getDiagnosticData().getSignatureById(signatureId).getSignerRoles().stream()
+                .map(this::mapXmlSignerRole)
+                .collect(Collectors.toList());
+    }
+
+    private SignerRole mapXmlSignerRole(XmlSignerRole xmlSignerRole) {
+        SignerRole signerRole = new SignerRole();
+        signerRole.setRole(xmlSignerRole.getRole());
+        return signerRole;
+    }
+
+    private SignatureProductionPlace parseSignatureProductionPlace(String signatureId) {
+        SignatureWrapper signature = dssReports.getDiagnosticData().getSignatureById(signatureId);
+        SignatureProductionPlace signatureProductionPlace = new SignatureProductionPlace();
+
+        if (signature.isSignatureProductionPlacePresent()) {
+            signatureProductionPlace.setCountryName(StringUtils.defaultString(signature.getCountryName()));
+            signatureProductionPlace.setStateOrProvince(StringUtils.defaultString(signature.getStateOrProvince()));
+            signatureProductionPlace.setCity(StringUtils.defaultString(signature.getCity()));
+            signatureProductionPlace.setPostalCode(StringUtils.defaultString(signature.getPostalCode()));
+        } else {
+            signatureProductionPlace.setCountryName("");
+            signatureProductionPlace.setStateOrProvince("");
+            signatureProductionPlace.setCity("");
+            signatureProductionPlace.setPostalCode("");
+        }
+
+        return signatureProductionPlace;
     }
 
     private List<Error> parseSignatureErrors(String signatureId) {

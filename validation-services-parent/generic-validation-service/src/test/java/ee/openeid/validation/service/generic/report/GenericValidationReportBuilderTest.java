@@ -18,13 +18,18 @@ package ee.openeid.validation.service.generic.report;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Reports;
+import ee.openeid.siva.validation.document.report.SignatureProductionPlace;
+import ee.openeid.siva.validation.document.report.SignerRole;
 import ee.openeid.siva.validation.document.report.SubjectDistinguishedName;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.validation.service.generic.validator.report.GenericValidationReportBuilder;
 import eu.europa.esig.dss.diagnostic.jaxb.*;
+import eu.europa.esig.dss.enumerations.DigestAlgorithm;
+import eu.europa.esig.dss.enumerations.EncryptionAlgorithm;
 import eu.europa.esig.dss.enumerations.Indication;
+import eu.europa.esig.dss.enumerations.MaskGenerationFunction;
 import eu.europa.esig.dss.enumerations.SignatureLevel;
 import eu.europa.esig.dss.simplereport.jaxb.XmlSimpleReport;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
@@ -34,6 +39,7 @@ import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Collections;
+import java.util.List;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -89,6 +95,101 @@ public class GenericValidationReportBuilderTest {
         Assert.assertEquals("", subjectDN.getSerialNumber());
     }
 
+    @Test
+    public void populatesSignerRole() {
+        XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
+
+        XmlSignerRole xmlSignerRole = new XmlSignerRole();
+        xmlSignerRole.setRole("role1");
+        diagnosticData.getSignatures().get(0).getSignerRole().clear();
+        diagnosticData.getSignatures().get(0).getSignerRole().add(xmlSignerRole);
+
+        eu.europa.esig.dss.validation.reports.Reports dssReports = new eu.europa.esig.dss.validation.reports.Reports(diagnosticData, null, getSimpleReport(), null);
+        Reports reports = new GenericValidationReportBuilder(dssReports, ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
+
+        List<SignerRole> signerRole = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getSignerRole();
+        Assert.assertEquals(1, signerRole.size());
+        Assert.assertEquals("role1", signerRole.get(0).getRole());
+    }
+
+    @Test
+    public void noSignerRolePresentResultsWithEmptyList() {
+        XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
+
+        diagnosticData.getSignatures().get(0).getSignerRole().clear();
+
+        eu.europa.esig.dss.validation.reports.Reports dssReports = new eu.europa.esig.dss.validation.reports.Reports(diagnosticData, null, getSimpleReport(), null);
+        Reports reports = new GenericValidationReportBuilder(dssReports, ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
+
+        List<SignerRole> signerRole = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getSignerRole();
+        Assert.assertTrue(signerRole.isEmpty());
+    }
+
+    @Test
+    public void populatesSignatureProductionPlace() {
+        XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
+
+        XmlSignatureProductionPlace xmlSignatureProductionPlace = new XmlSignatureProductionPlace();
+        xmlSignatureProductionPlace.setCity("Tallinn");
+        xmlSignatureProductionPlace.setCountryName("Eesti");
+        xmlSignatureProductionPlace.setPostalCode("12345");
+        xmlSignatureProductionPlace.setStateOrProvince("Harjumaa");
+        diagnosticData.getSignatures().get(0).setSignatureProductionPlace(xmlSignatureProductionPlace);
+
+        eu.europa.esig.dss.validation.reports.Reports dssReports = new eu.europa.esig.dss.validation.reports.Reports(diagnosticData, null, getSimpleReport(), null);
+        Reports reports = new GenericValidationReportBuilder(dssReports, ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
+
+        SignatureProductionPlace signatureProductionPlace = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getSignatureProductionPlace();
+        Assert.assertEquals("Tallinn", signatureProductionPlace.getCity());
+        Assert.assertEquals("Eesti", signatureProductionPlace.getCountryName());
+        Assert.assertEquals("12345", signatureProductionPlace.getPostalCode());
+        Assert.assertEquals("Harjumaa", signatureProductionPlace.getStateOrProvince());
+    }
+
+    @Test
+    public void signatureProductionPlaceNotPresentResultsWithEmptyFields() {
+        XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
+
+        diagnosticData.getSignatures().get(0).setSignatureProductionPlace(null);
+
+        eu.europa.esig.dss.validation.reports.Reports dssReports = new eu.europa.esig.dss.validation.reports.Reports(diagnosticData, null, getSimpleReport(), null);
+        Reports reports = new GenericValidationReportBuilder(dssReports, ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
+
+        SignatureProductionPlace signatureProductionPlace = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getSignatureProductionPlace();
+        Assert.assertEquals("", signatureProductionPlace.getCity());
+        Assert.assertEquals("", signatureProductionPlace.getCountryName());
+        Assert.assertEquals("", signatureProductionPlace.getPostalCode());
+        Assert.assertEquals("", signatureProductionPlace.getStateOrProvince());
+    }
+
+    @Test
+    public void signatureProductionPlaceWithNullFieldsResultsWithEmptyFields() {
+        XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
+
+        XmlSignatureProductionPlace xmlSignatureProductionPlace = new XmlSignatureProductionPlace();
+        diagnosticData.getSignatures().get(0).setSignatureProductionPlace(xmlSignatureProductionPlace);
+
+        eu.europa.esig.dss.validation.reports.Reports dssReports = new eu.europa.esig.dss.validation.reports.Reports(diagnosticData, null, getSimpleReport(), null);
+        Reports reports = new GenericValidationReportBuilder(dssReports, ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
+
+        SignatureProductionPlace signatureProductionPlace = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getSignatureProductionPlace();
+        Assert.assertEquals("", signatureProductionPlace.getCity());
+        Assert.assertEquals("", signatureProductionPlace.getCountryName());
+        Assert.assertEquals("", signatureProductionPlace.getPostalCode());
+        Assert.assertEquals("", signatureProductionPlace.getStateOrProvince());
+    }
+
+    @Test
+    public void populatesSignatureMethod() {
+        XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
+
+        eu.europa.esig.dss.validation.reports.Reports dssReports = new eu.europa.esig.dss.validation.reports.Reports(diagnosticData, null, getSimpleReport(), null);
+        Reports reports = new GenericValidationReportBuilder(dssReports, ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
+
+        Assert.assertEquals("http://www.w3.org/2007/05/xmldsig-more#sha256-rsa-MGF1",
+                reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getSignatureMethod());
+    }
+
     private ValidationDocument getValidationDocument() {
         ValidationDocument validationDocument = new ValidationDocument();
         validationDocument.setName("filename.bdoc");
@@ -132,6 +233,12 @@ public class GenericValidationReportBuilderTest {
         signingCertificate.setCertificate(certificate);
 
         xmlSignature.setSigningCertificate(signingCertificate);
+
+        XmlBasicSignature xmlBasicSignature = new XmlBasicSignature();
+        xmlBasicSignature.setDigestAlgoUsedToSignThisToken(DigestAlgorithm.SHA256);
+        xmlBasicSignature.setEncryptionAlgoUsedToSignThisToken(EncryptionAlgorithm.RSA);
+        xmlBasicSignature.setMaskGenerationFunctionUsedToSignThisToken(MaskGenerationFunction.MGF1);
+        xmlSignature.setBasicSignature(xmlBasicSignature);
 
         diagnosticData.setSignatures(Collections.singletonList(xmlSignature));
 

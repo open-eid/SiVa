@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Riigi Infosüsteemide Amet
+ * Copyright 2020 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -28,6 +28,8 @@ public class SignatureValidationData {
     private String id;
 
     private String signatureFormat;
+
+    private String SignatureMethod;
 
     private String signatureLevel;
 

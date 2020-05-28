@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Riigi Infosüsteemide Amet
+ * Copyright 2020 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -190,6 +190,7 @@ public class TimemarkContainerValidationServiceIntegrationTest {
                 .get();
 
         assertEquals("XAdES_BASELINE_LT_TM", sig1.getSignatureFormat());
+        assertEquals("http://www.w3.org/2001/04/xmldsig-more#rsa-sha224", sig1.getSignatureMethod());
         assertEquals("QESIG", sig1.getSignatureLevel());
         assertEquals("JUHANSON,ALLAN,38608014910", sig1.getSignedBy());
         assertEquals("JUHANSON,ALLAN,38608014910", sig1.getSubjectDistinguishedName().getCommonName());
@@ -205,6 +206,12 @@ public class TimemarkContainerValidationServiceIntegrationTest {
         assertEquals("FullSignatureScope", scope.getScope());
         assertEquals("2016-05-04T08:43:55Z", sig1.getClaimedSigningTime());
         assertEquals("2016-05-04T08:44:23Z", sig1.getInfo().getBestSignatureTime());
+        assertThat(sig1.getInfo().getSignerRole(), hasSize(1));
+        assertEquals("Roll / Resulutsioon", sig1.getInfo().getSignerRole().get(0).getRole());
+        assertEquals("Tallinn", sig1.getInfo().getSignatureProductionPlace().getCity());
+        assertEquals("Harjumaa", sig1.getInfo().getSignatureProductionPlace().getStateOrProvince());
+        assertEquals("Eesti", sig1.getInfo().getSignatureProductionPlace().getCountryName());
+        assertEquals("", sig1.getInfo().getSignatureProductionPlace().getPostalCode());
     }
 
     @Test
@@ -218,6 +225,7 @@ public class TimemarkContainerValidationServiceIntegrationTest {
                 .get();
 
         assertEquals("XAdES_BASELINE_LT_TM", sig2.getSignatureFormat());
+        assertEquals("http://www.w3.org/2001/04/xmldsig-more#rsa-sha224", sig2.getSignatureMethod());
         assertEquals("QESIG", sig2.getSignatureLevel());
         assertEquals("VOLL,ANDRES,39004170346", sig2.getSignedBy());
         assertEquals("VOLL,ANDRES,39004170346", sig2.getSubjectDistinguishedName().getCommonName());
@@ -233,6 +241,11 @@ public class TimemarkContainerValidationServiceIntegrationTest {
         assertEquals("FullSignatureScope", scope.getScope());
         assertEquals("2016-05-04T11:14:23Z", sig2.getClaimedSigningTime());
         assertEquals("2016-05-04T11:14:32Z", sig2.getInfo().getBestSignatureTime());
+        assertThat(sig2.getInfo().getSignerRole(), empty());
+        assertEquals("", sig2.getInfo().getSignatureProductionPlace().getCity());
+        assertEquals("", sig2.getInfo().getSignatureProductionPlace().getStateOrProvince());
+        assertEquals("", sig2.getInfo().getSignatureProductionPlace().getCountryName());
+        assertEquals("", sig2.getInfo().getSignatureProductionPlace().getPostalCode());
     }
 
     @Test
@@ -249,6 +262,46 @@ public class TimemarkContainerValidationServiceIntegrationTest {
         String bestSignatureTime2 = validationConclusion.getSignatures().get(1).getInfo().getBestSignatureTime();
         assertTrue(StringUtils.isNotBlank(bestSignatureTime1));
         assertTrue(StringUtils.isNotBlank(bestSignatureTime2));
+    }
+
+    @Test
+    public void populatesSignerRole() throws Exception {
+        SimpleReport report = timemarkContainerValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
+        List<SignerRole> signerRole1 = report.getValidationConclusion().getSignatures().get(0).getInfo().getSignerRole();
+        List<SignerRole> signerRole2 = report.getValidationConclusion().getSignatures().get(1).getInfo().getSignerRole();
+        assertThat(signerRole1, hasSize(1));
+        assertEquals("Roll / Resulutsioon", signerRole1.get(0).getRole());
+        assertThat(signerRole2, empty());
+    }
+
+    @Test
+    public void populatesSignatureProductionPlace() throws Exception {
+        SimpleReport report = timemarkContainerValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
+
+        SignatureProductionPlace signatureProductionPlace1 = report.getValidationConclusion().getSignatures().get(0)
+                .getInfo().getSignatureProductionPlace();
+        SignatureProductionPlace signatureProductionPlace2 = report.getValidationConclusion().getSignatures().get(1)
+                .getInfo().getSignatureProductionPlace();
+
+        assertEquals("Tallinn", signatureProductionPlace1.getCity());
+        assertEquals("Harjumaa", signatureProductionPlace1.getStateOrProvince());
+        assertEquals("Eesti", signatureProductionPlace1.getCountryName());
+        assertEquals("", signatureProductionPlace1.getPostalCode());
+
+        assertEquals("", signatureProductionPlace2.getCity());
+        assertEquals("", signatureProductionPlace2.getStateOrProvince());
+        assertEquals("", signatureProductionPlace2.getCountryName());
+        assertEquals("", signatureProductionPlace2.getPostalCode());
+    }
+
+    @Test
+    @Ignore("Enable once dd4j release with fix for getSignatureMethod is available from maven")
+    public void populatesSignatureMethod() throws Exception {
+        SimpleReport report = timemarkContainerValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
+        assertEquals("http://www.w3.org/2001/04/xmldsig-more#rsa-sha224",
+                report.getValidationConclusion().getSignatures().get(0).getSignatureMethod());
+        assertEquals("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256",
+                report.getValidationConclusion().getSignatures().get(1).getSignatureMethod());
     }
 
     @Test

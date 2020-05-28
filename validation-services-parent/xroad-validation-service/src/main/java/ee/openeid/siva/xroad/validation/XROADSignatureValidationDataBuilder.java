@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Riigi Infosüsteemide Amet
+ * Copyright 2020 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -58,6 +58,7 @@ public class XROADSignatureValidationDataBuilder {
         SignatureValidationData signatureValidationData = new SignatureValidationData();
         signatureValidationData.setId(getSignatureId(verifier.getSignature()));
         signatureValidationData.setSignatureFormat(getSignatureFormat(verifier.getAsic()));
+        signatureValidationData.setSignatureMethod(getSignatureMethod(verifier.getSignature()));
         signatureValidationData.setSignatureLevel(valueNotPresent());
         signatureValidationData.setSignedBy(getSignedBy(verifier.getSignerCert()));
         signatureValidationData.setSubjectDistinguishedName(getSubjectDistinguishedName(verifier.getSignerCert()));
@@ -111,6 +112,14 @@ public class XROADSignatureValidationDataBuilder {
             return XADES_FORMAT_PREFIX + (asicContainer.getSignature().isBatchSignature() ? XADES_BASELINE_B_BES_SUFFIX : XADES_BASELINE_LT_SUFFIX);
         }
         return valueNotPresent();
+    }
+
+    private String getSignatureMethod(Signature signature) {
+        if (signature == null || signature.getXmlSignature() == null || signature.getXmlSignature().getSignedInfo() == null) {
+            return valueNotPresent();
+        }
+
+        return signature.getXmlSignature().getSignedInfo().getSignatureMethodURI();
     }
 
     private List<SignatureScope> getSignatureScopes() {

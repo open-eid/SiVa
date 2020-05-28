@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Riigi Infosüsteemide Amet
+ * Copyright 2010 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -30,6 +30,7 @@ import eu.europa.esig.dss.diagnostic.jaxb.XmlDiagnosticData;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class ValidationReportSoapResponseTransformer {
@@ -50,7 +51,39 @@ public class ValidationReportSoapResponseTransformer {
             return null;
         Info responseSignatureInfo = new Info();
         responseSignatureInfo.setBestSignatureTime(signatureInfo.getBestSignatureTime());
+
+        if (signatureInfo.getSignerRole() != null) {
+            responseSignatureInfo.getSignerRole().addAll(toSoapSignerRole(signatureInfo.getSignerRole()));
+        }
+
+        responseSignatureInfo.setSignatureProductionPlace(toSoapSignatureProductionPlace(signatureInfo.getSignatureProductionPlace()));
         return responseSignatureInfo;
+    }
+
+    private static List<SignerRole> toSoapSignerRole(List<ee.openeid.siva.validation.document.report.SignerRole> signerRole) {
+        return signerRole.stream()
+                .map(ValidationReportSoapResponseTransformer::toSoapSignerRole)
+                .collect(Collectors.toList());
+    }
+
+    private static SignerRole toSoapSignerRole(ee.openeid.siva.validation.document.report.SignerRole signerRole) {
+        SignerRole soapSignerRole = new SignerRole();
+        soapSignerRole.setRole(signerRole.getRole());
+        return soapSignerRole;
+    }
+
+    private static SignatureProductionPlace toSoapSignatureProductionPlace(
+            ee.openeid.siva.validation.document.report.SignatureProductionPlace signatureProductionPlace) {
+        if (signatureProductionPlace == null) {
+            return null;
+        }
+
+        SignatureProductionPlace soapSignatureProductionPlace = new SignatureProductionPlace();
+        soapSignatureProductionPlace.setCountryName(signatureProductionPlace.getCountryName());
+        soapSignatureProductionPlace.setStateOrProvince(signatureProductionPlace.getStateOrProvince());
+        soapSignatureProductionPlace.setCity(signatureProductionPlace.getCity());
+        soapSignatureProductionPlace.setPostalCode(signatureProductionPlace.getPostalCode());
+        return soapSignatureProductionPlace;
     }
 
     public ValidationReport toSoapResponse(SimpleReport report) {
@@ -147,6 +180,7 @@ public class ValidationReportSoapResponseTransformer {
         responseSignature.setId(signature.getId());
         responseSignature.setClaimedSigningTime(signature.getClaimedSigningTime());
         responseSignature.setSignatureFormat(signature.getSignatureFormat());
+        responseSignature.setSignatureMethod(signature.getSignatureMethod());
         responseSignature.setSignatureLevel(signature.getSignatureLevel());
         responseSignature.setSignedBy(signature.getSignedBy());
         responseSignature.setSubjectDistinguishedName(toSoapResponseSignatureSubjectDN(signature.getSubjectDistinguishedName()));

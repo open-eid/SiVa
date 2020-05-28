@@ -132,6 +132,13 @@ public class XROADValidationReportTest {
         assertNull(reports.getDiagnosticReport().getDiagnosticData());
     }
 
+    @Test
+    public void populatesSignatureMethod() throws Exception {
+        Reports reports = validationService.validateDocument(buildValidationDocument(XROAD_SIMPLE));
+        assertEquals("http://www.w3.org/2001/04/xmldsig-more#rsa-sha512",
+                reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getSignatureMethod());
+    }
+
     public void assertSubjectDNPresent(ValidationConclusion validationConclusion, String expectedSerialNumber, String expectedCommonName) {
         assertSame(1, validationConclusion.getSignatures().size());
         SignatureValidationData signature = validationConclusion.getSignatures().get(0);

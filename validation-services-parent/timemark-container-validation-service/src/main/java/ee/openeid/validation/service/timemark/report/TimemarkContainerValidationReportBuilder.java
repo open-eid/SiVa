@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Riigi Infosüsteemide Amet
+ * Copyright 2020 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -19,6 +19,7 @@ package ee.openeid.validation.service.timemark.report;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.validation.document.report.SignatureProductionPlace;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import eu.europa.esig.dss.enumerations.SignatureQualification;
@@ -153,6 +154,7 @@ public abstract class TimemarkContainerValidationReportBuilder {
 
         signatureValidationData.setId(signature.getId());
         signatureValidationData.setSignatureFormat(getSignatureFormat(signature.getProfile()));
+        signatureValidationData.setSignatureMethod(signature.getSignatureMethod());
         signatureValidationData.setSignatureLevel(getSignatureLevel(signature));
         signatureValidationData.setSignedBy(removeQuotes(signature.getSigningCertificate().getSubjectName(CN)));
         signatureValidationData.setSubjectDistinguishedName(parseSubjectDistinguishedName(signature.getSigningCertificate()));
@@ -219,13 +221,38 @@ public abstract class TimemarkContainerValidationReportBuilder {
 
     private Info getInfo(Signature signature) {
         Info info = new Info();
-        Date trustedTime = signature.getTrustedSigningTime();
-        if (trustedTime != null) {
-            info.setBestSignatureTime(ReportBuilderUtils.getDateFormatterWithGMTZone().format(trustedTime));
-        } else {
-            info.setBestSignatureTime("");
-        }
+        info.setBestSignatureTime(getBestSignatureTime(signature));
+        info.setSignerRole(getSignerRole(signature));
+        info.setSignatureProductionPlace(getSignatureProductionPlace(signature));
         return info;
+    }
+
+    private String getBestSignatureTime(Signature signature) {
+        Date trustedTime = signature.getTrustedSigningTime();
+        return trustedTime != null
+                ? ReportBuilderUtils.getDateFormatterWithGMTZone().format(trustedTime)
+                : "";
+    }
+
+    private List<SignerRole> getSignerRole(Signature signature) {
+        return signature.getSignerRoles().stream()
+                .map(this::mapSignerRole)
+                .collect(Collectors.toList());
+    }
+
+    private SignerRole mapSignerRole(String role) {
+        SignerRole signerRole = new SignerRole();
+        signerRole.setRole(role);
+        return signerRole;
+    }
+
+    private SignatureProductionPlace getSignatureProductionPlace(Signature signature) {
+        SignatureProductionPlace signatureProductionPlace = new SignatureProductionPlace();
+        signatureProductionPlace.setCountryName(StringUtils.defaultString(signature.getCountryName()));
+        signatureProductionPlace.setStateOrProvince(StringUtils.defaultString(signature.getStateOrProvince()));
+        signatureProductionPlace.setCity(StringUtils.defaultString(signature.getCity()));
+        signatureProductionPlace.setPostalCode(StringUtils.defaultString(signature.getPostalCode()));
+        return signatureProductionPlace;
     }
 
     private List<Warning> getWarnings(Signature signature) {

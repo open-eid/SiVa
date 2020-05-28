@@ -39,10 +39,16 @@ public class TestData {
     public static final String SIGNATURE_FORMAT_XADES_LT = "XAdES_BASELINE_LT";
     public static final String SIGNATURE_FORMAT_XADES_LTA = "XAdES_BASELINE_LTA";
     public static final String SIGNATURE_FORMAT_SK_XML = "SK_XML_1.0";
-    public static final String SIGNATURE_FORMAT_DIGIDOC_XML = "DIGIDOC_XML_1.3";
+    public static final String SIGNATURE_FORMAT_DIGIDOC_XML_11 = "DIGIDOC_XML_1.1";
+    public static final String SIGNATURE_FORMAT_DIGIDOC_XML_12 = "DIGIDOC_XML_1.2";
+    public static final String SIGNATURE_FORMAT_DIGIDOC_XML_13 = "DIGIDOC_XML_1.3";
 
     public static final String SIGNATURE_FORM_ASICE = "ASiC-E";
     public static final String SIGNATURE_FORM_ASICS = "ASiC-S";
+    public static final String SIGNATURE_FORM_DDOC_10 = "DIGIDOC_XML_1.0";
+    public static final String SIGNATURE_FORM_DDOC_11 = "DIGIDOC_XML_1.1";
+    public static final String SIGNATURE_FORM_DDOC_12 = "DIGIDOC_XML_1.2";
+    public static final String SIGNATURE_FORM_DDOC_13 = "DIGIDOC_XML_1.3";
 
     public static final String SIGNATURE_LEVEL_QESIG = "QESIG";
     public static final String SIGNATURE_LEVEL_NOT_ADES_QC_QSCD = "NOT_ADES_QC_QSCD";

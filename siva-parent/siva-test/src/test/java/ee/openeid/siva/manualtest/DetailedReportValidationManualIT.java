@@ -107,7 +107,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      * File: pades-baseline-lta-live-aj.pdf
      */
     @Test
-    @Ignore("SIVA-119")
+    @Ignore //TODO: New test LOTL is needed with correct data
     public void detailedReportAssertValidationProcessTlanalysis() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
 

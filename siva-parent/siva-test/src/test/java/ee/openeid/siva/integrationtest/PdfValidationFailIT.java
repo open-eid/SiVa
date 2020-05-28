@@ -169,7 +169,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
      * File: hellopades-lt-sha256-rsa1024-expired2.pdf
      */
     @Test
-    @Ignore //Testfile needed
+    @Ignore //TODO: Test file needed
     public void documentSignedWithExpiredSha256CertificateShouldFail() {
         post(validationRequestFor("hellopades-lt-sha256-rsa1024-expired2.pdf"))
                 .then()

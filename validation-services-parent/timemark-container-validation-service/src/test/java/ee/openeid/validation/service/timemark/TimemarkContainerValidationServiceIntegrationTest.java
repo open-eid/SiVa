@@ -150,7 +150,6 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
-    @Ignore("SIVA-119")
     public void vShouldIncludeRequiredFields() throws Exception {
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
         ValidationConclusion validationConclusion = validationResult2Signatures.getValidationConclusion();
@@ -179,34 +178,32 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
-    @Ignore("SIVA-119")
     public void vShouldHaveCorrectSignatureValidationDataForSignature1() throws Exception {
 
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
         SignatureValidationData sig1 = validationResult2Signatures.getValidationConclusion().getSignatures()
                 .stream()
-                .filter(sig -> sig.getId().equals("S0"))
+                .filter(sig -> sig.getId().equals("id-7b7180a5265f919bc0ac65bd02e4b46a"))
                 .findFirst()
                 .get();
 
         assertEquals("XAdES_BASELINE_LT_TM", sig1.getSignatureFormat());
         assertEquals("http://www.w3.org/2001/04/xmldsig-more#rsa-sha224", sig1.getSignatureMethod());
         assertEquals("QESIG", sig1.getSignatureLevel());
-        assertEquals("JUHANSON,ALLAN,38608014910", sig1.getSignedBy());
-        assertEquals("JUHANSON,ALLAN,38608014910", sig1.getSubjectDistinguishedName().getCommonName());
-        assertEquals("38608014910", sig1.getSubjectDistinguishedName().getSerialNumber());
+        assertEquals("JÕEORG,JAAK-KRISTJAN,38001085718", sig1.getSignedBy());
+        assertEquals("JÕEORG,JAAK-KRISTJAN,38001085718", sig1.getSubjectDistinguishedName().getCommonName());
+        assertEquals("PNOEE-38001085718", sig1.getSubjectDistinguishedName().getSerialNumber());
         assertEquals(SignatureValidationData.Indication.TOTAL_PASSED.toString(), sig1.getIndication());
         assertTrue(StringUtils.isEmpty(sig1.getSubIndication()));
         assertTrue(sig1.getErrors().size() == 0);
         assertTrue(sig1.getWarnings().size() == 0);
         assertTrue(sig1.getSignatureScopes().size() == 1);
         SignatureScope scope = sig1.getSignatureScopes().get(0);
-        assertEquals("chrome-signing.log", scope.getName());
-        assertEquals("Full document", scope.getContent());
+        assertEquals("test.txt", scope.getName());
+        assertEquals("Digest of the document content", scope.getContent());
         assertEquals("FullSignatureScope", scope.getScope());
-        assertEquals("2016-05-04T08:43:55Z", sig1.getClaimedSigningTime());
-        assertEquals("2016-05-04T08:44:23Z", sig1.getInfo().getBestSignatureTime());
-        assertThat(sig1.getInfo().getSignerRole(), hasSize(1));
+        assertEquals("2020-05-21T14:07:04Z", sig1.getClaimedSigningTime());
+        assertEquals("2020-05-21T14:07:01Z", sig1.getInfo().getBestSignatureTime());
         assertEquals("Roll / Resulutsioon", sig1.getInfo().getSignerRole().get(0).getRole());
         assertEquals("Tallinn", sig1.getInfo().getSignatureProductionPlace().getCity());
         assertEquals("Harjumaa", sig1.getInfo().getSignatureProductionPlace().getStateOrProvince());
@@ -215,32 +212,31 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
-    @Ignore("SIVA-119")
     public void vShouldHaveCorrectSignatureValidationDataForSignature2() throws Exception {
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
         SignatureValidationData sig2 = validationResult2Signatures.getValidationConclusion().getSignatures()
                 .stream()
-                .filter(sig -> sig.getId().equals("S1"))
+                .filter(sig -> sig.getId().equals("id-2138b1c0059437904586ad487b16010d"))
                 .findFirst()
                 .get();
 
         assertEquals("XAdES_BASELINE_LT_TM", sig2.getSignatureFormat());
         assertEquals("http://www.w3.org/2001/04/xmldsig-more#rsa-sha224", sig2.getSignatureMethod());
         assertEquals("QESIG", sig2.getSignatureLevel());
-        assertEquals("VOLL,ANDRES,39004170346", sig2.getSignedBy());
-        assertEquals("VOLL,ANDRES,39004170346", sig2.getSubjectDistinguishedName().getCommonName());
-        assertEquals("39004170346", sig2.getSubjectDistinguishedName().getSerialNumber());
+        assertEquals("MÄNNIK,MARI-LIIS,47101010033", sig2.getSignedBy());
+        assertEquals("MÄNNIK,MARI-LIIS,47101010033", sig2.getSubjectDistinguishedName().getCommonName());
+        assertEquals("47101010033", sig2.getSubjectDistinguishedName().getSerialNumber());
         assertEquals(SignatureValidationData.Indication.TOTAL_PASSED.toString(), sig2.getIndication());
         assertTrue(StringUtils.isEmpty(sig2.getSubIndication()));
         assertTrue(sig2.getErrors().size() == 0);
         assertTrue(sig2.getWarnings().size() == 0);
         assertTrue(sig2.getSignatureScopes().size() == 1);
         SignatureScope scope = sig2.getSignatureScopes().get(0);
-        assertEquals("chrome-signing.log", scope.getName());
-        assertEquals("Full document", scope.getContent());
+        assertEquals("test.txt", scope.getName());
+        assertEquals("Digest of the document content", scope.getContent());
         assertEquals("FullSignatureScope", scope.getScope());
-        assertEquals("2016-05-04T11:14:23Z", sig2.getClaimedSigningTime());
-        assertEquals("2016-05-04T11:14:32Z", sig2.getInfo().getBestSignatureTime());
+        assertEquals("2020-05-26T14:34:51Z", sig2.getClaimedSigningTime());
+        assertEquals("2020-05-26T14:34:42Z", sig2.getInfo().getBestSignatureTime());
         assertThat(sig2.getInfo().getSignerRole(), empty());
         assertEquals("", sig2.getInfo().getSignatureProductionPlace().getCity());
         assertEquals("", sig2.getInfo().getSignatureProductionPlace().getStateOrProvince());

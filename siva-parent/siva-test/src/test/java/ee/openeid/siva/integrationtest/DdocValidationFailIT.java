@@ -24,6 +24,8 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
 
+import static ee.openeid.siva.integrationtest.TestData.*;
+
 @Category(IntegrationTest.class)
 public class DdocValidationFailIT extends SiVaRestTests{
 
@@ -55,7 +57,13 @@ public class DdocValidationFailIT extends SiVaRestTests{
      */
     @Test
     public void ddocInvalidSignature() {
-        assertAllSignaturesAreInvalid(postForReport("AndmefailiAtribuudidMuudetud.ddoc"));
+        post(validationRequestFor("AndmefailiAtribuudidMuudetud.ddoc"))
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
+                .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -73,7 +81,17 @@ public class DdocValidationFailIT extends SiVaRestTests{
      */
     @Test
     public void ddocInvalidMultipleSignatures() {
-        assertAllSignaturesAreInvalid(postForReport("multipleInvalidSignatures.ddoc"));
+        post(validationRequestFor("multipleInvalidSignatures.ddoc"))
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_11))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_11))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[1].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_11))
+                .body("signatures[1].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[2].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_11))
+                .body("signatures[2].indication", Matchers.is(TOTAL_FAILED))
+                .body("signaturesCount", Matchers.is(3))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -91,7 +109,17 @@ public class DdocValidationFailIT extends SiVaRestTests{
      */
     @Test
     public void ddocInvalidAndValidMultipleSignatures() {
-        assertSomeSignaturesAreValid(postForReport("multipleValidAndInvalidSignatures.ddoc"),2);
+        post(validationRequestFor("multipleValidAndInvalidSignatures.ddoc"))
+                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_11))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_11))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[1].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_11))
+                .body("signatures[1].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[2].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_11))
+                .body("signatures[2].indication", Matchers.is(TOTAL_PASSED))
+                .body("signaturesCount", Matchers.is(3))
+                .body("validSignaturesCount", Matchers.is(2));
     }
 
     /**

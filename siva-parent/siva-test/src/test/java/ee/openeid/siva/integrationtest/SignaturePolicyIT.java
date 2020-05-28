@@ -16,13 +16,16 @@
 
 package ee.openeid.siva.integrationtest;
 
+import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import static ee.openeid.siva.integrationtest.TestData.SIGNATURE_LEVEL_QESIG;
 
+@Category(IntegrationTest.class)
 public class SignaturePolicyIT extends SiVaRestTests {
 
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "pdf/signing_certifacte_test_files/";

@@ -210,7 +210,7 @@ public class TimemarkContainerValidationServiceIntegrationTest {
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
         SignatureValidationData sig2 = validationResult2Signatures.getValidationConclusion().getSignatures()
                 .stream()
-                .filter(sig -> sig.getId().equals("id-2138b1c0059437904586ad487b16010d"))
+                .filter(sig -> sig.getId().equals("id-c71904f656e45af0c9b0ce644fc9287d"))
                 .findFirst()
                 .get();
 
@@ -228,8 +228,8 @@ public class TimemarkContainerValidationServiceIntegrationTest {
         assertEquals("test.txt", scope.getName());
         assertEquals("Digest of the document content", scope.getContent());
         assertEquals("FullSignatureScope", scope.getScope());
-        assertEquals("2020-05-26T14:34:51Z", sig2.getClaimedSigningTime());
-        assertEquals("2020-05-26T14:34:42Z", sig2.getInfo().getBestSignatureTime());
+        assertEquals("2020-05-28T10:59:12Z", sig2.getClaimedSigningTime());
+        assertEquals("2020-05-28T10:59:14Z", sig2.getInfo().getBestSignatureTime());
     }
 
     @Test

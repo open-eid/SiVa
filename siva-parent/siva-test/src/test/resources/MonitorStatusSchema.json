@@ -3,67 +3,94 @@
   "type": "object",
   "properties": {
     "status": {
-      "type": "string",
-      "minLength": 1
+      "type": "string"
     },
-    "health": {
+    "components": {
       "type": "object",
       "properties": {
-        "status": {
-          "type": "string",
-          "minLength": 1
+        "health": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string"
+            },
+            "details": {
+              "type": "object",
+              "properties": {
+                "webappName": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                },
+                "buildTime": {
+                  "type": "string"
+                },
+                "startTime": {
+                  "type": "string"
+                },
+                "currentTime": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "webappName",
+                "version",
+                "buildTime",
+                "startTime",
+                "currentTime"
+              ]
+            }
+          },
+          "required": [
+            "status",
+            "details"
+          ]
         },
-        "webappName": {
-          "type": "string",
-          "minLength": 1
+        "link1": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string"
+            },
+            "details": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name"
+              ]
+            }
+          },
+          "required": [
+            "status",
+            "details"
+          ]
         },
-        "version": {
-          "type": "string",
-          "minLength": 1
-        },
-        "buildTime": {
-          "type": "string",
-          "minLength": 1
-        },
-        "startTime": {
-          "type": "string",
-          "minLength": 1
-        },
-        "currentTime": {
-          "type": "string",
-          "minLength": 1
+        "ping": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "status"
+          ]
         }
       },
       "required": [
-        "status",
-        "webappName",
-        "version",
-        "buildTime",
-        "startTime",
-        "currentTime"
-      ]
-    },
-    "link1": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "minLength": 1
-        },
-        "name": {
-          "type": "string",
-          "minLength": 1
-        }
-      },
-      "required": [
-        "status",
-        "name"
+        "health",
+        "link1",
+        "ping"
       ]
     }
   },
   "required": [
     "status",
-    "health",
-    "link1"
+    "components"
   ]
 }

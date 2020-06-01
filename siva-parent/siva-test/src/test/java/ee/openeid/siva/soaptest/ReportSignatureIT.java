@@ -16,15 +16,18 @@
 
 package ee.openeid.siva.soaptest;
 
+import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.w3c.dom.Document;
 
 import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.not;
 
+@Category(IntegrationTest.class)
 public class ReportSignatureIT extends SiVaSoapTests {
 
     private static final String TEST_FILES_DIRECTORY = "document_format_test_files/";

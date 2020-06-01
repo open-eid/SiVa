@@ -16,12 +16,15 @@
  */
 package ee.openeid.siva.integrationtest;
 
+import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 
+@Category(IntegrationTest.class)
 public class MonitoringIT extends SiVaRestTests {
 
     @Before
@@ -55,10 +58,10 @@ public class MonitoringIT extends SiVaRestTests {
         getMonitoring()
                 .then()
                 .body(matchesJsonSchemaInClasspath("MonitorStatusSchema.json"))
-                .body("status", Matchers.is("DOWN"))
-                .body("health.status", Matchers.is("UP"))
-                .body("link1.status", Matchers.is("DOWN"))
-                .body("link1.name", Matchers.is("xRoadService"));
+                .body("status", Matchers.is("UP"))
+                .body("components.health.status", Matchers.is("UP"))
+                .body("components.link1.status", Matchers.is("UP"))
+                .body("components.link1.details.name", Matchers.is("xRoadService"));
     }
 
     @Override

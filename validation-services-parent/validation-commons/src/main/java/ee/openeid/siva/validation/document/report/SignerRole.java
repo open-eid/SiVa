@@ -20,5 +20,5 @@ import lombok.Data;
 
 @Data
 public class SignerRole {
-    private String role;
+    private String claimedRole;
 }

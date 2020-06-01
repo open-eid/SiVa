@@ -153,7 +153,7 @@ public class ValidationReportSoapResponseTransformerTest {
         assertEquals(dssSignature.getSignedBy(), responseSignature.getSignedBy());
         assertEquals(dssSignature.getSubIndication(), responseSignature.getSubIndication());
         assertEquals(dssSignature.getInfo().getBestSignatureTime(), responseSignature.getInfo().getBestSignatureTime());
-        assertEquals(dssSignature.getInfo().getSignerRole().get(0).getRole(), responseSignature.getInfo().getSignerRole().get(0).getRole());
+        assertEquals(dssSignature.getInfo().getSignerRole().get(0).getClaimedRole(), responseSignature.getInfo().getSignerRole().get(0).getClaimedRole());
         assertEquals(dssSignature.getInfo().getSignatureProductionPlace().getCountryName(), responseSignature.getInfo().getSignatureProductionPlace().getCountryName());
         assertEquals(dssSignature.getInfo().getSignatureProductionPlace().getCity(), responseSignature.getInfo().getSignatureProductionPlace().getCity());
         assertEquals(dssSignature.getInfo().getSignatureProductionPlace().getPostalCode(), responseSignature.getInfo().getSignatureProductionPlace().getPostalCode());
@@ -435,7 +435,7 @@ public class ValidationReportSoapResponseTransformerTest {
         ee.openeid.siva.validation.document.report.Info info = new ee.openeid.siva.validation.document.report.Info();
         info.setBestSignatureTime("2016-09-21T14:00:00Z");
         SignerRole signerRole1 = new SignerRole();
-        signerRole1.setRole("role1");
+        signerRole1.setClaimedRole("role1");
         info.setSignerRole(Collections.singletonList(signerRole1));
         SignatureProductionPlace signatureProductionPlace = new SignatureProductionPlace();
         signatureProductionPlace.setPostalCode("12345");

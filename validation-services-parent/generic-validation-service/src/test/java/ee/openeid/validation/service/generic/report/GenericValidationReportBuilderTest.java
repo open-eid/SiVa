@@ -28,6 +28,7 @@ import ee.openeid.validation.service.generic.validator.report.GenericValidationR
 import eu.europa.esig.dss.diagnostic.jaxb.*;
 import eu.europa.esig.dss.enumerations.DigestAlgorithm;
 import eu.europa.esig.dss.enumerations.EncryptionAlgorithm;
+import eu.europa.esig.dss.enumerations.EndorsementType;
 import eu.europa.esig.dss.enumerations.Indication;
 import eu.europa.esig.dss.enumerations.MaskGenerationFunction;
 import eu.europa.esig.dss.enumerations.SignatureLevel;
@@ -96,20 +97,31 @@ public class GenericValidationReportBuilderTest {
     }
 
     @Test
-    public void populatesSignerRole() {
+    public void populatesNonEmptyClaimedRolesAsSignerRole() {
         XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
 
-        XmlSignerRole xmlSignerRole = new XmlSignerRole();
-        xmlSignerRole.setRole("role1");
+        XmlSignerRole claimedRole = new XmlSignerRole();
+        claimedRole.setRole("role1");
+        claimedRole.setCategory(EndorsementType.CLAIMED);
+
+        XmlSignerRole role = new XmlSignerRole();
+        role.setRole("role2");
+
+        XmlSignerRole emptyRole = new XmlSignerRole();
+        emptyRole.setRole("");
+        emptyRole.setCategory(EndorsementType.CLAIMED);
+
         diagnosticData.getSignatures().get(0).getSignerRole().clear();
-        diagnosticData.getSignatures().get(0).getSignerRole().add(xmlSignerRole);
+        diagnosticData.getSignatures().get(0).getSignerRole().add(claimedRole);
+        diagnosticData.getSignatures().get(0).getSignerRole().add(role);
+        diagnosticData.getSignatures().get(0).getSignerRole().add(emptyRole);
 
         eu.europa.esig.dss.validation.reports.Reports dssReports = new eu.europa.esig.dss.validation.reports.Reports(diagnosticData, null, getSimpleReport(), null);
         Reports reports = new GenericValidationReportBuilder(dssReports, ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
 
         List<SignerRole> signerRole = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getSignerRole();
         Assert.assertEquals(1, signerRole.size());
-        Assert.assertEquals("role1", signerRole.get(0).getRole());
+        Assert.assertEquals("role1", signerRole.get(0).getClaimedRole());
     }
 
     @Test
@@ -147,7 +159,7 @@ public class GenericValidationReportBuilderTest {
     }
 
     @Test
-    public void signatureProductionPlaceNotPresentResultsWithEmptyFields() {
+    public void signatureProductionPlaceNotPresentResultsWithNull() {
         XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
 
         diagnosticData.getSignatures().get(0).setSignatureProductionPlace(null);
@@ -156,27 +168,22 @@ public class GenericValidationReportBuilderTest {
         Reports reports = new GenericValidationReportBuilder(dssReports, ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
 
         SignatureProductionPlace signatureProductionPlace = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getSignatureProductionPlace();
-        Assert.assertEquals("", signatureProductionPlace.getCity());
-        Assert.assertEquals("", signatureProductionPlace.getCountryName());
-        Assert.assertEquals("", signatureProductionPlace.getPostalCode());
-        Assert.assertEquals("", signatureProductionPlace.getStateOrProvince());
+        Assert.assertNull(signatureProductionPlace);
     }
 
     @Test
-    public void signatureProductionPlaceWithNullFieldsResultsWithEmptyFields() {
+    public void signatureProductionPlaceWithNullOrEmptyFieldsResultsWithNull() {
         XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
 
         XmlSignatureProductionPlace xmlSignatureProductionPlace = new XmlSignatureProductionPlace();
+        xmlSignatureProductionPlace.setCountryName("");
         diagnosticData.getSignatures().get(0).setSignatureProductionPlace(xmlSignatureProductionPlace);
 
         eu.europa.esig.dss.validation.reports.Reports dssReports = new eu.europa.esig.dss.validation.reports.Reports(diagnosticData, null, getSimpleReport(), null);
         Reports reports = new GenericValidationReportBuilder(dssReports, ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
 
         SignatureProductionPlace signatureProductionPlace = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getSignatureProductionPlace();
-        Assert.assertEquals("", signatureProductionPlace.getCity());
-        Assert.assertEquals("", signatureProductionPlace.getCountryName());
-        Assert.assertEquals("", signatureProductionPlace.getPostalCode());
-        Assert.assertEquals("", signatureProductionPlace.getStateOrProvince());
+        Assert.assertNull(signatureProductionPlace);
     }
 
     @Test

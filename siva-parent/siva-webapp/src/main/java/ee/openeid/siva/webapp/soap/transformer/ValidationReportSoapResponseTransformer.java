@@ -68,7 +68,7 @@ public class ValidationReportSoapResponseTransformer {
 
     private static SignerRole toSoapSignerRole(ee.openeid.siva.validation.document.report.SignerRole signerRole) {
         SignerRole soapSignerRole = new SignerRole();
-        soapSignerRole.setRole(signerRole.getRole());
+        soapSignerRole.setClaimedRole(signerRole.getClaimedRole());
         return soapSignerRole;
     }
 

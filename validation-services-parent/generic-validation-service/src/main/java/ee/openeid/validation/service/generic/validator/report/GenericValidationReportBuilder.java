@@ -204,34 +204,39 @@ public class GenericValidationReportBuilder {
     }
 
     private List<SignerRole> parseSignerRole(String signatureId) {
-        return dssReports.getDiagnosticData().getSignatureById(signatureId).getSignerRoles().stream()
+        return dssReports.getDiagnosticData().getSignatureById(signatureId).getClaimedRoles().stream()
+                .filter(xmlSignerRole -> StringUtils.isNotEmpty(xmlSignerRole.getRole()))
                 .map(this::mapXmlSignerRole)
                 .collect(Collectors.toList());
     }
 
     private SignerRole mapXmlSignerRole(XmlSignerRole xmlSignerRole) {
         SignerRole signerRole = new SignerRole();
-        signerRole.setRole(xmlSignerRole.getRole());
+        signerRole.setClaimedRole(xmlSignerRole.getRole());
         return signerRole;
     }
 
     private SignatureProductionPlace parseSignatureProductionPlace(String signatureId) {
         SignatureWrapper signature = dssReports.getDiagnosticData().getSignatureById(signatureId);
-        SignatureProductionPlace signatureProductionPlace = new SignatureProductionPlace();
 
-        if (signature.isSignatureProductionPlacePresent()) {
-            signatureProductionPlace.setCountryName(StringUtils.defaultString(signature.getCountryName()));
-            signatureProductionPlace.setStateOrProvince(StringUtils.defaultString(signature.getStateOrProvince()));
-            signatureProductionPlace.setCity(StringUtils.defaultString(signature.getCity()));
-            signatureProductionPlace.setPostalCode(StringUtils.defaultString(signature.getPostalCode()));
-        } else {
-            signatureProductionPlace.setCountryName("");
-            signatureProductionPlace.setStateOrProvince("");
-            signatureProductionPlace.setCity("");
-            signatureProductionPlace.setPostalCode("");
+        if (isSignatureProductionPlaceEmpty(signature)) {
+            return null;
         }
 
+        SignatureProductionPlace signatureProductionPlace = new SignatureProductionPlace();
+        signatureProductionPlace.setCountryName(StringUtils.defaultString(signature.getCountryName()));
+        signatureProductionPlace.setStateOrProvince(StringUtils.defaultString(signature.getStateOrProvince()));
+        signatureProductionPlace.setCity(StringUtils.defaultString(signature.getCity()));
+        signatureProductionPlace.setPostalCode(StringUtils.defaultString(signature.getPostalCode()));
         return signatureProductionPlace;
+    }
+
+    private boolean isSignatureProductionPlaceEmpty(SignatureWrapper signature) {
+        return !signature.isSignatureProductionPlacePresent() || StringUtils.isAllEmpty(
+                signature.getCountryName(),
+                signature.getStateOrProvince(),
+                signature.getCity(),
+                signature.getPostalCode());
     }
 
     private List<Error> parseSignatureErrors(String signatureId) {

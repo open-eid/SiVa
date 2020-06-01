@@ -236,23 +236,36 @@ public abstract class TimemarkContainerValidationReportBuilder {
 
     private List<SignerRole> getSignerRole(Signature signature) {
         return signature.getSignerRoles().stream()
+                .filter(StringUtils::isNotEmpty)
                 .map(this::mapSignerRole)
                 .collect(Collectors.toList());
     }
 
-    private SignerRole mapSignerRole(String role) {
+    private SignerRole mapSignerRole(String claimedRole) {
         SignerRole signerRole = new SignerRole();
-        signerRole.setRole(role);
+        signerRole.setClaimedRole(claimedRole);
         return signerRole;
     }
 
     private SignatureProductionPlace getSignatureProductionPlace(Signature signature) {
+        if (isSignatureProductionPlaceEmpty(signature)) {
+            return null;
+        }
+
         SignatureProductionPlace signatureProductionPlace = new SignatureProductionPlace();
         signatureProductionPlace.setCountryName(StringUtils.defaultString(signature.getCountryName()));
         signatureProductionPlace.setStateOrProvince(StringUtils.defaultString(signature.getStateOrProvince()));
         signatureProductionPlace.setCity(StringUtils.defaultString(signature.getCity()));
         signatureProductionPlace.setPostalCode(StringUtils.defaultString(signature.getPostalCode()));
         return signatureProductionPlace;
+    }
+
+    private boolean isSignatureProductionPlaceEmpty(Signature signature) {
+        return StringUtils.isAllEmpty(
+                signature.getCountryName(),
+                signature.getStateOrProvince(),
+                signature.getCity(),
+                signature.getPostalCode());
     }
 
     private List<Warning> getWarnings(Signature signature) {

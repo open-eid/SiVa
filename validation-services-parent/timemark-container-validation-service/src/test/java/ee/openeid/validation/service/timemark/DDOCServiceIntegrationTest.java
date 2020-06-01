@@ -175,7 +175,7 @@ public class DDOCServiceIntegrationTest {
         assertEquals("Šužlikud sõid ühe õuna ära.txt", scope.getName());
         assertEquals("2005-02-11T16:23:43Z", sig1.getInfo().getBestSignatureTime());
         assertEquals(1, sig1.getInfo().getSignerRole().size());
-        assertEquals("Sušlik", sig1.getInfo().getSignerRole().get(0).getRole());
+        assertEquals("Sušlik", sig1.getInfo().getSignerRole().get(0).getClaimedRole());
         assertEquals("Kurežžaare", sig1.getInfo().getSignatureProductionPlace().getCity());
         assertEquals("Hõrjumaa", sig1.getInfo().getSignatureProductionPlace().getStateOrProvince());
         assertEquals("123", sig1.getInfo().getSignatureProductionPlace().getPostalCode());

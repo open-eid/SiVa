@@ -164,7 +164,7 @@
 
     <xs:complexType name="SignerRole">
         <xs:sequence>
-            <xs:element name="Role" type="xs:string"/>
+            <xs:element name="ClaimedRole" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 

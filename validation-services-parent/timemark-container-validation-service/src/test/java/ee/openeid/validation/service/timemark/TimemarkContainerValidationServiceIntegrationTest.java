@@ -206,10 +206,7 @@ public class TimemarkContainerValidationServiceIntegrationTest {
         assertEquals("2020-05-21T14:07:04Z", sig1.getClaimedSigningTime());
         assertEquals("2020-05-21T14:07:01Z", sig1.getInfo().getBestSignatureTime());
         assertTrue(sig1.getInfo().getSignerRole().isEmpty());
-        assertEquals("", sig1.getInfo().getSignatureProductionPlace().getCity());
-        assertEquals("", sig1.getInfo().getSignatureProductionPlace().getStateOrProvince());
-        assertEquals("", sig1.getInfo().getSignatureProductionPlace().getCountryName());
-        assertEquals("", sig1.getInfo().getSignatureProductionPlace().getPostalCode());
+        assertNull(sig1.getInfo().getSignatureProductionPlace());
     }
 
     @Test
@@ -240,7 +237,7 @@ public class TimemarkContainerValidationServiceIntegrationTest {
         assertEquals("2020-05-28T10:59:12Z", sig2.getClaimedSigningTime());
         assertEquals("2020-05-28T10:59:14Z", sig2.getInfo().getBestSignatureTime());
         assertEquals(1, sig2.getInfo().getSignerRole().size());
-        assertEquals("Signing as king of signers", sig2.getInfo().getSignerRole().get(0).getRole());
+        assertEquals("Signing as king of signers", sig2.getInfo().getSignerRole().get(0).getClaimedRole());
         assertEquals("Tallinn", sig2.getInfo().getSignatureProductionPlace().getCity());
         assertEquals("Harju", sig2.getInfo().getSignatureProductionPlace().getStateOrProvince());
         assertEquals("Elbonia", sig2.getInfo().getSignatureProductionPlace().getCountryName());

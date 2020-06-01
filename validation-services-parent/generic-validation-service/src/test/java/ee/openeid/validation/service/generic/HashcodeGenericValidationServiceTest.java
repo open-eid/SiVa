@@ -119,7 +119,7 @@ public class HashcodeGenericValidationServiceTest {
         Reports reports = validationService.validate(getValidationDocumentSingletonList());
         List<SignerRole> signerRole = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getSignerRole();
         assertEquals(1, signerRole.size());
-        assertEquals("Direktorius", signerRole.get(0).getRole());
+        assertEquals("Direktorius", signerRole.get(0).getClaimedRole());
     }
 
     @Test

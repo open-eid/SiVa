@@ -19,12 +19,14 @@ package ee.openeid.siva.soaptest;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.webapp.soap.response.SignatureValidationData;
 import ee.openeid.siva.webapp.soap.response.ValidationReport;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.w3c.dom.Document;
 
+import static ee.openeid.siva.integrationtest.TestData.SOAP_VALIDATION_CONCLUSION_PREFIX;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -62,16 +64,19 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     @Test
     public void SoapBdocCorrectValuesArePresentValidLtTmSignature() {
         setTestFilesDirectory("bdoc/live/timemark/");
-        Document report = extractReportDom(post(validationRequestForDocument("Valid_ID_sig.bdoc")).andReturn().body().asString());
-        assertEquals("validSignaturesCount should equal with signaturesCount", getValidationReportFromDom(report).getValidationConclusion().getValidSignaturesCount(),getValidationReportFromDom(report).getValidationConclusion().getSignaturesCount());
-        assertEquals("SignatureFormat should match expected", "XAdES_BASELINE_LT_TM", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureFormat());
-        assertEquals("Indication should match expected", "TOTAL-PASSED", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getIndication().value());
-        assertTrue("There should be no subIndication", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSubIndication().isEmpty());
-        assertEquals("SignatureLevel should match expected", "QESIG", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureLevel());
-        assertEquals("SignatureScopes should match expected", "FullSignatureScope", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
-        assertTrue("Errors should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getErrors().getError().isEmpty());
-        assertTrue("Warnings should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getWarnings().getWarning().isEmpty());
-        assertEquals("SignatureForm should match expected", "ASiC-E", getValidationReportFromDom(report).getValidationConclusion().getSignatureForm());
+        post(validationRequestForDocument("Valid_ID_sig.bdoc")).
+                then()
+                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+                .body("SignaturesCount", Matchers.is("1"))
+                .body("ValidSignaturesCount", Matchers.is("1"))
+                .body("Signatures.Signature[0].SignatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
+                .body("Signatures.Signature[0].SubIndication", Matchers.emptyOrNullString())
+                .body("Signatures.Signature[0].SignatureLevel", Matchers.is("QESIG"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope.Scope", Matchers.is("FullSignatureScope"))
+                .body("Signatures.Signature[0].Errors", Matchers.emptyOrNullString())
+                .body("Signatures.Signature[0].Warnings", Matchers.emptyOrNullString())
+                .body("SignatureForm", Matchers.is("ASiC-E"));
     }
 
     /**
@@ -92,16 +97,19 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     @Test
     public void SoapBdocCorrectValuesArePresentValidLtSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
-        Document report = extractReportDom(post(validationRequestForDocument("23635_bdoc_ts_OCSP_random_nonce.bdoc")).andReturn().body().asString());
-        assertEquals("validSignaturesCount should equal with signaturesCount", getValidationReportFromDom(report).getValidationConclusion().getValidSignaturesCount(),getValidationReportFromDom(report).getValidationConclusion().getSignaturesCount());
-        assertEquals("SignatureFormat should match expected", "XAdES_BASELINE_LT", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureFormat());
-        assertEquals("Indication should match expected", "TOTAL-PASSED", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getIndication().value());
-        assertTrue("There should be no subIndication", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSubIndication().isEmpty());
-        assertEquals("SignatureLevel should match expected", "QESIG", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureLevel());
-        assertEquals("SignatureScopes should match expected", "FullSignatureScope", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
-        assertTrue("Errors should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getErrors().getError().isEmpty());
-        assertTrue("Warnings should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getWarnings().getWarning().isEmpty());
-        assertEquals("SignatureForm should match expected", "ASiC-E", getValidationReportFromDom(report).getValidationConclusion().getSignatureForm());
+        post(validationRequestForDocument("23635_bdoc_ts_OCSP_random_nonce.bdoc")).
+                then()
+                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+                .body("SignaturesCount", Matchers.is("1"))
+                .body("ValidSignaturesCount", Matchers.is("1"))
+                .body("Signatures.Signature[0].SignatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
+                .body("Signatures.Signature[0].SubIndication", Matchers.emptyOrNullString())
+                .body("Signatures.Signature[0].SignatureLevel", Matchers.is("QESIG"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope.Scope", Matchers.is("FullSignatureScope"))
+                .body("Signatures.Signature[0].Errors", Matchers.emptyOrNullString())
+                .body("Signatures.Signature[0].Warnings", Matchers.emptyOrNullString())
+                .body("SignatureForm", Matchers.is("ASiC-E"));
     }
 
     /**
@@ -123,17 +131,18 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     @Ignore //TODO: New testfile needed
     public void SoapBdocCorrectValuesArePresentValidLtSignatureAdes() {
         setTestFilesDirectory("bdoc/test/timemark/");
-        Document report = extractReportDom(post(validationRequestForDocument("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc")).andReturn().body().asString());
-        ValidationReport v = getValidationReportFromDom(report);
-        SignatureValidationData signatureValidationData = v.getValidationConclusion().getSignatures().getSignature().get(0);
-        assertEquals("validSignaturesCount should equal with signaturesCount", v.getValidationConclusion().getValidSignaturesCount(), v.getValidationConclusion().getSignaturesCount());
-        assertEquals("SignatureFormat should match expected", "XAdES_BASELINE_LT_TM", signatureValidationData.getSignatureFormat());
-        assertEquals("Indication should match expected", "TOTAL-PASSED", signatureValidationData.getIndication().value());
-        assertTrue("There should be no subIndication", signatureValidationData.getSubIndication().isEmpty());
-        assertEquals("SignatureLevel should match expected", "ADES", signatureValidationData.getSignatureLevel());
-        assertEquals("SignatureScopes should match expected", "FullSignatureScope", signatureValidationData.getSignatureScopes().getSignatureScope().get(0).getScope());
-        assertTrue("Errors should be empty", signatureValidationData.getErrors().getError().isEmpty());
-        assertEquals("SignatureForm should match expected", "ASiC-E", v.getValidationConclusion().getSignatureForm());
+        post(validationRequestForDocument("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc")).
+                then()
+                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+                .body("SignaturesCount", Matchers.is("1"))
+                .body("ValidSignaturesCount", Matchers.is("1"))
+                .body("Signatures.Signature[0].SignatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
+                .body("Signatures.Signature[0].SubIndication", Matchers.emptyOrNullString())
+                .body("Signatures.Signature[0].SignatureLevel", Matchers.is("ADES"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope.Scope", Matchers.is("FullSignatureScope"))
+                .body("Signatures.Signature[0].Errors", Matchers.emptyOrNullString())
+                .body("SignatureForm", Matchers.is("ASiC-E"));
     }
 
     /**
@@ -155,16 +164,17 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     @Test
     public void SoapBdocCorrectValuesArePresentValidLtSignatureAdesqc() {
         setTestFilesDirectory("bdoc/live/timemark/");
-        Document report = extractReportDom(post(validationRequestForDocument("testAdesQC.bdoc")).andReturn().body().asString());
-        ValidationReport v = getValidationReportFromDom(report);
-        SignatureValidationData signatureValidationData = v.getValidationConclusion().getSignatures().getSignature().get(0);
-        assertTrue("validSignaturesCount should be 1", v.getValidationConclusion().getValidSignaturesCount()== 1);
-        assertEquals("SignatureFormat should match expected", "XAdES_BASELINE_LT_TM", signatureValidationData.getSignatureFormat());
-        assertEquals("Indication should match expected", "TOTAL-PASSED", signatureValidationData.getIndication().value());
-        assertEquals("SubIndication should match expected", "", signatureValidationData.getSubIndication());
-        assertEquals("SignatureLevel should match expected", "ADESIG_QC", signatureValidationData.getSignatureLevel());
-        assertEquals("SignatureScopes should match expected", "FullSignatureScope", signatureValidationData.getSignatureScopes().getSignatureScope().get(0).getScope());
-        assertEquals("SignatureForm should match expected", "ASiC-E", v.getValidationConclusion().getSignatureForm());
+        post(validationRequestForDocument("testAdesQC.bdoc")).
+                then()
+                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+                .body("SignaturesCount", Matchers.is("1"))
+                .body("ValidSignaturesCount", Matchers.is("1"))
+                .body("Signatures.Signature[0].SignatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
+                .body("Signatures.Signature[0].SubIndication", Matchers.emptyOrNullString())
+                .body("Signatures.Signature[0].SignatureLevel", Matchers.is("ADESIG_QC"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope.Scope", Matchers.is("FullSignatureScope"))
+                .body("SignatureForm", Matchers.is("ASiC-E"));
     }
 
     /**
@@ -185,15 +195,18 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     @Test
     public void SoapBdocCorrectValuesArePresentInvalidLtSignatureAdesqc() {
         setTestFilesDirectory("bdoc/live/timestamp/");
-        Document report = extractReportDom(post(validationRequestForDocument("EE_SER-AEX-B-LTA-V-24.bdoc")).andReturn().body().asString());
-        assertEquals("validSignaturesCount should equal with signaturesCount", getValidationReportFromDom(report).getValidationConclusion().getSignaturesCount(), getValidationReportFromDom(report).getValidationConclusion().getValidSignaturesCount());
-        assertEquals("SignatureFormat should match expected", "XAdES_BASELINE_LTA", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureFormat());
-        assertEquals("Indication should match expected", "TOTAL-PASSED", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getIndication().value());
-        assertEquals("SignatureLevel should match expected", "QESIG",getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureLevel());
-        assertEquals("SignatureScopes should match expected", "FullSignatureScope", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
-        assertTrue("Errors should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getErrors().getError().isEmpty());
-        assertTrue("Warnings should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getWarnings().getWarning().isEmpty());
-        assertEquals("SignatureForm should match expected", "ASiC-E", getValidationReportFromDom(report).getValidationConclusion().getSignatureForm());
+        post(validationRequestForDocument("EE_SER-AEX-B-LTA-V-24.bdoc")).
+                then()
+                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+                .body("SignaturesCount", Matchers.is("1"))
+                .body("ValidSignaturesCount", Matchers.is("1"))
+                .body("Signatures.Signature[0].SignatureFormat", Matchers.is("XAdES_BASELINE_LTA"))
+                .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
+                .body("Signatures.Signature[0].SignatureLevel", Matchers.is("QESIG"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope.Scope", Matchers.is("FullSignatureScope"))
+                .body("Signatures.Signature[0].Errors", Matchers.emptyOrNullString())
+                .body("Signatures.Signature[0].Warnings", Matchers.emptyOrNullString())
+                .body("SignatureForm", Matchers.is("ASiC-E"));
     }
 
     /**
@@ -215,14 +228,17 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     @Test
     public void SoapDdocCorrectValuesArePresentV1_0() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        Document report = extractReportDom(post(validationRequestForDocument("SK-XML1.0.ddoc")).andReturn().body().asString());
-        assertEquals("validSignaturesCount should equal with signaturesCount", getValidationReportFromDom(report).getValidationConclusion().getSignaturesCount(),getValidationReportFromDom(report).getValidationConclusion().getValidSignaturesCount());
-        assertEquals("SignatureFormat should match expected", "SK_XML_1.0", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureFormat());
-        assertEquals("Indication should match expected", "TOTAL-PASSED", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getIndication().value());
-        assertEquals("SignatureScopes should match expected", "FullSignatureScope", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
-        assertTrue("Errors should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getErrors().getError().isEmpty());
-        assertTrue("Warnings should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getWarnings().getWarning().isEmpty());
-        assertEquals("SignatureForm should match expected", "DIGIDOC_XML_1.0", getValidationReportFromDom(report).getValidationConclusion().getSignatureForm());
+        post(validationRequestForDocument("SK-XML1.0.ddoc")).
+                then()
+                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+                .body("SignaturesCount", Matchers.is("2"))
+                .body("ValidSignaturesCount", Matchers.is("2"))
+                .body("Signatures.Signature[0].SignatureFormat", Matchers.is("SK_XML_1.0"))
+                .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope.Scope", Matchers.is("FullSignatureScope"))
+                .body("Signatures.Signature[0].Errors", Matchers.emptyOrNullString())
+                .body("Signatures.Signature[0].Warnings.Warning[0].Content", Matchers.is("Old and unsupported format: SK-XML version: 1.0"))
+                .body("SignatureForm", Matchers.is("DIGIDOC_XML_1.0"));
     }
 
     /**
@@ -243,15 +259,18 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     @Test
     public void SoapDdocCorrectValuesArePresentV1_1() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        Document report = extractReportDom(post(validationRequestForDocument("igasugust1.1.ddoc")).andReturn().body().asString());
-        assertEquals("validSignaturesCount should equal with signaturesCount", getValidationReportFromDom(report).getValidationConclusion().getSignaturesCount(),getValidationReportFromDom(report).getValidationConclusion().getValidSignaturesCount());
-        assertEquals("SignatureFormat should match expected", "DIGIDOC_XML_1.1", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureFormat());
-        assertEquals("Indication should match expected", "TOTAL-PASSED", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getIndication().value());
-        assertEquals("SignatureScopes should match expected", "FullSignatureScope", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
-        assertTrue("Errors should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getErrors().getError().isEmpty());
-        assertEquals("Warnings size match expected", 1, getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getWarnings().getWarning().size());
-        assertEquals("Warning should match expected", "Old and unsupported format: DIGIDOC-XML version: 1.1", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getWarnings().getWarning().get(0).getContent());
-        assertEquals("SignatureForm should match expected", "DIGIDOC_XML_1.1", getValidationReportFromDom(report).getValidationConclusion().getSignatureForm());
+        post(validationRequestForDocument("igasugust1.1.ddoc")).
+                then()
+                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+                .body("SignaturesCount", Matchers.is("3"))
+                .body("ValidSignaturesCount", Matchers.is("3"))
+                .body("Signatures.Signature[0].SignatureFormat", Matchers.is("DIGIDOC_XML_1.1"))
+                .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Scope", Matchers.is("FullSignatureScope"))
+                .body("Signatures.Signature[0].Errors", Matchers.emptyOrNullString())
+                .body("Signatures.Signature[0].Warnings.Warning.size()", Matchers.is(1))
+                .body("Signatures.Signature[0].Warnings.Warning.Content", Matchers.is("Old and unsupported format: DIGIDOC-XML version: 1.1"))
+                .body("SignatureForm", Matchers.is("DIGIDOC_XML_1.1"));
     }
 
     /**
@@ -272,15 +291,18 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     @Test
     public void SoapDdocCorrectValuesArePresentV1_2() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        Document report = extractReportDom(post(validationRequestForDocument("igasugust1.2.ddoc")).andReturn().body().asString());
-        assertEquals("validSignaturesCount should equal with signaturesCount", getValidationReportFromDom(report).getValidationConclusion().getSignaturesCount(),getValidationReportFromDom(report).getValidationConclusion().getValidSignaturesCount());
-        assertEquals("SignatureFormat should match expected", "DIGIDOC_XML_1.2", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureFormat());
-        assertEquals("Indication should match expected", "TOTAL-PASSED", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getIndication().value());
-        assertEquals("SignatureScopes should match expected", "FullSignatureScope", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
-        assertTrue("Errors should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getErrors().getError().isEmpty());
-        assertEquals("Warnings size match expected", 1, getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getWarnings().getWarning().size());
-        assertEquals("Warning should match expected", "Old and unsupported format: DIGIDOC-XML version: 1.2", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getWarnings().getWarning().get(0).getContent());
-        assertEquals("SignatureForm should match expected", "DIGIDOC_XML_1.2", getValidationReportFromDom(report).getValidationConclusion().getSignatureForm());
+        post(validationRequestForDocument("igasugust1.2.ddoc")).
+                then()
+                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+                .body("SignaturesCount", Matchers.is("3"))
+                .body("ValidSignaturesCount", Matchers.is("3"))
+                .body("Signatures.Signature[0].SignatureFormat", Matchers.is("DIGIDOC_XML_1.2"))
+                .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Scope", Matchers.is("FullSignatureScope"))
+                .body("Signatures.Signature[0].Errors", Matchers.emptyOrNullString())
+                .body("Signatures.Signature[0].Warnings.Warning.size()", Matchers.is(1))
+                .body("Signatures.Signature[0].Warnings.Warning.Content", Matchers.is("Old and unsupported format: DIGIDOC-XML version: 1.2"))
+                .body("SignatureForm", Matchers.is("DIGIDOC_XML_1.2"));
     }
 
     /**
@@ -301,14 +323,17 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     @Test
     public void SoapDdocCorrectValuesArePresentV1_3() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        Document report = extractReportDom(post(validationRequestForDocument("igasugust1.3.ddoc")).andReturn().body().asString());
-        assertEquals("validSignaturesCount should equal with signaturesCount", getValidationReportFromDom(report).getValidationConclusion().getSignaturesCount(),getValidationReportFromDom(report).getValidationConclusion().getValidSignaturesCount());
-        assertEquals("SignatureFormat should match expected", "DIGIDOC_XML_1.3", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureFormat());
-        assertEquals("Indication should match expected", "TOTAL-PASSED", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getIndication().value());
-        assertEquals("SignatureScopes should match expected", "FullSignatureScope", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
-        assertTrue("Errors should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getErrors().getError().isEmpty());
-        assertTrue("Warnings should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getWarnings().getWarning().isEmpty());
-        assertEquals("SignatureForm should match expected", "DIGIDOC_XML_1.3", getValidationReportFromDom(report).getValidationConclusion().getSignatureForm());
+        post(validationRequestForDocument("igasugust1.3.ddoc")).
+                then()
+                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+                .body("SignaturesCount", Matchers.is("3"))
+                .body("ValidSignaturesCount", Matchers.is("3"))
+                .body("Signatures.Signature[0].SignatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Scope", Matchers.is("FullSignatureScope"))
+                .body("Signatures.Signature[0].Errors", Matchers.emptyOrNullString())
+                .body("Signatures.Signature[0].Warnings", Matchers.emptyOrNullString())
+                .body("SignatureForm", Matchers.is("DIGIDOC_XML_1.3"));
     }
 
     /**
@@ -329,15 +354,17 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     @Test
     public void SoapPdfCorrectValuesArePresentBaselineLtSignature() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
-        Document report = extractReportDom(post(validationRequestForDocument("pades_lt_two_valid_sig.pdf")).andReturn().body().asString());
-        assertEquals("validSignaturesCount should equal with signaturesCount", getValidationReportFromDom(report).getValidationConclusion().getSignaturesCount(),getValidationReportFromDom(report).getValidationConclusion().getValidSignaturesCount());
-        assertEquals("SignatureFormat should match expected", "PAdES_BASELINE_LT", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureFormat());
-        assertEquals("Indication should match expected", "TOTAL-PASSED", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getIndication().value());
-        assertEquals("SignatureLevel should match expected", "QESIG", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureLevel());
-        assertEquals("SignatureScopes should match expected", "PARTIAL", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
-        assertTrue("Errors should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getErrors().getError().isEmpty());
-        assertEquals("Warning should match expected", "The trusted certificate doesn't match the trust service", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getWarnings().getWarning().get(0).getContent());
-        assertEquals("SignatureForm should match expected", null, getValidationReportFromDom(report).getValidationConclusion().getSignatureForm());
+        post(validationRequestForDocument("pades_lt_two_valid_sig.pdf")).
+                then()
+                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+                .body("SignaturesCount", Matchers.is("2"))
+                .body("ValidSignaturesCount", Matchers.is("2"))
+                .body("Signatures.Signature[0].SignatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
+                .body("Signatures.Signature[0].SignatureLevel[0]", Matchers.is("QESIG"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope.Scope", Matchers.is("PARTIAL"))
+                .body("Signatures.Signature[0].Errors", Matchers.emptyOrNullString())
+                .body("Signatures.Signature[0].Warnings.Warning.Content", Matchers.is("The trusted certificate doesn't match the trust service"));
     }
 
     /**
@@ -356,15 +383,18 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      */
     @Test
-     public void SoapPdfCorrectValuesArePresentInvalidBaselineBSignature() {
+    public void SoapPdfCorrectValuesArePresentInvalidBaselineBSignatureV2() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
-        Document report = extractReportDom(post(validationRequestForDocument("hellopades-pades-b-sha256-auth.pdf")).andReturn().body().asString());
-        assertTrue("validSignaturesCount should be zero", getValidationReportFromDom(report).getValidationConclusion().getValidSignaturesCount()==0);
-        assertEquals("SignatureFormat should match expected", "PAdES_BASELINE_B", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureFormat());
-        assertEquals("Indication should match expected", "TOTAL-FAILED", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getIndication().value());
-        assertEquals("SubIndication should match expected", "FORMAT_FAILURE", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSubIndication());
-        assertEquals("SignatureLevel should match expected", "NOT_ADES_QC_QSCD", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureLevel());
-        assertEquals("SignatureScopes should match expected", "FULL", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureScopes().getSignatureScope().get(0).getScope());
+        post(validationRequestForDocument("hellopades-pades-b-sha256-auth.pdf")).
+                then()
+                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+                .body("SignaturesCount", Matchers.is("1"))
+                .body("ValidSignaturesCount", Matchers.is("0"))
+                .body("Signatures.Signature[0].SignatureFormat", Matchers.is("PAdES_BASELINE_B"))
+                .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-FAILED"))
+                .body("Signatures.Signature[0].SubIndication", Matchers.is("FORMAT_FAILURE"))
+                .body("Signatures.Signature[0].SignatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope.Scope", Matchers.is("FULL"));
     }
 
     @Override

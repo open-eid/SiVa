@@ -3,11 +3,13 @@ package ee.openeid.siva.xroadtest.soaptest;
 import ee.openeid.siva.soaptest.SiVaSoapTests;
 import ee.openeid.siva.xroadtest.configuration.XroadIntegrationTest;
 import org.apache.commons.codec.binary.Base64;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.w3c.dom.Document;
 
+import static ee.openeid.siva.integrationtest.TestData.SOAP_VALIDATION_CONCLUSION_PREFIX;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -46,12 +48,22 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     public void SoapXroadCorrectValuesArePresentValidSimpleSignature() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        Document report = extractReportDom(post(validationRequestForDocumentExtended(encodedString, "xroad-simple.asice", "XROAD", "POLv3")).andReturn().body().asString());
-        assertEquals("validSignaturesCount should equal with signaturesCount", getValidationReportFromDom(report).getValidationConclusion().getValidSignaturesCount(), getValidationReportFromDom(report).getValidationConclusion().getSignaturesCount());
-        assertEquals("SignatureFormat should match expected", "XAdES_BASELINE_LT", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureFormat());
-        assertEquals("Indication should match expected", "TOTAL-PASSED", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getIndication().value());
-        assertEquals("SignatureLevel should match expected", "", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureLevel());
-        assertEquals("SignatureForm should match expected", "ASiC-E", getValidationReportFromDom(report).getValidationConclusion().getSignatureForm());
+        post(validationRequestForDocumentExtended(encodedString, "xroad-simple.asice", "XROAD", "POLv3")).
+                then()
+                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+                .body("SignaturesCount", Matchers.is("1"))
+                .body("ValidSignaturesCount", Matchers.is("1"))
+                .body("Signatures.Signature[0].SignatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
+                .body("Signatures.Signature[0].SignedBy", Matchers.is("Riigi Infosüsteemi Amet"))
+                .body("Signatures.Signature[0].SubjectDistinguishedName.CommonName", Matchers.is("Riigi Infosüsteemi Amet"))
+                .body("Signatures.Signature[0].SubjectDistinguishedName.SerialNumber", Matchers.is("70006317"))
+                .body("Signatures.Signature[0].SignatureMethod", Matchers.is("http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"))
+                .body("Signatures.Signature[0].SubIndication", Matchers.emptyOrNullString())
+                .body("Signatures.Signature[0].SignatureLevel", Matchers.emptyOrNullString())
+                .body("Signatures.Signature[0].Errors", Matchers.emptyOrNullString())
+                .body("Signatures.Signature[0].Warnings", Matchers.emptyOrNullString())
+                .body("SignatureForm", Matchers.is("ASiC-E"));
     }
 
     /**
@@ -73,14 +85,19 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     public void SoapXroadCorrectValuesArePresentInvalidSimpleSignature() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("invalid-digest.asice"));
-        Document report = extractReportDom(post(validationRequestForDocumentExtended(encodedString, "invalid-digest.asice", "XROAD", "POLv3")).andReturn().body().asString());
-        assertEquals("validSignaturesCount is zero", new Integer(0), getValidationReportFromDom(report).getValidationConclusion().getValidSignaturesCount());
-        assertEquals("SignatureFormat should match expected", "XAdES_BASELINE_LT", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureFormat());
-        assertEquals("Indication should match expected", "TOTAL-FAILED", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getIndication().value());
-        assertEquals("Error message should match expected", "InvalidSignatureValue: Signature is not valid", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getErrors().getError().get(0).getContent());
-        assertEquals("SignatureLevel should match expected", "", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getSignatureLevel());
-        assertTrue("Warnings should be empty", getValidationReportFromDom(report).getValidationConclusion().getSignatures().getSignature().get(0).getWarnings().getWarning().isEmpty());
-        assertEquals("SignatureForm should match expected", "ASiC-E", getValidationReportFromDom(report).getValidationConclusion().getSignatureForm());
+        post(validationRequestForDocumentExtended(encodedString, "invalid-digest.asice", "XROAD", "POLv3")).
+                then()
+                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+                .body("SignaturesCount", Matchers.is("1"))
+                .body("ValidSignaturesCount", Matchers.is("0"))
+                .body("Signatures.Signature[0].SignatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-FAILED"))
+                .body("Signatures.Signature[0].SignatureMethod", Matchers.is("http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"))
+                .body("Signatures.Signature[0].SubIndication", Matchers.emptyOrNullString())
+                .body("Signatures.Signature[0].SignatureLevel", Matchers.emptyOrNullString())
+                .body("Signatures.Signature[0].Errors.Error[0].Content", Matchers.is("InvalidSignatureValue: Signature is not valid"))
+                .body("Signatures.Signature[0].Warnings", Matchers.emptyOrNullString())
+                .body("SignatureForm", Matchers.is("ASiC-E"));
     }
 
     @Override

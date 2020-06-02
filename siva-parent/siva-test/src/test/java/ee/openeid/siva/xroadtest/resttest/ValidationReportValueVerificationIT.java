@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import static ee.openeid.siva.integrationtest.TestData.VALIDATION_CONCLUSION_PREFIX;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 
 @Category(XroadIntegrationTest.class)
@@ -41,18 +42,22 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
         post(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-simple.asice", "xroad", "POLv3"))
                 .then()
+                .rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaXroad.json"))
-                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("signature"))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("Riigi Infosüsteemi Amet"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2016-04-27T12:15:42Z"))
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("xroad-simple.asice"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .body("signatures[0].id", Matchers.is("signature"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signedBy", Matchers.is("Riigi Infosüsteemi Amet"))
+                .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("Riigi Infosüsteemi Amet"))
+                .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("70006317"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings", Matchers.emptyOrNullString())
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-04-27T12:15:42Z"))
+                .body("signatures[0].signatureMethod", Matchers.is("http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"))
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("validatedDocument.filename", Matchers.is("xroad-simple.asice"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -74,16 +79,20 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-batchsignature.asice"));
         post(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-batchsignature.asice", "xroad", "POLv3"))
                 .then()
+                .rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaXroad.json"))
-                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("signature"))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
-                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("Riigi Infosüsteemi Amet"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2016-04-27T12:26:53Z"))
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E_batchsignature"))
-                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("xroad-batchsignature.asice"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .body("signatures[0].id", Matchers.is("signature"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
+                .body("signatures[0].signedBy", Matchers.is("Riigi Infosüsteemi Amet"))
+                .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("Riigi Infosüsteemi Amet"))
+                .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("70006317"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-04-27T12:26:53Z"))
+                .body("signatures[0].signatureMethod", Matchers.is("http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"))
+                .body("signatureForm", Matchers.is("ASiC-E_batchsignature"))
+                .body("validatedDocument.filename", Matchers.is("xroad-batchsignature.asice"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -105,19 +114,23 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-attachment.asice"));
         post(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-attachment.asice", "xroad", "POLv3"))
                 .then()
+                .rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaXroad.json"))
-                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("signature"))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("Riigi Infosüsteemi Amet"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2016-04-27T12:30:10Z"))
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E_batchsignature"))
-                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("xroad-attachment.asice"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .body("signatures[0].id", Matchers.is("signature"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
+                .body("signatures[0].signatureLevel", Matchers.emptyOrNullString())
+                .body("signatures[0].signedBy", Matchers.is("Riigi Infosüsteemi Amet"))
+                .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("Riigi Infosüsteemi Amet"))
+                .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("70006317"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings", Matchers.emptyOrNullString())
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-04-27T12:30:10Z"))
+                .body("signatures[0].signatureMethod", Matchers.is("http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"))
+                .body("signatureForm", Matchers.is("ASiC-E_batchsignature"))
+                .body("validatedDocument.filename", Matchers.is("xroad-attachment.asice"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -139,15 +152,17 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("invalid-digest.asice"));
         post(validationRequestWithDocumentTypeValidKeys(encodedString, "invalid-digest.asice", "xroad", "POLv3"))
                 .then()
+                .rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchemaXroad.json"))
-                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("signature"))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("InvalidSignatureValue: Signature is not valid"))
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("invalid-digest.asice"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .body("signatures[0].id", Matchers.is("signature"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].errors.content", Matchers.hasItem("InvalidSignatureValue: Signature is not valid"))
+                .body("signatures[0].signatureMethod", Matchers.is("http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"))
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("validatedDocument.filename", Matchers.is("invalid-digest.asice"))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     @Override

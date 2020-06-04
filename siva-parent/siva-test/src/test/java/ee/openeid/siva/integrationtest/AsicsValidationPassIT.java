@@ -51,22 +51,28 @@ public class AsicsValidationPassIT extends SiVaRestTests {
      * <p>
      * Expected Result: TST and inner DDOC are valid
      * <p>
-     * File: ValidDDOCinsideAsics.asics
+     * File: ddocWithRoleAndSigProductionPlace.asics
      */
     @Test
     public void validDdocInsideValidAsics() {
-        post(validationRequestFor("ValidDDOCinsideAsics.asics"))
+        post(validationRequestFor("ddocWithRoleAndSigProductionPlace.asics"))
                 .then()
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-S"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2012-10-03T07:46:51Z"))
+                .body("validationReport.validationConclusion.signatures[0].signatureMethod", Matchers.is("http://www.w3.org/2000/09/xmldsig#rsa-sha1"))
+                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2009-06-01T10:46:42Z"))
+                .body("validationReport.validationConclusion.signatures[0].info.signerRole[0].claimedRole", Matchers.is("Test"))
+                .body("validationReport.validationConclusion.signatures[0].info.signatureProductionPlace.countryName", Matchers.is("eesti"))
+                .body("validationReport.validationConclusion.signatures[0].info.signatureProductionPlace.stateOrProvince", Matchers.is("ei tea"))
+                .body("validationReport.validationConclusion.signatures[0].info.signatureProductionPlace.city", Matchers.is("tõrva"))
+                .body("validationReport.validationConclusion.signatures[0].info.signatureProductionPlace.postalCode", Matchers.is(" "))
                 .body("validationReport.validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY"))
-                .body("validationReport.validationConclusion.timeStampTokens[0].signedTime", Matchers.is("2017-08-10T12:40:40Z"))
-                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("ValidDDOCinsideAsics.asics"))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
+                .body("validationReport.validationConclusion.timeStampTokens[0].signedBy", Matchers.is("SK TIMESTAMPING AUTHORITY 2020"))
+                .body("validationReport.validationConclusion.timeStampTokens[0].signedTime", Matchers.is("2020-06-02T11:18:22Z"))
+                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("ddocWithRoleAndSigProductionPlace.asics"))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(3))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(3));
     }
 
     /**
@@ -89,6 +95,7 @@ public class AsicsValidationPassIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-S"))
                 .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("ValidDDOCinsideAsics.scs"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("validationReport.validationConclusion.signatures[0].signatureMethod", Matchers.is("http://www.w3.org/2000/09/xmldsig#rsa-sha1"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2012-10-03T07:46:31Z"))
                 .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2012-10-03T07:46:51Z"))
@@ -119,8 +126,14 @@ public class AsicsValidationPassIT extends SiVaRestTests {
                 .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-S"))
                 .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("ValidBDOCinsideAsics.asics"))
                 .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("validationReport.validationConclusion.signatures[0].signatureMethod", Matchers.is("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"))
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2016-05-11T10:18:06Z"))
+                .body("validationReport.validationConclusion.signatures[0].info.signerRole[0].claimedRole", Matchers.is("Signer / Proper signature"))
+                .body("validationReport.validationConclusion.signatures[0].info.signatureProductionPlace.countryName", Matchers.is("Estonia"))
+                .body("validationReport.validationConclusion.signatures[0].info.signatureProductionPlace.stateOrProvince", Matchers.is("Harju"))
+                .body("validationReport.validationConclusion.signatures[0].info.signatureProductionPlace.city", Matchers.is("Tallinn"))
+                .body("validationReport.validationConclusion.signatures[0].info.signatureProductionPlace.postalCode", Matchers.is("22333"))
                 .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("38211015222"))
                 .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.commonName", Matchers.is("NURM,AARE,38211015222"))
                 .body("validationReport.validationConclusion.signatures[1].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))

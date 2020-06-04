@@ -58,22 +58,36 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      * Expected Result: All required elements are present and meet the expected values.
      *
-     * File: Valid_ID_sig.bdoc
+     * File: TwoValidTmSignaturesWithRolesAndProductionPlace.bdoc
      *
      */
     @Test
     public void SoapBdocCorrectValuesArePresentValidLtTmSignature() {
-        setTestFilesDirectory("bdoc/live/timemark/");
-        post(validationRequestForDocument("Valid_ID_sig.bdoc")).
+        setTestFilesDirectory("bdoc/test/timemark/");
+        post(validationRequestForDocument("TwoValidTmSignaturesWithRolesAndProductionPlace.bdoc")).
                 then()
                 .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
-                .body("SignaturesCount", Matchers.is("1"))
-                .body("ValidSignaturesCount", Matchers.is("1"))
+                .body("SignaturesCount", Matchers.is("2"))
+                .body("ValidSignaturesCount", Matchers.is("2"))
                 .body("Signatures.Signature[0].SignatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("Signatures.Signature[0].SignatureMethod", Matchers.is("http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256"))
+                .body("Signatures.Signature[0].SignedBy", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
+                .body("Signatures.Signature[0].SubjectDistinguishedName.CommonName", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
+                .body("Signatures.Signature[0].SubjectDistinguishedName.SerialNumber", Matchers.is("47101010033"))
                 .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
                 .body("Signatures.Signature[0].SubIndication", Matchers.emptyOrNullString())
                 .body("Signatures.Signature[0].SignatureLevel", Matchers.is("QESIG"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope.Name", Matchers.is("test.txt"))
                 .body("Signatures.Signature[0].SignatureScopes.SignatureScope.Scope", Matchers.is("FullSignatureScope"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope.Content", Matchers.is("Digest of the document content"))
+                .body("Signatures.Signature[0].ClaimedSigningTime", Matchers.is("2020-05-29T08:19:25Z"))
+                .body("Signatures.Signature[0].Info.BestSignatureTime", Matchers.is("2020-05-29T08:19:27Z"))
+                .body("Signatures.Signature[0].Info.SignerRole.ClaimedRole[0]", Matchers.is("Signing as king of signers"))
+                .body("Signatures.Signature[0].Info.SignerRole.ClaimedRole[1]", Matchers.is("Second role"))
+                .body("Signatures.Signature[0].Info.SignatureProductionPlace.CountryName", Matchers.is("Elbonia"))
+                .body("Signatures.Signature[0].Info.SignatureProductionPlace.StateOrProvince", Matchers.is("Harju"))
+                .body("Signatures.Signature[0].Info.SignatureProductionPlace.City", Matchers.is("Tallinn"))
+                .body("Signatures.Signature[0].Info.SignatureProductionPlace.PostalCode", Matchers.is("32323"))
                 .body("Signatures.Signature[0].Errors", Matchers.emptyOrNullString())
                 .body("Signatures.Signature[0].Warnings", Matchers.emptyOrNullString())
                 .body("SignatureForm", Matchers.is("ASiC-E"));
@@ -91,24 +105,38 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      * Expected Result: All required elements are present and meet the expected values.
      *
-     * File: 23635_bdoc_ts_OCSP_random_nonce.bdoc
+     * File: validTsSignatureWithRolesAndProductionPlace.asice
      *
      */
     @Test
     public void SoapBdocCorrectValuesArePresentValidLtSignature() {
-        setTestFilesDirectory("bdoc/live/timestamp/");
-        post(validationRequestForDocument("23635_bdoc_ts_OCSP_random_nonce.bdoc")).
+        setTestFilesDirectory("bdoc/test/timestamp/");
+        post(validationRequestForDocument("validTsSignatureWithRolesAndProductionPlace.asice")).
                 then()
                 .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("SignaturesCount", Matchers.is("1"))
                 .body("ValidSignaturesCount", Matchers.is("1"))
                 .body("Signatures.Signature[0].SignatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("Signatures.Signature[0].SignatureMethod", Matchers.is("http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256"))
+                .body("Signatures.Signature[0].SignedBy", Matchers.is("JÕEORG,JAAK-KRISTJAN,38001085718"))
+                .body("Signatures.Signature[0].SubjectDistinguishedName.CommonName", Matchers.is("JÕEORG,JAAK-KRISTJAN,38001085718"))
+                .body("Signatures.Signature[0].SubjectDistinguishedName.SerialNumber", Matchers.is("PNOEE-38001085718"))
                 .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
                 .body("Signatures.Signature[0].SubIndication", Matchers.emptyOrNullString())
                 .body("Signatures.Signature[0].SignatureLevel", Matchers.is("QESIG"))
-                .body("Signatures.Signature[0].SignatureScopes.SignatureScope.Scope", Matchers.is("FullSignatureScope"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope.Name", Matchers.is("test.txt"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope.Scope", Matchers.is("FULL"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope.Content", Matchers.is("Full document"))
+                .body("Signatures.Signature[0].ClaimedSigningTime", Matchers.is("2020-05-29T09:34:56Z"))
+                .body("Signatures.Signature[0].Info.BestSignatureTime", Matchers.is("2020-05-29T09:34:58Z"))
+                .body("Signatures.Signature[0].Info.SignerRole.ClaimedRole[0]", Matchers.is("First role"))
+                .body("Signatures.Signature[0].Info.SignerRole.ClaimedRole[1]", Matchers.is("Second role"))
+                .body("Signatures.Signature[0].Info.SignatureProductionPlace.CountryName", Matchers.is("Some country"))
+                .body("Signatures.Signature[0].Info.SignatureProductionPlace.StateOrProvince", Matchers.is("ÕÄLnül23#&()"))
+                .body("Signatures.Signature[0].Info.SignatureProductionPlace.City", Matchers.is("City with spaces"))
+                .body("Signatures.Signature[0].Info.SignatureProductionPlace.PostalCode", Matchers.is("123456789"))
                 .body("Signatures.Signature[0].Errors", Matchers.emptyOrNullString())
-                .body("Signatures.Signature[0].Warnings", Matchers.emptyOrNullString())
+                .body("Signatures.Signature[0].Warnings.Warning[0].Content", Matchers.is("The trusted certificate doesn't match the trust service"))
                 .body("SignatureForm", Matchers.is("ASiC-E"));
     }
 
@@ -231,14 +259,26 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
         post(validationRequestForDocument("SK-XML1.0.ddoc")).
                 then()
                 .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
-                .body("SignaturesCount", Matchers.is("2"))
-                .body("ValidSignaturesCount", Matchers.is("2"))
+                .body("Signatures.Signature[0].Id", Matchers.is("S0"))
                 .body("Signatures.Signature[0].SignatureFormat", Matchers.is("SK_XML_1.0"))
+                .body("Signatures.Signature[0].SignatureMethod", Matchers.is("http://www.w3.org/2000/09/xmldsig#rsa-sha1"))
+                .body("Signatures.Signature[0].SignedBy", Matchers.is("ANSIP,ANDRUS,35610012722"))
                 .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
-                .body("Signatures.Signature[0].SignatureScopes.SignatureScope.Scope", Matchers.is("FullSignatureScope"))
                 .body("Signatures.Signature[0].Errors", Matchers.emptyOrNullString())
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Name", Matchers.is("Tartu ja Tallinna koostooleping.doc"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Scope", Matchers.is("FullSignatureScope"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Content", Matchers.is("Digest of the document content"))
+                .body("Signatures.Signature[0].ClaimedSigningTime", Matchers.is("2002-10-07T12:10:19Z"))
                 .body("Signatures.Signature[0].Warnings.Warning[0].Content", Matchers.is("Old and unsupported format: SK-XML version: 1.0"))
-                .body("SignatureForm", Matchers.is("DIGIDOC_XML_1.0"));
+                .body("Signatures.Signature[0].Info.BestSignatureTime", Matchers.is("2002-10-07T11:10:47Z"))
+                .body("Signatures.Signature[0].Info.SignatureProductionPlace.CountryName", Matchers.is("Eesti"))
+                .body("Signatures.Signature[0].Info.SignatureProductionPlace.StateOrProvince", Matchers.emptyOrNullString())
+                .body("Signatures.Signature[0].Info.SignatureProductionPlace.City", Matchers.is("Tallinn"))
+                .body("Signatures.Signature[0].Info.SignatureProductionPlace.PostalCode", Matchers.emptyOrNullString())
+                .body("SignatureForm", Matchers.is("DIGIDOC_XML_1.0"))
+                .body("ValidatedDocument.Filename", Matchers.is("SK-XML1.0.ddoc"))
+                .body("ValidSignaturesCount", Matchers.is("2"))
+                .body("SignaturesCount", Matchers.is("2"));
     }
 
     /**
@@ -264,13 +304,25 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
                 .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("SignaturesCount", Matchers.is("3"))
                 .body("ValidSignaturesCount", Matchers.is("3"))
-                .body("Signatures.Signature[0].SignatureFormat", Matchers.is("DIGIDOC_XML_1.1"))
+                .body("Signatures.Signature[0].SignatureMethod", Matchers.is("http://www.w3.org/2000/09/xmldsig#rsa-sha1"))
+                .body("Signatures.Signature[0].SignedBy", Matchers.is("SOONSEIN,SIMMO,38508134916"))
+                .body("Signatures.Signature[0].SubjectDistinguishedName.CommonName", Matchers.is("SOONSEIN,SIMMO,38508134916"))
+                .body("Signatures.Signature[0].SubjectDistinguishedName.SerialNumber", Matchers.is("38508134916"))
                 .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
-                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Scope", Matchers.is("FullSignatureScope"))
                 .body("Signatures.Signature[0].Errors", Matchers.emptyOrNullString())
-                .body("Signatures.Signature[0].Warnings.Warning.size()", Matchers.is(1))
-                .body("Signatures.Signature[0].Warnings.Warning.Content", Matchers.is("Old and unsupported format: DIGIDOC-XML version: 1.1"))
-                .body("SignatureForm", Matchers.is("DIGIDOC_XML_1.1"));
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Name", Matchers.is("DigiDocService_spec_1_110_est.pdf"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Scope", Matchers.is("FullSignatureScope"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Content", Matchers.is("Digest of the document content"))
+                .body("Signatures.Signature[0].ClaimedSigningTime", Matchers.is("2009-06-01T10:42:19Z"))
+                .body("Signatures.Signature[0].Warnings.Warning[0].Content", Matchers.is("Old and unsupported format: DIGIDOC-XML version: 1.1"))
+                .body("Signatures.Signature[0].Info.BestSignatureTime", Matchers.is("2009-06-01T10:42:25Z"))
+                .body("Signatures.Signature[0].Info.SignerRole.ClaimedRole[0]", Matchers.is("Test"))
+                .body("Signatures.Signature[0].Info.SignatureProductionPlace.CountryName", Matchers.is("eesti"))
+                .body("Signatures.Signature[0].Info.SignatureProductionPlace.StateOrProvince", Matchers.is("harju"))
+                .body("Signatures.Signature[0].Info.SignatureProductionPlace.City", Matchers.is("tallinn"))
+                .body("Signatures.Signature[0].Info.SignatureProductionPlace.PostalCode", Matchers.emptyOrNullString())
+                .body("SignatureForm", Matchers.is("DIGIDOC_XML_1.1"))
+                .body("ValidatedDocument.Filename", Matchers.is("igasugust1.1.ddoc"));
     }
 
     /**
@@ -296,13 +348,25 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
                 .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("SignaturesCount", Matchers.is("3"))
                 .body("ValidSignaturesCount", Matchers.is("3"))
-                .body("Signatures.Signature[0].SignatureFormat", Matchers.is("DIGIDOC_XML_1.2"))
+                .body("Signatures.Signature[0].SignatureMethod", Matchers.is("http://www.w3.org/2000/09/xmldsig#rsa-sha1"))
+                .body("Signatures.Signature[0].SignedBy", Matchers.is("SOONSEIN,SIMMO,38508134916"))
+                .body("Signatures.Signature[0].SubjectDistinguishedName.CommonName", Matchers.is("SOONSEIN,SIMMO,38508134916"))
+                .body("Signatures.Signature[0].SubjectDistinguishedName.SerialNumber", Matchers.is("38508134916"))
                 .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
-                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Scope", Matchers.is("FullSignatureScope"))
                 .body("Signatures.Signature[0].Errors", Matchers.emptyOrNullString())
-                .body("Signatures.Signature[0].Warnings.Warning.size()", Matchers.is(1))
-                .body("Signatures.Signature[0].Warnings.Warning.Content", Matchers.is("Old and unsupported format: DIGIDOC-XML version: 1.2"))
-                .body("SignatureForm", Matchers.is("DIGIDOC_XML_1.2"));
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Name", Matchers.is("DigiDocService_spec_1_110_est.pdf"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Scope", Matchers.is("FullSignatureScope"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Content", Matchers.is("Digest of the document content"))
+                .body("Signatures.Signature[0].ClaimedSigningTime", Matchers.is("2009-06-01T10:45:44Z"))
+                .body("Signatures.Signature[0].Warnings.Warning[0].Content", Matchers.is("Old and unsupported format: DIGIDOC-XML version: 1.2"))
+                .body("Signatures.Signature[0].Info.BestSignatureTime", Matchers.is("2009-06-01T10:45:49Z"))
+                .body("Signatures.Signature[0].Info.SignerRole.ClaimedRole[0]", Matchers.is("Test"))
+                .body("Signatures.Signature[0].Info.SignatureProductionPlace.CountryName", Matchers.is("eesti"))
+                .body("Signatures.Signature[0].Info.SignatureProductionPlace.StateOrProvince", Matchers.is("harju"))
+                .body("Signatures.Signature[0].Info.SignatureProductionPlace.City", Matchers.is("otepää"))
+                .body("Signatures.Signature[0].Info.SignatureProductionPlace.PostalCode", Matchers.emptyOrNullString())
+                .body("SignatureForm", Matchers.is("DIGIDOC_XML_1.2"))
+                .body("ValidatedDocument.Filename", Matchers.is("igasugust1.2.ddoc"));
     }
 
     /**
@@ -328,12 +392,25 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
                 .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("SignaturesCount", Matchers.is("3"))
                 .body("ValidSignaturesCount", Matchers.is("3"))
-                .body("Signatures.Signature[0].SignatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("Signatures.Signature[0].SignatureMethod", Matchers.is("http://www.w3.org/2000/09/xmldsig#rsa-sha1"))
+                .body("Signatures.Signature[0].SignedBy", Matchers.is("SOONSEIN,SIMMO,38508134916"))
+                .body("Signatures.Signature[0].SubjectDistinguishedName.CommonName", Matchers.is("SOONSEIN,SIMMO,38508134916"))
+                .body("Signatures.Signature[0].SubjectDistinguishedName.SerialNumber", Matchers.is("38508134916"))
                 .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
-                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Scope", Matchers.is("FullSignatureScope"))
                 .body("Signatures.Signature[0].Errors", Matchers.emptyOrNullString())
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Name", Matchers.is("DigiDocService_spec_1_110_est.pdf"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Scope", Matchers.is("FullSignatureScope"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Content", Matchers.is("Digest of the document content"))
+                .body("Signatures.Signature[0].ClaimedSigningTime", Matchers.is("2009-06-01T10:46:37Z"))
                 .body("Signatures.Signature[0].Warnings", Matchers.emptyOrNullString())
-                .body("SignatureForm", Matchers.is("DIGIDOC_XML_1.3"));
+                .body("Signatures.Signature[0].Info.BestSignatureTime", Matchers.is("2009-06-01T10:46:42Z"))
+                .body("Signatures.Signature[0].Info.SignerRole.ClaimedRole[0]", Matchers.is("Test"))
+                .body("Signatures.Signature[0].Info.SignatureProductionPlace.CountryName", Matchers.is("eesti"))
+                .body("Signatures.Signature[0].Info.SignatureProductionPlace.StateOrProvince", Matchers.is("ei tea"))
+                .body("Signatures.Signature[0].Info.SignatureProductionPlace.City", Matchers.is("tõrva"))
+                .body("Signatures.Signature[0].Info.SignatureProductionPlace.PostalCode", Matchers.emptyOrNullString())
+                .body("SignatureForm", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("ValidatedDocument.Filename", Matchers.is("igasugust1.3.ddoc"));
     }
 
     /**
@@ -354,17 +431,27 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     @Test
     public void SoapPdfCorrectValuesArePresentBaselineLtSignature() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
-        post(validationRequestForDocument("pades_lt_two_valid_sig.pdf")).
+        post(validationRequestForDocument("reason_and_location_Test.pdf")).
                 then()
                 .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
-                .body("SignaturesCount", Matchers.is("2"))
-                .body("ValidSignaturesCount", Matchers.is("2"))
+                .body("SignaturesCount", Matchers.is("1"))
+                .body("ValidSignaturesCount", Matchers.is("1"))
+                .body("Signatures.Signature[0].Id", Matchers.is("S-24C246774A122D4077DF298CF6F7DC9475AC0E272E0A7FFC2C1285DCC83F312C"))
                 .body("Signatures.Signature[0].SignatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("Signatures.Signature[0].SignatureMethod", Matchers.is("http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"))
+                .body("Signatures.Signature[0].SignatureLevel", Matchers.is("QESIG"))
+                .body("Signatures.Signature[0].SignedBy", Matchers.is("ŽÕRINÜWŠKY,MÄRÜ-LÖÖZ,11404176865"))
+                .body("Signatures.Signature[0].SubjectDistinguishedName.CommonName", Matchers.is("ŽÕRINÜWŠKY,MÄRÜ-LÖÖZ,11404176865"))
+                .body("Signatures.Signature[0].SubjectDistinguishedName.SerialNumber", Matchers.is("11404176865"))
                 .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
-                .body("Signatures.Signature[0].SignatureLevel[0]", Matchers.is("QESIG"))
-                .body("Signatures.Signature[0].SignatureScopes.SignatureScope.Scope", Matchers.is("PARTIAL"))
                 .body("Signatures.Signature[0].Errors", Matchers.emptyOrNullString())
-                .body("Signatures.Signature[0].Warnings.Warning.Content", Matchers.is("The trusted certificate doesn't match the trust service"));
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Name", Matchers.is("Partial PDF"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Scope", Matchers.is("PARTIAL"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Content", Matchers.is("The document byte range: [0, 2226, 21172, 314]"))
+                .body("Signatures.Signature[0].ClaimedSigningTime", Matchers.is("2020-05-27T09:59:07Z"))
+                .body("Signatures.Signature[0].Info.BestSignatureTime", Matchers.is("2020-05-27T09:59:09Z"))
+                .body("Signatures.Signature[0].Info.SignatureProductionPlace.CountryName", Matchers.is("Narva"))
+                .body("ValidatedDocument.Filename", Matchers.is("reason_and_location_Test.pdf"));
     }
 
     /**

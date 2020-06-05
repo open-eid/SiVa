@@ -104,6 +104,12 @@
             <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-crl-parser-x509crl</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.digidoc4j.dss</groupId>
+            <artifactId>dss-asic-xades</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>

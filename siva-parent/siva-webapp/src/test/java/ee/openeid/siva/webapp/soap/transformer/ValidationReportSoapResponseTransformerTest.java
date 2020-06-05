@@ -153,6 +153,7 @@ public class ValidationReportSoapResponseTransformerTest {
         assertEquals(dssSignature.getSignedBy(), responseSignature.getSignedBy());
         assertEquals(dssSignature.getSubIndication(), responseSignature.getSubIndication());
         assertEquals(dssSignature.getInfo().getBestSignatureTime(), responseSignature.getInfo().getBestSignatureTime());
+        assertEquals(dssSignature.getInfo().getTimeAssertionMessageImprint(), responseSignature.getInfo().getTimeAssertionMessageImprint());
         assertEquals(dssSignature.getInfo().getSignerRole().get(0).getClaimedRole(), responseSignature.getInfo().getSignerRole().get(0).getClaimedRole());
         assertEquals(dssSignature.getInfo().getSignatureProductionPlace().getCountryName(), responseSignature.getInfo().getSignatureProductionPlace().getCountryName());
         assertEquals(dssSignature.getInfo().getSignatureProductionPlace().getCity(), responseSignature.getInfo().getSignatureProductionPlace().getCity());
@@ -434,6 +435,7 @@ public class ValidationReportSoapResponseTransformerTest {
     private ee.openeid.siva.validation.document.report.Info createMockedSignatureInfo() {
         ee.openeid.siva.validation.document.report.Info info = new ee.openeid.siva.validation.document.report.Info();
         info.setBestSignatureTime("2016-09-21T14:00:00Z");
+        info.setTimeAssertionMessageImprint("messageImprint123");
         SignerRole signerRole1 = new SignerRole();
         signerRole1.setClaimedRole("role1");
         info.setSignerRole(Collections.singletonList(signerRole1));

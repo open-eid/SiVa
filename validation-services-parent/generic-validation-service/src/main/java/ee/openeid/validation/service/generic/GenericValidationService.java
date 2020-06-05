@@ -71,12 +71,6 @@ public class GenericValidationService implements ValidationService {
     private ConstraintLoadingSignaturePolicyService signaturePolicyService;
     private ReportConfigurationProperties reportConfigurationProperties;
 
-    private static boolean isInRangeMillis(Date date1, Date date2, int rangeInMillis) {
-        Date latestTime = addMilliseconds(date2, rangeInMillis);
-        Date earliestTime = addMilliseconds(date2, -rangeInMillis);
-        return !date1.before(latestTime) || !date1.after(earliestTime);
-    }
-
     @Override
     public Reports validateDocument(ValidationDocument validationDocument) throws DSSException {
         try {
@@ -135,6 +129,7 @@ public class GenericValidationService implements ValidationService {
 
         CommonCertificateVerifier certificateVerifier = new CommonCertificateVerifier(trustedListsCertificateSource,
                 new AlwaysFailingCRLSource(), new AlwaysFailingOCSPSource(), new CommonsDataLoader());
+        certificateVerifier.setIncludeCertificateRevocationValues(true);
         LOGGER.info("Certificate pool size: {}", getCertificatePoolSize(certificateVerifier));
         validator.setCertificateVerifier(certificateVerifier);
         validator.setValidationLevel(VALIDATION_LEVEL);

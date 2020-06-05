@@ -105,7 +105,6 @@ public class PDFValidationServiceTest {
         SimpleReport report = validateAndAssertReports(buildValidationDocument(PDF_WITH_REASON_AND_LOCATION)).getSimpleReport();
         assertEquals("http://www.w3.org/2001/04/xmldsig-more#rsa-sha512",
                 report.getValidationConclusion().getSignatures().get(0).getSignatureMethod());
-
     }
 
     void assertNoErrors(SignatureValidationData signatureValidationData) {

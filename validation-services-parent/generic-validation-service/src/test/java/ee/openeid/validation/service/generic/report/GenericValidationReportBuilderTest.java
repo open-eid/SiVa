@@ -32,6 +32,7 @@ import eu.europa.esig.dss.enumerations.EndorsementType;
 import eu.europa.esig.dss.enumerations.Indication;
 import eu.europa.esig.dss.enumerations.MaskGenerationFunction;
 import eu.europa.esig.dss.enumerations.SignatureLevel;
+import eu.europa.esig.dss.enumerations.TimestampType;
 import eu.europa.esig.dss.simplereport.jaxb.XmlSimpleReport;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
 import org.junit.Assert;
@@ -45,6 +46,8 @@ import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GenericValidationReportBuilderTest {
+
+    private static final String TM_POLICY_OID = "1.3.6.1.4.1.10015.1000.3.2.1";
 
     @Test
     public void totalPassedIndicationReportBuild() {
@@ -197,6 +200,55 @@ public class GenericValidationReportBuilderTest {
                 reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getSignatureMethod());
     }
 
+    @Test
+    public void timeAssertionMessageImprintIsEmptyOnTimestampParseError() {
+        XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
+
+        XmlDigestMatcher xmlDigestMatcher = new XmlDigestMatcher();
+        xmlDigestMatcher.setDigestValue(new byte[0]);
+        xmlDigestMatcher.setDataFound(true);
+        xmlDigestMatcher.setDataIntact(true);
+
+        XmlTimestamp xmlTimestamp = new XmlTimestamp();
+        xmlTimestamp.setDigestMatcher(xmlDigestMatcher);
+        xmlTimestamp.setType(TimestampType.SIGNATURE_TIMESTAMP);
+
+        XmlFoundTimestamp xmlFoundTimestamp = new XmlFoundTimestamp();
+        xmlFoundTimestamp.setTimestamp(xmlTimestamp);
+
+        diagnosticData.getSignatures().get(0).setFoundTimestamps(Collections.singletonList(xmlFoundTimestamp));
+
+        eu.europa.esig.dss.validation.reports.Reports dssReports = new eu.europa.esig.dss.validation.reports.Reports(diagnosticData, null, getSimpleReport(), null);
+        Reports reports = new GenericValidationReportBuilder(dssReports, ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
+
+        Assert.assertEquals("", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getTimeAssertionMessageImprint());
+    }
+
+    @Test
+    public void timeAssertionMessageImprintIsEmptyOnOcspNonceParseError() {
+        XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
+
+        XmlRevocation xmlRevocation = new XmlRevocation();
+        xmlRevocation.setBase64Encoded(new byte[0]);
+
+        XmlRelatedRevocation xmlRelatedRevocation = new XmlRelatedRevocation();
+        xmlRelatedRevocation.setRevocation(xmlRevocation);
+
+        XmlFoundRevocations xmlFoundRevocations = new XmlFoundRevocations();
+        xmlFoundRevocations.getRelatedRevocations().add(xmlRelatedRevocation);
+
+        diagnosticData.getSignatures().get(0).setFoundRevocations(xmlFoundRevocations);
+
+        XmlPolicy xmlPolicy = new XmlPolicy();
+        xmlPolicy.setId(TM_POLICY_OID);
+        diagnosticData.getSignatures().get(0).setPolicy(xmlPolicy);
+
+        eu.europa.esig.dss.validation.reports.Reports dssReports = new eu.europa.esig.dss.validation.reports.Reports(diagnosticData, null, getSimpleReport(), null);
+        Reports reports = new GenericValidationReportBuilder(dssReports, ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
+
+        Assert.assertEquals("", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getTimeAssertionMessageImprint());
+    }
+
     private ValidationDocument getValidationDocument() {
         ValidationDocument validationDocument = new ValidationDocument();
         validationDocument.setName("filename.bdoc");
@@ -229,6 +281,9 @@ public class GenericValidationReportBuilderTest {
         XmlFoundTimestamp xmlFoundTimestamp = new XmlFoundTimestamp();
         xmlFoundTimestamp.setTimestamp(new XmlTimestamp());
         xmlSignature.setFoundTimestamps(Collections.singletonList(xmlFoundTimestamp));
+
+        XmlFoundRevocations xmlFoundRevocations = new XmlFoundRevocations();
+        xmlSignature.setFoundRevocations(xmlFoundRevocations);
 
         XmlPolicy xmlPolicy = new XmlPolicy();
         xmlPolicy.setId(policyId);

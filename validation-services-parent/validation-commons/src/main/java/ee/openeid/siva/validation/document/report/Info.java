@@ -24,6 +24,7 @@ import java.util.List;
 public class Info {
 
     private String bestSignatureTime;
+    private String timeAssertionMessageImprint;
     private List<SignerRole> signerRole;
     private SignatureProductionPlace signatureProductionPlace;
 

@@ -51,6 +51,7 @@ public class ValidationReportSoapResponseTransformer {
             return null;
         Info responseSignatureInfo = new Info();
         responseSignatureInfo.setBestSignatureTime(signatureInfo.getBestSignatureTime());
+        responseSignatureInfo.setTimeAssertionMessageImprint(signatureInfo.getTimeAssertionMessageImprint());
 
         if (signatureInfo.getSignerRole() != null) {
             responseSignatureInfo.getSignerRole().addAll(toSoapSignerRole(signatureInfo.getSignerRole()));

@@ -10,6 +10,8 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
 
+import static ee.openeid.siva.integrationtest.TestData.SOAP_ERROR_RESPONSE_PREFIX;
+
 @Category(XroadIntegrationTest.class)
 public class SoapValidationRequestIT extends SiVaSoapTests {
 
@@ -40,9 +42,10 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
         post(validationRequestForDocumentExtended(encodedString, "xroad-simple.asice", "XROAD", INVALID_SIGNATURE_POLICY))
                 .then()
+                .rootPath(SOAP_ERROR_RESPONSE_PREFIX)
                 .statusCode(HttpStatus.OK.value())
-                .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
-                .body("Envelope.Body.Fault.faultstring", Matchers.is("Invalid signature policy: " + INVALID_SIGNATURE_POLICY + "; Available abstractPolicies: [" + VALID_SIGNATURE_POLICY_3 + "]"));
+                .body("faultcode", Matchers.is(CLIENT_FAULT))
+                .body("faultstring", Matchers.is("Invalid signature policy: " + INVALID_SIGNATURE_POLICY + "; Available abstractPolicies: [" + VALID_SIGNATURE_POLICY_3 + "]"));
     }
 
     /**
@@ -63,9 +66,10 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
         post(validationRequestForDocumentExtended(encodedString, "igasugust1.3.ddoc", "XROAD", "POLv3"))
                 .then()
+                .rootPath(SOAP_ERROR_RESPONSE_PREFIX)
                 .statusCode(HttpStatus.OK.value())
-                .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
-                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
+                .body("faultcode", Matchers.is(CLIENT_FAULT))
+                .body("faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
 
@@ -87,9 +91,10 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "XROAD", VALID_SIGNATURE_POLICY_3))
                 .then()
+                .rootPath(SOAP_ERROR_RESPONSE_PREFIX)
                 .statusCode(HttpStatus.OK.value())
-                .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
-                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
+                .body("faultcode", Matchers.is(CLIENT_FAULT))
+                .body("faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
     /**
@@ -110,9 +115,10 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
         post(validationRequestForDocumentExtended(encodedString, "PdfValidSingleSignature.pdf", "XROAD", "POLv3"))
                 .then()
+                .rootPath(SOAP_ERROR_RESPONSE_PREFIX)
                 .statusCode(HttpStatus.OK.value())
-                .body("Envelope.Body.Fault.faultcode", Matchers.is(CLIENT_FAULT))
-                .body("Envelope.Body.Fault.faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
+                .body("faultcode", Matchers.is(CLIENT_FAULT))
+                .body("faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
 

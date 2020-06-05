@@ -11,6 +11,7 @@ target
 dss-demo-webapp/dss-debug.log
 dss-demo-webapp/log.out
 log.out
+allure-results
 
 bin
 Vagrantfile

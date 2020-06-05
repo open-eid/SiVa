@@ -55,7 +55,7 @@ public class ValidationRequestIT extends SiVaRestTests {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
         post(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-simple.asice", "XROAD", "POLv3"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("validatedDocument.filename", equalTo("xroad-simple.asice"))
                 .body("policy.policyName", equalTo("POLv3"))
                 .body("validSignaturesCount", equalTo(1));
@@ -84,7 +84,7 @@ public class ValidationRequestIT extends SiVaRestTests {
         jsonObject.put(DOCUMENT_TYPE, "XROAD");
 
         post(jsonObject.toString())
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("validSignaturesCount", equalTo(1));
     }
 

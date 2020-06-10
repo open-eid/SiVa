@@ -34,8 +34,7 @@ import java.nio.charset.Charset;
 @Configuration
 @EnableConfigurationProperties({
         SivaRESTWebServiceConfigurationProperties.class,
-        BuildInfoProperties.class,
-        GoogleAnalyticsProperties.class
+        BuildInfoProperties.class
 })
 public class DemoApplicationConfiguration extends MonitoringConfiguration {
     private BuildInfoProperties properties;

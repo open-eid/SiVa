@@ -19,7 +19,6 @@ package ee.openeid.siva.statistics;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import ee.openeid.siva.statistics.googleanalytics.GoogleAnalyticsMeasurementProtocolClient;
 import ee.openeid.siva.statistics.model.SimpleSignatureReport;
 import ee.openeid.siva.statistics.model.SimpleValidationReport;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
@@ -46,7 +45,6 @@ public class StatisticsService {
     private static final Logger LOGGER = LoggerFactory.getLogger(StatisticsService.class);
 
     private HttpServletRequest httpRequest;
-    private GoogleAnalyticsMeasurementProtocolClient googleAnalyticsMeasurementProtocolClient;
 
     public void publishValidationStatistic(long validationDurationInNanos, ValidationConclusion validationConclusion) {
         SimpleValidationReport simpleValidationReport = createValidationResult(validationDurationInNanos, validationConclusion);
@@ -55,7 +53,6 @@ public class StatisticsService {
         } catch (JsonProcessingException e) {
             LOGGER.error("Error generating json: {}", e.getMessage(), e);
         }
-        googleAnalyticsMeasurementProtocolClient.sendStatisticalData(simpleValidationReport);
     }
 
     private SimpleValidationReport createValidationResult(long validationDurationInNanos, ValidationConclusion report) {
@@ -98,11 +95,6 @@ public class StatisticsService {
     private String getUserIdentifier() {
         String userIdentifier = httpRequest.getHeader("x-authenticated-user");
         return StringUtils.isEmpty(userIdentifier) ? "N/A" : userIdentifier;
-    }
-
-    @Autowired
-    public void setGoogleAnalyticsMeasurementClient(GoogleAnalyticsMeasurementProtocolClient googleAnalyticsMeasurementProtocolClient) {
-        this.googleAnalyticsMeasurementProtocolClient = googleAnalyticsMeasurementProtocolClient;
     }
 
     @Autowired

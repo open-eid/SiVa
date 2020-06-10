@@ -19,7 +19,6 @@ package ee.openeid.siva.sample.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import ee.openeid.siva.sample.cache.UploadFileCacheService;
 import ee.openeid.siva.sample.cache.UploadedFile;
-import ee.openeid.siva.sample.configuration.GoogleAnalyticsProperties;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,15 +48,13 @@ class UploadController {
     private DataFilesTaskRunner dataFilesTaskRunner;
     private HashcodeValidationTaskRunner hashcodeValidationTaskRunner;
     private UploadFileCacheService fileUploadService;
-    private GoogleAnalyticsProperties googleAnalyticsProperties;
 
     private static ValidationResponse validationResponse(Model model) {
         return (ValidationResponse) model.asMap().get("validationResponse");
     }
 
     @RequestMapping("/")
-    public String startPage(final Model model) {
-        model.addAttribute("googleTrackingId", googleAnalyticsProperties.getTrackingId());
+    public String startPage() {
         return START_PAGE_VIEW_NAME;
     }
 
@@ -172,11 +169,6 @@ class UploadController {
     @Autowired
     public void setDataFilesTaskRunner(DataFilesTaskRunner dataFilesTaskRunner) {
         this.dataFilesTaskRunner = dataFilesTaskRunner;
-    }
-
-    @Autowired
-    public void setGoogleAnalyticsProperties(GoogleAnalyticsProperties googleAnalyticsProperties) {
-        this.googleAnalyticsProperties = googleAnalyticsProperties;
     }
 
     @Autowired

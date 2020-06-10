@@ -302,9 +302,7 @@ There are two channels where this information is sent:
 
 1. Log feeds (at INFO level) which can be redirected to files or to a syslog feed.
 
-2. **Google Analytics service** (as GA events). Turned off by default. See [Configuration parameters](/siva/v2/systemintegrators_guide/#configuration-parameters) for further details.
-
-The format and events are described in more detail in [SiVa_statistics.pdf](/pdf-files/SiVa_statistics.pdf)
+The format and events are described in more detail in [SiVa_statistics_v3.pdf](/SiVa/pdf-files/SiVa_statistics_v3.pdf)
 
 ## Monitoring
 
@@ -436,15 +434,6 @@ See the reference list of all common [application properties](http://docs.spring
 | Property | Description |
 | ------ | ----------- |
 | **siva.wsdl.endpoint-url** | SOAP services endpoint URL to what specific service name is added within the application. Must contain only scheme, host and/or port and optional path. Service name must not be added to the url.  |
-
-* Collecting statistics with Google Analytics
-
-| Property | Description |
-| -------- | ----------- |
-| **siva.statistics.google-analytics.enabled** | Enables/disables the service <ul><li>Default: **false**</li></ul> |
-| **siva.statistics.google-analytics.url** | Statistics endpoint URL <ul><li>Default: **http://www.google-analytics.com/batch**</li></ul> |
-| **siva.statistics.google-analytics.trackingId** | The Google Analytics tracking ID <ul><li>Default: **UA-83206619-1**</li></ul> |
-| **siva.statistics.google-analytics.dataSourceName** | Descriptive text of the system <ul><li>Default: **SiVa**</li></ul> |
 
 * BDOC validation parameters
 

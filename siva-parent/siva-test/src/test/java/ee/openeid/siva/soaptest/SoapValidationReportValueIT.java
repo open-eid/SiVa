@@ -17,18 +17,14 @@
 package ee.openeid.siva.soaptest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
-import ee.openeid.siva.webapp.soap.response.SignatureValidationData;
-import ee.openeid.siva.webapp.soap.response.ValidationReport;
+import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.w3c.dom.Document;
 
 import static ee.openeid.siva.integrationtest.TestData.SOAP_VALIDATION_CONCLUSION_PREFIX;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 @Category(IntegrationTest.class)
 public class SoapValidationReportValueIT extends SiVaSoapTests {
@@ -482,6 +478,247 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
                 .body("Signatures.Signature[0].SubIndication", Matchers.is("FORMAT_FAILURE"))
                 .body("Signatures.Signature[0].SignatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
                 .body("Signatures.Signature[0].SignatureScopes.SignatureScope.Scope", Matchers.is("FULL"));
+    }
+
+    /**
+     *
+     * TestCaseID: Asice-SoapRoleAndProductionPlaceValue-1
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
+     *
+     * Title: Verification of filled SignerRole and SignatureProductionPlace values.
+     *
+     * Expected Result: All required elements are present and meet the expected values.
+     *
+     * File: role_productionPlace.asice
+     *
+     */
+    @Test
+    public void SoapAsiceRoleAndPlaceValidIT() {
+        setTestFilesDirectory("bdoc/test/timestamp/");
+        post(validationRequestForDocument("role_productionPlace.asice")).
+                then()
+                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+                .body("Signatures.Signature[0].Info.SignerRole.ClaimedRole", Matchers.is("Normal SignerRoleV2Type"))
+                .body("Signatures.Signature[0].Info.SignatureProductionPlace.CountryName", Matchers.is("Estonia"))
+                .body("Signatures.Signature[0].Info.SignatureProductionPlace.StateOrProvince", Matchers.is("Harju County"))
+                .body("Signatures.Signature[0].Info.SignatureProductionPlace.City", Matchers.is("Tallinn"))
+                .body("Signatures.Signature[0].Info.SignatureProductionPlace.PostalCode", Matchers.is("12345"));
+    }
+
+    /**
+     *
+     * TestCaseID: Asice-SoapRoleAndProductionPlaceValue-2
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
+     *
+     * Title: Verification of filled SignerRole and SignatureProductionPlace special character values.
+     *
+     * Expected Result: All required elements are present and meet the expected values.
+     *
+     * File: role_productionPlace.asice
+     *
+     */
+    @Test
+    public void SoapAsiceRoleAndPlaceValidSpecialCharactersIT() {
+        setTestFilesDirectory("bdoc/test/timestamp/");
+        post(validationRequestForDocument("role_productionPlace.asice")).
+                then()
+                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+                .body("Signatures.Signature[1].Info.SignerRole.ClaimedRole[0]", Matchers.is("Special character SignerRoleV2Type - Õäöüžš"))
+                .body("Signatures.Signature[1].Info.SignatureProductionPlace.CountryName", Matchers.is("Эсто́ния"))
+                .body("Signatures.Signature[1].Info.SignatureProductionPlace.StateOrProvince", Matchers.is("И́да-Ви́руский уезд"))
+                .body("Signatures.Signature[1].Info.SignatureProductionPlace.City", Matchers.is("На́рва"))
+                .body("Signatures.Signature[1].Info.SignatureProductionPlace.PostalCode", Matchers.is("#12345%"));
+    }
+
+    /**
+     *
+     * TestCaseID: Asice-SoapRoleAndProductionPlaceValue-3
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
+     *
+     * Title: Verification of filled SignerRole and SignatureProductionPlace values in XML and JSON syntax.
+     *
+     * Expected Result: All required elements are present and meet the expected values. Structure is not malformed.
+     *
+     * File: role_productionPlace.asice
+     *
+     */
+    @Test
+    public void SoapAsiceRoleAndPlaceSoapAndJsonFormatIT() {
+        setTestFilesDirectory("bdoc/test/timestamp/");
+        post(validationRequestForDocument("role_productionPlace.asice")).
+                then()
+                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+                .body("Signatures.Signature[2].Info.SignerRole.ClaimedRole[0]", Matchers.is("{\"claimedRole\": \"XML/JSON SignerRoleV2Type\", </ns3:ClaimedRole>"))
+                .body("Signatures.Signature[2].Info.SignatureProductionPlace.CountryName", Matchers.is("\"countryName\": \"Eesti\""))
+                .body("Signatures.Signature[2].Info.SignatureProductionPlace.StateOrProvince", Matchers.is("Harjumaa</ns3:SignatureProductionPlace>"))
+                .body("Signatures.Signature[2].Info.SignatureProductionPlace.City", Matchers.is("<ns3:ClaimedRole>Tallinn"))
+                .body("Signatures.Signature[2].Info.SignatureProductionPlace.PostalCode", Matchers.is("[ {\"postalCode1\": 12345}, {postalCode2\": \"12345\"}],"));
+    }
+
+    /**
+     *
+     * TestCaseID: Asice-SoapRoleAndProductionPlaceValue-4
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
+     *
+     * Title: Verification of empty SignerRole and SignatureProductionPlace elements.
+     *
+     * Expected Result: Structure does not contain SignerRole and SignatureProductionPlace elements.
+     *
+     * File: role_productionPlace.asice
+     *
+     */
+    @Test
+    public void SoapAsiceRoleAndPlaceEmptyIT() {
+        setTestFilesDirectory("bdoc/test/timestamp/");
+        post(validationRequestForDocument("role_productionPlace.asice")).
+                then()
+                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+                .body("Signatures.Signature[3].Info", Matchers.not(new XmlNodeContainsKeyMatcher("SignatureProductionPlace")))
+                .body("Signatures.Signature[3].Info", Matchers.not(new XmlNodeContainsKeyMatcher("SignerRole")));
+    }
+
+    /**
+     *
+     * TestCaseID: Asice-SoapRoleAndProductionPlaceValue-5
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
+     *
+     * Title: Verification of filled SignerRole and empty SignatureProductionPlace elements.
+     *
+     * Expected Result: SignerRole element is present and meets the expected value. Structure does not contain SignatureProductionPlace elements.
+     *
+     * File: role_productionPlace.asice
+     *
+     */
+    @Test
+    public void SoapAsiceRoleAndPlaceOnlyRoleIT() {
+        setTestFilesDirectory("bdoc/test/timestamp/");
+        post(validationRequestForDocument("role_productionPlace.asice")).
+                then()
+                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+                .body("Signatures.Signature[4].Info.SignerRole.ClaimedRole[0]", Matchers.is("Only role"))
+                .body("Signatures.Signature[4].Info", Matchers.not(new XmlNodeContainsKeyMatcher("SignatureProductionPlace")));
+    }
+
+    /**
+     *
+     * TestCaseID: Asice-SoapRoleAndProductionPlaceValue-6
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
+     *
+     * Title: Verification of empty SignerRole and partially filled SignatureProductionPlace element.
+     *
+     * Expected Result: SignatureProductionPlace.City element is present and meets the expected value. Structure does not contain SignerRole element.
+     *
+     * File: role_productionPlace.asice
+     *
+     */
+    @Test
+    public void SoapAsiceRoleAndPlaceOnlyCityIT() {
+        setTestFilesDirectory("bdoc/test/timestamp/");
+        post(validationRequestForDocument("role_productionPlace.asice")).
+                then()
+                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+                .body("Signatures.Signature[5].Info", Matchers.not(new XmlNodeContainsKeyMatcher("SignerRole")))
+                .body("Signatures.Signature[5].Info.SignatureProductionPlace.City", Matchers.is("Only city"));
+    }
+
+    /**
+     *
+     * TestCaseID: Asice-SoapRoleAndProductionPlaceValue-7
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
+     *
+     * Title: Verification of short data type maximum range value for SignerRole and SignatureProductionPlace.
+     *
+     * Expected Result: All required elements are present and corresponding values meet the short data type maximum range of 32767 characters.
+     *
+     * File: role_productionPlace.asice
+     *
+     */
+    @Test
+    public void SoapAsiceRoleAndPlaceShortDataTypeMaxValueLengthIT() {
+        setTestFilesDirectory("bdoc/test/timestamp/");
+        String shortTypeValue = "32767" + StringUtils.repeat("a", 32762);
+        post(validationRequestForDocument("role_productionPlace.asice")).
+                then()
+                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+                .body("Signatures.Signature[6].Info.SignerRole.ClaimedRole[0]", Matchers.is(shortTypeValue))
+                .body("Signatures.Signature[6].Info.SignatureProductionPlace.CountryName", Matchers.is(shortTypeValue))
+                .body("Signatures.Signature[6].Info.SignatureProductionPlace.StateOrProvince", Matchers.is(shortTypeValue))
+                .body("Signatures.Signature[6].Info.SignatureProductionPlace.City", Matchers.is(shortTypeValue))
+                .body("Signatures.Signature[6].Info.SignatureProductionPlace.PostalCode", Matchers.is(shortTypeValue));
+    }
+
+    /**
+     *
+     * TestCaseID: Asice-SoapRoleAndProductionPlaceValue-8
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
+     *
+     * Title:  Verification of int data type value longer than short data type maximum value for SignatureProductionPlace.
+     *
+     * Expected Result: Element is present and meets expected value of 32768 characters.
+     *
+     * File: role_productionPlace.asice
+     *
+     */
+    @Test
+    public void SoapAsiceRoleAndPlaceIntDataTypeValueLengthCityIT() {
+        setTestFilesDirectory("bdoc/test/timestamp/");
+        String intValue = "32768" + StringUtils.repeat("a", 32763);
+        post(validationRequestForDocument("role_productionPlace.asice")).
+                then()
+                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+                .body("Signatures.Signature[7].Info.SignatureProductionPlace.City", Matchers.is(intValue));
+    }
+
+    /**
+     *
+     * TestCaseID: Asice-SoapRoleAndProductionPlaceValue-9
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
+     *
+     * Title: Verification of 3 concurrent claimed roles.
+     *
+     * Expected Result: All claimed roles are present and meet the expected values.
+     *
+     * File: role_productionPlace.asice
+     *
+     */
+    @Test
+    public void SoapAsiceRoleAndPlaceThreeRolesIT() {
+        setTestFilesDirectory("bdoc/test/timestamp/");
+        post(validationRequestForDocument("role_productionPlace.asice")).
+                then()
+                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+                .body("Signatures.Signature[8].Info.SignerRole.ClaimedRole[0]", Matchers.is("First role"))
+                .body("Signatures.Signature[8].Info.SignerRole.ClaimedRole[1]", Matchers.is("Second role"))
+                .body("Signatures.Signature[8].Info.SignerRole.ClaimedRole[2]", Matchers.is("Third role"))
+                .body("Signatures.Signature[8].Errors", Matchers.emptyOrNullString())
+                .body("Signatures.Signature[8].Warnings.Warning[0].Content", Matchers.is("The trusted certificate doesn't match the trust service"));
     }
 
     @Override

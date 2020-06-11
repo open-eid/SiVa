@@ -205,6 +205,8 @@ public class TimemarkContainerValidationServiceIntegrationTest {
         assertEquals("FullSignatureScope", scope.getScope());
         assertEquals("2020-05-21T14:07:04Z", sig1.getClaimedSigningTime());
         assertEquals("2020-05-21T14:07:01Z", sig1.getInfo().getBestSignatureTime());
+        //TODO Enable once dd4j release with added getNonce implementation is available from maven
+        //assertEquals("MDEwDQYJYIZIAWUDBAIBBQAEIGKrO2Grf+WLkmOnj9QQbCXAa2A3881D9PUIOk0M7Nm6", sig1.getInfo().getTimeAssertionMessageImprint());
         assertTrue(sig1.getInfo().getSignerRole().isEmpty());
         assertNull(sig1.getInfo().getSignatureProductionPlace());
     }
@@ -236,6 +238,8 @@ public class TimemarkContainerValidationServiceIntegrationTest {
         assertEquals("FullSignatureScope", scope.getScope());
         assertEquals("2020-05-28T10:59:12Z", sig2.getClaimedSigningTime());
         assertEquals("2020-05-28T10:59:14Z", sig2.getInfo().getBestSignatureTime());
+        //TODO Enable once dd4j release with added getNonce implementation is available from maven
+        //assertEquals("MDEwDQYJYIZIAWUDBAIBBQAEIDDnPj4HDgSwi+tj/s30GshbBf1L8Nqnt2GMK+6VnEdt", sig2.getInfo().getTimeAssertionMessageImprint());
         assertEquals(1, sig2.getInfo().getSignerRole().size());
         assertEquals("Signing as king of signers", sig2.getInfo().getSignerRole().get(0).getClaimedRole());
         assertEquals("Tallinn", sig2.getInfo().getSignatureProductionPlace().getCity());
@@ -377,6 +381,16 @@ public class TimemarkContainerValidationServiceIntegrationTest {
         assertSubjectDNPresent(reports.getSimpleReport().getValidationConclusion().getSignatures().get(0), expectedSerialNumber, expectedCommonName);
         assertSubjectDNPresent(reports.getDetailedReport().getValidationConclusion().getSignatures().get(0), expectedSerialNumber, expectedCommonName);
         assertSubjectDNPresent(reports.getDiagnosticReport().getValidationConclusion().getSignatures().get(0), expectedSerialNumber, expectedCommonName);
+    }
+
+    @Test
+    @Ignore("Enable once dd4j release with added getNonce implementation is available from maven")
+    public void timeAssertionMessageImprintIsEmptyForMissingOcspData() {
+        Reports reports = timemarkContainerValidationService.validateDocument(buildValidationDocument("LT_without_nonce.bdoc"));
+
+        SignatureValidationData signatureValidationData = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0);
+
+        assertEquals("", signatureValidationData.getInfo().getTimeAssertionMessageImprint());
     }
 
     private void assertSubjectDNPresent(SignatureValidationData signature, String serialNumber, String commonName) {

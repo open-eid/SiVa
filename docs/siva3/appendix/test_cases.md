@@ -2992,95 +2992,6 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   **Attention! This test is disabled: 
 
 
-## StatisticsToGAManualIT.java
-
-!!! Note
-
-    All tests in this class expect manual configuration of Google Analytics before executing the tests.
-    The test are made to prepare test data and ease the test execution, all results must be checked manually in GA!
-    Check all the fields presence and correctness even though tests prepare data for specific cases.
-
-**TestCaseID: Xauth-Statistics-GA-1**
-
-  * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf)
-  * Title: Pdf valid container is validated with x-authenticated-user set in header
-  * Expected Result: x-authenticated-user value is shown in GA
-  * File: pades_lt_two_valid_sig.pdf
-
-
-**TestCaseID: Xauth-Statistics-GA-2**
-
-  * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf)
-  * Title: Pdf valid container is validated with x-authenticated-user set in header
-  * Expected Result: x-authenticated-user value is shown as N/A in GA
-  * File: pades_lt_two_valid_sig.pdf
-
-
-**TestCaseID: Xauth-Statistics-GA-3**
-
-  * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf)
-  * Title: Pdf valid container is validated with x-authenticated-user set in header
-  * Expected Result: x-authenticated-user value is shown as N/A in GA
-  * File: pades_lt_two_valid_sig.pdf
-
-
-**TestCaseID: Bdoc-Statistics-GA-1**
-
-  * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf)
-  * Title: Bdoc with certificates from different countries.
-  * Expected Result: LT, EE and LV country codes are present in GA, Signature container type is ASIC-E TM
-  * File: Baltic MoU digital signing_EST_LT_LV.bdoc
-
-
-**TestCaseID: Bdoc-Statistics-GA-2**
-
-  * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf)
-  * Title: Asice-E TS is validated
-  * Expected Result: GA shows Signature container type as ASIC-E TS
-  * File: BDOC-TS.bdoc
-
-
-**TestCaseID: Xroad-Statistics-GA-1**
-
-  * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf)
-  * Title: Xroad valid container is validated
-  * Expected Result: Country code XX is sent to GA (GA shows ZZ as the XX is unknown code), Signature container type is ASiC-E (BatchSignature)
-  * File: xroad-batchsignature.asice
-
-
-**TestCaseID: Ddoc-Statistics-GA-1**
-
-  * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf)
-  * Title: Ddoc not supported file is inserted
-  * Expected Result: Not shown in GA statistics as the container is not validated
-  * File: xroad-simple.asice
-
-
-**TestCaseID: Ddoc-Statistics-Log-2**
-
-  * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf)
-  * Title: Ddoc invalid container is validated
-  * Expected Result: GA shows Signature container type as XAdES, TOTAL-FAILED indication
-  * File: ilma_kehtivuskinnituseta.ddoc
-
-
-**TestCaseID: Xauth-Statistics-GA-1**
-
-  * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf)
-  * Title: Pdf valid container is validated with x-authenticated-user set in header
-  * Expected Result: x-authenticated-user value is shown in GA
-  * File: pades_lt_two_valid_sig.pdf
-
-
 ## StatisticsToLogsManualIT.java
 
 !!! Note
@@ -3090,7 +3001,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-Statistics-Log-1**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
   * Title: Bdoc valid container is validated
   * Expected Result: Correct data is shown in the log with correct structure
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -3099,7 +3010,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-Statistics-Log-2**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
   * Title: Bdoc invalid container is validated
   * Expected Result: Correct data is shown in the log with correct structure
   * File: SS-4_teadmataCA.4.asice
@@ -3108,7 +3019,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-Statistics-Log-3**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
   * Title: Bdoc not supported file is inserted
   * Expected Result: No message in statistics as the container is not validated
   * File: xroad-simple.asice
@@ -3117,7 +3028,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-Statistics-Log-4**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
   * Title: Bdoc with certificates from different countries.
   * Expected Result: Correct data is shown in the log with correct structure
   * File: Baltic MoU digital signing_EST_LT_LV.bdoc
@@ -3126,7 +3037,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-Statistics-Log-1**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
   * Title: Ddoc valid container is validated
   * Expected Result: Correct data is shown in the log with correct structure
   * File: igasugust1.3.ddoc
@@ -3135,7 +3046,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-Statistics-Log-2**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
   * Title: Ddoc invalid container is validated
   * Expected Result: Correct data is shown in the log with correct structure
   * File: ilma_kehtivuskinnituseta.ddoc
@@ -3144,7 +3055,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-Statistics-Log-3**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
   * Title: Ddoc not supported file is inserted
   * Expected Result: No message in statistics as the container is not validated
   * File: xroad-simple.asice
@@ -3153,7 +3064,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-Statistics-Log-4**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
   * Title: Ddoc with certificates from different countries.
   * Expected Result: Correct data is shown in the log with correct structure
   * File: Belgia_kandeavaldus_LIV.ddoc
@@ -3164,7 +3075,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Pdf-Statistics-Log-1**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
   * Title: Pdf valid container is validated
   * Expected Result: Correct data is shown in the log with correct structure
   * File: pades_lt_two_valid_sig.pdf
@@ -3173,7 +3084,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Pdf-Statistics-Log-2**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
   * Title: Pdf invalid container is validated
   * Expected Result: Correct data is shown in the log with correct structure
   * File: hellopades-lt1-lt2-wrongDigestValue.pdf
@@ -3182,7 +3093,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Pdf-Statistics-Log-4**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
   * Title: Pdf with certificates from non Estonian countries.
   * Expected Result: Correct data is shown in the log with correct structure
   * File: Regulatione-signedbyco-legislators.pdf
@@ -3191,7 +3102,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Xroad-Statistics-Log-1**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
   * Title: Xroad valid container is validated
   * Expected Result: Correct data is shown in the log with correct structure
   * File: xroad-batchsignature.asice
@@ -3200,7 +3111,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Xroad-Statistics-Log-2**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
   * Title: Xroad invalid container is validated
   * Expected Result: Correct data is shown in the log with correct structure
   * File: invalid-digest.asice
@@ -3209,7 +3120,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Xroad-Statistics-Log-3**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
   * Title: Xroad not supported file is inserted
   * Expected Result: No message in statistics as the container is not validated
   * File: BDOC-TS.bdoc
@@ -3218,7 +3129,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asics-Statistics-Log-1**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
   * Title: ASiCs valid container is validated
   * Expected Result: Correct data is shown in the log with correct structure
   * File: ValidBDOCinsideAsics.asics
@@ -3227,7 +3138,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asics-Statistics-Log-3**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
   * Title: asics invalid container is validated
   * Expected Result: No message in statistics as the container is not validated
   * File: TwoDataFilesAsics.asics
@@ -5558,14 +5469,6 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Requirement: [http://open-eid.github.io/SiVa/siva2/systemintegrators_guide/](http://open-eid.github.io/SiVa/siva2/systemintegrators_guide/)
   * Title: X-Road validator service address is changed
   * Expected Result: correct address is used
-  * File: not relevant
-  
-**TestCaseID: Configuration-Webapp-GA-1**
-
-  * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/systemintegrators_guide/](http://open-eid.github.io/SiVa/siva2/systemintegrators_guide/)
-  * Title: Google Analytics is configured
-  * Expected Result: Data is transfered to GA
   * File: not relevant
   
 **TestCaseID: Configuration-Webapp-Policy-1**

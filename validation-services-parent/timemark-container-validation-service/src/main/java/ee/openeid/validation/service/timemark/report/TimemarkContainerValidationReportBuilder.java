@@ -24,6 +24,7 @@ import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import eu.europa.esig.dss.enumerations.SignatureQualification;
 import eu.europa.esig.dss.enumerations.SubIndication;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.*;
 import org.digidoc4j.exceptions.DigiDoc4JException;
@@ -222,6 +223,7 @@ public abstract class TimemarkContainerValidationReportBuilder {
     private Info getInfo(Signature signature) {
         Info info = new Info();
         info.setBestSignatureTime(getBestSignatureTime(signature));
+        info.setTimeAssertionMessageImprint(getTimeAssertionMessageImprint(signature));
         info.setSignerRole(getSignerRole(signature));
         info.setSignatureProductionPlace(getSignatureProductionPlace(signature));
         return info;
@@ -232,6 +234,15 @@ public abstract class TimemarkContainerValidationReportBuilder {
         return trustedTime != null
                 ? ReportBuilderUtils.getDateFormatterWithGMTZone().format(trustedTime)
                 : "";
+    }
+
+    private String getTimeAssertionMessageImprint(Signature signature) {
+        try {
+            return StringUtils.defaultString(Base64.encodeBase64String(signature.getOCSPNonce()));
+        } catch (DigiDoc4JException e) {
+            LOGGER.warn("Unable to parse time assertion message imprint from OCSP nonce: ", e);
+            return ""; //parse errors due to corrupted OCSP data should be present in validation errors already
+        }
     }
 
     private List<SignerRole> getSignerRole(Signature signature) {

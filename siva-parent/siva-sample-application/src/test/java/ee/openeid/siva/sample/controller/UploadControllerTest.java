@@ -27,7 +27,6 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import ee.openeid.siva.sample.cache.UploadFileCacheService;
 import ee.openeid.siva.sample.cache.UploadedFile;
-import ee.openeid.siva.sample.configuration.GoogleAnalyticsProperties;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -77,9 +76,6 @@ public class UploadControllerTest {
     @MockBean
     private UploadFileCacheService hazelcastUploadFileCacheService;
 
-    @MockBean
-    private GoogleAnalyticsProperties googleAnalyticsProperties;
-
     @Mock
     private Appender<ILoggingEvent> mockAppender;
 
@@ -90,7 +86,6 @@ public class UploadControllerTest {
     public void setUp() throws Exception {
         final Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
         logger.addAppender(mockAppender);
-        given(googleAnalyticsProperties.getTrackingId()).willReturn("random-tracking-id");
     }
 
     @After

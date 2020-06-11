@@ -165,5 +165,7 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
         assertEquals("EU", diagnosticData.getListOfTrustedLists().getCountryCode());
 
         assertSubjectDNPresent(reports.getDiagnosticReport().getValidationConclusion().getSignatures().get(0), "36706020210", "SINIVEE,VEIKO,36706020210");
+        assertEquals("MDEwDQYJYIZIAWUDBAIBBQAEIEct8ZhE1SzctkbT9/REf9QKYKZgCXrI/dgbsyRPUsxM",
+                reports.getDetailedReport().getValidationConclusion().getSignatures().get(0).getInfo().getTimeAssertionMessageImprint());
     }
 }

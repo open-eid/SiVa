@@ -24,9 +24,11 @@ import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.siva.validation.util.SubjectDNParser;
 import eu.europa.esig.dss.diagnostic.CertificateWrapper;
-import eu.europa.esig.dss.diagnostic.RevocationWrapper;
 import eu.europa.esig.dss.diagnostic.SignatureWrapper;
 import eu.europa.esig.dss.diagnostic.TimestampWrapper;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlDigestMatcher;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlRelatedRevocation;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlRevocation;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlSignatureScope;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlSignerRole;
 import eu.europa.esig.dss.enumerations.DigestAlgorithm;
@@ -35,10 +37,22 @@ import eu.europa.esig.dss.enumerations.Indication;
 import eu.europa.esig.dss.enumerations.MaskGenerationFunction;
 import eu.europa.esig.dss.enumerations.SignatureAlgorithm;
 import eu.europa.esig.dss.enumerations.SubIndication;
+import eu.europa.esig.dss.enumerations.TimestampType;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
+import org.bouncycastle.asn1.ocsp.OCSPObjectIdentifiers;
+import org.bouncycastle.asn1.tsp.MessageImprint;
+import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
+import org.bouncycastle.asn1.x509.Extension;
+import org.bouncycastle.cert.ocsp.BasicOCSPResp;
+import org.bouncycastle.cert.ocsp.OCSPException;
+import org.bouncycastle.cert.ocsp.OCSPResp;
+import org.bouncycastle.operator.DefaultDigestAlgorithmIdentifierFinder;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -48,6 +62,8 @@ import java.util.stream.Collectors;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.*;
 
 public class GenericValidationReportBuilder {
+
+    protected static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(GenericValidationReportBuilder.class);
 
     private static final String LT_SIGNATURE_FORMAT_SUFFIX = "LT";
     private static final String BASELINE_SIGNATURE_FORMAT_SUFFIX = "B";
@@ -185,22 +201,76 @@ public class GenericValidationReportBuilder {
         Date bestSignatureTime = getBestSignatureTime(signatureFormat, signatureId);
         Info info = new Info();
         info.setBestSignatureTime(bestSignatureTime == null ? "" : ReportBuilderUtils.getDateFormatterWithGMTZone().format(bestSignatureTime));
+        info.setTimeAssertionMessageImprint(parseTimeAssertionMessageImprint(signatureFormat, signatureId));
         info.setSignerRole(parseSignerRole(signatureId));
         info.setSignatureProductionPlace(parseSignatureProductionPlace(signatureId));
         return info;
     }
 
     private Date getBestSignatureTime(String signatureFormat, String signatureId) {
-        SignatureWrapper signature = dssReports.getDiagnosticData().getSignatureById(signatureId);
         if (signatureFormat.equals(LT_TM_XAdES_SIGNATURE_FORMAT)) {
-            for (RevocationWrapper revocationData : dssReports.getDiagnosticData().getAllRevocationData()) {
-                return revocationData.getProductionDate();
-            }
+            List<XmlRelatedRevocation> revocations = dssReports.getDiagnosticData().getSignatureById(signatureId).getRelatedRevocations();
+            return revocations.isEmpty() ? null : revocations.get(0).getRevocation().getProductionDate();
         } else {
-            List<TimestampWrapper> timeStamps = signature.getTimestampList();
-            return timeStamps.isEmpty() ? null : timeStamps.get(0).getProductionTime();
+            TimestampWrapper timestamp = getBestTimestamp(signatureId);
+            return timestamp == null ? null : timestamp.getProductionTime();
         }
-        return null;
+    }
+
+    private TimestampWrapper getBestTimestamp(String signatureId) {
+        List<TimestampWrapper> timestamps = dssReports.getDiagnosticData().getSignatureById(signatureId)
+                .getTimestampListByType(TimestampType.SIGNATURE_TIMESTAMP);
+        return timestamps.isEmpty() ? null : timestamps.get(0);
+    }
+
+    private String parseTimeAssertionMessageImprint(String signatureFormat, String signatureId) {
+        return LT_TM_XAdES_SIGNATURE_FORMAT.equals(signatureFormat)
+                ? parseTimeAssertionMessageImprintFromOcspNonce(signatureId)
+                : parseTimeAssertionMessageImprintFromTimestamp(signatureId);
+    }
+
+    private String parseTimeAssertionMessageImprintFromOcspNonce(String signatureId) {
+        List<XmlRelatedRevocation> revocations = dssReports.getDiagnosticData().getSignatureById(signatureId).getRelatedRevocations();
+
+        if (revocations.isEmpty()) {
+            return "";
+        }
+
+        try {
+            return parseTimeAssertionMessageImprint(revocations.get(0).getRevocation());
+        } catch (Exception e) {
+            LOGGER.warn("Unable to parse time assertion message imprint from OCSP nonce: ", e);
+            return ""; //parse errors due to corrupted OCSP data should be present in validation errors already
+        }
+    }
+
+    private String parseTimeAssertionMessageImprint(XmlRevocation revocation) throws IOException, OCSPException {
+        OCSPResp response = new OCSPResp(revocation.getBase64Encoded());
+        BasicOCSPResp basicResponse = (BasicOCSPResp) response.getResponseObject();
+        Extension nonce = basicResponse.getExtension(OCSPObjectIdentifiers.id_pkix_ocsp_nonce);
+        return nonce == null ? "" : StringUtils.defaultString(Base64.encodeBase64String(nonce.getExtnValue().getOctets()));
+    }
+
+    private String parseTimeAssertionMessageImprintFromTimestamp(String signatureId) {
+        TimestampWrapper timestamp = getBestTimestamp(signatureId);
+
+        if (timestamp == null || !timestamp.isMessageImprintDataFound() || !timestamp.isMessageImprintDataIntact()) {
+            return "";
+        }
+
+        try {
+            return parseTimeAssertionMessageImprint(timestamp);
+        } catch (Exception e) {
+            LOGGER.warn("Unable to parse time assertion message imprint from timestamop: ", e);
+            return ""; //parse errors due to corrupted timestamp data should be present in validation errors already
+        }
+    }
+
+    private String parseTimeAssertionMessageImprint(TimestampWrapper timestamp) throws IOException {
+        XmlDigestMatcher messageImprint = timestamp.getMessageImprint();
+        AlgorithmIdentifier algorithm = new DefaultDigestAlgorithmIdentifierFinder().find(messageImprint.getDigestMethod().getJavaName());
+        byte[] nonce = new MessageImprint(algorithm, messageImprint.getDigestValue()).getEncoded();
+        return StringUtils.defaultString(Base64.encodeBase64String(nonce));
     }
 
     private List<SignerRole> parseSignerRole(String signatureId) {

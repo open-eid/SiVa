@@ -141,6 +141,13 @@ public class HashcodeGenericValidationServiceTest {
                 reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getSignatureMethod());
     }
 
+    @Test
+    public void populatesTimeAssertionMessageImprint() throws IOException, URISyntaxException {
+        Reports reports = validationService.validate(getValidationDocumentSingletonList());
+        assertEquals("MDEwDQYJYIZIAWUDBAIBBQAEIBf8So+lfR/lrfzu5i+SZwguJGakhr/W+eHwrAQJ0acJ",
+                reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getTimeAssertionMessageImprint());
+    }
+
     private List<ValidationDocument> getValidationDocumentSingletonList() throws URISyntaxException, IOException {
         return getValidationDocumentSingletonList("test-files/signatures.xml");
     }

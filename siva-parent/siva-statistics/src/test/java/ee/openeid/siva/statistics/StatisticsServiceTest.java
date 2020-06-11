@@ -16,7 +16,6 @@
 
 package ee.openeid.siva.statistics;
 
-import ee.openeid.siva.statistics.googleanalytics.GoogleAnalyticsMeasurementProtocolClient;
 import ee.openeid.siva.statistics.model.SimpleValidationReport;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
@@ -52,9 +51,6 @@ public class StatisticsServiceTest {
         when(LoggerFactory.getLogger(StatisticsService.class)).thenReturn(loggerMock);
 
         statisticsService = new StatisticsService();
-        GoogleAnalyticsMeasurementProtocolClient ga = mock(GoogleAnalyticsMeasurementProtocolClient.class);
-        statisticsService.setGoogleAnalyticsMeasurementClient(ga);
-        doNothing().when(ga).sendStatisticalData(any(SimpleValidationReport.class));
 
         HttpServletRequest mockedRequest = mock(HttpServletRequest.class);
         statisticsService.setHttpRequest(mockedRequest);

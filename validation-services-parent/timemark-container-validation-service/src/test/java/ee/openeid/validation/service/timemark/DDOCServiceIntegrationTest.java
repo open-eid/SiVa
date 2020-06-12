@@ -174,8 +174,7 @@ public class DDOCServiceIntegrationTest {
         SignatureScope scope = sig1.getSignatureScopes().get(0);
         assertEquals("Šužlikud sõid ühe õuna ära.txt", scope.getName());
         assertEquals("2005-02-11T16:23:43Z", sig1.getInfo().getBestSignatureTime());
-        //TODO Enable once dd4j release with added getNonce implementation is available from maven
-        //assertEquals("7BWOmJnhm9HUbcnnnb/9SkYe1ok=", sig1.getInfo().getTimeAssertionMessageImprint());
+        assertEquals("7BWOmJnhm9HUbcnnnb/9SkYe1ok=", sig1.getInfo().getTimeAssertionMessageImprint());
         assertEquals(1, sig1.getInfo().getSignerRole().size());
         assertEquals("Sušlik", sig1.getInfo().getSignerRole().get(0).getClaimedRole());
         assertEquals("Kurežžaare", sig1.getInfo().getSignatureProductionPlace().getCity());
@@ -211,8 +210,7 @@ public class DDOCServiceIntegrationTest {
         assertEquals("Digest of the document content", scope.getContent());
         assertEquals("FullSignatureScope", scope.getScope());
         assertEquals("2009-02-13T09:22:58Z", sig2.getInfo().getBestSignatureTime());
-        //TODO Enable once dd4j release with added getNonce implementation is available from maven
-        //assertEquals("UDM+W5rBO6kwBcbHzHvN5/M0r/k=", sig2.getInfo().getTimeAssertionMessageImprint());
+        assertEquals("UDM+W5rBO6kwBcbHzHvN5/M0r/k=", sig2.getInfo().getTimeAssertionMessageImprint());
         assertEquals("2009-02-13T09:22:49Z", sig2.getClaimedSigningTime());
         assertTrue(sig2.getInfo().getSignerRole().isEmpty());
         assertEquals(" ", sig2.getInfo().getSignatureProductionPlace().getCity());
@@ -294,7 +292,6 @@ public class DDOCServiceIntegrationTest {
     }
 
     @Test
-    @Ignore("Enable once dd4j release with added getNonce implementation is available from maven")
     public void timeAssertionMessageImprintIsEmptyForCorruptedOcspData() throws Exception {
         SimpleReport report = timemarkContainerValidationService
                 .validateDocument(buildValidationDocument("ddoc_corrupted_ocsp_2_signatures.ddoc"))
@@ -308,7 +305,6 @@ public class DDOCServiceIntegrationTest {
     }
 
     @Test
-    @Ignore("Enable once dd4j release with added getNonce implementation is available from maven")
     public void timeAssertionMessageImprintIsEmptyForMissingOcspData() throws Exception {
         SimpleReport report = timemarkContainerValidationService
                 .validateDocument(buildValidationDocument("ddoc_missing_ocsp_2_signatures.ddoc"))

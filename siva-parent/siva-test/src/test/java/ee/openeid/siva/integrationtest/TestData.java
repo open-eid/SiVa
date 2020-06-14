@@ -49,6 +49,10 @@ public class TestData {
     public static final String SIGNATURE_FORM_DDOC_11 = "DIGIDOC_XML_1.1";
     public static final String SIGNATURE_FORM_DDOC_12 = "DIGIDOC_XML_1.2";
     public static final String SIGNATURE_FORM_DDOC_13 = "DIGIDOC_XML_1.3";
+    public static final String SIGNATURE_FORM_DDOC_10_HASHCODE = "DIGIDOC_XML_1.0_hashcode";
+    public static final String SIGNATURE_FORM_DDOC_11_HASHCODE = "DIGIDOC_XML_1.1_hashcode";
+    public static final String SIGNATURE_FORM_DDOC_12_HASHCODE = "DIGIDOC_XML_1.2_hashcode";
+    public static final String SIGNATURE_FORM_DDOC_13_HASHCODE = "DIGIDOC_XML_1.3_hashcode";
 
     public static final String SIGNATURE_LEVEL_QESIG = "QESIG";
     public static final String SIGNATURE_LEVEL_NOT_ADES_QC_QSCD = "NOT_ADES_QC_QSCD";

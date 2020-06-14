@@ -48,16 +48,19 @@ public class DdocValidationPassIT extends SiVaRestTests {
      *
      * File: SK-XML1.0.ddoc
      */
-    @Ignore //TODO: DDOC 1.0 fails in Travis CI. Needs investigation
     @Test
     public void ddocValidMultipleSignaturesV1_0() {
         post(validationRequestFor("SK-XML1.0.ddoc"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_10))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_SK_XML))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[0].warnings[0].content", Matchers.is("Old and unsupported format: SK-XML version: 1.0"))
+                .body("signatures[0].warnings.size()", Matchers.is(1))
                 .body("signatures[1].signatureFormat", Matchers.is(SIGNATURE_FORMAT_SK_XML))
                 .body("signatures[1].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[1].warnings[0].content", Matchers.is("Old and unsupported format: SK-XML version: 1.0"))
+                .body("signatures[1].warnings.size()", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(2))
                 .body("validSignaturesCount", Matchers.is(2));
     }
@@ -78,10 +81,12 @@ public class DdocValidationPassIT extends SiVaRestTests {
     @Test
     public void ddocValidSignatureV1_1() {
         post(validationRequestFor("DIGIDOC-XML1.1.ddoc"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_11))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_11))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[0].warnings[0].content", Matchers.is("Old and unsupported format: DIGIDOC-XML version: 1.1"))
+                .body("signatures[0].warnings.size()", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1));
     }
@@ -102,10 +107,12 @@ public class DdocValidationPassIT extends SiVaRestTests {
     @Test
     public void ddocValidSignatureV1_2() {
         post(validationRequestFor("DIGIDOC-XML1.2.ddoc"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_12))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_12))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[0].warnings[0].content", Matchers.is("Old and unsupported format: DIGIDOC-XML version: 1.2"))
+                .body("signatures[0].warnings.size()", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1));
     }
@@ -126,7 +133,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
     @Test
     public void ddocValidSignatureV1_3() {
         post(validationRequestFor("DIGIDOC-XML1.3.ddoc"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_13))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
@@ -150,7 +157,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
     @Test
     public void ddocSpecialCharactersInDataFileValidSignature() {
         post(validationRequestFor("susisevad1_3.ddoc"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_13))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
@@ -174,7 +181,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
     @Test
     public void ddocKlass3SkCertificateChainValidSignature() {
         post(validationRequestFor("KLASS3-SK _ KLASS3-SK OCSP RESPONDER uus.ddoc"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_13))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
@@ -198,7 +205,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
     @Test
     public void ddocKlass3Sk2010CertificateChainValidSignature() {
         post(validationRequestFor("KLASS3-SK 2010 _ KLASS3-SK 2010 OCSP RESPONDER.ddoc"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_13))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
@@ -222,10 +229,12 @@ public class DdocValidationPassIT extends SiVaRestTests {
     @Test
     public void ddocEsteidSk2007CertificateChainValidSignature() {
         post(validationRequestFor("vaikesed1.1.ddoc"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_11))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_11))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[0].warnings[0].content", Matchers.is("Old and unsupported format: DIGIDOC-XML version: 1.1"))
+                .body("signatures[0].warnings.size()", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1));
     }
@@ -246,7 +255,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
     @Test
     public void ddocEsteidSk2015CertificateChainValidSignature() {
         post(validationRequestFor("IB-4270_ESTEID-SK 2015  SK OCSP RESPONDER 2011.ddoc"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_13))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
@@ -270,10 +279,12 @@ public class DdocValidationPassIT extends SiVaRestTests {
     @Test
     public void ddocEsteidSkCertificateChainValidSignature() {
         post(validationRequestFor("EID-SK _ EID-SK OCSP RESPONDER.ddoc"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_11))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_11))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[0].warnings[0].content", Matchers.is("Old and unsupported format: DIGIDOC-XML version: 1.1"))
+                .body("signatures[0].warnings.size()", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1));
     }
@@ -294,7 +305,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
     @Test
     public void ddocEsteidSk2007Ocsp2010CertificateChainValidSignature() {
         post(validationRequestFor("EID-SK 2007 _ EID-SK 2007 OCSP RESPONDER 2010.ddoc"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_13))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
@@ -320,7 +331,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
     @Test
     public void ddocEsteidSk2007Ocsp2007CertificateChainValidSignature() {
         post(validationRequestFor("EID-SK 2007 _ EID-SK 2007 OCSP RESPONDER.ddoc"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_13))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
@@ -344,10 +355,13 @@ public class DdocValidationPassIT extends SiVaRestTests {
     @Test
     public void ddocEsteidSk2011Ocsp2011CertificateChainValidSignature() {
         post(validationRequestFor("EID-SK 2011 _ SK OCSP RESPONDER 2011.ddoc"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_13))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[0].warnings[0].content", Matchers.is("X509IssuerName has none or invalid namespace: null"))
+                .body("signatures[0].warnings[1].content", Matchers.is("X509SerialNumber has none or invalid namespace: null"))
+                .body("signatures[0].warnings.size()", Matchers.is(2))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1));
     }
@@ -368,26 +382,26 @@ public class DdocValidationPassIT extends SiVaRestTests {
     @Test
     public void ddocWithWarningShouldPass() {
         post(validationRequestFor("18912.ddoc"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S0"))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("36706020210"))
-                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.commonName", Matchers.is("SINIVEE,VEIKO,36706020210"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("readme"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Digest of the document content"))
-                .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2012-09-21T11:56:53Z"))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2012-09-21T11:56:55Z"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("Bad digest for DataFile: D0 alternate digest matches!"))
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("18912.ddoc"))
-                .body("validationReport.validationConclusion.validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
+                .body("signatures[0].id", Matchers.is("S0"))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_13))
+                .body("signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("36706020210"))
+                .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("SINIVEE,VEIKO,36706020210"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].signatureScopes[0].name", Matchers.is("readme"))
+                .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
+                .body("signatures[0].signatureScopes[0].content", Matchers.is("Digest of the document content"))
+                .body("signatures[0].claimedSigningTime", Matchers.is("2012-09-21T11:56:53Z"))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2012-09-21T11:56:55Z"))
+                .body("signatures[0].warnings[0].content", Matchers.is("Bad digest for DataFile: D0 alternate digest matches!"))
+                .body("signatures[0].warnings.size()", Matchers.is(1))
+                .body("validatedDocument.filename", Matchers.is("18912.ddoc"))
+                .body("validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -407,12 +421,12 @@ public class DdocValidationPassIT extends SiVaRestTests {
     public void ddocNoSignatures() {
         setTestFilesDirectory("document_format_test_files/");
         post(validationRequestFor("DdocContainerNoSignature.ddoc", VALID_SIGNATURE_POLICY_4, null))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("DdocContainerNoSignature.ddoc"))
-                .body("validationReport.validationConclusion.validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("validatedDocument.filename", Matchers.is("DdocContainerNoSignature.ddoc"))
+                .body("validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(0));
     }
 
     /**
@@ -428,28 +442,27 @@ public class DdocValidationPassIT extends SiVaRestTests {
      *
      * File: SK-XML1.0_hashcode.ddoc
      */
-    @Ignore //TODO: https://jira.ria.ee/browse/DD4J-561
     @Test
     public void ddocV1_0HashcodeShouldPass() {
         post(validationRequestFor("SK-XML1_0_hashcode.ddoc"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("SK_XML_1.0"))
-                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S0"))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("SK_XML_1.0"))
-                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("ANSIP,ANDRUS,35610012722"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is(""))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is(""))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is(""))
-                .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2002-10-07T12:10:19Z"))
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is(""))
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.0_hashcode"))
-                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("SK-XML1.0_hashcode.ddoc"))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(2))
-                .body("validationReport.validationConclusion.validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_10_HASHCODE))
+                .body("signatures[0].id", Matchers.is("S0"))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_SK_XML))
+                .body("signatures[0].signedBy", Matchers.is("ANSIP,ANDRUS,35610012722"))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].signatureScopes[0].name", Matchers.is("Tartu ja Tallinna koostooleping.doc"))
+                .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
+                .body("signatures[0].signatureScopes[0].content", Matchers.is("Digest of the document content"))
+                .body("signatures[0].claimedSigningTime", Matchers.is("2002-10-07T12:10:19Z"))
+                .body("signatures[0].warnings[0].content", Matchers.is("Old and unsupported format: SK-XML version: 1.0"))
+                .body("signatures[0].warnings.size()", Matchers.is(1))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2002-10-07T11:10:47Z"))
+                .body("validatedDocument.filename", Matchers.is("SK-XML1_0_hashcode.ddoc"))
+                .body("signaturesCount", Matchers.is(2))
+                .body("validSignaturesCount", Matchers.is(2))
+                .body("validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"));
     }
 
     /**
@@ -466,25 +479,24 @@ public class DdocValidationPassIT extends SiVaRestTests {
      * File: DIGIDOC-XML1.1_hashcode.ddoc
      */
     @Test
-    @Ignore //TODO: This tests fails in Travis. Has been executed locally
     public void ddocV1_1HashcodeShouldPass() {
         post(validationRequestFor("DIGIDOC-XML1.1_hashcode.ddoc"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.1_hashcode"))
-                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S0"))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.1"))
-                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("KESKEL,URMO,38002240232"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("puhkus_urmo_062006.doc"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Digest of the document content"))
-                .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2006-06-26T12:15:40Z"))
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.1_hashcode"))
-                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("DIGIDOC-XML1.1_hashcode.ddoc"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_11_HASHCODE))
+                .body("signatures[0].id", Matchers.is("S0"))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORM_DDOC_11))
+                .body("signatures[0].signedBy", Matchers.is("KESKEL,URMO,38002240232"))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].signatureScopes[0].name", Matchers.is("puhkus_urmo_062006.doc"))
+                .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
+                .body("signatures[0].signatureScopes[0].content", Matchers.is("Digest of the document content"))
+                .body("signatures[0].claimedSigningTime", Matchers.is("2006-06-26T12:15:40Z"))
+                .body("signatures[0].warnings[0].content", Matchers.is("Old and unsupported format: DIGIDOC-XML version: 1.1"))
+                .body("signatures[0].warnings.size()", Matchers.is(1))
+                .body("validatedDocument.filename", Matchers.is("DIGIDOC-XML1.1_hashcode.ddoc"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -502,27 +514,26 @@ public class DdocValidationPassIT extends SiVaRestTests {
      */
 
     @Test
-    @Ignore //TODO: This tests fails in Travis. Has been executed locally
     public void ddocV1_2HashcodeShouldPass() {
         post(validationRequestFor("DIGIDOC-XML1.2_hashcode.ddoc"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.2_hashcode"))
-                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S0"))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.2"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("Eesti Ühispank: Ülekandejuhise kinnitus"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("RO219559508.pdf"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Digest of the document content"))
-                .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2003-10-24T10:57:19Z"))
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.2_hashcode"))
-                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("DIGIDOC-XML1.2_hashcode.ddoc"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_12_HASHCODE))
+                .body("signatures[0].id", Matchers.is("S0"))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_12))
+                .body("signatures[0].signatureLevel", Matchers.emptyOrNullString())
+                .body("signatures[0].signedBy", Matchers.is("Eesti Ühispank: Ülekandejuhise kinnitus"))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[0].subIndication", Matchers.emptyOrNullString())
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].signatureScopes[0].name", Matchers.is("RO219559508.pdf"))
+                .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
+                .body("signatures[0].signatureScopes[0].content", Matchers.is("Digest of the document content"))
+                .body("signatures[0].claimedSigningTime", Matchers.is("2003-10-24T10:57:19Z"))
+                .body("signatures[0].warnings[0].content", Matchers.is("Old and unsupported format: DIGIDOC-XML version: 1.2"))
+                .body("signatures[0].warnings.size()", Matchers.is(1))
+                .body("validatedDocument.filename", Matchers.is("DIGIDOC-XML1.2_hashcode.ddoc"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -539,28 +550,26 @@ public class DdocValidationPassIT extends SiVaRestTests {
      * File: DIGIDOC-XML1.3_hashcode.ddoc
      */
     @Test
-    @Ignore //TODO: This tests fails in Travis. Has been executed locally
     public void ddocV1_3HashcodeShouldPass() {
         post(validationRequestFor("DIGIDOC-XML1.3_hashcode.ddoc"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3_hashcode"))
-                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S0"))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("LUKIN,LIISA,47710110274"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("Glitter-rock-4_gallery.jpg"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Digest of the document content"))
-                .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2012-10-03T07:46:31Z"))
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3_hashcode"))
-                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("DIGIDOC-XML1.3_hashcode.ddoc"))
-                .body("validationReport.validationConclusion.validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13_HASHCODE))
+                .body("signatures[0].id", Matchers.is("S0"))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_13))
+                .body("signatures[0].signatureLevel", Matchers.emptyOrNullString())
+                .body("signatures[0].signedBy", Matchers.is("LUKIN,LIISA,47710110274"))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[0].subIndication", Matchers.emptyOrNullString())
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].signatureScopes[0].name", Matchers.is("Glitter-rock-4_gallery.jpg"))
+                .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
+                .body("signatures[0].signatureScopes[0].content", Matchers.is("Digest of the document content"))
+                .body("signatures[0].claimedSigningTime", Matchers.is("2012-10-03T07:46:31Z"))
+                .body("signatures[0].warnings", Matchers.emptyOrNullString())
+                .body("validatedDocument.filename", Matchers.is("DIGIDOC-XML1.3_hashcode.ddoc"))
+                .body("validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     @Override

@@ -134,7 +134,6 @@ public class SoapGetDataFileReportIT extends SiVaSoapTests  {
      * File: igasugust1.3.ddoc
      *
      **/
-    @Ignore //TODO: Run this test manually as it fails in Travis because of big response data
     @Test
     public void soapGetDataFilesFromDdocManyFilesCorrectValuesArePresent(){
         setTestFilesDirectory("ddoc/live/timemark/");

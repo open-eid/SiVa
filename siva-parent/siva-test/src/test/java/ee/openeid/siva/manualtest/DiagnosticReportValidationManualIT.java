@@ -20,6 +20,7 @@ import ee.openeid.siva.integrationtest.SiVaRestTests;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.signature.configuration.SignatureServiceConfigurationProperties;
 import io.restassured.response.Response;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -72,7 +73,7 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
         ZonedDateTime testStartDate = ZonedDateTime.now(ZoneId.of("GMT"));
 
         post(validationRequestFor("ValidLiveSignature.asice", null, REPORT_TYPE_DIAGNOSTIC ))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("policy.policyDescription", equalTo(POLICY_4_DESCRIPTION))
                 .body("policy.policyName", equalTo(SIGNATURE_POLICY_2))
                 .body("policy.policyUrl", equalTo(POLICY_4_URL))
@@ -111,7 +112,7 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
 
         post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DIAGNOSTIC ))
-                .then().root(DIAGNOSTIC_DATA_PREFIX)
+                .then().rootPath(DIAGNOSTIC_DATA_PREFIX)
                 .body("trustedLists", notNullValue())
                 .body("trustedLists[0].countryCode", equalTo("EE"))
                 .body("trustedLists[0].url", equalTo("https://sr.riik.ee/tsl/estonian-tsl.xml"))
@@ -142,7 +143,7 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
 
         post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DIAGNOSTIC ))
-                .then().root(DIAGNOSTIC_DATA_PREFIX)
+                .then().rootPath(DIAGNOSTIC_DATA_PREFIX)
                 .body("listOfTrustedLists", notNullValue())
                 .body("listOfTrustedLists.countryCode", equalTo("EU"))
                 .body("listOfTrustedLists.url", equalTo("http://repo.ria/tsl/trusted-test-mp.xml"))
@@ -167,12 +168,12 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
      *
      * File: pades-baseline-lta-live-aj.pdf
      */
-    @Test //TODO: This test may became flaky, we need a mechanism to cover elements changing their order
+    @Test
     public  void diagnosticReportAssertSignature(){
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
 
         post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DIAGNOSTIC))
-                .then().root(DIAGNOSTIC_DATA_PREFIX)
+                .then().rootPath(DIAGNOSTIC_DATA_PREFIX)
                 .body("signatures[0]", notNullValue())
                 .body("signatures[0].signatureFilename", equalTo("pades-baseline-lta-live-aj.pdf"))
                 .body("signatures[0].dateTime", notNullValue())
@@ -194,9 +195,8 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
                 .body("signatures[0].signingCertificate.digestValueMatch", equalTo(true))
                 .body("signatures[0].signingCertificate.issuerSerialMatch", equalTo(true))
                 .body("signatures[0].signingCertificate.certificate", equalTo("C-F014C7DF249D8734DF273D937EE5EBF0F8166BE0775C47A80608F1A14EB23F4C"))
-                .body("signatures[0].certificateChain[0].certificate", equalTo("C-F014C7DF249D8734DF273D937EE5EBF0F8166BE0775C47A80608F1A14EB23F4C"))
-                .body("signatures[0].certificateChain[1].certificate", equalTo("C-74D992D3910BCF7E34B8B5CD28F91EAEB4F41F3DA6394D78B8C43672D43F4F0F"))
-                .body("signatures[0].certificateChain[2].certificate", equalTo("C-3E84BA4342908516E77573C0992F0979CA084E4685681FF195CCBA8A229B8A76"))
+                .body("signatures[0].certificateChain.certificate", Matchers.hasItems("C-F014C7DF249D8734DF273D937EE5EBF0F8166BE0775C47A80608F1A14EB23F4C", "C-74D992D3910BCF7E34B8B5CD28F91EAEB4F41F3DA6394D78B8C43672D43F4F0F", "C-3E84BA4342908516E77573C0992F0979CA084E4685681FF195CCBA8A229B8A76"))
+                .body("signatures[0].certificateChain.certificate.size()", Matchers.is(3))
                 .body("signatures[0].foundTimestamps[0].location", equalTo("CAdES"))
                 .body("signatures[0].foundTimestamps[0].timestamp", equalTo("T-986BB33B29274A85EF94B7EC0FB89C3427910D59C40A233FD588FBCB2A0E4A84"))
                 .body("signatures[0].foundTimestamps[1].location", equalTo("DOC_TIMESTAMP"))
@@ -220,23 +220,22 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
      *
      * File: pades-baseline-lta-live-aj.pdf
      */
-    @Ignore //TODO: This test is flaky, we need a mechanism to cover elements changing their order
     @Test
     public  void diagnosticReportAssertUsedCertificates(){
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
 
         post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DIAGNOSTIC ))
-                .then().root(DIAGNOSTIC_DATA_PREFIX)
+                .then().rootPath(DIAGNOSTIC_DATA_PREFIX)
                 .body("usedCertificates", notNullValue())
                 .body("usedCertificates.serialNumber", notNullValue())
-                .body("usedCertificates[0].subjectDistinguishedName[0].value", equalTo("cn=esteid-sk 2015,2.5.4.97=#0c0e4e545245452d3130373437303133,o=as sertifitseerimiskeskus,c=ee"))
-                .body("usedCertificates[0].subjectDistinguishedName[0].format", equalTo("CANONICAL"))
-                .body("usedCertificates[0].subjectDistinguishedName[1].value", equalTo("CN=ESTEID-SK 2015,2.5.4.97=#0c0e4e545245452d3130373437303133,O=AS Sertifitseerimiskeskus,C=EE"))
-                .body("usedCertificates[0].subjectDistinguishedName[1].format", equalTo("RFC2253"))
-                .body("usedCertificates[0].issuerDistinguishedName[0].value", equalTo("1.2.840.113549.1.9.1=#1609706b6940736b2e6565,cn=ee certification centre root ca,o=as sertifitseerimiskeskus,c=ee"))
-                .body("usedCertificates[0].issuerDistinguishedName[0].format", equalTo("CANONICAL"))
-                .body("usedCertificates[0].issuerDistinguishedName[1].value", equalTo("1.2.840.113549.1.9.1=#1609706b6940736b2e6565,CN=EE Certification Centre Root CA,O=AS Sertifitseerimiskeskus,C=EE"))
-                .body("usedCertificates[0].issuerDistinguishedName[1].format", equalTo("RFC2253"));
+                .body("usedCertificates[0].subjectDistinguishedName.value", Matchers.hasItems("1.2.840.113549.1.9.1=#1609706b6940736b2e6565,cn=sk ocsp responder 2011,ou=ocsp,o=as sertifitseerimiskeskus,l=tallinn,st=harju,c=ee", "1.2.840.113549.1.9.1=#1609706b6940736b2e6565,CN=SK OCSP RESPONDER 2011,OU=OCSP,O=AS Sertifitseerimiskeskus,L=Tallinn,ST=Harju,C=EE"))
+                .body("usedCertificates[0].subjectDistinguishedName.value.size()", Matchers.is(2))
+                .body("usedCertificates[0].subjectDistinguishedName.format", Matchers.hasItems("CANONICAL","RFC2253"))
+                .body("usedCertificates[0].subjectDistinguishedName.format.size()", Matchers.is(2))
+                .body("usedCertificates[0].issuerDistinguishedName.value", Matchers.hasItems("1.2.840.113549.1.9.1=#1609706b6940736b2e6565,cn=ee certification centre root ca,o=as sertifitseerimiskeskus,c=ee","1.2.840.113549.1.9.1=#1609706b6940736b2e6565,CN=EE Certification Centre Root CA,O=AS Sertifitseerimiskeskus,C=EE"))
+                .body("usedCertificates[0].issuerDistinguishedName.value.size()", Matchers.is(2))
+                .body("usedCertificates[0].issuerDistinguishedName.format", Matchers.hasItems("CANONICAL","RFC2253"))
+                .body("usedCertificates[0].issuerDistinguishedName.format.size()", Matchers.is(2));
     }
 
     /**
@@ -257,7 +256,7 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timestamp/");
 
         post(validationRequestFor("TS-02_23634_TS_wrong_SignatureValue.asice", null, REPORT_TYPE_DIAGNOSTIC))
-                .then().root(DIAGNOSTIC_DATA_PREFIX)
+                .then().rootPath(DIAGNOSTIC_DATA_PREFIX)
                 .body("signatures[0].basicSignature.encryptionAlgoUsedToSignThisToken", equalTo("RSA"))
                 .body("signatures[0].basicSignature.keyLengthUsedToSignThisToken", equalTo("2048"))
                 .body("signatures[0].basicSignature.digestAlgoUsedToSignThisToken", equalTo(HASH_ALGO_SHA256))

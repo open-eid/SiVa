@@ -58,7 +58,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
     @Test
     public void ddocInvalidSignature() {
         post(validationRequestFor("AndmefailiAtribuudidMuudetud.ddoc"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
                 .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
@@ -82,10 +82,15 @@ public class DdocValidationFailIT extends SiVaRestTests{
     @Test
     public void ddocInvalidMultipleSignatures() {
         post(validationRequestFor("multipleInvalidSignatures.ddoc"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_11))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_11))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].errors[0].content", Matchers.is("Bad digest for DataFile: D2"))
+                .body("signatures[0].errors[1].content", Matchers.is("Invalid signature value!"))
+                .body("signatures[0].errors.size()", Matchers.is(2))
+                .body("signatures[0].warnings[0].content", Matchers.is("Old and unsupported format: DIGIDOC-XML version: 1.1"))
+                .body("signatures[0].warnings.size()", Matchers.is(1))
                 .body("signatures[1].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_11))
                 .body("signatures[1].indication", Matchers.is(TOTAL_FAILED))
                 .body("signatures[2].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_11))
@@ -110,12 +115,19 @@ public class DdocValidationFailIT extends SiVaRestTests{
     @Test
     public void ddocInvalidAndValidMultipleSignatures() {
         post(validationRequestFor("multipleValidAndInvalidSignatures.ddoc"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_11))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_11))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].errors[0].content", Matchers.is("Bad digest for DataFile: D11"))
+                .body("signatures[0].errors[1].content", Matchers.is("Invalid signature value!"))
+                .body("signatures[0].errors.size()", Matchers.is(2))
+                .body("signatures[0].warnings[0].content", Matchers.is("Old and unsupported format: DIGIDOC-XML version: 1.1"))
+                .body("signatures[0].warnings.size()", Matchers.is(1))
                 .body("signatures[1].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_11))
                 .body("signatures[1].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[1].warnings[0].content", Matchers.is("Old and unsupported format: DIGIDOC-XML version: 1.1"))
+                .body("signatures[1].warnings.size()", Matchers.is(1))
                 .body("signatures[2].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_11))
                 .body("signatures[2].indication", Matchers.is(TOTAL_PASSED))
                 .body("signaturesCount", Matchers.is(3))
@@ -139,15 +151,16 @@ public class DdocValidationFailIT extends SiVaRestTests{
     public void ddocSignatureValueChanged() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("test-inv-sig-inf.ddoc"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.containsString("Invalid signature value!"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2012-09-19T06:28:55Z"))
-                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.serialNumber", Matchers.notNullValue())
-                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.commonName", Matchers.notNullValue())
-                .body("validationReport.validationConclusion.validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
+                .body("signatures[0].errors[0].content", Matchers.containsString("Invalid signature value!"))
+                .body("signatures[0].errors.size()", Matchers.is(1))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2012-09-19T06:28:55Z"))
+                .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.notNullValue())
+                .body("signatures[0].subjectDistinguishedName.commonName", Matchers.notNullValue())
+                .body("validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -167,12 +180,13 @@ public class DdocValidationFailIT extends SiVaRestTests{
     public void ddocDataFileHashMismatch() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("AndmefailiAtribuudidMuudetud.ddoc"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.containsString("Bad digest for DataFile: D0"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
+                .body("signatures[0].errors[0].content", Matchers.containsString("Bad digest for DataFile: D0"))
+                .body("signatures[0].errors.size()", Matchers.is(1))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -192,12 +206,15 @@ public class DdocValidationFailIT extends SiVaRestTests{
     public void ddocNoOCSPResponse() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("ilma_kehtivuskinnituseta.ddoc"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.2"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Signature has no OCSP confirmation!"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_12))
+                .body("signatures[0].errors.content", Matchers.hasItems("Signature has no OCSP confirmation!"))
+                .body("signatures[0].errors.size()", Matchers.is(1))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].warnings[0].content", Matchers.is("Old and unsupported format: DIGIDOC-XML version: 1.2"))
+                .body("signatures[0].warnings.size()", Matchers.is(1))
+                .body("validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -217,11 +234,14 @@ public class DdocValidationFailIT extends SiVaRestTests{
     public void ddocNoNonRepudiationKey() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("test-non-repu1.ddoc"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Signers cert does not have non-repudiation bit set!"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
+                .body("signatures[0].errors.content", Matchers.hasItems("Signers cert does not have non-repudiation bit set!"))
+                .body("signatures[0].errors.size()", Matchers.is(1))
+                .body("signatures[0].warnings.content", Matchers.hasItems("X509IssuerName has none or invalid namespace: null", "X509SerialNumber has none or invalid namespace: null"))
+                .body("signatures[0].warnings.size()", Matchers.is(2))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -241,11 +261,13 @@ public class DdocValidationFailIT extends SiVaRestTests{
     public void ddocSignersCertNotTrusted() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("Belgia_kandeavaldus_LIV.ddoc"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationReport.validationConclusion.signatures[1].errors.content", Matchers.hasItems("Signers cert not trusted, missing CA cert!", "Signing certificate issuer information does not match"))
-                .body("validationReport.validationConclusion.signatures[1].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
+                .body("signatures[1].errors.content", Matchers.hasItems("Signers cert not trusted, missing CA cert!", "Signing certificate issuer information does not match"))
+                .body("signatures[1].errors.size()", Matchers.is(3))
+                .body("signatures[1].indication", Matchers.is(TOTAL_FAILED))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(2));
     }
 
     /**
@@ -265,11 +287,12 @@ public class DdocValidationFailIT extends SiVaRestTests{
     public void ddocOCSPNotTrusted() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("Tundmatu_OCSP_responder.ddoc"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Signers cert not trusted, missing CA cert!", "Signing certificate issuer information does not match"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
+                .body("signatures[0].errors.content", Matchers.hasItems("Signers cert not trusted, missing CA cert!", "Signing certificate issuer information does not match"))
+                .body("signatures[0].errors.size()", Matchers.is(3))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -289,11 +312,12 @@ public class DdocValidationFailIT extends SiVaRestTests{
     public void ddocNonSignedFile() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("DIGIDOC-XML1.3_lisatud_andmefail.ddoc"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Missing Reference for file: testfail2.txt"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
+                .body("signatures[0].errors.content", Matchers.hasItems("Missing Reference for file: testfail2.txt"))
+                .body("signatures[0].errors.size()", Matchers.is(1))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -313,11 +337,12 @@ public class DdocValidationFailIT extends SiVaRestTests{
     public void ddocFileRemoved() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("faileemald1.ddoc"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Missing DataFile for signature: S0 reference #D0"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("signatures[0].errors.content", Matchers.hasItems("Missing DataFile for signature: S0 reference #D0"))
+                .body("signatures[0].errors.size()", Matchers.is(1))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -337,11 +362,12 @@ public class DdocValidationFailIT extends SiVaRestTests{
     public void ddocWrongOcspNonce() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("OCSP nonce vale.ddoc"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Notarys digest doesn't match!"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));    }
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
+                .body("signatures[0].errors.content", Matchers.hasItems("Notarys digest doesn't match!", "OCSP response's nonce doesn't match the requests nonce!"))
+                .body("signatures[0].errors.size()", Matchers.is(2))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("validSignaturesCount", Matchers.is(0));    }
 
     /**
      * TestCaseID: Ddoc-ValidationFail-13
@@ -406,6 +432,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
         post(validationRequestFor("KS-02_tyhi.ddoc"))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("requestErrors.message", Matchers.hasItems("Document is not encoded in a valid base64 string", "may not be empty"))
                 .body("requestErrors", Matchers.hasSize(2));
     }
 
@@ -426,25 +453,25 @@ public class DdocValidationFailIT extends SiVaRestTests{
     public void ddocBadDatafileId() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("22915-bad-df-id.ddoc", VALID_SIGNATURE_POLICY_4, null))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S0"))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.hasSize(1))
-                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("Id attribute value has to be in form D<number> or DO"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("build.xml"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Digest of the document content"))
-                .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2013-05-09T18:15:42Z"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("X509IssuerName has none or invalid namespace: null"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("X509SerialNumber has none or invalid namespace: null"))
-                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("22915-bad-df-id.ddoc"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.validationWarnings", Matchers.hasSize(1))
-                .body("validationReport.validationConclusion.validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
+                .body("signatures[0].id", Matchers.is("S0"))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_13))
+                .body("signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].errors.content", Matchers.hasItems("Id attribute value has to be in form D<number> or DO"))
+                .body("signatures[0].errors.size()", Matchers.is(1))
+                .body("signatures[0].warnings.content", Matchers.hasItems("X509IssuerName has none or invalid namespace: null", "X509SerialNumber has none or invalid namespace: null"))
+                .body("signatures[0].warnings.size()", Matchers.is(2))
+                .body("signatures[0].signatureScopes[0].name", Matchers.is("build.xml"))
+                .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
+                .body("signatures[0].signatureScopes[0].content", Matchers.is("Digest of the document content"))
+                .body("signatures[0].claimedSigningTime", Matchers.is("2013-05-09T18:15:42Z"))
+                .body("validatedDocument.filename", Matchers.is("22915-bad-df-id.ddoc"))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validationWarnings", Matchers.hasSize(1))
+                .body("validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"));
     }
 
     /**
@@ -454,7 +481,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
      *
-     * Title: Validation of DDOC with revoked certificates
+     * Title: Validation of DDOC with revoked certificate status
      *
      * Expected Result: The document should fail the validation
      *
@@ -462,26 +489,27 @@ public class DdocValidationFailIT extends SiVaRestTests{
      */
     @Test
     @Ignore("Depends on jdigidoc test certificates configuration, currently only passable if jdigidoc is locally configured and built")
-    public void ddocWithRevokedCertificatesShouldFail() {
+    public void ddocWithRevokedCertificateStatusFromOcspShouldFail() {
         post(validationRequestFor("cert-revoked.ddoc"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S0"))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.hasSize(1))
-                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("Certificate has been revoked!"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("build.xml"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Digest of the document content"))
-                .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2013-05-17T12:15:08Z"))
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("cert-revoked.ddoc"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.validationWarnings", Matchers.hasSize(1))
-                .body("validationReport.validationConclusion.validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
+                .body("signatures[0].id", Matchers.is("S0"))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_13))
+                .body("signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].errors.content", Matchers.hasItems("Certificate has been revoked!"))
+                .body("signatures[0].errors.size()", Matchers.is(1))
+                .body("signatures[0].warnings.content", Matchers.hasItems("X509IssuerName has none or invalid namespace: null", "X509SerialNumber has none or invalid namespace: null"))
+                .body("signatures[0].warnings.size()", Matchers.is(2))
+                .body("signatures[0].signatureScopes[0].name", Matchers.is("build.xml"))
+                .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
+                .body("signatures[0].signatureScopes[0].content", Matchers.is("Digest of the document content"))
+                .body("signatures[0].claimedSigningTime", Matchers.is("2013-05-17T12:15:08Z"))
+                .body("validatedDocument.filename", Matchers.is("cert-revoked.ddoc"))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validationWarnings", Matchers.hasSize(1))
+                .body("validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"));
     }
 
     /**
@@ -491,7 +519,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
      *
-     * Title: Validation of DDOC with unknown certificates
+     * Title: Validation of DDOC with unknown OCSP status
      *
      * Expected Result: The document should fail the validation
      *
@@ -499,26 +527,27 @@ public class DdocValidationFailIT extends SiVaRestTests{
      */
     @Test
     @Ignore("Depends on jdigidoc test certificates configuration, currently only passable if jdigidoc is locally configured and built")
-    public void ddocWithUnknownCertificatesShouldFail() {
+    public void ddocWithUnknownCertificateStatusFromOcspShouldFail() {
         post(validationRequestFor("cert-unknown.ddoc"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationReport.validationConclusion.signatures[0].id", Matchers.is("S0"))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationReport.validationConclusion.signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.hasSize(1))
-                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("Certificate status is unknown!"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].name", Matchers.is("build.xml"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
-                .body("validationReport.validationConclusion.signatures[0].signatureScopes[0].content", Matchers.is("Digest of the document content"))
-                .body("validationReport.validationConclusion.signatures[0].claimedSigningTime", Matchers.is("2013-05-17T12:20:18Z"))
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("cert-unknown.ddoc"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.validationWarnings", Matchers.hasSize(1))
-                .body("validationReport.validationConclusion.validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
+                .body("signatures[0].id", Matchers.is("S0"))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_13))
+                .body("signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].errors.content", Matchers.hasItems("Certificate status is unknown!"))
+                .body("signatures[0].errors.size()", Matchers.is(1))
+                .body("signatures[0].warnings.content", Matchers.hasItems("X509IssuerName has none or invalid namespace: null", "X509SerialNumber has none or invalid namespace: null"))
+                .body("signatures[0].warnings.size()", Matchers.is(2))
+                .body("signatures[0].signatureScopes[0].name", Matchers.is("build.xml"))
+                .body("signatures[0].signatureScopes[0].scope", Matchers.is("FullSignatureScope"))
+                .body("signatures[0].signatureScopes[0].content", Matchers.is("Digest of the document content"))
+                .body("signatures[0].claimedSigningTime", Matchers.is("2013-05-17T12:20:18Z"))
+                .body("validatedDocument.filename", Matchers.is("cert-unknown.ddoc"))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validationWarnings", Matchers.hasSize(1))
+                .body("validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"));
     }
 
     @Override

@@ -202,6 +202,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * File: ilma_kehtivuskinnituseta.ddoc
      */
+    @Ignore
     @Test
     public void ddocNoOCSPResponse() {
         setTestFilesDirectory("ddoc/live/timemark/");
@@ -358,6 +359,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      *
      * File: OCSP nonce vale.ddoc
      */
+    @Ignore
     @Test
     public void ddocWrongOcspNonce() {
         setTestFilesDirectory("ddoc/live/timemark/");

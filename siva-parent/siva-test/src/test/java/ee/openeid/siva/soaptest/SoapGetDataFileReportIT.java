@@ -21,7 +21,6 @@ import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.w3c.dom.Document;
@@ -138,7 +137,7 @@ public class SoapGetDataFileReportIT extends SiVaSoapTests  {
     public void soapGetDataFilesFromDdocManyFilesCorrectValuesArePresent(){
         setTestFilesDirectory("ddoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
-        Document report = extractDataFilesReportDom(postDataFiles(createXMLValidationRequestForDataFiles(encodedString, "DDOC")).andReturn().body().asString());
+        Document report = extractDataFilesReportDom(postDataFiles(createXMLValidationRequestForDataFiles(encodedString, "igasugust1.3.ddoc")).andReturn().body().asString());
         assertEquals("File name should match expected","DigiDocService_spec_1_110_est.pdf" ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(0).getFilename());
         assertEquals("Base64 should match expected","JVBERi0xLjMKJcfsj6IKOCAwIG9iago8PC9MZW5ndGggOSAwIFIvRml" ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(0).getBase64().substring(0, 55));
         assertEquals("Mimetype should match expected","application/pdf" ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(0).getMimeType());
@@ -156,7 +155,7 @@ public class SoapGetDataFileReportIT extends SiVaSoapTests  {
         assertEquals("Mimetype should match expected","application/unknown" ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(3).getMimeType());
         assertEquals("Size should match expected",7427 ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(3).getSize());
         assertEquals("File name should match expected","4.txt" ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(4).getFilename());
-        assertEquals("Base64 should match expected","/GtzZmFpbA==\n" ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(4).getBase64());
+        assertEquals("Base64 should match expected","/GtzZmFpbA==" ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(4).getBase64());
         assertEquals("Mimetype should match expected","text/plain" ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(4).getMimeType());
         assertEquals("Size should match expected",7 ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(4).getSize());
         assertEquals("File name should match expected","kolm.doc" ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(5).getFilename());
@@ -172,7 +171,7 @@ public class SoapGetDataFileReportIT extends SiVaSoapTests  {
         assertEquals("Mimetype should match expected","application/msword" ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(7).getMimeType());
         assertEquals("Size should match expected",24064 ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(7).getSize());
         assertEquals("File name should match expected","kõõs.txt" ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(8).getFilename());
-        assertEquals("Base64 should match expected","bfZoaGho\n" ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(8).getBase64());
+        assertEquals("Base64 should match expected","bfZoaGho" ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(8).getBase64());
         assertEquals("Mimetype should match expected","text/plain" ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(8).getMimeType());
         assertEquals("Size should match expected",6 ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(8).getSize());
         assertEquals("File name should match expected","yks.doc" ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(9).getFilename());

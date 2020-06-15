@@ -285,9 +285,19 @@ Structure of validationConclusion block
 | signatures[0].errors | Signature.Errors | - | Array | Information about validation error(s), array of error messages.  |
 | signatures[0].errors[0] | Signature.Errors. Error | + | Object | Object containing the error |
 | signatures[0].errors[0].  content | Signature.Errors. Error.Content | + | String | Error message, as returned by the base library that was used for signature validation. |
-| signatures[0].info | Signature.Info | - | Object | Object containing trusted signing time information.  |
+| signatures[0].info | Signature.Info | - | Object | Object containing trusted signing time information and user added additional signing info. |
 | signatures[0].info. bestSignatureTime | Signature.Info. BestSignatureTime | + | Date | Time value that is regarded as trusted signing time, denoting the earliest time when it can be trusted by the validation application (because proven by some Proof-of-Existence present in the signature) that a signature has existed.<br>The source of the value depends on the signature profile (see also `SignatureFormat` parameter):<br>- Signature with time-mark (LT_TM level) - the producedAt value of the earliest valid time-mark (OCSP confirmation of the signer's certificate) in the signature.<br>- Signature with time-stamp (LT or LTA level) - the genTime value of the earliest valid signature time-stamp token in the signature. <br> - Signature with BES or EPES level - the value is empty, i.e. there is no trusted signing time value available. |
+| signatures[0].info. timeAssertionMessageImprint | Signature.Info. TimeAssertionMessageImprint | - | String | Base64 encoded value of message imprint retrieved from time assertion. In case of LT_TM (TimeMark) signatures, OCSP nonce value is returned. In case of T, LT or LTA (TimeStamp) signatures, TimeStamp message imprint is returned. |
+| signatures[0].info. signerRole | Signature.Info. SignerRole | - | Array | Array of roles attached to the signature. |
+| signatures[0].info. signerRole[0] | Signature.Info. SignerRole[0] | + | Object | Object containing claimed roles. |
+| signatures[0].info. signerRole[0]. claimedRole | Signature.Info. SignerRole[0].ClaimedRole | + | String | Role stated by signer on signing. |
+| signatures[0].info. signatureProductionPlace | Signature.Info. SignatureProductionPlace | - | Object | Object containing stated signing location info. |
+| signatures[0].info. signatureProductionPlace.countryName | Signature.Info. SignatureProductionPlace.CountryName | - | String | Stated signing country. |
+| signatures[0].info. signatureProductionPlace.stateOrProvince | Signature.Info. SignatureProductionPlace.StateOrProvince | - | String | Stated state or province. |
+| signatures[0].info. signatureProductionPlace.city | Signature.Info. SignatureProductionPlace.City | - | String | Stated city. |
+| signatures[0].info. signatureProductionPlace.postalCode | Signature.Info. SignatureProductionPlace.PostalCode | - | String | Stated postal code. |
 | signatures[0]. signatureFormat | Signature. SignatureFormat | + | String | Format and profile (according to Baseline Profile) of the signature. See [XAdES Baseline Profile](http://www.etsi.org/deliver/etsi_ts/103100_103199/103171/02.01.01_60/ts_103171v020101p.pdf), [CAdES Baseline Profile](http://www.etsi.org/deliver/etsi_ts/103100_103199/103173/02.02.01_60/ts_103173v020201p.pdf) and [PAdES Baseline Profile](http://www.etsi.org/deliver/etsi_ts/103100_103199/103172/02.02.02_60/ts_103172v020202p.pdf) for detailed description of the Baseline Profile levels. Levels that are accepted in SiVa validation policy are described in [SiVa signature validation policy](/siva/appendix/validation_policy) <br>**Possible values:**  <br> XAdES_BASELINE_B <br> XAdES_BASELINE_B_BES <br> XAdES_BASELINE_B_EPES <br> XAdES_BASELINE_T <br> XAdES_BASELINE_LT - long-term level XAdES signature where time-stamp is used as a assertion of trusted signing time<br> XAdES_BASELINE_LT_TM - long-term level XAdES signature where time-mark is used as a assertion of trusted signing time. Used in case of [BDOC](http://id.ee/public/bdoc-spec212-eng.pdf) signatures with time-mark profile and [DIGIDOC-XML](http://id.ee/public/DigiDoc_format_1.3.pdf) (DDOC) signatures.<br>  XAdES_BASELINE_LTA <br> CAdES_BASELINE_B <br> CAdES_BASELINE_T <br> CAdES_BASELINE_LT <br> CAdES_BASELINE_LTA<br> PAdES_BASELINE_B <br> PAdES_BASELINE_T <br> PAdES_BASELINE_LT <br> PAdES_BASELINE_LTA |
+| signatures[0]. signatureMethod | Signature. SignatureMethod | + | String | Signature method specification URI used in signature creation. |
 | signatures[0]. signatureLevel | Signature. SignatureLevel | - |String | Legal level of the signature, according to Regulation (EU) No 910/2014. <br> - **Possible values on positive validation result:**<br> QESIG <br> QESEAL <br> QES <br> ADESIG_QC <br> ADESEAL_QC <br> ADES_QC <br> ADESIG <br> ADESEAL <br> ADES <br> - **Possible values on indeterminate validation result:**<br> prefix INDETERMINATE is added to the level described in positive result. For example  INDETERMINATE_QESIG <br> - **Possible values on negative validation result:**<br>In addition to abovementioned<br> NOT_ADES_QC_QSCD <br> NOT_ADES_QC <br> NOT_ADES <br> NA <br> - In case of DIGIDOC-XML 1.0..1.3 formats, value is missing as the signature level is not checked by the JDigiDoc base library that is used for validation. However, the signatures can be indirectly regarded as QES level signatures, see also [SiVa Validation Policy](/siva3/appendix/validation_policy)<br> - In case of XROAD ASICE containers the value is missing as the asicverifier base library do not check the signature level.|
 | signatures[0].signedBy | Signature.SignedBy | + | String | Signers name and identification number, i.e. value of the CN field of the signer's certificate |
 | signatures[0].subjectDistinguishedName.serialNumber | Signature.SubjectDistinguishedName.SerialNumber | - | String | SERIALNUMBER value portion in signer's certificate's subject distinguished name |
@@ -301,12 +311,12 @@ Structure of validationConclusion block
 | signatures[0]. warnings | Signature.Warnings | - | Array | Block of validation warnings that do not affect the overall validation result. |
 | signatures[0]. warnings[0] | Signature.Warnings. Warning | + | Object | Object containing the warning |
 | signatures[0]. warnings[0]. content | Signature.Warnings. Warning.Description | + | String | Warning description, as retuned by the base library that was used for validation. |
-| signatures[0].certificates | Signature.Certificates | + | Array | Array containing certificates that are present in the signature or in TSL.  |
+| signatures[0].certificates | Signature.Certificates | - | Array | Array containing certificates that are present in the signature or can be fetched from TSL. |
 | signatures[0].certificates[0] | Signature.Certificates.Certificate | + | Object | Object containinig certificate type, common name and certificate. Minimal object is signer certificate. If present contains certificates for TimeStamps and OCSP as well. |
 | signatures[0].certificates[0].commonName | Signature.Certificates.Certificate.CommonName | + | String | CN (common name) value in certificate. |
 | signatures[0].certificates[0].type | Signature.Certificates.Certificate.Type | + | String | Type of the certificate. Can be SIGNING, REVOCATION, SIGNATURE_TIMESTAMP, ARCHIVE_TIMESTAMP or CONTENT_TIMESTAMP. |
 | signatures[0].certificates[0].content | Signature.Certificates.Certificate.Content | + | String | DER encoded X.509 certificate in Base64. |
-| signatures[0].certificates[0].ca |Signature.Certificates.Certificate.Ca | - | Object | Certificate object containing issuer certificate and common name value. Is returned for signer certificate for non DDOC/BDOC containers. This chain can be linked up until chain of trust.|
+| signatures[0].certificates[0].issuer | Signature.Certificates.Certificate.Issuer | + | String | Object containing issuer certificate information. Can create chain til the trust anchor. |
 | timeStampTokens | TimeStampTokens | - | Array | Array containing the time stamp tokens |
 | timeStampTokens[0]. | TimeStampToken | + | Object | Object containing the time stamp token (TST) |
 | timeStampTokens[0]. indication | TimeStampToken. Indication | + | String | Result of the time stamp token validation. <br>**Possible values:** <br> TOTAL-PASSED <br> TOTAL-FAILED |
@@ -319,12 +329,11 @@ Structure of validationConclusion block
 #### Sample JSON response Simple Report (successful scenario)
 
 ```json
-{
-  "validationReport": {"validationConclusion": {
-    "validationTime": "2019-03-25T14:40:31Z",
+{"validationReport": {"validationConclusion": {
+    "validationTime": "2020-06-15T11:45:52Z",
     "signaturesCount": 1,
     "validationLevel": "ARCHIVAL_DATA",
-    "validatedDocument": {"filename": "JaakTest.asice"},
+    "validatedDocument": {"filename": "singleValidSignatureTS.asice"},
     "validSignaturesCount": 1,
     "signatures": [{
         "signatureFormat": "XAdES_BASELINE_LT",
@@ -332,33 +341,42 @@ Structure of validationConclusion block
             "commonName": "JÕEORG,JAAK-KRISTJAN,38001085718",
             "serialNumber": "PNOEE-38001085718"
         },
-        "signedBy": "JÕEORG,JAAK-KRISTJAN,38001085718",
-        "claimedSigningTime": "2018-12-21T09:07:22Z",
-        "signatureLevel": "QESIG",
-        "signatureScopes": [{
-            "scope": "FULL",
-            "name": "test1.txt",
-            "content": "Full document"
-        }],
         "certificates": [
+            {
+                "commonName": "DEMO of SK TSA 2014",
+                "type": "SIGNATURE_TIMESTAMP",
+                "content": "MII..."
+            },
             {
                 "commonName": "JÕEORG,JAAK-KRISTJAN,38001085718",
                 "type": "SIGNING",
                 "content": "MII...",
-                "ca": {
-                    "commonName": "EID-SK 2016",
+                "issuer": {
+                    "commonName": "TEST of ESTEID2018",
                     "content": "MII..."
                 }
             },
             {
-                "commonName": "SK TIMESTAMPING AUTHORITY 2020",
-                "type": "SIGNATURE_TIMESTAMP",
+                "commonName": "TEST of SK OCSP RESPONDER 2011",
+                "type": "REVOCATION",
                 "content": "MII..."
             }
         ],
-        "id": "id-b62aa476c6c42d368e114a84e9db0169",
+        "signedBy": "JÕEORG,JAAK-KRISTJAN,38001085718",
+        "claimedSigningTime": "2020-05-21T13:56:52Z",
+        "signatureLevel": "QESIG",
+        "signatureScopes": [{
+            "scope": "FULL",
+            "name": "test.txt",
+            "content": "Full document"
+        }],
+        "signatureMethod": "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256",
+        "id": "id-a9ce7f66cff1d17ddaab37c46a88f5f4",
         "indication": "TOTAL-PASSED",
-        "info": {"bestSignatureTime": "2018-12-21T09:07:22Z"}
+        "info": {
+            "timeAssertionMessageImprint": "MDEwDQYJYIZIAWUDBAIBBQAEID3j1ceryQp4ZNP8iVfd50l/0JXvpry+XS+ajiAUA+Su",
+            "bestSignatureTime": "2020-05-21T13:56:48Z"
+        }
     }],
     "policy": {
         "policyDescription": "Policy according most common requirements of Estonian Public Administration, to validate Qualified Electronic Signatures and Electronic Seals with Qualified Certificates (according to Regulation (EU) No 910/2014, aka eIDAS). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result, with exception for seals, where AdES/QC and above will produce positive result. Signatures and Seals which are not compliant with ETSI standards (referred by eIDAS) may produce unknown or invalid validation result. Validation process is based on eIDAS Article 32 and referred ETSI standards.",
@@ -383,53 +401,60 @@ Structure of validationConclusion block
             <ns3:PolicyName>POLv4</ns3:PolicyName>
             <ns3:PolicyUrl>http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4</ns3:PolicyUrl>
           </ns3:Policy>
-          <ns3:ValidationTime>2019-03-25T14:40:31Z</ns3:ValidationTime>
+          <ns3:ValidationTime>2020-06-15T11:45:52Z</ns3:ValidationTime>
           <ns3:ValidatedDocument>
-            <ns3:Filename>JaakTest.asice</ns3:Filename>
+            <ns3:Filename>singleValidSignatureTS.asice</ns3:Filename>
           </ns3:ValidatedDocument>
           <ns3:ValidationLevel>ARCHIVAL_DATA</ns3:ValidationLevel>
           <ns3:ValidationWarnings/>
           <ns3:SignatureForm>ASiC-E</ns3:SignatureForm>
           <ns3:Signatures>
             <ns3:Signature>
-              <ns3:Id>id-b62aa476c6c42d368e114a84e9db0169</ns3:Id>
+              <ns3:Id>id-a9ce7f66cff1d17ddaab37c46a88f5f4</ns3:Id>
               <ns3:SignatureFormat>XAdES_BASELINE_LT</ns3:SignatureFormat>
+              <ns3:SignatureMethod>http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256</ns3:SignatureMethod>
               <ns3:SignatureLevel>QESIG</ns3:SignatureLevel>
               <ns3:SignedBy>JÕEORG,JAAK-KRISTJAN,38001085718</ns3:SignedBy>
               <ns3:SubjectDistinguishedName>
                 <ns3:SerialNumber>PNOEE-38001085718</ns3:SerialNumber>
                 <ns3:CommonName>JÕEORG,JAAK-KRISTJAN,38001085718</ns3:CommonName>
               </ns3:SubjectDistinguishedName>
+              <ns3:Certificates>
+                <ns3:Certificate>
+                  <ns3:Content>MIIE...</ns3:Content>
+                  <ns3:CommonName>DEMO of SK TSA 2014</ns3:CommonName>
+                  <ns3:Type>SIGNATURE_TIMESTAMP</ns3:Type>
+                </ns3:Certificate>
+                <ns3:Certificate>
+                  <ns3:Content>MIIE...</ns3:Content>
+                  <ns3:CommonName>JÕEORG,JAAK-KRISTJAN,38001085718</ns3:CommonName>
+                  <ns3:Issuer>
+                    <ns3:Content>MIIE...</ns3:Content>
+                    <ns3:CommonName>TEST of ESTEID2018</ns3:CommonName>
+                  </ns3:Issuer>
+                  <ns3:Type>SIGNING</ns3:Type>
+                </ns3:Certificate>
+                <ns3:Certificate>
+                  <ns3:Content>MIIE...</ns3:Content>
+                  <ns3:CommonName>TEST of SK OCSP RESPONDER 2011</ns3:CommonName>
+                  <ns3:Type>REVOCATION</ns3:Type>
+                </ns3:Certificate>
+              </ns3:Certificates>
               <ns3:Indication>TOTAL-PASSED</ns3:Indication>
               <ns3:SubIndication/>
               <ns3:Errors/>
               <ns3:SignatureScopes>
                 <ns3:SignatureScope>
-                  <ns3:Name>test1.txt</ns3:Name>
+                  <ns3:Name>test.txt</ns3:Name>
                   <ns3:Scope>FULL</ns3:Scope>
                   <ns3:Content>Full document</ns3:Content>
                 </ns3:SignatureScope>
               </ns3:SignatureScopes>
-              <ns3:Certificates>
-                <ns3:Certificate>
-                  <ns3:Content>MII...</ns3:Content>
-                  <ns3:CommonName>SK TIMESTAMPING AUTHORITY 2020</ns3:CommonName>
-                  <ns3:Type>SIGNATURE_TIMESTAMP</ns3:Type>
-                </ns3:Certificate>
-                <ns3:Certificate>
-                  <ns3:Content>MII...</ns3:Content>
-                  <ns3:CommonName>JÕEORG,JAAK-KRISTJAN,38001085718</ns3:CommonName>
-                  <ns3:Ca>
-                    <ns3:Content>MII...</ns3:Content>
-                    <ns3:CommonName>EID-SK 2016</ns3:CommonName>
-                  </ns3:Ca>
-                  <ns3:Type>SIGNING</ns3:Type>
-                </ns3:Certificate>
-              </ns3:Certificates>
-              <ns3:ClaimedSigningTime>2018-12-21T09:07:22Z</ns3:ClaimedSigningTime>
+              <ns3:ClaimedSigningTime>2020-05-21T13:56:52Z</ns3:ClaimedSigningTime>
               <ns3:Warnings/>
               <ns3:Info>
-                <ns3:BestSignatureTime>2018-12-21T09:07:22Z</ns3:BestSignatureTime>
+                <ns3:BestSignatureTime>2020-05-21T13:56:48Z</ns3:BestSignatureTime>
+                <ns3:TimeAssertionMessageImprint>MDEwDQYJYIZIAWUDBAIBBQAEID3j1ceryQp4ZNP8iVfd50l/0JXvpry+XS+ajiAUA+Su</ns3:TimeAssertionMessageImprint>
               </ns3:Info>
             </ns3:Signature>
           </ns3:Signatures>
@@ -453,282 +478,6 @@ General structure of validation response.
 | validationReport. validationProcess | ValidationReport. ValidationProcess | - | Object | Object containing information of the validation process. This block is present only on DSS library based validations and is built on DSS detailed report. For more information visit [DSS documentation](https://github.com/esig/dss/blob/develop/dss-cookbook/src/main/asciidoc/dss-documentation.adoc#validation-process).  |
 | validationReportSignature | ValidationReportSignature |  - | String | Base64 string of ASIC-E container that includes the detailed report and is signed by the validation service provider |
 
-#### Sample JSON response Detailed Report (successful scenario). The report is shortened but gives general overview of structure.
-
-```json
-{"validationReport": {
-    "validationProcess": {
-        "tlanalysis": [
-            {
-                "conclusion": {"indication": "PASSED"},
-                "countryCode": "EU",
-                "constraint": [
-                    {
-                        "name": {
-                            "nameId": "QUAL_TL_FRESH",
-                            "value": "Is the trusted list fresh ?"
-                        },
-                        "status": "OK"
-                    },
-                    ...
-                ]
-            },
-            {
-                "conclusion": {"indication": "PASSED"},
-                "countryCode": "EU",
-                "constraint": [
-                    {
-                        "name": {
-                            "nameId": "QUAL_TL_FRESH",
-                            "value": "Is the trusted list fresh ?"
-                        },
-                        "status": "OK"
-                    },
-                    ...
-                ]
-            }
-        ],
-        "basicBuildingBlocks": [
-            {
-                "conclusion": {"indication": "PASSED"},
-                "cv": {
-                    "conclusion": {"indication": "PASSED"},
-                    "constraint": [
-                        {
-                            "name": {
-                                "nameId": "BBB_CV_IRDOF",
-                                "value": "Is the reference data object found?"
-                            },
-                            "additionalInfo": "MESSAGE_IMPRINT",
-                            "status": "OK"
-                        },
-                        ...
-                    ]
-                },
-                ...
-                "id": "FA6C844387F7162088444A80D95DD251D8AC1BF94EA067D97C10364F71720F3B",
-                "type": "TIMESTAMP"
-            },
-            ...
-        ],
-        "signatures": [{
-            "validationProcessArchivalData": {
-                "conclusion": {"indication": "PASSED"},
-                "constraint": [{
-                    "name": {
-                        "nameId": "ARCH_LTVV",
-                        "value": "Is the result of the LTV validation process acceptable?"
-                    },
-                    "status": "OK"
-                }],
-                "bestSignatureTime": 1545383242000
-            },
-            ...
-            "id": "id-b62aa476c6c42d368e114a84e9db0169",
-            "validationProcessLongTermData": {
-                "conclusion": {"indication": "PASSED"},
-                "constraint": [
-                    {
-                        "name": {
-                            "nameId": "LTV_ABSV",
-                            "value": "Is the result of the Basic Validation Process acceptable?"
-                        },
-                        "status": "OK"
-                    },
-                    ...
-                ],
-                "bestSignatureTime": 1545383242000
-            }
-        }]
-    },
-    "validationConclusion": {
-        "validationTime": "2019-03-25T14:51:27Z",
-        "signaturesCount": 1,
-        "validationLevel": "ARCHIVAL_DATA",
-        "validatedDocument": {"filename": "JaakTest.asice"},
-        "validSignaturesCount": 1,
-        "signatures": [{
-            "signatureFormat": "XAdES_BASELINE_LT",
-            "subjectDistinguishedName": {
-                "commonName": "JÕEORG,JAAK-KRISTJAN,38001085718",
-                "serialNumber": "PNOEE-38001085718"
-            },
-            "signedBy": "JÕEORG,JAAK-KRISTJAN,38001085718",
-            "claimedSigningTime": "2018-12-21T09:07:22Z",
-            "signatureLevel": "QESIG",
-            "signatureScopes": [{
-                "scope": "FULL",
-                "name": "test1.txt",
-                "content": "Full document"
-            }],
-            "certificates": [
-                {
-                    "commonName": "JÕEORG,JAAK-KRISTJAN,38001085718",
-                    "type": "SIGNING",
-                    "content": "MII...",
-                    "ca": {
-                        "commonName": "EID-SK 2016",
-                        "content": "MII..."
-                    }
-                },
-                {
-                    "commonName": "SK TIMESTAMPING AUTHORITY 2020",
-                    "type": "SIGNATURE_TIMESTAMP",
-                    "content": "MII..."
-                }
-            ],
-            "id": "id-b62aa476c6c42d368e114a84e9db0169",
-            "indication": "TOTAL-PASSED",
-            "info": {"bestSignatureTime": "2018-12-21T09:07:22Z"}
-        }],
-        "policy": {
-            "policyDescription": "Policy according most common requirements of Estonian Public Administration, to validate Qualified Electronic Signatures and Electronic Seals with Qualified Certificates (according to Regulation (EU) No 910/2014, aka eIDAS). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result, with exception for seals, where AdES/QC and above will produce positive result. Signatures and Seals which are not compliant with ETSI standards (referred by eIDAS) may produce unknown or invalid validation result. Validation process is based on eIDAS Article 32 and referred ETSI standards.",
-            "policyUrl": "http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4",
-            "policyName": "POLv4"
-        },
-        "signatureForm": "ASiC-E"
-    }
-}}
-```
-
-#### Sample SOAP response Detailed Report (successful scenario)
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-  <soap:Body>
-    <ns2:ValidateDocumentResponse xmlns:ns2="http://soap.webapp.siva.openeid.ee/" xmlns:ns3="http://soap.webapp.siva.openeid.ee/response/" xmlns:ns4="http://dss.esig.europa.eu/validation/detailed-report" xmlns:ns5="http://dss.esig.europa.eu/validation/diagnostic" xmlns:ns6="http://x-road.eu/xsd/identifiers" xmlns:ns7="http://x-road.eu/xsd/xroad.xsd">
-      <ns3:ValidationReport>
-        <ns3:ValidationConclusion>
-          <ns3:Policy>
-            <ns3:PolicyDescription>Policy according most common requirements of Estonian Public Administration, to validate Qualified Electronic Signatures and Electronic Seals with Qualified Certificates (according to Regulation (EU) No 910/2014, aka eIDAS). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result, with exception for seals, where AdES/QC and above will produce positive result. Signatures and Seals which are not compliant with ETSI standards (referred by eIDAS) may produce unknown or invalid validation result. Validation process is based on eIDAS Article 32 and referred ETSI standards.</ns3:PolicyDescription>
-            <ns3:PolicyName>POLv4</ns3:PolicyName>
-            <ns3:PolicyUrl>http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4</ns3:PolicyUrl>
-          </ns3:Policy>
-          <ns3:ValidationTime>2019-03-25T14:51:27Z</ns3:ValidationTime>
-          <ns3:ValidatedDocument>
-            <ns3:Filename>JaakTest.asice</ns3:Filename>
-          </ns3:ValidatedDocument>
-          <ns3:ValidationLevel>ARCHIVAL_DATA</ns3:ValidationLevel>
-          <ns3:ValidationWarnings/>
-          <ns3:SignatureForm>ASiC-E</ns3:SignatureForm>
-          <ns3:Signatures>
-            <ns3:Signature>
-              <ns3:Id>id-b62aa476c6c42d368e114a84e9db0169</ns3:Id>
-              <ns3:SignatureFormat>XAdES_BASELINE_LT</ns3:SignatureFormat>
-              <ns3:SignatureLevel>QESIG</ns3:SignatureLevel>
-              <ns3:SignedBy>JÕEORG,JAAK-KRISTJAN,38001085718</ns3:SignedBy>
-              <ns3:SubjectDistinguishedName>
-                <ns3:SerialNumber>PNOEE-38001085718</ns3:SerialNumber>
-                <ns3:CommonName>JÕEORG,JAAK-KRISTJAN,38001085718</ns3:CommonName>
-              </ns3:SubjectDistinguishedName>
-              <ns3:Indication>TOTAL-PASSED</ns3:Indication>
-              <ns3:SubIndication/>
-              <ns3:Errors/>
-              <ns3:SignatureScopes>
-                <ns3:SignatureScope>
-                  <ns3:Name>test1.txt</ns3:Name>
-                  <ns3:Scope>FULL</ns3:Scope>
-                  <ns3:Content>Full document</ns3:Content>
-                </ns3:SignatureScope>
-              </ns3:SignatureScopes>
-              <ns3:Certificates>
-                <ns3:Certificate>
-                  <ns3:Content>MII...</ns3:Content>
-                  <ns3:CommonName>SK TIMESTAMPING AUTHORITY 2020</ns3:CommonName>
-                  <ns3:Type>SIGNATURE_TIMESTAMP</ns3:Type>
-                </ns3:Certificate>
-                <ns3:Certificate>
-                  <ns3:Content>MII...</ns3:Content>
-                  <ns3:CommonName>JÕEORG,JAAK-KRISTJAN,38001085718</ns3:CommonName>
-                  <ns3:Ca>
-                    <ns3:Content>MII...</ns3:Content>
-                    <ns3:CommonName>EID-SK 2016</ns3:CommonName>
-                  </ns3:Ca>
-                  <ns3:Type>SIGNING</ns3:Type>
-                </ns3:Certificate>
-              </ns3:Certificates>                
-              <ns3:ClaimedSigningTime>2018-12-21T09:07:22Z</ns3:ClaimedSigningTime>
-              <ns3:Warnings/>
-              <ns3:Info>
-                <ns3:BestSignatureTime>2018-12-21T09:07:22Z</ns3:BestSignatureTime>
-              </ns3:Info>
-            </ns3:Signature>
-          </ns3:Signatures>
-          <ns3:ValidSignaturesCount>1</ns3:ValidSignaturesCount>
-          <ns3:SignaturesCount>1</ns3:SignaturesCount>
-        </ns3:ValidationConclusion>
-        <ns3:ValidationProcess>
-          <ns4:Signatures Id="id-b62aa476c6c42d368e114a84e9db0169">
-            <ns4:ValidationProcessBasicSignatures BestSignatureTime="2019-03-25T14:51:27">
-              <ns4:Constraint Id="id-b62aa476c6c42d368e114a84e9db0169">
-                <ns4:Name NameId="ADEST_ROBVPIIC">Is the result of the Basic Validation Process conclusive?</ns4:Name>
-                <ns4:Status>OK</ns4:Status>
-              </ns4:Constraint>
-              <ns4:Conclusion>
-                <ns4:Indication>PASSED</ns4:Indication>
-              </ns4:Conclusion>
-            </ns4:ValidationProcessBasicSignatures>
-            ...
-			<ns4:ValidationProcessArchivalData BestSignatureTime="2018-12-21T09:07:22">
-              <ns4:Constraint>
-                <ns4:Name NameId="ARCH_LTVV">Is the result of the LTV validation process acceptable?</ns4:Name>
-                <ns4:Status>OK</ns4:Status>
-              </ns4:Constraint>
-              <ns4:Conclusion>
-                <ns4:Indication>PASSED</ns4:Indication>
-              </ns4:Conclusion>
-            </ns4:ValidationProcessArchivalData>
-            ...
-          </ns4:Signatures>
-          ...
-          <ns4:BasicBuildingBlocks Id="id-b62aa476c6c42d368e114a84e9db0169" Type="SIGNATURE">
-            <ns4:FC>
-              <ns4:Constraint>
-                <ns4:Name NameId="BBB_FC_IEFF">Is the expected format found?</ns4:Name>
-                <ns4:Status>OK</ns4:Status>
-              </ns4:Constraint>
-              ...
-            </ns4:FC>
-            ...
-            <ns4:XCV>
-              <ns4:Constraint>
-                <ns4:Name NameId="BBB_XCV_CCCBB">Can the certificate chain be built till the trust anchor?</ns4:Name>
-                <ns4:Status>OK</ns4:Status>
-              </ns4:Constraint>
-              ...
-            </ns4:XCV>
-            <ns4:Certificate>
-              <ns4:ChainItem Id="E5F26DE786C6A54C75C115E0BA31DF328ED7CEDD5DB539C1078D603F5EEC582E">
-                <ns4:Source>SIGNATURE</ns4:Source>
-              </ns4:ChainItem>
-              <ns4:ChainItem Id="2291C167B5275152B53F1EFA2C1805C9A15EC8DEF7120E56A3726A2959B31049">
-                <ns4:Source>TRUSTED_LIST</ns4:Source>
-              </ns4:ChainItem>
-            </ns4:Certificate>
-            <ns4:Conclusion>
-              <ns4:Indication>PASSED</ns4:Indication>
-            </ns4:Conclusion>
-          </ns4:BasicBuildingBlocks>
-          ...
-		  <ns4:TLAnalysis CountryCode="EU">
-            ...
-            <ns4:Constraint>
-              <ns4:Name NameId="QUAL_TL_WS">Is the trusted list well signed ?</ns4:Name>
-              <ns4:Status>OK</ns4:Status>
-            </ns4:Constraint>
-            <ns4:Conclusion>
-              <ns4:Indication>PASSED</ns4:Indication>
-            </ns4:Conclusion>
-          </ns4:TLAnalysis>
-          ...
-        </ns3:ValidationProcess>
-      </ns3:ValidationReport>
-    </ns2:ValidateDocumentResponse>
-  </soap:Body>
-</soap:Envelope>
-```
-
 ### Validation response parameters for Diagnostic Data Report (successful scenario)
 
 General structure of validation response.
@@ -738,457 +487,6 @@ General structure of validation response.
 | validationReport | ValidationReport |  + | Object | Object containing SIVA validation report. |
 | validationReport. validationConclusion | ValidationReport. ValidationConclusion |  + | Object | Object containing information of the validation conclusion. The same object that is present in Simple Report and Detailed Report. |
 | validationReport. diagnosticData | ValidationReport. DiagnosticData | - | Object | Object containing diagnostic data about the information contained in the signature itself, it's revocation data and mathematical validity. This block is present only on DSS library based validations (excluding hashcode validation) and is built on DSS diagnostic data. For more information visit [DSS documentation](https://github.com/esig/dss/blob/develop/dss-cookbook/src/main/asciidoc/dss-documentation.adoc#validation-process).  |
-
-#### Sample Diagnostic Data Report JSON response (successful scenario). The report is shortened but gives general overview of structure.
-
-```json
-{"validationReport": {
-    "diagnosticData": {
-        "listOfTrustedLists": {
-            "sequenceNumber": 237,
-            "countryCode": "EU",
-            "wellSigned": true,
-            "lastLoading": 1553524453769,
-            "issueDate": 1553151600000,
-            "version": 5,
-            "url": "https://ec.europa.eu/tools/lotl/eu-lotl.xml",
-            "nextUpdate": 1569024000000
-        },
-        "usedCertificates": [
-            ...,
-			{
-                "commonName": "JÕEORG,JAAK-KRISTJAN,38001085718",
-                "notAfter": 1697579999000,
-                "subjectDistinguishedName": [
-                    {
-                        "format": "CANONICAL",
-                        "value": "2.5.4.5=#1311504e4f45452d3338303031303835373138,2.5.4.42=#0c0d4a41414b2d4b524953544a414e,2.5.4.4=#0c074ac395454f5247,cn=jõeorg\\,jaak-kristjan\\,38001085718,c=ee"
-                    },
-                    ...
-                ],
-                "issuerDistinguishedName": [
-                    {
-                        "format": "CANONICAL",
-                        "value": "cn=test of esteid2018,2.5.4.97=#0c0e4e545245452d3130373437303133,o=sk id solutions as,c=ee"
-                    },
-                    ...
-                ],
-                "publicKeyEncryptionAlgo": "ECDSA",
-                "qcstatementIds": [
-                    ...
-                ],
-                "qctypes": [{
-                    "description": "qc-type-esign",
-                    "value": "0.4.0.1862.1.6.1"
-                }],
-                "notBefore": 1539858740000,
-                "surname": "JÕEORG",
-                "keyUsageBits": ["nonRepudiation"],
-                "basicSignature": {
-                    ...
-                },
-                "certificatePolicies": [
-                    ...
-                ],
-                "publicKeySize": 384,
-                "selfSigned": false,
-                "id": "E5F26DE786C6A54C75C115E0BA31DF328ED7CEDD5DB539C1078D603F5EEC582E",
-                "trustedServiceProviders": [{
-                    ...,
-                    "tspname": "TEST of ESTEID2018",
-                    "countryCode": "EU"
-                }],
-                "signingCertificate": {"id": "2291C167B5275152B53F1EFA2C1805C9A15EC8DEF7120E56A3726A2959B31049"},
-                "serialNumber": "19005286950875642170302181391352002125",
-                "digestAlgoAndValues": [{
-                    "digestValue": "5fJt54bGpUx1wRXgujHfMo7Xzt1dtTnBB41gP17sWC4=",
-                    "digestMethod": "SHA256"
-                }],
-                "certificate": [{
-                    "source": "TRUSTED_LIST",
-                    "id": "2291C167B5275152B53F1EFA2C1805C9A15EC8DEF7120E56A3726A2959B31049"
-                }],
-                "givenName": "JAAK-KRISTJAN",
-                "idPkixOcspNoCheck": false,
-                "authorityInformationAccessUrls": ["http://c.sk.ee/Test_of_ESTEID2018.der.crt"],
-                "revocations": [{
-                    "signingCertificate": {"id": "E83A008AF341579A76367AF41CDD371F7F35E949220FC4621A3F2596A73D1D05"},
-                    "productionDate": 1545383244000,
-                    "digestAlgoAndValues": [{
-                        "digestValue": "5O0YUUWO0X0kc/5oz2yGvIYOwfZZBHUrBDHPhe3BBrM=",
-                        "digestMethod": "SHA256"
-                    }],
-                    "certificate": [{
-                        "source": "TRUSTED_LIST",
-                        "id": "E83A008AF341579A76367AF41CDD371F7F35E949220FC4621A3F2596A73D1D05"
-                    }],
-                    "thisUpdate": 1545383244000,
-                    "origin": "SIGNATURE",
-                    "basicSignature": {
-                        ...
-                    },
-                    "source": "OCSPToken",
-                    "id": "e5f26de786c6a54c75c115e0ba31df328ed7cedd5db539c1078d603f5eec582ee4ed1851458ed17d2473fe68cf6c86bc860ec1f65904752b0431cf85edc106b3",
-                    "status": true
-                }],
-                "trusted": false,
-                "ocspaccessUrls": ["http://aia.demo.sk.ee/esteid2018"],
-                "countryName": "EE"
-            },
-            ...
-        ],
-        "containerInfo": {
-            "contentFiles": ["test1.txt"],
-            "containerType": "ASiC-E",
-            "mimeTypeContent": "application/vnd.etsi.asic-e+zip",
-            "mimeTypeFilePresent": true,
-            "manifestFiles": [{
-                "entries": ["test1.txt"],
-                "filename": "META-INF/manifest.xml",
-                "signatureFilename": "META-INF/signatures0.xml"
-            }],
-            "zipComment": "LIB DigiDoc4j/DEV format: application/vnd.etsi.asic-e+zip signatureProfile: XAdES_BASELINE_LT Java: 1.8.0_171/Oracle Corporation OS: Windows 10/amd64/10.0 JVM: Java HotSpot(TM) 64-Bit Server VM/Oracle Corporation/25.171-b11"
-        },
-        "trustedLists": [{
-            "sequenceNumber": 237,
-            "countryCode": "EU",
-            "wellSigned": true,
-            "lastLoading": 1553524453769,
-            "issueDate": 1553151600000,
-            "version": 5,
-            "url": "https://ec.europa.eu/tools/lotl/eu-lotl.xml",
-            "nextUpdate": 1569024000000
-        }],
-        "documentName": "JaakTest.asice",
-        "validationDate": 1553526062404,
-        "signatures": [{
-            "dateTime": 1545383242000,
-            "signingCertificate": {
-                "attributePresent": true,
-                "digestValueMatch": true,
-                "digestValuePresent": true,
-                "id": "E5F26DE786C6A54C75C115E0BA31DF328ED7CEDD5DB539C1078D603F5EEC582E",
-                "issuerSerialMatch": true
-            },
-            "signatureFormat": "XAdES-BASELINE-LT",
-            "digestMatchers": [
-                {
-                    "digestValue": "MFRF3SBw+Ykk8BdGCEGzlMrxycC8qzbzvjQuST0yk8M=",
-                    "dataIntact": true,
-                    "digestMethod": "SHA256",
-                    "name": "r-id-1",
-                    "dataFound": true,
-                    "type": "REFERENCE"
-                },
-                ...
-            ],
-            "certificate": [
-                ...
-            ],
-            "timestamps": [{
-                ...
-            }],
-            "basicSignature": {
-                ...
-            },
-            "signatureScopes": [{
-                "scope": "FULL",
-                "name": "test1.txt",
-                "value": "Full document"
-            }],
-            "certificates": [
-                {
-                    "commonName": "JÕEORG,JAAK-KRISTJAN,38001085718",
-                    "type": "SIGNING",
-                    "content": "MII...",
-                    "ca": {
-                        "commonName": "EID-SK 2016",
-                        "content": "MII..."
-                    }
-                },
-                {
-                    "commonName": "SK TIMESTAMPING AUTHORITY 2020",
-                    "type": "SIGNATURE_TIMESTAMP",
-                    "content": "MII..."
-                }
-            ],
-            "structuralValidation": {"valid": true},
-            "signatureFilename": "META-INF/signatures0.xml",
-            "id": "id-b62aa476c6c42d368e114a84e9db0169",
-            "contentType": "text/xml"
-        }]
-    },
-    "validationConclusion": {
-        "validationTime": "2019-03-25T15:01:02Z",
-        "signaturesCount": 1,
-        "validationLevel": "ARCHIVAL_DATA",
-        "validatedDocument": {"filename": "JaakTest.asice"},
-        "validSignaturesCount": 1,
-        "signatures": [{
-            "signatureFormat": "XAdES_BASELINE_LT",
-            "subjectDistinguishedName": {
-                "commonName": "JÕEORG,JAAK-KRISTJAN,38001085718",
-                "serialNumber": "PNOEE-38001085718"
-            },
-            "signedBy": "JÕEORG,JAAK-KRISTJAN,38001085718",
-            "claimedSigningTime": "2018-12-21T09:07:22Z",
-            "signatureLevel": "QESIG",
-            "signatureScopes": [{
-                "scope": "FULL",
-                "name": "test1.txt",
-                "content": "Full document"
-            }],
-            "id": "id-b62aa476c6c42d368e114a84e9db0169",
-            "indication": "TOTAL-PASSED",
-            "info": {"bestSignatureTime": "2018-12-21T09:07:22Z"}
-        }],
-        "policy": {
-            "policyDescription": "Policy according most common requirements of Estonian Public Administration, to validate Qualified Electronic Signatures and Electronic Seals with Qualified Certificates (according to Regulation (EU) No 910/2014, aka eIDAS). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result, with exception for seals, where AdES/QC and above will produce positive result. Signatures and Seals which are not compliant with ETSI standards (referred by eIDAS) may produce unknown or invalid validation result. Validation process is based on eIDAS Article 32 and referred ETSI standards.",
-            "policyUrl": "http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4",
-            "policyName": "POLv4"
-        },
-        "signatureForm": "ASiC-E"
-    }
-}}
-```
-
-#### Sample Diagnostic Data Report SOAP response (successful scenario)
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-  <soap:Body>
-    <ns2:ValidateDocumentResponse xmlns:ns2="http://soap.webapp.siva.openeid.ee/" xmlns:ns3="http://soap.webapp.siva.openeid.ee/response/" xmlns:ns4="http://dss.esig.europa.eu/validation/detailed-report" xmlns:ns5="http://dss.esig.europa.eu/validation/diagnostic" xmlns:ns6="http://x-road.eu/xsd/identifiers" xmlns:ns7="http://x-road.eu/xsd/xroad.xsd">
-      <ns3:ValidationReport>
-        <ns3:ValidationConclusion>
-          <ns3:Policy>
-            <ns3:PolicyDescription>Policy according most common requirements of Estonian Public Administration, to validate Qualified Electronic Signatures and Electronic Seals with Qualified Certificates (according to Regulation (EU) No 910/2014, aka eIDAS). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result, with exception for seals, where AdES/QC and above will produce positive result. Signatures and Seals which are not compliant with ETSI standards (referred by eIDAS) may produce unknown or invalid validation result. Validation process is based on eIDAS Article 32 and referred ETSI standards.</ns3:PolicyDescription>
-            <ns3:PolicyName>POLv4</ns3:PolicyName>
-            <ns3:PolicyUrl>http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4</ns3:PolicyUrl>
-          </ns3:Policy>
-          <ns3:ValidationTime>2019-03-25T15:01:02Z</ns3:ValidationTime>
-          <ns3:ValidatedDocument>
-            <ns3:Filename>JaakTest.asice</ns3:Filename>
-          </ns3:ValidatedDocument>
-          <ns3:ValidationLevel>ARCHIVAL_DATA</ns3:ValidationLevel>
-          <ns3:ValidationWarnings/>
-          <ns3:SignatureForm>ASiC-E</ns3:SignatureForm>
-          <ns3:Signatures>
-            <ns3:Signature>
-              <ns3:Id>id-b62aa476c6c42d368e114a84e9db0169</ns3:Id>
-              <ns3:SignatureFormat>XAdES_BASELINE_LT</ns3:SignatureFormat>
-              <ns3:SignatureLevel>QESIG</ns3:SignatureLevel>
-              <ns3:SignedBy>JÕEORG,JAAK-KRISTJAN,38001085718</ns3:SignedBy>
-              <ns3:SubjectDistinguishedName>
-                <ns3:SerialNumber>PNOEE-38001085718</ns3:SerialNumber>
-                <ns3:CommonName>JÕEORG,JAAK-KRISTJAN,38001085718</ns3:CommonName>
-              </ns3:SubjectDistinguishedName>
-              <ns3:Indication>TOTAL-PASSED</ns3:Indication>
-              <ns3:SubIndication/>
-              <ns3:Errors/>
-              <ns3:SignatureScopes>
-                <ns3:SignatureScope>
-                  <ns3:Name>test1.txt</ns3:Name>
-                  <ns3:Scope>FULL</ns3:Scope>
-                  <ns3:Content>Full document</ns3:Content>
-                </ns3:SignatureScope>
-              </ns3:SignatureScopes>
-              <ns3:Certificates>
-                <ns3:Certificate>
-                  <ns3:Content>MII...</ns3:Content>
-                  <ns3:CommonName>SK TIMESTAMPING AUTHORITY 2020</ns3:CommonName>
-                  <ns3:Type>SIGNATURE_TIMESTAMP</ns3:Type>
-                </ns3:Certificate>
-                <ns3:Certificate>
-                  <ns3:Content>MII...</ns3:Content>
-                  <ns3:CommonName>JÕEORG,JAAK-KRISTJAN,38001085718</ns3:CommonName>
-                  <ns3:Ca>
-                    <ns3:Content>MII...</ns3:Content>
-                    <ns3:CommonName>EID-SK 2016</ns3:CommonName>
-                  </ns3:Ca>
-                  <ns3:Type>SIGNING</ns3:Type>
-                </ns3:Certificate>
-              </ns3:Certificates>    
-              <ns3:ClaimedSigningTime>2018-12-21T09:07:22Z</ns3:ClaimedSigningTime>
-              <ns3:Warnings/>
-              <ns3:Info>
-                <ns3:BestSignatureTime>2018-12-21T09:07:22Z</ns3:BestSignatureTime>
-              </ns3:Info>
-            </ns3:Signature>
-          </ns3:Signatures>
-          <ns3:ValidSignaturesCount>1</ns3:ValidSignaturesCount>
-          <ns3:SignaturesCount>1</ns3:SignaturesCount>
-        </ns3:ValidationConclusion>
-        <ns3:DiagnosticData>
-          <ns5:DocumentName>JaakTest.asice</ns5:DocumentName>
-          <ns5:ValidationDate>2019-03-25T15:01:02</ns5:ValidationDate>
-          <ns5:ContainerInfo>
-            <ns5:ContainerType>ASiC-E</ns5:ContainerType>
-            <ns5:ZipComment>LIB DigiDoc4j/DEV format: application/vnd.etsi.asic-e+zip signatureProfile: XAdES_BASELINE_LT Java: 1.8.0_171/Oracle Corporation OS: Windows 10/amd64/10.0 JVM: Java HotSpot(TM) 64-Bit Server VM/Oracle Corporation/25.171-b11</ns5:ZipComment>
-            <ns5:MimeTypeFilePresent>true</ns5:MimeTypeFilePresent>
-            <ns5:MimeTypeContent>application/vnd.etsi.asic-e+zip</ns5:MimeTypeContent>
-            <ns5:ManifestFiles>
-              <ns5:ManifestFile>
-                <ns5:Filename>META-INF/manifest.xml</ns5:Filename>
-                <ns5:SignatureFilename>META-INF/signatures0.xml</ns5:SignatureFilename>
-                <ns5:Entries>
-                  <ns5:Entry>test1.txt</ns5:Entry>
-                </ns5:Entries>
-              </ns5:ManifestFile>
-            </ns5:ManifestFiles>
-            <ns5:ContentFiles>
-              <ns5:ContentFile>test1.txt</ns5:ContentFile>
-            </ns5:ContentFiles>
-          </ns5:ContainerInfo>
-          <ns5:Signatures>
-            <ns5:Signature Id="id-b62aa476c6c42d368e114a84e9db0169">
-              <ns5:SignatureFilename>META-INF/signatures0.xml</ns5:SignatureFilename>
-              <ns5:DateTime>2018-12-21T09:07:22</ns5:DateTime>
-              <ns5:SignatureFormat>XAdES-BASELINE-LT</ns5:SignatureFormat>
-              <ns5:StructuralValidation>
-                <ns5:Valid>true</ns5:Valid>
-              </ns5:StructuralValidation>
-              <ns5:DigestMatchers>
-                <ns5:DigestMatcher name="r-id-1" type="REFERENCE">
-                  <ns5:DigestMethod>SHA256</ns5:DigestMethod>
-                  <ns5:DigestValue>MFRF3SBw+Ykk8BdGCEGzlMrxycC8qzbzvjQuST0yk8M=</ns5:DigestValue>
-                  <ns5:DataFound>true</ns5:DataFound>
-                  <ns5:DataIntact>true</ns5:DataIntact>
-                </ns5:DigestMatcher>
-                ...
-              </ns5:DigestMatchers>
-              <ns5:BasicSignature>
-                ...
-              </ns5:BasicSignature>
-              <ns5:SigningCertificate Id="E5F26DE786C6A54C75C115E0BA31DF328ED7CEDD5DB539C1078D603F5EEC582E">
-                ...
-              </ns5:SigningCertificate>
-              <ns5:Certificate>
-                ...
-              </ns5:Certificate>
-              <ns5:ContentType>text/xml</ns5:ContentType>
-              <ns5:CommitmentTypeIndication/>
-              <ns5:ClaimedRoles/>
-              <ns5:Timestamps>
-                ...
-              </ns5:Timestamps>
-              <ns5:SignatureScopes>
-                <ns5:SignatureScope name="test1.txt" scope="FULL">Full document</ns5:SignatureScope>
-              </ns5:SignatureScopes>
-            </ns5:Signature>
-          </ns5:Signatures>
-          <ns5:UsedCertificates>
-            <ns5:Certificate Id="E5F26DE786C6A54C75C115E0BA31DF328ED7CEDD5DB539C1078D603F5EEC582E">
-              <ns5:SubjectDistinguishedName Format="CANONICAL">2.5.4.5=#1311504e4f45452d3338303031303835373138,2.5.4.42=#0c0d4a41414b2d4b524953544a414e,2.5.4.4=#0c074ac395454f5247,cn=jõeorg\,jaak-kristjan\,38001085718,c=ee</ns5:SubjectDistinguishedName>
-              <ns5:SubjectDistinguishedName Format="RFC2253">2.5.4.5=#1311504e4f45452d3338303031303835373138,2.5.4.42=#0c0d4a41414b2d4b524953544a414e,2.5.4.4=#0c074ac395454f5247,CN=JÕEORG\,JAAK-KRISTJAN\,38001085718,C=EE</ns5:SubjectDistinguishedName>
-              <ns5:IssuerDistinguishedName Format="CANONICAL">cn=test of esteid2018,2.5.4.97=#0c0e4e545245452d3130373437303133,o=sk id solutions as,c=ee</ns5:IssuerDistinguishedName>
-              <ns5:IssuerDistinguishedName Format="RFC2253">CN=TEST of ESTEID2018,2.5.4.97=#0c0e4e545245452d3130373437303133,O=SK ID Solutions AS,C=EE</ns5:IssuerDistinguishedName>
-              <ns5:SerialNumber>19005286950875642170302181391352002125</ns5:SerialNumber>
-              <ns5:CommonName>JÕEORG,JAAK-KRISTJAN,38001085718</ns5:CommonName>
-              <ns5:CountryName>EE</ns5:CountryName>
-              <ns5:GivenName>JAAK-KRISTJAN</ns5:GivenName>
-              <ns5:Surname>JÕEORG</ns5:Surname>
-              <ns5:AuthorityInformationAccessUrls>
-                <ns5:Url>http://c.sk.ee/Test_of_ESTEID2018.der.crt</ns5:Url>
-              </ns5:AuthorityInformationAccessUrls>
-              <ns5:CRLDistributionPoints/>
-              <ns5:OCSPAccessUrls>
-                <ns5:Url>http://aia.demo.sk.ee/esteid2018</ns5:Url>
-              </ns5:OCSPAccessUrls>
-              <ns5:DigestAlgoAndValues>
-                <ns5:DigestAlgoAndValue>
-                  <ns5:DigestMethod>SHA256</ns5:DigestMethod>
-                  <ns5:DigestValue>5fJt54bGpUx1wRXgujHfMo7Xzt1dtTnBB41gP17sWC4=</ns5:DigestValue>
-                </ns5:DigestAlgoAndValue>
-              </ns5:DigestAlgoAndValues>
-              <ns5:NotAfter>2023-10-17T21:59:59</ns5:NotAfter>
-              <ns5:NotBefore>2018-10-18T10:32:20</ns5:NotBefore>
-              <ns5:PublicKeySize>384</ns5:PublicKeySize>
-              <ns5:PublicKeyEncryptionAlgo>ECDSA</ns5:PublicKeyEncryptionAlgo>
-              <ns5:KeyUsageBits>
-                <ns5:KeyUsage>nonRepudiation</ns5:KeyUsage>
-              </ns5:KeyUsageBits>
-              <ns5:ExtendedKeyUsages/>
-              <ns5:IdPkixOcspNoCheck>false</ns5:IdPkixOcspNoCheck>
-              <ns5:BasicSignature>
-                ...
-              </ns5:BasicSignature>
-              <ns5:SigningCertificate Id="2291C167B5275152B53F1EFA2C1805C9A15EC8DEF7120E56A3726A2959B31049"/>
-              <ns5:Certificate>
-                <ns5:ChainItem Id="2291C167B5275152B53F1EFA2C1805C9A15EC8DEF7120E56A3726A2959B31049">
-                  <ns5:Source>TRUSTED_LIST</ns5:Source>
-                </ns5:ChainItem>
-              </ns5:Certificate>
-              <ns5:Trusted>false</ns5:Trusted>
-              <ns5:SelfSigned>false</ns5:SelfSigned>
-              <ns5:CertificatePolicies>
-                <ns5:certificatePolicy cpsUrl="https://www.sk.ee/CPS">1.3.6.1.4.1.51361.1.2.1</ns5:certificatePolicy>
-                <ns5:certificatePolicy Description="qcp-natural-qscd">0.4.0.194112.1.2</ns5:certificatePolicy>
-              </ns5:CertificatePolicies>
-              <ns5:QCStatementIds>
-                ...
-              </ns5:QCStatementIds>
-              <ns5:QCTypes>
-                <ns5:oid Description="qc-type-esign">0.4.0.1862.1.6.1</ns5:oid>
-              </ns5:QCTypes>
-              <ns5:TrustedServiceProviders>
-                ...
-              </ns5:TrustedServiceProviders>
-              <ns5:Revocations>
-                <ns5:Revocation Id="e5f26de786c6a54c75c115e0ba31df328ed7cedd5db539c1078d603f5eec582ee4ed1851458ed17d2473fe68cf6c86bc860ec1f65904752b0431cf85edc106b3">
-                  <ns5:Origin>SIGNATURE</ns5:Origin>
-                  <ns5:Source>OCSPToken</ns5:Source>
-                  <ns5:Status>true</ns5:Status>
-                  <ns5:ProductionDate>2018-12-21T09:07:24</ns5:ProductionDate>
-                  <ns5:ThisUpdate>2018-12-21T09:07:24</ns5:ThisUpdate>
-                  <ns5:DigestAlgoAndValues>
-                    <ns5:DigestAlgoAndValue>
-                      <ns5:DigestMethod>SHA256</ns5:DigestMethod>
-                      <ns5:DigestValue>5O0YUUWO0X0kc/5oz2yGvIYOwfZZBHUrBDHPhe3BBrM=</ns5:DigestValue>
-                    </ns5:DigestAlgoAndValue>
-                  </ns5:DigestAlgoAndValues>
-                  <ns5:BasicSignature>
-                    ...
-                  </ns5:BasicSignature>
-                  <ns5:SigningCertificate Id="E83A008AF341579A76367AF41CDD371F7F35E949220FC4621A3F2596A73D1D05"/>
-                  <ns5:Certificate>
-                    <ns5:ChainItem Id="E83A008AF341579A76367AF41CDD371F7F35E949220FC4621A3F2596A73D1D05">
-                      <ns5:Source>TRUSTED_LIST</ns5:Source>
-                    </ns5:ChainItem>
-                  </ns5:Certificate>
-                </ns5:Revocation>
-              </ns5:Revocations>
-            </ns5:Certificate>
-            ...
-          </ns5:UsedCertificates>
-          <ns5:TrustedLists>
-            <ns5:TrustedList>
-              <ns5:CountryCode>EU</ns5:CountryCode>
-              <ns5:Url>https://ec.europa.eu/tools/lotl/eu-lotl.xml</ns5:Url>
-              <ns5:SequenceNumber>237</ns5:SequenceNumber>
-              <ns5:Version>5</ns5:Version>
-              <ns5:LastLoading>2019-03-25T14:34:13</ns5:LastLoading>
-              <ns5:IssueDate>2019-03-21T07:00:00</ns5:IssueDate>
-              <ns5:NextUpdate>2019-09-21T00:00:00</ns5:NextUpdate>
-              <ns5:WellSigned>true</ns5:WellSigned>
-            </ns5:TrustedList>
-          </ns5:TrustedLists>
-          <ns5:ListOfTrustedLists>
-            <ns5:CountryCode>EU</ns5:CountryCode>
-            <ns5:Url>https://ec.europa.eu/tools/lotl/eu-lotl.xml</ns5:Url>
-            <ns5:SequenceNumber>237</ns5:SequenceNumber>
-            <ns5:Version>5</ns5:Version>
-            <ns5:LastLoading>2019-03-25T14:34:13</ns5:LastLoading>
-            <ns5:IssueDate>2019-03-21T07:00:00</ns5:IssueDate>
-            <ns5:NextUpdate>2019-09-21T00:00:00</ns5:NextUpdate>
-            <ns5:WellSigned>true</ns5:WellSigned>
-          </ns5:ListOfTrustedLists>
-        </ns3:DiagnosticData>
-      </ns3:ValidationReport>
-    </ns2:ValidateDocumentResponse>
-  </soap:Body>
-</soap:Envelope>
-```
 
 ### Sample JSON response (error situation)
 In case of error (when validation report is not returned) status code 400 is returned together with following message body:
@@ -1398,6 +696,19 @@ Sample response:
     }
 }
 ```
+## Changes in API compared to V3 v3.2.0 (non breaking additions to protocol)
+
+Changes are described using notation from REST endpoint.
+
+### Changes in response
+
+| Report | Parameter | Change | Link | Comment |
+|---------------|-----------|--------|------|---------|
+| validationConclusion | signatures[0].signatureMethod | Parameter added |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | Used signature method is now returned |
+| validationConclusion | signatures[0].info.timeAssertionMessageImprint | Parameter added |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | Base64 encoded value of message imprint retrieved from time assertion. In case of LT_TM (TimeMark) signatures, OCSP nonce value is returned. In case of T, LT or LTA (TimeStamp) signatures, TimeStamp message imprint is returned. |
+| validationConclusion | signatures[0].info.signatureProductionPlace | Parameter added |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | Object containing optional signing location info added |
+| validationConclusion | signatures[0].info.signerRole | Parameter added |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | Array containing optional signer roles added |
+| validationConclusion | signatures[0].certificates | Parameter added |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | Array containing certificates that are present in the signature or in TSL. |
 
 ## Changes in API compared to V2
 

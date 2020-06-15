@@ -23,6 +23,7 @@ import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource;
+import ee.openeid.siva.validation.util.CertUtil;
 import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.TSLValidationJobFactory;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
@@ -34,7 +35,9 @@ import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.spi.tsl.Condition;
 import eu.europa.esig.dss.spi.tsl.ServiceInfo;
 import org.apache.commons.lang3.StringUtils;
+import org.bouncycastle.util.encoders.Base64;
 import org.digidoc4j.TSLCertificateSource;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -45,6 +48,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.ByteArrayInputStream;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -388,7 +395,51 @@ public class TimemarkContainerValidationServiceIntegrationTest {
         assertEquals("", signatureValidationData.getInfo().getTimeAssertionMessageImprint());
     }
 
-    private void assertSubjectDNPresent(SignatureValidationData signature, String serialNumber, String commonName) {
+    @Test
+    public void certificatePresentLT_TM() throws Exception {
+        Reports reports = timemarkContainerValidationService.validateDocument(buildValidationDocument(BDOC_TEST_FILE_ALL_SIGNED));
+        SignatureValidationData signatureValidationData = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0);
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+
+        Assert.assertEquals(2, signatureValidationData.getCertificates().size());
+
+        ee.openeid.siva.validation.document.report.Certificate signerCertificate = signatureValidationData.getCertificatesByType(CertificateType.SIGNING).get(0);
+        Certificate signerX509Certificate = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(signerCertificate.getContent().getBytes())));
+        Assert.assertEquals("SOLOVEI,JULIA,47711040261", CertUtil.getCommonName((X509Certificate) signerX509Certificate));
+        Assert.assertEquals("SOLOVEI,JULIA,47711040261", signerCertificate.getCommonName());
+
+        ee.openeid.siva.validation.document.report.Certificate revocationCertificate = signatureValidationData.getCertificatesByType(CertificateType.REVOCATION).get(0);
+        Certificate revocationX509Certificate = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(revocationCertificate.getContent().getBytes())));
+        Assert.assertEquals("SK OCSP RESPONDER 2011", CertUtil.getCommonName((X509Certificate) revocationX509Certificate));
+        Assert.assertEquals("SK OCSP RESPONDER 2011", revocationCertificate.getCommonName());
+    }
+
+    @Test
+    public void certificatePresentLT() throws Exception {
+        Reports reports = timemarkContainerValidationService.validateDocument(buildValidationDocument(VALID_ASICE));
+        SignatureValidationData signatureValidationData = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0);
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+
+        Assert.assertEquals(3, signatureValidationData.getCertificates().size());
+
+        ee.openeid.siva.validation.document.report.Certificate signerCertificate = signatureValidationData.getCertificatesByType(CertificateType.SIGNING).get(0);
+        Certificate signerX509Certificate = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(signerCertificate.getContent().getBytes())));
+        Assert.assertEquals("SINIVEE,VEIKO,36706020210", CertUtil.getCommonName((X509Certificate) signerX509Certificate));
+        Assert.assertEquals("SINIVEE,VEIKO,36706020210", signerCertificate.getCommonName());
+
+        ee.openeid.siva.validation.document.report.Certificate revocationCertificate = signatureValidationData.getCertificatesByType(CertificateType.REVOCATION).get(0);
+        Certificate revocationX509Certificate = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(revocationCertificate.getContent().getBytes())));
+        Assert.assertEquals("SK OCSP RESPONDER 2011", CertUtil.getCommonName((X509Certificate) revocationX509Certificate));
+        Assert.assertEquals("SK OCSP RESPONDER 2011", revocationCertificate.getCommonName());
+
+        ee.openeid.siva.validation.document.report.Certificate timestampCertificate = signatureValidationData.getCertificatesByType(CertificateType.SIGNATURE_TIMESTAMP).get(0);
+        Certificate timestampX509Certificate = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(timestampCertificate.getContent().getBytes())));
+        Assert.assertEquals("SK TIMESTAMPING AUTHORITY", CertUtil.getCommonName((X509Certificate) timestampX509Certificate));
+        Assert.assertEquals("SK TIMESTAMPING AUTHORITY", timestampCertificate.getCommonName());
+    }
+
+    private void assertSubjectDNPresent(SignatureValidationData signature, String serialNumber, String
+            commonName) {
         SubjectDistinguishedName subjectDistinguishedName = signature.getSubjectDistinguishedName();
         assertNotNull(subjectDistinguishedName);
         assertEquals(serialNumber, subjectDistinguishedName.getSerialNumber());
@@ -419,7 +470,8 @@ public class TimemarkContainerValidationServiceIntegrationTest {
 
     }
 
-    private ServiceInfo getServiceInfo(TSLCertificateSource tslCertificateSource, CertificateToken certificateToken) {
+    private ServiceInfo getServiceInfo(TSLCertificateSource tslCertificateSource, CertificateToken
+            certificateToken) {
         return (ServiceInfo) tslCertificateSource.getTrustServices(certificateToken).toArray()[0];
     }
 

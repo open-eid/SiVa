@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class SignatureValidationData {
@@ -51,8 +52,16 @@ public class SignatureValidationData {
 
     private Info info;
 
+    private List<Certificate> certificates;
+
     @JsonIgnore
     private String countryCode;
+
+    public List<Certificate> getCertificatesByType(CertificateType type) {
+        return certificates.stream()
+                .filter(certificate -> type == certificate.getType())
+                .collect(Collectors.toList());
+    }
 
     public String getIndication() {
         return indication.toString();

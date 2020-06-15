@@ -301,6 +301,12 @@ Structure of validationConclusion block
 | signatures[0]. warnings | Signature.Warnings | - | Array | Block of validation warnings that do not affect the overall validation result. |
 | signatures[0]. warnings[0] | Signature.Warnings. Warning | + | Object | Object containing the warning |
 | signatures[0]. warnings[0]. content | Signature.Warnings. Warning.Description | + | String | Warning description, as retuned by the base library that was used for validation. |
+| signatures[0].certificates | Signature.Certificates | + | Array | Array containing certificates that are present in the signature or in TSL.  |
+| signatures[0].certificates[0] | Signature.Certificates.Certificate | + | Object | Object containinig certificate type, common name and certificate. Minimal object is signer certificate. If present contains certificates for TimeStamps and OCSP as well. |
+| signatures[0].certificates[0].commonName | Signature.Certificates.Certificate.CommonName | + | String | CN (common name) value in certificate. |
+| signatures[0].certificates[0].type | Signature.Certificates.Certificate.Type | + | String | Type of the certificate. Can be SIGNING, REVOCATION, SIGNATURE_TIMESTAMP, ARCHIVE_TIMESTAMP or CONTENT_TIMESTAMP. |
+| signatures[0].certificates[0].content | Signature.Certificates.Certificate.Content | + | String | DER encoded X.509 certificate in Base64. |
+| signatures[0].certificates[0].ca |Signature.Certificates.Certificate.Ca | - | Object | Certificate object containing issuer certificate and common name value. Is returned for signer certificate for non DDOC/BDOC containers. This chain can be linked up until chain of trust.|
 | timeStampTokens | TimeStampTokens | - | Array | Array containing the time stamp tokens |
 | timeStampTokens[0]. | TimeStampToken | + | Object | Object containing the time stamp token (TST) |
 | timeStampTokens[0]. indication | TimeStampToken. Indication | + | String | Result of the time stamp token validation. <br>**Possible values:** <br> TOTAL-PASSED <br> TOTAL-FAILED |
@@ -334,6 +340,22 @@ Structure of validationConclusion block
             "name": "test1.txt",
             "content": "Full document"
         }],
+        "certificates": [
+            {
+                "commonName": "JÕEORG,JAAK-KRISTJAN,38001085718",
+                "type": "SIGNING",
+                "content": "MII...",
+                "ca": {
+                    "commonName": "EID-SK 2016",
+                    "content": "MII..."
+                }
+            },
+            {
+                "commonName": "SK TIMESTAMPING AUTHORITY 2020",
+                "type": "SIGNATURE_TIMESTAMP",
+                "content": "MII..."
+            }
+        ],
         "id": "id-b62aa476c6c42d368e114a84e9db0169",
         "indication": "TOTAL-PASSED",
         "info": {"bestSignatureTime": "2018-12-21T09:07:22Z"}
@@ -388,6 +410,22 @@ Structure of validationConclusion block
                   <ns3:Content>Full document</ns3:Content>
                 </ns3:SignatureScope>
               </ns3:SignatureScopes>
+              <ns3:Certificates>
+                <ns3:Certificate>
+                  <ns3:Content>MII...</ns3:Content>
+                  <ns3:CommonName>SK TIMESTAMPING AUTHORITY 2020</ns3:CommonName>
+                  <ns3:Type>SIGNATURE_TIMESTAMP</ns3:Type>
+                </ns3:Certificate>
+                <ns3:Certificate>
+                  <ns3:Content>MII...</ns3:Content>
+                  <ns3:CommonName>JÕEORG,JAAK-KRISTJAN,38001085718</ns3:CommonName>
+                  <ns3:Ca>
+                    <ns3:Content>MII...</ns3:Content>
+                    <ns3:CommonName>EID-SK 2016</ns3:CommonName>
+                  </ns3:Ca>
+                  <ns3:Type>SIGNING</ns3:Type>
+                </ns3:Certificate>
+              </ns3:Certificates>
               <ns3:ClaimedSigningTime>2018-12-21T09:07:22Z</ns3:ClaimedSigningTime>
               <ns3:Warnings/>
               <ns3:Info>
@@ -523,6 +561,22 @@ General structure of validation response.
                 "name": "test1.txt",
                 "content": "Full document"
             }],
+            "certificates": [
+                {
+                    "commonName": "JÕEORG,JAAK-KRISTJAN,38001085718",
+                    "type": "SIGNING",
+                    "content": "MII...",
+                    "ca": {
+                        "commonName": "EID-SK 2016",
+                        "content": "MII..."
+                    }
+                },
+                {
+                    "commonName": "SK TIMESTAMPING AUTHORITY 2020",
+                    "type": "SIGNATURE_TIMESTAMP",
+                    "content": "MII..."
+                }
+            ],
             "id": "id-b62aa476c6c42d368e114a84e9db0169",
             "indication": "TOTAL-PASSED",
             "info": {"bestSignatureTime": "2018-12-21T09:07:22Z"}
@@ -578,6 +632,22 @@ General structure of validation response.
                   <ns3:Content>Full document</ns3:Content>
                 </ns3:SignatureScope>
               </ns3:SignatureScopes>
+              <ns3:Certificates>
+                <ns3:Certificate>
+                  <ns3:Content>MII...</ns3:Content>
+                  <ns3:CommonName>SK TIMESTAMPING AUTHORITY 2020</ns3:CommonName>
+                  <ns3:Type>SIGNATURE_TIMESTAMP</ns3:Type>
+                </ns3:Certificate>
+                <ns3:Certificate>
+                  <ns3:Content>MII...</ns3:Content>
+                  <ns3:CommonName>JÕEORG,JAAK-KRISTJAN,38001085718</ns3:CommonName>
+                  <ns3:Ca>
+                    <ns3:Content>MII...</ns3:Content>
+                    <ns3:CommonName>EID-SK 2016</ns3:CommonName>
+                  </ns3:Ca>
+                  <ns3:Type>SIGNING</ns3:Type>
+                </ns3:Certificate>
+              </ns3:Certificates>                
               <ns3:ClaimedSigningTime>2018-12-21T09:07:22Z</ns3:ClaimedSigningTime>
               <ns3:Warnings/>
               <ns3:Info>
@@ -628,14 +698,14 @@ General structure of validation response.
               </ns4:Constraint>
               ...
             </ns4:XCV>
-            <ns4:CertificateChain>
+            <ns4:Certificate>
               <ns4:ChainItem Id="E5F26DE786C6A54C75C115E0BA31DF328ED7CEDD5DB539C1078D603F5EEC582E">
                 <ns4:Source>SIGNATURE</ns4:Source>
               </ns4:ChainItem>
               <ns4:ChainItem Id="2291C167B5275152B53F1EFA2C1805C9A15EC8DEF7120E56A3726A2959B31049">
                 <ns4:Source>TRUSTED_LIST</ns4:Source>
               </ns4:ChainItem>
-            </ns4:CertificateChain>
+            </ns4:Certificate>
             <ns4:Conclusion>
               <ns4:Indication>PASSED</ns4:Indication>
             </ns4:Conclusion>
@@ -734,7 +804,7 @@ General structure of validation response.
                     "digestValue": "5fJt54bGpUx1wRXgujHfMo7Xzt1dtTnBB41gP17sWC4=",
                     "digestMethod": "SHA256"
                 }],
-                "certificateChain": [{
+                "certificate": [{
                     "source": "TRUSTED_LIST",
                     "id": "2291C167B5275152B53F1EFA2C1805C9A15EC8DEF7120E56A3726A2959B31049"
                 }],
@@ -748,7 +818,7 @@ General structure of validation response.
                         "digestValue": "5O0YUUWO0X0kc/5oz2yGvIYOwfZZBHUrBDHPhe3BBrM=",
                         "digestMethod": "SHA256"
                     }],
-                    "certificateChain": [{
+                    "certificate": [{
                         "source": "TRUSTED_LIST",
                         "id": "E83A008AF341579A76367AF41CDD371F7F35E949220FC4621A3F2596A73D1D05"
                     }],
@@ -812,7 +882,7 @@ General structure of validation response.
                 },
                 ...
             ],
-            "certificateChain": [
+            "certificate": [
                 ...
             ],
             "timestamps": [{
@@ -826,6 +896,22 @@ General structure of validation response.
                 "name": "test1.txt",
                 "value": "Full document"
             }],
+            "certificates": [
+                {
+                    "commonName": "JÕEORG,JAAK-KRISTJAN,38001085718",
+                    "type": "SIGNING",
+                    "content": "MII...",
+                    "ca": {
+                        "commonName": "EID-SK 2016",
+                        "content": "MII..."
+                    }
+                },
+                {
+                    "commonName": "SK TIMESTAMPING AUTHORITY 2020",
+                    "type": "SIGNATURE_TIMESTAMP",
+                    "content": "MII..."
+                }
+            ],
             "structuralValidation": {"valid": true},
             "signatureFilename": "META-INF/signatures0.xml",
             "id": "id-b62aa476c6c42d368e114a84e9db0169",
@@ -907,6 +993,22 @@ General structure of validation response.
                   <ns3:Content>Full document</ns3:Content>
                 </ns3:SignatureScope>
               </ns3:SignatureScopes>
+              <ns3:Certificates>
+                <ns3:Certificate>
+                  <ns3:Content>MII...</ns3:Content>
+                  <ns3:CommonName>SK TIMESTAMPING AUTHORITY 2020</ns3:CommonName>
+                  <ns3:Type>SIGNATURE_TIMESTAMP</ns3:Type>
+                </ns3:Certificate>
+                <ns3:Certificate>
+                  <ns3:Content>MII...</ns3:Content>
+                  <ns3:CommonName>JÕEORG,JAAK-KRISTJAN,38001085718</ns3:CommonName>
+                  <ns3:Ca>
+                    <ns3:Content>MII...</ns3:Content>
+                    <ns3:CommonName>EID-SK 2016</ns3:CommonName>
+                  </ns3:Ca>
+                  <ns3:Type>SIGNING</ns3:Type>
+                </ns3:Certificate>
+              </ns3:Certificates>    
               <ns3:ClaimedSigningTime>2018-12-21T09:07:22Z</ns3:ClaimedSigningTime>
               <ns3:Warnings/>
               <ns3:Info>
@@ -961,9 +1063,9 @@ General structure of validation response.
               <ns5:SigningCertificate Id="E5F26DE786C6A54C75C115E0BA31DF328ED7CEDD5DB539C1078D603F5EEC582E">
                 ...
               </ns5:SigningCertificate>
-              <ns5:CertificateChain>
+              <ns5:Certificate>
                 ...
-              </ns5:CertificateChain>
+              </ns5:Certificate>
               <ns5:ContentType>text/xml</ns5:ContentType>
               <ns5:CommitmentTypeIndication/>
               <ns5:ClaimedRoles/>
@@ -1012,11 +1114,11 @@ General structure of validation response.
                 ...
               </ns5:BasicSignature>
               <ns5:SigningCertificate Id="2291C167B5275152B53F1EFA2C1805C9A15EC8DEF7120E56A3726A2959B31049"/>
-              <ns5:CertificateChain>
+              <ns5:Certificate>
                 <ns5:ChainItem Id="2291C167B5275152B53F1EFA2C1805C9A15EC8DEF7120E56A3726A2959B31049">
                   <ns5:Source>TRUSTED_LIST</ns5:Source>
                 </ns5:ChainItem>
-              </ns5:CertificateChain>
+              </ns5:Certificate>
               <ns5:Trusted>false</ns5:Trusted>
               <ns5:SelfSigned>false</ns5:SelfSigned>
               <ns5:CertificatePolicies>
@@ -1049,11 +1151,11 @@ General structure of validation response.
                     ...
                   </ns5:BasicSignature>
                   <ns5:SigningCertificate Id="E83A008AF341579A76367AF41CDD371F7F35E949220FC4621A3F2596A73D1D05"/>
-                  <ns5:CertificateChain>
+                  <ns5:Certificate>
                     <ns5:ChainItem Id="E83A008AF341579A76367AF41CDD371F7F35E949220FC4621A3F2596A73D1D05">
                       <ns5:Source>TRUSTED_LIST</ns5:Source>
                     </ns5:ChainItem>
-                  </ns5:CertificateChain>
+                  </ns5:Certificate>
                 </ns5:Revocation>
               </ns5:Revocations>
             </ns5:Certificate>

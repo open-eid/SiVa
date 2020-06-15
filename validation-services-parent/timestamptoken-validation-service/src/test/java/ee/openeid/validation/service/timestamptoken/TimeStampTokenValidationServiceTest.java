@@ -17,16 +17,16 @@
 package ee.openeid.validation.service.timestamptoken;
 
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
+import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
-import ee.openeid.siva.validation.document.report.Reports;
-import ee.openeid.siva.validation.document.report.SimpleReport;
-import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
 import ee.openeid.siva.validation.exception.DocumentRequirementsException;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
+import ee.openeid.siva.validation.util.CertUtil;
 import ee.openeid.validation.service.timestamptoken.configuration.TimeStampTokenSignaturePolicyProperties;
+import org.bouncycastle.util.encoders.Base64;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -34,6 +34,11 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.io.ByteArrayInputStream;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -60,12 +65,27 @@ public class TimeStampTokenValidationServiceTest {
     }
 
     @Test
-    public void validTimeStampToken() throws Exception {
+    public void validTimeStampToken() {
         SimpleReport simpleReport = validationService.validateDocument(buildValidationDocument("timestamptoken-ddoc.asics")).getSimpleReport();
         TimeStampTokenValidationData validationData = simpleReport.getValidationConclusion().getTimeStampTokens().get(0);
         Assert.assertEquals(TimeStampTokenValidationData.Indication.TOTAL_PASSED, validationData.getIndication());
         Assert.assertEquals("SK TIMESTAMPING AUTHORITY", validationData.getSignedBy());
         Assert.assertNull(validationData.getError());
+    }
+
+    @Test
+    public void certificatePresent() throws Exception{
+        SimpleReport simpleReport = validationService.validateDocument(buildValidationDocument("timestamptoken-ddoc.asics")).getSimpleReport();
+        TimeStampTokenValidationData timeStampTokenValidationData = simpleReport.getValidationConclusion().getTimeStampTokens().get(0);
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+
+        Assert.assertEquals(1, timeStampTokenValidationData.getCertificates().size());
+
+        ee.openeid.siva.validation.document.report.Certificate certificate = timeStampTokenValidationData.getCertificates().get(0);
+        Assert.assertEquals(CertificateType.CONTENT_TIMESTAMP, certificate.getType());
+        Assert.assertEquals("SK TIMESTAMPING AUTHORITY", certificate.getCommonName());
+        Certificate timeStampCertificate = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(certificate.getContent().getBytes())));
+        Assert.assertEquals("SK TIMESTAMPING AUTHORITY", CertUtil.getCommonName((X509Certificate) timeStampCertificate));
 
     }
 

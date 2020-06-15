@@ -29,6 +29,7 @@ import ee.openeid.siva.validation.service.signature.policy.properties.Constraint
 import ee.openeid.tsl.configuration.AlwaysFailingCRLSource;
 import ee.openeid.tsl.configuration.AlwaysFailingOCSPSource;
 import ee.openeid.validation.service.generic.validator.report.GenericValidationReportBuilder;
+import ee.openeid.validation.service.generic.validator.report.ReportBuilderData;
 import eu.europa.esig.dss.crl.CRLUtils;
 import eu.europa.esig.dss.crl.CRLValidity;
 import eu.europa.esig.dss.crl.x509.impl.X509CRLValidity;
@@ -99,14 +100,17 @@ public class GenericValidationService implements ValidationService {
 
                 LOGGER.info("WsValidateDocument: end");
             }
-            final GenericValidationReportBuilder reportBuilder = new GenericValidationReportBuilder(
-                    reports,
-                    VALIDATION_LEVEL,
-                    validationDocument,
-                    policy,
-                    reportConfigurationProperties.isReportSignatureEnabled()
-            );
-            return reportBuilder.build();
+            ReportBuilderData reportBuilderData = ReportBuilderData.builder()
+                    .dssReports(reports)
+                    .validationLevel(VALIDATION_LEVEL)
+                    .validationDocument(validationDocument)
+                    .policy(policy)
+                    .isReportSignatureEnabled(reportConfigurationProperties.isReportSignatureEnabled())
+                    .validator(validator)
+                    .trustedListsCertificateSource(trustedListsCertificateSource)
+                    .build();
+
+            return new GenericValidationReportBuilder(reportBuilderData).build();
         } catch (InvalidPolicyException e) {
             endExceptionally(e);
             throw e;
@@ -146,10 +150,6 @@ public class GenericValidationService implements ValidationService {
         dssDocument.setMimeType(MimeType.fromFileName(validationDocument.getName()));
 
         return dssDocument;
-    }
-
-    private TimestampWrapper getFirstTimestamp(List<TimestampWrapper> timestamps) {
-        return Collections.min(timestamps, Comparator.comparing(TimestampWrapper::getProductionTime));
     }
 
     private int getCertificatePoolSize(CommonCertificateVerifier certificateVerifier) {

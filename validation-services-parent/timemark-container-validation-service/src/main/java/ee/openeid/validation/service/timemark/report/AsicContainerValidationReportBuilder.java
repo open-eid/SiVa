@@ -1,15 +1,14 @@
 package ee.openeid.validation.service.timemark.report;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.report.SignatureScope;
-import ee.openeid.siva.validation.document.report.ValidationWarning;
-import ee.openeid.siva.validation.document.report.Warning;
+import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import org.digidoc4j.*;
 import org.digidoc4j.impl.asic.asice.AsicESignature;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.security.cert.X509Certificate;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +18,16 @@ import static org.digidoc4j.X509Cert.SubjectName.CN;
 public class AsicContainerValidationReportBuilder extends TimemarkContainerValidationReportBuilder {
     public AsicContainerValidationReportBuilder(Container container, ValidationDocument validationDocument, ValidationPolicy validationPolicy, ValidationResult validationResult, boolean isReportSignatureEnabled) {
         super(container, validationDocument, validationPolicy, validationResult, isReportSignatureEnabled);
+    }
+
+    @Override
+    protected List<Certificate> getCertificateList(Signature signature) {
+        List<Certificate> certificateList = super.getCertificateList(signature);
+        if (signature.getTimeStampTokenCertificate() != null) {
+            X509Certificate x509Certificate = signature.getTimeStampTokenCertificate().getX509Certificate();
+            certificateList.add(getCertificate(x509Certificate, CertificateType.SIGNATURE_TIMESTAMP));
+        }
+        return certificateList;
     }
 
     @Override

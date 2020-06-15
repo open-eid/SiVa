@@ -30,6 +30,8 @@ public class TimeStampTokenValidationData {
     private String signedTime;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<Error> error;
+    private List<Certificate> certificates;
+
 
     public enum Indication {
         @JsonProperty("TOTAL-PASSED")

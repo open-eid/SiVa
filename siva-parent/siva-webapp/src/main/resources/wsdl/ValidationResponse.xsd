@@ -97,7 +97,14 @@
             <xs:element name="SignatureMethod" minOccurs="0" type="xs:string"/>
             <xs:element name="SignatureLevel" minOccurs="0" type="xs:string"/>
             <xs:element name="SignedBy" type="xs:string"/>
-            <xs:element name="SubjectDistinguishedName" minOccurs="0"  type="tns:SubjectDistinguishedName"/>
+            <xs:element name="SubjectDistinguishedName" minOccurs="0" type="tns:SubjectDistinguishedName"/>
+            <xs:element name="Certificates" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="Certificate" type="tns:Certificate"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
             <xs:element name="Indication" type="tns:Indication"/>
             <xs:element name="SubIndication" minOccurs="0" type="xs:string"/>
             <xs:element name="Errors" minOccurs="0">
@@ -182,6 +189,15 @@
         <xs:sequence>
             <xs:element name="SerialNumber" type="xs:string"/>
             <xs:element name="CommonName" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Certificate">
+        <xs:sequence>
+            <xs:element name="Content" type="xs:string"/>
+            <xs:element name="CommonName" type="xs:string"/>
+            <xs:element name="Issuer" type="tns:Certificate"/>
+            <xs:element name="Type" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 

@@ -22,24 +22,21 @@ import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
+import ee.openeid.siva.validation.util.CertUtil;
 import ee.openeid.siva.validation.util.SubjectDNParser;
 import eu.europa.esig.dss.diagnostic.CertificateWrapper;
 import eu.europa.esig.dss.diagnostic.SignatureWrapper;
 import eu.europa.esig.dss.diagnostic.TimestampWrapper;
-import eu.europa.esig.dss.diagnostic.jaxb.XmlDigestMatcher;
-import eu.europa.esig.dss.diagnostic.jaxb.XmlRelatedRevocation;
-import eu.europa.esig.dss.diagnostic.jaxb.XmlRevocation;
-import eu.europa.esig.dss.diagnostic.jaxb.XmlSignatureScope;
-import eu.europa.esig.dss.diagnostic.jaxb.XmlSignerRole;
-import eu.europa.esig.dss.enumerations.DigestAlgorithm;
-import eu.europa.esig.dss.enumerations.EncryptionAlgorithm;
-import eu.europa.esig.dss.enumerations.Indication;
-import eu.europa.esig.dss.enumerations.MaskGenerationFunction;
-import eu.europa.esig.dss.enumerations.SignatureAlgorithm;
-import eu.europa.esig.dss.enumerations.SubIndication;
-import eu.europa.esig.dss.enumerations.TimestampType;
+import eu.europa.esig.dss.diagnostic.jaxb.*;
+import eu.europa.esig.dss.enumerations.*;
+import eu.europa.esig.dss.model.Digest;
+import eu.europa.esig.dss.model.x509.CertificateToken;
+import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
+import eu.europa.esig.dss.validation.AdvancedSignature;
+import eu.europa.esig.dss.validation.SignedDocumentValidator;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.asn1.ocsp.OCSPObjectIdentifiers;
 import org.bouncycastle.asn1.tsp.MessageImprint;
@@ -50,13 +47,10 @@ import org.bouncycastle.cert.ocsp.OCSPException;
 import org.bouncycastle.cert.ocsp.OCSPResp;
 import org.bouncycastle.operator.DefaultDigestAlgorithmIdentifierFinder;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.security.cert.X509Certificate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.*;
@@ -71,18 +65,24 @@ public class GenericValidationReportBuilder {
     private static final String LT_XAdES_SIGNATURE_FORMAT = "XAdES-BASELINE-LT";
     private static final String TM_POLICY_OID = "1.3.6.1.4.1.10015.1000.3.2.1";
 
-    private eu.europa.esig.dss.validation.reports.Reports dssReports;
-    private ValidationDocument validationDocument;
-    private ConstraintDefinedPolicy validationPolicy;
-    private ValidationLevel validationLevel;
-    private boolean isReportSignatureEnabled;
+    private final eu.europa.esig.dss.validation.reports.Reports dssReports;
+    private final ValidationDocument validationDocument;
+    private final ConstraintDefinedPolicy validationPolicy;
+    private final ValidationLevel validationLevel;
+    private final boolean isReportSignatureEnabled;
+    private SignedDocumentValidator validator;
+    TrustedListsCertificateSource trustedListsCertificateSource;
+    private List<CertificateToken> usedCertificates;
 
-    public GenericValidationReportBuilder(eu.europa.esig.dss.validation.reports.Reports dssReports, ValidationLevel validationLevel, ValidationDocument validationDocument, ConstraintDefinedPolicy policy, boolean isReportSignatureEnabled) {
-        this.dssReports = dssReports;
-        this.validationDocument = validationDocument;
-        this.validationPolicy = policy;
-        this.validationLevel = validationLevel;
-        this.isReportSignatureEnabled = isReportSignatureEnabled;
+    public GenericValidationReportBuilder(ReportBuilderData reportData) {
+        this.dssReports = reportData.getDssReports();
+        this.validationDocument = reportData.getValidationDocument();
+        this.validationPolicy = reportData.getPolicy();
+        this.validationLevel = reportData.getValidationLevel();
+        this.isReportSignatureEnabled = reportData.isReportSignatureEnabled();
+        this.validator = reportData.getValidator();
+        this.trustedListsCertificateSource = reportData.getTrustedListsCertificateSource();
+        this.usedCertificates = collectUsedCertificates();
     }
 
     public Reports build() {
@@ -97,6 +97,29 @@ public class GenericValidationReportBuilder {
         return new Reports(simpleReport, detailedReport, diagnosticReport);
     }
 
+    private List<CertificateToken> collectUsedCertificates() {
+        return dssReports.getDiagnosticDataJaxb().getUsedCertificates().stream()
+                .map(usedCertificate -> {
+                    XmlDigestAlgoAndValue digestAlgoAndValue = usedCertificate.getDigestAlgoAndValue();
+                    Digest digest = new Digest(digestAlgoAndValue.getDigestMethod(), digestAlgoAndValue.getDigestValue());
+                    CertificateToken certSource = trustedListsCertificateSource.getCertificateTokenByDigest(digest);
+                    if (certSource != null) {
+                        return certSource;
+                    }
+
+                    for (AdvancedSignature advancedSignature : validator.getSignatures()) {
+                        Optional<CertificateToken> optionalCertSource = advancedSignature.getCertificateListWithinSignatureAndTimestamps().stream()
+                                .filter(signature -> signature.getDSSIdAsString().equals(usedCertificate.getId())).findFirst();
+                        if (optionalCertSource.isPresent()) {
+                            return optionalCertSource.get();
+                        }
+                    }
+                    return null;
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
     private ValidationConclusion getValidationConclusion() {
         ValidationConclusion validationConclusion = new ValidationConclusion();
         validationConclusion.setPolicy(createReportPolicy(validationPolicy));
@@ -106,11 +129,9 @@ public class GenericValidationReportBuilder {
         validationConclusion.setSignatures(buildSignatureValidationDataList());
         validationConclusion.setSignaturesCount(validationConclusion.getSignatures().size());
         validationConclusion.setValidatedDocument(ReportBuilderUtils.createValidatedDocument(isReportSignatureEnabled, validationDocument.getName(), validationDocument.getBytes()));
-        validationConclusion.setValidSignaturesCount(validationConclusion.getSignatures()
+        validationConclusion.setValidSignaturesCount((int) validationConclusion.getSignatures()
                 .stream()
-                .filter(vd -> StringUtils.equals(vd.getIndication(), SignatureValidationData.Indication.TOTAL_PASSED.toString()))
-                .collect(Collectors.toList())
-                .size());
+                .filter(vd -> StringUtils.equals(vd.getIndication(), SignatureValidationData.Indication.TOTAL_PASSED.toString())).count());
         return validationConclusion;
     }
 
@@ -143,7 +164,121 @@ public class GenericValidationReportBuilder {
         signatureValidationData.setCountryCode(getCountryCode(signatureId));
         signatureValidationData.setIndication(parseIndication(signatureId, signatureValidationData.getErrors()));
         signatureValidationData.setSubIndication(parseSubIndication(signatureId, signatureValidationData.getErrors()));
+        signatureValidationData.setCertificates(getCertificateList(signatureId));
         return signatureValidationData;
+    }
+
+    private List<Certificate> getCertificateList(String signatureId) {
+        List<Certificate> certificateList = new ArrayList<>();
+        SignatureWrapper signatureWrapper = dssReports.getDiagnosticData().getSignatureById(signatureId);
+
+        Certificate archiveTimestampCertificate = getArchiveTimestampCertificate(signatureWrapper);
+        if (archiveTimestampCertificate != null) {
+            certificateList.add(archiveTimestampCertificate);
+        }
+
+        Certificate signatureTimestamp = getSignatureTimestampCertificate(signatureWrapper);
+        if (signatureTimestamp != null) {
+            certificateList.add(signatureTimestamp);
+        }
+
+        Certificate signingCertificate = getSigningCertificate(signatureWrapper);
+        if (signingCertificate != null) {
+            certificateList.add(signingCertificate);
+        }
+
+        Certificate revocationCertificate = getRevocationCertificate(signatureWrapper);
+        if (revocationCertificate != null) {
+            certificateList.add(revocationCertificate);
+        }
+
+        return certificateList;
+    }
+
+    private Certificate getArchiveTimestampCertificate(SignatureWrapper signatureWrapper) {
+        List<TimestampWrapper> archiveTimestamps = signatureWrapper.getTimestampListByType(TimestampType.ARCHIVE_TIMESTAMP);
+        if (CollectionUtils.isNotEmpty(archiveTimestamps)) {
+            TimestampWrapper lastTimestamp = getLastTimestamp(archiveTimestamps);
+            if (lastTimestamp.getSigningCertificate() != null) {
+                String archiveTimestampCertId = lastTimestamp.getSigningCertificate().getId();
+                return getCertificate(archiveTimestampCertId, CertificateType.ARCHIVE_TIMESTAMP);
+            }
+        }
+        return null;
+    }
+
+    private Certificate getSignatureTimestampCertificate(SignatureWrapper signatureWrapper) {
+        List<TimestampWrapper> signatureTimestamps = signatureWrapper.getTimestampListByType(TimestampType.SIGNATURE_TIMESTAMP);
+        if (CollectionUtils.isNotEmpty(signatureTimestamps)) {
+            TimestampWrapper firstTimestamp = signatureTimestamps.get(0);
+            if (firstTimestamp.getSigningCertificate() != null) {
+                String timestampCertId = firstTimestamp.getSigningCertificate().getId();
+                return getCertificate(timestampCertId, CertificateType.SIGNATURE_TIMESTAMP);
+            }
+        }
+        return null;
+    }
+
+    private Certificate getSigningCertificate(SignatureWrapper signatureWrapper) {
+        CertificateWrapper signingCertificate = signatureWrapper.getSigningCertificate();
+        if (signingCertificate != null) {
+            String signingCertId = signingCertificate.getId();
+            return getCertificate(signingCertId, CertificateType.SIGNING);
+        }
+        return null;
+    }
+
+    private Certificate getRevocationCertificate(SignatureWrapper signatureWrapper) {
+        List<XmlRelatedRevocation> relatedRevocations = signatureWrapper.getRelatedRevocations();
+        if (CollectionUtils.isNotEmpty(relatedRevocations)) {
+            XmlRelatedRevocation lastRevocation = relatedRevocations.get(0);
+            if (lastRevocation.getRevocation().getSigningCertificate() != null) {
+                String revocationId = lastRevocation.getRevocation().getSigningCertificate().getCertificate().getId();
+                return getCertificate(revocationId, CertificateType.REVOCATION);
+            }
+        }
+        return null;
+    }
+
+    private TimestampWrapper getLastTimestamp(List<TimestampWrapper> timestamps) {
+        return Collections.max(timestamps, Comparator.comparing(TimestampWrapper::getProductionTime));
+    }
+
+    private Certificate getCertificate(String certificateId, CertificateType type) {
+        Optional<CertificateToken> certificateToken = getCertificateTokenById(certificateId);
+        if (certificateToken.isEmpty()) {
+            return null;
+        }
+        Certificate certificate = new Certificate();
+        X509Certificate x509Certificate = certificateToken.get().getCertificate();
+        certificate.setCommonName(CertUtil.getCommonName(x509Certificate));
+        certificate.setContent(CertUtil.encodeCertificateToBase64(x509Certificate));
+        certificate.setIssuer(getIssuerCertificate(x509Certificate));
+        certificate.setType(type);
+        return certificate;
+    }
+
+    private Certificate getIssuerCertificate(X509Certificate x509Certificate) {
+        Optional<CertificateToken> issuerCert = usedCertificates.stream()
+                .filter(certificateToken -> certificateToken != null
+                        && !certificateToken.isSelfSigned()
+                        && certificateToken.getSubjectX500Principal() != null
+                        && certificateToken.getSubjectX500Principal().equals(x509Certificate.getIssuerX500Principal()))
+                .findFirst();
+        if (issuerCert.isPresent()) {
+            Certificate certificate = new Certificate();
+            certificate.setCommonName(CertUtil.getCommonName(issuerCert.get().getCertificate()));
+            certificate.setContent(CertUtil.encodeCertificateToBase64(issuerCert.get().getCertificate()));
+            certificate.setIssuer(getIssuerCertificate(issuerCert.get().getCertificate()));
+            return certificate;
+        }
+        return null;
+    }
+
+    private Optional<CertificateToken> getCertificateTokenById(String id) {
+        return usedCertificates.stream()
+                .filter(certificateToken -> certificateToken.getDSSIdAsString().equals(id))
+                .findFirst();
     }
 
     private String getSignatureId(String signatureId) {
@@ -348,7 +483,7 @@ public class GenericValidationReportBuilder {
         signatureScope.setName(emptyWhenNull(dssSignatureScope.getName()));
         if (dssSignatureScope.getScope() != null)
             signatureScope.setScope(emptyWhenNull(dssSignatureScope.getScope().name()));
-        if (!CollectionUtils.isEmpty(validationDocument.getDatafiles())) {
+        if (CollectionUtils.isNotEmpty(validationDocument.getDatafiles())) {
             Optional<Datafile> dataFile = validationDocument.getDatafiles()
                     .stream()
                     .filter(datafile -> datafile.getFilename().equals(dssSignatureScope.getName()))

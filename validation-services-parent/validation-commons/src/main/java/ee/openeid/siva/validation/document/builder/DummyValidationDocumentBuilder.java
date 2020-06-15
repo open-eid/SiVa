@@ -26,6 +26,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 /**
  * Use for testing purposes only
@@ -46,7 +47,7 @@ public final class DummyValidationDocumentBuilder {
 
     public DummyValidationDocumentBuilder withDocument(String filePath) {
         try {
-            Path documentPath = Paths.get(getClass().getClassLoader().getResource(filePath).toURI());
+            Path documentPath = Paths.get(Objects.requireNonNull(getClass().getClassLoader().getResource(filePath)).toURI());
             validationDocument.setBytes(Files.readAllBytes(documentPath));
         } catch (IOException e) {
             LOGGER.warn("FAiled to load dummy validation document with error: {}", e.getMessage(), e);

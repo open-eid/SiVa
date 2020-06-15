@@ -22,6 +22,7 @@ import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.document.report.SignatureProductionPlace;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
+import ee.openeid.siva.validation.util.CertUtil;
 import eu.europa.esig.dss.enumerations.SignatureQualification;
 import eu.europa.esig.dss.enumerations.SubIndication;
 import org.apache.commons.codec.binary.Base64;
@@ -32,6 +33,7 @@ import org.digidoc4j.impl.asic.asice.AsicESignature;
 import org.digidoc4j.impl.ddoc.DDocContainer;
 import org.slf4j.LoggerFactory;
 
+import java.security.cert.X509Certificate;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -167,6 +169,7 @@ public abstract class TimemarkContainerValidationReportBuilder {
         signatureValidationData.setIndication(getIndication(signature));
         signatureValidationData.setSubIndication(getSubIndication(signature));
         signatureValidationData.setCountryCode(getCountryCode(signature));
+        signatureValidationData.setCertificates(getCertificateList(signature));
 
         return signatureValidationData;
     }
@@ -301,6 +304,27 @@ public abstract class TimemarkContainerValidationReportBuilder {
 
     private String getCountryCode(Signature signature) {
         return signature.getSigningCertificate().getSubjectName(X509Cert.SubjectName.C);
+    }
+
+    protected List<Certificate> getCertificateList(Signature signature) {
+        List<Certificate> certificateList = new ArrayList<>();
+        if (signature.getOCSPCertificate() != null) {
+            X509Certificate x509Certificate = signature.getOCSPCertificate().getX509Certificate();
+            certificateList.add(getCertificate(x509Certificate, CertificateType.REVOCATION));
+        }
+        if (signature.getSigningCertificate() != null) {
+            X509Certificate x509Certificate = signature.getSigningCertificate().getX509Certificate();
+            certificateList.add(getCertificate(x509Certificate, CertificateType.SIGNING));
+        }
+        return certificateList;
+    }
+
+    protected Certificate getCertificate(X509Certificate x509Certificate, CertificateType type) {
+        Certificate certificate = new Certificate();
+        certificate.setContent(CertUtil.encodeCertificateToBase64(x509Certificate));
+        certificate.setCommonName(CertUtil.getCommonName(x509Certificate));
+        certificate.setType(type);
+        return certificate;
     }
 
     abstract List<Warning> getExtraWarnings(Signature signature);

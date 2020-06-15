@@ -19,14 +19,12 @@ package ee.openeid.validation.service.generic;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.Datafile;
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.report.Reports;
-import ee.openeid.siva.validation.document.report.SignatureProductionPlace;
-import ee.openeid.siva.validation.document.report.SignatureScope;
-import ee.openeid.siva.validation.document.report.SignatureValidationData;
-import ee.openeid.siva.validation.document.report.SignerRole;
+import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
+import ee.openeid.siva.validation.util.CertUtil;
 import ee.openeid.validation.service.generic.configuration.GenericSignaturePolicyProperties;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
+import org.bouncycastle.util.encoders.Base64;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,11 +33,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -101,6 +103,32 @@ public class HashcodeGenericValidationServiceTest {
         Assert.assertEquals("LvhnsrgBZBK9kTQ8asbPtcsjuEhBo9s3QDdCcIxlMmo=", signatureScope.getHash());
         Assert.assertEquals("SHA256", signatureScope.getHashAlgo());
         Assert.assertEquals("test.pdf", signatureScope.getName());
+    }
+
+    @Test
+    public void hashcodeValidationCertificateCorrectlyPresent() throws Exception {
+        Reports response = validationService.validate(getValidationDocumentSingletonList());
+        SignatureValidationData signatureValidationData = response.getSimpleReport().getValidationConclusion().getSignatures().get(0);
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+
+        Assert.assertEquals(3, signatureValidationData.getCertificates().size());
+
+        ee.openeid.siva.validation.document.report.Certificate signerCertificate = signatureValidationData.getCertificatesByType(CertificateType.SIGNING).get(0);
+        Certificate signerX509Certificate = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(signerCertificate.getContent().getBytes())));
+        Assert.assertEquals("PAULIUS PODOLSKIS", CertUtil.getCommonName((X509Certificate) signerX509Certificate));
+        Assert.assertEquals("PAULIUS PODOLSKIS", signerCertificate.getCommonName());
+
+        ee.openeid.siva.validation.document.report.Certificate timestampCertificate = signatureValidationData.getCertificatesByType((CertificateType.SIGNATURE_TIMESTAMP)).get(0);
+        Certificate timestampX509Certificate = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(timestampCertificate.getContent().getBytes())));
+        Assert.assertEquals("SK TIMESTAMPING AUTHORITY", CertUtil.getCommonName((X509Certificate) timestampX509Certificate));
+        Assert.assertEquals("SK TIMESTAMPING AUTHORITY", timestampCertificate.getCommonName());
+
+
+        ee.openeid.siva.validation.document.report.Certificate revocationCertificate = signatureValidationData.getCertificatesByType((CertificateType.REVOCATION)).get(0);
+        Certificate revocationX509Certificate = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(revocationCertificate.getContent().getBytes())));
+        Assert.assertEquals("VI Registru Centras OCSP (IssuingCA-A)", CertUtil.getCommonName((X509Certificate) revocationX509Certificate));
+        Assert.assertEquals("VI Registru Centras OCSP (IssuingCA-A)", revocationCertificate.getCommonName());
+
     }
 
     @Test

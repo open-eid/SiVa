@@ -30,18 +30,19 @@ import ee.openeid.validation.service.timestamptoken.validator.report.TimeStampTo
 import eu.europa.esig.dss.enumerations.DigestAlgorithm;
 import eu.europa.esig.dss.model.InMemoryDocument;
 import eu.europa.esig.dss.spi.DSSUtils;
+import lombok.SneakyThrows;
 import org.bouncycastle.asn1.ASN1Encodable;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.asn1.x500.style.IETFUtils;
+import org.bouncycastle.cert.AttributeCertificateHolder;
 import org.bouncycastle.cert.X509CertificateHolder;
-import org.bouncycastle.cms.CMSException;
-import org.bouncycastle.cms.CMSSignedData;
-import org.bouncycastle.cms.SignerInformationVerifier;
+import org.bouncycastle.cms.*;
 import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoVerifierBuilder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.tsp.TSPException;
 import org.bouncycastle.tsp.TimeStampToken;
+import org.bouncycastle.util.Selector;
 import org.digidoc4j.utils.ZipEntryInputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -89,25 +90,9 @@ public class TimeStampTokenValidationService implements ValidationService {
         validateContainer(documents);
         TimeStampToken timeStampToken = getTimeStamp(documents);
         List<Error> errors = validateTimeStamp(documents, timeStampToken);
-        Date signedTime = timeStampToken.getTimeStampInfo().getGenTime();
-        String signedBy = getTimeStampTokenSigner(timeStampToken);
 
-        TimeStampTokenValidationData timeStampTokenValidationData = generateTimeStampTokenData(signedTime, signedBy, errors);
-        TimeStampTokenValidationReportBuilder reportBuilder = new TimeStampTokenValidationReportBuilder(validationDocument, signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy()), timeStampTokenValidationData, reportConfigurationProperties.isReportSignatureEnabled());
+        TimeStampTokenValidationReportBuilder reportBuilder = new TimeStampTokenValidationReportBuilder(validationDocument, timeStampToken, signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy()), errors, reportConfigurationProperties.isReportSignatureEnabled());
         return reportBuilder.build();
-    }
-
-    private TimeStampTokenValidationData generateTimeStampTokenData(Date signedTime, String signedBy, List<Error> errors) {
-        TimeStampTokenValidationData timeStampTokenValidationData = new TimeStampTokenValidationData();
-        timeStampTokenValidationData.setSignedBy(signedBy);
-        timeStampTokenValidationData.setSignedTime(getDateFormatterWithGMTZone().format(signedTime));
-        if (!errors.isEmpty()) {
-            timeStampTokenValidationData.setError(errors);
-            timeStampTokenValidationData.setIndication(TimeStampTokenValidationData.Indication.TOTAL_FAILED);
-        } else {
-            timeStampTokenValidationData.setIndication(TimeStampTokenValidationData.Indication.TOTAL_PASSED);
-        }
-        return timeStampTokenValidationData;
     }
 
     private void validateContainer(List<InMemoryDocument> documents) {
@@ -185,15 +170,6 @@ public class TimeStampTokenValidationService implements ValidationService {
 
     private boolean isVersionValid(TimeStampToken timeStampToken) {
         return timeStampToken.getTimeStampInfo().toASN1Structure().getVersion().getValue().longValue() == 1;
-    }
-
-    private String getTimeStampTokenSigner(TimeStampToken timeStampToken) {
-        ASN1Encodable x500Name = timeStampToken.getTimeStampInfo().getTsa().getName();
-        if (x500Name instanceof X500Name) {
-            return IETFUtils.valueToString(((X500Name) x500Name).getRDNs(BCStyle.CN)[0].getFirst().getValue());
-        }
-        return null;
-
     }
 
     private Error mapError(String content) {

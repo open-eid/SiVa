@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
+import java.util.Base64;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CertUtil {
@@ -37,18 +38,18 @@ public final class CertUtil {
 
     public static String getCountryCode(X509Certificate cert) {
         try {
-           return getValueByObjectIdentifier(cert, BCStyle.C);
+            return getValueByObjectIdentifier(cert, BCStyle.C);
         } catch (CertificateEncodingException e) {
-            LOGGER.error("Error extracting country from certificate", e.getMessage(), e);
+            LOGGER.error("Error extracting country from certificate", e);
             return null;
         }
     }
 
     public static String getCommonName(X509Certificate cert) {
         try {
-            return getValueByObjectIdentifier(cert, BCStyle.CN);
+            return getValueByObjectIdentifier(cert, BCStyle.CN).replaceAll("\\\\", "");
         } catch (CertificateEncodingException e) {
-            LOGGER.error("Error extracting common name from certificate", e.getMessage(), e);
+            LOGGER.error("Error extracting common name from certificate", e);
             return null;
         }
     }
@@ -57,6 +58,15 @@ public final class CertUtil {
         X500Name x500name = new JcaX509CertificateHolder(cert).getSubject();
         RDN c = x500name.getRDNs(identifier)[0];
         return IETFUtils.valueToString(c.getFirst().getValue());
+    }
+
+
+    public static String encodeCertificateToBase64(X509Certificate certificate) {
+        try {
+            return Base64.getEncoder().encodeToString(certificate.getEncoded());
+        } catch (CertificateEncodingException e) {
+            throw new IllegalArgumentException("Certificate encoding error");
+        }
     }
 
 }

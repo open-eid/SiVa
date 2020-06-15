@@ -531,6 +531,13 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
             <xs:element name="SignatureLevel" minOccurs="0" type="xs:string"/>
             <xs:element name="SignedBy" type="xs:string"/>
             <xs:element name="SubjectDistinguishedName" minOccurs="0"  type="tns:SubjectDistinguishedName"/>
+            <xs:element name="Certificates" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="Certificate" type="tns:Certificate"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
             <xs:element name="Indication" type="tns:Indication"/>
             <xs:element name="SubIndication" minOccurs="0" type="xs:string"/>
             <xs:element name="Errors" minOccurs="0">
@@ -599,6 +606,15 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
             <xs:element name="CommonName" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
+
+    <xs:complexType name="Certificate">
+        <xs:sequence>
+            <xs:element name="Content" type="xs:string"/>
+            <xs:element name="CommonName" type="xs:string"/>
+            <xs:element name="Issuer" type="tns:Certificate"/>
+            <xs:element name="Type" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>    
 
     <xs:simpleType name="Indication">
         <xs:restriction base="xs:string">
@@ -671,7 +687,7 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
             <xs:element type="PSV" name="PSV" minOccurs="0" />
             <xs:element type="PCV" name="PCV" minOccurs="0" />
             <xs:element type="VTS" name="VTS" minOccurs="0" />
-            <xs:element name="CertificateChain" type="CertificateChain" />
+            <xs:element name="Certificate" type="Certificate" />
             <xs:element type="Conclusion" name="Conclusion" />
         </xs:sequence>
         <xs:attribute name="Id" type="xs:string" use="required" />
@@ -769,7 +785,7 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
         <xs:complexContent>
             <xs:extension base="ConstraintsConclusion" >
                 <xs:sequence>
-                    <xs:element name="CertificateChain" type="CertificateChain" />
+                    <xs:element name="Certificate" type="Certificate" />
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -983,7 +999,7 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:complexType name="CertificateChain">
+    <xs:complexType name="Certificate">
         <xs:sequence>
             <xs:element name="ChainItem" minOccurs="0" maxOccurs="unbounded">
                 <xs:complexType>
@@ -1101,7 +1117,7 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
 
             <xs:element name="BasicSignature" type="BasicSignature" />
             <xs:element name="SigningCertificate" type="SigningCertificate" minOccurs="0" />
-            <xs:element name="CertificateChain"	type="CertificateChain" minOccurs="0" />
+            <xs:element name="Certificate"	type="Certificate" minOccurs="0" />
 
             <xs:element name="ContentType" type="xs:string" minOccurs="0" />
             <xs:element name="ContentIdentifier" type="xs:string" minOccurs="0" />
@@ -1232,7 +1248,7 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
 
             <xs:element name="BasicSignature" type="BasicSignature" />
             <xs:element name="SigningCertificate" type="SigningCertificate" minOccurs="0" />
-            <xs:element name="CertificateChain" type="CertificateChain" minOccurs="0" />
+            <xs:element name="Certificate" type="Certificate" minOccurs="0" />
 
             <xs:element name="Trusted" type="xs:boolean" />
             <xs:element name="SelfSigned" type="xs:boolean" />
@@ -1371,7 +1387,7 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:complexType name="CertificateChain">
+    <xs:complexType name="Certificate">
         <xs:sequence>
             <xs:element name="ChainItem" minOccurs="0" maxOccurs="unbounded">
                 <xs:complexType>
@@ -1436,7 +1452,7 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
             <xs:element name="DigestMatcher" type="DigestMatcher" />
             <xs:element name="BasicSignature" type="BasicSignature" />
             <xs:element name="SigningCertificate" type="SigningCertificate" minOccurs="0" />
-            <xs:element name="CertificateChain" type="CertificateChain" minOccurs="0" />
+            <xs:element name="Certificate" type="Certificate" minOccurs="0" />
 
             <xs:element name="TimestampedObjects" type="TimestampedObjects" minOccurs="0" />
 
@@ -1467,7 +1483,7 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
 
             <xs:element name="BasicSignature" type="BasicSignature" minOccurs="0" /> <!-- Can be null in case of no SUCCESSFUL response of OCSP -->
             <xs:element name="SigningCertificate" type="SigningCertificate" minOccurs="0" />
-            <xs:element name="CertificateChain" type="CertificateChain" minOccurs="0" />
+            <xs:element name="Certificate" type="Certificate" minOccurs="0" />
 
             <xs:element name="Base64Encoded" type="xs:base64Binary" minOccurs="0" />
         </xs:sequence>

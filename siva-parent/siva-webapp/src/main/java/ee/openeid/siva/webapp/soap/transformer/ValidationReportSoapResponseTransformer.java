@@ -17,11 +17,19 @@
 package ee.openeid.siva.webapp.soap.transformer;
 
 import ee.openeid.siva.validation.document.report.DetailedReport;
-import ee.openeid.siva.validation.document.report.DiagnosticReport;
-import ee.openeid.siva.validation.document.report.SimpleReport;
-import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
-import ee.openeid.siva.validation.document.report.ValidatedDocument;
+import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.webapp.soap.response.Certificate;
 import ee.openeid.siva.webapp.soap.response.Error;
+import ee.openeid.siva.webapp.soap.response.Info;
+import ee.openeid.siva.webapp.soap.response.Policy;
+import ee.openeid.siva.webapp.soap.response.SignatureProductionPlace;
+import ee.openeid.siva.webapp.soap.response.SignatureScope;
+import ee.openeid.siva.webapp.soap.response.SignatureValidationData;
+import ee.openeid.siva.webapp.soap.response.SignerRole;
+import ee.openeid.siva.webapp.soap.response.SubjectDistinguishedName;
+import ee.openeid.siva.webapp.soap.response.ValidationConclusion;
+import ee.openeid.siva.webapp.soap.response.ValidationWarning;
+import ee.openeid.siva.webapp.soap.response.Warning;
 import ee.openeid.siva.webapp.soap.response.*;
 import ee.openeid.siva.webapp.soap.transformer.report.DetailedReportTransformer;
 import ee.openeid.siva.webapp.soap.transformer.report.DiagnosticDataTransformer;
@@ -30,6 +38,7 @@ import eu.europa.esig.dss.diagnostic.jaxb.XmlDiagnosticData;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -191,9 +200,38 @@ public class ValidationReportSoapResponseTransformer {
         responseSignature.setErrors(toSoapResponseSignatureErrors(signature.getErrors()));
         responseSignature.setWarnings(toSoapResponseSignatureWarnings(signature.getWarnings()));
         responseSignature.setSignatureScopes(toSoapResponseSignatureScopes(signature.getSignatureScopes()));
+        responseSignature.setCertificates(toSoapResponseCertificates(signature.getCertificates()));
 
         return responseSignature;
     }
+
+    private SignatureValidationData.Certificates toSoapResponseCertificates(List<ee.openeid.siva.validation.document.report.Certificate> certificateList) {
+        if (certificateList == null) {
+            return null;
+        }
+        SignatureValidationData.Certificates certificates = new SignatureValidationData.Certificates();
+        List<Certificate> responseCertificateList = certificateList.stream()
+                .map(this::toSoapResponseCertificate)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        certificates.getCertificate().addAll(responseCertificateList);
+        return certificates;
+    }
+
+    private Certificate toSoapResponseCertificate(ee.openeid.siva.validation.document.report.Certificate certificate) {
+        if (certificate == null) {
+            return null;
+        }
+        Certificate responseCertificate = new Certificate();
+        responseCertificate.setContent(certificate.getContent());
+        responseCertificate.setCommonName(certificate.getCommonName());
+        if (certificate.getType() != null) {
+            responseCertificate.setType(certificate.getType().name());
+        }
+        responseCertificate.setIssuer(toSoapResponseCertificate(certificate.getIssuer()));
+        return responseCertificate;
+    }
+
 
     private SubjectDistinguishedName toSoapResponseSignatureSubjectDN(ee.openeid.siva.validation.document.report.SubjectDistinguishedName subjectDistinguishedName) {
         if (subjectDistinguishedName == null) {

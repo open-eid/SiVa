@@ -16,25 +16,16 @@
 
 package ee.openeid.siva.webapp.soap.transformer;
 
-import ee.openeid.siva.validation.document.report.DetailedReport;
-import ee.openeid.siva.validation.document.report.DiagnosticReport;
 import ee.openeid.siva.validation.document.report.SignatureProductionPlace;
-import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.SignerRole;
-import ee.openeid.siva.validation.document.report.SimpleReport;
-import ee.openeid.siva.validation.document.report.SubjectDistinguishedName;
-import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
-import ee.openeid.siva.validation.document.report.ValidatedDocument;
+import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.webapp.soap.response.DiagnosticData;
 import ee.openeid.siva.webapp.soap.response.ValidationConclusion;
 import ee.openeid.siva.webapp.soap.response.ValidationReport;
 import eu.europa.esig.dss.detailedreport.jaxb.XmlTLAnalysis;
 import eu.europa.esig.dss.diagnostic.jaxb.*;
-import eu.europa.esig.dss.enumerations.DigestAlgorithm;
-import eu.europa.esig.dss.enumerations.DigestMatcherType;
-import eu.europa.esig.dss.enumerations.EncryptionAlgorithm;
-import eu.europa.esig.dss.enumerations.MaskGenerationFunction;
-import eu.europa.esig.dss.enumerations.TimestampLocation;
+import eu.europa.esig.dss.enumerations.*;
+import eu.europa.esig.dss.validation.diagnostic.Certificate;
 import eu.europa.esig.dss.validation.diagnostic.*;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -44,11 +35,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.*;
@@ -319,7 +306,7 @@ public class ValidationReportSoapResponseTransformerTest {
         assertEquals(dssXmlCertificate.getSurname(), certificate.getSurname());
         assertEquals(dssXmlCertificate.getOrganizationalUnit(), certificate.getOrganizationalUnit());
         assertEquals(dssXmlCertificate.getOrganizationName(), certificate.getOrganizationName());
-        assertEquals(dssXmlCertificate.getPseudonym(),   certificate.getPseudonym());
+        assertEquals(dssXmlCertificate.getPseudonym(), certificate.getPseudonym());
         assertEquals(dssXmlCertificate.getPublicKeyEncryptionAlgo(), certificate.getPublicKeyEncryptionAlgo());
         assertEquals(dssXmlCertificate.getPublicKeySize(), certificate.getPublicKeySize());
         assertDateEquals(dssXmlCertificate.getNotAfter(), certificate.getNotAfter());

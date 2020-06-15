@@ -61,7 +61,7 @@ public class CertUtilTest {
 
     @Test
     public void validCommonNameFromCertificate() throws CertificateException {
-        Assert.assertEquals("VOLL\\,ANDRES\\,39004170346", CertUtil.getCommonName(getCertificate()));
+        Assert.assertEquals("VOLL,ANDRES,39004170346", CertUtil.getCommonName(getCertificate()));
     }
 
     private X509Certificate getCertificate() throws CertificateException {

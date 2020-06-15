@@ -17,27 +17,23 @@
 package ee.openeid.validation.service.generic.report;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.report.Reports;
-import ee.openeid.siva.validation.document.report.SignatureProductionPlace;
-import ee.openeid.siva.validation.document.report.SignerRole;
-import ee.openeid.siva.validation.document.report.SubjectDistinguishedName;
-import ee.openeid.siva.validation.document.report.ValidationConclusion;
+import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.validation.service.generic.validator.report.GenericValidationReportBuilder;
+import ee.openeid.validation.service.generic.validator.report.ReportBuilderData;
 import eu.europa.esig.dss.diagnostic.jaxb.*;
-import eu.europa.esig.dss.enumerations.DigestAlgorithm;
-import eu.europa.esig.dss.enumerations.EncryptionAlgorithm;
-import eu.europa.esig.dss.enumerations.EndorsementType;
-import eu.europa.esig.dss.enumerations.Indication;
-import eu.europa.esig.dss.enumerations.MaskGenerationFunction;
-import eu.europa.esig.dss.enumerations.SignatureLevel;
-import eu.europa.esig.dss.enumerations.TimestampType;
+import eu.europa.esig.dss.enumerations.*;
+import eu.europa.esig.dss.model.FileDocument;
+import eu.europa.esig.dss.pades.validation.PDFDocumentValidator;
 import eu.europa.esig.dss.simplereport.jaxb.XmlSimpleReport;
+import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
+import eu.europa.esig.dss.validation.SignedDocumentValidator;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Collections;
@@ -47,21 +43,28 @@ import java.util.List;
 @RunWith(MockitoJUnitRunner.class)
 public class GenericValidationReportBuilderTest {
 
+    @Mock
+    TrustedListsCertificateSource trustedListsCertificateSource;
+
     private static final String TM_POLICY_OID = "1.3.6.1.4.1.10015.1000.3.2.1";
 
     @Test
     public void totalPassedIndicationReportBuild() {
-        Reports reports = new GenericValidationReportBuilder(getDssReports(""), ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
+
+        ReportBuilderData reportBuilderData = getReportBuilderData(getDssReports(""));
+        Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
         ValidationConclusion validationConclusion = reports.getSimpleReport().getValidationConclusion();
-        Assert.assertEquals(new Integer(1), validationConclusion.getValidSignaturesCount());
+        Assert.assertEquals(Integer.valueOf(1), validationConclusion.getValidSignaturesCount());
         Assert.assertEquals("TOTAL-PASSED", validationConclusion.getSignatures().get(0).getIndication());
         Assert.assertEquals("XAdES_BASELINE_LT", validationConclusion.getSignatures().get(0).getSignatureFormat());
     }
 
     @Test
     public void totalPassedIndicationTimeMarkReportBuild() {
-        Reports reports = new GenericValidationReportBuilder(getDssReports("1.3.6.1.4.1.10015.1000.3.2.1"), ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
-        Assert.assertEquals(new Integer(1), reports.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
+
+        ReportBuilderData reportBuilderData = getReportBuilderData(getDssReports(TM_POLICY_OID));
+        Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
+        Assert.assertEquals(Integer.valueOf(1), reports.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
         Assert.assertEquals("TOTAL-PASSED", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getIndication());
         Assert.assertEquals("XAdES_BASELINE_LT_TM", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getSignatureFormat());
     }
@@ -71,8 +74,10 @@ public class GenericValidationReportBuilderTest {
         eu.europa.esig.dss.validation.reports.Reports dssReports = getDssReports("");
         dssReports.getSimpleReportJaxb().getSignature().get(0).setIndication(Indication.TOTAL_FAILED);
         dssReports.getSimpleReportJaxb().getSignature().get(0).getErrors().add("Something is wrong");
-        Reports reports = new GenericValidationReportBuilder(dssReports, ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
-        Assert.assertEquals(new Integer(0), reports.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
+
+        ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
+        Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
+        Assert.assertEquals(Integer.valueOf(0), reports.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
         Assert.assertEquals("TOTAL-FAILED", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getIndication());
         Assert.assertEquals("Something is wrong", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getErrors().get(0).getContent());
     }
@@ -81,8 +86,9 @@ public class GenericValidationReportBuilderTest {
     public void indeterminateIndicationReportBuild() {
         eu.europa.esig.dss.validation.reports.Reports dssReports = getDssReports("");
         dssReports.getSimpleReportJaxb().getSignature().get(0).setIndication(Indication.INDETERMINATE);
-        Reports reports = new GenericValidationReportBuilder(dssReports, ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
-        Assert.assertEquals(new Integer(0), reports.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
+        ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
+        Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
+        Assert.assertEquals(Integer.valueOf(0), reports.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
         Assert.assertEquals("INDETERMINATE", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getIndication());
     }
 
@@ -92,7 +98,8 @@ public class GenericValidationReportBuilderTest {
 
         diagnosticData.getSignatures().get(0).setSigningCertificate(null);
         eu.europa.esig.dss.validation.reports.Reports dssReports = new eu.europa.esig.dss.validation.reports.Reports(diagnosticData, null, getSimpleReport(), null);
-        Reports reports = new GenericValidationReportBuilder(dssReports, ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
+        ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
+        Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
 
         SubjectDistinguishedName subjectDN = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getSubjectDistinguishedName();
         Assert.assertEquals("", subjectDN.getCommonName());
@@ -120,7 +127,8 @@ public class GenericValidationReportBuilderTest {
         diagnosticData.getSignatures().get(0).getSignerRole().add(emptyRole);
 
         eu.europa.esig.dss.validation.reports.Reports dssReports = new eu.europa.esig.dss.validation.reports.Reports(diagnosticData, null, getSimpleReport(), null);
-        Reports reports = new GenericValidationReportBuilder(dssReports, ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
+        ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
+        Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
 
         List<SignerRole> signerRole = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getSignerRole();
         Assert.assertEquals(1, signerRole.size());
@@ -134,7 +142,8 @@ public class GenericValidationReportBuilderTest {
         diagnosticData.getSignatures().get(0).getSignerRole().clear();
 
         eu.europa.esig.dss.validation.reports.Reports dssReports = new eu.europa.esig.dss.validation.reports.Reports(diagnosticData, null, getSimpleReport(), null);
-        Reports reports = new GenericValidationReportBuilder(dssReports, ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
+        ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
+        Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
 
         List<SignerRole> signerRole = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getSignerRole();
         Assert.assertTrue(signerRole.isEmpty());
@@ -152,7 +161,8 @@ public class GenericValidationReportBuilderTest {
         diagnosticData.getSignatures().get(0).setSignatureProductionPlace(xmlSignatureProductionPlace);
 
         eu.europa.esig.dss.validation.reports.Reports dssReports = new eu.europa.esig.dss.validation.reports.Reports(diagnosticData, null, getSimpleReport(), null);
-        Reports reports = new GenericValidationReportBuilder(dssReports, ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
+        ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
+        Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
 
         SignatureProductionPlace signatureProductionPlace = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getSignatureProductionPlace();
         Assert.assertEquals("Tallinn", signatureProductionPlace.getCity());
@@ -168,7 +178,8 @@ public class GenericValidationReportBuilderTest {
         diagnosticData.getSignatures().get(0).setSignatureProductionPlace(null);
 
         eu.europa.esig.dss.validation.reports.Reports dssReports = new eu.europa.esig.dss.validation.reports.Reports(diagnosticData, null, getSimpleReport(), null);
-        Reports reports = new GenericValidationReportBuilder(dssReports, ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
+        ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
+        Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
 
         SignatureProductionPlace signatureProductionPlace = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getSignatureProductionPlace();
         Assert.assertNull(signatureProductionPlace);
@@ -183,7 +194,8 @@ public class GenericValidationReportBuilderTest {
         diagnosticData.getSignatures().get(0).setSignatureProductionPlace(xmlSignatureProductionPlace);
 
         eu.europa.esig.dss.validation.reports.Reports dssReports = new eu.europa.esig.dss.validation.reports.Reports(diagnosticData, null, getSimpleReport(), null);
-        Reports reports = new GenericValidationReportBuilder(dssReports, ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
+        ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
+        Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
 
         SignatureProductionPlace signatureProductionPlace = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getSignatureProductionPlace();
         Assert.assertNull(signatureProductionPlace);
@@ -194,7 +206,8 @@ public class GenericValidationReportBuilderTest {
         XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
 
         eu.europa.esig.dss.validation.reports.Reports dssReports = new eu.europa.esig.dss.validation.reports.Reports(diagnosticData, null, getSimpleReport(), null);
-        Reports reports = new GenericValidationReportBuilder(dssReports, ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
+        ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
+        Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
 
         Assert.assertEquals("http://www.w3.org/2007/05/xmldsig-more#sha256-rsa-MGF1",
                 reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getSignatureMethod());
@@ -219,7 +232,8 @@ public class GenericValidationReportBuilderTest {
         diagnosticData.getSignatures().get(0).setFoundTimestamps(Collections.singletonList(xmlFoundTimestamp));
 
         eu.europa.esig.dss.validation.reports.Reports dssReports = new eu.europa.esig.dss.validation.reports.Reports(diagnosticData, null, getSimpleReport(), null);
-        Reports reports = new GenericValidationReportBuilder(dssReports, ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
+        ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
+        Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
 
         Assert.assertEquals("", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getTimeAssertionMessageImprint());
     }
@@ -244,16 +258,32 @@ public class GenericValidationReportBuilderTest {
         diagnosticData.getSignatures().get(0).setPolicy(xmlPolicy);
 
         eu.europa.esig.dss.validation.reports.Reports dssReports = new eu.europa.esig.dss.validation.reports.Reports(diagnosticData, null, getSimpleReport(), null);
-        Reports reports = new GenericValidationReportBuilder(dssReports, ValidationLevel.ARCHIVAL_DATA, getValidationDocument(), getValidationPolicy(), false).build();
+        ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
+        Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
 
         Assert.assertEquals("", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getTimeAssertionMessageImprint());
     }
 
+    private ReportBuilderData getReportBuilderData(eu.europa.esig.dss.validation.reports.Reports reports){
+        return ReportBuilderData.builder()
+                .dssReports(reports)
+                .validationLevel(ValidationLevel.ARCHIVAL_DATA)
+                .validationDocument(getValidationDocument())
+                .policy(getValidationPolicy())
+                .isReportSignatureEnabled(false)
+                .validator(getDocumentValidator())
+                .trustedListsCertificateSource(trustedListsCertificateSource)
+                .build();
+    }
     private ValidationDocument getValidationDocument() {
         ValidationDocument validationDocument = new ValidationDocument();
         validationDocument.setName("filename.bdoc");
         validationDocument.setBytes("dGVzdA==".getBytes());
         return validationDocument;
+    }
+
+    private SignedDocumentValidator getDocumentValidator() {
+        return new PDFDocumentValidator(new FileDocument("src/test/resources/test-files/no-signatures.pdf"));
     }
 
     private ConstraintDefinedPolicy getValidationPolicy() {
@@ -310,6 +340,8 @@ public class GenericValidationReportBuilderTest {
         distinguishedName.setFormat("RFC2253");
         distinguishedName.setValue("2.5.4.5=#130b3437313031303130303333,2.5.4.42=#0c05504552454e494d49,2.5.4.4=#0c074545534e494d49,CN=PERENIMI\\,EESNIMI\\,47101010033,OU=digital signature,O=ESTEID,C=EE");
         xmlCertificate.getSubjectDistinguishedName().add(distinguishedName);
+        XmlDigestAlgoAndValue xmlDigestAlgoAndValue = new XmlDigestAlgoAndValue();
+        xmlCertificate.setDigestAlgoAndValue(xmlDigestAlgoAndValue);
         xmlCertificate.setCountryName("EE");
         diagnosticData.setUsedCertificates(Collections.singletonList(xmlCertificate));
         return diagnosticData;

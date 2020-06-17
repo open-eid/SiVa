@@ -19,7 +19,6 @@ package ee.openeid.siva.integrationtest;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.hamcrest.Matchers;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -61,12 +60,21 @@ public class AsiceValidationPassIT extends SiVaRestTests {
     @Test
     public void validAsiceSingleSignature() {
         post(validationRequestFor("ValidLiveSignature.asice"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-10-11T09:36:10Z"))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("signatures[0].certificates.size()", Matchers.is(3))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("NURM,AARE,38211015222"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIE3DCCAsSgAwIBAgIQSsqdjzAQgvpX80krgJy83DANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.commonName",  Matchers.startsWith("ESTEID-SK 2015"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.content",  Matchers.startsWith("MIIGcDCCBVigAwIBAgIQRUgJC4ec7yFWcqzT3mwbWzANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].commonName",  Matchers.is("SK TIMESTAMPING AUTHORITY"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].content",  Matchers.startsWith("MIIEDTCCAvWgAwIBAgIQJK/s6xJo0AJUF/eG7W8BWTANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("SK OCSP RESPONDER 2011"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content",  Matchers.startsWith("MIIEvDCCA6SgAwIBAgIQcpyVmdruRVxNgzI3N/NZQTANBgkqhk"))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1));
     }
@@ -87,7 +95,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
     @Test
     public void validAsiceMultipleSignatures() {
         post(validationRequestFor("BDOC-TS.asice"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
@@ -114,9 +122,18 @@ public class AsiceValidationPassIT extends SiVaRestTests {
     @Test
     public void asiceDifferentCertificateCountries() {
         post(validationRequestFor("EE_SER-AEX-B-LT-V-30.asice"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[0].certificates.size()", Matchers.is(3))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("MINDAUGAS PELANIS"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIGJzCCBQ+gAwIBAgIObV8h37aTlaYAAQAEAckwDQYJKoZIhv"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.commonName",  Matchers.startsWith("VI Registru Centras RCSC (IssuingCA-A)"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.content",  Matchers.startsWith("MIIF7jCCBNagAwIBAgIOEvrAfT5Zs1YAAwAAABkwDQYJKoZIhv"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].commonName",  Matchers.is("SK TIMESTAMPING AUTHORITY"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].content",  Matchers.startsWith("MIIEDTCCAvWgAwIBAgIQJK/s6xJo0AJUF/eG7W8BWTANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("SK OCSP RESPONDER 2011"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content",  Matchers.startsWith("MIIEvDCCA6SgAwIBAgIQcpyVmdruRVxNgzI3N/NZQTANBgkqhk"))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(1));
     }
@@ -138,11 +155,20 @@ public class AsiceValidationPassIT extends SiVaRestTests {
     @Test
     public void asiceBaselineLtProfileValidSignature() {
         post(validationRequestFor("EE_SER-AEX-B-LT-V-49.asice"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-05-23T10:06:23Z"))
+                .body("signatures[0].certificates.size()", Matchers.is(3))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("UUKKIVI,KRISTI,48505280278"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIEojCCA4qgAwIBAgIQPKphkF8jscxRrFRhBsxlhjANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.commonName",  Matchers.startsWith("ESTEID-SK 2011"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.content",  Matchers.startsWith("MIIFBTCCA+2gAwIBAgIQKVKTqv2MxtRNgzCjwmRRDTANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].commonName",  Matchers.is("SK TIMESTAMPING AUTHORITY"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].content",  Matchers.startsWith("MIIEDTCCAvWgAwIBAgIQJK/s6xJo0AJUF/eG7W8BWTANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("SK OCSP RESPONDER 2011"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content",  Matchers.startsWith("MIIEvDCCA6SgAwIBAgIQcpyVmdruRVxNgzI3N/NZQTANBgkqhk"))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(1));
     }
@@ -163,11 +189,26 @@ public class AsiceValidationPassIT extends SiVaRestTests {
     @Test
     public void asiceBaselineLtaProfileValidSignature() {
         post(validationRequestFor("EE_SER-AEX-B-LTA-V-24.asice"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LTA))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2014-10-30T18:50:35Z"))
+                .body("signatures[0].certificates.size()", Matchers.is(4))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("METSMA,RAUL,38207162766"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIEmzCCA4OgAwIBAgIQFQe7NKtE06tRSY1vHfPijjANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.commonName",  Matchers.startsWith("ESTEID-SK 2011"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.content",  Matchers.startsWith("MIIFBTCCA+2gAwIBAgIQKVKTqv2MxtRNgzCjwmRRDTANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].commonName",  Matchers.is("BalTstamp QTSA TSU2"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].content",  Matchers.startsWith("MIIEtzCCA5+gAwIBAgIKFg5NNQAAAAADhzANBgkqhkiG9w0BAQ"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].issuer.commonName",  Matchers.startsWith("SSC Qualified Class 3 CA"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].issuer.content",  Matchers.startsWith("MIIFvTCCA6WgAwIBAgIQWJFmnMAIyiVAcLMn/5wGnjANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'ARCHIVE_TIMESTAMP'}[0].commonName",  Matchers.is("BalTstamp QTSA TSU2"))
+                .body("signatures[0].certificates.findAll{it.type == 'ARCHIVE_TIMESTAMP'}[0].content",  Matchers.startsWith("MIIEtzCCA5+gAwIBAgIKFg5NNQAAAAADhzANBgkqhkiG9w0BAQ"))
+                .body("signatures[0].certificates.findAll{it.type == 'ARCHIVE_TIMESTAMP'}[0].issuer.commonName",  Matchers.startsWith("SSC Qualified Class 3 CA"))
+                .body("signatures[0].certificates.findAll{it.type == 'ARCHIVE_TIMESTAMP'}[0].issuer.content",  Matchers.startsWith("MIIFvTCCA6WgAwIBAgIQWJFmnMAIyiVAcLMn/5wGnjANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("SK OCSP RESPONDER 2011"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content",  Matchers.startsWith("MIIEvDCCA6SgAwIBAgIQcpyVmdruRVxNgzI3N/NZQTANBgkqhk"))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(1));
     }
@@ -188,7 +229,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
     @Test
     public void asiceWithEccSha256ValidSignature() {
         post(validationRequestFor("EE_SER-AEX-B-LT-V-2.asice"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
@@ -212,11 +253,20 @@ public class AsiceValidationPassIT extends SiVaRestTests {
     @Test
     public void asiceSk2015CertificateChainValidSignature() {
         post(validationRequestFor("IB-4270_TS_ESTEID-SK 2015  SK OCSP RESPONDER 2011.asice"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
                 .body("signatures[0].signatureLevel", Matchers.is(SIGNATURE_LEVEL_QESIG))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[0].certificates.size()", Matchers.is(3))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("LUKIN,LIISA,47710110274"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIFfzCCA2egAwIBAgIQL+hzDhb7R0xWi+03fxcZKDANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.commonName",  Matchers.startsWith("ESTEID-SK 2015"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.content",  Matchers.startsWith("MIIGcDCCBVigAwIBAgIQRUgJC4ec7yFWcqzT3mwbWzANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].commonName",  Matchers.is("SK TIMESTAMPING AUTHORITY"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].content",  Matchers.startsWith("MIIEDTCCAvWgAwIBAgIQJK/s6xJo0AJUF/eG7W8BWTANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("SK OCSP RESPONDER 2011"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content",  Matchers.startsWith("MIIEvDCCA6SgAwIBAgIQcpyVmdruRVxNgzI3N/NZQTANBgkqhk"))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(1));
     }
@@ -237,13 +287,24 @@ public class AsiceValidationPassIT extends SiVaRestTests {
     @Test
     public void asiceKlass3Sk2010CertificateChainValidSignature() {
         post(validationRequestFor("EE_SER-AEX-B-LT-V-28.asice"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
                 .body("signatures[0].signatureLevel", Matchers.is(SIGNATURE_LEVEL_QESIG))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
                 .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("Wilson OÜ digital stamp"))
                 .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("12508548"))
+                .body("signatures[0].certificates.size()", Matchers.is(3))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("Wilson OÜ digital stamp"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIEcDCCA1igAwIBAgIQBCCW1H7A4/xUfYW+dTWZgzANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.commonName",  Matchers.startsWith("KLASS3-SK 2010"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.content",  Matchers.startsWith("MIIErDCCA5SgAwIBAgIQAznVp1LayatNgy6bN8f9QjANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].commonName",  Matchers.is("SK TIMESTAMPING AUTHORITY"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].content",  Matchers.startsWith("MIIEDTCCAvWgAwIBAgIQJK/s6xJo0AJUF/eG7W8BWTANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("KLASS3-SK 2010 OCSP RESPONDER"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content",  Matchers.startsWith("MIIELzCCAxegAwIBAgICAMswDQYJKoZIhvcNAQEFBQAwbTELMA"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].issuer.commonName",  Matchers.startsWith("KLASS3-SK 2010"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].issuer.content",  Matchers.startsWith("MIIErDCCA5SgAwIBAgIQAznVp1LayatNgy6bN8f9QjANBgkqhk"))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(1));
     }
@@ -264,7 +325,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
     @Test
     public void asiceWithSceFileExtensionShouldPass() {
         post(validationRequestFor("ASICE_TS_LTA_content_as_sce.sce"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LTA))
@@ -293,7 +354,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
     @Test
     public void asiceWithSpecialCharactersInDataFileShouldPass() {
         post(validationRequestFor("Nonconventionalcharacters.asice"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
                 .body("signatures[0].signatureLevel", Matchers.is(SIGNATURE_LEVEL_QESIG))
@@ -322,7 +383,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
     @Test
     public void asiceUnsignedDataFiles() {
         post(validationRequestFor("EE_SER-AEX-B-LT-V-34.asice"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
                 .body("signatures[0].warnings[0].content", Matchers.is(CERTIFICATE_DO_NOT_MATCH_TRUST_SERVICE))
@@ -349,7 +410,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
     public void asiceEccSignatureShouldPass() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestFor("Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
                 .body("signatures[0].warnings", Matchers.emptyOrNullString())

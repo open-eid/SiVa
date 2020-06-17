@@ -185,6 +185,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_13))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("KLASS3-SK OCSP RESPONDER"))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1));
     }
@@ -209,6 +210,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_13))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("KLASS3-SK 2010 OCSP RESPONDER"))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1));
     }
@@ -235,6 +237,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
                 .body("signatures[0].warnings[0].content", Matchers.is("Old and unsupported format: DIGIDOC-XML version: 1.1"))
                 .body("signatures[0].warnings.size()", Matchers.is(1))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("ESTEID-SK 2007 OCSP RESPONDER"))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1));
     }
@@ -259,6 +262,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_13))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("SK OCSP RESPONDER 2011"))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1));
     }
@@ -285,6 +289,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
                 .body("signatures[0].warnings[0].content", Matchers.is("Old and unsupported format: DIGIDOC-XML version: 1.1"))
                 .body("signatures[0].warnings.size()", Matchers.is(1))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("EID-SK OCSP RESPONDER"))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1));
     }
@@ -311,6 +316,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
                 .body("signatures[1].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_13))
                 .body("signatures[1].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[1].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("EID-SK 2007 OCSP RESPONDER 2010"))
                 .body("signaturesCount", Matchers.is(2))
                 .body("validSignaturesCount", Matchers.is(2));
     }
@@ -335,6 +341,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_13))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("EID-SK 2007 OCSP RESPONDER"))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1));
     }
@@ -362,6 +369,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].warnings[0].content", Matchers.is("X509IssuerName has none or invalid namespace: null"))
                 .body("signatures[0].warnings[1].content", Matchers.is("X509SerialNumber has none or invalid namespace: null"))
                 .body("signatures[0].warnings.size()", Matchers.is(2))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("SK OCSP RESPONDER 2011"))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1));
     }
@@ -422,7 +430,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
         setTestFilesDirectory("document_format_test_files/");
         post(validationRequestFor("DdocContainerNoSignature.ddoc", VALID_SIGNATURE_POLICY_4, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
-                .body("signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
                 .body("validatedDocument.filename", Matchers.is("DdocContainerNoSignature.ddoc"))
                 .body("validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
                 .body("validSignaturesCount", Matchers.is(0))

@@ -17,18 +17,15 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
-import ee.openeid.siva.validation.document.report.SimpleReport;
-import io.restassured.response.Response;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
 
 import static ee.openeid.siva.integrationtest.TestData.*;
-import static org.junit.Assert.assertEquals;
+
 @Category(IntegrationTest.class)
 public class BdocValidationFailIT extends SiVaRestTests {
 
@@ -61,10 +58,17 @@ public class BdocValidationFailIT extends SiVaRestTests {
     @Test
     public void bdocInvalidSingleSignature() {
         post(validationRequestFor("IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].certificates.size()", Matchers.is(3))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIFHTCCBAWgAwIBAgIQDq1SanUB71xO+wbqIO72rDANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].commonName",  Matchers.is("SK TIMESTAMPING AUTHORITY"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].content",  Matchers.startsWith("MIIEDTCCAvWgAwIBAgIQJK/s6xJo0AJUF/eG7W8BWTANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("TEST of SK OCSP RESPONDER 2011"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content",  Matchers.startsWith("MIIEijCCA3KgAwIBAgIQaI8x6BnacYdNdNwlYnn/mzANBgkqhk"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -84,7 +88,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocInvalidMultipleSignatures() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("BdocMultipleSignaturesInvalid.bdoc"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT_TM))
                 .body("signatures[0].indication", Matchers.is(INDETERMINATE))
@@ -113,7 +117,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocInvalidAndValidMultipleSignatures() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("BdocMultipleSignaturesMixedWithValidAndInvalid.bdoc"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT_TM))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
@@ -147,10 +151,10 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocNoSignatures() {
         setTestFilesDirectory("document_format_test_files/");
         post(validationRequestFor("BdocContainerNoSignature.bdoc"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.validationWarnings", Matchers.emptyOrNullString());
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("validationWarnings", Matchers.emptyOrNullString());
     }
 
     /**
@@ -170,13 +174,13 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocInvalidTimeStampDontMatchSigValue() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("TS-02_23634_TS_wrong_SignatureValue.asice",null, null))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2015-11-13T11:15:36Z"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!", "The result of the timestamps validation process is not conclusive!", "The reference data object is not intact!", "Signature has an invalid timestamp"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2015-11-13T11:15:36Z"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!", "The result of the timestamps validation process is not conclusive!", "The reference data object is not intact!", "Signature has an invalid timestamp"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -196,13 +200,13 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocInvalidNonRepudiationKey() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("EE_SER-AEX-B-LT-I-43.asice", null, null))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("NOT_ADES"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CONSTRAINTS_FAILURE"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is("SIG_CONSTRAINTS_FAILURE"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -222,12 +226,12 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocInvalidNonRepudiationKeyNoComplianceInfo() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("EE_SER-AEX-B-LT-I-26.asice", null, null))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CONSTRAINTS_FAILURE"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is("SIG_CONSTRAINTS_FAILURE"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -248,12 +252,17 @@ public class BdocValidationFailIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("TM-01_bdoc21-unknown-resp.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "TM-01_bdoc21-unknown-resp.bdoc", VALID_SIGNATURE_POLICY_3))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].certificates.size()", Matchers.is(2))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("SINIVEE,VEIKO,36706020210"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIEPzCCAyegAwIBAgIQH0FobucEcidPGVN0HUUgATANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("DemoCA"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content",  Matchers.startsWith("MIIEBzCCAu+gAwIBAgIJALWMTsk6oP/yMA0GCSqGSIb3DQEBBQ"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -273,12 +282,19 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocNotTrustedTsaCert() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("TS-05_23634_TS_unknown_TSA.asice", null, null))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2014-05-19T10:45:19Z"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Signature has an invalid timestamp"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2014-05-19T10:45:19Z"))
+                .body("signatures[0].errors.content", Matchers.hasItems("Signature has an invalid timestamp"))
+                .body("signatures[0].certificates.size()", Matchers.is(3))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("ŽAIKOVSKI,IGOR,37101010021"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIEjzCCA3egAwIBAgIQZTNeodpzkAxPgpfyQEp1dTANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].commonName",  Matchers.is("Time Stamp Authority Server"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].content",  Matchers.startsWith("MIIG2jCCBMKgAwIBAgIBCDANBgkqhkiG9w0BAQUFADCBpDELMA"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("TEST of SK OCSP RESPONDER 2011"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content",  Matchers.startsWith("MIIEijCCA3KgAwIBAgIQaI8x6BnacYdNdNwlYnn/mzANBgkqhk"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -298,12 +314,12 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocTsOcspStatusRevoked() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("EE_SER-AEX-B-LT-R-25.asice", null, null))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("NO_POE"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The past signature validation is not conclusive!"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatures[0].subIndication", Matchers.is("NO_POE"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The past signature validation is not conclusive!"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -323,11 +339,11 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocOcspAndTsDifferenceOver24H() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("EE_SER-AEX-B-LT-V-20.asice", null, null))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("The difference between the OCSP response time and the signature timestamp is too large"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].errors[0].content", Matchers.is("The difference between the OCSP response time and the signature timestamp is too large"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -347,11 +363,11 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocDifferentDataFileInSignature() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("23613_TM_wrong-manifest-mimetype.bdoc"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Manifest file has an entry for file <test.txt> with mimetype <application/binary> but the signature file for signature S0 indicates the mimetype is <application/octet-stream>"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].errors.content", Matchers.hasItems("Manifest file has an entry for file <test.txt> with mimetype <application/binary> but the signature file for signature S0 indicates the mimetype is <application/octet-stream>"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -371,12 +387,12 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocSignatureValueDoNotCorrespondToSignedInfo() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("REF-19_bdoc21-no-sig-asn1-pref.bdoc"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -396,15 +412,18 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocBaselineBesSignatureLevel() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("signWithIdCard_d4j_1.0.4_BES.asice", null, null))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.serialNumber", Matchers.notNullValue())
-                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.commonName", Matchers.notNullValue())
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.notNullValue())
+                .body("signatures[0].subjectDistinguishedName.commonName", Matchers.notNullValue())
+                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].certificates.size()", Matchers.is(1))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("UUKKIVI,KRISTI,48505280278"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIEojCCA4qgAwIBAgIQPKphkF8jscxRrFRhBsxlhjANBgkqhk"))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -424,12 +443,15 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocBaselineEpesSignatureLevel() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDD4j("TM-04_kehtivuskinnituset.4.asice", null, null))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_EPES"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_EPES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].certificates.size()", Matchers.is(1))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIE/TCCA+WgAwIBAgIQJw9uhQnKff9RdnVKwzk1OzANBgkqhk"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -449,13 +471,18 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocSignersCertNotTrusted() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDD4j("SS-4_teadmataCA.4.asice", null, null))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2013-10-11T08:15:47Z"))
-                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("The certificate path is not trusted!"))
-                .body("validationReport.validationConclusion.signatures[0].errors[1].content", Matchers.is("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2013-10-11T08:15:47Z"))
+                .body("signatures[0].errors[0].content", Matchers.is("The certificate path is not trusted!"))
+                .body("signatures[0].errors[1].content", Matchers.is("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].certificates.size()", Matchers.is(2))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("signer1"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIICHDCCAYWgAwIBAgIBAjANBgkqhkiG9w0BAQUFADAqMQswCQ"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("TEST of SK OCSP RESPONDER 2011"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content",  Matchers.startsWith("MIIEijCCA3KgAwIBAgIQaI8x6BnacYdNdNwlYnn/mzANBgkqhk"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -475,12 +502,12 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocTmOcspStatusRevoked() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDD4j("TM-15_revoked.4.asice", null, null))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("NO_POE"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The past signature validation is not conclusive!"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatures[0].subIndication", Matchers.is("NO_POE"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The past signature validation is not conclusive!"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -500,11 +527,11 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocTmOcspStatusUnknown() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDD4j("TM-16_unknown.4.asice", null, null))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -569,11 +596,11 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocWrongOcspNonce() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("TM-10_noncevale.4.bdoc"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("OCSP nonce is invalid"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].errors.content", Matchers.hasItem("OCSP nonce is invalid"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -593,12 +620,12 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocDataFilesDontMatchHash() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("REF-14_filesisumuudetud.4.bdoc"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
+                .body("signatures[0].errors.content", Matchers.hasItem("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -618,13 +645,18 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocBaselineTSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("TS-06_23634_TS_missing_OCSP.asice", null, null))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2014-05-19T10:48:04Z"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2014-05-19T10:48:04Z"))
+                .body("signatures[0].errors.content", Matchers.hasItem("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].certificates.size()", Matchers.is(2))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("ŽAIKOVSKI,IGOR,37101010021"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIEjzCCA3egAwIBAgIQZTNeodpzkAxPgpfyQEp1dTANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].commonName",  Matchers.is("tsa01.quovadisglobal.com"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].content",  Matchers.startsWith("MIIGOzCCBSOgAwIBAgIUe6m/OP/GwmsrkHR8Mz8LJoNedfgwDQ"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -644,12 +676,12 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocWrongSignersCertInOcspResponse() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("23608-bdoc21-TM-ocsp-bad-nonce.bdoc"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2014-12-12T13:17:00Z"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("OCSP nonce is invalid"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2014-12-12T13:17:00Z"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].errors.content", Matchers.hasItem("OCSP nonce is invalid"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -669,12 +701,12 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void bdocCertificateValidityOutOfOcspRange() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("23154_test1-old-sig-sigat-OK-prodat-NOK-1.bdoc"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
 
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("Signature has been created with expired certificate"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .body("signatures[0].errors.content", Matchers.hasItem("Signature has been created with expired certificate"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -717,13 +749,13 @@ public class BdocValidationFailIT extends SiVaRestTests {
     public void asiceUnsignedDataFiles() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("EE_SER-AEX-B-LT-V-34.asice", null, null))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("Manifest file has an entry for file <unsigned.txt> with mimetype <text/plain> but the signature file for signature S0 does not have an entry for this file"))
-                .body("validationReport.validationConclusion.signatures[0].errors[1].content", Matchers.is("Container contains a file named <unsigned.txt> which is not found in the signature file"))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].errors[0].content", Matchers.is("Manifest file has an entry for file <unsigned.txt> with mimetype <text/plain> but the signature file for signature S0 does not have an entry for this file"))
+                .body("signatures[0].errors[1].content", Matchers.is("Container contains a file named <unsigned.txt> which is not found in the signature file"))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(0));
 
     }
 

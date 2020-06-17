@@ -58,7 +58,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     @Test
     public void asiceInvalidSingleSignature() {
         post(validationRequestFor("InvalidLiveSignature.asice"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
@@ -87,7 +87,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     @Test
     public void asiceInvalidMultipleSignatures() {
         post(validationRequestFor("InvalidMultipleSignatures.asice"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
                 .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_SIG_CRYPTO_FAILURE))
@@ -118,7 +118,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     @Test
     public void asiceInvalidAndValidMultipleSignatures() {
         post(validationRequestFor("InvalidAndValidSignatures.asice"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[1].indication", Matchers.is(TOTAL_PASSED))
                 .body("signatures[1].info.bestSignatureTime", Matchers.is("2016-06-21T21:38:50Z"))
@@ -172,7 +172,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     @Test
     public void asiceInvalidTimeStampDontMatchSigValue() {
         post(validationRequestFor("TS-02_23634_TS_wrong_SignatureValue.asice"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
                 .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_SIG_CRYPTO_FAILURE))
@@ -198,7 +198,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     @Test
     public void asiceInvalidNonRepudiationKey() {
         post(validationRequestFor("EE_SER-AEX-B-LT-I-43.asice", VALID_SIGNATURE_POLICY_3,"Simple"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].signatureLevel", Matchers.is(SIGNATURE_LEVEL_NOT_ADES))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
@@ -224,7 +224,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     @Test
     public void asiceInvalidNonRepudiationKeyNoComplianceInfo() {
         post(validationRequestFor("EE_SER-AEX-B-LT-I-26.asice"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
@@ -251,12 +251,17 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     public void asiceNotTrustedOcspCert() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDSS("TM-01_bdoc21-unknown-resp.bdoc", null, null))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(INDETERMINATE))
                 .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_NO_CERTIFICATE_CHAIN_FOUND))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2013-11-11T06:45:46Z")) //this may not be valid time to show
                 .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE))
+                .body("signatures[0].certificates.size()", Matchers.is(1))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("SINIVEE,VEIKO,36706020210"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIEPzCCAyegAwIBAgIQH0FobucEcidPGVN0HUUgATANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.commonName",  Matchers.startsWith("ESTEID-SK 2011"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.content",  Matchers.startsWith("MIIFBTCCA+2gAwIBAgIQKVKTqv2MxtRNgzCjwmRRDTANBgkqhk"))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(0));
     }
@@ -277,10 +282,19 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     @Test
     public void asiceNotTrustedTsaCert() {
         post(validationRequestFor("TS-05_23634_TS_unknown_TSA.asice", null, null))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
                 .body("signatures[0].errors.content", Matchers.hasItems(TS_PROCESS_NOT_CONCLUSIVE))
+                .body("signatures[0].certificates.size()", Matchers.is(3))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("ŽAIKOVSKI,IGOR,37101010021"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIEjzCCA3egAwIBAgIQZTNeodpzkAxPgpfyQEp1dTANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.commonName",  Matchers.startsWith("TEST of ESTEID-SK 2011"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.content",  Matchers.startsWith("MIIEuzCCA6OgAwIBAgIQSxRID7FoIaNNdNhBeucLvDANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].commonName",  Matchers.is("Time Stamp Authority Server"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].content",  Matchers.startsWith("MIIG2jCCBMKgAwIBAgIBCDANBgkqhkiG9w0BAQUFADCBpDELMA"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("TEST of SK OCSP RESPONDER 2011"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content",  Matchers.startsWith("MIIEijCCA3KgAwIBAgIQaI8x6BnacYdNdNwlYnn/mzANBgkqhk"))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(0));
     }
@@ -301,7 +315,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     @Test
     public void asiceTsOcspStatusRevoked() {
         post(validationRequestFor("EE_SER-AEX-B-LT-R-25.asice"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(INDETERMINATE))
                 .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_NO_POE))
@@ -327,7 +341,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     @Test
     public void asiceOcspAndTsDifferenceOver24H() {
         post(validationRequestFor("EE_SER-AEX-B-LT-V-20.asice"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2014-11-07T13:18:01Z"))
@@ -352,7 +366,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     @Test
     public void asiceUnsignedDataFiles() {
         post(validationRequestFor("EE_SER-AEX-B-LT-V-34.asice"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
                 .body("signatures[0].warnings.content", Matchers.hasItems(ALL_FILES_NOT_SIGNED))
@@ -378,7 +392,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     public void asiceSignatureValueDoNotCorrespondToSignedInfo() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDSS("REF-19_bdoc21-no-sig-asn1-pref.bdoc", null, null))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
                 .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_SIG_CRYPTO_FAILURE))
@@ -403,11 +417,16 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     @Test
     public void asiceBaselineBesSignatureLevel() {
         post(validationRequestFor("signWithIdCard_d4j_1.0.4_BES.asice"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_B))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
                 .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE))
+                .body("signatures[0].certificates.size()", Matchers.is(1))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("UUKKIVI,KRISTI,48505280278"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIEojCCA4qgAwIBAgIQPKphkF8jscxRrFRhBsxlhjANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.commonName",  Matchers.startsWith("ESTEID-SK 2011"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.content",  Matchers.startsWith("MIIFBTCCA+2gAwIBAgIQKVKTqv2MxtRNgzCjwmRRDTANBgkqhk"))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1));
@@ -430,11 +449,16 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     public void asiceBaselineEpesSignatureLevel() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("TM-04_kehtivuskinnituset.4.asice"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_B))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
                 .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE))
+                .body("signatures[0].certificates.size()", Matchers.is(1))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIE/TCCA+WgAwIBAgIQJw9uhQnKff9RdnVKwzk1OzANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.commonName",  Matchers.startsWith("TEST of ESTEID-SK 2011"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.content",  Matchers.startsWith("MIIEuzCCA6OgAwIBAgIQSxRID7FoIaNNdNhBeucLvDANBgkqhk"))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(0));
     }
@@ -456,11 +480,18 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     public void asiceSignersCertNotTrusted() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("SS-4_teadmataCA.4.asice"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
                 .body("signatures[0].errors[0].content", Matchers.is(CERT_PATH_NOT_TRUSTED))
                 .body("signatures[0].errors[1].content", Matchers.is(LTV_PROCESS_NOT_ACCEPTABLE))
+                .body("signatures[0].certificates.size()", Matchers.is(2))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("signer1"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIICHDCCAYWgAwIBAgIBAjANBgkqhkiG9w0BAQUFADAqMQswCQ"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.commonName",  Matchers.startsWith("libdigidocpp Inter"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.content",  Matchers.startsWith("MIICCTCCAXKgAwIBAgIBAzANBgkqhkiG9w0BAQUFADAnMQswCQ"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("TEST of SK OCSP RESPONDER 2011"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content",  Matchers.startsWith("MIIEijCCA3KgAwIBAgIQaI8x6BnacYdNdNwlYnn/mzANBgkqhk"))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(0));
     }
@@ -482,7 +513,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     public void asiceTmOcspStatusRevoked() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("TM-15_revoked.4.asice"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(INDETERMINATE))
                 .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_NO_POE))
@@ -509,7 +540,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     public void asiceTmOcspStatusUnknown() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("TM-16_unknown.4.asice"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
                 .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE))
@@ -534,7 +565,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     public void asiceSignedFileRemoved() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("KS-21_fileeemaldatud.4.asice"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(INDETERMINATE))
                 .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_SIGNED_DATA_NOT_FOUND))
@@ -582,7 +613,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     public void asiceDataFilesDontMatchHash() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDSS("REF-14_filesisumuudetud.4.bdoc", null, null))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
                 .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_HASH_FAILURE))
@@ -607,11 +638,17 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     @Test
     public void asiceBaselineTSignature() {
         post(validationRequestFor("TS-06_23634_TS_missing_OCSP.asice", null, null))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_T))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
                 .body("signatures[0].errors.content", Matchers.hasItem(LTV_PROCESS_NOT_ACCEPTABLE))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("ŽAIKOVSKI,IGOR,37101010021"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIEjzCCA3egAwIBAgIQZTNeodpzkAxPgpfyQEp1dTANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.commonName",  Matchers.startsWith("TEST of ESTEID-SK 2011"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.content",  Matchers.startsWith("MIIEuzCCA6OgAwIBAgIQSxRID7FoIaNNdNhBeucLvDANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].commonName",  Matchers.is("tsa01.quovadisglobal.com"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].content",  Matchers.startsWith("MIIGOzCCBSOgAwIBAgIUe6m/OP/GwmsrkHR8Mz8LJoNedfgwDQ"))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(0));
     }
@@ -634,7 +671,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
     public void asiceCertificateValidityOutOfOcspRange() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDSS("", null, null))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
                 .body("signatures[0].errors.content", Matchers.hasItem(SIG_CREATED_WITH_EXP_CERT))
@@ -660,7 +697,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/test/timemark/");
         String fileName = "TM-invalid-sig-no-sign-cert.asice";
         post(validationRequestFor(fileName))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].signedBy", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_T))

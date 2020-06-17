@@ -267,6 +267,8 @@ public class DdocValidationFailIT extends SiVaRestTests{
                 .body("signatures[1].errors.content", Matchers.hasItems("Signers cert not trusted, missing CA cert!", "Signing certificate issuer information does not match"))
                 .body("signatures[1].errors.size()", Matchers.is(3))
                 .body("signatures[1].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[1].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("Guy Ramlot (Signature)"))
+                .body("signatures[1].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIID5DCCAsygAwIBAgIQEAAAAAAA6b6vobxT/DKUOzANBgkqhk"))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(2));
     }
@@ -293,6 +295,8 @@ public class DdocValidationFailIT extends SiVaRestTests{
                 .body("signatures[0].errors.content", Matchers.hasItems("Signers cert not trusted, missing CA cert!", "Signing certificate issuer information does not match"))
                 .body("signatures[0].errors.size()", Matchers.is(3))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("Belgium OCSP Responder"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content",  Matchers.startsWith("MIIDTTCCAjWgAwIBAgILBAAAAAABGTkSVnEwDQYJKoZIhvcNAQ"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 

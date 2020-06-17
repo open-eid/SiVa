@@ -22,6 +22,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import static ee.openeid.siva.integrationtest.TestData.VALIDATION_CONCLUSION_PREFIX;
+
 @Category(IntegrationTest.class)
 public class AsicsValidationFailIT extends SiVaRestTests {
 
@@ -160,12 +162,12 @@ public class AsicsValidationFailIT extends SiVaRestTests {
     @Test
     public void modifiedTstShouldFail() {
         post(validationRequestFor("AsicsTSTsignatureModified.asics"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-S"))
-                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("AsicsTSTsignatureModified.asics"))
-                .body("validationReport.validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.timeStampTokens[0].error[0].content", Matchers.is("Signature not intact"))
-                .body("validationReport.validationConclusion.timeStampTokens[0].signedTime", Matchers.is("2017-08-10T12:40:40Z"));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-S"))
+                .body("validatedDocument.filename", Matchers.is("AsicsTSTsignatureModified.asics"))
+                .body("timeStampTokens[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("timeStampTokens[0].error[0].content", Matchers.is("Signature not intact"))
+                .body("timeStampTokens[0].signedTime", Matchers.is("2017-08-10T12:40:40Z"));
     }
 
     /**
@@ -205,11 +207,14 @@ public class AsicsValidationFailIT extends SiVaRestTests {
     @Test
     public void dataFileChangedAsicsShouldFail() {
         post(validationRequestFor("DatafileAlteredButStillValid.asics"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-S"))
-                .body("validationReport.validationConclusion.validatedDocument.filename", Matchers.is("DatafileAlteredButStillValid.asics"))
-                .body("validationReport.validationConclusion.timeStampTokens[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.timeStampTokens[0].error[0].content", Matchers.is("Signature not intact"));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-S"))
+                .body("validatedDocument.filename", Matchers.is("DatafileAlteredButStillValid.asics"))
+                .body("timeStampTokens[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("timeStampTokens[0].error[0].content", Matchers.is("Signature not intact"))
+                .body("timeStampTokens[0].certificates[0].commonName",  Matchers.is("SK TIMESTAMPING AUTHORITY"))
+                .body("timeStampTokens[0].certificates[0].type",  Matchers.is("CONTENT_TIMESTAMP"))
+                .body("timeStampTokens[0].certificates[0].content",  Matchers.startsWith("MIIEDTCCAvWgAwIBAgIQJK/s6xJo0AJUF/eG7W8BWTANBgkqhk"));
     }
 
     /**

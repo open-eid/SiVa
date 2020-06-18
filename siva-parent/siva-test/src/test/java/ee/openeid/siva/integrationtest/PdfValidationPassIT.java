@@ -23,6 +23,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import static ee.openeid.siva.integrationtest.TestData.VALIDATION_CONCLUSION_PREFIX;
+
 @Category(IntegrationTest.class)
 public class PdfValidationPassIT extends SiVaRestTests {
 
@@ -50,13 +52,13 @@ public class PdfValidationPassIT extends SiVaRestTests {
     @Test
     public void validSignaturesRemainValidAfterSigningCertificateExpires() {
         post(validationRequestFor("hellopades-lt-sha256-rsa1024-not-expired.pdf", VALID_SIGNATURE_POLICY_3, null))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.emptyOrNullString())
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
 
     }
 
@@ -76,13 +78,13 @@ public class PdfValidationPassIT extends SiVaRestTests {
     @Test
     public void certificateExpired7DaysAfterDocumentSigningShouldPass() {
         post(validationRequestFor("hellopades-lt-sha256-rsa2048-7d.pdf", VALID_SIGNATURE_POLICY_3, null))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.emptyOrNullString())
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
 
     }
 
@@ -103,16 +105,16 @@ public class PdfValidationPassIT extends SiVaRestTests {
     public void validSignature() {
         setTestFilesDirectory("document_format_test_files/");
         post(validationRequestFor("PdfValidSingleSignature.pdf"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
-                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.serialNumber", Matchers.notNullValue())
-                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.commonName", Matchers.notNullValue())
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.emptyOrNullString())
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.notNullValue())
+                .body("signatures[0].subjectDistinguishedName.commonName", Matchers.notNullValue())
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -132,17 +134,17 @@ public class PdfValidationPassIT extends SiVaRestTests {
     public void ocsp15MinutesAfterTsShouldPassWithWarning() {
         setTestFilesDirectory("pdf/signature_revocation_value_test_files/");
         post(validationRequestFor("hellopades-lt-sha256-ocsp-15min1s.pdf"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The revocation information is not considered as 'fresh'."))
-                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.serialNumber", Matchers.notNullValue())
-                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.commonName", Matchers.notNullValue())
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.emptyOrNullString())
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The revocation information is not considered as 'fresh'."))
+                .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.notNullValue())
+                .body("signatures[0].subjectDistinguishedName.commonName", Matchers.notNullValue())
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -162,13 +164,13 @@ public class PdfValidationPassIT extends SiVaRestTests {
     public void ocspAlmost24hBeforeTsShouldPassWithWarning() {
         setTestFilesDirectory("pdf/signature_revocation_value_test_files/");
         post(validationRequestFor("hellopades-lt-sha256-rsa2048-ocsp-before-ts.pdf"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.emptyOrNullString())
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     @Override

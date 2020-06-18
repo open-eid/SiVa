@@ -23,6 +23,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import static ee.openeid.siva.integrationtest.TestData.VALIDATION_CONCLUSION_PREFIX;
+
 
 @Category(IntegrationTest.class)
 public class DocumentValidationIT extends SiVaRestTests {
@@ -58,25 +60,25 @@ public class DocumentValidationIT extends SiVaRestTests {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("3f_2s_1f_unsigned.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "3f_2s_1f_unsigned.bdoc", "POLv3"))
-                .then()
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Manifest file has an entry for file <document_3.xml> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Manifest file has an entry for file <document_3.xml> with mimetype <application/octet-stream> but the signature file for signature S1 does not have an entry for this file"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Container contains a file named <document_3.xml> which is not found in the signature file"))
-                .body("validationReport.validationConclusion.signatures[0].warnings.content", Matchers.hasItems("The signature/seal is not a valid AdES!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml"))
-                .body("validationReport.validationConclusion.signatures[1].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[1].subIndication", Matchers.is("HASH_FAILURE"))
-                .body("validationReport.validationConclusion.signatures[1].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.signatures[1].errors.content", Matchers.hasItems("Manifest file has an entry for file <document_3.xml> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"))
-                .body("validationReport.validationConclusion.signatures[1].errors.content", Matchers.hasItems("Manifest file has an entry for file <document_3.xml> with mimetype <application/octet-stream> but the signature file for signature S1 does not have an entry for this file"))
-                .body("validationReport.validationConclusion.signatures[1].errors.content", Matchers.hasItems("Container contains a file named <document_3.xml> which is not found in the signature file"))
-                .body("validationReport.validationConclusion.signatures[1].warnings.content", Matchers.hasItems("The signature/seal is not a valid AdES!"))
-                .body("validationReport.validationConclusion.signatures[1].warnings.content", Matchers.hasItems("Signature PUDOV,VADIM,39101013724 has unsigned files: document_3.xml"));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signaturesCount", Matchers.is(2))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].errors.content", Matchers.hasItems("Manifest file has an entry for file <document_3.xml> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"))
+                .body("signatures[0].errors.content", Matchers.hasItems("Manifest file has an entry for file <document_3.xml> with mimetype <application/octet-stream> but the signature file for signature S1 does not have an entry for this file"))
+                .body("signatures[0].errors.content", Matchers.hasItems("Container contains a file named <document_3.xml> which is not found in the signature file"))
+                .body("signatures[0].warnings.content", Matchers.hasItems("The signature/seal is not a valid AdES!"))
+                .body("signatures[0].warnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml"))
+                .body("signatures[1].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[1].subIndication", Matchers.is("HASH_FAILURE"))
+                .body("signatures[1].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[1].errors.content", Matchers.hasItems("Manifest file has an entry for file <document_3.xml> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"))
+                .body("signatures[1].errors.content", Matchers.hasItems("Manifest file has an entry for file <document_3.xml> with mimetype <application/octet-stream> but the signature file for signature S1 does not have an entry for this file"))
+                .body("signatures[1].errors.content", Matchers.hasItems("Container contains a file named <document_3.xml> which is not found in the signature file"))
+                .body("signatures[1].warnings.content", Matchers.hasItems("The signature/seal is not a valid AdES!"))
+                .body("signatures[1].warnings.content", Matchers.hasItems("Signature PUDOV,VADIM,39101013724 has unsigned files: document_3.xml"));
 
     }
 
@@ -98,17 +100,17 @@ public class DocumentValidationIT extends SiVaRestTests {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("3f_2s_1partly_signed.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "3f_2s_1partly_signed.bdoc", "POLv3"))
-                .then()
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Manifest file has an entry for file <document_3.xml> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"))
-                .body("validationReport.validationConclusion.signatures[0].warnings.content", Matchers.hasItems("The signature/seal is not a valid AdES!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml"))
-                .body("validationReport.validationConclusion.signatures[1].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[1].errors.content", Matchers.hasItems("Manifest file has an entry for file <document_3.xml> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signaturesCount", Matchers.is(2))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].errors.content", Matchers.hasItems("Manifest file has an entry for file <document_3.xml> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"))
+                .body("signatures[0].warnings.content", Matchers.hasItems("The signature/seal is not a valid AdES!"))
+                .body("signatures[0].warnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml"))
+                .body("signatures[1].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[1].errors.content", Matchers.hasItems("Manifest file has an entry for file <document_3.xml> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"));
     }
 
     /**
@@ -130,16 +132,16 @@ public class DocumentValidationIT extends SiVaRestTests {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("3f_2s_2partly_signed.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "3f_2s_2partly_signed.bdoc", "POLv3"))
-                .then()
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml"))
-                .body("validationReport.validationConclusion.signatures[1].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[1].warnings.content", Matchers.hasItems("Signature PUDOV,VADIM,39101013724 has unsigned files: document_2.docx"));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signaturesCount", Matchers.is(2))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].warnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml"))
+                .body("signatures[1].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[1].warnings.content", Matchers.hasItems("Signature PUDOV,VADIM,39101013724 has unsigned files: document_2.docx"));
 
     }
 
@@ -162,22 +164,22 @@ public class DocumentValidationIT extends SiVaRestTests {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("4f_2s_all_combinations.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "4f_2s_all_combinations.bdoc", "POLv3"))
-                .then()
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Manifest file has an entry for file <unsigned.txt> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Manifest file has an entry for file <document_3.xml> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Manifest file has an entry for file <document_2.docx> with mimetype <application/octet-stream> but the signature file for signature S1 does not have an entry for this file"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Manifest file has an entry for file <unsigned.txt> with mimetype <application/octet-stream> but the signature file for signature S1 does not have an entry for this file"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Container contains a file named <document_2.docx> which is not found in the signature file"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Container contains a file named <unsigned.txt> which is not found in the signature file"))
-                .body("validationReport.validationConclusion.signatures[0].warnings.content", Matchers.hasItems("The signature/seal is not a valid AdES!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml, unsigned.txt"))
-                .body("validationReport.validationConclusion.signatures[1].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[1].subIndication", Matchers.is("HASH_FAILURE"));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signaturesCount", Matchers.is(2))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].errors.content", Matchers.hasItems("Manifest file has an entry for file <unsigned.txt> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"))
+                .body("signatures[0].errors.content", Matchers.hasItems("Manifest file has an entry for file <document_3.xml> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"))
+                .body("signatures[0].errors.content", Matchers.hasItems("Manifest file has an entry for file <document_2.docx> with mimetype <application/octet-stream> but the signature file for signature S1 does not have an entry for this file"))
+                .body("signatures[0].errors.content", Matchers.hasItems("Manifest file has an entry for file <unsigned.txt> with mimetype <application/octet-stream> but the signature file for signature S1 does not have an entry for this file"))
+                .body("signatures[0].errors.content", Matchers.hasItems("Container contains a file named <document_2.docx> which is not found in the signature file"))
+                .body("signatures[0].errors.content", Matchers.hasItems("Container contains a file named <unsigned.txt> which is not found in the signature file"))
+                .body("signatures[0].warnings.content", Matchers.hasItems("The signature/seal is not a valid AdES!"))
+                .body("signatures[0].warnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml, unsigned.txt"))
+                .body("signatures[1].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[1].subIndication", Matchers.is("HASH_FAILURE"));
 
     }
 
@@ -200,22 +202,22 @@ public class DocumentValidationIT extends SiVaRestTests {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("6f_2s_3unsigned.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "6f_2s_3unsigned.bdoc", "POLv3"))
-                .then()
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[1].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[1].errors.content", Matchers.hasItems("Manifest file has an entry for file <unsigned.txt> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"))
-                .body("validationReport.validationConclusion.signatures[1].errors.content", Matchers.hasItems("Manifest file has an entry for file <unsigned2.txt> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"))
-                .body("validationReport.validationConclusion.signatures[1].errors.content", Matchers.hasItems("Manifest file has an entry for file <unsigned3.txt> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"))
-                .body("validationReport.validationConclusion.signatures[1].errors.content", Matchers.hasItems("Manifest file has an entry for file <unsigned.txt> with mimetype <application/octet-stream> but the signature file for signature S1 does not have an entry for this file"))
-                .body("validationReport.validationConclusion.signatures[1].errors.content", Matchers.hasItems("Manifest file has an entry for file <unsigned2.txt> with mimetype <application/octet-stream> but the signature file for signature S1 does not have an entry for this file"))
-                .body("validationReport.validationConclusion.signatures[1].errors.content", Matchers.hasItems("Manifest file has an entry for file <unsigned3.txt> with mimetype <application/octet-stream> but the signature file for signature S1 does not have an entry for this file"))
-                .body("validationReport.validationConclusion.signatures[1].errors.content", Matchers.hasItems("Container contains a file named <unsigned.txt> which is not found in the signature file"))
-                .body("validationReport.validationConclusion.signatures[1].errors.content", Matchers.hasItems("Container contains a file named <unsigned2.txt> which is not found in the signature file"))
-                .body("validationReport.validationConclusion.signatures[1].errors.content", Matchers.hasItems("Container contains a file named <unsigned3.txt> which is not found in the signature file"))
-                .body("validationReport.validationConclusion.signatures[1].warnings.content", Matchers.hasItems("Signature PUDOV,VADIM,39101013724 has unsigned files: unsigned.txt, unsigned2.txt, unsigned3.txt"))
-                .body("validationReport.validationConclusion.signatures[0].warnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: unsigned.txt, unsigned2.txt, unsigned3.txt"));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signaturesCount", Matchers.is(2))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[1].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[1].errors.content", Matchers.hasItems("Manifest file has an entry for file <unsigned.txt> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"))
+                .body("signatures[1].errors.content", Matchers.hasItems("Manifest file has an entry for file <unsigned2.txt> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"))
+                .body("signatures[1].errors.content", Matchers.hasItems("Manifest file has an entry for file <unsigned3.txt> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"))
+                .body("signatures[1].errors.content", Matchers.hasItems("Manifest file has an entry for file <unsigned.txt> with mimetype <application/octet-stream> but the signature file for signature S1 does not have an entry for this file"))
+                .body("signatures[1].errors.content", Matchers.hasItems("Manifest file has an entry for file <unsigned2.txt> with mimetype <application/octet-stream> but the signature file for signature S1 does not have an entry for this file"))
+                .body("signatures[1].errors.content", Matchers.hasItems("Manifest file has an entry for file <unsigned3.txt> with mimetype <application/octet-stream> but the signature file for signature S1 does not have an entry for this file"))
+                .body("signatures[1].errors.content", Matchers.hasItems("Container contains a file named <unsigned.txt> which is not found in the signature file"))
+                .body("signatures[1].errors.content", Matchers.hasItems("Container contains a file named <unsigned2.txt> which is not found in the signature file"))
+                .body("signatures[1].errors.content", Matchers.hasItems("Container contains a file named <unsigned3.txt> which is not found in the signature file"))
+                .body("signatures[1].warnings.content", Matchers.hasItems("Signature PUDOV,VADIM,39101013724 has unsigned files: unsigned.txt, unsigned2.txt, unsigned3.txt"))
+                .body("signatures[0].warnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: unsigned.txt, unsigned2.txt, unsigned3.txt"));
 
     }
 
@@ -237,13 +239,13 @@ public class DocumentValidationIT extends SiVaRestTests {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("2f_2signed_1f_deleted.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "2f_2signed_1f_deleted.bdoc", "POLv3"))
-                .then()
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIGNED_DATA_NOT_FOUND"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.validationWarnings", Matchers.emptyOrNullString())
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatures[0].subIndication", Matchers.is("SIGNED_DATA_NOT_FOUND"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("validationWarnings", Matchers.emptyOrNullString())
         ;
 
     }
@@ -266,14 +268,14 @@ public class DocumentValidationIT extends SiVaRestTests {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("2f_2signed_1f_totally_removed.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "2f_2signed_1f_totally_removed.bdoc", "POLv3"))
-                .then()
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("INDETERMINATE_QESIG"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIGNED_DATA_NOT_FOUND"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The signature file for signature S0 has an entry for file <Test document.pdf> with mimetype <application/octet-stream> but the manifest file does not have an entry for this file"));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signatures[0].signatureLevel", Matchers.is("INDETERMINATE_QESIG"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is("SIGNED_DATA_NOT_FOUND"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The signature file for signature S0 has an entry for file <Test document.pdf> with mimetype <application/octet-stream> but the manifest file does not have an entry for this file"));
 
     }
 
@@ -297,13 +299,13 @@ public class DocumentValidationIT extends SiVaRestTests {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("3f_2signed_1unsigned_all_in_manifest.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "3f_2signed_1unsigned_all_in_manifest.bdoc", "POLv3"))
-                .then()
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Manifest file has an entry for file <Test_1703.pdf> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Container contains a file named <Test_1703.pdf> which is not found in the signature file"))
-                .body("validationReport.validationConclusion.signatures[0].warnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: Test_1703.pdf"));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].errors.content", Matchers.hasItems("Manifest file has an entry for file <Test_1703.pdf> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"))
+                .body("signatures[0].errors.content", Matchers.hasItems("Container contains a file named <Test_1703.pdf> which is not found in the signature file"))
+                .body("signatures[0].warnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: Test_1703.pdf"));
 
     }
 
@@ -326,12 +328,12 @@ public class DocumentValidationIT extends SiVaRestTests {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("3f_2signed_1unsigned_2in_manifest.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "33f_2signed_1unsigned_2in_manifest.bdoc", "POLv3"))
-                .then()
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("Container contains a file named <Test_1703.pdf> which is not found in the signature file"))
-                .body("validationReport.validationConclusion.signatures[0].warnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: Test_1703.pdf"));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].errors.content", Matchers.hasItems("Container contains a file named <Test_1703.pdf> which is not found in the signature file"))
+                .body("signatures[0].warnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: Test_1703.pdf"));
 
     }
 
@@ -353,11 +355,11 @@ public class DocumentValidationIT extends SiVaRestTests {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("2f_all_signed.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "2f_all_signed.bdoc", "POLv3"))
-                .then()
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.validationWarnings", Matchers.emptyOrNullString());
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationWarnings", Matchers.emptyOrNullString());
 
     }
 

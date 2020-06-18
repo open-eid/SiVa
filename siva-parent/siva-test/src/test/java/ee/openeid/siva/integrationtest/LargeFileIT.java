@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import static ee.openeid.siva.integrationtest.TestData.VALIDATION_CONCLUSION_PREFIX;
 import static org.hamcrest.Matchers.equalTo;
 
 @Category(IntegrationTest.class)
@@ -57,9 +58,9 @@ public class LargeFileIT extends SiVaRestTests{
     public void pdfNineMegabyteFilesWithLtSignatureAreAccepted() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("9MB_PDF.pdf"));
         post(validationRequestWithValidKeys(encodedString, "9MB_PDF.pdf", "POLv3"))
-                .then()
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat",equalTo("PAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.validatedDocument.filename",equalTo("9MB_PDF.pdf"));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatures[0].signatureFormat",equalTo("PAdES_BASELINE_LT"))
+                .body("validatedDocument.filename",equalTo("9MB_PDF.pdf"));
     }
 
     /**
@@ -79,10 +80,10 @@ public class LargeFileIT extends SiVaRestTests{
     public void bdocTsNineMegabyteFilesValidSignatureAreAccepted() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("9MB_BDOC-TS.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "9MB_BDOC-TS.bdoc","POLv3"))
-                .then()
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat",equalTo("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.validatedDocument.filename",equalTo("9MB_BDOC-TS.bdoc"))
-                .body("validationReport.validationConclusion.validSignaturesCount", equalTo(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatures[0].signatureFormat",equalTo("XAdES_BASELINE_LT"))
+                .body("validatedDocument.filename",equalTo("9MB_BDOC-TS.bdoc"))
+                .body("validSignaturesCount", equalTo(1));
     }
 
     /**
@@ -102,10 +103,10 @@ public class LargeFileIT extends SiVaRestTests{
     public void bdocTmNineMegabyteFilesValidSignatureAreAccepted() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("9MB_BDOC-TM.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "9MB_BDOC-TM.bdoc","POLv3"))
-                .then()
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat",equalTo("XAdES_BASELINE_LT_TM"))
-                .body("validationReport.validationConclusion.validatedDocument.filename",equalTo("9MB_BDOC-TM.bdoc"))
-                .body("validationReport.validationConclusion.validSignaturesCount", equalTo(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatures[0].signatureFormat",equalTo("XAdES_BASELINE_LT_TM"))
+                .body("validatedDocument.filename",equalTo("9MB_BDOC-TM.bdoc"))
+                .body("validSignaturesCount", equalTo(1));
     }
 
     /**
@@ -125,10 +126,10 @@ public class LargeFileIT extends SiVaRestTests{
     public void ddocTenMegabyteFilesWithValidSignatureAreAccepted() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("9MB_DDOC.ddoc"));
         post(validationRequestWithValidKeys(encodedString, "9MB_DDOC.ddoc", "POLv3"))
-                .then()
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat",equalTo("DIGIDOC_XML_1.3"))
-                .body("validationReport.validationConclusion.validatedDocument.filename",equalTo("9MB_DDOC.ddoc"))
-                .body("validationReport.validationConclusion.validSignaturesCount", equalTo(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatures[0].signatureFormat",equalTo("DIGIDOC_XML_1.3"))
+                .body("validatedDocument.filename",equalTo("9MB_DDOC.ddoc"))
+                .body("validSignaturesCount", equalTo(1));
     }
 
     @Override

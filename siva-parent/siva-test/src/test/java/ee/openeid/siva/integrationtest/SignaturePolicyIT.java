@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import static ee.openeid.siva.integrationtest.TestData.SIGNATURE_LEVEL_QESIG;
+import static ee.openeid.siva.integrationtest.TestData.VALIDATION_CONCLUSION_PREFIX;
 
 @Category(IntegrationTest.class)
 public class SignaturePolicyIT extends SiVaRestTests {
@@ -53,24 +54,23 @@ public class SignaturePolicyIT extends SiVaRestTests {
     @Test
     public void pdfDocumentAdesNonSscdCompliantShouldFailWithGivenPolicy() {
         post(validationRequestFor("soft-cert-signature.pdf", VALID_SIGNATURE_POLICY_4, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_4_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("NA"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.containsString("Signature/seal level do not meet the minimal level required by applied policy"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The certificate is not qualified at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[2].content", Matchers.is("The certificate is not for eSig at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[3].content", Matchers.is("The private key is not on a QSCD at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[4].content", Matchers.is("The certificate is not qualified at (best) signing time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[5].content", Matchers.is("The certificate is not for eSig at (best) signing time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[6].content", Matchers.is("The private key is not on a QSCD at (best) signing time!"))
-
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
+                .body("policy.policyUrl", Matchers.is(POLICY_4_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("NA"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].errors[0].content", Matchers.containsString("Signature/seal level do not meet the minimal level required by applied policy"))
+                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The certificate is not qualified at issuance time!"))
+                .body("signatures[0].warnings[2].content", Matchers.is("The certificate is not for eSig at issuance time!"))
+                .body("signatures[0].warnings[3].content", Matchers.is("The private key is not on a QSCD at issuance time!"))
+                .body("signatures[0].warnings[4].content", Matchers.is("The certificate is not qualified at (best) signing time!"))
+                .body("signatures[0].warnings[5].content", Matchers.is("The certificate is not for eSig at (best) signing time!"))
+                .body("signatures[0].warnings[6].content", Matchers.is("The private key is not on a QSCD at (best) signing time!"))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -91,21 +91,21 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void bdocDocumentAdesNonSscdCompliantShouldFailWithGivenPolicy() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestForDD4j("", VALID_SIGNATURE_POLICY_4, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_4_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("ADESIG"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("Signature/seal level do not meet the minimal level required by applied policy"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The certificate is not qualified at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The private key is not on a QSCD at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[2].content", Matchers.is("The certificate is not qualified at (best) signing time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[3].content", Matchers.is("The private key is not on a QSCD at (best) signing time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.hasSize(4))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
+                .body("policy.policyUrl", Matchers.is(POLICY_4_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("ADESIG"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].errors[0].content", Matchers.is("Signature/seal level do not meet the minimal level required by applied policy"))
+                .body("signatures[0].warnings[0].content", Matchers.is("The certificate is not qualified at issuance time!"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The private key is not on a QSCD at issuance time!"))
+                .body("signatures[0].warnings[2].content", Matchers.is("The certificate is not qualified at (best) signing time!"))
+                .body("signatures[0].warnings[3].content", Matchers.is("The private key is not on a QSCD at (best) signing time!"))
+                .body("signatures[0].warnings", Matchers.hasSize(4))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -126,18 +126,18 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void bdocDocumentAdesSigShouldFail() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDD4j("", VALID_SIGNATURE_POLICY_4, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_4_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("ADESIG"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The certificate is not qualified at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The signature/seal is not created by a QSCD!"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
+                .body("policy.policyUrl", Matchers.is(POLICY_4_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("ADESIG"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The certificate is not qualified at issuance time!"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The signature/seal is not created by a QSCD!"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -158,18 +158,18 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void asiceDocumentAdesSigShouldFail() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDD4j("", VALID_SIGNATURE_POLICY_4, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_4_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("ADESIG"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The certificate is not qualified at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The signature/seal is not created by a QSCD!"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
+                .body("policy.policyUrl", Matchers.is(POLICY_4_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("ADESIG"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The certificate is not qualified at issuance time!"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The signature/seal is not created by a QSCD!"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -190,18 +190,18 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void bdocDocumentAdesSealShouldFail() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDD4j("", VALID_SIGNATURE_POLICY_4, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_4_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("ADESEAL"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The certificate is not qualified at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The signature/seal is not created by a QSCD!"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
+                .body("policy.policyUrl", Matchers.is(POLICY_4_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("ADESEAL"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The certificate is not qualified at issuance time!"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The signature/seal is not created by a QSCD!"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -222,18 +222,18 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void asiceDocumentAdesSealShouldFail() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDD4j("", VALID_SIGNATURE_POLICY_4, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_4_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("ADESEAL"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The certificate is not qualified at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The signature/seal is not created by a QSCD!"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
+                .body("policy.policyUrl", Matchers.is(POLICY_4_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("ADESEAL"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The certificate is not qualified at issuance time!"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The signature/seal is not created by a QSCD!"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -253,20 +253,20 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void asiceDocumentAdesQcSigCompliantShouldPassWithWarning() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("testAdesQC.asice", VALID_SIGNATURE_POLICY_4, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_4_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("ADESIG_QC"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The private key is not on a QSCD at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[2].content", Matchers.is("The private key is not on a QSCD at (best) signing time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[3].content", Matchers.is("The signature is not in the Qualified Electronic Signature level"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
+                .body("policy.policyUrl", Matchers.is(POLICY_4_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("ADESIG_QC"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The private key is not on a QSCD at issuance time!"))
+                .body("signatures[0].warnings[2].content", Matchers.is("The private key is not on a QSCD at (best) signing time!"))
+                .body("signatures[0].warnings[3].content", Matchers.is("The signature is not in the Qualified Electronic Signature level"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -286,18 +286,18 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void bdocDocumentAdesQcSigCompliantShouldPassWithWarning() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("testAdesQC.asice", VALID_SIGNATURE_POLICY_4, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_4_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("ADESIG_QC"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The private key is not on a QSCD at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The private key is not on a QSCD at (best) signing time!"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
+                .body("policy.policyUrl", Matchers.is(POLICY_4_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("ADESIG_QC"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The private key is not on a QSCD at issuance time!"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The private key is not on a QSCD at (best) signing time!"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -317,19 +317,19 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void asiceDocumentAdesQCCompliantSealShouldPass() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("IB-4828_tempel_not_qscd_TS.asice", VALID_SIGNATURE_POLICY_4, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_4_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("ADESEAL_QC"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The certificate is not for eSig at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.hasSize(5))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
+                .body("policy.policyUrl", Matchers.is(POLICY_4_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("ADESEAL_QC"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The certificate is not for eSig at issuance time!"))
+                .body("signatures[0].warnings", Matchers.hasSize(5))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -349,21 +349,21 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void bdocDocumentAdesQCCompliantSealShouldPass() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("IB-4828_tempel_not_qscd_TM.bdoc", VALID_SIGNATURE_POLICY_4, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_4_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("ADESEAL_QC"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The certificate is not for eSig at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The private key is not on a QSCD at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[2].content", Matchers.is("The certificate is not for eSig at (best) signing time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[3].content", Matchers.is("The private key is not on a QSCD at (best) signing time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.hasSize(4))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
+                .body("policy.policyUrl", Matchers.is(POLICY_4_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].signatureLevel", Matchers.is("ADESEAL_QC"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The certificate is not for eSig at issuance time!"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The private key is not on a QSCD at issuance time!"))
+                .body("signatures[0].warnings[2].content", Matchers.is("The certificate is not for eSig at (best) signing time!"))
+                .body("signatures[0].warnings[3].content", Matchers.is("The private key is not on a QSCD at (best) signing time!"))
+                .body("signatures[0].warnings", Matchers.hasSize(4))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -384,19 +384,19 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void asiceDocumentAdesQCCompliantNoTypeShouldFail() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("", VALID_SIGNATURE_POLICY_4, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_4_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("ADES_QC"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The signature/seal is not created by a QSCD!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The certificate is not for eSig at signing time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.hasSize(2))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
+                .body("policy.policyUrl", Matchers.is(POLICY_4_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("ADES_QC"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The signature/seal is not created by a QSCD!"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The certificate is not for eSig at signing time!"))
+                .body("signatures[0].warnings", Matchers.hasSize(2))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -417,19 +417,19 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void bdocDocumentAdesQCCompliantNoTypeShouldFail() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("", VALID_SIGNATURE_POLICY_4, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_4_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("ADES_QC"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The signature/seal is not created by a QSCD!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The certificate is not for eSig at signing time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.hasSize(2))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
+                .body("policy.policyUrl", Matchers.is(POLICY_4_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("ADES_QC"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The signature/seal is not created by a QSCD!"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The certificate is not for eSig at signing time!"))
+                .body("signatures[0].warnings", Matchers.hasSize(2))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -449,17 +449,17 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void bdocDocumentQesigShouldPassWithStrictPolicy() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("Valid_ID_sig.bdoc", VALID_SIGNATURE_POLICY_4, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_4_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
+                .body("policy.policyUrl", Matchers.is(POLICY_4_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings", Matchers.emptyOrNullString())
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -479,17 +479,17 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void asiceDocumentQesigShouldPassWithStrictPolicy() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("ValidLiveSignature.asice", VALID_SIGNATURE_POLICY_4, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_4_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
+                .body("policy.policyUrl", Matchers.is(POLICY_4_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -509,19 +509,19 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void bdocDocumentQesealShouldPassWithStrictPolicy() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("IB-4828_tempel_qscd_TM.bdoc", VALID_SIGNATURE_POLICY_4, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_4_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESEAL"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The certificate is not for eSig at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The certificate is not for eSig at (best) signing time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.hasSize(2))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
+                .body("policy.policyUrl", Matchers.is(POLICY_4_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].signatureLevel", Matchers.is("QESEAL"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The certificate is not for eSig at issuance time!"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The certificate is not for eSig at (best) signing time!"))
+                .body("signatures[0].warnings", Matchers.hasSize(2))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -541,19 +541,19 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void asiceDocumentQesealShouldPassWithStrictPolicy() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("IB-4828_tempel_qscd_TS.asice", VALID_SIGNATURE_POLICY_4, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_4_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESEAL"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The certificate is not for eSig at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[2].content", Matchers.is("The certificate is not for eSig at (best) signing time!"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
+                .body("policy.policyUrl", Matchers.is(POLICY_4_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("QESEAL"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The certificate is not for eSig at issuance time!"))
+                .body("signatures[0].warnings[2].content", Matchers.is("The certificate is not for eSig at (best) signing time!"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -574,17 +574,17 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void bdocDocumentQesNoTypeShouldPassWithStrictPolicy() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc", VALID_SIGNATURE_POLICY_4, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_4_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is(SIGNATURE_LEVEL_QESIG))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
+                .body("policy.policyUrl", Matchers.is(POLICY_4_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].signatureLevel", Matchers.is(SIGNATURE_LEVEL_QESIG))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings", Matchers.emptyOrNullString())
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -604,17 +604,17 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void asiceDocumentQesNoTypeShouldPassWithStrictPolicy() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-V-28.asice", null, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_4_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
+                .body("policy.policyUrl", Matchers.is(POLICY_4_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -634,23 +634,23 @@ public class SignaturePolicyIT extends SiVaRestTests {
     @Ignore //TODO: New testfile is needed
     public void pdfDocumentAdesNonSscdCompliantShouldPassWithGivenPolicy() {
         post(validationRequestFor("soft-cert-signature.pdf", VALID_SIGNATURE_POLICY_3, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_3_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("NA"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The certificate is not qualified at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[2].content", Matchers.is("The certificate is not for eSig at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[3].content", Matchers.is("The private key is not on a QSCD at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[4].content", Matchers.is("The certificate is not qualified at (best) signing time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[5].content", Matchers.is("The certificate is not for eSig at (best) signing time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[6].content", Matchers.is("The private key is not on a QSCD at (best) signing time!"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
+                .body("policy.policyUrl", Matchers.is(POLICY_3_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("NA"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The certificate is not qualified at issuance time!"))
+                .body("signatures[0].warnings[2].content", Matchers.is("The certificate is not for eSig at issuance time!"))
+                .body("signatures[0].warnings[3].content", Matchers.is("The private key is not on a QSCD at issuance time!"))
+                .body("signatures[0].warnings[4].content", Matchers.is("The certificate is not qualified at (best) signing time!"))
+                .body("signatures[0].warnings[5].content", Matchers.is("The certificate is not for eSig at (best) signing time!"))
+                .body("signatures[0].warnings[6].content", Matchers.is("The private key is not on a QSCD at (best) signing time!"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -671,21 +671,21 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void bdocDocumentAdesNonSscdCompliantShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestForDD4j("allkiri_ades.asice", VALID_SIGNATURE_POLICY_3, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_3_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("ADESIG"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The certificate is not qualified at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The private key is not on a QSCD at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[2].content", Matchers.is("The certificate is not qualified at (best) signing time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[3].content", Matchers.is("The private key is not on a QSCD at (best) signing time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.hasSize(4))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
+                .body("policy.policyUrl", Matchers.is(POLICY_3_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("ADESIG"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The certificate is not qualified at issuance time!"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The private key is not on a QSCD at issuance time!"))
+                .body("signatures[0].warnings[2].content", Matchers.is("The certificate is not qualified at (best) signing time!"))
+                .body("signatures[0].warnings[3].content", Matchers.is("The private key is not on a QSCD at (best) signing time!"))
+                .body("signatures[0].warnings", Matchers.hasSize(4))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -706,18 +706,18 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void bdocDocumentAdesSigShouldPass() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDD4j("", VALID_SIGNATURE_POLICY_3, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_3_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("ADESIG"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The certificate is not qualified at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The signature/seal is not created by a QSCD!"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
+                .body("policy.policyUrl", Matchers.is(POLICY_3_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("ADESIG"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The certificate is not qualified at issuance time!"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The signature/seal is not created by a QSCD!"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -738,18 +738,18 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void asiceDocumentAdesSigShouldPass() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDD4j("", VALID_SIGNATURE_POLICY_3, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_3_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("ADESIG"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The certificate is not qualified at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The signature/seal is not created by a QSCD!"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
+                .body("policy.policyUrl", Matchers.is(POLICY_3_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("ADESIG"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The certificate is not qualified at issuance time!"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The signature/seal is not created by a QSCD!"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -770,18 +770,18 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void bdocDocumentAdesSealShouldPass() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDD4j("", VALID_SIGNATURE_POLICY_3, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_3_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("ADESEAL"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The certificate is not qualified at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The signature/seal is not created by a QSCD!"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
+                .body("policy.policyUrl", Matchers.is(POLICY_3_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("ADESEAL"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The certificate is not qualified at issuance time!"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The signature/seal is not created by a QSCD!"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -802,18 +802,18 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void asiceDocumentAdesSealShouldPass() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDD4j("", VALID_SIGNATURE_POLICY_3, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_3_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("ADESEAL"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The certificate is not qualified at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The signature/seal is not created by a QSCD!"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
+                .body("policy.policyUrl", Matchers.is(POLICY_3_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("ADESEAL"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The certificate is not qualified at issuance time!"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The signature/seal is not created by a QSCD!"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -833,20 +833,20 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void asiceDocumentAdesQcSicShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("testAdesQC.asice", VALID_SIGNATURE_POLICY_3, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_3_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("ADESIG_QC"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The private key is not on a QSCD at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[2].content", Matchers.is("The private key is not on a QSCD at (best) signing time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.hasSize(3))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
+                .body("policy.policyUrl", Matchers.is(POLICY_3_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("ADESIG_QC"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The private key is not on a QSCD at issuance time!"))
+                .body("signatures[0].warnings[2].content", Matchers.is("The private key is not on a QSCD at (best) signing time!"))
+                .body("signatures[0].warnings", Matchers.hasSize(3))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -866,19 +866,19 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void bdocDocumentAdesQcSigShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("testAdesQC.asice", VALID_SIGNATURE_POLICY_3, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_3_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("ADESIG_QC"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The private key is not on a QSCD at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The private key is not on a QSCD at (best) signing time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.hasSize(2))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
+                .body("policy.policyUrl", Matchers.is(POLICY_3_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("ADESIG_QC"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The private key is not on a QSCD at issuance time!"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The private key is not on a QSCD at (best) signing time!"))
+                .body("signatures[0].warnings", Matchers.hasSize(2))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -898,22 +898,22 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void asiceDocumentAdesQcCompliantSealShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("IB-4828_tempel_not_qscd_TS.asice", VALID_SIGNATURE_POLICY_3, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_3_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("ADESEAL_QC"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The certificate is not for eSig at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[2].content", Matchers.is("The private key is not on a QSCD at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[3].content", Matchers.is("The certificate is not for eSig at (best) signing time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[4].content", Matchers.is("The private key is not on a QSCD at (best) signing time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.hasSize(5))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
+                .body("policy.policyUrl", Matchers.is(POLICY_3_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("ADESEAL_QC"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The certificate is not for eSig at issuance time!"))
+                .body("signatures[0].warnings[2].content", Matchers.is("The private key is not on a QSCD at issuance time!"))
+                .body("signatures[0].warnings[3].content", Matchers.is("The certificate is not for eSig at (best) signing time!"))
+                .body("signatures[0].warnings[4].content", Matchers.is("The private key is not on a QSCD at (best) signing time!"))
+                .body("signatures[0].warnings", Matchers.hasSize(5))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -933,21 +933,21 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void bdocDocumentAdesQCCompliantSealShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("IB-4828_tempel_not_qscd_TM.bdoc", VALID_SIGNATURE_POLICY_3, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_3_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("ADESEAL_QC"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The certificate is not for eSig at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The private key is not on a QSCD at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[2].content", Matchers.is("The certificate is not for eSig at (best) signing time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[3].content", Matchers.is("The private key is not on a QSCD at (best) signing time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.hasSize(4))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
+                .body("policy.policyUrl", Matchers.is(POLICY_3_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].signatureLevel", Matchers.is("ADESEAL_QC"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The certificate is not for eSig at issuance time!"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The private key is not on a QSCD at issuance time!"))
+                .body("signatures[0].warnings[2].content", Matchers.is("The certificate is not for eSig at (best) signing time!"))
+                .body("signatures[0].warnings[3].content", Matchers.is("The private key is not on a QSCD at (best) signing time!"))
+                .body("signatures[0].warnings", Matchers.hasSize(4))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -968,19 +968,19 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void asiceDocumentAdesQCCompliantNoTypeShouldPass() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("", VALID_SIGNATURE_POLICY_3, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_3_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("ADES_QC"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The signature/seal is not created by a QSCD!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The certificate is not for eSig at signing time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.hasSize(2))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
+                .body("policy.policyUrl", Matchers.is(POLICY_3_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("ADES_QC"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The signature/seal is not created by a QSCD!"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The certificate is not for eSig at signing time!"))
+                .body("signatures[0].warnings", Matchers.hasSize(2))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -1001,19 +1001,19 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void bdocDocumentAdesQCCompliantNoTypeShouldPass() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("", VALID_SIGNATURE_POLICY_3, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_3_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("ADES_QC"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The signature/seal is not created by a QSCD!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The certificate is not for eSig at signing time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.hasSize(2))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
+                .body("policy.policyUrl", Matchers.is(POLICY_3_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("ADES_QC"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The signature/seal is not created by a QSCD!"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The certificate is not for eSig at signing time!"))
+                .body("signatures[0].warnings", Matchers.hasSize(2))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -1033,17 +1033,17 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void bdocDocumentQesigShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("Valid_ID_sig.bdoc", VALID_SIGNATURE_POLICY_3, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_3_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
+                .body("policy.policyUrl", Matchers.is(POLICY_3_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings", Matchers.emptyOrNullString())
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -1063,17 +1063,17 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void asiceDocumentQesigShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("ValidLiveSignature.asice", VALID_SIGNATURE_POLICY_3, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_3_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
+                .body("policy.policyUrl", Matchers.is(POLICY_3_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -1093,19 +1093,19 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void bdocDocumentQesealShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("IB-4828_tempel_qscd_TM.bdoc", VALID_SIGNATURE_POLICY_3, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_3_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESEAL"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The certificate is not for eSig at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The certificate is not for eSig at (best) signing time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.hasSize(2))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
+                .body("policy.policyUrl", Matchers.is(POLICY_3_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].signatureLevel", Matchers.is("QESEAL"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The certificate is not for eSig at issuance time!"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The certificate is not for eSig at (best) signing time!"))
+                .body("signatures[0].warnings", Matchers.hasSize(2))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -1125,20 +1125,19 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void asiceDocumentQesealShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("IB-4828_tempel_qscd_TS.asice", VALID_SIGNATURE_POLICY_3, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_3_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESEAL"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[1].content", Matchers.is("The certificate is not for eSig at issuance time!"))
-                .body("validationReport.validationConclusion.signatures[0].warnings[2].content", Matchers.is("The certificate is not for eSig at (best) signing time!"))
-
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
+                .body("policy.policyUrl", Matchers.is(POLICY_3_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("QESEAL"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The certificate is not for eSig at issuance time!"))
+                .body("signatures[0].warnings[2].content", Matchers.is("The certificate is not for eSig at (best) signing time!"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -1158,17 +1157,17 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void bdocDocumentQesNoTypeShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestForDD4j("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc", VALID_SIGNATURE_POLICY_3, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_3_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is(SIGNATURE_LEVEL_QESIG))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
+                .body("policy.policyUrl", Matchers.is(POLICY_3_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].signatureLevel", Matchers.is(SIGNATURE_LEVEL_QESIG))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings", Matchers.emptyOrNullString())
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -1188,17 +1187,17 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void asiceDocumentQesNoTypeShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-V-28.asice", VALID_SIGNATURE_POLICY_3, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_3_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_3))
+                .body("policy.policyUrl", Matchers.is(POLICY_3_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -1218,16 +1217,16 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void pdfDocumentWithoutRevocationInfoShouldFail() {
         setTestFilesDirectory("signature_policy_test_files/");
         post(validationRequestFor("PadesProfileT.pdf", VALID_SIGNATURE_POLICY_4, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_4_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_T"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors[0].content", Matchers.is("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
+                .body("policy.policyUrl", Matchers.is(POLICY_4_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_T"))
+                .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].errors[0].content", Matchers.is("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -1247,16 +1246,16 @@ public class SignaturePolicyIT extends SiVaRestTests {
     public void pdfDocumentWithCrlAsRevocationInfoShouldPass() {
         setTestFilesDirectory("signature_policy_test_files/");
         post(validationRequestFor("PadesProfileLtWithCrl.pdf", VALID_SIGNATURE_POLICY_4, null))
-                .then()
-                .body("validationReport.validationConclusion.policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
-                .body("validationReport.validationConclusion.policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
-                .body("validationReport.validationConclusion.policy.policyUrl", Matchers.is(POLICY_4_URL))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].signatureLevel", Matchers.is("QESIG"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
+                .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
+                .body("policy.policyUrl", Matchers.is(POLICY_4_URL))
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     @Override

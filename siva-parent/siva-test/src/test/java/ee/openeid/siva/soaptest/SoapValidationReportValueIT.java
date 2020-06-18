@@ -60,9 +60,8 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     @Test
     public void SoapBdocCorrectValuesArePresentValidLtTmSignature() {
         setTestFilesDirectory("bdoc/test/timemark/");
-        post(validationRequestForDocument("TwoValidTmSignaturesWithRolesAndProductionPlace.bdoc")).
-                then()
-                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+        post(validationRequestForDocument("TwoValidTmSignaturesWithRolesAndProductionPlace.bdoc"))
+                .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("SignaturesCount", Matchers.is("2"))
                 .body("ValidSignaturesCount", Matchers.is("2"))
                 .body("Signatures.Signature[0].SignatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
@@ -107,9 +106,8 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     @Test
     public void SoapBdocCorrectValuesArePresentValidLtSignature() {
         setTestFilesDirectory("bdoc/test/timestamp/");
-        post(validationRequestForDocument("validTsSignatureWithRolesAndProductionPlace.asice")).
-                then()
-                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+        post(validationRequestForDocument("validTsSignatureWithRolesAndProductionPlace.asice"))
+                .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("SignaturesCount", Matchers.is("1"))
                 .body("ValidSignaturesCount", Matchers.is("1"))
                 .body("Signatures.Signature[0].SignatureFormat", Matchers.is("XAdES_BASELINE_LT"))
@@ -155,9 +153,8 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     @Ignore //TODO: New testfile needed
     public void SoapBdocCorrectValuesArePresentValidLtSignatureAdes() {
         setTestFilesDirectory("bdoc/test/timemark/");
-        post(validationRequestForDocument("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc")).
-                then()
-                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+        post(validationRequestForDocument("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc"))
+                .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("SignaturesCount", Matchers.is("1"))
                 .body("ValidSignaturesCount", Matchers.is("1"))
                 .body("Signatures.Signature[0].SignatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
@@ -188,9 +185,8 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     @Test
     public void SoapBdocCorrectValuesArePresentValidLtSignatureAdesqc() {
         setTestFilesDirectory("bdoc/live/timemark/");
-        post(validationRequestForDocument("testAdesQC.bdoc")).
-                then()
-                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+        post(validationRequestForDocument("testAdesQC.bdoc"))
+                .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("SignaturesCount", Matchers.is("1"))
                 .body("ValidSignaturesCount", Matchers.is("1"))
                 .body("Signatures.Signature[0].SignatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
@@ -219,9 +215,8 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     @Test
     public void SoapBdocCorrectValuesArePresentInvalidLtSignatureAdesqc() {
         setTestFilesDirectory("bdoc/live/timestamp/");
-        post(validationRequestForDocument("EE_SER-AEX-B-LTA-V-24.bdoc")).
-                then()
-                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+        post(validationRequestForDocument("EE_SER-AEX-B-LTA-V-24.bdoc"))
+                .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("SignaturesCount", Matchers.is("1"))
                 .body("ValidSignaturesCount", Matchers.is("1"))
                 .body("Signatures.Signature[0].SignatureFormat", Matchers.is("XAdES_BASELINE_LTA"))
@@ -251,9 +246,8 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     @Test
     public void SoapDdocCorrectValuesArePresentV1_0() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestForDocument("SK-XML1.0.ddoc")).
-                then()
-                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+        post(validationRequestForDocument("SK-XML1.0.ddoc"))
+                .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("Signatures.Signature[0].Id", Matchers.is("S0"))
                 .body("Signatures.Signature[0].SignatureFormat", Matchers.is("SK_XML_1.0"))
                 .body("Signatures.Signature[0].SignatureMethod", Matchers.is("http://www.w3.org/2000/09/xmldsig#rsa-sha1"))
@@ -294,9 +288,8 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     @Test
     public void SoapDdocCorrectValuesArePresentV1_1() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestForDocument("igasugust1.1.ddoc")).
-                then()
-                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+        post(validationRequestForDocument("igasugust1.1.ddoc"))
+                .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("SignaturesCount", Matchers.is("3"))
                 .body("ValidSignaturesCount", Matchers.is("3"))
                 .body("Signatures.Signature[0].SignatureMethod", Matchers.is("http://www.w3.org/2000/09/xmldsig#rsa-sha1"))
@@ -338,9 +331,8 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     @Test
     public void SoapDdocCorrectValuesArePresentV1_2() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestForDocument("igasugust1.2.ddoc")).
-                then()
-                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+        post(validationRequestForDocument("igasugust1.2.ddoc"))
+                .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("SignaturesCount", Matchers.is("3"))
                 .body("ValidSignaturesCount", Matchers.is("3"))
                 .body("Signatures.Signature[0].SignatureMethod", Matchers.is("http://www.w3.org/2000/09/xmldsig#rsa-sha1"))
@@ -382,9 +374,8 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     @Test
     public void SoapDdocCorrectValuesArePresentV1_3() {
         setTestFilesDirectory("ddoc/live/timemark/");
-        post(validationRequestForDocument("igasugust1.3.ddoc")).
-                then()
-                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+        post(validationRequestForDocument("igasugust1.3.ddoc"))
+                .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("SignaturesCount", Matchers.is("3"))
                 .body("ValidSignaturesCount", Matchers.is("3"))
                 .body("Signatures.Signature[0].SignatureMethod", Matchers.is("http://www.w3.org/2000/09/xmldsig#rsa-sha1"))
@@ -426,9 +417,8 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     @Test
     public void SoapPdfCorrectValuesArePresentBaselineLtSignature() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
-        post(validationRequestForDocument("reason_and_location_Test.pdf")).
-                then()
-                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+        post(validationRequestForDocument("reason_and_location_Test.pdf"))
+                .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("SignaturesCount", Matchers.is("1"))
                 .body("ValidSignaturesCount", Matchers.is("1"))
                 .body("Signatures.Signature[0].Id", Matchers.is("S-24C246774A122D4077DF298CF6F7DC9475AC0E272E0A7FFC2C1285DCC83F312C"))
@@ -467,9 +457,8 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     @Test
     public void SoapPdfCorrectValuesArePresentInvalidBaselineBSignatureV2() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
-        post(validationRequestForDocument("hellopades-pades-b-sha256-auth.pdf")).
-                then()
-                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+        post(validationRequestForDocument("hellopades-pades-b-sha256-auth.pdf"))
+                .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("SignaturesCount", Matchers.is("1"))
                 .body("ValidSignaturesCount", Matchers.is("0"))
                 .body("Signatures.Signature[0].SignatureFormat", Matchers.is("PAdES_BASELINE_B"))
@@ -497,9 +486,8 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     @Test
     public void SoapAsiceRoleAndPlaceValidIT() {
         setTestFilesDirectory("bdoc/test/timestamp/");
-        post(validationRequestForDocument("role_productionPlace.asice")).
-                then()
-                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+        post(validationRequestForDocument("role_productionPlace.asice"))
+                .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("Signatures.Signature[0].Info.SignerRole.ClaimedRole", Matchers.is("Normal SignerRoleV2Type"))
                 .body("Signatures.Signature[0].Info.SignatureProductionPlace.CountryName", Matchers.is("Estonia"))
                 .body("Signatures.Signature[0].Info.SignatureProductionPlace.StateOrProvince", Matchers.is("Harju County"))
@@ -525,9 +513,8 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     @Test
     public void SoapAsiceRoleAndPlaceValidSpecialCharactersIT() {
         setTestFilesDirectory("bdoc/test/timestamp/");
-        post(validationRequestForDocument("role_productionPlace.asice")).
-                then()
-                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+        post(validationRequestForDocument("role_productionPlace.asice"))
+                .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("Signatures.Signature[1].Info.SignerRole.ClaimedRole[0]", Matchers.is("Special character SignerRoleV2Type - Õäöüžš"))
                 .body("Signatures.Signature[1].Info.SignatureProductionPlace.CountryName", Matchers.is("Эсто́ния"))
                 .body("Signatures.Signature[1].Info.SignatureProductionPlace.StateOrProvince", Matchers.is("И́да-Ви́руский уезд"))
@@ -553,9 +540,8 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     @Test
     public void SoapAsiceRoleAndPlaceSoapAndJsonFormatIT() {
         setTestFilesDirectory("bdoc/test/timestamp/");
-        post(validationRequestForDocument("role_productionPlace.asice")).
-                then()
-                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+        post(validationRequestForDocument("role_productionPlace.asice"))
+                .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("Signatures.Signature[2].Info.SignerRole.ClaimedRole[0]", Matchers.is("{\"claimedRole\": \"XML/JSON SignerRoleV2Type\", </ns3:ClaimedRole>"))
                 .body("Signatures.Signature[2].Info.SignatureProductionPlace.CountryName", Matchers.is("\"countryName\": \"Eesti\""))
                 .body("Signatures.Signature[2].Info.SignatureProductionPlace.StateOrProvince", Matchers.is("Harjumaa</ns3:SignatureProductionPlace>"))
@@ -581,9 +567,8 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     @Test
     public void SoapAsiceRoleAndPlaceEmptyIT() {
         setTestFilesDirectory("bdoc/test/timestamp/");
-        post(validationRequestForDocument("role_productionPlace.asice")).
-                then()
-                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+        post(validationRequestForDocument("role_productionPlace.asice"))
+                .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("Signatures.Signature[3].Info", Matchers.not(new XmlNodeContainsKeyMatcher("SignatureProductionPlace")))
                 .body("Signatures.Signature[3].Info", Matchers.not(new XmlNodeContainsKeyMatcher("SignerRole")));
     }
@@ -606,9 +591,8 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     @Test
     public void SoapAsiceRoleAndPlaceOnlyRoleIT() {
         setTestFilesDirectory("bdoc/test/timestamp/");
-        post(validationRequestForDocument("role_productionPlace.asice")).
-                then()
-                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+        post(validationRequestForDocument("role_productionPlace.asice"))
+                .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("Signatures.Signature[4].Info.SignerRole.ClaimedRole[0]", Matchers.is("Only role"))
                 .body("Signatures.Signature[4].Info", Matchers.not(new XmlNodeContainsKeyMatcher("SignatureProductionPlace")));
     }
@@ -631,9 +615,8 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     @Test
     public void SoapAsiceRoleAndPlaceOnlyCityIT() {
         setTestFilesDirectory("bdoc/test/timestamp/");
-        post(validationRequestForDocument("role_productionPlace.asice")).
-                then()
-                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+        post(validationRequestForDocument("role_productionPlace.asice"))
+                .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("Signatures.Signature[5].Info", Matchers.not(new XmlNodeContainsKeyMatcher("SignerRole")))
                 .body("Signatures.Signature[5].Info.SignatureProductionPlace.City", Matchers.is("Only city"));
     }
@@ -657,9 +640,8 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     public void SoapAsiceRoleAndPlaceShortDataTypeMaxValueLengthIT() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         String shortTypeValue = "32767" + StringUtils.repeat("a", 32762);
-        post(validationRequestForDocument("role_productionPlace.asice")).
-                then()
-                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+        post(validationRequestForDocument("role_productionPlace.asice"))
+                .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("Signatures.Signature[6].Info.SignerRole.ClaimedRole[0]", Matchers.is(shortTypeValue))
                 .body("Signatures.Signature[6].Info.SignatureProductionPlace.CountryName", Matchers.is(shortTypeValue))
                 .body("Signatures.Signature[6].Info.SignatureProductionPlace.StateOrProvince", Matchers.is(shortTypeValue))
@@ -686,9 +668,8 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     public void SoapAsiceRoleAndPlaceIntDataTypeValueLengthCityIT() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         String intValue = "32768" + StringUtils.repeat("a", 32763);
-        post(validationRequestForDocument("role_productionPlace.asice")).
-                then()
-                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+        post(validationRequestForDocument("role_productionPlace.asice"))
+                .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("Signatures.Signature[7].Info.SignatureProductionPlace.City", Matchers.is(intValue));
     }
 
@@ -710,9 +691,8 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
     @Test
     public void SoapAsiceRoleAndPlaceThreeRolesIT() {
         setTestFilesDirectory("bdoc/test/timestamp/");
-        post(validationRequestForDocument("role_productionPlace.asice")).
-                then()
-                .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+        post(validationRequestForDocument("role_productionPlace.asice"))
+                .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("Signatures.Signature[8].Info.SignerRole.ClaimedRole[0]", Matchers.is("First role"))
                 .body("Signatures.Signature[8].Info.SignerRole.ClaimedRole[1]", Matchers.is("Second role"))
                 .body("Signatures.Signature[8].Info.SignerRole.ClaimedRole[2]", Matchers.is("Third role"))

@@ -23,6 +23,8 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import static ee.openeid.siva.integrationtest.TestData.VALIDATION_CONCLUSION_PREFIX;
+
 @Category(XroadIntegrationTest.class)
 public class XRoadValidationPassIT extends SiVaRestTests {
 
@@ -48,15 +50,15 @@ public class XRoadValidationPassIT extends SiVaRestTests {
     public void validatingSimpleXroadDocumentShouldReturnAReport() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
         post(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-simple.asice", "xroad", VALID_SIGNATURE_POLICY_3))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("70006317"))
-                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.commonName", Matchers.is("Riigi Infosüsteemi Amet"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("70006317"))
+                .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("Riigi Infosüsteemi Amet"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -76,15 +78,15 @@ public class XRoadValidationPassIT extends SiVaRestTests {
     public void validatingBatchXroadDocumentShouldReturnAReport() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-batchsignature.asice"));
         post(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-batchsignature.asice", "xroad", VALID_SIGNATURE_POLICY_3))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E_batchsignature"))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("70006317"))
-                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.commonName", Matchers.is("Riigi Infosüsteemi Amet"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E_batchsignature"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("70006317"))
+                .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("Riigi Infosüsteemi Amet"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     /**
@@ -104,15 +106,15 @@ public class XRoadValidationPassIT extends SiVaRestTests {
     public void validatingAttachXroadDocumentShouldReturnAReport() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-attachment.asice"));
         post(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-attachment.asice", "xroad", VALID_SIGNATURE_POLICY_3))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E_batchsignature"))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("70006317"))
-                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.commonName", Matchers.is("Riigi Infosüsteemi Amet"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E_batchsignature"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_BES"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("70006317"))
+                .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("Riigi Infosüsteemi Amet"))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signaturesCount", Matchers.is(1));
     }
 
 }

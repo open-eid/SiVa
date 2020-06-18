@@ -23,6 +23,8 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import static ee.openeid.siva.integrationtest.TestData.VALIDATION_CONCLUSION_PREFIX;
+
 @Category(XroadIntegrationTest.class)
 public class XRoadValidationFailIT extends SiVaRestTests {
 
@@ -48,13 +50,13 @@ public class XRoadValidationFailIT extends SiVaRestTests {
     public void validatingInvalidSimpleXroadDocumentShouldReturnAReport() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("invalid-digest.asice"));
         post(validationRequestWithDocumentTypeValidKeys(encodedString, "invalid-digest.asice", "xroad", VALID_SIGNATURE_POLICY_3))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItem("InvalidSignatureValue: Signature is not valid"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].errors.content", Matchers.hasItem("InvalidSignatureValue: Signature is not valid"))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1));
     }
 
 

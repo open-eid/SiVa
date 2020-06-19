@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    ​
+    <property name="COMMON_LOG_FILE" value="${BUILD_FOLDER:-logs}/siva-common.log"/>​
+    <property name="STATISTICS_CONTAINER_LOG_FILE" value="${BUILD_FOLDER:-logs}/siva-statistics-container.log"/>​
+    <property name="STATISTICS_SIGNATURE_LOG_FILE" value="${BUILD_FOLDER:-logs}/siva-statistics-signature.log"/>​
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <encoder class="co.elastic.logging.logback.EcsEncoder"/>
+    </appender>
+    <appender name="COMMON_LOG_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${COMMON_LOG_FILE}</file>
+        <encoder class="co.elastic.logging.logback.EcsEncoder"/>
+    </appender>
+    <appender name="STATISTICS_CONTAINER_LOG_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${STATISTICS_CONTAINER_LOG_FILE}</file>
+        <encoder class="co.elastic.logging.logback.EcsEncoder"/>
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
+                <marker>STATISTICS_CONTAINER_LOG</marker>
+            </evaluator>
+            <onMismatch>DENY</onMismatch>
+            <onMatch>NEUTRAL</onMatch>
+        </filter>
+    </appender>
+    <appender name="STATISTICS_SIGNATURE_LOG_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${STATISTICS_SIGNATURE_LOG_FILE}</file>
+        <encoder class="co.elastic.logging.logback.EcsEncoder"/>
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
+                <marker>STATISTICS_SIGNATURE_LOG</marker>
+            </evaluator>
+            <onMismatch>DENY</onMismatch>
+            <onMatch>NEUTRAL</onMatch>
+        </filter>
+    </appender>
+
+    <logger name="org.digidoc4j.impl" level="WARN"/>
+
+    <root level="INFO">
+        <appender-ref ref="COMMON_LOG_FILE"/>
+        <appender-ref ref="STATISTICS_CONTAINER_LOG_FILE"/>
+        <appender-ref ref="STATISTICS_SIGNATURE_LOG_FILE"/>
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>

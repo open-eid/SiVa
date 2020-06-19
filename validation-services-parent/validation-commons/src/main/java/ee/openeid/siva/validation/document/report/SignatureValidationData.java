@@ -30,7 +30,7 @@ public class SignatureValidationData {
 
     private String signatureFormat;
 
-    private String SignatureMethod;
+    private String signatureMethod;
 
     private String signatureLevel;
 

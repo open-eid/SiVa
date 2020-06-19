@@ -18,7 +18,6 @@ package ee.openeid.siva.statistics;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import ee.openeid.siva.statistics.model.SimpleSignatureReport;
 import ee.openeid.siva.statistics.model.SimpleValidationReport;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
@@ -38,18 +37,23 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static ee.openeid.siva.statistics.SignatureFormToContainerTypeTransormer.transformToContainerTypeOrEmpty;
+import static org.slf4j.MarkerFactory.getMarker;
 
 @Service
 public class StatisticsService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StatisticsService.class);
 
+    private static final String CONTAINER_LOG_MARKER = "STATISTICS_CONTAINER_LOG";
+    private static final String SIGNATURE_LOG_MARKER = "STATISTICS_SIGNATURE_LOG";
+
     private HttpServletRequest httpRequest;
 
     public void publishValidationStatistic(long validationDurationInNanos, ValidationConclusion validationConclusion) {
         SimpleValidationReport simpleValidationReport = createValidationResult(validationDurationInNanos, validationConclusion);
         try {
-            LOGGER.info(toJson(simpleValidationReport));
+            logContainerStats(simpleValidationReport);
+            logSignatureStats(simpleValidationReport.getSimpleSignatureReports());
         } catch (JsonProcessingException e) {
             LOGGER.error("Error generating json: {}", e.getMessage(), e);
         }
@@ -84,17 +88,32 @@ public class StatisticsService {
         return simpleSignatureReport;
     }
 
-    private String toJson(SimpleValidationReport simpleValidationReport) throws JsonProcessingException {
-        Map<String, SimpleValidationReport> stats = new HashMap<>();
-        stats.put("stats", simpleValidationReport);
-
-        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        return ow.writeValueAsString(stats);
-    }
-
     private String getUserIdentifier() {
         String userIdentifier = httpRequest.getHeader("x-authenticated-user");
         return StringUtils.isEmpty(userIdentifier) ? "N/A" : userIdentifier;
+    }
+
+    private void logContainerStats(SimpleValidationReport simpleValidationReport) throws JsonProcessingException {
+        LOGGER.info(getMarker(CONTAINER_LOG_MARKER), toJson(simpleValidationReport));
+    }
+
+    private String toJson(SimpleValidationReport simpleValidationReport) throws JsonProcessingException {
+        Map<String, SimpleValidationReport> stats = new HashMap<>();
+        stats.put("stats", simpleValidationReport);
+        return new ObjectMapper().writer().writeValueAsString(stats);
+    }
+
+
+    private void logSignatureStats(List<SimpleSignatureReport> simpleSignatureReports) throws JsonProcessingException {
+        for (SimpleSignatureReport simpleSignatureReport : simpleSignatureReports) {
+            LOGGER.info(getMarker(SIGNATURE_LOG_MARKER), toJson(simpleSignatureReport));
+        }
+    }
+
+    private String toJson(SimpleSignatureReport simpleSignatureReport) throws JsonProcessingException {
+        Map<String, SimpleSignatureReport> stats = new HashMap<>();
+        stats.put("signatureStats", simpleSignatureReport);
+        return new ObjectMapper().writer().writeValueAsString(stats);
     }
 
     @Autowired

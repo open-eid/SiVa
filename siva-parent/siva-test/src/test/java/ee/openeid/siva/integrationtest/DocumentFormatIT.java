@@ -17,14 +17,13 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
-import ee.openeid.siva.validation.document.report.SimpleReport;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import static org.junit.Assert.assertEquals;
+import static ee.openeid.siva.integrationtest.TestData.VALIDATION_CONCLUSION_PREFIX;
 
 @Category(IntegrationTest.class)
 public class DocumentFormatIT extends SiVaRestTests {
@@ -58,13 +57,13 @@ public class DocumentFormatIT extends SiVaRestTests {
     @Test
     public void PAdESDocumentShouldPass() {
         post(validationRequestFor("hellopades-pades-lt-sha256-sign.pdf"))
-                .then()
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(1));
     }
 
     /**
@@ -83,14 +82,14 @@ public class DocumentFormatIT extends SiVaRestTests {
     @Test
     public void BdocDocumentShouldPass() {
         post(validationRequestFor("Valid_IDCard_MobID_signatures.bdoc"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(2))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(2));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings", Matchers.emptyOrNullString())
+                .body("signaturesCount", Matchers.is(2))
+                .body("validSignaturesCount", Matchers.is(2));
     }
 
     /**
@@ -110,14 +109,14 @@ public class DocumentFormatIT extends SiVaRestTests {
     public void asiceDocumentShouldPass() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("bdoc21-TS.asice"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(1));
     }
 
     /**
@@ -137,14 +136,14 @@ public class DocumentFormatIT extends SiVaRestTests {
     public void asicsDocumentShouldPass() {
         setTestFilesDirectory("asics/");
         post(validationRequestFor("ValidDDOCinsideAsics.asics"))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-S"))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-S"))
+                .body("signatures[0].signatureFormat", Matchers.is("DIGIDOC_XML_1.3"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings", Matchers.emptyOrNullString())
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(1));
     }
 
     /**
@@ -163,13 +162,13 @@ public class DocumentFormatIT extends SiVaRestTests {
     @Test
     public void xadesDocumentShouldPass() {
         postHashcodeValidation(validationRequestHashcodeSimple("signatures0.xml", "POLv4", "Simple"))
-                .then()
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(1));
     }
 
     /**
@@ -189,14 +188,14 @@ public class DocumentFormatIT extends SiVaRestTests {
     @Test
     public void cadesDocumentShouldPass() {
         post(validationRequestFor(""))
-                .then()
-                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("CAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationReport.validationConclusion.signatures[0].errors", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signatures[0].warnings", Matchers.emptyOrNullString())
-                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(1))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(1));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].signatureFormat", Matchers.is("CAdES_BASELINE_LT"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].errors", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings", Matchers.emptyOrNullString())
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(1));
     }
 
     @Override

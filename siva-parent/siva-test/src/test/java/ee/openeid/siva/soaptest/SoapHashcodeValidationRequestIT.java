@@ -844,7 +844,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
     public void validXadesWithPlusInDataFileName() {
         postHashcodeValidation(createXMLHashcodeValidationRequestSimple("test+document.xml"))
                 .then()
-                .root(VALIDATION_CONCLUSION_PREFIX)
+                .rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("Signatures.Signature[0].SignatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
                 .body("Signatures.Signature[0].Info.BestSignatureTime", Matchers.is("2019-02-05T12:43:15Z"))
@@ -869,7 +869,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
     public void validXadesWithSpaceInDataFileName() {
         postHashcodeValidation(createXMLHashcodeValidationRequestSimple("spacesInDatafile.xml"))
                 .then()
-                .root(VALIDATION_CONCLUSION_PREFIX)
+                .rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("Signatures.Signature[0].SignatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
                 .body("Signatures.Signature[0].Info.BestSignatureTime", Matchers.is("2019-02-05T13:22:04Z"))
@@ -894,7 +894,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
     public void datafileWithPlusInFilenameRequestedThrougApi() {
         postHashcodeValidation(createXMLHashcodeValidationRequest(validRequestBody("test+document.xml", HASH_ALGO_SHA256, "test+document.txt", "heKN3NGQ0HttzgmfKG0L243dfG7W+6kTMO5n7YbKeS4=")))
                 .then()
-                .root(VALIDATION_CONCLUSION_PREFIX)
+                .rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("Signatures.Signature[0].SignatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
                 .body("Signatures.Signature[0].Info.BestSignatureTime", Matchers.is("2019-02-05T12:43:15Z"))
@@ -919,7 +919,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
     public void datafileWithSpaceInFilenameRequestedThroughApi() {
         postHashcodeValidation(createXMLHashcodeValidationRequest(validRequestBody("spacesInDatafile.xml", HASH_ALGO_SHA256, "Te st in g.txt", "5UxI8Rm1jUZm48+Vkdutyrsyr3L/MPu/RK1V81AeKEY=")))
                 .then()
-                .root(VALIDATION_CONCLUSION_PREFIX)
+                .rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("Signatures.Signature[0].SignatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
                 .body("Signatures.Signature[0].Info.BestSignatureTime", Matchers.is("2019-02-05T13:22:04Z"))
@@ -969,7 +969,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
     }
 
     private void assertSignatureTotalPassed(ValidatableResponse response) {
-        response.root(VALIDATION_CONCLUSION_PREFIX)
+        response.rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("Signatures.children().size()", is(1))
                 .body("Signatures.Signature[0].Id", is(TestData.MOCK_XADES_SIGNATURE_ID))
                 .body("Signatures.Signature[0].SignatureFormat", is(TestData.SIGNATURE_FORMAT_XADES_LT))
@@ -988,7 +988,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
     }
 
     private void assertSignatureDataNotFound(String datafileName, ValidatableResponse response) {
-        response.root(VALIDATION_CONCLUSION_PREFIX)
+        response.rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("Signatures.children().size()", is(1))
                 .body("Signatures.Signature[0].Id", is(TestData.MOCK_XADES_SIGNATURE_ID))
                 .body("Signatures.Signature[0].SignatureFormat", is(TestData.SIGNATURE_FORMAT_XADES_LT))
@@ -1009,7 +1009,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
     }
 
     private void assertSignatureHashFailure(ValidatableResponse response, String subIndication, String signatureLevel, String indication) {
-        response.root(VALIDATION_CONCLUSION_PREFIX)
+        response.rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("Signatures.children().size()", is(1))
                 .body("Signatures.Signature[0].Id", is(TestData.MOCK_XADES_SIGNATURE_ID))
                 .body("Signatures.Signature[0].SignatureFormat", is(TestData.SIGNATURE_FORMAT_XADES_LT))

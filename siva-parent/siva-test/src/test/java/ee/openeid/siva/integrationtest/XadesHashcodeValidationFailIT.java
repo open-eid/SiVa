@@ -22,8 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import static ee.openeid.siva.integrationtest.TestData.HASH_ALGO_SHA256;
-import static ee.openeid.siva.integrationtest.TestData.HASH_ALGO_SHA512;
+import static ee.openeid.siva.integrationtest.TestData.*;
 
 @Category(IntegrationTest.class)
 public class XadesHashcodeValidationFailIT extends SiVaRestTests {
@@ -51,16 +50,16 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
     @Test
     public void dataFileHashAlgorithmDoesNotMatchWithSignatureDataFileHashAlgorithm() {
         postHashcodeValidation(validationRequestHashcode("Valid_XAdES_LT_TM.xml", null, null, "test.txt", HASH_ALGO_SHA512, "RnKZobNWVy8u92sDL4S2j1BUzMT5qTgt6hm90TfAGRo="))
-                .then()
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIGNED_DATA_NOT_FOUND"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2019-02-05T13:36:23Z"))
-                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("47101010033"))
-                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.commonName", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
-                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatures[0].subIndication", Matchers.is("SIGNED_DATA_NOT_FOUND"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2019-02-05T13:36:23Z"))
+                .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("47101010033"))
+                .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
+                .body("validationLevel", Matchers.is("ARCHIVAL_DATA"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -79,14 +78,14 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
     @Test
     public void dataFileHashDoesNotMatchWithSignatureFile() {
         postHashcodeValidation(validationRequestHashcode("Valid_XAdES_LT_TM.xml", null, null, "test.txt", HASH_ALGO_SHA256, "kl2ZobNWVy8u92sDL4S2j1BUzMT5qTgt6hm90TfAGRo="))
-                .then()
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2019-02-05T13:36:23Z"))
-                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2019-02-05T13:36:23Z"))
+                .body("validationLevel", Matchers.is("ARCHIVAL_DATA"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -105,16 +104,16 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
     @Test
     public void dataFileFilenameDoesNotMatchWithSignatureFile() {
         postHashcodeValidation(validationRequestHashcode("Valid_XAdES_LT_TS.xml", null, null, "wrongDataFileName.jpg", HASH_ALGO_SHA256, "Sj/WcgsM57hpCiR5E8OycJ4jioYwdHzz3s4e5LXditA="))
-                .then()
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIGNED_DATA_NOT_FOUND"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2019-02-05T13:27:24Z"))
-                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("47101010033"))
-                .body("validationReport.validationConclusion.signatures[0].subjectDistinguishedName.commonName", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
-                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatures[0].subIndication", Matchers.is("SIGNED_DATA_NOT_FOUND"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2019-02-05T13:27:24Z"))
+                .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("47101010033"))
+                .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
+                .body("validationLevel", Matchers.is("ARCHIVAL_DATA"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -133,14 +132,14 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
     @Test
     public void invalidSignature() {
         postHashcodeValidation(validationRequestHashcode("Invalid_XAdES_LT_TM.xml", null, null, "test.txt", HASH_ALGO_SHA256, "RnKZobNWVy8u92sDL4S2j1BUzMT5qTgt6hm90TfAGRo="))
-                .then()
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2019-02-05T13:36:23Z"))
-                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2019-02-05T13:36:23Z"))
+                .body("validationLevel", Matchers.is("ARCHIVAL_DATA"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -159,14 +158,14 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
     @Test
     public void invalidBase64Signature() {
         postHashcodeValidation(validationRequestHashcode("Invalid_base64_XAdES_LT_TM.xml", null, null, "test.txt", HASH_ALGO_SHA256, "RnKZobNWVy8u92sDL4S2j1BUzMT5qTgt6hm90TfAGRo="))
-                .then()
-                .body("validationReport.validationConclusion.signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("validationReport.validationConclusion.signatures[0].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
-                .body("validationReport.validationConclusion.signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationReport.validationConclusion.signatures[0].info.bestSignatureTime", Matchers.is("2019-02-05T13:36:23Z"))
-                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
-                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0));
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
+                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].info.bestSignatureTime", Matchers.is("2019-02-05T13:36:23Z"))
+                .body("validationLevel", Matchers.is("ARCHIVAL_DATA"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     @Override

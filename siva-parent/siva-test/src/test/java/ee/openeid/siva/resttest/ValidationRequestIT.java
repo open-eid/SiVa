@@ -23,7 +23,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;
 import org.json.JSONObject;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
@@ -77,7 +76,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     public void validationRequestAllRequiredInputs() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("singleValidSignatureTM.bdoc"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("validatedDocument.filename", equalTo("singleValidSignatureTM.bdoc"))
                 .body("validSignaturesCount", equalTo(1));
     }
@@ -159,7 +158,7 @@ public class ValidationRequestIT extends SiVaRestTests {
         jsonObject.put("ExtraOne", "RandomValue");
         jsonObject.put("ExtraTwo", "AnotherValue");
         post(jsonObject.toString())
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("validatedDocument.filename", equalTo("singleValidSignatureTM.bdoc"));
     }
 
@@ -259,7 +258,7 @@ public class ValidationRequestIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/test/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("singleValidSignatureTM.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "singleValidSignatureTM.bdoc", null))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("validatedDocument.filename", equalTo("singleValidSignatureTM.bdoc"))
                 .body("validSignaturesCount", equalTo(1));
     }
@@ -328,7 +327,7 @@ public class ValidationRequestIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/test/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("singleValidSignatureTM.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "singleValidSignatureTM.bDoC", null))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("validSignaturesCount", equalTo(1));
     }
 
@@ -350,7 +349,7 @@ public class ValidationRequestIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/test/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("singleValidSignatureTM.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "singleValidSignatureTM .bDoC", null))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("validSignaturesCount", equalTo(1));
     }
 
@@ -375,7 +374,7 @@ public class ValidationRequestIT extends SiVaRestTests {
         String filename = StringUtils.repeat("a", 250) + ".bdoc";
 
         post(validationRequestWithValidKeys(encodedString, filename, "POLv3"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("validatedDocument.filename", equalTo(filename));
     }
 
@@ -429,7 +428,7 @@ public class ValidationRequestIT extends SiVaRestTests {
         jsonObject.put(SIGNATURE_POLICY, "POLv3");
 
         post(jsonObject.toString())
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("validSignaturesCount", equalTo(1));
     }
 
@@ -479,7 +478,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     public void validationRequestDefaultPolicy() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("singleValidSignatureTM.bdoc"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("policy.policyName", equalTo("POLv4"));
     }
 
@@ -500,7 +499,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     public void validationRequestPOLv3() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("singleValidSignatureTM.bdoc", "POLv3", null))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("policy.policyName", equalTo("POLv3"));
     }
 
@@ -521,7 +520,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     public void validationRequestPOLv4() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("singleValidSignatureTM.bdoc", "POLv4", null))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("policy.policyName", equalTo("POLv4"));
     }
 
@@ -593,7 +592,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .then()
                 .body("validationReport.validationProcess", emptyOrNullString())
                 .body("validationReport.diagnosticData", emptyOrNullString())
-                .body("validationReport.validationConclusion.validSignaturesCount", equalTo(1));
+                .body(VALIDATION_CONCLUSION_PREFIX + "validSignaturesCount", equalTo(1));
     }
 
     /**
@@ -615,7 +614,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .then()
                 .body("validationReport.diagnosticData", emptyOrNullString())
                 .body("validationReport.validationProcess.signatures[0].validationSignatureQualification.signatureQualification", equalTo("QESIG"))
-                .body("validationReport.validationConclusion.validSignaturesCount", equalTo(1));
+                .body(VALIDATION_CONCLUSION_PREFIX + "validSignaturesCount", equalTo(1));
     }
 
     /**
@@ -748,7 +747,7 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .then()
                 .body("validationReport.validationProcess", emptyOrNullString())
                 .body("validationReport.diagnosticData.documentName", equalTo("singleValidSignatureTS.asice"))
-                .body("validationReport.validationConclusion.validSignaturesCount", equalTo(1));
+                .body(VALIDATION_CONCLUSION_PREFIX + "validSignaturesCount", equalTo(1));
     }
 
     /**
@@ -815,7 +814,7 @@ public class ValidationRequestIT extends SiVaRestTests {
     public void validationRequestDocumentTypeBdocAndFileAsice() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("singleValidSignatureTS.asice"));
         post(validationRequestWithValidKeys(encodedString, "singleValidSignatureTS.bdoc", "POLv3"))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("validSignaturesCount", Matchers.is(1));
     }
 

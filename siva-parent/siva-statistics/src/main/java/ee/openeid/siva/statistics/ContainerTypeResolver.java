@@ -16,58 +16,69 @@
 
 package ee.openeid.siva.statistics;
 
+import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.List;
 
 import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
-class SignatureFormToContainerTypeTransormer {
+class ContainerTypeResolver {
 
+    private static final String PADES_SIGNATURE_FORMAT_PREFIX = "PAdES_";
     private static final String ASIC_E_SIGNATURE_FORM = "ASiC-E";
     private static final String ASIC_S_SIGNATURE_FORM = "ASiC-S";
     private static final String XROAD_SIGNATURE_FORM = "ASiC-E_batchsignature";
     private static final String DDOC_SIGNATURE_FORM_PREFIX = "DIGIDOC_XML_";
 
+    private static final String PADES_CONTAINER_TYPE = "PAdES";
     private static final String ASIC_E_CONTAINER_TYPE = "ASiC-E";
     private static final String ASIC_S_CONTAINER_TYPE = "ASiC-S";
-    private static final String XROAD_CONTAINER_TYPE = "ASiC-E (BatchSignature)";
-    private static final String DDOC_CONTAINER_TYPE = "XAdES";
+    private static final String DDOC_CONTAINER_TYPE = "DIGIDOC_XML";
 
-    static String transformToContainerTypeOrEmpty(String signatureForm) {
-        if (signatureForm == null) {
-            return valueNotPresent();
-        }
-        if (isAsicE(signatureForm)) {
+    private static final String NA = "N/A";
+
+    static String resolveContainerType(ValidationConclusion validationConclusion) {
+        return isPades(validationConclusion.getSignatures())
+                ? PADES_CONTAINER_TYPE
+                : resolveContainerTypeFromSignatureForm(validationConclusion.getSignatureForm());
+    }
+
+    private static boolean isPades(List<SignatureValidationData> signatures) {
+        return CollectionUtils.isNotEmpty(signatures)
+                && StringUtils.startsWith(signatures.get(0).getSignatureFormat(), PADES_SIGNATURE_FORMAT_PREFIX);
+    }
+
+    private static String resolveContainerTypeFromSignatureForm(String signatureForm) {
+        if (isAsicE(signatureForm) || isXRoad(signatureForm)) {
             return ASIC_E_CONTAINER_TYPE;
         }
         if (isAsicS(signatureForm)) {
             return ASIC_S_CONTAINER_TYPE;
         }
-        if (isXRoad(signatureForm)) {
-            return XROAD_CONTAINER_TYPE;
-        }
         if (isDdoc(signatureForm)) {
             return DDOC_CONTAINER_TYPE;
         }
-        return valueNotPresent();
+        return NA;
     }
 
     private static boolean isAsicE(String signatureForm) {
-        return signatureForm.equals(ASIC_E_SIGNATURE_FORM);
+        return ASIC_E_SIGNATURE_FORM.equals(signatureForm);
     }
+
     private static boolean isAsicS(String signatureForm) {
-        return signatureForm.equals(ASIC_S_SIGNATURE_FORM);
+        return ASIC_S_SIGNATURE_FORM.equals(signatureForm);
     }
+
     private static boolean isXRoad(String signatureForm) {
-        return signatureForm.equals(XROAD_SIGNATURE_FORM);
+        return XROAD_SIGNATURE_FORM.equals(signatureForm);
     }
 
     private static boolean isDdoc(String signatureForm) {
-        return signatureForm.startsWith(DDOC_SIGNATURE_FORM_PREFIX);
-    }
-
-    private static String valueNotPresent() {
-        return StringUtils.EMPTY;
+        return StringUtils.startsWith(signatureForm, DDOC_SIGNATURE_FORM_PREFIX);
     }
 }

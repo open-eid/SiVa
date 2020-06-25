@@ -43,6 +43,10 @@ public class SimpleValidationReport {
     @JsonProperty("type")
     private String containerType;
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @JsonProperty("sigType")
+    private String signatureType;
+
     @JsonProperty("usrId")
     private String userIdentifier;
 

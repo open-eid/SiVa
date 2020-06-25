@@ -141,11 +141,6 @@ public class ContainerValidationProxy extends ValidationProxy {
         throw new IllegalArgumentException("Invalid document");
     }
 
-    private boolean isDocumentTypeXRoad(ProxyRequest proxyRequest) {
-        ProxyDocument proxyDocument = (ProxyDocument) proxyRequest;
-        return proxyDocument.getDocumentType() != null && proxyDocument.getDocumentType() == DocumentType.XROAD;
-    }
-
     private String decideAsicsValidatorService(byte[] document, String extension) {
         try (ZipInputStream zipStream = new ZipInputStream(new ByteArrayInputStream(document))) {
             ZipEntry entry;

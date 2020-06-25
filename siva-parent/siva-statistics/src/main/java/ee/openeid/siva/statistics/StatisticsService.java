@@ -34,9 +34,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static ee.openeid.siva.statistics.SignatureFormToContainerTypeTransormer.transformToContainerTypeOrEmpty;
+import static ee.openeid.siva.statistics.ContainerTypeResolver.resolveContainerType;
 import static org.slf4j.MarkerFactory.getMarker;
 
 @Service
@@ -47,26 +48,45 @@ public class StatisticsService {
     private static final String CONTAINER_LOG_MARKER = "STATISTICS_CONTAINER_LOG";
     private static final String SIGNATURE_LOG_MARKER = "STATISTICS_SIGNATURE_LOG";
 
+    private static final String NA = "N/A";
+
     private HttpServletRequest httpRequest;
 
     public void publishValidationStatistic(long validationDurationInNanos, ValidationConclusion validationConclusion) {
-        SimpleValidationReport simpleValidationReport = createValidationResult(validationDurationInNanos, validationConclusion);
-        try {
-            logContainerStats(simpleValidationReport);
-            logSignatureStats(simpleValidationReport.getSimpleSignatureReports());
-        } catch (JsonProcessingException e) {
-            LOGGER.error("Error generating json: {}", e.getMessage(), e);
-        }
+        SimpleValidationReport simpleValidationReport = createValidationResult(
+                validationDurationInNanos,
+                validationConclusion,
+                () -> SignatureTypeResolver.resolveSignatureType(validationConclusion));
+        logStats(simpleValidationReport);
     }
 
-    private SimpleValidationReport createValidationResult(long validationDurationInNanos, ValidationConclusion report) {
+    public void publishXroadValidationStatistics(long validationDurationInNanos, ValidationConclusion validationConclusion) {
+        SimpleValidationReport simpleValidationReport = createValidationResult(
+                validationDurationInNanos,
+                validationConclusion,
+                SignatureTypeResolver::resolveXroadSignatureType);
+        logStats(simpleValidationReport);
+    }
+
+    private SimpleValidationReport createValidationResult(long validationDurationInNanos,
+                                                          ValidationConclusion report,
+                                                          Supplier<String> signatureTypeSupplier) {
         SimpleValidationReport simpleValidationReport = new SimpleValidationReport();
         simpleValidationReport.setDuration(TimeUnit.NANOSECONDS.toMillis(validationDurationInNanos));
-        simpleValidationReport.setSignatureCount(report.getSignaturesCount());
-        simpleValidationReport.setValidSignatureCount(report.getValidSignaturesCount());
-        simpleValidationReport.setSimpleSignatureReports(createSimpleSignatureReports(report));
-        simpleValidationReport.setContainerType(transformToContainerTypeOrEmpty(report.getSignatureForm()));
+        simpleValidationReport.setContainerType(resolveContainerType(report));
+        simpleValidationReport.setSignatureType(signatureTypeSupplier.get());
         simpleValidationReport.setUserIdentifier(getUserIdentifier());
+
+        if (SignatureTypeResolver.isTstTypeContainer(report)) {
+            simpleValidationReport.setSignatureCount(0);
+            simpleValidationReport.setValidSignatureCount(0);
+            simpleValidationReport.setSimpleSignatureReports(Collections.emptyList());
+        } else {
+            simpleValidationReport.setSignatureCount(report.getSignaturesCount());
+            simpleValidationReport.setValidSignatureCount(report.getValidSignaturesCount());
+            simpleValidationReport.setSimpleSignatureReports(createSimpleSignatureReports(report));
+        }
+
         return simpleValidationReport;
     }
 
@@ -90,7 +110,16 @@ public class StatisticsService {
 
     private String getUserIdentifier() {
         String userIdentifier = httpRequest.getHeader("x-authenticated-user");
-        return StringUtils.isEmpty(userIdentifier) ? "N/A" : userIdentifier;
+        return StringUtils.isEmpty(userIdentifier) ? NA : userIdentifier;
+    }
+
+    private void logStats(SimpleValidationReport simpleValidationReport) {
+        try {
+            logContainerStats(simpleValidationReport);
+            logSignatureStats(simpleValidationReport.getSimpleSignatureReports());
+        } catch (JsonProcessingException e) {
+            LOGGER.error("Error generating json: {}", e.getMessage(), e);
+        }
     }
 
     private void logContainerStats(SimpleValidationReport simpleValidationReport) throws JsonProcessingException {

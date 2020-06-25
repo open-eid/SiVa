@@ -16,6 +16,8 @@
 
 package ee.openeid.siva.proxy;
 
+import ee.openeid.siva.proxy.document.DocumentType;
+import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.document.ReportType;
 import ee.openeid.siva.proxy.exception.ValidatonServiceNotFoundException;
 import ee.openeid.siva.statistics.StatisticsService;
@@ -40,8 +42,23 @@ public abstract class ValidationProxy {
     public SimpleReport validate(ProxyRequest proxyRequest) {
         long validationStartTime = System.nanoTime();
         SimpleReport report = validateRequest(proxyRequest);
-        statisticsService.publishValidationStatistic(System.nanoTime() - validationStartTime, report.getValidationConclusion());
+        long validationDuration = System.nanoTime() - validationStartTime;
+
+        if (isDocumentTypeXRoad(proxyRequest)) {
+            statisticsService.publishXroadValidationStatistics(validationDuration, report.getValidationConclusion());
+        } else {
+            statisticsService.publishValidationStatistic(validationDuration, report.getValidationConclusion());
+        }
+
         return report;
+    }
+
+    boolean isDocumentTypeXRoad(ProxyRequest proxyRequest) {
+        if (proxyRequest instanceof ProxyDocument) {
+            ProxyDocument proxyDocument = (ProxyDocument) proxyRequest;
+            return proxyDocument.getDocumentType() != null && proxyDocument.getDocumentType() == DocumentType.XROAD;
+        }
+        return false;
     }
 
     SimpleReport chooseReport(Reports reports, ReportType reportType) {

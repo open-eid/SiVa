@@ -16,13 +16,15 @@
 
 package ee.openeid.siva.statistics;
 
-import ee.openeid.siva.statistics.model.SimpleValidationReport;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
+import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.slf4j.Logger;
@@ -30,17 +32,21 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.slf4j.MarkerFactory.getMarker;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({LoggerFactory.class})
 public class StatisticsServiceTest {
 
-    private static final String LINE_SEPARATOR = System.lineSeparator();
     private static final String X_AUTHENTICATED_USER = "x-authenticated-user";
+    private static final String CONTAINER_LOG_MARKER = "STATISTICS_CONTAINER_LOG";
+    private static final String SIGNATURE_LOG_MARKER = "STATISTICS_SIGNATURE_LOG";
+
     private static StatisticsService statisticsService;
     private static Logger loggerMock;
 
@@ -56,18 +62,21 @@ public class StatisticsServiceTest {
         statisticsService.setHttpRequest(mockedRequest);
     }
 
+    @After
+    public void clearMock() {
+        Mockito.reset(loggerMock);
+    }
+
     @Test
     public void testValidationStatisticsLoggingWhereAllSignaturesInValidationReportAreValid() {
         long validationDurationInMillis = 1000L;
         String signatureForm = "ASiC-E";
-        String expectedContainerType = "ASiC-E";
         int validSignaturesCount = 1;
         int totalSignatureCount = 1;
         SignatureValidationData.Indication indication = SignatureValidationData.Indication.TOTAL_PASSED;
         String subindication = "";
         String countryCode = "EE";
-        String xAuthenticatedUser = "N/A";
-        String signatureFormat = "FORMAT";
+        String signatureFormat = "XAdES_some_prefix";
 
         SimpleReport report = createDummySimpleReport(signatureForm, validSignaturesCount, totalSignatureCount);
         addSignatureValidationData(report.getValidationConclusion(), indication, subindication, countryCode, signatureFormat);
@@ -77,21 +86,22 @@ public class StatisticsServiceTest {
         when(mockedRequest.getHeader(X_AUTHENTICATED_USER)).thenReturn("");
 
         statisticsService.publishValidationStatistic(TimeUnit.MILLISECONDS.toNanos(validationDurationInMillis), report.getValidationConclusion());
-        verify(loggerMock).info("{" + LINE_SEPARATOR +
-                "  \"stats\" : {" + LINE_SEPARATOR +
-                "    \"type\" : \"" + expectedContainerType + "\"," + LINE_SEPARATOR +
-                "    \"usrId\" : \"" + xAuthenticatedUser + "\"," + LINE_SEPARATOR +
-                "    \"dur\" : " + validationDurationInMillis + "," + LINE_SEPARATOR +
-                "    \"sigCt\" : " + totalSignatureCount + "," + LINE_SEPARATOR +
-                "    \"vSigCt\" : " + validSignaturesCount + "," + LINE_SEPARATOR +
-                "    \"sigRslt\" : [ {" + LINE_SEPARATOR +
-                "      \"i\" : \"" + indication + "\"," + LINE_SEPARATOR +
-                "      \"cc\" : \"" + countryCode + "\"," + LINE_SEPARATOR +
-                "      \"sf\" : \"" + signatureFormat + "\"" + LINE_SEPARATOR +
-                "    } ]" + LINE_SEPARATOR +
-                "  }" + LINE_SEPARATOR +
-                "}"
-        );
+
+        verify(loggerMock).info(getMarker(CONTAINER_LOG_MARKER),
+                "{\"stats\":{" +
+                        "\"type\":\"ASiC-E\"," +
+                        "\"usrId\":\"N/A\"," +
+                        "\"dur\":1000," +
+                        "\"sigCt\":1," +
+                        "\"vSigCt\":1," +
+                        "\"sigRslt\":[" +
+                            "{\"i\":\"TOTAL-PASSED\"," +
+                            "\"cc\":\"EE\"," +
+                            "\"sf\":\"XAdES_some_prefix\"}]," +
+                        "\"sigType\":\"XAdES\"}}");
+
+        verify(loggerMock).info(getMarker(SIGNATURE_LOG_MARKER),
+                "{\"signatureStats\":{\"i\":\"TOTAL-PASSED\",\"cc\":\"EE\",\"sf\":\"XAdES_some_prefix\"}}");
     }
 
     @Test
@@ -103,7 +113,7 @@ public class StatisticsServiceTest {
         SignatureValidationData.Indication firstSignatureIndication = SignatureValidationData.Indication.TOTAL_PASSED;
         String firstSignatureSubindication = "";
         String firstSignatureCountryCode = "EE";
-        String firstSignatureFormat = "FORMAT";
+        String firstSignatureFormat = "XAdES_some_prefix";
         SignatureValidationData.Indication secondSignatureIndication = SignatureValidationData.Indication.TOTAL_FAILED;
         String secondSignatureSubindication = "CERTIFICATE_CHAIN_NOT_FOUND";
         String secondSignatureCountryCode = "US";
@@ -119,25 +129,101 @@ public class StatisticsServiceTest {
         when(mockedRequest.getHeader(X_AUTHENTICATED_USER)).thenReturn(xAuthenticatedUser);
 
         statisticsService.publishValidationStatistic(TimeUnit.MILLISECONDS.toNanos(validationDurationInMillis), report.getValidationConclusion());
-        verify(loggerMock).info("{" + LINE_SEPARATOR +
-                "  \"stats\" : {" + LINE_SEPARATOR +
-                "    \"type\" : \"" + signatureForm + "\"," + LINE_SEPARATOR +
-                "    \"usrId\" : \"" + xAuthenticatedUser + "\"," + LINE_SEPARATOR +
-                "    \"dur\" : " + validationDurationInMillis + "," + LINE_SEPARATOR +
-                "    \"sigCt\" : " + totalSignatureCount + "," + LINE_SEPARATOR +
-                "    \"vSigCt\" : " + validSignaturesCount + "," + LINE_SEPARATOR +
-                "    \"sigRslt\" : [ {" + LINE_SEPARATOR +
-                "      \"i\" : \"" + firstSignatureIndication + "\"," + LINE_SEPARATOR +
-                "      \"cc\" : \"" + firstSignatureCountryCode + "\"," + LINE_SEPARATOR +
-                "      \"sf\" : \"" + firstSignatureFormat + "\"" + LINE_SEPARATOR +
-                "    }, {" + LINE_SEPARATOR +
-                "      \"i\" : \"" + secondSignatureIndication + "\"," + LINE_SEPARATOR +
-                "      \"si\" : \"" + secondSignatureSubindication + "\"," + LINE_SEPARATOR +
-                "      \"cc\" : \"" + secondSignatureCountryCode + "\"" + LINE_SEPARATOR +
-                "    } ]" + LINE_SEPARATOR +
-                "  }" + LINE_SEPARATOR +
-                "}"
-        );
+
+        verify(loggerMock).info(getMarker(CONTAINER_LOG_MARKER),
+                "{\"stats\":{" +
+                        "\"type\":\"ASiC-E\"," +
+                        "\"usrId\":\"some_user\"," +
+                        "\"dur\":2000," +
+                        "\"sigCt\":2," +
+                        "\"vSigCt\":1," +
+                        "\"sigRslt\":[" +
+                            "{\"i\":\"TOTAL-PASSED\"," +
+                            "\"cc\":\"EE\"," +
+                            "\"sf\":\"XAdES_some_prefix\"}," +
+                            "{\"i\":\"TOTAL-FAILED\"," +
+                            "\"si\":\"CERTIFICATE_CHAIN_NOT_FOUND\"," +
+                            "\"cc\":\"US\"}]," +
+                        "\"sigType\":\"XAdES\"}}");
+
+        verify(loggerMock).info(getMarker(SIGNATURE_LOG_MARKER),
+                "{\"signatureStats\":{\"i\":\"TOTAL-PASSED\",\"cc\":\"EE\",\"sf\":\"XAdES_some_prefix\"}}");
+
+        verify(loggerMock).info(getMarker(SIGNATURE_LOG_MARKER),
+                "{\"signatureStats\":{\"i\":\"TOTAL-FAILED\",\"si\":\"CERTIFICATE_CHAIN_NOT_FOUND\",\"cc\":\"US\"}}");
+    }
+
+    @Test
+    public void testXroadValidationStatisticsLogging() {
+        long validationDurationInMillis = 1000L;
+        String signatureForm = "ASiC-E_batchsignature";
+        int validSignaturesCount = 1;
+        int totalSignatureCount = 1;
+        SignatureValidationData.Indication indication = SignatureValidationData.Indication.TOTAL_PASSED;
+        String subindication = "";
+        String countryCode = "EE";
+        String signatureFormat = "XAdES_some_prefix";
+
+        SimpleReport report = createDummySimpleReport(signatureForm, validSignaturesCount, totalSignatureCount);
+        addSignatureValidationData(report.getValidationConclusion(), indication, subindication, countryCode, signatureFormat);
+
+        HttpServletRequest mockedRequest = mock(HttpServletRequest.class);
+        statisticsService.setHttpRequest(mockedRequest);
+        when(mockedRequest.getHeader(X_AUTHENTICATED_USER)).thenReturn("");
+
+        statisticsService.publishXroadValidationStatistics(TimeUnit.MILLISECONDS.toNanos(validationDurationInMillis), report.getValidationConclusion());
+
+        verify(loggerMock).info(getMarker(CONTAINER_LOG_MARKER),
+                "{\"stats\":{" +
+                        "\"type\":\"ASiC-E\"," +
+                        "\"usrId\":\"N/A\"," +
+                        "\"dur\":1000," +
+                        "\"sigCt\":1," +
+                        "\"vSigCt\":1," +
+                        "\"sigRslt\":[" +
+                        "{\"i\":\"TOTAL-PASSED\"," +
+                        "\"cc\":\"EE\"," +
+                        "\"sf\":\"XAdES_some_prefix\"}]," +
+                        "\"sigType\":\"XAdES_XROAD\"}}");
+
+        verify(loggerMock).info(getMarker(SIGNATURE_LOG_MARKER),
+                "{\"signatureStats\":{\"i\":\"TOTAL-PASSED\",\"cc\":\"EE\",\"sf\":\"XAdES_some_prefix\"}}");
+    }
+
+    @Test
+    public void testValidationStatisticsLoggingDoesNotLogSignatureInfoForTstTypeContainer() {
+        long validationDurationInMillis = 1000L;
+        String signatureForm = "ASiC-S";
+        int validSignaturesCount = 1;
+        int totalSignatureCount = 1;
+        SignatureValidationData.Indication indication = SignatureValidationData.Indication.TOTAL_PASSED;
+        String subindication = "";
+        String countryCode = "EE";
+        String signatureFormat = "XAdES_some_prefix";
+
+        SimpleReport report = createDummySimpleReport(signatureForm, validSignaturesCount, totalSignatureCount);
+        addSignatureValidationData(report.getValidationConclusion(), indication, subindication, countryCode, signatureFormat);
+        List<TimeStampTokenValidationData> timestampTokens = new ArrayList<>();
+        timestampTokens.add(new TimeStampTokenValidationData());
+        report.getValidationConclusion().setTimeStampTokens(timestampTokens);
+
+        HttpServletRequest mockedRequest = mock(HttpServletRequest.class);
+        statisticsService.setHttpRequest(mockedRequest);
+        when(mockedRequest.getHeader(X_AUTHENTICATED_USER)).thenReturn("");
+
+        statisticsService.publishValidationStatistic(TimeUnit.MILLISECONDS.toNanos(validationDurationInMillis), report.getValidationConclusion());
+
+        verify(loggerMock).info(getMarker(CONTAINER_LOG_MARKER),
+                "{\"stats\":{" +
+                        "\"type\":\"ASiC-S\"," +
+                        "\"usrId\":\"N/A\"," +
+                        "\"dur\":1000," +
+                        "\"sigCt\":0," +
+                        "\"vSigCt\":0," +
+                        "\"sigRslt\":[]," +
+                        "\"sigType\":\"N/A\"}}");
+
+        verify(loggerMock, never()).info(eq(getMarker(SIGNATURE_LOG_MARKER)), anyString());
     }
 
     private SimpleReport createDummySimpleReport(String signatureForm, int validSignaturesCount, int totalSignaturesCount) {

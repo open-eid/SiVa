@@ -20,7 +20,6 @@ import ee.openeid.siva.integrationtest.SiVaRestTests;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
@@ -48,7 +47,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf
+     * Requirement: http://open-eid.github.io/SiVa/siva3/systemintegrators_guide/#statistics
      *
      * Title: Bdoc valid container is validated
      *
@@ -68,13 +67,14 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
    "stats": {
       "type" : "ASiC-E",
       "usrId" : "XAuthTest",
-      "dur": 1334, <- Can vary, verify that its present
+      "dur": 68, <- Can vary, verify that its present
       "sigCt": 2,
       "vSigCt": 2,
       "sigRslt": [
          {"i":"TOTAL-PASSED", "cc":"EE", "sf" : "XAdES_BASELINE_LT_TM"},
          {"i":"TOTAL-PASSED", "cc":"EE", "sf" : "XAdES_BASELINE_LT_TM"}
-      ]
+      ],
+      "sigType" : "XAdES"
    }
 }        */
     }
@@ -84,7 +84,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf
+     * Requirement: http://open-eid.github.io/SiVa/siva3/systemintegrators_guide/#statistics
      *
      * Title: Bdoc invalid container is validated
      *
@@ -104,12 +104,13 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
    "stats": {
       "type" : "ASiC-E",
       "usrId" : "XAuthTest",
-      "dur": 1334, <- Can vary, verify that its present
+      "dur": 585, <- Can vary, verify that its present
       "sigCt": 1,
       "vSigCt": 0,
       "sigRslt": [
-         {"i":"INDETERMINATE", "si":"NO_CERTIFICATE_CHAIN_FOUND", "cc":"EE", "sf" : "XAdES_BASELINE_LT_TM"}
-      ]
+         {"i":"TOTAL-FAILED", "si":"FORMAT_FAILURE", "cc":"EE", "sf" : "XAdES_BASELINE_LT_TM"}
+      ],
+      "sigType" : "XAdES"
    }
 }        */
     }
@@ -119,7 +120,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf
+     * Requirement: http://open-eid.github.io/SiVa/siva3/systemintegrators_guide/#statistics
      *
      * Title: Bdoc not supported file is inserted
      *
@@ -143,7 +144,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf
+     * Requirement: http://open-eid.github.io/SiVa/siva3/systemintegrators_guide/#statistics
      *
      * Title: Bdoc with certificates from different countries.
      *
@@ -170,7 +171,8 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
          {"i":"TOTAL-PASSED", "cc":"EE", "sf" : "XAdES_BASELINE_LT_TM"},
          {"i":"TOTAL-PASSED", "cc":"LT", "sf" : "XAdES_BASELINE_LT_TM"},
          {"i":"TOTAL-PASSED", "cc":"LV", "sf" : "XAdES_BASELINE_LT_TM"}
-      ]
+      ],
+      "sigType" : "XAdES"
    }
 }        */
     }
@@ -180,7 +182,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf
+     * Requirement: http://open-eid.github.io/SiVa/siva3/systemintegrators_guide/#statistics
      *
      * Title: Ddoc valid container is validated
      *
@@ -199,7 +201,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     Expected result:
 {
    "stats": {
-      "type" : "XAdES",
+      "type" : "DIGIDOC_XML",
       "usrId" : "XAuthTest",
       "dur": 1334, <- Can vary, verify that its present
       "sigCt": 3,
@@ -208,7 +210,8 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
          {"i":"TOTAL-PASSED", "cc":"EE", "sf" : "DIGIDOC_XML_1.3"},
          {"i":"TOTAL-PASSED", "cc":"EE", "sf" : "DIGIDOC_XML_1.3"},
          {"i":"TOTAL-PASSED", "cc":"EE", "sf" : "DIGIDOC_XML_1.3"}
-      ]
+      ],
+      "sigType" : "XAdES"
    }
 }        */
     }
@@ -218,7 +221,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf
+     * Requirement: http://open-eid.github.io/SiVa/siva3/systemintegrators_guide/#statistics
      *
      * Title: Ddoc invalid container is validated
      *
@@ -237,14 +240,15 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     Expected result:
 {
    "stats": {
-      "type" : "XAdES",
+      "type" : "DIGIDOC_XML",
       "usrId" : "XAuthTest",
       "dur": 1334, <- Can vary, verify that its present
       "sigCt": 1,
       "vSigCt": 0,
       "sigRslt": [
          {"i":"TOTAL-FAILED", "cc":"EE", "sf" : "DIGIDOC_XML_1.2"}
-      ]
+      ],
+      "sigType" : "XAdES"
    }
 }        */
     }
@@ -254,7 +258,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf
+     * Requirement: http://open-eid.github.io/SiVa/siva3/systemintegrators_guide/#statistics
      *
      * Title: Ddoc not supported file is inserted
      *
@@ -278,7 +282,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf
+     * Requirement: http://open-eid.github.io/SiVa/siva3/systemintegrators_guide/#statistics
      *
      * Title: Ddoc with certificates from different countries.
      *
@@ -287,7 +291,6 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      * File: Belgia_kandeavaldus_LIV.ddoc
      */
     @Test
-    @Ignore("SIVARIA2-126")
     public void ddocWithSignaturesFromDifferentCountries() {
         setTestFilesDirectory("ddoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Belgia_kandeavaldus_LIV.ddoc"));
@@ -298,7 +301,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     Expected result:
 {
    "stats": {
-      "type" : "XAdES",
+      "type" : "DIGIDOC_XML",
       "usrId" : "XAuthTest",
       "dur": 1334, <- Can vary, verify that its present
       "sigCt": 2,
@@ -306,7 +309,8 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
       "sigRslt": [
          {"i":"TOTAL-PASSED", "cc":"EE", "sf" : "DIGIDOC_XML_1.3"},
          {"i":"TOTAL-FAILED", "cc":"BE", "sf" : "DIGIDOC_XML_1.3"},
-      ]
+      ],
+      "sigType" : "XAdES"
    }
 }        */
     }
@@ -316,7 +320,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf
+     * Requirement: http://open-eid.github.io/SiVa/siva3/systemintegrators_guide/#statistics
      *
      * Title: Pdf valid container is validated
      *
@@ -335,19 +339,16 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     Expected result:
 {
   "stats" : {
+    "type" : "PAdES",
     "usrId" : "XAuthTest",
     "dur" : 685,
     "sigCt" : 2,
     "vSigCt" : 2,
-    "sigRslt" : [ {
-      "i" : "TOTAL-PASSED",
-      "cc" : "EE",
-      "sf" : "PAdES_BASELINE_LT"
-    }, {
-      "i" : "TOTAL-PASSED",
-      "cc" : "EE",
-      "sf" : "PAdES_BASELINE_LT"
-    } ]
+    "sigRslt" : [
+        {"i" : "TOTAL-PASSED", "cc" : "EE", "sf" : "PAdES_BASELINE_LT"},
+        {"i" : "TOTAL-PASSED", "cc" : "EE", "sf" : "PAdES_BASELINE_LT"}
+    ],
+    "sigType" : "PAdES"
   }
 }        */
     }
@@ -357,7 +358,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf
+     * Requirement: http://open-eid.github.io/SiVa/siva3/systemintegrators_guide/#statistics
      *
      * Title: Pdf invalid container is validated
      *
@@ -375,20 +376,16 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     /*
   {
   "stats" : {
+    "type" : "PAdES",
     "usrId" : "XAuthTest",
     "dur" : 687,
     "sigCt" : 2,
-    "vSigCt" : 1,
-    "sigRslt" : [ {
-      "i" : "TOTAL-PASSED",
-      "cc" : "EE",
-      "sf" : "PAdES_BASELINE_LTA"
-    }, {
-      "i" : "TOTAL-FAILED",
-      "si" : "HASH_FAILURE",
-      "cc" : "EE",
-      "sf" : "PAdES_BASELINE_LTA"
-    } ]
+    "vSigCt" : 0,
+    "sigRslt" : [
+       {"i" : "TOTAL-FAILED", "cc" : "EE", "sf" : "PAdES_BASELINE_LTA"},
+       {"i" : "TOTAL-FAILED", "si" : "HASH_FAILURE", "cc" : "EE", "sf" : "PAdES_BASELINE_LTA"}
+    ],
+    "sigType" : "PAdES"
   }
 }        */
     }
@@ -399,7 +396,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf
+     * Requirement: http://open-eid.github.io/SiVa/siva3/systemintegrators_guide/#statistics
      *
      * Title: Pdf with certificates from non Estonian countries.
      *
@@ -418,15 +415,16 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     Expected result:
 {
   "stats" : {
+    "type" : "PAdES",
     "usrId" : "XAuthTest",
     "dur" : 830,
     "sigCt" : 2,
     "vSigCt" : 0,
-    "sigRslt" : [ {
-      "i" : "TOTAL-FAILED", "cc" : "BE", "sf" : "PAdES_BASELINE_B"
-    }, {
-      "i" : "TOTAL-FAILED", "cc" : "BE", "sf" : "PAdES_BASELINE_B"
-    } ]
+    "sigRslt" : [
+      {"i" : "TOTAL-FAILED", "si" : "FORMAT_FAILURE", "cc" : "BE", "sf" : "PAdES_BASELINE_B"},
+      {"i" : "TOTAL-FAILED", "si" : "FORMAT_FAILURE", "cc" : "BE", "sf" : "PAdES_BASELINE_B"}
+    ],
+    "sigType" : "PAdES"
   }
 }        */
     }
@@ -436,7 +434,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf
+     * Requirement: http://open-eid.github.io/SiVa/siva3/systemintegrators_guide/#statistics
      *
      * Title: Xroad valid container is validated
      *
@@ -455,14 +453,15 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     Expected result:
 {
    "stats": {
-      "type" : "ASiC-E (BatchSignature)",
+      "type" : "ASiC-E",
       "usrId" : "XAuthTest",
       "dur": 1334, <- Can vary, verify that its present
       "sigCt": 1,
       "vSigCt": 1,
       "sigRslt": [
          {"i":"TOTAL-PASSED", "cc":"XX", "sf" : "XAdES_BASELINE_B_BES"}
-      ]
+      ],
+      "sigType" : "XAdES_XROAD"
    }
 }        */
     }
@@ -472,7 +471,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf
+     * Requirement: http://open-eid.github.io/SiVa/siva3/systemintegrators_guide/#statistics
      *
      * Title: Xroad invalid container is validated
      *
@@ -497,8 +496,9 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
       "sigCt": 1,
       "vSigCt": 0,
       "sigRslt": [
-         { "i" : "TOTAL-FAILED", "si" : "", "cc":"XX", "sf" : "XAdES_BASELINE_LT"}
-      ]
+         { "i" : "TOTAL-FAILED", "cc":"XX", "sf" : "XAdES_BASELINE_LT"}
+      ],
+      "sigType" : "XAdES_XROAD"
    }
 }        */
     }
@@ -508,7 +508,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf
+     * Requirement: http://open-eid.github.io/SiVa/siva3/systemintegrators_guide/#statistics
      *
      * Title: Xroad not supported file is inserted
      *
@@ -532,7 +532,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf
+     * Requirement: http://open-eid.github.io/SiVa/siva3/systemintegrators_guide/#statistics
      *
      * Title: ASiCs valid container is validated
      *
@@ -548,21 +548,14 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
                 .then()
                 .statusCode(HttpStatus.OK.value());
        /*
-        stats" : {
+       stats" : {
         "type" : "ASiC-S",
-                "usrId" : "N/A",
-                "dur" : 1566,
-                "sigCt" : 2,
-                "vSigCt" : 2,
-                "sigRslt" : [ {
-            "i" : "TOTAL-PASSED",
-                    "cc" : "EE",
-                    "sf" : "XAdES_BASELINE_LT_TM"
-        }, {
-            "i" : "TOTAL-PASSED",
-                    "cc" : "EE",
-                    "sf" : "XAdES_BASELINE_LT_TM"
-        } ]
+        "usrId" : "N/A",
+        "dur" : 1566,
+        "sigCt" : 0,
+        "vSigCt" : 0,
+        "sigRslt" : [],
+        "sigType" : "N/A"
     }
 }     */
     }
@@ -572,7 +565,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * TestType: Manual
      *
-     * Requirement: http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf
+     * Requirement: http://open-eid.github.io/SiVa/siva3/systemintegrators_guide/#statistics
      *
      * Title: asics invalid container is validated
      *

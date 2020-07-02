@@ -285,24 +285,44 @@ logging.config=/path/to/logback.xml
 
 ## Statistics
 
-For every report validated, a statistical report is composed that collects the following data:
+For every validation a statistical report is composed that contains the following data:
 
-| Data | Description |
-| ----- | ----- |
-| Validation duration | The time it takes to process an incoming request - measured in milliseconds |
-| Container type | Container type ( text value that identifies the signature type of the incoming document: ASiC-E, XAdES, ASiC-S or ASiC-E (BatchSignature) ) |
-| Siva User ID | String (Text data that contains the SiVa user identifier for reports (from the HTTP x-authenticated-user header) or `N/A`) |
-| Total signatures count | The value of the `signaturesCount` element in the validation report
-| Valid signatures count | The value of the `validSignaturesCount` element in the validation report
-| Signature validation indication(s) | Values of elements signatures/indication and signatures/subindication from the validation report. `indication[/subindication]` |
-| Signature country/countries | Country code extracted from the signer certs. The ISO-3166-1 alpha-2 country code that is associated with signature (the signing certificate). Or constant string "XX" if the country cannot be determined. |
-| Signature format(s) | Values of element signatures/signatureFormat from the validation report. <signatureFormat> |
+| Property | Type | Description |
+|----------|------|-------------|
+| stats | Object | Object containing statistic info |
+| stats.type | String | Container type ( text value that identifies the container type) of the validated document: ASiC-E, ASIC-S, PAdES, DIGIDOC_XML, N/A |
+| stats.sigType | String | Signature type in validated document: XAdES, CAdES, PAdES, XROAD_XAdES, N/A |
+| stats.usrId | String | (Text data that contains the SiVa user identifier for reports (from the HTTP x-authenticated-user header) or N/A) |
+| stats.dur | Number | The time it takes to process an incoming request - measured in milliseconds |
+| stats.sigCt | Number | The value of the "signaturesCount" element in the validation report |
+| stats.vSigCt | Number | The value of the "validSignaturesCount" element in the validation report |
+| stats.sigRslt  | Array | Array of signature statistic objects |
+| stats.sigRslt[0] | Object | Object containing signature statistic info |
+| stats.sigRslt[0].i | String | Value of signature indication field from the validation report |
+| stats.sigRslt[0].si | String | Value of signature subindication field from the validation report. Element not present if not in validation report |
+| stats.sigRslt[0].cc | String | Country code extracted from the signer cert subject field. The ISO-3166-1 alpha-2 country code that is associated with signature (the signing certificate or XX if the country cannot be determined. |
+| stats.sigRslt[0].sf | String | Values of signatureFormat field from the validation report |
 
-There are two channels where this information is sent:
+Example of statistic
+```
+{
+   "stats": {
+      "type": "PAdES",
+      "sigType": "PAdES",
+      "usrId": "sample_user1",
+      "dur": 4021,
+      "sigCt": 2,
+      "vSigCt": 1,
+      "sigRslt": [
+         {"i":"TOTAL-PASSED", "cc":"EE", "sf":"PAdES_BASELINE_LT"},
+         {"i":"INDETERMINATE", "si":"NO_CERTIFICATE_CHAIN_FOUND", "cc":"EE", "sf":"PAdES_BASELINE_LT"}
+      ]
+   }
+}
+```
 
-1. Log feeds (at INFO level) which can be redirected to files or to a syslog feed.
+This information is sent to log feeds (at INFO level) which can be redirected to files or to a syslog feed.
 
-The format and events are described in more detail in [SiVa_statistics_v3.pdf](/SiVa/pdf-files/SiVa_statistics_v3.pdf)
 
 ## Monitoring
 

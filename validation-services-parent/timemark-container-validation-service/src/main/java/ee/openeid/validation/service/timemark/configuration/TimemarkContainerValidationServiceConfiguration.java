@@ -17,31 +17,35 @@
 package ee.openeid.validation.service.timemark.configuration;
 
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
-import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
-import ee.openeid.validation.service.timemark.XMLEntityAttackValidator;
-import ee.openeid.validation.service.timemark.signature.policy.BDOCSignaturePolicyService;
-import ee.openeid.validation.service.timemark.signature.policy.PolicyConfigurationWrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.Configuration;
+import org.digidoc4j.ExternalConnectionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
+import org.springframework.core.io.ClassPathResource;
 
 @SpringBootConfiguration
 @EnableAutoConfiguration
 @EnableConfigurationProperties({
         BDOCSignaturePolicyProperties.class,
-        BDOCValidationServiceProperties.class,
-        DDOCValidationServiceProperties.class,
-        XMLEntityAttackValidator.class
+        BDOCValidationServiceProperties.class
 })
 public class TimemarkContainerValidationServiceConfiguration {
 
+    private final TSLLoaderConfigurationProperties tslLoaderConfigurationProperties;
+    private final BDOCValidationServiceProperties bdocValidationServiceProperties;
+
     @Autowired
-    private TSLLoaderConfigurationProperties tslLoaderConfigurationProperties;
+    public TimemarkContainerValidationServiceConfiguration(TSLLoaderConfigurationProperties tslLoaderConfigurationProperties,
+            BDOCValidationServiceProperties bdocValidationServiceProperties) {
+        this.tslLoaderConfigurationProperties = tslLoaderConfigurationProperties;
+        this.bdocValidationServiceProperties = bdocValidationServiceProperties;
+    }
 
     @Bean(name = "timemarkPolicyService")
     public ConstraintLoadingSignaturePolicyService timemarkSignaturePolicyService(BDOCSignaturePolicyProperties properties) {
@@ -49,10 +53,30 @@ public class TimemarkContainerValidationServiceConfiguration {
     }
 
     @Bean
-    public PolicyConfigurationWrapper policyConfiguration( BDOCSignaturePolicyService bdocSignaturePolicyService, Configuration configuration) {
+    @Profile("test")
+    public Configuration testDigiDoc4JConfiguration() {
+        Configuration configuration = new Configuration(Configuration.Mode.TEST);
+        configuration.setTrustedTerritories();
+        configuration.setSslTruststorePathFor(ExternalConnectionType.TSL, tslLoaderConfigurationProperties.getSslTruststorePath());
+        configuration.setSslTruststorePasswordFor(ExternalConnectionType.TSL, tslLoaderConfigurationProperties.getSslTruststorePassword());
+        configuration.setSslTruststoreTypeFor(ExternalConnectionType.TSL, tslLoaderConfigurationProperties.getSslTruststoreType());
         configuration.setTslLocation(tslLoaderConfigurationProperties.getUrl());
-        ConstraintDefinedPolicy policy = bdocSignaturePolicyService.getPolicy(StringUtils.EMPTY);
-        configuration.setValidationPolicy(bdocSignaturePolicyService.getAbsolutePath(policy.getName()));
-        return new PolicyConfigurationWrapper(configuration, policy);
+        configuration.loadConfiguration(getAdditionalConfigurationFilePath("/siva-digidoc4j-test.yaml"), true);
+        return configuration;
     }
+
+    @Bean
+    @Profile("!test")
+    public Configuration prodDigiDoc4JConfiguration() {
+        org.digidoc4j.Configuration configuration = new org.digidoc4j.Configuration(Configuration.Mode.PROD);
+        configuration.setTslLocation(tslLoaderConfigurationProperties.getUrl());
+        configuration.loadConfiguration(getAdditionalConfigurationFilePath("/siva-digidoc4j.yaml"), true);
+        return configuration;
+    }
+
+    private String getAdditionalConfigurationFilePath(String defaultFilePath) {
+        String filePath = StringUtils.defaultString(bdocValidationServiceProperties.getDigidoc4JConfigurationFile(), defaultFilePath);
+        return new ClassPathResource(filePath, this.getClass().getClassLoader()).getPath();
+    }
+
 }

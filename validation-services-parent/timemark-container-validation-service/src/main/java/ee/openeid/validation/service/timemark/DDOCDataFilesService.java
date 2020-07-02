@@ -39,11 +39,9 @@ import java.io.InputStream;
 public class DDOCDataFilesService implements DataFilesService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DDOCDataFilesService.class);
 
-    private XMLEntityAttackValidator xmlEntityAttackValidator;
-
     @Override
     public DataFilesReport getDataFiles(DataFilesDocument dataFilesDocument) {
-        xmlEntityAttackValidator.validateAgainstXMLEntityAttacks(dataFilesDocument.getBytes());
+        XMLEntityAttackValidator.validateAgainstXMLEntityAttacks(dataFilesDocument.getBytes());
 
         Container container;
         try {
@@ -61,11 +59,6 @@ public class DDOCDataFilesService implements DataFilesService {
         return ContainerBuilder.aContainer()
                 .fromStream(containerInputStream)
                 .build();
-    }
-
-    @Autowired
-    public void setXMLEntityAttackValidator(XMLEntityAttackValidator xmlEntityAttackValidator) {
-        this.xmlEntityAttackValidator = xmlEntityAttackValidator;
     }
 
 }

@@ -18,7 +18,6 @@ package ee.openeid.validation.service.timemark.signature.policy;
 
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import ee.openeid.validation.service.timemark.configuration.BDOCSignaturePolicyProperties;
-import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.Configuration;
 import org.slf4j.Logger;
@@ -34,17 +33,25 @@ import java.util.concurrent.ConcurrentSkipListMap;
 public class BDOCConfigurationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(BDOCConfigurationService.class);
 
-    private final Map<String, PolicyConfigurationWrapper> policyList = new ConcurrentSkipListMap<>(String.CASE_INSENSITIVE_ORDER);
-    private PolicyConfigurationWrapper policyConfiguration;
-    private BDOCSignaturePolicyProperties properties;
-    private BDOCSignaturePolicyService policyService;
+    private final BDOCSignaturePolicyProperties properties;
+    private final BDOCSignaturePolicyService policyService;
+    private final Configuration configuration;
 
-    private TrustedListsCertificateSource trustedListSource;
+    private final Map<String, PolicyConfigurationWrapper> policyList = new ConcurrentSkipListMap<>(String.CASE_INSENSITIVE_ORDER);
+
+    @Autowired
+    public BDOCConfigurationService(BDOCSignaturePolicyService policyService,
+            BDOCSignaturePolicyProperties properties,
+            Configuration configuration) {
+        this.policyService = policyService;
+        this.properties = properties;
+        this.configuration = configuration;
+    }
 
     @PostConstruct
     protected void loadAllBDOCConfigurations() {
         properties.getAbstractPolicies().forEach(policy -> {
-            Configuration tempConfiguration = policyConfiguration.getConfiguration().copy();
+            Configuration tempConfiguration = configuration.copy();
             tempConfiguration.setValidationPolicy(policyService.getAbsolutePath(policy.getName()));
             LOGGER.info("Adding BDOC validation policy: {}", policy.getName());
             policyList.putIfAbsent(policy.getName(), new PolicyConfigurationWrapper(tempConfiguration, policy));
@@ -68,23 +75,4 @@ public class BDOCConfigurationService {
         return policyList.get(policyName);
     }
 
-    @Autowired
-    public void setPolicyService(BDOCSignaturePolicyService policyService) {
-        this.policyService = policyService;
-    }
-
-    @Autowired
-    public void setConfiguration(PolicyConfigurationWrapper policyConfiguration) {
-        this.policyConfiguration = policyConfiguration;
-    }
-
-    @Autowired
-    public void setProperties(BDOCSignaturePolicyProperties properties) {
-        this.properties = properties;
-    }
-
-    @Autowired
-    public void setTrustedListSource(TrustedListsCertificateSource trustedListSource) {
-        this.trustedListSource = trustedListSource;
-    }
 }

@@ -22,7 +22,6 @@ import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.ValidationService;
-import ee.openeid.validation.service.timemark.configuration.DDOCValidationServiceProperties;
 import ee.openeid.validation.service.timemark.report.AsicContainerValidationReportBuilder;
 import ee.openeid.validation.service.timemark.report.DDOCContainerValidationReportBuilder;
 import ee.openeid.validation.service.timemark.signature.policy.BDOCConfigurationService;
@@ -39,7 +38,6 @@ import org.digidoc4j.impl.ddoc.DDocContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
@@ -51,18 +49,14 @@ public class TimemarkContainerValidationService implements ValidationService {
 
     private ReportConfigurationProperties reportConfigurationProperties;
     private BDOCConfigurationService bdocConfigurationService;
-    private DDOCValidationServiceProperties ddocValidationServiceProperties;
-    private XMLEntityAttackValidator xmlEntityAttackValidator;
     private static final String DDOC_FORMAT = "DDOC";
 
     @Override
     public Reports validateDocument(ValidationDocument validationDocument) {
         if (DDOC_FORMAT.equalsIgnoreCase(FilenameUtils.getExtension(validationDocument.getName()))) {
-            xmlEntityAttackValidator.validateAgainstXMLEntityAttacks(validationDocument.getBytes());
+            XMLEntityAttackValidator.validateAgainstXMLEntityAttacks(validationDocument.getBytes());
         }
         PolicyConfigurationWrapper policyConfiguration = bdocConfigurationService.loadPolicyConfiguration(validationDocument.getSignaturePolicy());
-        String configurationFilePath = new ClassPathResource(ddocValidationServiceProperties.getJdigidocConfigurationFile(), this.getClass().getClassLoader()).getPath();
-        policyConfiguration.getConfiguration().loadConfiguration(configurationFilePath, true);
         Container container;
         try {
             container = createContainer(validationDocument, policyConfiguration.getConfiguration());
@@ -116,13 +110,4 @@ public class TimemarkContainerValidationService implements ValidationService {
         this.reportConfigurationProperties = reportConfigurationProperties;
     }
 
-    @Autowired
-    public void setDdocValidationServiceProperties(DDOCValidationServiceProperties ddocValidationServiceProperties) {
-        this.ddocValidationServiceProperties = ddocValidationServiceProperties;
-    }
-
-    @Autowired
-    public void setXMLEntityAttackValidator(XMLEntityAttackValidator xmlEntityAttackValidator) {
-        this.xmlEntityAttackValidator = xmlEntityAttackValidator;
-    }
 }

@@ -24,6 +24,7 @@ import ee.openeid.siva.validation.service.DataFilesService;
 import ee.openeid.validation.service.timemark.report.DDOCDataFilesReportBuilder;
 
 import eu.europa.esig.dss.model.DSSException;
+import org.digidoc4j.Configuration;
 import org.digidoc4j.Container;
 import org.digidoc4j.ContainerBuilder;
 import org.digidoc4j.exceptions.DigiDoc4JException;
@@ -38,6 +39,13 @@ import java.io.InputStream;
 @Service
 public class DDOCDataFilesService implements DataFilesService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DDOCDataFilesService.class);
+
+    private final Configuration configuration;
+
+    @Autowired
+    public DDOCDataFilesService(Configuration configuration) {
+        this.configuration = configuration;
+    }
 
     @Override
     public DataFilesReport getDataFiles(DataFilesDocument dataFilesDocument) {
@@ -58,6 +66,7 @@ public class DDOCDataFilesService implements DataFilesService {
         InputStream containerInputStream = new ByteArrayInputStream(dataFilesDocument.getBytes());
         return ContainerBuilder.aContainer()
                 .fromStream(containerInputStream)
+                .withConfiguration(configuration)
                 .build();
     }
 

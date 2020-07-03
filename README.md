@@ -6,38 +6,30 @@
 [![Coverage Status](https://coveralls.io/repos/github/open-eid/SiVa/badge.svg?branch=develop)](https://coveralls.io/github/open-eid/SiVa?branch=develop)
 [![GitHub license](https://img.shields.io/badge/license-EUPLv1.1-blue.svg)](https://raw.githubusercontent.com/open-eid/SiVa/develop/LICENSE.md)
 
-SiVa is digitally signed documents validations web service with REST JSON API
-built with [Spring Boot](http://projects.spring.io/spring-boot/). Supported digitally
-signed document formats are: BDOC, DDOC and PDF files with at least signature level Long Term.
+SiVa is digital signature validation web service that provides JSON and SOAP API to validate following file types:
 
-## Main features
-
-* SiVa REST ETSI compliant API to validate all supported signatures.
-* SiVa handles files in PDF-format version 1.7 and later, signed with PadES-profile signatures.
-* Service handles DDOC files starting from version 1.0 or later
-* Service supports BDOC files starting from version 2.1 or later
-* Signatures with PadES-LT and PadES-LTA profile are supported.
-* BDOC signatures with type BDOC-TM and BDOC-TS are supported
+* Estonian DDOC containers
+* Estonian BDOC containers with TimeMark and TimeStamp signatures
+* Estonian X-Road security server ASiCE signature containers
+* Estonian ASiC-S containers with time stamp tokens
+* ETSI standard based ASiC-E and ASiC-S containers
+* ETSI standard based XAdES, CAdES and PAdES signatures
+* ETSI standard based XAdES signatures with datafiles in hashcode form
 
 ### Libraries used in validation services
 
-Below is list of Java libraries we use and for which digitally signed document format we use it for:
+Below is list of Java libraries used for validation:
 
-* [JDigiDoc](https://github.com/open-eid/jdigidoc) - is used to validate Estonian older digital
-  signature format called DDOC
-* [DigiDoc4J](https://github.com/open-eid/digidoc4j) - is used to validate BDOC digital signature container
-  that are compliant with ASiCE standard
-* [DigiDoc4J DSS fork](https://github.com/open-eid/sd-dss) - to validate digitally signed PDF files that
-  comply with Estonian laws
-* [asicverifier](https://github.com/ria-ee/X-Road/tree/master/src/asicverifier) is used to validate
-  XRoad signature containers
+* [DigiDoc4J](https://github.com/open-eid/digidoc4j) - is used to validate DDOC and BDOC digital signature containers.
+* [asicverifier](https://github.com/ria-ee/X-Road/tree/master/src/asicverifier) - is used to validate XRoad signature containers.
+* [DigiDoc4J DSS fork](https://github.com/open-eid/sd-dss) - to validate all other digitally signed files.
 
 ## Requirements
 
 These are minimum requirements to build and develop SiVa project:
 
 * **git** - to easily download and update code. You can [download git here](https://git-scm.com/)
-* **Oracle Java JDK** - to compile and run SiVa applications. Download link for [Oracle Java JDK](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+* **Java JDK 11** - to compile and run SiVa applications.
 * **IDE** - to develop SiVa. We recommend to use [JetBrains IntelliJ](https://www.jetbrains.com/idea/)
 * **2 GB of RAM** the RAM requirement is here because when building the project the integration tests take up a lot of memory
 * Optionally You can also install **Maven** but it is not needed because SiVa project uses Maven wrapper to install maven
@@ -46,7 +38,7 @@ These are minimum requirements to build and develop SiVa project:
 
 ### Using Maven Wrapper
 
-Recommended way of building this project is using [Maven Wrapper](https://github.com/takari/maven-wrapper) to build it.
+Recommended way of building this project is using [Maven Wrapper](https://github.com/takari/maven-wrapper).
 Run following command:
 
 ```bash
@@ -85,33 +77,16 @@ Now point Your browser to URL: <http://localhost:9000>
 
 ## WAR and Tomcat setup for legacy systems
 
-> **NOTE 1**: We do not recommend using WAR deployment option because lack of testing done on different servlet
-> containers also possible container application libraries conflicts
-
-> **NOTE 2**: Each SiVa service **must** be deployed to separate instance of Tomcat to avoid Java JAR library version
+> **NOTE**: Each SiVa service **must** be deployed to separate instance of Tomcat to avoid Java JAR library version
 > conflicts.
 
-First we need to download Tomcat web servlet container as of the writing latest version available in version 7 branch is 7.0.77. We will download it with `wget`
-
-```bash
-wget http://www-eu.apache.org/dist/tomcat/tomcat-7/v7.0.70/bin/apache-tomcat-7.0.70.tar.gz
-```
-
-Unpack it somewhere:
-
-```bash
-tar xf apache-tomcat-7.0.70.tar.gz
-```
-
-Now we should build the WAR file. We have created helper script with all the correct Maven parameters.
+To build the WAR file use helper script with all the correct Maven parameters.
 
 ```bash
 ./war-build.sh
 ```
 
-> **NOTE** The script will skip running the integration tests when building WAR files
-
-Final steps would be copying built WAR file into Tomcat `webapps` directory and starting the servlet container.
+Copy built WAR file into Tomcat `webapps` directory and start the servlet container.
 
 ```bash
 cp siva-parent/siva-webapp/target/siva-webapp-3.2.2.war apache-tomcat-7.0.70/webapps
@@ -135,7 +110,7 @@ export CATALINA_OPTS="-Dspring.config.location=file:/path/to/application.propert
 
 ## How-to run tests
 
-Unit are integral part of the SiVa code base. The tests are automatically executed every
+Unit test are integral part of the SiVa code base. The tests are automatically executed every
 time the application is built. The build will fail if any of the tests fail.
 
 To execute the tests from command line after application is built use:
@@ -145,8 +120,8 @@ To execute the tests from command line after application is built use:
 ```
 
 ### How to run integration tests
-Integration tests are disabled by default, but can be enabled with maven parameter `-DrunIntegrationTests=true`. When executing the integration
-tests, SiVa Web application has to be started before the tests are executed. The build will fail if any of the tests fail.
+Integration tests are disabled by default, but can be enabled with maven parameter `-DrunIntegrationTests=true`. 
+Executing integration tests requires running SiVa Web application instance (and XROAD validation service instance). 
 It is possible to run integration tests without xroad tests `-DrunWithoutXroadIntegrationTests=true`.
 
 ### How to run load tests

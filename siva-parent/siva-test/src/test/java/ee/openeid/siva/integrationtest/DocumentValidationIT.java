@@ -16,6 +16,7 @@
 
 package ee.openeid.siva.integrationtest;
 
+import ee.openeid.siva.common.Constants;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
@@ -245,7 +246,8 @@ public class DocumentValidationIT extends SiVaRestTests {
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("signatures[0].subIndication", Matchers.is("SIGNED_DATA_NOT_FOUND"))
                 .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validationWarnings", Matchers.emptyOrNullString())
+                .body("validationWarnings", Matchers.hasSize(1))
+                .body("validationWarnings[0].content", Matchers.is(Constants.TEST_ENV_VALIDATION_WARNING));
         ;
 
     }
@@ -359,7 +361,8 @@ public class DocumentValidationIT extends SiVaRestTests {
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validationWarnings", Matchers.emptyOrNullString());
+                .body("validationWarnings", Matchers.hasSize(1))
+                .body("validationWarnings[0].content", Matchers.is(Constants.TEST_ENV_VALIDATION_WARNING));
 
     }
 

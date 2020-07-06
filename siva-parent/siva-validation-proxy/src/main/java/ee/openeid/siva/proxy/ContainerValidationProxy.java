@@ -3,6 +3,7 @@ package ee.openeid.siva.proxy;
 import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.http.RESTProxyService;
+import ee.openeid.siva.statistics.StatisticsService;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.document.report.SimpleReport;
@@ -18,6 +19,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.utils.ZipEntryInputStream;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
@@ -42,7 +45,16 @@ public class ContainerValidationProxy extends ValidationProxy {
     private static final String META_INF_FOLDER = "META-INF/";
     private static final String DOCUMENT_FORMAT_NOT_RECOGNIZED = "Document format not recognized/handled";
 
-    private RESTProxyService restProxyService;
+    private final RESTProxyService restProxyService;
+
+    @Autowired
+    public ContainerValidationProxy(RESTProxyService restProxyService,
+            StatisticsService statisticsService,
+            ApplicationContext applicationContext,
+            Environment environment) {
+        super(statisticsService, applicationContext, environment);
+        this.restProxyService = restProxyService;
+    }
 
     @Override
     public SimpleReport validateRequest(ProxyRequest proxyRequest) {
@@ -185,8 +197,4 @@ public class ContainerValidationProxy extends ValidationProxy {
         return entry.getName().equals(MIME_TYPE_FILE_NAME) && ASICS_MIME_TYPE.equals(new String(new InMemoryDocument(zipStream, entry.getName()).getBytes()));
     }
 
-    @Autowired
-    public void setRestProxyService(RESTProxyService restProxyService) {
-        this.restProxyService = restProxyService;
-    }
 }

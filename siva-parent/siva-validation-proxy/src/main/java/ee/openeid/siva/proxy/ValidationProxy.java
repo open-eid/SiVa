@@ -23,34 +23,54 @@ import ee.openeid.siva.proxy.exception.ValidatonServiceNotFoundException;
 import ee.openeid.siva.statistics.StatisticsService;
 import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.validation.document.report.ValidationWarning;
 import ee.openeid.siva.validation.service.ValidationService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public abstract class ValidationProxy {
     static final Logger LOGGER = LoggerFactory.getLogger(ValidationProxy.class);
+
     protected static final String SERVICE_BEAN_NAME_POSTFIX = "ValidationService";
+    private static final Profiles TEST_PROFILE = Profiles.of("test");
 
-    private StatisticsService statisticsService;
-    ApplicationContext applicationContext;
+    private final StatisticsService statisticsService;
+    private final ApplicationContext applicationContext;
+    private final Environment environment;
 
+    @Autowired
+    public ValidationProxy(StatisticsService statisticsService, ApplicationContext applicationContext, Environment environment) {
+        this.statisticsService = statisticsService;
+        this.applicationContext = applicationContext;
+        this.environment = environment;
+    }
 
     public SimpleReport validate(ProxyRequest proxyRequest) {
         long validationStartTime = System.nanoTime();
         SimpleReport report = validateRequest(proxyRequest);
         long validationDuration = System.nanoTime() - validationStartTime;
 
+        publishStatistics(proxyRequest, report, validationDuration);
+        addWarningForTestEnvironment(report);
+        return report;
+    }
+
+    private void publishStatistics(ProxyRequest proxyRequest, SimpleReport report, long validationDuration) {
         if (isDocumentTypeXRoad(proxyRequest)) {
             statisticsService.publishXroadValidationStatistics(validationDuration, report.getValidationConclusion());
         } else {
             statisticsService.publishValidationStatistic(validationDuration, report.getValidationConclusion());
         }
-
-        return report;
     }
 
     boolean isDocumentTypeXRoad(ProxyRequest proxyRequest) {
@@ -59,6 +79,24 @@ public abstract class ValidationProxy {
             return proxyDocument.getDocumentType() != null && proxyDocument.getDocumentType() == DocumentType.XROAD;
         }
         return false;
+    }
+
+    private void addWarningForTestEnvironment(SimpleReport simpleReport) {
+        if (!environment.acceptsProfiles(TEST_PROFILE)) {
+            return;
+        }
+
+        ValidationWarning validationWarning = new ValidationWarning();
+        validationWarning.setContent("This is validation service demo. Use it for testing purposes only");
+
+        List<ValidationWarning> warnings = new ArrayList<>();
+        warnings.add(validationWarning);
+
+        if (CollectionUtils.isNotEmpty(simpleReport.getValidationConclusion().getValidationWarnings())) {
+            warnings.addAll(simpleReport.getValidationConclusion().getValidationWarnings());
+        }
+
+        simpleReport.getValidationConclusion().setValidationWarnings(warnings);
     }
 
     SimpleReport chooseReport(Reports reports, ReportType reportType) {
@@ -91,15 +129,5 @@ public abstract class ValidationProxy {
 
     abstract String constructValidatorName(ProxyRequest proxyRequest);
     abstract SimpleReport validateRequest(ProxyRequest proxyRequest);
-
-    @Autowired
-    public void setStatisticsService(StatisticsService statisticsService) {
-        this.statisticsService = statisticsService;
-    }
-
-    @Autowired
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
-    }
 
 }

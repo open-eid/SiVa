@@ -16,6 +16,7 @@
 
 package ee.openeid.siva.integrationtest;
 
+import ee.openeid.siva.common.Constants;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
@@ -154,7 +155,8 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-E"))
                 .body("validSignaturesCount", Matchers.is(0))
-                .body("validationWarnings", Matchers.emptyOrNullString());
+                .body("validationWarnings", Matchers.hasSize(1))
+                .body("validationWarnings[0].content", Matchers.is(Constants.TEST_ENV_VALIDATION_WARNING));
     }
 
     /**

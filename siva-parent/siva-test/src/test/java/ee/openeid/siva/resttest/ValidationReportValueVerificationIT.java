@@ -16,6 +16,7 @@
 
 package ee.openeid.siva.resttest;
 
+import ee.openeid.siva.common.Constants;
 import ee.openeid.siva.integrationtest.SiVaRestTests;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.apache.commons.codec.binary.Base64;
@@ -693,7 +694,8 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content", Matchers.startsWith("MIIEuTCCA6GgAwIBAgIQZ+e7WiJWyzFPH8axcYYMdzANBgkqhk"))
                 .body("signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
                 .body("validatedDocument.filename", Matchers.is("18912.ddoc"))
-                .body("validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
+                .body("validationWarnings[0].content", Matchers.is(Constants.TEST_ENV_VALIDATION_WARNING))
+                .body("validationWarnings[1].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -718,7 +720,8 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("DIGIDOC_XML_1.3"))
                 .body("validatedDocument.filename", Matchers.is("DdocContainerNoSignature.ddoc"))
-                .body("validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
+                .body("validationWarnings[0].content", Matchers.is(Constants.TEST_ENV_VALIDATION_WARNING))
+                .body("validationWarnings[1].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(0));
     }

@@ -31,6 +31,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -46,18 +48,25 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 @RunWith(MockitoJUnitRunner.class)
 public class HashcodeValidationControllerTest {
 
-    private HashcodeValidationProxySpy hashcodeValidationProxySpy = new HashcodeValidationProxySpy();
     private HashcodeValidationRequestToProxyDocumentTransformerSpy hashRequestTransformerSpy = new HashcodeValidationRequestToProxyDocumentTransformerSpy();
+
     @Mock
     private StatisticsService statisticsService;
+
+    @Mock
+    private ApplicationContext applicationContext;
+
+    @Mock
+    private Environment environment;
+
     private MockMvc mockMvc;
 
     @Before
     public void setUp() {
         ValidationController validationController = new ValidationController();
-        hashcodeValidationProxySpy.setStatisticsService(statisticsService);
+        HashcodeValidationProxySpy validationProxySpy = new HashcodeValidationProxySpy(statisticsService, applicationContext, environment);
         validationController.setHashRequestTransformer(hashRequestTransformerSpy);
-        validationController.setHashcodeValidationProxy(hashcodeValidationProxySpy);
+        validationController.setHashcodeValidationProxy(validationProxySpy);
         mockMvc = standaloneSetup(validationController).build();
     }
 
@@ -142,14 +151,19 @@ public class HashcodeValidationControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-    private class HashcodeValidationProxySpy extends HashcodeValidationProxy {
+    private static class HashcodeValidationProxySpy extends HashcodeValidationProxy {
+
+        public HashcodeValidationProxySpy(StatisticsService statisticsService, ApplicationContext applicationContext, Environment environment) {
+            super(statisticsService, applicationContext, environment);
+        }
+
         @Override
         public SimpleReport validateRequest(ProxyRequest proxyRequest) {
             return new SimpleReport();
         }
     }
 
-    private class HashcodeValidationRequestToProxyDocumentTransformerSpy extends HashcodeValidationRequestToProxyDocumentTransformer {
+    private static class HashcodeValidationRequestToProxyDocumentTransformerSpy extends HashcodeValidationRequestToProxyDocumentTransformer {
 
         private HashcodeValidationRequest validationRequest;
 

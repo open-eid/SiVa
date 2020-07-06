@@ -19,6 +19,7 @@ package ee.openeid.siva.webapp;
 import ee.openeid.siva.proxy.ContainerValidationProxy;
 import ee.openeid.siva.proxy.ProxyRequest;
 import ee.openeid.siva.proxy.document.ProxyDocument;
+import ee.openeid.siva.proxy.http.RESTProxyService;
 import ee.openeid.siva.statistics.StatisticsService;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.webapp.request.ValidationRequest;
@@ -29,6 +30,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -40,16 +43,21 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 @RunWith(MockitoJUnitRunner.class)
 public class ValidationControllerTest {
 
-    private ValidationProxySpy validationProxyServiceSpy = new ValidationProxySpy();
     private ValidationRequestToProxyDocumentTransformerSpy transformerSpy = new ValidationRequestToProxyDocumentTransformerSpy();
     @Mock
+    private RESTProxyService restProxyService;
+    @Mock
     private StatisticsService statisticsService;
+    @Mock
+    private ApplicationContext applicationContext;
+    @Mock
+    private Environment environment;
     private MockMvc mockMvc;
 
     @Before
     public void setUp() {
         ValidationController validationController = new ValidationController();
-        validationProxyServiceSpy.setStatisticsService(statisticsService);
+        ValidationProxySpy validationProxyServiceSpy = new ValidationProxySpy(restProxyService, statisticsService, applicationContext, environment);
         validationController.setContainerValidationProxy(validationProxyServiceSpy);
         validationController.setTransformer(transformerSpy);
         mockMvc = standaloneSetup(validationController).build();
@@ -194,14 +202,22 @@ public class ValidationControllerTest {
         return jsonObject;
     }
 
-    private class ValidationProxySpy extends ContainerValidationProxy {
+    private static class ValidationProxySpy extends ContainerValidationProxy {
+
+        public ValidationProxySpy(RESTProxyService restProxyService,
+                StatisticsService statisticsService,
+                ApplicationContext applicationContext,
+                Environment environment) {
+            super(restProxyService, statisticsService, applicationContext, environment);
+        }
+
         @Override
         public SimpleReport validateRequest(ProxyRequest proxyRequest) {
             return new SimpleReport();
         }
     }
 
-    private class ValidationRequestToProxyDocumentTransformerSpy extends ValidationRequestToProxyDocumentTransformer {
+    private static class ValidationRequestToProxyDocumentTransformerSpy extends ValidationRequestToProxyDocumentTransformer {
 
         private ValidationRequest validationRequest;
 

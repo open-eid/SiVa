@@ -18,12 +18,16 @@ package ee.openeid.siva.proxy;
 
 import ee.openeid.siva.proxy.document.ProxyHashcodeDataSet;
 import ee.openeid.siva.proxy.document.ReportType;
+import ee.openeid.siva.statistics.StatisticsService;
 import ee.openeid.siva.validation.document.SignatureFile;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.validation.service.generic.HashcodeGenericValidationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,6 +37,11 @@ import java.util.stream.Collectors;
 public class HashcodeValidationProxy extends ValidationProxy {
 
     private static final String HASHCODE_GENERIC_SERVICE = "hashcodeGeneric";
+
+    @Autowired
+    public HashcodeValidationProxy(StatisticsService statisticsService, ApplicationContext applicationContext, Environment environment) {
+        super(statisticsService, applicationContext, environment);
+    }
 
     @Override
     String constructValidatorName(ProxyRequest proxyRequest) {

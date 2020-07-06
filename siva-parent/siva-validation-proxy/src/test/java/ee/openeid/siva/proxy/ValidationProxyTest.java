@@ -54,8 +54,13 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.BDDMockito;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.StandardEnvironment;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
@@ -63,9 +68,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.any;
@@ -82,32 +89,30 @@ public class ValidationProxyTest {
     private static final String TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN = "timeStampTokenValidationService";
     private static final String GENERIC_VALIDATION_SERVICE_BEAN = "genericValidationService";
 
+    private static final ValidationWarning TEST_ENV_WARNING = getTestEnvironmentValidationWarning();
+
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
+    @InjectMocks
     private ContainerValidationProxy validationProxy;
-
-    private ApplicationContext applicationContext;
 
     private ValidationServiceSpy validationServiceSpy;
 
+    @Mock
     private RESTProxyService restProxyService;
 
+    @Mock
     private StatisticsService statisticsService;
+
+    @Mock
+    private ApplicationContext applicationContext;
+
+    @Spy
+    private StandardEnvironment environment;
 
     @Before
     public void setUp() {
-        validationProxy = new ContainerValidationProxy();
-
-        applicationContext = mock(ApplicationContext.class);
-        validationProxy.setApplicationContext(applicationContext);
-
-        restProxyService = mock(RESTProxyService.class);
-        validationProxy.setRestProxyService(restProxyService);
-
-        statisticsService = mock(StatisticsService.class);
-        validationProxy.setStatisticsService(statisticsService);
-
         validationServiceSpy = new ValidationServiceSpy();
     }
 
@@ -272,6 +277,32 @@ public class ValidationProxyTest {
         }
     }
 
+    @Test
+    public void addsTestEnvironmentWarningForTestProfile() {
+        environment.setActiveProfiles("test");
+        SimpleReport report = getValidationProxySpy().validate(new ProxyDocument());
+        Assert.assertThat(report.getValidationConclusion().getValidationWarnings(), contains(TEST_ENV_WARNING));
+    }
+
+    @Test
+    public void doesNotAddTestEnvironmentWarningWhenTestProfileNotSet() {
+        SimpleReport report = getValidationProxySpy().validate(new ProxyDocument());
+        Assert.assertNull(report.getValidationConclusion().getValidationWarnings());
+    }
+
+    @Test
+    public void addsTestEnvironmentWarningForTestProfile_constructsANewListWhenWarningsPresentInReport() {
+        environment.setActiveProfiles("test");
+        ValidationWarning warning1 = new ValidationWarning();
+        warning1.setContent("warning1");
+        ValidationWarning warning2 = new ValidationWarning();
+        warning1.setContent("warning2");
+
+        SimpleReport report = getValidationProxySpyWithValidationWarningsInReport(Arrays.asList(warning1, warning2))
+                .validate(new ProxyDocument());
+        Assert.assertThat(report.getValidationConclusion().getValidationWarnings(), contains(TEST_ENV_WARNING, warning1, warning2));
+    }
+
     private void mockValidationServices() {
         Reports mockReports = mockReports();
         ValidationService validationServiceMock = mock(ValidationService.class);
@@ -343,7 +374,7 @@ public class ValidationProxyTest {
         return Files.readAllBytes(documentPath);
     }
 
-    private class ValidationServiceSpy implements ValidationService {
+    private static class ValidationServiceSpy implements ValidationService {
 
         Reports reports;
 
@@ -404,6 +435,47 @@ public class ValidationProxyTest {
             policy.setPolicyUrl("http://policyUrl.com");
             return policy;
         }
+    }
+
+    private static class ValidationProxySpy extends ValidationProxy {
+
+        private SimpleReport report = new SimpleReport(new ValidationConclusion());
+
+        public ValidationProxySpy(StatisticsService statisticsService, ApplicationContext applicationContext, Environment environment) {
+            super(statisticsService, applicationContext, environment);
+        }
+
+        @Override
+        String constructValidatorName(ProxyRequest proxyRequest) {
+            return null;
+        }
+
+        @Override
+        SimpleReport validateRequest(ProxyRequest proxyRequest) {
+            return report;
+        }
+
+        private void setReportToReturn(SimpleReport simpleReport) {
+            this.report = simpleReport;
+        }
+    }
+
+    private static ValidationWarning getTestEnvironmentValidationWarning() {
+        ValidationWarning validationWarning = new ValidationWarning();
+        validationWarning.setContent("This is validation service demo. Use it for testing purposes only");
+        return validationWarning;
+    }
+
+    private ValidationProxySpy getValidationProxySpyWithValidationWarningsInReport(List<ValidationWarning> warnings) {
+        SimpleReport simpleReport = new SimpleReport(new ValidationConclusion());
+        simpleReport.getValidationConclusion().setValidationWarnings(warnings);
+        ValidationProxySpy validationProxySpy = getValidationProxySpy();
+        validationProxySpy.setReportToReturn(simpleReport);
+        return validationProxySpy;
+    }
+
+    private ValidationProxySpy getValidationProxySpy() {
+        return new ValidationProxySpy(statisticsService, applicationContext, environment);
     }
 
 }

@@ -16,6 +16,7 @@
 
 package ee.openeid.siva.integrationtest;
 
+import ee.openeid.siva.common.Constants;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -159,7 +160,8 @@ public class DdocValidationFailIT extends SiVaRestTests{
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2012-09-19T06:28:55Z"))
                 .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.notNullValue())
                 .body("signatures[0].subjectDistinguishedName.commonName", Matchers.notNullValue())
-                .body("validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
+                .body("validationWarnings[0].content", Matchers.is(Constants.TEST_ENV_VALIDATION_WARNING))
+                .body("validationWarnings[1].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -185,7 +187,8 @@ public class DdocValidationFailIT extends SiVaRestTests{
                 .body("signatures[0].errors[0].content", Matchers.containsString("Bad digest for DataFile: D0"))
                 .body("signatures[0].errors.size()", Matchers.is(1))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
-                .body("validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
+                .body("validationWarnings[0].content", Matchers.is(Constants.TEST_ENV_VALIDATION_WARNING))
+                .body("validationWarnings[1].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -214,7 +217,8 @@ public class DdocValidationFailIT extends SiVaRestTests{
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
                 .body("signatures[0].warnings[0].content", Matchers.is("Old and unsupported format: DIGIDOC-XML version: 1.2"))
                 .body("signatures[0].warnings.size()", Matchers.is(1))
-                .body("validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
+                .body("validationWarnings[0].content", Matchers.is(Constants.TEST_ENV_VALIDATION_WARNING))
+                .body("validationWarnings[1].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -476,8 +480,9 @@ public class DdocValidationFailIT extends SiVaRestTests{
                 .body("validatedDocument.filename", Matchers.is("22915-bad-df-id.ddoc"))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1))
-                .body("validationWarnings", Matchers.hasSize(1))
-                .body("validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"));
+                .body("validationWarnings", Matchers.hasSize(2))
+                .body("validationWarnings[0].content", Matchers.is(Constants.TEST_ENV_VALIDATION_WARNING))
+                .body("validationWarnings[1].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"));
     }
 
     /**
@@ -514,8 +519,9 @@ public class DdocValidationFailIT extends SiVaRestTests{
                 .body("validatedDocument.filename", Matchers.is("cert-revoked.ddoc"))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1))
-                .body("validationWarnings", Matchers.hasSize(1))
-                .body("validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"));
+                .body("validationWarnings", Matchers.hasSize(2))
+                .body("validationWarnings[0].content", Matchers.is(Constants.TEST_ENV_VALIDATION_WARNING))
+                .body("validationWarnings[1].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"));
     }
 
     /**
@@ -552,8 +558,9 @@ public class DdocValidationFailIT extends SiVaRestTests{
                 .body("validatedDocument.filename", Matchers.is("cert-unknown.ddoc"))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1))
-                .body("validationWarnings", Matchers.hasSize(1))
-                .body("validationWarnings[0].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"));
+                .body("validationWarnings", Matchers.hasSize(2))
+                .body("validationWarnings[0].content", Matchers.is(Constants.TEST_ENV_VALIDATION_WARNING))
+                .body("validationWarnings[1].content", Matchers.is("Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa"));
     }
 
     @Override

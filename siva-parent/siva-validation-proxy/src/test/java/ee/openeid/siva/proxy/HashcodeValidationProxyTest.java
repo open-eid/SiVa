@@ -33,8 +33,10 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.BDDMockito;
+import org.mockito.Mock;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Arrays;
@@ -54,19 +56,20 @@ public class HashcodeValidationProxyTest {
 
     private HashcodeValidationProxy hashcodeValidationProxy;
 
+    @Mock
+    private StatisticsService statisticsService;
+
+    @Mock
     private ApplicationContext applicationContext;
+
+    @Mock
+    private Environment environment;
 
     private ValidationServiceSpy validationServiceSpy;
 
     @Before
     public void setUp() {
-        hashcodeValidationProxy = new HashcodeValidationProxy();
-
-        applicationContext = mock(ApplicationContext.class);
-        hashcodeValidationProxy.setApplicationContext(applicationContext);
-
-        StatisticsService statisticsService = mock(StatisticsService.class);
-        hashcodeValidationProxy.setStatisticsService(statisticsService);
+        hashcodeValidationProxy = new HashcodeValidationProxy(statisticsService, applicationContext, environment);
 
         validationServiceSpy = new ValidationServiceSpy();
     }

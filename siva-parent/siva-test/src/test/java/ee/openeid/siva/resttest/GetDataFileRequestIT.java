@@ -99,11 +99,11 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * Expected Result: Order of  elements is ignored, no error messages in response
      *
-     * File: test_file.ddoc
+     * File: valid_XML1_3.ddoc
      **/
     @Test
     public void testGetDataFileRequestChangedOrderOfKeys() {
-        String invalidRequest = "{\"document\":\"" + Base64.encodeBase64String(readFileFromTestResources("test_file.ddoc")) + "\",\"filename\":\"test_file.ddoc\"}";
+        String invalidRequest = "{\"document\":\"" + Base64.encodeBase64String(readFileFromTestResources("valid_XML1_3.ddoc")) + "\",\"filename\":\"valid_XML1_3.ddoc\"}";
         postForDataFiles(invalidRequest)
                 .then()
                 .body("dataFiles[0].filename", Matchers.is("test.txt"))
@@ -123,11 +123,11 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * Expected Result: Added elements ignored, no error messages and  additional elements in response
      *
-     * File: test_file.ddoc
+     * File: valid_XML1_3.ddoc
      **/
     @Test
     public void testGetDataFileRequestMoreKeysThanExpected() {
-        JSONObject jsonObject = new JSONObject(dataFilesRequest("test_file.ddoc"));
+        JSONObject jsonObject = new JSONObject(dataFilesRequest("valid_XML1_3.ddoc"));
         jsonObject.put("ExtraOne", "RandomValue");
         jsonObject.put("ExtraTwo", "AnotherValue");
         postForDataFiles(jsonObject.toString())
@@ -151,7 +151,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      **/
     @Test
     public void testGetDataFileRequestDuplicatedKey() {
-        String invalidRequest = "{\"documentType\":\"DDOC\",\"documentType\":\"BDOC\",\"document\":\"" + Base64.encodeBase64String(readFileFromTestResources("test_file.ddoc")) + "\"}";
+        String invalidRequest = "{\"documentType\":\"DDOC\",\"documentType\":\"BDOC\",\"document\":\"" + Base64.encodeBase64String(readFileFromTestResources("valid_XML1_3.ddoc")) + "\"}";
         String response = postForDataFiles(invalidRequest).asString();
         assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME) == 1);
     }
@@ -167,11 +167,11 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * Expected Result: Errors returned stating the missing element
      *
-     * File: test_file.ddoc
+     * File: valid_XML1_3.ddoc
      **/
     @Test
     public void testGetDataFileRequestDocumentElementRemoved() {
-        JSONObject jsonObject = new JSONObject(dataFilesRequest("test_file.ddoc"));
+        JSONObject jsonObject = new JSONObject(dataFilesRequest("valid_XML1_3.ddoc"));
         jsonObject.remove("document");
         String response = postForDataFiles(jsonObject.toString()).asString();
         assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, MAY_NOT_BE_EMPTY) == 1);
@@ -189,11 +189,11 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * Expected Result: Data file is returned, no error messages
      *
-     * File: test_file.ddoc
+     * File: valid_XML1_3.ddoc
      **/
     @Test
     public void testGetDataFileRequestDocumentTypeLowCase() {
-        JSONObject jsonObject = new JSONObject(dataFilesRequest("test_file.ddoc"));
+        JSONObject jsonObject = new JSONObject(dataFilesRequest("valid_XML1_3.ddoc"));
         jsonObject.put("documentType", "ddoc");
         postForDataFiles(jsonObject.toString())
                 .then()
@@ -214,11 +214,11 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is returned
      *
-     * File: test_file.ddoc
+     * File: valid_XML1_3.ddoc
      **/
     @Test
     public void testGetDataFileRequestDocumentTypeSetToBdoc() {
-        String response = postForDataFiles(dataFilesRequestExtended("test_file.ddoc", "test.BDOC")).asString();
+        String response = postForDataFiles(dataFilesRequestExtended("valid_XML1_3.ddoc", "test.BDOC")).asString();
         assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME) == 1);
     }
 
@@ -233,11 +233,11 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is returned
      *
-     * File: test_file.ddoc
+     * File: valid_XML1_3.ddoc
      **/
     @Test
     public void testGetDataFileRequestDocumentTypeSetToPdf() {
-        String response = postForDataFiles(dataFilesRequestExtended("test_file.ddoc", "test.PDF")).asString();
+        String response = postForDataFiles(dataFilesRequestExtended("valid_XML1_3.ddoc", "test.PDF")).asString();
         assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME) == 1);
     }
 
@@ -252,11 +252,11 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is returned
      *
-     * File: test_file.ddoc
+     * File: valid_XML1_3.ddoc
      **/
     @Test
     public void testGetDataFileRequestDocumentTypeSetToUnsupportedFormat() {
-        String response = postForDataFiles(dataFilesRequestExtended("test_file.ddoc", "test.JPG")).asString();
+        String response = postForDataFiles(dataFilesRequestExtended("valid_XML1_3.ddoc", "test.JPG")).asString();
         assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME) == 1);
     }
 
@@ -271,11 +271,11 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is returned
      *
-     * File: test_file.ddoc
+     * File: valid_XML1_3.ddoc
      **/
     @Test
     public void testGetDataFileRequestDocumentTypeSetToXroad() {
-        String response = postForDataFiles(dataFilesRequestExtended("test_file.ddoc", "test.XROAD")).asString();
+        String response = postForDataFiles(dataFilesRequestExtended("valid_XML1_3.ddoc", "test.XROAD")).asString();
         assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME) == 1);
     }
 

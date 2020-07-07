@@ -188,13 +188,13 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * Expected Result: Correct data is shown in the log with correct structure
      *
-     * File: test_file.ddoc
+     * File: valid_XML1_3.ddoc
      */
     @Test
     public void ddocWithValidSignatures() {
         setTestFilesDirectory("ddoc/test/timemark/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("test_file.ddoc"));
-        postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "test_file.ddoc", VALID_SIGNATURE_POLICY_3), "XAuthTest")
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("valid_XML1_3.ddoc"));
+        postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "valid_XML1_3.ddoc", VALID_SIGNATURE_POLICY_3), "XAuthTest")
                 .then()
                 .statusCode(HttpStatus.OK.value());
     /*

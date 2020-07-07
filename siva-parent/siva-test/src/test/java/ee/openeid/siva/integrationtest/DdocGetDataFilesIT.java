@@ -145,12 +145,12 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
      *
      * Expected Result: The data file is returned
      *
-     * File: test_file.ddoc
+     * File: valid_XML1_3.ddoc
      * */
     @Test
     public void testGetDataFileFromDdocXml1_3(){
         setTestFilesDirectory("ddoc/test/timemark/");
-        postForDataFiles(dataFilesRequest("test_file.ddoc"))
+        postForDataFiles(dataFilesRequest("valid_XML1_3.ddoc"))
                 .then()
                 .body("dataFiles[0].filename", Matchers.is("test.txt"))
                 .body("dataFiles[0].mimeType", Matchers.is("application/octet-stream"))

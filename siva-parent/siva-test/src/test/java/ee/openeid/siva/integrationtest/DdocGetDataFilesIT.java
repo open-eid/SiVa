@@ -145,17 +145,17 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
      *
      * Expected Result: The data file is returned
      *
-     * File: DIGIDOC-XML1.3.ddoc
+     * File: test_file.ddoc
      * */
     @Test
     public void testGetDataFileFromDdocXml1_3(){
-        setTestFilesDirectory("ddoc/live/timemark/");
-        postForDataFiles(dataFilesRequest("DIGIDOC-XML1.3.ddoc"))
+        setTestFilesDirectory("ddoc/test/timemark/");
+        postForDataFiles(dataFilesRequest("test_file.ddoc"))
                 .then()
-                .body("dataFiles[0].filename", Matchers.is("Glitter-rock-4_gallery.jpg"))
+                .body("dataFiles[0].filename", Matchers.is("test.txt"))
                 .body("dataFiles[0].mimeType", Matchers.is("application/octet-stream"))
-                .body("dataFiles[0].base64", Matchers.startsWith("/9j/4AAQSkZJRgABAQAAAQABAAD/4RXeRXhpZgAASUkqAAgAAAACADEBAgAHAAAA"))
-                .body("dataFiles[0].size", Matchers.is(41114));
+                .body("dataFiles[0].base64", Matchers.startsWith("VGVzdCBhbmQgc29tZSBvdGhlciB0ZXN0"))
+                .body("dataFiles[0].size", Matchers.is(24));
     }
 
     /**

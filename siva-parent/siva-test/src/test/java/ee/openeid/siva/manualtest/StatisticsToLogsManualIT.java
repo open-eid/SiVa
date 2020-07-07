@@ -188,13 +188,13 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      *
      * Expected Result: Correct data is shown in the log with correct structure
      *
-     * File: igasugust1.3.ddoc
+     * File: test_file.ddoc
      */
     @Test
     public void ddocWithValidSignatures() {
-        setTestFilesDirectory("ddoc/live/timemark/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
-        postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "igasugust1.3.ddoc", VALID_SIGNATURE_POLICY_3), "XAuthTest")
+        setTestFilesDirectory("ddoc/test/timemark/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("test_file.ddoc"));
+        postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "test_file.ddoc", VALID_SIGNATURE_POLICY_3), "XAuthTest")
                 .then()
                 .statusCode(HttpStatus.OK.value());
     /*
@@ -204,11 +204,9 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
       "type" : "DIGIDOC_XML",
       "usrId" : "XAuthTest",
       "dur": 1334, <- Can vary, verify that its present
-      "sigCt": 3,
-      "vSigCt": 3,
+      "sigCt": 1,
+      "vSigCt": 1,
       "sigRslt": [
-         {"i":"TOTAL-PASSED", "cc":"EE", "sf" : "DIGIDOC_XML_1.3"},
-         {"i":"TOTAL-PASSED", "cc":"EE", "sf" : "DIGIDOC_XML_1.3"},
          {"i":"TOTAL-PASSED", "cc":"EE", "sf" : "DIGIDOC_XML_1.3"}
       ],
       "sigType" : "XAdES"

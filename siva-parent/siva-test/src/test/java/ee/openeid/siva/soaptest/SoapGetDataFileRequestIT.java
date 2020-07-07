@@ -102,14 +102,14 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      * Expected Result: Error is returned
      *
-     * File: ddoc_1_3.xml.ddoc
+     * File: test_file.ddoc
      *
      **/
     @Test
     public void soapGetDataFileRequestDocumentTypeRemoved(){
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("ddoc_1_3.xml.ddoc"));
-        String request = validationRequestForDocumentDataFilesExtended(encodedString, "ddoc_1_3.xml.ddoc");
-        String invalidRequest = request.replace("<Filename>ddoc_1_3.xml.ddoc</Filename>", "");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("test_file.ddoc"));
+        String request = validationRequestForDocumentDataFilesExtended(encodedString, "test_file.ddoc");
+        String invalidRequest = request.replace("<Filename>test_file.ddoc</Filename>", "");
         postDataFiles(invalidRequest)
                 .then()
                 .statusCode(HttpStatus.OK.value())
@@ -128,12 +128,12 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      * Expected Result: Error is returned
      *
-     * File: ddoc_1_3.xml.ddoc
+     * File: test_file.ddoc
      *
      **/
     @Test
     public void soapGetDataFileRequestDocumentRemoved(){
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("ddoc_1_3.xml.ddoc"));
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("test_file.ddoc"));
         String request = validationRequestForDocumentDataFilesExtended(encodedString, "DDOC");
         String invalidRequest = request.replace("<Document>"+encodedString+"</Document>", "");
         postDataFiles(invalidRequest)
@@ -154,14 +154,14 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      * Expected Result: Error is returned
      *
-     * File: ddoc_1_3.xml.ddoc
+     * File: test_file.ddoc
      *
      **/
     @Test
     public void soapGetDataFileRequestDocumentTypeDuplicated(){
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("ddoc_1_3.xml.ddoc"));
-        String request = validationRequestForDocumentDataFilesExtended(encodedString, "test.DDOC");
-        String invalidRequest = request.replace("<Filename>test.DDOC</Filename", "<Filename>test.DDOC</Filename><Filename>test.BDOC</Filename>");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("test_file.ddoc"));
+        String request = validationRequestForDocumentDataFilesExtended(encodedString, "test_file.DDOC");
+        String invalidRequest = request.replace("<Filename>test_file.DDOC</Filename", "<Filename>test.DDOC</Filename><Filename>test.BDOC</Filename>");
         postDataFiles(invalidRequest)
                 .then()
                 .statusCode(HttpStatus.OK.value())
@@ -180,19 +180,19 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      * Expected Result: Error is returned
      *
-     * File: ddoc_1_3.xml.ddoc
+     * File: test_file.ddoc
      *
      **/
     @Test
     public void soapGetDataFileRequestMoreKeysThanExpected() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("ddoc_1_3.xml.ddoc"));
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("test_file.ddoc"));
         String invalidRequest = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
                 "   <soapenv:Header/>\n" +
                 "   <soapenv:Body>\n" +
                 "      <soap:GetDocumentDataFiles>\n" +
                 "         <soap:DataFilesRequest>\n" +
                 "            <Document>" + encodedString + "</Document>\n" +
-                "			 <Filename>ddoc_1_3.xml.ddoc</Filename>\n" +
+                "			 <Filename>test_file.ddoc</Filename>\n" +
                 "            <DocumentType>DDOC</DocumentType>\n" +
                 "            </soap:DataFilesRequest>\n" +
                 "      </soap:GetDocumentDataFiles>\n" +
@@ -216,13 +216,13 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      * Expected Result: Error is returned
      *
-     * File: ddoc_1_3.xml.ddoc
+     * File: test_file.ddoc
      *
      **/
     @Test
     public void soapGetDataFileRequestDocumentValueIsChanged(){
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("ddoc_1_3.xml.ddoc"));
-        String invalidEncodedString = encodedString.replace("2t3RWdZSkt3WUVCUVVITUFFRkJBVX", "AAAAAA");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("test_file.ddoc"));
+        String invalidEncodedString = encodedString.replace("PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZ", "AAAAAA");
         postDataFiles(validationRequestForDocumentDataFilesExtended(invalidEncodedString, "test.DDOC"))
                 .then()
                 .statusCode(HttpStatus.OK.value())
@@ -243,13 +243,13 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      * Expected Result: Error is returned
      *
-     * File: 18912.ddoc
+     * File: test_file.ddoc
      *
      **/
     @Test
     public void soapGetDataFileRequestDocumentTypeChangedToBdoc() {
-        setTestFilesDirectory("ddoc/live/timemark/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("18912.ddoc"));
+        setTestFilesDirectory("ddoc/test/timemark/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("test_file.ddoc"));
         postDataFiles(validationRequestForDocumentDataFilesExtended(encodedString, "test.BDOC"))
                 .then()
                 .statusCode(HttpStatus.OK.value())
@@ -268,13 +268,13 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      * Expected Result: Error is returned
      *
-     * File: 18912.ddoc
+     * File: test_file.ddoc
      *
      **/
     @Test
     public void soapGetDataFileRequestDocumentTypeChangedToPdf() {
-        setTestFilesDirectory("ddoc/live/timemark/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("18912.ddoc"));
+        setTestFilesDirectory("ddoc/test/timemark/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("test_file.ddoc"));
         postDataFiles(validationRequestForDocumentDataFilesExtended(encodedString, "test.PDF"))
                 .then()
                 .statusCode(HttpStatus.OK.value())
@@ -293,13 +293,13 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      * Expected Result: Error is returned
      *
-     * File: 18912.ddoc
+     * File: test_file.ddoc
      *
      **/
     @Test
     public void soapGetDataFileRequestDocumentTypeChangedToXROAD() {
-        setTestFilesDirectory("ddoc/live/timemark/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("18912.ddoc"));
+        setTestFilesDirectory("ddoc/test/timemark/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("test_file.ddoc"));
         postDataFiles(validationRequestForDocumentDataFilesExtended(encodedString, "test.XROAD"))
                 .then()
                 .statusCode(HttpStatus.OK.value())
@@ -318,13 +318,13 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      * Expected Result: Error is returned
      *
-     * File: 18912.ddoc
+     * File: test_file.ddoc
      *
      **/
     @Test
     public void soapGetDataFileRequestDocumentTypeChangedToUnsupported() {
-        setTestFilesDirectory("ddoc/live/timemark/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("18912.ddoc"));
+        setTestFilesDirectory("ddoc/test/timemark/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("test_file.ddoc"));
         postDataFiles(validationRequestForDocumentDataFilesExtended(encodedString, "test.JPG"))
                 .then()
                 .statusCode(HttpStatus.OK.value())

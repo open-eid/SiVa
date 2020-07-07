@@ -264,7 +264,7 @@ public class SoapXRoadRequestHeaderIT extends SiVaSoapTests {
      */
     @Test
     public void soapGetDataFilesRequestHeadersAreReturnedInResponse() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("susisevad1_3.ddoc"));
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("test_file.ddoc"));
 
         String requestBody = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xrd=\"http://x-road.eu/xsd/xroad.xsd\" xmlns:id=\"http://x-road.eu/xsd/identifiers\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
                 "   <soapenv:Header>\n" +
@@ -327,12 +327,12 @@ public class SoapXRoadRequestHeaderIT extends SiVaSoapTests {
      *
      * Expected Result: Same headers are in response as in request
      *
-     * File: susisevad1_3.ddoc
+     * File: test_file.ddoc
      *
      */
     @Test
     public void soapGetDataFilesRequestHeadersAreReturnedInSameOrderInResponse() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("susisevad1_3.ddoc"));
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("test_file.ddoc"));
 
         String requestBody = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xrd=\"http://x-road.eu/xsd/xroad.xsd\" xmlns:id=\"http://x-road.eu/xsd/identifiers\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
                 "   <soapenv:Header>\n" +

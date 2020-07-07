@@ -99,17 +99,17 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * Expected Result: Order of  elements is ignored, no error messages in response
      *
-     * File: susisevad1_3.ddoc
+     * File: test_file.ddoc
      **/
     @Test
     public void testGetDataFileRequestChangedOrderOfKeys() {
-        String invalidRequest = "{\"document\":\"" + Base64.encodeBase64String(readFileFromTestResources("susisevad1_3.ddoc")) + "\",\"filename\":\"susisevad1_3.ddoc\"}";
+        String invalidRequest = "{\"document\":\"" + Base64.encodeBase64String(readFileFromTestResources("test_file.ddoc")) + "\",\"filename\":\"test_file.ddoc\"}";
         postForDataFiles(invalidRequest)
                 .then()
-                .body("dataFiles[0].filename", Matchers.is("Šužlikud sõid ühe õuna ära.txt"))
-                .body("dataFiles[0].mimeType", Matchers.is("text/plain"))
-                .body("dataFiles[0].base64", Matchers.is("VGVzdDENClRlc3QyDQpUZfB0Mw0KS2H+bWFhciAuLi4uDQo="))
-                .body("dataFiles[0].size", Matchers.is(35));
+                .body("dataFiles[0].filename", Matchers.is("test.txt"))
+                .body("dataFiles[0].mimeType", Matchers.is("application/octet-stream"))
+                .body("dataFiles[0].base64", Matchers.is("VGVzdCBhbmQgc29tZSBvdGhlciB0ZXN0"))
+                .body("dataFiles[0].size", Matchers.is(24));
     }
 
     /**
@@ -123,17 +123,17 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * Expected Result: Added elements ignored, no error messages and  additional elements in response
      *
-     * File: susisevad1_3.ddoc
+     * File: test_file.ddoc
      **/
     @Test
     public void testGetDataFileRequestMoreKeysThanExpected() {
-        JSONObject jsonObject = new JSONObject(dataFilesRequest("susisevad1_3.ddoc"));
+        JSONObject jsonObject = new JSONObject(dataFilesRequest("test_file.ddoc"));
         jsonObject.put("ExtraOne", "RandomValue");
         jsonObject.put("ExtraTwo", "AnotherValue");
         postForDataFiles(jsonObject.toString())
                 .then()
-                .body("dataFiles[0].size", Matchers.is(35))
-                .body("dataFiles[0].base64", Matchers.is("VGVzdDENClRlc3QyDQpUZfB0Mw0KS2H+bWFhciAuLi4uDQo="));
+                .body("dataFiles[0].size", Matchers.is(24))
+                .body("dataFiles[0].base64", Matchers.is("VGVzdCBhbmQgc29tZSBvdGhlciB0ZXN0"));
     }
 
     /**
@@ -147,11 +147,11 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error message is returned
      *
-     * File: susisevad1_3.ddoc
+     * File: test_fail.ddoc
      **/
     @Test
     public void testGetDataFileRequestDuplicatedKey() {
-        String invalidRequest = "{\"documentType\":\"DDOC\",\"documentType\":\"BDOC\",\"document\":\"" + Base64.encodeBase64String(readFileFromTestResources("susisevad1_3.ddoc")) + "\"}";
+        String invalidRequest = "{\"documentType\":\"DDOC\",\"documentType\":\"BDOC\",\"document\":\"" + Base64.encodeBase64String(readFileFromTestResources("test_file.ddoc")) + "\"}";
         String response = postForDataFiles(invalidRequest).asString();
         assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME) == 1);
     }
@@ -167,11 +167,11 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * Expected Result: Errors returned stating the missing element
      *
-     * File: susisevad1_3.ddoc
+     * File: test_file.ddoc
      **/
     @Test
     public void testGetDataFileRequestDocumentElementRemoved() {
-        JSONObject jsonObject = new JSONObject(dataFilesRequest("susisevad1_3.ddoc"));
+        JSONObject jsonObject = new JSONObject(dataFilesRequest("test_file.ddoc"));
         jsonObject.remove("document");
         String response = postForDataFiles(jsonObject.toString()).asString();
         assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, MAY_NOT_BE_EMPTY) == 1);
@@ -189,18 +189,18 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * Expected Result: Data file is returned, no error messages
      *
-     * File: susisevad1_3.ddoc
+     * File: test_file.ddoc
      **/
     @Test
     public void testGetDataFileRequestDocumentTypeLowCase() {
-        JSONObject jsonObject = new JSONObject(dataFilesRequest("susisevad1_3.ddoc"));
+        JSONObject jsonObject = new JSONObject(dataFilesRequest("test_file.ddoc"));
         jsonObject.put("documentType", "ddoc");
         postForDataFiles(jsonObject.toString())
                 .then()
-                .body("dataFiles[0].filename", Matchers.is("Šužlikud sõid ühe õuna ära.txt"))
-                .body("dataFiles[0].mimeType", Matchers.is("text/plain"))
-                .body("dataFiles[0].base64", Matchers.is("VGVzdDENClRlc3QyDQpUZfB0Mw0KS2H+bWFhciAuLi4uDQo="))
-                .body("dataFiles[0].size", Matchers.is(35));
+                .body("dataFiles[0].filename", Matchers.is("test.txt"))
+                .body("dataFiles[0].mimeType", Matchers.is("application/octet-stream"))
+                .body("dataFiles[0].base64", Matchers.is("VGVzdCBhbmQgc29tZSBvdGhlciB0ZXN0"))
+                .body("dataFiles[0].size", Matchers.is(24));
     }
 
     /**
@@ -214,11 +214,11 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is returned
      *
-     * File: susisevad1_3.ddoc
+     * File: test_file.ddoc
      **/
     @Test
     public void testGetDataFileRequestDocumentTypeSetToBdoc() {
-        String response = postForDataFiles(dataFilesRequestExtended("susisevad1_3.ddoc", "test.BDOC")).asString();
+        String response = postForDataFiles(dataFilesRequestExtended("test_file.ddoc", "test.BDOC")).asString();
         assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME) == 1);
     }
 
@@ -233,11 +233,11 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is returned
      *
-     * File: susisevad1_3.ddoc
+     * File: test_file.ddoc
      **/
     @Test
     public void testGetDataFileRequestDocumentTypeSetToPdf() {
-        String response = postForDataFiles(dataFilesRequestExtended("susisevad1_3.ddoc", "test.PDF")).asString();
+        String response = postForDataFiles(dataFilesRequestExtended("test_file.ddoc", "test.PDF")).asString();
         assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME) == 1);
     }
 
@@ -252,11 +252,11 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is returned
      *
-     * File: susisevad1_3.ddoc
+     * File: test_file.ddoc
      **/
     @Test
     public void testGetDataFileRequestDocumentTypeSetToUnsupportedFormat() {
-        String response = postForDataFiles(dataFilesRequestExtended("susisevad1_3.ddoc", "test.JPG")).asString();
+        String response = postForDataFiles(dataFilesRequestExtended("test_file.ddoc", "test.JPG")).asString();
         assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME) == 1);
     }
 
@@ -271,11 +271,11 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * Expected Result: Error is returned
      *
-     * File: susisevad1_3.ddoc
+     * File: test_file.ddoc
      **/
     @Test
     public void testGetDataFileRequestDocumentTypeSetToXroad() {
-        String response = postForDataFiles(dataFilesRequestExtended("susisevad1_3.ddoc", "test.XROAD")).asString();
+        String response = postForDataFiles(dataFilesRequestExtended("test_file.ddoc", "test.XROAD")).asString();
         assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME) == 1);
     }
 

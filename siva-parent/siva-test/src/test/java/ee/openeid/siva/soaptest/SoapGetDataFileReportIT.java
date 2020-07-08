@@ -54,12 +54,12 @@ public class SoapGetDataFileReportIT extends SiVaSoapTests  {
      *
      * Expected Result: All required elements are present and meet the expected values
      *
-     * File: test_file.ddoc
+     * File: valid_XML1_3.ddoc
      *
      **/
     @Test
     public void soapGetDataFilesCorrectValuesArePresent(){
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("test_file.ddoc"));
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("valid_XML1_3.ddoc"));
         Document report = extractDataFilesReportDom(postDataFiles(createXMLValidationRequestForDataFiles(encodedString, "test.DDOC")).andReturn().body().asString());
         assertEquals("File name should match expected","test.txt" ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(0).getFilename());
         assertEquals("Base64 should match expected","VGVzdCBhbmQgc29tZSBvdGhlciB0ZXN0" ,getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(0).getBase64());

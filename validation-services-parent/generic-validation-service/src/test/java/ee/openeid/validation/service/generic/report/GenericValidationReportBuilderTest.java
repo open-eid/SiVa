@@ -28,7 +28,7 @@ import eu.europa.esig.dss.model.FileDocument;
 import eu.europa.esig.dss.pades.validation.PDFDocumentValidator;
 import eu.europa.esig.dss.simplereport.jaxb.XmlSimpleReport;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
-import eu.europa.esig.dss.validation.SignedDocumentValidator;
+import eu.europa.esig.dss.validation.AdvancedSignature;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
 import org.junit.Assert;
 import org.junit.Test;
@@ -271,8 +271,8 @@ public class GenericValidationReportBuilderTest {
                 .validationDocument(getValidationDocument())
                 .policy(getValidationPolicy())
                 .isReportSignatureEnabled(false)
-                .validator(getDocumentValidator())
                 .trustedListsCertificateSource(trustedListsCertificateSource)
+                .signatures(getSignatures())
                 .build();
     }
     private ValidationDocument getValidationDocument() {
@@ -282,8 +282,8 @@ public class GenericValidationReportBuilderTest {
         return validationDocument;
     }
 
-    private SignedDocumentValidator getDocumentValidator() {
-        return new PDFDocumentValidator(new FileDocument("src/test/resources/test-files/no-signatures.pdf"));
+    private List<AdvancedSignature> getSignatures() {
+        return new PDFDocumentValidator(new FileDocument("src/test/resources/test-files/no-signatures.pdf")).getSignatures();
     }
 
     private ConstraintDefinedPolicy getValidationPolicy() {

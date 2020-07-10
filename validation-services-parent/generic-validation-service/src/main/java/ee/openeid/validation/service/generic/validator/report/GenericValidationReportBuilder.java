@@ -33,7 +33,6 @@ import eu.europa.esig.dss.model.Digest;
 import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.validation.AdvancedSignature;
-import eu.europa.esig.dss.validation.SignedDocumentValidator;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections4.CollectionUtils;
@@ -70,8 +69,9 @@ public class GenericValidationReportBuilder {
     private final ConstraintDefinedPolicy validationPolicy;
     private final ValidationLevel validationLevel;
     private final boolean isReportSignatureEnabled;
-    private SignedDocumentValidator validator;
-    TrustedListsCertificateSource trustedListsCertificateSource;
+    private final TrustedListsCertificateSource trustedListsCertificateSource;
+    private final List<AdvancedSignature> signatures;
+
     private List<CertificateToken> usedCertificates;
 
     public GenericValidationReportBuilder(ReportBuilderData reportData) {
@@ -80,12 +80,12 @@ public class GenericValidationReportBuilder {
         this.validationPolicy = reportData.getPolicy();
         this.validationLevel = reportData.getValidationLevel();
         this.isReportSignatureEnabled = reportData.isReportSignatureEnabled();
-        this.validator = reportData.getValidator();
         this.trustedListsCertificateSource = reportData.getTrustedListsCertificateSource();
-        this.usedCertificates = collectUsedCertificates();
+        this.signatures = reportData.getSignatures();
     }
 
     public Reports build() {
+        collectUsedCertificates();
         ValidationConclusion validationConclusion = getValidationConclusion();
         processSignatureIndications(validationConclusion, validationPolicy.getName());
 
@@ -97,8 +97,8 @@ public class GenericValidationReportBuilder {
         return new Reports(simpleReport, detailedReport, diagnosticReport);
     }
 
-    private List<CertificateToken> collectUsedCertificates() {
-        return dssReports.getDiagnosticDataJaxb().getUsedCertificates().stream()
+    private void collectUsedCertificates() {
+        usedCertificates = dssReports.getDiagnosticDataJaxb().getUsedCertificates().stream()
                 .map(usedCertificate -> {
                     XmlDigestAlgoAndValue digestAlgoAndValue = usedCertificate.getDigestAlgoAndValue();
                     Digest digest = new Digest(digestAlgoAndValue.getDigestMethod(), digestAlgoAndValue.getDigestValue());
@@ -107,7 +107,7 @@ public class GenericValidationReportBuilder {
                         return certSource;
                     }
 
-                    for (AdvancedSignature advancedSignature : validator.getSignatures()) {
+                    for (AdvancedSignature advancedSignature : signatures) {
                         Optional<CertificateToken> optionalCertSource = advancedSignature.getCertificateListWithinSignatureAndTimestamps().stream()
                                 .filter(signature -> signature.getDSSIdAsString().equals(usedCertificate.getId())).findFirst();
                         if (optionalCertSource.isPresent()) {

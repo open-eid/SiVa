@@ -30,27 +30,16 @@ import ee.openeid.tsl.configuration.AlwaysFailingCRLSource;
 import ee.openeid.tsl.configuration.AlwaysFailingOCSPSource;
 import ee.openeid.validation.service.generic.validator.report.GenericValidationReportBuilder;
 import ee.openeid.validation.service.generic.validator.report.ReportBuilderData;
-import eu.europa.esig.dss.crl.CRLUtils;
-import eu.europa.esig.dss.crl.CRLValidity;
-import eu.europa.esig.dss.crl.x509.impl.X509CRLValidity;
-import eu.europa.esig.dss.diagnostic.CertificateWrapper;
-import eu.europa.esig.dss.diagnostic.DiagnosticData;
-import eu.europa.esig.dss.diagnostic.SignatureWrapper;
-import eu.europa.esig.dss.diagnostic.TimestampWrapper;
 import eu.europa.esig.dss.model.DSSDocument;
 import eu.europa.esig.dss.model.DSSException;
 import eu.europa.esig.dss.model.InMemoryDocument;
 import eu.europa.esig.dss.model.MimeType;
-import eu.europa.esig.dss.model.identifier.EncapsulatedRevocationTokenIdentifier;
 import eu.europa.esig.dss.service.http.commons.CommonsDataLoader;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
-import eu.europa.esig.dss.spi.x509.revocation.RevocationToken;
-import eu.europa.esig.dss.spi.x509.revocation.ocsp.OCSPResponseBinary;
+import eu.europa.esig.dss.validation.AdvancedSignature;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
-import eu.europa.esig.dss.xades.validation.XAdESSignature;
-import org.bouncycastle.cert.ocsp.BasicOCSPResp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,9 +47,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static org.apache.commons.lang3.time.DateUtils.addMilliseconds;
 
 @Service
 public class GenericValidationService implements ValidationService {
@@ -87,8 +73,13 @@ public class GenericValidationService implements ValidationService {
             final ConstraintDefinedPolicy policy = signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy());
 
             final eu.europa.esig.dss.validation.reports.Reports reports = validator.validateDocument(policy.getConstraintDataStream());
-            
-            RevocationFreshnessValidator revocationFreshnessValidator = new RevocationFreshnessValidator(reports, validator.getSignatures());
+
+            //For large PDF files the getSignatures() method is currently expensive.
+            //Initialize once and use in different components to reduce response time for large PDF files validation.
+            List<AdvancedSignature> signatures = validator.getSignatures();
+
+            RevocationFreshnessValidator revocationFreshnessValidator = new RevocationFreshnessValidator(reports, signatures);
+
             revocationFreshnessValidator.validate();
 
             if (LOGGER.isInfoEnabled()) {
@@ -106,8 +97,8 @@ public class GenericValidationService implements ValidationService {
                     .validationDocument(validationDocument)
                     .policy(policy)
                     .isReportSignatureEnabled(reportConfigurationProperties.isReportSignatureEnabled())
-                    .validator(validator)
                     .trustedListsCertificateSource(trustedListsCertificateSource)
+                    .signatures(signatures)
                     .build();
 
             return new GenericValidationReportBuilder(reportBuilderData).build();

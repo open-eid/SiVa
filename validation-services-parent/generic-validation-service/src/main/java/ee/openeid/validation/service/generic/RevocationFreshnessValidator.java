@@ -26,11 +26,11 @@ public class RevocationFreshnessValidator {
     private static final String REVOCATION_FRESHNESS_FAULT = "The revocation information is not considered as 'fresh'.";
 
     private final Reports reports;
-    private final List<AdvancedSignature> signatureList;
+    private final List<AdvancedSignature> signatures;
 
-    public RevocationFreshnessValidator(Reports reports, List<AdvancedSignature> signatureList) {
+    public RevocationFreshnessValidator(Reports reports, List<AdvancedSignature> signatures) {
         this.reports = reports;
-        this.signatureList = signatureList;
+        this.signatures = signatures;
     }
 
     public void validate() {
@@ -66,7 +66,7 @@ public class RevocationFreshnessValidator {
     }
 
     private CRLValidity findCRLValidity(String signatureId, String certificateId) {
-        Optional<AdvancedSignature> advancedSignature = signatureList.stream()
+        Optional<AdvancedSignature> advancedSignature = signatures.stream()
                 .filter(signature -> signature.getId().equals(signatureId))
                 .findFirst();
         if (advancedSignature.isEmpty() || advancedSignature.get().getCRLSource() == null) {
@@ -91,7 +91,7 @@ public class RevocationFreshnessValidator {
     }
 
     private Date findOcspProducedAt(String signatureId) {
-        Optional<List<BasicOCSPResp>> basicOCSPResps = signatureList.stream()
+        Optional<List<BasicOCSPResp>> basicOCSPResps = signatures.stream()
                 .filter(signature -> signature.getId().equals(signatureId) && signature.getOCSPSource() != null)
                 .findFirst()
                 .map(signature -> signature.getOCSPSource().getOCSPResponsesList().stream()

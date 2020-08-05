@@ -206,7 +206,10 @@ cp siva-parent/siva-webapp/target/siva-webapp-3.2.2.war apache-tomcat-8.5.24/web
 
 > **IMPORTANT** siva-webapp on startup creates `etc` directory where it copies the TSL validaiton certificates
 > `siva-keystore.jks`. Default location for this directory is application root or `$CATALINA_HOME`. To change
-> this default behavior you should set environment variable `DSS_DATA_FOLDER`
+> this default behavior you should set environment variable `DSS_DATA_FOLDER`. 
+
+> **IMPORTANT** When updating the siva-keystore.jks it is needed to delete the "temp" keystore from default/specified location. 
+> Deleting the "temp" keystore is also needed when upgrading your deployment to newer SIVA version!
 
 ### How-to set WAR deployed SiVa `application.properties`
 
@@ -415,11 +418,14 @@ See the reference list of all common [application properties](http://docs.spring
 | **siva.tsl.loader.sslTruststoreType** | Truststore type <ul><li>Default: **PKCS12**</li></ul> |
 | **siva.tsl.loader.sslTruststorePassword** | Truststore password <ul><li>Default: **digidoc4j-password**</li></ul>  |
 | **siva.keystore.type** | Keystore type <ul><li>Default: **JKS**</li></ul> |
-| **siva.keystore.filename** | Keystore that contains public keys to verify the signed TSL <ul><li>Default: **siva-keystore.jks**</li></ul> |
+| **siva.keystore.filename** | Keystore that contains public keys of trusted LOTL signers for LOTL signature validation<ul><li>Default: **siva-keystore.jks**</li></ul> |
 | **siva.keystore.password** | Keystore password <ul><li>Default: **siva-keystore-password**</li></ul> |
 
 !!! note
     Note that the keystore file location can be overriden using environment variable `DSS_DATA_FOLDER`. By default the keystore file location, is expected to be on local filesystem in `etc` directory which is at the same level with the fat jar file (one is created, if no such directory exists).
+
+!!! note
+    When updating the siva-keystore.jks it is needed to delete the "temp" keystore from default/specified location. Deleting the "temp" keystore is also needed when upgrading your deployment to newer SIVA version!
 
 !!! note
     TSL is currently used only by Generic and BDOC validators

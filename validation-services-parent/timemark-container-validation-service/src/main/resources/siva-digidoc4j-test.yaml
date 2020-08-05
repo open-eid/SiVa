@@ -11,7 +11,7 @@ DIGIDOC_SECURITY_PROVIDER: org.bouncycastle.jce.provider.BouncyCastleProvider
 DIGIDOC_SECURITY_PROVIDER_NAME: BC
 
 # Big file handling
-DIGIDOC_MAX_DATAFILE_CACHED: 4096
+DIGIDOC_MAX_DATAFILE_CACHED: -1
 # use this param if you want temp files in specific dir. You must have write access to it
 # default is to use java.io.tempdir
 # DIGIDOC_DF_CACHE_DIR: /tmp

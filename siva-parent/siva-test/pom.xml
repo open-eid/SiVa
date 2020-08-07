@@ -223,6 +223,7 @@
             <properties>
                 <jmeter.host.name>localhost</jmeter.host.name>
                 <jmeter.host.port>8080</jmeter.host.port>
+                <jmeter.host.protocol>http</jmeter.host.protocol>
                 <jmeter.host.endpoint>/validate</jmeter.host.endpoint>
                 <jmeter.host.hashcodeendpoint>/validateHashcode</jmeter.host.hashcodeendpoint>
                 <jmeter.host.soapendpoint>/soap/validationWebService</jmeter.host.soapendpoint>
@@ -258,6 +259,7 @@
                                     <propertiesUser>
                                         <host.name>${jmeter.host.name}</host.name>
                                         <host.port>${jmeter.host.port}</host.port>
+                                        <host.protocol>${jmeter.host.protocol}</host.protocol>
                                         <host.endpoint>${jmeter.host.endpoint}</host.endpoint>
                                         <host.hashcodeendpoint>${jmeter.host.hashcodeendpoint}</host.hashcodeendpoint>
                                         <host.soapendpoint>${jmeter.host.soapendpoint}</host.soapendpoint>

@@ -20,16 +20,26 @@ import ee.openeid.siva.monitoring.configuration.MonitoringConfiguration;
 import ee.openeid.siva.monitoring.indicator.UrlHealthIndicator;
 import ee.openeid.siva.sample.ci.info.BuildInfo;
 import ee.openeid.siva.sample.ci.info.FilesystemBuildInfoFileLoader;
+import lombok.SneakyThrows;
+import org.apache.http.client.HttpClient;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContextBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import javax.net.ssl.SSLContext;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 
 @Configuration
 @EnableConfigurationProperties({
@@ -37,28 +47,49 @@ import java.nio.charset.Charset;
         BuildInfoProperties.class
 })
 public class DemoApplicationConfiguration extends MonitoringConfiguration {
-    private BuildInfoProperties properties;
-    private SivaRESTWebServiceConfigurationProperties proxyProperties;
+    private final BuildInfoProperties properties;
+    private final SivaRESTWebServiceConfigurationProperties proxyProperties;
+
+    @Autowired
+    public DemoApplicationConfiguration(BuildInfoProperties properties, SivaRESTWebServiceConfigurationProperties proxyProperties) {
+        this.properties = properties;
+        this.proxyProperties = proxyProperties;
+    }
 
     @Bean
-    public UrlHealthIndicator link1() {
+    public UrlHealthIndicator link1(RestTemplateBuilder restTemplateBuilder) {
         UrlHealthIndicator.ExternalLink link = new UrlHealthIndicator.ExternalLink("sivaService", proxyProperties.getServiceHost() + DEFAULT_MONITORING_ENDPOINT, DEFAULT_TIMEOUT * 2);
         UrlHealthIndicator indicator = new UrlHealthIndicator();
         indicator.setExternalLink(link);
-        RestTemplate restTemplate = new RestTemplate();
-        ((SimpleClientHttpRequestFactory) restTemplate.getRequestFactory()).setConnectTimeout(link.getTimeout());
-        ((SimpleClientHttpRequestFactory) restTemplate.getRequestFactory()).setReadTimeout(link.getTimeout());
+
+        RestTemplate restTemplate = getBaseSslRestTemplateBuilder(restTemplateBuilder)
+                .setConnectTimeout(Duration.ofMillis(link.getTimeout()))
+                .setReadTimeout(Duration.ofMillis(link.getTimeout()))
+                .build();
+
         indicator.setRestTemplate(restTemplate);
         return indicator;
     }
 
+    @SneakyThrows
     @Bean
-    public RestTemplate restTemplate() {
-        final RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getMessageConverters()
-                .add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
+    public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
+        return getBaseSslRestTemplateBuilder(restTemplateBuilder)
+                .additionalMessageConverters(new StringHttpMessageConverter(StandardCharsets.UTF_8))
+                .build();
+    }
 
-        return restTemplate;
+    @SneakyThrows
+    private RestTemplateBuilder getBaseSslRestTemplateBuilder(RestTemplateBuilder restTemplateBuilder) {
+        SSLContext sslContext = new SSLContextBuilder()
+                .loadTrustMaterial(
+                        new ClassPathResource(proxyProperties.getTrustStore()).getURL(),
+                        proxyProperties.getTrustStorePassword().toCharArray())
+                .build();
+        SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
+        HttpClient httpClient = HttpClients.custom().setSSLSocketFactory(socketFactory).build();
+
+        return restTemplateBuilder.requestFactory(() -> new HttpComponentsClientHttpRequestFactory(httpClient));
     }
 
     @Bean
@@ -66,15 +97,5 @@ public class DemoApplicationConfiguration extends MonitoringConfiguration {
         final FilesystemBuildInfoFileLoader buildInfoFileLoader = new FilesystemBuildInfoFileLoader();
         buildInfoFileLoader.setProperties(properties);
         return buildInfoFileLoader.loadBuildInfo();
-    }
-
-    @Autowired
-    public void setProperties(final BuildInfoProperties properties) {
-        this.properties = properties;
-    }
-
-    @Autowired
-    public void setProxyProperties(final SivaRESTWebServiceConfigurationProperties proxyProperties) {
-        this.proxyProperties = proxyProperties;
     }
 }

@@ -538,4 +538,5 @@ siva.xroad.signaturePolicy.policies[0].constraintPath=xroad_constraint_no_type.x
 |**siva.service.soapServicePath**| Service path in Siva webapp to access the SOAP API <ul><li>Default: **/soap/validationWebService/validateDocument**</li></ul> |
 |**siva.service.jsonDataFilesServicePath**| Data file service path in Siva webapp to access the REST/JSON API<ul><li>Default: **/getDataFiles**</li></ul> |
 |**siva.service.soapDataFilesServicePath**| Data file service path in Siva webapp to access the SOAP API <ul><li>Default: **/soap/dataFilesWebService/getDocumentDataFiles**</li></ul> |
-
+|**siva.service.trustStore**| Path to Siva webapp truststore on classpath <ul><li>Default: **siva_server_truststore.p12**</li></ul> |
+|**siva.service.trustStorePassword**| Siva webapp truststore password <ul><li>Default: **password**</li></ul> |

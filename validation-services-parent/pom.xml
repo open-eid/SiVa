@@ -35,7 +35,7 @@
     </modules>
 
     <properties>
-        <digidoc4j.version>4.0.2</digidoc4j.version>
+        <digidoc4j.version>4.0.3</digidoc4j.version>
     </properties>
 
     <dependencyManagement>

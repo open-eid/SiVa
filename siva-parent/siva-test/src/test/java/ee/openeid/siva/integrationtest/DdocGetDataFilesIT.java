@@ -87,6 +87,30 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
     }
 
     /**
+     * TestCaseID:  Ddoc-Get-Data-Files-10
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process
+     *
+     * Title:DDOC with xml v1.1 is  used
+     *
+     * Expected Result: The data file is returned
+     *
+     * File: DIGIDOC-XML1.1.ddoc
+     * */
+    @Test
+    public void testGetDataFileFromDdocXml1_0(){
+        setTestFilesDirectory("ddoc/live/timemark/");
+        postForDataFiles(dataFilesRequest("SK-XML1.0.ddoc"))
+                .then()
+                .body("dataFiles[0].filename", Matchers.is("Tartu ja Tallinna koostooleping.doc"))
+                .body("dataFiles[0].mimeType", Matchers.is("application/msword"))
+                .body("dataFiles[0].base64", Matchers.startsWith("0M8R4KGxGuEAAAAAAAAAAAAAAAAAAAAAPgADAP7/CQAGAAAAAAAAAAAAAAABAAAAUgAAAAAAAAAA"))
+                .body("dataFiles[0].size", Matchers.is(44544));
+    }
+
+    /**
      * TestCaseID:  Ddoc-Get-Data-Files-3
      *
      * TestType: Automated

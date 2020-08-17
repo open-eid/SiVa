@@ -1,7 +1,7 @@
 mixin footerBuildInfo
+    hr
     .row.footer
-        hr
-        .col-lg-6.pull-lg-left.hidden-md-down
+        .col-lg-6.float-lg-left.d-none.d-lg-block
             span
                 a(href="https://open-eid.github.io/SiVa/", target="_blank") SiVa Documentation&nbsp;
             if buildInfo.github != null
@@ -11,11 +11,11 @@ mixin footerBuildInfo
                 span=buildInfo.github.authorName
                 span &nbsp;. TravisCI build number:&nbsp;
                     a(href=buildInfo.travisCi.buildUrl, target="_blank")= buildInfo.travisCi.buildNumber
-        .col-lg-4.col-md-12.pull-lg-right.text-lg-right.text-md-center.footer-icons
+        .col-lg-6.col-md-12.float-lg-right.text-lg-right.text-md-center.footer-icons
             a.footer-social(href="https://www.facebook.com/riigiinfosysteemiamet/", target="_blank")
-                img(src="img/social/Facebook.svg", alt="Facebook Riigi Infosüsteemide Amet")
+                img.img-fluid(src="img/social/Facebook.svg", alt="Facebook Riigi Infosüsteemide Amet")
             a.footer-social(href="https://github.com/open-eid/SiVa", target="_blank")
-                img(src="img/social/Github.svg", alt="Github SiVa project")
-            a.footer-social.hidden-md-up(href="/")
-                img(src="img/eu-logo.svg", alt="EU Supported project Logo")
+                img.img-fluid(src="img/social/Github.svg", alt="Github SiVa project")
+            a.footer-social.d-md-none(href="/")
+                img.img-fluid(src="img/eu-logo.svg", alt="EU Supported project Logo")
 

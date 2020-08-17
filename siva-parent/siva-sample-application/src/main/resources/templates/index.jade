@@ -14,20 +14,22 @@ block content
             h5 This is a demo interface for testing RIA's digital signature validation service SiVa. The service validates digital signatures made with both test and live components.
             h5 The service does not distinguish test signatures. RIA does not take responsibility for the availability of the interface nor the veracity of the validation result.
             h5: a(href="https://www.ria.ee/en/state-information-system/eid/partners.html") Read more about validation service and digital signature gateway service
-        .col-lg-2.hidden-md-down
-            img.eu-brand(src="img/eu-logo.svg")
+        .col-lg-2.d-none.d-lg-block
+            img.img-fluid(src="img/eu-logo.svg")
     .row
         .col-md-3
             .input-group
-                span.input-group-addon#policy-addon Validation policy:
-                select.form-control#policy-select(aria-describedby="policy-addon")
+                .input-group-prepend
+                    label.input-group-text(for="policy-select") Validation policy
+                select.custom-select#policy-select(aria-describedby="policy-addon")
                     option(value="") default
                     option(value="POLv3") POLv3
                     option(value="POLv4") POLv4
         .col-md-3
             .input-group
-                span.input-group-addon#report-addon Report type:
-                select.form-control#report-select(aria-describedby="report-addon")
+                .input-group-prepend
+                    label.input-group-text(for="report-select") Report type
+                select.custom-select#report-select(aria-describedby="report-addon")
                     option(value="") default
                     option(value="Simple") Simple
                     option(value="Detailed") Detailed
@@ -35,17 +37,20 @@ block content
 
         .col-md-3
             .input-group
-                span.input-group-addon#type-addon Validation type:
-                select.form-control#type-select(aria-describedby="type-addon")
+                .input-group-prepend
+                    label.input-group-text(for="type-select") Validation type
+                select.custom-select#type-select(aria-describedby="type-addon")
                     option(value="") default
                     option(value="Container") Container
                     option(value="Hashcode") Hashcode
 
         .col-md-3
             .input-group
-                span.input-group-addon Return Data Files:
-                span.input-group-addon
-                    input#return-data-files(type="checkbox")
+                .input-group-prepend
+                    label.input-group-text(for="return-data-files") Return Data Files
+                .input-group-append
+                    .input-group-text
+                        input#return-data-files(type="checkbox")
 
     .row.top-buffer
         .col-md-12

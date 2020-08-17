@@ -70,8 +70,8 @@
 
 .footer-social > img {
     margin: 0 .5em 0 0;
-    height: 2%;
-    width: auto;
+    height: auto;
+    max-width: 3%;
 }
 
 .footer a {
@@ -107,11 +107,6 @@
     margin-top: 1em;
 }
 
-.eu-brand {
-    height: 10%;
-    width: auto;
-}
-
 @media screen and (max-width: 768px) {
     .dropzone .dz-message {
         margin: 1em 0;
@@ -138,17 +133,5 @@
 
     .footer-icons {
         text-align: center;
-    }
-
-    .footer-social > img {
-        height: 5%;
-        margin-right: 1em;
-    }
-
-    .navbar-brand > img {
-        height: 3%;
-        width: auto;
-        margin-top: -1px;
-        display: inline-block;
     }
 }

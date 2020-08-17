@@ -17,15 +17,14 @@
 
 <groups xmlns="http://www.isdc.ro/wro">
     <group name="site">
-        <css minimize="true">/webjars/bootstrap/4.0.0-alpha.4/dist/css/bootstrap.css</css>
+        <css minimize="true">/webjars/bootstrap/4.5.1/dist/css/bootstrap.css</css>
         <css minimize="true">/webjars/dropzone/4.2.0/dropzone.css</css>
         <css minimize="true">/webjars/highlightjs/9.4.0/styles/dark.css</css>
         <css>/css/desert.css</css>
         <css>/css/custom.css</css>
 
-        <js>/webjars/jquery/3.4.1/dist/jquery.js</js>
-        <js>/webjars/tether/1.4.4/dist/js/tether.js</js>
-        <js>/webjars/bootstrap/4.0.0-alpha.4/dist/js/bootstrap.js</js>
+        <js>/webjars/jquery/3.5.1/dist/jquery.js</js>
+        <js>/webjars/bootstrap/4.5.1/dist/js/bootstrap.js</js>
         <js>/webjars/dropzone/4.2.0/dropzone.js</js>
         <js>/webjars/js-cookie/2.1.2/src/js.cookie.js</js>
         <js>/webjars/highlightjs/9.4.0/highlight.pack.js</js>

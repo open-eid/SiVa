@@ -31,5 +31,6 @@ public class SivaRESTWebServiceConfigurationProperties {
     private String soapHashcodeServicePath = "/soap/hashcodeValidationWebService/hashcodeValidationDocument";
     private String serviceHost = DEFAULT_SERVICE_URL;
     private String trustStore = "siva_server_truststore.p12";
+    @SuppressWarnings("squid:S2068") //default password
     private String trustStorePassword = "password";
 }

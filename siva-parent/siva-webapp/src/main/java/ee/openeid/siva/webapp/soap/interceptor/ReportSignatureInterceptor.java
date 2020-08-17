@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Node;
 
+import javax.xml.XMLConstants;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
@@ -94,9 +95,14 @@ public class ReportSignatureInterceptor extends AbstractSoapInterceptor {
         Node validationReportNode = soapBody.getFirstChild().getFirstChild();
         DOMSource source = new DOMSource(validationReportNode);
         StringWriter stringWriter = new StringWriter();
-        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+
+        TransformerFactory factory = TransformerFactory.newInstance();
+        factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+
+        Transformer transformer = factory.newTransformer();
         transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
         transformer.transform(source, new StreamResult(stringWriter));
+
         String soapBodyString = stringWriter.toString();
         return soapBodyString.getBytes();
     }

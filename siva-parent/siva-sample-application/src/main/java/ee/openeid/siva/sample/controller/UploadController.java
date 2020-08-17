@@ -53,7 +53,7 @@ class UploadController {
         return (ValidationResponse) model.asMap().get("validationResponse");
     }
 
-    @RequestMapping("/")
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public String startPage() {
         return START_PAGE_VIEW_NAME;
     }

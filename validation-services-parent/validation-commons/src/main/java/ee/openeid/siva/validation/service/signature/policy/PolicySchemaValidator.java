@@ -40,6 +40,8 @@ public final class PolicySchemaValidator {
         StreamSource xmlSource = new StreamSource(xmlToValidate);
         try {
             Validator validator = schemaFactory.newSchema(xsdSource).newValidator();
+            validator.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            validator.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
             validator.validate(xmlSource);
         } catch (SAXException | IOException e) {
             LOGGER.error("Not a valid policy", e);

@@ -156,6 +156,7 @@ public class ServletConfiguration extends MonitoringConfiguration {
         return indicator;
     }
 
+    @SuppressWarnings("squid:S2095") //False positive for AutoCloseable bean
     private EndpointImpl constructValidationEndpoint(SpringBus springBus, ValidationWebService validationWebService, String serviceName, String endpointPathExtra) {
         EndpointImpl endpoint = new EndpointImpl(springBus, validationWebService);
         endpoint.setWsdlLocation("wsdl/siva.wsdl");
@@ -166,6 +167,7 @@ public class ServletConfiguration extends MonitoringConfiguration {
         return endpoint;
     }
 
+    @SuppressWarnings("squid:S2095") //False positive for AutoCloseable bean
     private EndpointImpl constructHashcodeValidationEndpoint(SpringBus springBus, HashcodeValidationWebService validationWebService, String serviceName, String endpointPathExtra) {
         EndpointImpl endpoint = new EndpointImpl(springBus, validationWebService);
         endpoint.setWsdlLocation("wsdl/siva-hashcode-validation.wsdl");
@@ -176,6 +178,7 @@ public class ServletConfiguration extends MonitoringConfiguration {
         return endpoint;
     }
 
+    @SuppressWarnings("squid:S2095") //False positive for AutoCloseable bean
     private EndpointImpl constructDataFilesEndpoint(SpringBus springBus, DataFilesWebService validationWebService, String serviceName, String endpointPathExtra) {
         EndpointImpl endpoint = new EndpointImpl(springBus, validationWebService);
         endpoint.setWsdlLocation("wsdl/siva-datafiles.wsdl");

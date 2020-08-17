@@ -35,6 +35,7 @@ public final class SecureSAXParsers {
         return getFactory().newSAXParser();
     }
 
+    @SuppressWarnings("squid:S2755") //external entities are disabled in a separate method which produces false positive warning for sonar
     private static synchronized SAXParserFactory getFactory() throws SAXNotRecognizedException, SAXNotSupportedException, ParserConfigurationException {
         if (factory == null) {
             factory = SAXParserFactory.newInstance();

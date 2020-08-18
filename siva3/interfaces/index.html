@@ -1,60 +1,36 @@
 
 
 
-
 <!doctype html>
 <html lang="en" class="no-js">
   <head>
     
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
-      <meta http-equiv="x-ua-compatible" content="ie=edge">
       
       
-      
-      
-        <meta name="lang:clipboard.copy" content="Copy to clipboard">
-      
-        <meta name="lang:clipboard.copied" content="Copied to clipboard">
-      
-        <meta name="lang:search.language" content="en">
-      
-        <meta name="lang:search.pipeline.stopwords" content="True">
-      
-        <meta name="lang:search.pipeline.trimmer" content="True">
-      
-        <meta name="lang:search.result.none" content="No matching documents">
-      
-        <meta name="lang:search.result.one" content="1 matching document">
-      
-        <meta name="lang:search.result.other" content="# matching documents">
-      
-        <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.1.1">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.2.3">
     
     
       
-        <title>4. INTERFACES - SiVa 3.2 - Signature Validation Service Documentation</title>
+        <title>4. INTERFACES - SiVa 3.3 - Signature Validation Service Documentation</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/application.3020aac5.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.6e35a1a6.min.css">
       
       
     
-    
-      <script src="../../assets/javascripts/modernizr.01ccdecf.js"></script>
     
     
       
         <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
-        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
       
     
-    <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
     
     
       <link rel="stylesheet" href="../../override.css">
@@ -65,86 +41,72 @@
     
   </head>
   
+  
     <body dir="ltr">
   
-    <svg class="md-svg">
-      <defs>
-        
-        
-          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
-    viewBox="0 0 416 448" id="__github">
-  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
-        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
-        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
-        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
-        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
-        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
-        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
-        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
-        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
-        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
-        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
-        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
-        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
-        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
-        99.5z" />
-</svg>
-        
-      </defs>
-    </svg>
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
-    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
-    
-      <a href="#validation-request-interface" tabindex="1" class="md-skip">
-        Skip to content
-      </a>
-    
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#validation-request-interface" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
     
       <header class="md-header" data-md-component="header">
-  <nav class="md-header-nav md-grid">
-    <div class="md-flex">
-      <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../.." title="SiVa 3.2 - Signature Validation Service Documentation" class="md-header-nav__button md-logo">
-          
-            <i class="md-icon"></i>
-          
-        </a>
-      </div>
-      <div class="md-flex__cell md-flex__cell--shrink">
-        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
-      </div>
-      <div class="md-flex__cell md-flex__cell--stretch">
-        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
-          
-            <span class="md-header-nav__topic">
-              SiVa 3.2 - Signature Validation Service Documentation
-            </span>
-            <span class="md-header-nav__topic">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="../.." title="SiVa 3.3 - Signature Validation Service Documentation" class="md-header-nav__button md-logo" aria-label="SiVa 3.3 - Signature Validation Service Documentation">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      
+        <div class="md-header-nav__ellipsis">
+          <span class="md-header-nav__topic md-ellipsis">
+            SiVa 3.3 - Signature Validation Service Documentation
+          </span>
+          <span class="md-header-nav__topic md-ellipsis">
+            
               4. INTERFACES
-            </span>
-          
+            
+          </span>
         </div>
-      </div>
-      <div class="md-flex__cell md-flex__cell--shrink">
-        
-          <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
-          
+      
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
 <div class="md-search" data-md-component="search" role="dialog">
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
-      <label class="md-icon md-search__icon" for="__search"></label>
-      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
-        &#xE5CD;
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active">
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
       </button>
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="result">
+        <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
-            Type to start searching
+            Initializing search
           </div>
           <ol class="md-search-result__list"></ol>
         </div>
@@ -152,71 +114,56 @@
     </div>
   </div>
 </div>
+    
+    
+      <div class="md-header-nav__source">
         
-      </div>
-      
-        <div class="md-flex__cell md-flex__cell--shrink">
-          <div class="md-header-nav__source">
-            
-
-
-  
-
-<a href="https://github.com/open-eid/SiVa/" title="Go to repository" class="md-source" data-md-source="github">
-  
-    <div class="md-source__icon">
-      <svg viewBox="0 0 24 24" width="24" height="24">
-        <use xlink:href="#__github" width="24" height="24"></use>
-      </svg>
-    </div>
-  
+<a href="https://github.com/open-eid/SiVa/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
   <div class="md-source__repository">
     GitHub
   </div>
 </a>
-          </div>
-        </div>
-      
-    </div>
+      </div>
+    
   </nav>
 </header>
     
-    <div class="md-container">
+    <div class="md-container" data-md-component="container">
       
         
       
       
-      <main class="md-main">
-        <div class="md-main__inner md-grid" data-md-component="container">
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
           
             
               <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
-                    <nav class="md-nav md-nav--primary" data-md-level="0">
-  <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../.." title="SiVa 3.2 - Signature Validation Service Documentation" class="md-nav__button md-logo">
+                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="SiVa 3.3 - Signature Validation Service Documentation" class="md-nav__button md-logo" aria-label="SiVa 3.3 - Signature Validation Service Documentation">
       
-        <i class="md-icon"></i>
-      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
     </a>
-    SiVa 3.2 - Signature Validation Service Documentation
+    SiVa 3.3 - Signature Validation Service Documentation
   </label>
   
     <div class="md-nav__source">
       
-
-
-  
-
-<a href="https://github.com/open-eid/SiVa/" title="Go to repository" class="md-source" data-md-source="github">
-  
-    <div class="md-source__icon">
-      <svg viewBox="0 0 24 24" width="24" height="24">
-        <use xlink:href="#__github" width="24" height="24"></use>
-      </svg>
-    </div>
-  
+<a href="https://github.com/open-eid/SiVa/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
   <div class="md-source__repository">
     GitHub
   </div>
@@ -280,13 +227,19 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
     
     <label class="md-nav__link" for="nav-5">
       3. STRUCTURE & ACTIVITIES
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+    <nav class="md-nav" aria-label="3. STRUCTURE & ACTIVITIES" data-md-level="1">
       <label class="md-nav__title" for="nav-5">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
         3. STRUCTURE & ACTIVITIES
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -330,11 +283,14 @@
 
   <li class="md-nav__item md-nav__item--active">
     
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
     
     
       <label class="md-nav__link md-nav__link--active" for="__toc">
         4. INTERFACES
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
+        </span>
       </label>
     
     <a href="./" title="4. INTERFACES" class="md-nav__link md-nav__link--active">
@@ -342,44 +298,49 @@
     </a>
     
       
-<nav class="md-nav md-nav--secondary">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
-    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#validation-request-interface" title="Validation request interface" class="md-nav__link">
+  <a href="#validation-request-interface" class="md-nav__link">
     Validation request interface
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="Validation request interface">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#validation-request-parameters" title="Validation request parameters" class="md-nav__link">
+  <a href="#validation-request-parameters" class="md-nav__link">
     Validation request parameters
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-json-request-with-mandatory-parameters" title="Sample JSON request with mandatory parameters" class="md-nav__link">
+  <a href="#sample-json-request-with-mandatory-parameters" class="md-nav__link">
     Sample JSON request with mandatory parameters
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-json-request-with-all-parameters" title="Sample JSON request with all parameters" class="md-nav__link">
+  <a href="#sample-json-request-with-all-parameters" class="md-nav__link">
     Sample JSON request with all parameters
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-soap-request" title="Sample SOAP request" class="md-nav__link">
+  <a href="#sample-soap-request" class="md-nav__link">
     Sample SOAP request
   </a>
   
@@ -391,43 +352,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation-request-interface-for-hashcode" title="Validation request interface for hashcode" class="md-nav__link">
+  <a href="#validation-request-interface-for-hashcode" class="md-nav__link">
     Validation request interface for hashcode
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="Validation request interface for hashcode">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#validation-request-parameters_1" title="Validation request parameters" class="md-nav__link">
+  <a href="#validation-request-parameters_1" class="md-nav__link">
     Validation request parameters
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-json-request-with-mandatory-parameters-datafile-hashcode-match-verification-done-on-integrators-side" title="Sample JSON request with mandatory parameters (datafile hashcode match verification done on integrators side)" class="md-nav__link">
+  <a href="#sample-json-request-with-mandatory-parameters-datafile-hashcode-match-verification-done-on-integrators-side" class="md-nav__link">
     Sample JSON request with mandatory parameters (datafile hashcode match verification done on integrators side)
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-json-request-with-all-parameters-datafile-hashcode-match-verification-done-on-siva-side" title="Sample JSON request with all parameters (datafile hashcode match verification done on SIVA side)" class="md-nav__link">
+  <a href="#sample-json-request-with-all-parameters-datafile-hashcode-match-verification-done-on-siva-side" class="md-nav__link">
     Sample JSON request with all parameters (datafile hashcode match verification done on SIVA side)
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-soap-request-with-mandatory-parameters" title="Sample SOAP request with mandatory parameters" class="md-nav__link">
+  <a href="#sample-soap-request-with-mandatory-parameters" class="md-nav__link">
     Sample SOAP request with mandatory parameters
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-soap-request-with-all-parameters-and-multiple-datafiles" title="Sample SOAP request with all parameters and multiple datafiles" class="md-nav__link">
+  <a href="#sample-soap-request-with-all-parameters-and-multiple-datafiles" class="md-nav__link">
     Sample SOAP request with all parameters and multiple datafiles
   </a>
   
@@ -439,30 +400,30 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation-response-interface" title="Validation response interface" class="md-nav__link">
+  <a href="#validation-response-interface" class="md-nav__link">
     Validation response interface
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="Validation response interface">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#validation-response-parameters-simple-report-successful-scenario" title="Validation response parameters Simple Report (successful scenario)" class="md-nav__link">
+  <a href="#validation-response-parameters-simple-report-successful-scenario" class="md-nav__link">
     Validation response parameters Simple Report (successful scenario)
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="Validation response parameters Simple Report (successful scenario)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#sample-json-response-simple-report-successful-scenario" title="Sample JSON response Simple Report (successful scenario)" class="md-nav__link">
+  <a href="#sample-json-response-simple-report-successful-scenario" class="md-nav__link">
     Sample JSON response Simple Report (successful scenario)
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-soap-response-simple-report-successful-scenario" title="Sample SOAP response Simple Report (successful scenario)" class="md-nav__link">
+  <a href="#sample-soap-response-simple-report-successful-scenario" class="md-nav__link">
     Sample SOAP response Simple Report (successful scenario)
   </a>
   
@@ -474,68 +435,28 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#validation-response-parameters-detailed-report-successful-scenario" title="Validation response parameters Detailed Report (successful scenario)" class="md-nav__link">
+  <a href="#validation-response-parameters-detailed-report-successful-scenario" class="md-nav__link">
     Validation response parameters Detailed Report (successful scenario)
   </a>
   
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#sample-json-response-detailed-report-successful-scenario-the-report-is-shortened-but-gives-general-overview-of-structure" title="Sample JSON response Detailed Report (successful scenario). The report is shortened but gives general overview of structure." class="md-nav__link">
-    Sample JSON response Detailed Report (successful scenario). The report is shortened but gives general overview of structure.
-  </a>
-  
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-soap-response-detailed-report-successful-scenario" title="Sample SOAP response Detailed Report (successful scenario)" class="md-nav__link">
-    Sample SOAP response Detailed Report (successful scenario)
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#validation-response-parameters-for-diagnostic-data-report-successful-scenario" title="Validation response parameters for Diagnostic Data Report (successful scenario)" class="md-nav__link">
+  <a href="#validation-response-parameters-for-diagnostic-data-report-successful-scenario" class="md-nav__link">
     Validation response parameters for Diagnostic Data Report (successful scenario)
   </a>
   
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#sample-diagnostic-data-report-json-response-successful-scenario-the-report-is-shortened-but-gives-general-overview-of-structure" title="Sample Diagnostic Data Report JSON response (successful scenario). The report is shortened but gives general overview of structure." class="md-nav__link">
-    Sample Diagnostic Data Report JSON response (successful scenario). The report is shortened but gives general overview of structure.
-  </a>
-  
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-diagnostic-data-report-soap-response-successful-scenario" title="Sample Diagnostic Data Report SOAP response (successful scenario)" class="md-nav__link">
-    Sample Diagnostic Data Report SOAP response (successful scenario)
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#sample-json-response-error-situation" title="Sample JSON response (error situation)" class="md-nav__link">
+  <a href="#sample-json-response-error-situation" class="md-nav__link">
     Sample JSON response (error situation)
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-soap-response-error-situation" title="Sample SOAP response (error situation)" class="md-nav__link">
+  <a href="#sample-soap-response-error-situation" class="md-nav__link">
     Sample SOAP response (error situation)
   </a>
   
@@ -547,29 +468,29 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#data-files-request-interface" title="Data files request interface" class="md-nav__link">
+  <a href="#data-files-request-interface" class="md-nav__link">
     Data files request interface
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="Data files request interface">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#data-files-request-parameters" title="Data files request parameters" class="md-nav__link">
+  <a href="#data-files-request-parameters" class="md-nav__link">
     Data files request parameters
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-json-request" title="Sample JSON request" class="md-nav__link">
+  <a href="#sample-json-request" class="md-nav__link">
     Sample JSON request
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-soap-request_1" title="Sample SOAP request" class="md-nav__link">
+  <a href="#sample-soap-request_1" class="md-nav__link">
     Sample SOAP request
   </a>
   
@@ -581,43 +502,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#data-files-response-interface" title="Data files response interface" class="md-nav__link">
+  <a href="#data-files-response-interface" class="md-nav__link">
     Data files response interface
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="Data files response interface">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#data-files-response-parameters-successful-scenario" title="Data files response parameters (successful scenario)" class="md-nav__link">
+  <a href="#data-files-response-parameters-successful-scenario" class="md-nav__link">
     Data files response parameters (successful scenario)
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-json-response-successful-scenario" title="Sample JSON response (successful scenario)" class="md-nav__link">
+  <a href="#sample-json-response-successful-scenario" class="md-nav__link">
     Sample JSON response (successful scenario)
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-soap-response-successful-scenario" title="Sample SOAP response (successful scenario)" class="md-nav__link">
+  <a href="#sample-soap-response-successful-scenario" class="md-nav__link">
     Sample SOAP response (successful scenario)
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-json-response-error-situation_1" title="Sample JSON response (error situation)" class="md-nav__link">
+  <a href="#sample-json-response-error-situation_1" class="md-nav__link">
     Sample JSON response (error situation)
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-soap-response-error-situation_1" title="Sample SOAP response (error situation)" class="md-nav__link">
+  <a href="#sample-soap-response-error-situation_1" class="md-nav__link">
     Sample SOAP response (error situation)
   </a>
   
@@ -629,22 +550,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#service-health-monitoring" title="Service health monitoring" class="md-nav__link">
+  <a href="#service-health-monitoring" class="md-nav__link">
     Service health monitoring
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="Service health monitoring">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#the-request" title="The request" class="md-nav__link">
+  <a href="#the-request" class="md-nav__link">
     The request
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#the-response" title="The response" class="md-nav__link">
+  <a href="#the-response" class="md-nav__link">
     The response
   </a>
   
@@ -656,22 +577,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#changes-in-api-compared-to-v2" title="Changes in API compared to V2" class="md-nav__link">
-    Changes in API compared to V2
+  <a href="#changes-in-api-compared-to-v3-v320-non-breaking-additions-to-protocol" class="md-nav__link">
+    Changes in API compared to V3 v3.2.0 (non breaking additions to protocol)
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="Changes in API compared to V3 v3.2.0 (non breaking additions to protocol)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#changes-in-request" title="Changes in request" class="md-nav__link">
-    Changes in request
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#changes-in-response" title="Changes in response" class="md-nav__link">
+  <a href="#changes-in-response" class="md-nav__link">
     Changes in response
   </a>
   
@@ -682,9 +596,32 @@
   
 </li>
       
-      
-      
-      
+        <li class="md-nav__item">
+  <a href="#changes-in-api-compared-to-v2" class="md-nav__link">
+    Changes in API compared to V2
+  </a>
+  
+    <nav class="md-nav" aria-label="Changes in API compared to V2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changes-in-request" class="md-nav__link">
+    Changes in request
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changes-in-response_1" class="md-nav__link">
+    Changes in response
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
     </ul>
   
@@ -700,13 +637,19 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
     
     <label class="md-nav__link" for="nav-7">
       5. DEPLOYMENT
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+    <nav class="md-nav" aria-label="5. DEPLOYMENT" data-md-level="1">
       <label class="md-nav__title" for="nav-7">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
         5. DEPLOYMENT
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -730,8 +673,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../systemintegrators_guide/" title="5.2 System integrator's guide" class="md-nav__link">
-      5.2 System integrator's guide
+    <a href="../deployment_guide/" title="5.2 Deployment guide" class="md-nav__link">
+      5.2 Deployment guide
     </a>
   </li>
 
@@ -748,13 +691,19 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8">
     
     <label class="md-nav__link" for="nav-8">
       6. QUALITY ASSURANCE
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+    <nav class="md-nav" aria-label="6. QUALITY ASSURANCE" data-md-level="1">
       <label class="md-nav__title" for="nav-8">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
         6. QUALITY ASSURANCE
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -808,13 +757,19 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-10" type="checkbox" id="nav-10">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-10" type="checkbox" id="nav-10">
     
     <label class="md-nav__link" for="nav-10">
       8. APPENDICES
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+    <nav class="md-nav" aria-label="8. APPENDICES" data-md-level="1">
       <label class="md-nav__title" for="nav-10">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
         8. APPENDICES
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -880,13 +835,19 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-11" type="checkbox" id="nav-11">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-11" type="checkbox" id="nav-11">
     
     <label class="md-nav__link" for="nav-11">
       9. SIVA 2.0 (Deprecated)
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+    <nav class="md-nav" aria-label="9. SIVA 2.0 (Deprecated)" data-md-level="1">
       <label class="md-nav__title" for="nav-11">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
         9. SIVA 2.0 (Deprecated)
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -923,13 +884,19 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-11-3" type="checkbox" id="nav-11-3">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-11-3" type="checkbox" id="nav-11-3">
     
     <label class="md-nav__link" for="nav-11-3">
       9.3. STRUCTURE & ACTIVITIES
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" aria-label="9.3. STRUCTURE & ACTIVITIES" data-md-level="2">
       <label class="md-nav__title" for="nav-11-3">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
         9.3. STRUCTURE & ACTIVITIES
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -983,13 +950,19 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-11-5" type="checkbox" id="nav-11-5">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-11-5" type="checkbox" id="nav-11-5">
     
     <label class="md-nav__link" for="nav-11-5">
       9.5. DEPLOYMENT
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" aria-label="9.5. DEPLOYMENT" data-md-level="2">
       <label class="md-nav__title" for="nav-11-5">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
         9.5. DEPLOYMENT
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -1031,13 +1004,19 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-11-6" type="checkbox" id="nav-11-6">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-11-6" type="checkbox" id="nav-11-6">
     
     <label class="md-nav__link" for="nav-11-6">
       9.6. QUALITY ASSURANCE
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" aria-label="9.6. QUALITY ASSURANCE" data-md-level="2">
       <label class="md-nav__title" for="nav-11-6">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
         9.6. QUALITY ASSURANCE
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -1091,13 +1070,19 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-11-8" type="checkbox" id="nav-11-8">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-11-8" type="checkbox" id="nav-11-8">
     
     <label class="md-nav__link" for="nav-11-8">
       9.8. APPENDICES
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" aria-label="9.8. APPENDICES" data-md-level="2">
       <label class="md-nav__title" for="nav-11-8">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
         9.8. APPENDICES
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -1168,13 +1153,19 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-12" type="checkbox" id="nav-12">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-12" type="checkbox" id="nav-12">
     
     <label class="md-nav__link" for="nav-12">
       10. SIVA 1.1 (Deprecated)
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+    <nav class="md-nav" aria-label="10. SIVA 1.1 (Deprecated)" data-md-level="1">
       <label class="md-nav__title" for="nav-12">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
         10. SIVA 1.1 (Deprecated)
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -1211,13 +1202,19 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-12-3" type="checkbox" id="nav-12-3">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-12-3" type="checkbox" id="nav-12-3">
     
     <label class="md-nav__link" for="nav-12-3">
       10.3. STRUCTURE & ACTIVITIES
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" aria-label="10.3. STRUCTURE & ACTIVITIES" data-md-level="2">
       <label class="md-nav__title" for="nav-12-3">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
         10.3. STRUCTURE & ACTIVITIES
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -1271,13 +1268,19 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-12-5" type="checkbox" id="nav-12-5">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-12-5" type="checkbox" id="nav-12-5">
     
     <label class="md-nav__link" for="nav-12-5">
       10.5. DEPLOYMENT
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" aria-label="10.5. DEPLOYMENT" data-md-level="2">
       <label class="md-nav__title" for="nav-12-5">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
         10.5. DEPLOYMENT
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -1319,13 +1322,19 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-12-6" type="checkbox" id="nav-12-6">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-12-6" type="checkbox" id="nav-12-6">
     
     <label class="md-nav__link" for="nav-12-6">
       10.6. QUALITY ASSURANCE
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" aria-label="10.6. QUALITY ASSURANCE" data-md-level="2">
       <label class="md-nav__title" for="nav-12-6">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
         10.6. QUALITY ASSURANCE
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -1379,13 +1388,19 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-12-8" type="checkbox" id="nav-12-8">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-12-8" type="checkbox" id="nav-12-8">
     
     <label class="md-nav__link" for="nav-12-8">
       10.8. APPENDICES
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" aria-label="10.8. APPENDICES" data-md-level="2">
       <label class="md-nav__title" for="nav-12-8">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
         10.8. APPENDICES
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -1460,44 +1475,49 @@
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
-<nav class="md-nav md-nav--secondary">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
-    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#validation-request-interface" title="Validation request interface" class="md-nav__link">
+  <a href="#validation-request-interface" class="md-nav__link">
     Validation request interface
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="Validation request interface">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#validation-request-parameters" title="Validation request parameters" class="md-nav__link">
+  <a href="#validation-request-parameters" class="md-nav__link">
     Validation request parameters
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-json-request-with-mandatory-parameters" title="Sample JSON request with mandatory parameters" class="md-nav__link">
+  <a href="#sample-json-request-with-mandatory-parameters" class="md-nav__link">
     Sample JSON request with mandatory parameters
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-json-request-with-all-parameters" title="Sample JSON request with all parameters" class="md-nav__link">
+  <a href="#sample-json-request-with-all-parameters" class="md-nav__link">
     Sample JSON request with all parameters
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-soap-request" title="Sample SOAP request" class="md-nav__link">
+  <a href="#sample-soap-request" class="md-nav__link">
     Sample SOAP request
   </a>
   
@@ -1509,43 +1529,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation-request-interface-for-hashcode" title="Validation request interface for hashcode" class="md-nav__link">
+  <a href="#validation-request-interface-for-hashcode" class="md-nav__link">
     Validation request interface for hashcode
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="Validation request interface for hashcode">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#validation-request-parameters_1" title="Validation request parameters" class="md-nav__link">
+  <a href="#validation-request-parameters_1" class="md-nav__link">
     Validation request parameters
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-json-request-with-mandatory-parameters-datafile-hashcode-match-verification-done-on-integrators-side" title="Sample JSON request with mandatory parameters (datafile hashcode match verification done on integrators side)" class="md-nav__link">
+  <a href="#sample-json-request-with-mandatory-parameters-datafile-hashcode-match-verification-done-on-integrators-side" class="md-nav__link">
     Sample JSON request with mandatory parameters (datafile hashcode match verification done on integrators side)
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-json-request-with-all-parameters-datafile-hashcode-match-verification-done-on-siva-side" title="Sample JSON request with all parameters (datafile hashcode match verification done on SIVA side)" class="md-nav__link">
+  <a href="#sample-json-request-with-all-parameters-datafile-hashcode-match-verification-done-on-siva-side" class="md-nav__link">
     Sample JSON request with all parameters (datafile hashcode match verification done on SIVA side)
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-soap-request-with-mandatory-parameters" title="Sample SOAP request with mandatory parameters" class="md-nav__link">
+  <a href="#sample-soap-request-with-mandatory-parameters" class="md-nav__link">
     Sample SOAP request with mandatory parameters
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-soap-request-with-all-parameters-and-multiple-datafiles" title="Sample SOAP request with all parameters and multiple datafiles" class="md-nav__link">
+  <a href="#sample-soap-request-with-all-parameters-and-multiple-datafiles" class="md-nav__link">
     Sample SOAP request with all parameters and multiple datafiles
   </a>
   
@@ -1557,30 +1577,30 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation-response-interface" title="Validation response interface" class="md-nav__link">
+  <a href="#validation-response-interface" class="md-nav__link">
     Validation response interface
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="Validation response interface">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#validation-response-parameters-simple-report-successful-scenario" title="Validation response parameters Simple Report (successful scenario)" class="md-nav__link">
+  <a href="#validation-response-parameters-simple-report-successful-scenario" class="md-nav__link">
     Validation response parameters Simple Report (successful scenario)
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="Validation response parameters Simple Report (successful scenario)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#sample-json-response-simple-report-successful-scenario" title="Sample JSON response Simple Report (successful scenario)" class="md-nav__link">
+  <a href="#sample-json-response-simple-report-successful-scenario" class="md-nav__link">
     Sample JSON response Simple Report (successful scenario)
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-soap-response-simple-report-successful-scenario" title="Sample SOAP response Simple Report (successful scenario)" class="md-nav__link">
+  <a href="#sample-soap-response-simple-report-successful-scenario" class="md-nav__link">
     Sample SOAP response Simple Report (successful scenario)
   </a>
   
@@ -1592,68 +1612,28 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#validation-response-parameters-detailed-report-successful-scenario" title="Validation response parameters Detailed Report (successful scenario)" class="md-nav__link">
+  <a href="#validation-response-parameters-detailed-report-successful-scenario" class="md-nav__link">
     Validation response parameters Detailed Report (successful scenario)
   </a>
   
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#sample-json-response-detailed-report-successful-scenario-the-report-is-shortened-but-gives-general-overview-of-structure" title="Sample JSON response Detailed Report (successful scenario). The report is shortened but gives general overview of structure." class="md-nav__link">
-    Sample JSON response Detailed Report (successful scenario). The report is shortened but gives general overview of structure.
-  </a>
-  
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-soap-response-detailed-report-successful-scenario" title="Sample SOAP response Detailed Report (successful scenario)" class="md-nav__link">
-    Sample SOAP response Detailed Report (successful scenario)
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#validation-response-parameters-for-diagnostic-data-report-successful-scenario" title="Validation response parameters for Diagnostic Data Report (successful scenario)" class="md-nav__link">
+  <a href="#validation-response-parameters-for-diagnostic-data-report-successful-scenario" class="md-nav__link">
     Validation response parameters for Diagnostic Data Report (successful scenario)
   </a>
   
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#sample-diagnostic-data-report-json-response-successful-scenario-the-report-is-shortened-but-gives-general-overview-of-structure" title="Sample Diagnostic Data Report JSON response (successful scenario). The report is shortened but gives general overview of structure." class="md-nav__link">
-    Sample Diagnostic Data Report JSON response (successful scenario). The report is shortened but gives general overview of structure.
-  </a>
-  
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-diagnostic-data-report-soap-response-successful-scenario" title="Sample Diagnostic Data Report SOAP response (successful scenario)" class="md-nav__link">
-    Sample Diagnostic Data Report SOAP response (successful scenario)
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#sample-json-response-error-situation" title="Sample JSON response (error situation)" class="md-nav__link">
+  <a href="#sample-json-response-error-situation" class="md-nav__link">
     Sample JSON response (error situation)
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-soap-response-error-situation" title="Sample SOAP response (error situation)" class="md-nav__link">
+  <a href="#sample-soap-response-error-situation" class="md-nav__link">
     Sample SOAP response (error situation)
   </a>
   
@@ -1665,29 +1645,29 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#data-files-request-interface" title="Data files request interface" class="md-nav__link">
+  <a href="#data-files-request-interface" class="md-nav__link">
     Data files request interface
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="Data files request interface">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#data-files-request-parameters" title="Data files request parameters" class="md-nav__link">
+  <a href="#data-files-request-parameters" class="md-nav__link">
     Data files request parameters
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-json-request" title="Sample JSON request" class="md-nav__link">
+  <a href="#sample-json-request" class="md-nav__link">
     Sample JSON request
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-soap-request_1" title="Sample SOAP request" class="md-nav__link">
+  <a href="#sample-soap-request_1" class="md-nav__link">
     Sample SOAP request
   </a>
   
@@ -1699,43 +1679,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#data-files-response-interface" title="Data files response interface" class="md-nav__link">
+  <a href="#data-files-response-interface" class="md-nav__link">
     Data files response interface
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="Data files response interface">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#data-files-response-parameters-successful-scenario" title="Data files response parameters (successful scenario)" class="md-nav__link">
+  <a href="#data-files-response-parameters-successful-scenario" class="md-nav__link">
     Data files response parameters (successful scenario)
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-json-response-successful-scenario" title="Sample JSON response (successful scenario)" class="md-nav__link">
+  <a href="#sample-json-response-successful-scenario" class="md-nav__link">
     Sample JSON response (successful scenario)
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-soap-response-successful-scenario" title="Sample SOAP response (successful scenario)" class="md-nav__link">
+  <a href="#sample-soap-response-successful-scenario" class="md-nav__link">
     Sample SOAP response (successful scenario)
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-json-response-error-situation_1" title="Sample JSON response (error situation)" class="md-nav__link">
+  <a href="#sample-json-response-error-situation_1" class="md-nav__link">
     Sample JSON response (error situation)
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sample-soap-response-error-situation_1" title="Sample SOAP response (error situation)" class="md-nav__link">
+  <a href="#sample-soap-response-error-situation_1" class="md-nav__link">
     Sample SOAP response (error situation)
   </a>
   
@@ -1747,22 +1727,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#service-health-monitoring" title="Service health monitoring" class="md-nav__link">
+  <a href="#service-health-monitoring" class="md-nav__link">
     Service health monitoring
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="Service health monitoring">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#the-request" title="The request" class="md-nav__link">
+  <a href="#the-request" class="md-nav__link">
     The request
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#the-response" title="The response" class="md-nav__link">
+  <a href="#the-response" class="md-nav__link">
     The response
   </a>
   
@@ -1774,22 +1754,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#changes-in-api-compared-to-v2" title="Changes in API compared to V2" class="md-nav__link">
-    Changes in API compared to V2
+  <a href="#changes-in-api-compared-to-v3-v320-non-breaking-additions-to-protocol" class="md-nav__link">
+    Changes in API compared to V3 v3.2.0 (non breaking additions to protocol)
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="Changes in API compared to V3 v3.2.0 (non breaking additions to protocol)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#changes-in-request" title="Changes in request" class="md-nav__link">
-    Changes in request
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#changes-in-response" title="Changes in response" class="md-nav__link">
+  <a href="#changes-in-response" class="md-nav__link">
     Changes in response
   </a>
   
@@ -1800,9 +1773,32 @@
   
 </li>
       
-      
-      
-      
+        <li class="md-nav__item">
+  <a href="#changes-in-api-compared-to-v2" class="md-nav__link">
+    Changes in API compared to V2
+  </a>
+  
+    <nav class="md-nav" aria-label="Changes in API compared to V2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changes-in-request" class="md-nav__link">
+    Changes in request
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changes-in-response_1" class="md-nav__link">
+    Changes in response
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
     </ul>
   
@@ -1816,7 +1812,12 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/open-eid/SiVa/edit/master/docs/siva3/interfaces.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                  <a href="https://github.com/open-eid/SiVa/edit/master/docs/siva3/interfaces.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                  
                 
                 
                   <h1>4. INTERFACES</h1>
@@ -1834,18 +1835,18 @@
 <p>In the following subsections, the SiVa validation request and response interfaces are described in detail. </p>
 <h2 id="validation-request-interface">Validation request interface</h2>
 <p><strong> REST JSON Endpoint </strong></p>
-<div class="codehilite"><pre><span></span>POST https://&lt;server url&gt;/validate
-</pre></div>
+<div class="codehilite"><pre><span></span><code><span class="err">POST https://&lt;server url&gt;/validate</span>
+</code></pre></div>
 
 
 <p><strong> SOAP Endpoint </strong></p>
-<div class="codehilite"><pre><span></span>POST https://&lt;server url&gt;/soap/validationWebService/validateDocument
-</pre></div>
+<div class="codehilite"><pre><span></span><code><span class="err">POST https://&lt;server url&gt;/soap/validationWebService/validateDocument</span>
+</code></pre></div>
 
 
 <p><strong> SOAP WSDL </strong></p>
-<div class="codehilite"><pre><span></span>POST https://&lt;server url&gt;/soap/validationWebService/validateDocument?wsdl
-</pre></div>
+<div class="codehilite"><pre><span></span><code><span class="err">POST https://&lt;server url&gt;/soap/validationWebService/validateDocument?wsdl</span>
+</code></pre></div>
 
 
 <h3 id="validation-request-parameters">Validation request parameters</h3>
@@ -1899,26 +1900,26 @@
 </tbody>
 </table>
 <h3 id="sample-json-request-with-mandatory-parameters">Sample JSON request with mandatory parameters</h3>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;filename&quot;</span><span class="p">:</span><span class="s2">&quot;sample.bdoc&quot;</span><span class="p">,</span>
   <span class="nt">&quot;document&quot;</span><span class="p">:</span><span class="s2">&quot;PD94bWwgdmVyc2lvbj0iMS4....&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h3 id="sample-json-request-with-all-parameters">Sample JSON request with all parameters</h3>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;filename&quot;</span><span class="p">:</span><span class="s2">&quot;sample.asice&quot;</span><span class="p">,</span>
   <span class="nt">&quot;document&quot;</span><span class="p">:</span><span class="s2">&quot;PD94bWwgdmVyc2lvbj0iMS4....&quot;</span><span class="p">,</span>
   <span class="nt">&quot;documentType&quot;</span><span class="p">:</span><span class="s2">&quot;XROAD&quot;</span><span class="p">,</span>
   <span class="nt">&quot;signaturePolicy&quot;</span><span class="p">:</span><span class="s2">&quot;POLv3&quot;</span><span class="p">,</span>
   <span class="nt">&quot;reportType&quot;</span><span class="p">:</span><span class="s2">&quot;Detailed&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h3 id="sample-soap-request">Sample SOAP request</h3>
-<div class="codehilite"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
 <span class="nt">&lt;soap:Envelope</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span><span class="nt">&gt;</span>
   <span class="nt">&lt;soap:Body&gt;</span>
     <span class="nt">&lt;ns2:ValidateDocument</span> <span class="na">xmlns:ns2=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span><span class="nt">&gt;</span>
@@ -1932,24 +1933,24 @@
     <span class="nt">&lt;/ns2:ValidateDocument&gt;</span>
   <span class="nt">&lt;/soap:Body&gt;</span>
 <span class="nt">&lt;/soap:Envelope&gt;</span>
-</pre></div>
+</code></pre></div>
 
 
 <h2 id="validation-request-interface-for-hashcode">Validation request interface for hashcode</h2>
 <p>Hashcode XAdES validation is supported for <strong>REST JSON</strong> and <strong>SOAP</strong> interfaces.</p>
 <p><strong> REST JSON Endpoint </strong></p>
-<div class="codehilite"><pre><span></span>POST https://&lt;server url&gt;/validateHashcode
-</pre></div>
+<div class="codehilite"><pre><span></span><code><span class="err">POST https://&lt;server url&gt;/validateHashcode</span>
+</code></pre></div>
 
 
 <p><strong> SOAP Endpoint </strong></p>
-<div class="codehilite"><pre><span></span>POST https://&lt;server url&gt;/soap/hashcodeValidationWebService
-</pre></div>
+<div class="codehilite"><pre><span></span><code><span class="err">POST https://&lt;server url&gt;/soap/hashcodeValidationWebService</span>
+</code></pre></div>
 
 
 <p><strong> SOAP WSDL </strong></p>
-<div class="codehilite"><pre><span></span>POST https://&lt;server url&gt;/soap/hashcodeValidationWebService?wsdl
-</pre></div>
+<div class="codehilite"><pre><span></span><code><span class="err">POST https://&lt;server url&gt;/soap/hashcodeValidationWebService?wsdl</span>
+</code></pre></div>
 
 
 <h3 id="validation-request-parameters_1">Validation request parameters</h3>
@@ -2041,7 +2042,7 @@
 </tbody>
 </table>
 <h3 id="sample-json-request-with-mandatory-parameters-datafile-hashcode-match-verification-done-on-integrators-side">Sample JSON request with mandatory parameters (datafile hashcode match verification done on integrators side)</h3>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;signatureFiles&quot;</span><span class="p">:</span> <span class="p">[</span>
     <span class="p">{</span>
       <span class="nt">&quot;signature&quot;</span><span class="p">:</span> <span class="s2">&quot;PD9094wskjd...&quot;</span>
@@ -2051,15 +2052,15 @@
     <span class="p">}</span>
   <span class="p">]</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h3 id="sample-json-request-with-all-parameters-datafile-hashcode-match-verification-done-on-siva-side">Sample JSON request with all parameters (datafile hashcode match verification done on SIVA side)</h3>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
     <span class="nt">&quot;signatureFiles&quot;</span><span class="p">:</span> <span class="p">[</span>
         <span class="p">{</span>
             <span class="nt">&quot;signature&quot;</span><span class="p">:</span> <span class="s2">&quot;PD94bWwgdmVyc2lvbj...&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;dataFiles&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="nt">&quot;datafiles&quot;</span><span class="p">:</span> <span class="p">[</span>
                 <span class="p">{</span>
                     <span class="nt">&quot;filename&quot;</span><span class="p">:</span> <span class="s2">&quot;leping.pdf&quot;</span><span class="p">,</span>
                     <span class="nt">&quot;hashAlgo&quot;</span><span class="p">:</span> <span class="s2">&quot;SHA256&quot;</span><span class="p">,</span>
@@ -2074,7 +2075,7 @@
         <span class="p">},</span>
         <span class="p">{</span>
             <span class="nt">&quot;signature&quot;</span><span class="p">:</span> <span class="s2">&quot;PDadw4mVyc2lvbj...&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;dataFiles&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="nt">&quot;datafiles&quot;</span><span class="p">:</span> <span class="p">[</span>
                 <span class="p">{</span>
                     <span class="nt">&quot;filename&quot;</span><span class="p">:</span> <span class="s2">&quot;leping.pdf&quot;</span><span class="p">,</span>
                     <span class="nt">&quot;hashAlgo&quot;</span><span class="p">:</span> <span class="s2">&quot;SHA256&quot;</span><span class="p">,</span>
@@ -2091,11 +2092,11 @@
     <span class="nt">&quot;reportType&quot;</span><span class="p">:</span> <span class="s2">&quot;Simple&quot;</span><span class="p">,</span>
     <span class="nt">&quot;signaturePolicy&quot;</span><span class="p">:</span> <span class="s2">&quot;POLv4&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h3 id="sample-soap-request-with-mandatory-parameters">Sample SOAP request with mandatory parameters</h3>
-<div class="codehilite"><pre><span></span><span class="nt">&lt;soapenv:Envelope</span> <span class="na">xmlns:soapenv=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span><span class="nt">&gt;</span>
+<div class="codehilite"><pre><span></span><code><span class="nt">&lt;soapenv:Envelope</span> <span class="na">xmlns:soapenv=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span><span class="nt">&gt;</span>
    <span class="nt">&lt;soapenv:Body&gt;</span>
       <span class="nt">&lt;soap:HashcodeValidationDocument&gt;</span>
          <span class="nt">&lt;soap:HashcodeValidationRequest&gt;</span>
@@ -2111,11 +2112,11 @@
       <span class="nt">&lt;/soap:HashcodeValidationDocument&gt;</span>
    <span class="nt">&lt;/soapenv:Body&gt;</span>
 <span class="nt">&lt;/soapenv:Envelope&gt;</span>
-</pre></div>
+</code></pre></div>
 
 
 <h3 id="sample-soap-request-with-all-parameters-and-multiple-datafiles">Sample SOAP request with all parameters and multiple datafiles</h3>
-<div class="codehilite"><pre><span></span><span class="nt">&lt;soapenv:Envelope</span> <span class="na">xmlns:soapenv=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span><span class="nt">&gt;</span>
+<div class="codehilite"><pre><span></span><code><span class="nt">&lt;soapenv:Envelope</span> <span class="na">xmlns:soapenv=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span><span class="nt">&gt;</span>
    <span class="nt">&lt;soapenv:Body&gt;</span>
       <span class="nt">&lt;soap:HashcodeValidationDocument&gt;</span>
          <span class="nt">&lt;soap:HashcodeValidationRequest&gt;</span>
@@ -2155,7 +2156,7 @@
       <span class="nt">&lt;/soap:HashcodeValidationDocument&gt;</span>
    <span class="nt">&lt;/soapenv:Body&gt;</span>
 <span class="nt">&lt;/soapenv:Envelope&gt;</span>
-</pre></div>
+</code></pre></div>
 
 
 <h2 id="validation-response-interface">Validation response interface</h2>
@@ -2381,7 +2382,7 @@
 <td>Signature.Info</td>
 <td>-</td>
 <td>Object</td>
-<td>Object containing trusted signing time information.</td>
+<td>Object containing trusted signing time information and user added additional signing info.</td>
 </tr>
 <tr>
 <td>signatures[0].info. bestSignatureTime</td>
@@ -2391,11 +2392,81 @@
 <td>Time value that is regarded as trusted signing time, denoting the earliest time when it can be trusted by the validation application (because proven by some Proof-of-Existence present in the signature) that a signature has existed.<br>The source of the value depends on the signature profile (see also <code>SignatureFormat</code> parameter):<br>- Signature with time-mark (LT_TM level) - the producedAt value of the earliest valid time-mark (OCSP confirmation of the signer's certificate) in the signature.<br>- Signature with time-stamp (LT or LTA level) - the genTime value of the earliest valid signature time-stamp token in the signature. <br> - Signature with BES or EPES level - the value is empty, i.e. there is no trusted signing time value available.</td>
 </tr>
 <tr>
+<td>signatures[0].info. timeAssertionMessageImprint</td>
+<td>Signature.Info. TimeAssertionMessageImprint</td>
+<td>-</td>
+<td>String</td>
+<td>Base64 encoded value of message imprint retrieved from time assertion. In case of LT_TM (TimeMark) signatures, OCSP nonce value is returned. In case of T, LT or LTA (TimeStamp) signatures, TimeStamp message imprint is returned.</td>
+</tr>
+<tr>
+<td>signatures[0].info. signerRole</td>
+<td>Signature.Info. SignerRole</td>
+<td>-</td>
+<td>Array</td>
+<td>Array of roles attached to the signature.</td>
+</tr>
+<tr>
+<td>signatures[0].info. signerRole[0]</td>
+<td>Signature.Info. SignerRole[0]</td>
+<td>+</td>
+<td>Object</td>
+<td>Object containing claimed roles.</td>
+</tr>
+<tr>
+<td>signatures[0].info. signerRole[0]. claimedRole</td>
+<td>Signature.Info. SignerRole[0].ClaimedRole</td>
+<td>+</td>
+<td>String</td>
+<td>Role stated by signer on signing.</td>
+</tr>
+<tr>
+<td>signatures[0].info. signatureProductionPlace</td>
+<td>Signature.Info. SignatureProductionPlace</td>
+<td>-</td>
+<td>Object</td>
+<td>Object containing stated signing location info.</td>
+</tr>
+<tr>
+<td>signatures[0].info. signatureProductionPlace.countryName</td>
+<td>Signature.Info. SignatureProductionPlace.CountryName</td>
+<td>-</td>
+<td>String</td>
+<td>Stated signing country.</td>
+</tr>
+<tr>
+<td>signatures[0].info. signatureProductionPlace.stateOrProvince</td>
+<td>Signature.Info. SignatureProductionPlace.StateOrProvince</td>
+<td>-</td>
+<td>String</td>
+<td>Stated state or province.</td>
+</tr>
+<tr>
+<td>signatures[0].info. signatureProductionPlace.city</td>
+<td>Signature.Info. SignatureProductionPlace.City</td>
+<td>-</td>
+<td>String</td>
+<td>Stated city.</td>
+</tr>
+<tr>
+<td>signatures[0].info. signatureProductionPlace.postalCode</td>
+<td>Signature.Info. SignatureProductionPlace.PostalCode</td>
+<td>-</td>
+<td>String</td>
+<td>Stated postal code.</td>
+</tr>
+<tr>
 <td>signatures[0]. signatureFormat</td>
 <td>Signature. SignatureFormat</td>
 <td>+</td>
 <td>String</td>
 <td>Format and profile (according to Baseline Profile) of the signature. See <a href="http://www.etsi.org/deliver/etsi_ts/103100_103199/103171/02.01.01_60/ts_103171v020101p.pdf">XAdES Baseline Profile</a>, <a href="http://www.etsi.org/deliver/etsi_ts/103100_103199/103173/02.02.01_60/ts_103173v020201p.pdf">CAdES Baseline Profile</a> and <a href="http://www.etsi.org/deliver/etsi_ts/103100_103199/103172/02.02.02_60/ts_103172v020202p.pdf">PAdES Baseline Profile</a> for detailed description of the Baseline Profile levels. Levels that are accepted in SiVa validation policy are described in <a href="/siva/appendix/validation_policy">SiVa signature validation policy</a> <br><strong>Possible values:</strong>  <br> XAdES_BASELINE_B <br> XAdES_BASELINE_B_BES <br> XAdES_BASELINE_B_EPES <br> XAdES_BASELINE_T <br> XAdES_BASELINE_LT - long-term level XAdES signature where time-stamp is used as a assertion of trusted signing time<br> XAdES_BASELINE_LT_TM - long-term level XAdES signature where time-mark is used as a assertion of trusted signing time. Used in case of <a href="http://id.ee/public/bdoc-spec212-eng.pdf">BDOC</a> signatures with time-mark profile and <a href="http://id.ee/public/DigiDoc_format_1.3.pdf">DIGIDOC-XML</a> (DDOC) signatures.<br>  XAdES_BASELINE_LTA <br> CAdES_BASELINE_B <br> CAdES_BASELINE_T <br> CAdES_BASELINE_LT <br> CAdES_BASELINE_LTA<br> PAdES_BASELINE_B <br> PAdES_BASELINE_T <br> PAdES_BASELINE_LT <br> PAdES_BASELINE_LTA</td>
+</tr>
+<tr>
+<td>signatures[0]. signatureMethod</td>
+<td>Signature. SignatureMethod</td>
+<td>+</td>
+<td>String</td>
+<td>Signature method specification URI used in signature creation.</td>
 </tr>
 <tr>
 <td>signatures[0]. signatureLevel</td>
@@ -2489,6 +2560,48 @@
 <td>Warning description, as retuned by the base library that was used for validation.</td>
 </tr>
 <tr>
+<td>signatures[0].certificates</td>
+<td>Signature.Certificates</td>
+<td>-</td>
+<td>Array</td>
+<td>Array containing certificates that are present in the signature or can be fetched from TSL.</td>
+</tr>
+<tr>
+<td>signatures[0].certificates[0]</td>
+<td>Signature.Certificates.Certificate</td>
+<td>+</td>
+<td>Object</td>
+<td>Object containinig certificate type, common name and certificate. Minimal object is signer certificate. If present contains certificates for TimeStamps and OCSP as well.</td>
+</tr>
+<tr>
+<td>signatures[0].certificates[0].commonName</td>
+<td>Signature.Certificates.Certificate.CommonName</td>
+<td>+</td>
+<td>String</td>
+<td>CN (common name) value in certificate.</td>
+</tr>
+<tr>
+<td>signatures[0].certificates[0].type</td>
+<td>Signature.Certificates.Certificate.Type</td>
+<td>+</td>
+<td>String</td>
+<td>Type of the certificate. Can be SIGNING, REVOCATION, SIGNATURE_TIMESTAMP, ARCHIVE_TIMESTAMP or CONTENT_TIMESTAMP.</td>
+</tr>
+<tr>
+<td>signatures[0].certificates[0].content</td>
+<td>Signature.Certificates.Certificate.Content</td>
+<td>+</td>
+<td>String</td>
+<td>DER encoded X.509 certificate in Base64.</td>
+</tr>
+<tr>
+<td>signatures[0].certificates[0].issuer</td>
+<td>Signature.Certificates.Certificate.Issuer</td>
+<td>+</td>
+<td>String</td>
+<td>Object containing issuer certificate information. Can create chain til the trust anchor.</td>
+</tr>
+<tr>
 <td>timeStampTokens</td>
 <td>TimeStampTokens</td>
 <td>-</td>
@@ -2547,12 +2660,11 @@
 </tbody>
 </table>
 <h4 id="sample-json-response-simple-report-successful-scenario">Sample JSON response Simple Report (successful scenario)</h4>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;validationReport&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;validationConclusion&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;validationTime&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-03-25T14:40:31Z&quot;</span><span class="p">,</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span><span class="nt">&quot;validationReport&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;validationConclusion&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;validationTime&quot;</span><span class="p">:</span> <span class="s2">&quot;2020-06-15T11:45:52Z&quot;</span><span class="p">,</span>
     <span class="nt">&quot;signaturesCount&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
     <span class="nt">&quot;validationLevel&quot;</span><span class="p">:</span> <span class="s2">&quot;ARCHIVAL_DATA&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;validatedDocument&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;filename&quot;</span><span class="p">:</span> <span class="s2">&quot;JaakTest.asice&quot;</span><span class="p">},</span>
+    <span class="nt">&quot;validatedDocument&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;filename&quot;</span><span class="p">:</span> <span class="s2">&quot;singleValidSignatureTS.asice&quot;</span><span class="p">},</span>
     <span class="nt">&quot;validSignaturesCount&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
     <span class="nt">&quot;signatures&quot;</span><span class="p">:</span> <span class="p">[{</span>
         <span class="nt">&quot;signatureFormat&quot;</span><span class="p">:</span> <span class="s2">&quot;XAdES_BASELINE_LT&quot;</span><span class="p">,</span>
@@ -2560,17 +2672,42 @@
             <span class="nt">&quot;commonName&quot;</span><span class="p">:</span> <span class="s2">&quot;JÕEORG,JAAK-KRISTJAN,38001085718&quot;</span><span class="p">,</span>
             <span class="nt">&quot;serialNumber&quot;</span><span class="p">:</span> <span class="s2">&quot;PNOEE-38001085718&quot;</span>
         <span class="p">},</span>
+        <span class="nt">&quot;certificates&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="nt">&quot;commonName&quot;</span><span class="p">:</span> <span class="s2">&quot;DEMO of SK TSA 2014&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;SIGNATURE_TIMESTAMP&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;MII...&quot;</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="nt">&quot;commonName&quot;</span><span class="p">:</span> <span class="s2">&quot;JÕEORG,JAAK-KRISTJAN,38001085718&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;SIGNING&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;MII...&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;issuer&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;commonName&quot;</span><span class="p">:</span> <span class="s2">&quot;TEST of ESTEID2018&quot;</span><span class="p">,</span>
+                    <span class="nt">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;MII...&quot;</span>
+                <span class="p">}</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="nt">&quot;commonName&quot;</span><span class="p">:</span> <span class="s2">&quot;TEST of SK OCSP RESPONDER 2011&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;REVOCATION&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;MII...&quot;</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
         <span class="nt">&quot;signedBy&quot;</span><span class="p">:</span> <span class="s2">&quot;JÕEORG,JAAK-KRISTJAN,38001085718&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;claimedSigningTime&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-12-21T09:07:22Z&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;claimedSigningTime&quot;</span><span class="p">:</span> <span class="s2">&quot;2020-05-21T13:56:52Z&quot;</span><span class="p">,</span>
         <span class="nt">&quot;signatureLevel&quot;</span><span class="p">:</span> <span class="s2">&quot;QESIG&quot;</span><span class="p">,</span>
         <span class="nt">&quot;signatureScopes&quot;</span><span class="p">:</span> <span class="p">[{</span>
             <span class="nt">&quot;scope&quot;</span><span class="p">:</span> <span class="s2">&quot;FULL&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test1.txt&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test.txt&quot;</span><span class="p">,</span>
             <span class="nt">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Full document&quot;</span>
         <span class="p">}],</span>
-        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;id-b62aa476c6c42d368e114a84e9db0169&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;signatureMethod&quot;</span><span class="p">:</span> <span class="s2">&quot;http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;id-a9ce7f66cff1d17ddaab37c46a88f5f4&quot;</span><span class="p">,</span>
         <span class="nt">&quot;indication&quot;</span><span class="p">:</span> <span class="s2">&quot;TOTAL-PASSED&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;info&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;bestSignatureTime&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-12-21T09:07:22Z&quot;</span><span class="p">}</span>
+        <span class="nt">&quot;info&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;timeAssertionMessageImprint&quot;</span><span class="p">:</span> <span class="s2">&quot;MDEwDQYJYIZIAWUDBAIBBQAEID3j1ceryQp4ZNP8iVfd50l/0JXvpry+XS+ajiAUA+Su&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;bestSignatureTime&quot;</span><span class="p">:</span> <span class="s2">&quot;2020-05-21T13:56:48Z&quot;</span>
+        <span class="p">}</span>
     <span class="p">}],</span>
     <span class="nt">&quot;policy&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="nt">&quot;policyDescription&quot;</span><span class="p">:</span> <span class="s2">&quot;Policy according most common requirements of Estonian Public Administration, to validate Qualified Electronic Signatures and Electronic Seals with Qualified Certificates (according to Regulation (EU) No 910/2014, aka eIDAS). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result, with exception for seals, where AdES/QC and above will produce positive result. Signatures and Seals which are not compliant with ETSI standards (referred by eIDAS) may produce unknown or invalid validation result. Validation process is based on eIDAS Article 32 and referred ETSI standards.&quot;</span><span class="p">,</span>
@@ -2579,11 +2716,11 @@
     <span class="p">},</span>
     <span class="nt">&quot;signatureForm&quot;</span><span class="p">:</span> <span class="s2">&quot;ASiC-E&quot;</span>
 <span class="p">}}}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h4 id="sample-soap-response-simple-report-successful-scenario">Sample SOAP response Simple Report (successful scenario)</h4>
-<div class="codehilite"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
 <span class="nt">&lt;soap:Envelope</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span><span class="nt">&gt;</span>
   <span class="nt">&lt;soap:Body&gt;</span>
     <span class="nt">&lt;ns2:ValidateDocumentResponse</span> <span class="na">xmlns:ns2=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span> <span class="na">xmlns:ns3=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/response/&quot;</span> <span class="na">xmlns:ns4=</span><span class="s">&quot;http://dss.esig.europa.eu/validation/detailed-report&quot;</span> <span class="na">xmlns:ns5=</span><span class="s">&quot;http://dss.esig.europa.eu/validation/diagnostic&quot;</span> <span class="na">xmlns:ns6=</span><span class="s">&quot;http://x-road.eu/xsd/identifiers&quot;</span> <span class="na">xmlns:ns7=</span><span class="s">&quot;http://x-road.eu/xsd/xroad.xsd&quot;</span><span class="nt">&gt;</span>
@@ -2594,37 +2731,60 @@
             <span class="nt">&lt;ns3:PolicyName&gt;</span>POLv4<span class="nt">&lt;/ns3:PolicyName&gt;</span>
             <span class="nt">&lt;ns3:PolicyUrl&gt;</span>http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4<span class="nt">&lt;/ns3:PolicyUrl&gt;</span>
           <span class="nt">&lt;/ns3:Policy&gt;</span>
-          <span class="nt">&lt;ns3:ValidationTime&gt;</span>2019-03-25T14:40:31Z<span class="nt">&lt;/ns3:ValidationTime&gt;</span>
+          <span class="nt">&lt;ns3:ValidationTime&gt;</span>2020-06-15T11:45:52Z<span class="nt">&lt;/ns3:ValidationTime&gt;</span>
           <span class="nt">&lt;ns3:ValidatedDocument&gt;</span>
-            <span class="nt">&lt;ns3:Filename&gt;</span>JaakTest.asice<span class="nt">&lt;/ns3:Filename&gt;</span>
+            <span class="nt">&lt;ns3:Filename&gt;</span>singleValidSignatureTS.asice<span class="nt">&lt;/ns3:Filename&gt;</span>
           <span class="nt">&lt;/ns3:ValidatedDocument&gt;</span>
           <span class="nt">&lt;ns3:ValidationLevel&gt;</span>ARCHIVAL_DATA<span class="nt">&lt;/ns3:ValidationLevel&gt;</span>
           <span class="nt">&lt;ns3:ValidationWarnings/&gt;</span>
           <span class="nt">&lt;ns3:SignatureForm&gt;</span>ASiC-E<span class="nt">&lt;/ns3:SignatureForm&gt;</span>
           <span class="nt">&lt;ns3:Signatures&gt;</span>
             <span class="nt">&lt;ns3:Signature&gt;</span>
-              <span class="nt">&lt;ns3:Id&gt;</span>id-b62aa476c6c42d368e114a84e9db0169<span class="nt">&lt;/ns3:Id&gt;</span>
+              <span class="nt">&lt;ns3:Id&gt;</span>id-a9ce7f66cff1d17ddaab37c46a88f5f4<span class="nt">&lt;/ns3:Id&gt;</span>
               <span class="nt">&lt;ns3:SignatureFormat&gt;</span>XAdES_BASELINE_LT<span class="nt">&lt;/ns3:SignatureFormat&gt;</span>
+              <span class="nt">&lt;ns3:SignatureMethod&gt;</span>http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256<span class="nt">&lt;/ns3:SignatureMethod&gt;</span>
               <span class="nt">&lt;ns3:SignatureLevel&gt;</span>QESIG<span class="nt">&lt;/ns3:SignatureLevel&gt;</span>
               <span class="nt">&lt;ns3:SignedBy&gt;</span>JÕEORG,JAAK-KRISTJAN,38001085718<span class="nt">&lt;/ns3:SignedBy&gt;</span>
               <span class="nt">&lt;ns3:SubjectDistinguishedName&gt;</span>
                 <span class="nt">&lt;ns3:SerialNumber&gt;</span>PNOEE-38001085718<span class="nt">&lt;/ns3:SerialNumber&gt;</span>
                 <span class="nt">&lt;ns3:CommonName&gt;</span>JÕEORG,JAAK-KRISTJAN,38001085718<span class="nt">&lt;/ns3:CommonName&gt;</span>
               <span class="nt">&lt;/ns3:SubjectDistinguishedName&gt;</span>
+              <span class="nt">&lt;ns3:Certificates&gt;</span>
+                <span class="nt">&lt;ns3:Certificate&gt;</span>
+                  <span class="nt">&lt;ns3:Content&gt;</span>MIIE...<span class="nt">&lt;/ns3:Content&gt;</span>
+                  <span class="nt">&lt;ns3:CommonName&gt;</span>DEMO of SK TSA 2014<span class="nt">&lt;/ns3:CommonName&gt;</span>
+                  <span class="nt">&lt;ns3:Type&gt;</span>SIGNATURE_TIMESTAMP<span class="nt">&lt;/ns3:Type&gt;</span>
+                <span class="nt">&lt;/ns3:Certificate&gt;</span>
+                <span class="nt">&lt;ns3:Certificate&gt;</span>
+                  <span class="nt">&lt;ns3:Content&gt;</span>MIIE...<span class="nt">&lt;/ns3:Content&gt;</span>
+                  <span class="nt">&lt;ns3:CommonName&gt;</span>JÕEORG,JAAK-KRISTJAN,38001085718<span class="nt">&lt;/ns3:CommonName&gt;</span>
+                  <span class="nt">&lt;ns3:Issuer&gt;</span>
+                    <span class="nt">&lt;ns3:Content&gt;</span>MIIE...<span class="nt">&lt;/ns3:Content&gt;</span>
+                    <span class="nt">&lt;ns3:CommonName&gt;</span>TEST of ESTEID2018<span class="nt">&lt;/ns3:CommonName&gt;</span>
+                  <span class="nt">&lt;/ns3:Issuer&gt;</span>
+                  <span class="nt">&lt;ns3:Type&gt;</span>SIGNING<span class="nt">&lt;/ns3:Type&gt;</span>
+                <span class="nt">&lt;/ns3:Certificate&gt;</span>
+                <span class="nt">&lt;ns3:Certificate&gt;</span>
+                  <span class="nt">&lt;ns3:Content&gt;</span>MIIE...<span class="nt">&lt;/ns3:Content&gt;</span>
+                  <span class="nt">&lt;ns3:CommonName&gt;</span>TEST of SK OCSP RESPONDER 2011<span class="nt">&lt;/ns3:CommonName&gt;</span>
+                  <span class="nt">&lt;ns3:Type&gt;</span>REVOCATION<span class="nt">&lt;/ns3:Type&gt;</span>
+                <span class="nt">&lt;/ns3:Certificate&gt;</span>
+              <span class="nt">&lt;/ns3:Certificates&gt;</span>
               <span class="nt">&lt;ns3:Indication&gt;</span>TOTAL-PASSED<span class="nt">&lt;/ns3:Indication&gt;</span>
               <span class="nt">&lt;ns3:SubIndication/&gt;</span>
               <span class="nt">&lt;ns3:Errors/&gt;</span>
               <span class="nt">&lt;ns3:SignatureScopes&gt;</span>
                 <span class="nt">&lt;ns3:SignatureScope&gt;</span>
-                  <span class="nt">&lt;ns3:Name&gt;</span>test1.txt<span class="nt">&lt;/ns3:Name&gt;</span>
+                  <span class="nt">&lt;ns3:Name&gt;</span>test.txt<span class="nt">&lt;/ns3:Name&gt;</span>
                   <span class="nt">&lt;ns3:Scope&gt;</span>FULL<span class="nt">&lt;/ns3:Scope&gt;</span>
                   <span class="nt">&lt;ns3:Content&gt;</span>Full document<span class="nt">&lt;/ns3:Content&gt;</span>
                 <span class="nt">&lt;/ns3:SignatureScope&gt;</span>
               <span class="nt">&lt;/ns3:SignatureScopes&gt;</span>
-              <span class="nt">&lt;ns3:ClaimedSigningTime&gt;</span>2018-12-21T09:07:22Z<span class="nt">&lt;/ns3:ClaimedSigningTime&gt;</span>
+              <span class="nt">&lt;ns3:ClaimedSigningTime&gt;</span>2020-05-21T13:56:52Z<span class="nt">&lt;/ns3:ClaimedSigningTime&gt;</span>
               <span class="nt">&lt;ns3:Warnings/&gt;</span>
               <span class="nt">&lt;ns3:Info&gt;</span>
-                <span class="nt">&lt;ns3:BestSignatureTime&gt;</span>2018-12-21T09:07:22Z<span class="nt">&lt;/ns3:BestSignatureTime&gt;</span>
+                <span class="nt">&lt;ns3:BestSignatureTime&gt;</span>2020-05-21T13:56:48Z<span class="nt">&lt;/ns3:BestSignatureTime&gt;</span>
+                <span class="nt">&lt;ns3:TimeAssertionMessageImprint&gt;</span>MDEwDQYJYIZIAWUDBAIBBQAEID3j1ceryQp4ZNP8iVfd50l/0JXvpry+XS+ajiAUA+Su<span class="nt">&lt;/ns3:TimeAssertionMessageImprint&gt;</span>
               <span class="nt">&lt;/ns3:Info&gt;</span>
             <span class="nt">&lt;/ns3:Signature&gt;</span>
           <span class="nt">&lt;/ns3:Signatures&gt;</span>
@@ -2635,7 +2795,7 @@
     <span class="nt">&lt;/ns2:ValidateDocumentResponse&gt;</span>
   <span class="nt">&lt;/soap:Body&gt;</span>
 <span class="nt">&lt;/soap:Envelope&gt;</span>
-</pre></div>
+</code></pre></div>
 
 
 <h3 id="validation-response-parameters-detailed-report-successful-scenario">Validation response parameters Detailed Report (successful scenario)</h3>
@@ -2681,248 +2841,6 @@
 </tr>
 </tbody>
 </table>
-<h4 id="sample-json-response-detailed-report-successful-scenario-the-report-is-shortened-but-gives-general-overview-of-structure">Sample JSON response Detailed Report (successful scenario). The report is shortened but gives general overview of structure.</h4>
-<div class="codehilite"><pre><span></span><span class="p">{</span><span class="nt">&quot;validationReport&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;validationProcess&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;tlanalysis&quot;</span><span class="p">:</span> <span class="p">[</span>
-            <span class="p">{</span>
-                <span class="nt">&quot;conclusion&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;indication&quot;</span><span class="p">:</span> <span class="s2">&quot;PASSED&quot;</span><span class="p">},</span>
-                <span class="nt">&quot;countryCode&quot;</span><span class="p">:</span> <span class="s2">&quot;EU&quot;</span><span class="p">,</span>
-                <span class="nt">&quot;constraint&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="p">{</span>
-                        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="p">{</span>
-                            <span class="nt">&quot;nameId&quot;</span><span class="p">:</span> <span class="s2">&quot;QUAL_TL_FRESH&quot;</span><span class="p">,</span>
-                            <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;Is the trusted list fresh ?&quot;</span>
-                        <span class="p">},</span>
-                        <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;OK&quot;</span>
-                    <span class="p">},</span>
-                    <span class="err">...</span>
-                <span class="p">]</span>
-            <span class="p">},</span>
-            <span class="p">{</span>
-                <span class="nt">&quot;conclusion&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;indication&quot;</span><span class="p">:</span> <span class="s2">&quot;PASSED&quot;</span><span class="p">},</span>
-                <span class="nt">&quot;countryCode&quot;</span><span class="p">:</span> <span class="s2">&quot;EU&quot;</span><span class="p">,</span>
-                <span class="nt">&quot;constraint&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="p">{</span>
-                        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="p">{</span>
-                            <span class="nt">&quot;nameId&quot;</span><span class="p">:</span> <span class="s2">&quot;QUAL_TL_FRESH&quot;</span><span class="p">,</span>
-                            <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;Is the trusted list fresh ?&quot;</span>
-                        <span class="p">},</span>
-                        <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;OK&quot;</span>
-                    <span class="p">},</span>
-                    <span class="err">...</span>
-                <span class="p">]</span>
-            <span class="p">}</span>
-        <span class="p">],</span>
-        <span class="nt">&quot;basicBuildingBlocks&quot;</span><span class="p">:</span> <span class="p">[</span>
-            <span class="p">{</span>
-                <span class="nt">&quot;conclusion&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;indication&quot;</span><span class="p">:</span> <span class="s2">&quot;PASSED&quot;</span><span class="p">},</span>
-                <span class="nt">&quot;cv&quot;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="nt">&quot;conclusion&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;indication&quot;</span><span class="p">:</span> <span class="s2">&quot;PASSED&quot;</span><span class="p">},</span>
-                    <span class="nt">&quot;constraint&quot;</span><span class="p">:</span> <span class="p">[</span>
-                        <span class="p">{</span>
-                            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="p">{</span>
-                                <span class="nt">&quot;nameId&quot;</span><span class="p">:</span> <span class="s2">&quot;BBB_CV_IRDOF&quot;</span><span class="p">,</span>
-                                <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;Is the reference data object found?&quot;</span>
-                            <span class="p">},</span>
-                            <span class="nt">&quot;additionalInfo&quot;</span><span class="p">:</span> <span class="s2">&quot;MESSAGE_IMPRINT&quot;</span><span class="p">,</span>
-                            <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;OK&quot;</span>
-                        <span class="p">},</span>
-                        <span class="err">...</span>
-                    <span class="p">]</span>
-                <span class="p">},</span>
-                <span class="err">...</span>
-                <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;FA6C844387F7162088444A80D95DD251D8AC1BF94EA067D97C10364F71720F3B&quot;</span><span class="p">,</span>
-                <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;TIMESTAMP&quot;</span>
-            <span class="p">},</span>
-            <span class="err">...</span>
-        <span class="p">],</span>
-        <span class="nt">&quot;signatures&quot;</span><span class="p">:</span> <span class="p">[{</span>
-            <span class="nt">&quot;validationProcessArchivalData&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="nt">&quot;conclusion&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;indication&quot;</span><span class="p">:</span> <span class="s2">&quot;PASSED&quot;</span><span class="p">},</span>
-                <span class="nt">&quot;constraint&quot;</span><span class="p">:</span> <span class="p">[{</span>
-                    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="nt">&quot;nameId&quot;</span><span class="p">:</span> <span class="s2">&quot;ARCH_LTVV&quot;</span><span class="p">,</span>
-                        <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;Is the result of the LTV validation process acceptable?&quot;</span>
-                    <span class="p">},</span>
-                    <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;OK&quot;</span>
-                <span class="p">}],</span>
-                <span class="nt">&quot;bestSignatureTime&quot;</span><span class="p">:</span> <span class="mi">1545383242000</span>
-            <span class="p">},</span>
-            <span class="err">...</span>
-            <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;id-b62aa476c6c42d368e114a84e9db0169&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;validationProcessLongTermData&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="nt">&quot;conclusion&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;indication&quot;</span><span class="p">:</span> <span class="s2">&quot;PASSED&quot;</span><span class="p">},</span>
-                <span class="nt">&quot;constraint&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="p">{</span>
-                        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="p">{</span>
-                            <span class="nt">&quot;nameId&quot;</span><span class="p">:</span> <span class="s2">&quot;LTV_ABSV&quot;</span><span class="p">,</span>
-                            <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;Is the result of the Basic Validation Process acceptable?&quot;</span>
-                        <span class="p">},</span>
-                        <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;OK&quot;</span>
-                    <span class="p">},</span>
-                    <span class="err">...</span>
-                <span class="p">],</span>
-                <span class="nt">&quot;bestSignatureTime&quot;</span><span class="p">:</span> <span class="mi">1545383242000</span>
-            <span class="p">}</span>
-        <span class="p">}]</span>
-    <span class="p">},</span>
-    <span class="nt">&quot;validationConclusion&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;validationTime&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-03-25T14:51:27Z&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;signaturesCount&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="nt">&quot;validationLevel&quot;</span><span class="p">:</span> <span class="s2">&quot;ARCHIVAL_DATA&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;validatedDocument&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;filename&quot;</span><span class="p">:</span> <span class="s2">&quot;JaakTest.asice&quot;</span><span class="p">},</span>
-        <span class="nt">&quot;validSignaturesCount&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="nt">&quot;signatures&quot;</span><span class="p">:</span> <span class="p">[{</span>
-            <span class="nt">&quot;signatureFormat&quot;</span><span class="p">:</span> <span class="s2">&quot;XAdES_BASELINE_LT&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;subjectDistinguishedName&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="nt">&quot;commonName&quot;</span><span class="p">:</span> <span class="s2">&quot;JÕEORG,JAAK-KRISTJAN,38001085718&quot;</span><span class="p">,</span>
-                <span class="nt">&quot;serialNumber&quot;</span><span class="p">:</span> <span class="s2">&quot;PNOEE-38001085718&quot;</span>
-            <span class="p">},</span>
-            <span class="nt">&quot;signedBy&quot;</span><span class="p">:</span> <span class="s2">&quot;JÕEORG,JAAK-KRISTJAN,38001085718&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;claimedSigningTime&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-12-21T09:07:22Z&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;signatureLevel&quot;</span><span class="p">:</span> <span class="s2">&quot;QESIG&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;signatureScopes&quot;</span><span class="p">:</span> <span class="p">[{</span>
-                <span class="nt">&quot;scope&quot;</span><span class="p">:</span> <span class="s2">&quot;FULL&quot;</span><span class="p">,</span>
-                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test1.txt&quot;</span><span class="p">,</span>
-                <span class="nt">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Full document&quot;</span>
-            <span class="p">}],</span>
-            <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;id-b62aa476c6c42d368e114a84e9db0169&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;indication&quot;</span><span class="p">:</span> <span class="s2">&quot;TOTAL-PASSED&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;info&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;bestSignatureTime&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-12-21T09:07:22Z&quot;</span><span class="p">}</span>
-        <span class="p">}],</span>
-        <span class="nt">&quot;policy&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="nt">&quot;policyDescription&quot;</span><span class="p">:</span> <span class="s2">&quot;Policy according most common requirements of Estonian Public Administration, to validate Qualified Electronic Signatures and Electronic Seals with Qualified Certificates (according to Regulation (EU) No 910/2014, aka eIDAS). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result, with exception for seals, where AdES/QC and above will produce positive result. Signatures and Seals which are not compliant with ETSI standards (referred by eIDAS) may produce unknown or invalid validation result. Validation process is based on eIDAS Article 32 and referred ETSI standards.&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;policyUrl&quot;</span><span class="p">:</span> <span class="s2">&quot;http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;policyName&quot;</span><span class="p">:</span> <span class="s2">&quot;POLv4&quot;</span>
-        <span class="p">},</span>
-        <span class="nt">&quot;signatureForm&quot;</span><span class="p">:</span> <span class="s2">&quot;ASiC-E&quot;</span>
-    <span class="p">}</span>
-<span class="p">}}</span>
-</pre></div>
-
-
-<h4 id="sample-soap-response-detailed-report-successful-scenario">Sample SOAP response Detailed Report (successful scenario)</h4>
-<div class="codehilite"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
-<span class="nt">&lt;soap:Envelope</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;soap:Body&gt;</span>
-    <span class="nt">&lt;ns2:ValidateDocumentResponse</span> <span class="na">xmlns:ns2=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span> <span class="na">xmlns:ns3=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/response/&quot;</span> <span class="na">xmlns:ns4=</span><span class="s">&quot;http://dss.esig.europa.eu/validation/detailed-report&quot;</span> <span class="na">xmlns:ns5=</span><span class="s">&quot;http://dss.esig.europa.eu/validation/diagnostic&quot;</span> <span class="na">xmlns:ns6=</span><span class="s">&quot;http://x-road.eu/xsd/identifiers&quot;</span> <span class="na">xmlns:ns7=</span><span class="s">&quot;http://x-road.eu/xsd/xroad.xsd&quot;</span><span class="nt">&gt;</span>
-      <span class="nt">&lt;ns3:ValidationReport&gt;</span>
-        <span class="nt">&lt;ns3:ValidationConclusion&gt;</span>
-          <span class="nt">&lt;ns3:Policy&gt;</span>
-            <span class="nt">&lt;ns3:PolicyDescription&gt;</span>Policy according most common requirements of Estonian Public Administration, to validate Qualified Electronic Signatures and Electronic Seals with Qualified Certificates (according to Regulation (EU) No 910/2014, aka eIDAS). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result, with exception for seals, where AdES/QC and above will produce positive result. Signatures and Seals which are not compliant with ETSI standards (referred by eIDAS) may produce unknown or invalid validation result. Validation process is based on eIDAS Article 32 and referred ETSI standards.<span class="nt">&lt;/ns3:PolicyDescription&gt;</span>
-            <span class="nt">&lt;ns3:PolicyName&gt;</span>POLv4<span class="nt">&lt;/ns3:PolicyName&gt;</span>
-            <span class="nt">&lt;ns3:PolicyUrl&gt;</span>http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4<span class="nt">&lt;/ns3:PolicyUrl&gt;</span>
-          <span class="nt">&lt;/ns3:Policy&gt;</span>
-          <span class="nt">&lt;ns3:ValidationTime&gt;</span>2019-03-25T14:51:27Z<span class="nt">&lt;/ns3:ValidationTime&gt;</span>
-          <span class="nt">&lt;ns3:ValidatedDocument&gt;</span>
-            <span class="nt">&lt;ns3:Filename&gt;</span>JaakTest.asice<span class="nt">&lt;/ns3:Filename&gt;</span>
-          <span class="nt">&lt;/ns3:ValidatedDocument&gt;</span>
-          <span class="nt">&lt;ns3:ValidationLevel&gt;</span>ARCHIVAL_DATA<span class="nt">&lt;/ns3:ValidationLevel&gt;</span>
-          <span class="nt">&lt;ns3:ValidationWarnings/&gt;</span>
-          <span class="nt">&lt;ns3:SignatureForm&gt;</span>ASiC-E<span class="nt">&lt;/ns3:SignatureForm&gt;</span>
-          <span class="nt">&lt;ns3:Signatures&gt;</span>
-            <span class="nt">&lt;ns3:Signature&gt;</span>
-              <span class="nt">&lt;ns3:Id&gt;</span>id-b62aa476c6c42d368e114a84e9db0169<span class="nt">&lt;/ns3:Id&gt;</span>
-              <span class="nt">&lt;ns3:SignatureFormat&gt;</span>XAdES_BASELINE_LT<span class="nt">&lt;/ns3:SignatureFormat&gt;</span>
-              <span class="nt">&lt;ns3:SignatureLevel&gt;</span>QESIG<span class="nt">&lt;/ns3:SignatureLevel&gt;</span>
-              <span class="nt">&lt;ns3:SignedBy&gt;</span>JÕEORG,JAAK-KRISTJAN,38001085718<span class="nt">&lt;/ns3:SignedBy&gt;</span>
-              <span class="nt">&lt;ns3:SubjectDistinguishedName&gt;</span>
-                <span class="nt">&lt;ns3:SerialNumber&gt;</span>PNOEE-38001085718<span class="nt">&lt;/ns3:SerialNumber&gt;</span>
-                <span class="nt">&lt;ns3:CommonName&gt;</span>JÕEORG,JAAK-KRISTJAN,38001085718<span class="nt">&lt;/ns3:CommonName&gt;</span>
-              <span class="nt">&lt;/ns3:SubjectDistinguishedName&gt;</span>
-              <span class="nt">&lt;ns3:Indication&gt;</span>TOTAL-PASSED<span class="nt">&lt;/ns3:Indication&gt;</span>
-              <span class="nt">&lt;ns3:SubIndication/&gt;</span>
-              <span class="nt">&lt;ns3:Errors/&gt;</span>
-              <span class="nt">&lt;ns3:SignatureScopes&gt;</span>
-                <span class="nt">&lt;ns3:SignatureScope&gt;</span>
-                  <span class="nt">&lt;ns3:Name&gt;</span>test1.txt<span class="nt">&lt;/ns3:Name&gt;</span>
-                  <span class="nt">&lt;ns3:Scope&gt;</span>FULL<span class="nt">&lt;/ns3:Scope&gt;</span>
-                  <span class="nt">&lt;ns3:Content&gt;</span>Full document<span class="nt">&lt;/ns3:Content&gt;</span>
-                <span class="nt">&lt;/ns3:SignatureScope&gt;</span>
-              <span class="nt">&lt;/ns3:SignatureScopes&gt;</span>
-              <span class="nt">&lt;ns3:ClaimedSigningTime&gt;</span>2018-12-21T09:07:22Z<span class="nt">&lt;/ns3:ClaimedSigningTime&gt;</span>
-              <span class="nt">&lt;ns3:Warnings/&gt;</span>
-              <span class="nt">&lt;ns3:Info&gt;</span>
-                <span class="nt">&lt;ns3:BestSignatureTime&gt;</span>2018-12-21T09:07:22Z<span class="nt">&lt;/ns3:BestSignatureTime&gt;</span>
-              <span class="nt">&lt;/ns3:Info&gt;</span>
-            <span class="nt">&lt;/ns3:Signature&gt;</span>
-          <span class="nt">&lt;/ns3:Signatures&gt;</span>
-          <span class="nt">&lt;ns3:ValidSignaturesCount&gt;</span>1<span class="nt">&lt;/ns3:ValidSignaturesCount&gt;</span>
-          <span class="nt">&lt;ns3:SignaturesCount&gt;</span>1<span class="nt">&lt;/ns3:SignaturesCount&gt;</span>
-        <span class="nt">&lt;/ns3:ValidationConclusion&gt;</span>
-        <span class="nt">&lt;ns3:ValidationProcess&gt;</span>
-          <span class="nt">&lt;ns4:Signatures</span> <span class="na">Id=</span><span class="s">&quot;id-b62aa476c6c42d368e114a84e9db0169&quot;</span><span class="nt">&gt;</span>
-            <span class="nt">&lt;ns4:ValidationProcessBasicSignatures</span> <span class="na">BestSignatureTime=</span><span class="s">&quot;2019-03-25T14:51:27&quot;</span><span class="nt">&gt;</span>
-              <span class="nt">&lt;ns4:Constraint</span> <span class="na">Id=</span><span class="s">&quot;id-b62aa476c6c42d368e114a84e9db0169&quot;</span><span class="nt">&gt;</span>
-                <span class="nt">&lt;ns4:Name</span> <span class="na">NameId=</span><span class="s">&quot;ADEST_ROBVPIIC&quot;</span><span class="nt">&gt;</span>Is the result of the Basic Validation Process conclusive?<span class="nt">&lt;/ns4:Name&gt;</span>
-                <span class="nt">&lt;ns4:Status&gt;</span>OK<span class="nt">&lt;/ns4:Status&gt;</span>
-              <span class="nt">&lt;/ns4:Constraint&gt;</span>
-              <span class="nt">&lt;ns4:Conclusion&gt;</span>
-                <span class="nt">&lt;ns4:Indication&gt;</span>PASSED<span class="nt">&lt;/ns4:Indication&gt;</span>
-              <span class="nt">&lt;/ns4:Conclusion&gt;</span>
-            <span class="nt">&lt;/ns4:ValidationProcessBasicSignatures&gt;</span>
-            ...
-            <span class="nt">&lt;ns4:ValidationProcessArchivalData</span> <span class="na">BestSignatureTime=</span><span class="s">&quot;2018-12-21T09:07:22&quot;</span><span class="nt">&gt;</span>
-              <span class="nt">&lt;ns4:Constraint&gt;</span>
-                <span class="nt">&lt;ns4:Name</span> <span class="na">NameId=</span><span class="s">&quot;ARCH_LTVV&quot;</span><span class="nt">&gt;</span>Is the result of the LTV validation process acceptable?<span class="nt">&lt;/ns4:Name&gt;</span>
-                <span class="nt">&lt;ns4:Status&gt;</span>OK<span class="nt">&lt;/ns4:Status&gt;</span>
-              <span class="nt">&lt;/ns4:Constraint&gt;</span>
-              <span class="nt">&lt;ns4:Conclusion&gt;</span>
-                <span class="nt">&lt;ns4:Indication&gt;</span>PASSED<span class="nt">&lt;/ns4:Indication&gt;</span>
-              <span class="nt">&lt;/ns4:Conclusion&gt;</span>
-            <span class="nt">&lt;/ns4:ValidationProcessArchivalData&gt;</span>
-            ...
-          <span class="nt">&lt;/ns4:Signatures&gt;</span>
-          ...
-          <span class="nt">&lt;ns4:BasicBuildingBlocks</span> <span class="na">Id=</span><span class="s">&quot;id-b62aa476c6c42d368e114a84e9db0169&quot;</span> <span class="na">Type=</span><span class="s">&quot;SIGNATURE&quot;</span><span class="nt">&gt;</span>
-            <span class="nt">&lt;ns4:FC&gt;</span>
-              <span class="nt">&lt;ns4:Constraint&gt;</span>
-                <span class="nt">&lt;ns4:Name</span> <span class="na">NameId=</span><span class="s">&quot;BBB_FC_IEFF&quot;</span><span class="nt">&gt;</span>Is the expected format found?<span class="nt">&lt;/ns4:Name&gt;</span>
-                <span class="nt">&lt;ns4:Status&gt;</span>OK<span class="nt">&lt;/ns4:Status&gt;</span>
-              <span class="nt">&lt;/ns4:Constraint&gt;</span>
-              ...
-            <span class="nt">&lt;/ns4:FC&gt;</span>
-            ...
-            <span class="nt">&lt;ns4:XCV&gt;</span>
-              <span class="nt">&lt;ns4:Constraint&gt;</span>
-                <span class="nt">&lt;ns4:Name</span> <span class="na">NameId=</span><span class="s">&quot;BBB_XCV_CCCBB&quot;</span><span class="nt">&gt;</span>Can the certificate chain be built till the trust anchor?<span class="nt">&lt;/ns4:Name&gt;</span>
-                <span class="nt">&lt;ns4:Status&gt;</span>OK<span class="nt">&lt;/ns4:Status&gt;</span>
-              <span class="nt">&lt;/ns4:Constraint&gt;</span>
-              ...
-            <span class="nt">&lt;/ns4:XCV&gt;</span>
-            <span class="nt">&lt;ns4:CertificateChain&gt;</span>
-              <span class="nt">&lt;ns4:ChainItem</span> <span class="na">Id=</span><span class="s">&quot;E5F26DE786C6A54C75C115E0BA31DF328ED7CEDD5DB539C1078D603F5EEC582E&quot;</span><span class="nt">&gt;</span>
-                <span class="nt">&lt;ns4:Source&gt;</span>SIGNATURE<span class="nt">&lt;/ns4:Source&gt;</span>
-              <span class="nt">&lt;/ns4:ChainItem&gt;</span>
-              <span class="nt">&lt;ns4:ChainItem</span> <span class="na">Id=</span><span class="s">&quot;2291C167B5275152B53F1EFA2C1805C9A15EC8DEF7120E56A3726A2959B31049&quot;</span><span class="nt">&gt;</span>
-                <span class="nt">&lt;ns4:Source&gt;</span>TRUSTED_LIST<span class="nt">&lt;/ns4:Source&gt;</span>
-              <span class="nt">&lt;/ns4:ChainItem&gt;</span>
-            <span class="nt">&lt;/ns4:CertificateChain&gt;</span>
-            <span class="nt">&lt;ns4:Conclusion&gt;</span>
-              <span class="nt">&lt;ns4:Indication&gt;</span>PASSED<span class="nt">&lt;/ns4:Indication&gt;</span>
-            <span class="nt">&lt;/ns4:Conclusion&gt;</span>
-          <span class="nt">&lt;/ns4:BasicBuildingBlocks&gt;</span>
-          ...
-          <span class="nt">&lt;ns4:TLAnalysis</span> <span class="na">CountryCode=</span><span class="s">&quot;EU&quot;</span><span class="nt">&gt;</span>
-            ...
-            <span class="nt">&lt;ns4:Constraint&gt;</span>
-              <span class="nt">&lt;ns4:Name</span> <span class="na">NameId=</span><span class="s">&quot;QUAL_TL_WS&quot;</span><span class="nt">&gt;</span>Is the trusted list well signed ?<span class="nt">&lt;/ns4:Name&gt;</span>
-              <span class="nt">&lt;ns4:Status&gt;</span>OK<span class="nt">&lt;/ns4:Status&gt;</span>
-            <span class="nt">&lt;/ns4:Constraint&gt;</span>
-            <span class="nt">&lt;ns4:Conclusion&gt;</span>
-              <span class="nt">&lt;ns4:Indication&gt;</span>PASSED<span class="nt">&lt;/ns4:Indication&gt;</span>
-            <span class="nt">&lt;/ns4:Conclusion&gt;</span>
-          <span class="nt">&lt;/ns4:TLAnalysis&gt;</span>
-          ...
-        <span class="nt">&lt;/ns3:ValidationProcess&gt;</span>
-      <span class="nt">&lt;/ns3:ValidationReport&gt;</span>
-    <span class="nt">&lt;/ns2:ValidateDocumentResponse&gt;</span>
-  <span class="nt">&lt;/soap:Body&gt;</span>
-<span class="nt">&lt;/soap:Envelope&gt;</span>
-</pre></div>
-
-
 <h3 id="validation-response-parameters-for-diagnostic-data-report-successful-scenario">Validation response parameters for Diagnostic Data Report (successful scenario)</h3>
 <p>General structure of validation response.</p>
 <table>
@@ -2959,434 +2877,17 @@
 </tr>
 </tbody>
 </table>
-<h4 id="sample-diagnostic-data-report-json-response-successful-scenario-the-report-is-shortened-but-gives-general-overview-of-structure">Sample Diagnostic Data Report JSON response (successful scenario). The report is shortened but gives general overview of structure.</h4>
-<div class="codehilite"><pre><span></span><span class="p">{</span><span class="nt">&quot;validationReport&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;diagnosticData&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;listOfTrustedLists&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="nt">&quot;sequenceNumber&quot;</span><span class="p">:</span> <span class="mi">237</span><span class="p">,</span>
-            <span class="nt">&quot;countryCode&quot;</span><span class="p">:</span> <span class="s2">&quot;EU&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;wellSigned&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-            <span class="nt">&quot;lastLoading&quot;</span><span class="p">:</span> <span class="mi">1553524453769</span><span class="p">,</span>
-            <span class="nt">&quot;issueDate&quot;</span><span class="p">:</span> <span class="mi">1553151600000</span><span class="p">,</span>
-            <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-            <span class="nt">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://ec.europa.eu/tools/lotl/eu-lotl.xml&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;nextUpdate&quot;</span><span class="p">:</span> <span class="mi">1569024000000</span>
-        <span class="p">},</span>
-        <span class="nt">&quot;usedCertificates&quot;</span><span class="p">:</span> <span class="p">[</span>
-            <span class="err">...</span><span class="p">,</span>
-            <span class="p">{</span>
-                <span class="nt">&quot;commonName&quot;</span><span class="p">:</span> <span class="s2">&quot;JÕEORG,JAAK-KRISTJAN,38001085718&quot;</span><span class="p">,</span>
-                <span class="nt">&quot;notAfter&quot;</span><span class="p">:</span> <span class="mi">1697579999000</span><span class="p">,</span>
-                <span class="nt">&quot;subjectDistinguishedName&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="p">{</span>
-                        <span class="nt">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;CANONICAL&quot;</span><span class="p">,</span>
-                        <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;2.5.4.5=#1311504e4f45452d3338303031303835373138,2.5.4.42=#0c0d4a41414b2d4b524953544a414e,2.5.4.4=#0c074ac395454f5247,cn=jõeorg\\,jaak-kristjan\\,38001085718,c=ee&quot;</span>
-                    <span class="p">},</span>
-                    <span class="err">...</span>
-                <span class="p">],</span>
-                <span class="nt">&quot;issuerDistinguishedName&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="p">{</span>
-                        <span class="nt">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;CANONICAL&quot;</span><span class="p">,</span>
-                        <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;cn=test of esteid2018,2.5.4.97=#0c0e4e545245452d3130373437303133,o=sk id solutions as,c=ee&quot;</span>
-                    <span class="p">},</span>
-                    <span class="err">...</span>
-                <span class="p">],</span>
-                <span class="nt">&quot;publicKeyEncryptionAlgo&quot;</span><span class="p">:</span> <span class="s2">&quot;ECDSA&quot;</span><span class="p">,</span>
-                <span class="nt">&quot;qcstatementIds&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="err">...</span>
-                <span class="p">],</span>
-                <span class="nt">&quot;qctypes&quot;</span><span class="p">:</span> <span class="p">[{</span>
-                    <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;qc-type-esign&quot;</span><span class="p">,</span>
-                    <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;0.4.0.1862.1.6.1&quot;</span>
-                <span class="p">}],</span>
-                <span class="nt">&quot;notBefore&quot;</span><span class="p">:</span> <span class="mi">1539858740000</span><span class="p">,</span>
-                <span class="nt">&quot;surname&quot;</span><span class="p">:</span> <span class="s2">&quot;JÕEORG&quot;</span><span class="p">,</span>
-                <span class="nt">&quot;keyUsageBits&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;nonRepudiation&quot;</span><span class="p">],</span>
-                <span class="nt">&quot;basicSignature&quot;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="err">...</span>
-                <span class="p">},</span>
-                <span class="nt">&quot;certificatePolicies&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="err">...</span>
-                <span class="p">],</span>
-                <span class="nt">&quot;publicKeySize&quot;</span><span class="p">:</span> <span class="mi">384</span><span class="p">,</span>
-                <span class="nt">&quot;selfSigned&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
-                <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;E5F26DE786C6A54C75C115E0BA31DF328ED7CEDD5DB539C1078D603F5EEC582E&quot;</span><span class="p">,</span>
-                <span class="nt">&quot;trustedServiceProviders&quot;</span><span class="p">:</span> <span class="p">[{</span>
-                    <span class="err">...,</span>
-                    <span class="nt">&quot;tspname&quot;</span><span class="p">:</span> <span class="s2">&quot;TEST of ESTEID2018&quot;</span><span class="p">,</span>
-                    <span class="nt">&quot;countryCode&quot;</span><span class="p">:</span> <span class="s2">&quot;EU&quot;</span>
-                <span class="p">}],</span>
-                <span class="nt">&quot;signingCertificate&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;2291C167B5275152B53F1EFA2C1805C9A15EC8DEF7120E56A3726A2959B31049&quot;</span><span class="p">},</span>
-                <span class="nt">&quot;serialNumber&quot;</span><span class="p">:</span> <span class="s2">&quot;19005286950875642170302181391352002125&quot;</span><span class="p">,</span>
-                <span class="nt">&quot;digestAlgoAndValues&quot;</span><span class="p">:</span> <span class="p">[{</span>
-                    <span class="nt">&quot;digestValue&quot;</span><span class="p">:</span> <span class="s2">&quot;5fJt54bGpUx1wRXgujHfMo7Xzt1dtTnBB41gP17sWC4=&quot;</span><span class="p">,</span>
-                    <span class="nt">&quot;digestMethod&quot;</span><span class="p">:</span> <span class="s2">&quot;SHA256&quot;</span>
-                <span class="p">}],</span>
-                <span class="nt">&quot;certificateChain&quot;</span><span class="p">:</span> <span class="p">[{</span>
-                    <span class="nt">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;TRUSTED_LIST&quot;</span><span class="p">,</span>
-                    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;2291C167B5275152B53F1EFA2C1805C9A15EC8DEF7120E56A3726A2959B31049&quot;</span>
-                <span class="p">}],</span>
-                <span class="nt">&quot;givenName&quot;</span><span class="p">:</span> <span class="s2">&quot;JAAK-KRISTJAN&quot;</span><span class="p">,</span>
-                <span class="nt">&quot;idPkixOcspNoCheck&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
-                <span class="nt">&quot;authorityInformationAccessUrls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;http://c.sk.ee/Test_of_ESTEID2018.der.crt&quot;</span><span class="p">],</span>
-                <span class="nt">&quot;revocations&quot;</span><span class="p">:</span> <span class="p">[{</span>
-                    <span class="nt">&quot;signingCertificate&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;E83A008AF341579A76367AF41CDD371F7F35E949220FC4621A3F2596A73D1D05&quot;</span><span class="p">},</span>
-                    <span class="nt">&quot;productionDate&quot;</span><span class="p">:</span> <span class="mi">1545383244000</span><span class="p">,</span>
-                    <span class="nt">&quot;digestAlgoAndValues&quot;</span><span class="p">:</span> <span class="p">[{</span>
-                        <span class="nt">&quot;digestValue&quot;</span><span class="p">:</span> <span class="s2">&quot;5O0YUUWO0X0kc/5oz2yGvIYOwfZZBHUrBDHPhe3BBrM=&quot;</span><span class="p">,</span>
-                        <span class="nt">&quot;digestMethod&quot;</span><span class="p">:</span> <span class="s2">&quot;SHA256&quot;</span>
-                    <span class="p">}],</span>
-                    <span class="nt">&quot;certificateChain&quot;</span><span class="p">:</span> <span class="p">[{</span>
-                        <span class="nt">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;TRUSTED_LIST&quot;</span><span class="p">,</span>
-                        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;E83A008AF341579A76367AF41CDD371F7F35E949220FC4621A3F2596A73D1D05&quot;</span>
-                    <span class="p">}],</span>
-                    <span class="nt">&quot;thisUpdate&quot;</span><span class="p">:</span> <span class="mi">1545383244000</span><span class="p">,</span>
-                    <span class="nt">&quot;origin&quot;</span><span class="p">:</span> <span class="s2">&quot;SIGNATURE&quot;</span><span class="p">,</span>
-                    <span class="nt">&quot;basicSignature&quot;</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="err">...</span>
-                    <span class="p">},</span>
-                    <span class="nt">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;OCSPToken&quot;</span><span class="p">,</span>
-                    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;e5f26de786c6a54c75c115e0ba31df328ed7cedd5db539c1078d603f5eec582ee4ed1851458ed17d2473fe68cf6c86bc860ec1f65904752b0431cf85edc106b3&quot;</span><span class="p">,</span>
-                    <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="kc">true</span>
-                <span class="p">}],</span>
-                <span class="nt">&quot;trusted&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
-                <span class="nt">&quot;ocspaccessUrls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;http://aia.demo.sk.ee/esteid2018&quot;</span><span class="p">],</span>
-                <span class="nt">&quot;countryName&quot;</span><span class="p">:</span> <span class="s2">&quot;EE&quot;</span>
-            <span class="p">},</span>
-            <span class="err">...</span>
-        <span class="p">],</span>
-        <span class="nt">&quot;containerInfo&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="nt">&quot;contentFiles&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;test1.txt&quot;</span><span class="p">],</span>
-            <span class="nt">&quot;containerType&quot;</span><span class="p">:</span> <span class="s2">&quot;ASiC-E&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;mimeTypeContent&quot;</span><span class="p">:</span> <span class="s2">&quot;application/vnd.etsi.asic-e+zip&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;mimeTypeFilePresent&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-            <span class="nt">&quot;manifestFiles&quot;</span><span class="p">:</span> <span class="p">[{</span>
-                <span class="nt">&quot;entries&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;test1.txt&quot;</span><span class="p">],</span>
-                <span class="nt">&quot;filename&quot;</span><span class="p">:</span> <span class="s2">&quot;META-INF/manifest.xml&quot;</span><span class="p">,</span>
-                <span class="nt">&quot;signatureFilename&quot;</span><span class="p">:</span> <span class="s2">&quot;META-INF/signatures0.xml&quot;</span>
-            <span class="p">}],</span>
-            <span class="nt">&quot;zipComment&quot;</span><span class="p">:</span> <span class="s2">&quot;LIB DigiDoc4j/DEV format: application/vnd.etsi.asic-e+zip signatureProfile: XAdES_BASELINE_LT Java: 1.8.0_171/Oracle Corporation OS: Windows 10/amd64/10.0 JVM: Java HotSpot(TM) 64-Bit Server VM/Oracle Corporation/25.171-b11&quot;</span>
-        <span class="p">},</span>
-        <span class="nt">&quot;trustedLists&quot;</span><span class="p">:</span> <span class="p">[{</span>
-            <span class="nt">&quot;sequenceNumber&quot;</span><span class="p">:</span> <span class="mi">237</span><span class="p">,</span>
-            <span class="nt">&quot;countryCode&quot;</span><span class="p">:</span> <span class="s2">&quot;EU&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;wellSigned&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-            <span class="nt">&quot;lastLoading&quot;</span><span class="p">:</span> <span class="mi">1553524453769</span><span class="p">,</span>
-            <span class="nt">&quot;issueDate&quot;</span><span class="p">:</span> <span class="mi">1553151600000</span><span class="p">,</span>
-            <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-            <span class="nt">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://ec.europa.eu/tools/lotl/eu-lotl.xml&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;nextUpdate&quot;</span><span class="p">:</span> <span class="mi">1569024000000</span>
-        <span class="p">}],</span>
-        <span class="nt">&quot;documentName&quot;</span><span class="p">:</span> <span class="s2">&quot;JaakTest.asice&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;validationDate&quot;</span><span class="p">:</span> <span class="mi">1553526062404</span><span class="p">,</span>
-        <span class="nt">&quot;signatures&quot;</span><span class="p">:</span> <span class="p">[{</span>
-            <span class="nt">&quot;dateTime&quot;</span><span class="p">:</span> <span class="mi">1545383242000</span><span class="p">,</span>
-            <span class="nt">&quot;signingCertificate&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="nt">&quot;attributePresent&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-                <span class="nt">&quot;digestValueMatch&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-                <span class="nt">&quot;digestValuePresent&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-                <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;E5F26DE786C6A54C75C115E0BA31DF328ED7CEDD5DB539C1078D603F5EEC582E&quot;</span><span class="p">,</span>
-                <span class="nt">&quot;issuerSerialMatch&quot;</span><span class="p">:</span> <span class="kc">true</span>
-            <span class="p">},</span>
-            <span class="nt">&quot;signatureFormat&quot;</span><span class="p">:</span> <span class="s2">&quot;XAdES-BASELINE-LT&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;digestMatchers&quot;</span><span class="p">:</span> <span class="p">[</span>
-                <span class="p">{</span>
-                    <span class="nt">&quot;digestValue&quot;</span><span class="p">:</span> <span class="s2">&quot;MFRF3SBw+Ykk8BdGCEGzlMrxycC8qzbzvjQuST0yk8M=&quot;</span><span class="p">,</span>
-                    <span class="nt">&quot;dataIntact&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-                    <span class="nt">&quot;digestMethod&quot;</span><span class="p">:</span> <span class="s2">&quot;SHA256&quot;</span><span class="p">,</span>
-                    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;r-id-1&quot;</span><span class="p">,</span>
-                    <span class="nt">&quot;dataFound&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;REFERENCE&quot;</span>
-                <span class="p">},</span>
-                <span class="err">...</span>
-            <span class="p">],</span>
-            <span class="nt">&quot;certificateChain&quot;</span><span class="p">:</span> <span class="p">[</span>
-                <span class="err">...</span>
-            <span class="p">],</span>
-            <span class="nt">&quot;timestamps&quot;</span><span class="p">:</span> <span class="p">[{</span>
-                <span class="err">...</span>
-            <span class="p">}],</span>
-            <span class="nt">&quot;basicSignature&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="err">...</span>
-            <span class="p">},</span>
-            <span class="nt">&quot;signatureScopes&quot;</span><span class="p">:</span> <span class="p">[{</span>
-                <span class="nt">&quot;scope&quot;</span><span class="p">:</span> <span class="s2">&quot;FULL&quot;</span><span class="p">,</span>
-                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test1.txt&quot;</span><span class="p">,</span>
-                <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;Full document&quot;</span>
-            <span class="p">}],</span>
-            <span class="nt">&quot;structuralValidation&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;valid&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">},</span>
-            <span class="nt">&quot;signatureFilename&quot;</span><span class="p">:</span> <span class="s2">&quot;META-INF/signatures0.xml&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;id-b62aa476c6c42d368e114a84e9db0169&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;contentType&quot;</span><span class="p">:</span> <span class="s2">&quot;text/xml&quot;</span>
-        <span class="p">}]</span>
-    <span class="p">},</span>
-    <span class="nt">&quot;validationConclusion&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;validationTime&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-03-25T15:01:02Z&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;signaturesCount&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="nt">&quot;validationLevel&quot;</span><span class="p">:</span> <span class="s2">&quot;ARCHIVAL_DATA&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;validatedDocument&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;filename&quot;</span><span class="p">:</span> <span class="s2">&quot;JaakTest.asice&quot;</span><span class="p">},</span>
-        <span class="nt">&quot;validSignaturesCount&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="nt">&quot;signatures&quot;</span><span class="p">:</span> <span class="p">[{</span>
-            <span class="nt">&quot;signatureFormat&quot;</span><span class="p">:</span> <span class="s2">&quot;XAdES_BASELINE_LT&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;subjectDistinguishedName&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="nt">&quot;commonName&quot;</span><span class="p">:</span> <span class="s2">&quot;JÕEORG,JAAK-KRISTJAN,38001085718&quot;</span><span class="p">,</span>
-                <span class="nt">&quot;serialNumber&quot;</span><span class="p">:</span> <span class="s2">&quot;PNOEE-38001085718&quot;</span>
-            <span class="p">},</span>
-            <span class="nt">&quot;signedBy&quot;</span><span class="p">:</span> <span class="s2">&quot;JÕEORG,JAAK-KRISTJAN,38001085718&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;claimedSigningTime&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-12-21T09:07:22Z&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;signatureLevel&quot;</span><span class="p">:</span> <span class="s2">&quot;QESIG&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;signatureScopes&quot;</span><span class="p">:</span> <span class="p">[{</span>
-                <span class="nt">&quot;scope&quot;</span><span class="p">:</span> <span class="s2">&quot;FULL&quot;</span><span class="p">,</span>
-                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test1.txt&quot;</span><span class="p">,</span>
-                <span class="nt">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Full document&quot;</span>
-            <span class="p">}],</span>
-            <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;id-b62aa476c6c42d368e114a84e9db0169&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;indication&quot;</span><span class="p">:</span> <span class="s2">&quot;TOTAL-PASSED&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;info&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;bestSignatureTime&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-12-21T09:07:22Z&quot;</span><span class="p">}</span>
-        <span class="p">}],</span>
-        <span class="nt">&quot;policy&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="nt">&quot;policyDescription&quot;</span><span class="p">:</span> <span class="s2">&quot;Policy according most common requirements of Estonian Public Administration, to validate Qualified Electronic Signatures and Electronic Seals with Qualified Certificates (according to Regulation (EU) No 910/2014, aka eIDAS). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result, with exception for seals, where AdES/QC and above will produce positive result. Signatures and Seals which are not compliant with ETSI standards (referred by eIDAS) may produce unknown or invalid validation result. Validation process is based on eIDAS Article 32 and referred ETSI standards.&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;policyUrl&quot;</span><span class="p">:</span> <span class="s2">&quot;http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;policyName&quot;</span><span class="p">:</span> <span class="s2">&quot;POLv4&quot;</span>
-        <span class="p">},</span>
-        <span class="nt">&quot;signatureForm&quot;</span><span class="p">:</span> <span class="s2">&quot;ASiC-E&quot;</span>
-    <span class="p">}</span>
-<span class="p">}}</span>
-</pre></div>
-
-
-<h4 id="sample-diagnostic-data-report-soap-response-successful-scenario">Sample Diagnostic Data Report SOAP response (successful scenario)</h4>
-<div class="codehilite"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
-<span class="nt">&lt;soap:Envelope</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;soap:Body&gt;</span>
-    <span class="nt">&lt;ns2:ValidateDocumentResponse</span> <span class="na">xmlns:ns2=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span> <span class="na">xmlns:ns3=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/response/&quot;</span> <span class="na">xmlns:ns4=</span><span class="s">&quot;http://dss.esig.europa.eu/validation/detailed-report&quot;</span> <span class="na">xmlns:ns5=</span><span class="s">&quot;http://dss.esig.europa.eu/validation/diagnostic&quot;</span> <span class="na">xmlns:ns6=</span><span class="s">&quot;http://x-road.eu/xsd/identifiers&quot;</span> <span class="na">xmlns:ns7=</span><span class="s">&quot;http://x-road.eu/xsd/xroad.xsd&quot;</span><span class="nt">&gt;</span>
-      <span class="nt">&lt;ns3:ValidationReport&gt;</span>
-        <span class="nt">&lt;ns3:ValidationConclusion&gt;</span>
-          <span class="nt">&lt;ns3:Policy&gt;</span>
-            <span class="nt">&lt;ns3:PolicyDescription&gt;</span>Policy according most common requirements of Estonian Public Administration, to validate Qualified Electronic Signatures and Electronic Seals with Qualified Certificates (according to Regulation (EU) No 910/2014, aka eIDAS). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result, with exception for seals, where AdES/QC and above will produce positive result. Signatures and Seals which are not compliant with ETSI standards (referred by eIDAS) may produce unknown or invalid validation result. Validation process is based on eIDAS Article 32 and referred ETSI standards.<span class="nt">&lt;/ns3:PolicyDescription&gt;</span>
-            <span class="nt">&lt;ns3:PolicyName&gt;</span>POLv4<span class="nt">&lt;/ns3:PolicyName&gt;</span>
-            <span class="nt">&lt;ns3:PolicyUrl&gt;</span>http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4<span class="nt">&lt;/ns3:PolicyUrl&gt;</span>
-          <span class="nt">&lt;/ns3:Policy&gt;</span>
-          <span class="nt">&lt;ns3:ValidationTime&gt;</span>2019-03-25T15:01:02Z<span class="nt">&lt;/ns3:ValidationTime&gt;</span>
-          <span class="nt">&lt;ns3:ValidatedDocument&gt;</span>
-            <span class="nt">&lt;ns3:Filename&gt;</span>JaakTest.asice<span class="nt">&lt;/ns3:Filename&gt;</span>
-          <span class="nt">&lt;/ns3:ValidatedDocument&gt;</span>
-          <span class="nt">&lt;ns3:ValidationLevel&gt;</span>ARCHIVAL_DATA<span class="nt">&lt;/ns3:ValidationLevel&gt;</span>
-          <span class="nt">&lt;ns3:ValidationWarnings/&gt;</span>
-          <span class="nt">&lt;ns3:SignatureForm&gt;</span>ASiC-E<span class="nt">&lt;/ns3:SignatureForm&gt;</span>
-          <span class="nt">&lt;ns3:Signatures&gt;</span>
-            <span class="nt">&lt;ns3:Signature&gt;</span>
-              <span class="nt">&lt;ns3:Id&gt;</span>id-b62aa476c6c42d368e114a84e9db0169<span class="nt">&lt;/ns3:Id&gt;</span>
-              <span class="nt">&lt;ns3:SignatureFormat&gt;</span>XAdES_BASELINE_LT<span class="nt">&lt;/ns3:SignatureFormat&gt;</span>
-              <span class="nt">&lt;ns3:SignatureLevel&gt;</span>QESIG<span class="nt">&lt;/ns3:SignatureLevel&gt;</span>
-              <span class="nt">&lt;ns3:SignedBy&gt;</span>JÕEORG,JAAK-KRISTJAN,38001085718<span class="nt">&lt;/ns3:SignedBy&gt;</span>
-              <span class="nt">&lt;ns3:SubjectDistinguishedName&gt;</span>
-                <span class="nt">&lt;ns3:SerialNumber&gt;</span>PNOEE-38001085718<span class="nt">&lt;/ns3:SerialNumber&gt;</span>
-                <span class="nt">&lt;ns3:CommonName&gt;</span>JÕEORG,JAAK-KRISTJAN,38001085718<span class="nt">&lt;/ns3:CommonName&gt;</span>
-              <span class="nt">&lt;/ns3:SubjectDistinguishedName&gt;</span>
-              <span class="nt">&lt;ns3:Indication&gt;</span>TOTAL-PASSED<span class="nt">&lt;/ns3:Indication&gt;</span>
-              <span class="nt">&lt;ns3:SubIndication/&gt;</span>
-              <span class="nt">&lt;ns3:Errors/&gt;</span>
-              <span class="nt">&lt;ns3:SignatureScopes&gt;</span>
-                <span class="nt">&lt;ns3:SignatureScope&gt;</span>
-                  <span class="nt">&lt;ns3:Name&gt;</span>test1.txt<span class="nt">&lt;/ns3:Name&gt;</span>
-                  <span class="nt">&lt;ns3:Scope&gt;</span>FULL<span class="nt">&lt;/ns3:Scope&gt;</span>
-                  <span class="nt">&lt;ns3:Content&gt;</span>Full document<span class="nt">&lt;/ns3:Content&gt;</span>
-                <span class="nt">&lt;/ns3:SignatureScope&gt;</span>
-              <span class="nt">&lt;/ns3:SignatureScopes&gt;</span>
-              <span class="nt">&lt;ns3:ClaimedSigningTime&gt;</span>2018-12-21T09:07:22Z<span class="nt">&lt;/ns3:ClaimedSigningTime&gt;</span>
-              <span class="nt">&lt;ns3:Warnings/&gt;</span>
-              <span class="nt">&lt;ns3:Info&gt;</span>
-                <span class="nt">&lt;ns3:BestSignatureTime&gt;</span>2018-12-21T09:07:22Z<span class="nt">&lt;/ns3:BestSignatureTime&gt;</span>
-              <span class="nt">&lt;/ns3:Info&gt;</span>
-            <span class="nt">&lt;/ns3:Signature&gt;</span>
-          <span class="nt">&lt;/ns3:Signatures&gt;</span>
-          <span class="nt">&lt;ns3:ValidSignaturesCount&gt;</span>1<span class="nt">&lt;/ns3:ValidSignaturesCount&gt;</span>
-          <span class="nt">&lt;ns3:SignaturesCount&gt;</span>1<span class="nt">&lt;/ns3:SignaturesCount&gt;</span>
-        <span class="nt">&lt;/ns3:ValidationConclusion&gt;</span>
-        <span class="nt">&lt;ns3:DiagnosticData&gt;</span>
-          <span class="nt">&lt;ns5:DocumentName&gt;</span>JaakTest.asice<span class="nt">&lt;/ns5:DocumentName&gt;</span>
-          <span class="nt">&lt;ns5:ValidationDate&gt;</span>2019-03-25T15:01:02<span class="nt">&lt;/ns5:ValidationDate&gt;</span>
-          <span class="nt">&lt;ns5:ContainerInfo&gt;</span>
-            <span class="nt">&lt;ns5:ContainerType&gt;</span>ASiC-E<span class="nt">&lt;/ns5:ContainerType&gt;</span>
-            <span class="nt">&lt;ns5:ZipComment&gt;</span>LIB DigiDoc4j/DEV format: application/vnd.etsi.asic-e+zip signatureProfile: XAdES_BASELINE_LT Java: 1.8.0_171/Oracle Corporation OS: Windows 10/amd64/10.0 JVM: Java HotSpot(TM) 64-Bit Server VM/Oracle Corporation/25.171-b11<span class="nt">&lt;/ns5:ZipComment&gt;</span>
-            <span class="nt">&lt;ns5:MimeTypeFilePresent&gt;</span>true<span class="nt">&lt;/ns5:MimeTypeFilePresent&gt;</span>
-            <span class="nt">&lt;ns5:MimeTypeContent&gt;</span>application/vnd.etsi.asic-e+zip<span class="nt">&lt;/ns5:MimeTypeContent&gt;</span>
-            <span class="nt">&lt;ns5:ManifestFiles&gt;</span>
-              <span class="nt">&lt;ns5:ManifestFile&gt;</span>
-                <span class="nt">&lt;ns5:Filename&gt;</span>META-INF/manifest.xml<span class="nt">&lt;/ns5:Filename&gt;</span>
-                <span class="nt">&lt;ns5:SignatureFilename&gt;</span>META-INF/signatures0.xml<span class="nt">&lt;/ns5:SignatureFilename&gt;</span>
-                <span class="nt">&lt;ns5:Entries&gt;</span>
-                  <span class="nt">&lt;ns5:Entry&gt;</span>test1.txt<span class="nt">&lt;/ns5:Entry&gt;</span>
-                <span class="nt">&lt;/ns5:Entries&gt;</span>
-              <span class="nt">&lt;/ns5:ManifestFile&gt;</span>
-            <span class="nt">&lt;/ns5:ManifestFiles&gt;</span>
-            <span class="nt">&lt;ns5:ContentFiles&gt;</span>
-              <span class="nt">&lt;ns5:ContentFile&gt;</span>test1.txt<span class="nt">&lt;/ns5:ContentFile&gt;</span>
-            <span class="nt">&lt;/ns5:ContentFiles&gt;</span>
-          <span class="nt">&lt;/ns5:ContainerInfo&gt;</span>
-          <span class="nt">&lt;ns5:Signatures&gt;</span>
-            <span class="nt">&lt;ns5:Signature</span> <span class="na">Id=</span><span class="s">&quot;id-b62aa476c6c42d368e114a84e9db0169&quot;</span><span class="nt">&gt;</span>
-              <span class="nt">&lt;ns5:SignatureFilename&gt;</span>META-INF/signatures0.xml<span class="nt">&lt;/ns5:SignatureFilename&gt;</span>
-              <span class="nt">&lt;ns5:DateTime&gt;</span>2018-12-21T09:07:22<span class="nt">&lt;/ns5:DateTime&gt;</span>
-              <span class="nt">&lt;ns5:SignatureFormat&gt;</span>XAdES-BASELINE-LT<span class="nt">&lt;/ns5:SignatureFormat&gt;</span>
-              <span class="nt">&lt;ns5:StructuralValidation&gt;</span>
-                <span class="nt">&lt;ns5:Valid&gt;</span>true<span class="nt">&lt;/ns5:Valid&gt;</span>
-              <span class="nt">&lt;/ns5:StructuralValidation&gt;</span>
-              <span class="nt">&lt;ns5:DigestMatchers&gt;</span>
-                <span class="nt">&lt;ns5:DigestMatcher</span> <span class="na">name=</span><span class="s">&quot;r-id-1&quot;</span> <span class="na">type=</span><span class="s">&quot;REFERENCE&quot;</span><span class="nt">&gt;</span>
-                  <span class="nt">&lt;ns5:DigestMethod&gt;</span>SHA256<span class="nt">&lt;/ns5:DigestMethod&gt;</span>
-                  <span class="nt">&lt;ns5:DigestValue&gt;</span>MFRF3SBw+Ykk8BdGCEGzlMrxycC8qzbzvjQuST0yk8M=<span class="nt">&lt;/ns5:DigestValue&gt;</span>
-                  <span class="nt">&lt;ns5:DataFound&gt;</span>true<span class="nt">&lt;/ns5:DataFound&gt;</span>
-                  <span class="nt">&lt;ns5:DataIntact&gt;</span>true<span class="nt">&lt;/ns5:DataIntact&gt;</span>
-                <span class="nt">&lt;/ns5:DigestMatcher&gt;</span>
-                ...
-              <span class="nt">&lt;/ns5:DigestMatchers&gt;</span>
-              <span class="nt">&lt;ns5:BasicSignature&gt;</span>
-                ...
-              <span class="nt">&lt;/ns5:BasicSignature&gt;</span>
-              <span class="nt">&lt;ns5:SigningCertificate</span> <span class="na">Id=</span><span class="s">&quot;E5F26DE786C6A54C75C115E0BA31DF328ED7CEDD5DB539C1078D603F5EEC582E&quot;</span><span class="nt">&gt;</span>
-                ...
-              <span class="nt">&lt;/ns5:SigningCertificate&gt;</span>
-              <span class="nt">&lt;ns5:CertificateChain&gt;</span>
-                ...
-              <span class="nt">&lt;/ns5:CertificateChain&gt;</span>
-              <span class="nt">&lt;ns5:ContentType&gt;</span>text/xml<span class="nt">&lt;/ns5:ContentType&gt;</span>
-              <span class="nt">&lt;ns5:CommitmentTypeIndication/&gt;</span>
-              <span class="nt">&lt;ns5:ClaimedRoles/&gt;</span>
-              <span class="nt">&lt;ns5:Timestamps&gt;</span>
-                ...
-              <span class="nt">&lt;/ns5:Timestamps&gt;</span>
-              <span class="nt">&lt;ns5:SignatureScopes&gt;</span>
-                <span class="nt">&lt;ns5:SignatureScope</span> <span class="na">name=</span><span class="s">&quot;test1.txt&quot;</span> <span class="na">scope=</span><span class="s">&quot;FULL&quot;</span><span class="nt">&gt;</span>Full document<span class="nt">&lt;/ns5:SignatureScope&gt;</span>
-              <span class="nt">&lt;/ns5:SignatureScopes&gt;</span>
-            <span class="nt">&lt;/ns5:Signature&gt;</span>
-          <span class="nt">&lt;/ns5:Signatures&gt;</span>
-          <span class="nt">&lt;ns5:UsedCertificates&gt;</span>
-            <span class="nt">&lt;ns5:Certificate</span> <span class="na">Id=</span><span class="s">&quot;E5F26DE786C6A54C75C115E0BA31DF328ED7CEDD5DB539C1078D603F5EEC582E&quot;</span><span class="nt">&gt;</span>
-              <span class="nt">&lt;ns5:SubjectDistinguishedName</span> <span class="na">Format=</span><span class="s">&quot;CANONICAL&quot;</span><span class="nt">&gt;</span>2.5.4.5=#1311504e4f45452d3338303031303835373138,2.5.4.42=#0c0d4a41414b2d4b524953544a414e,2.5.4.4=#0c074ac395454f5247,cn=jõeorg\,jaak-kristjan\,38001085718,c=ee<span class="nt">&lt;/ns5:SubjectDistinguishedName&gt;</span>
-              <span class="nt">&lt;ns5:SubjectDistinguishedName</span> <span class="na">Format=</span><span class="s">&quot;RFC2253&quot;</span><span class="nt">&gt;</span>2.5.4.5=#1311504e4f45452d3338303031303835373138,2.5.4.42=#0c0d4a41414b2d4b524953544a414e,2.5.4.4=#0c074ac395454f5247,CN=JÕEORG\,JAAK-KRISTJAN\,38001085718,C=EE<span class="nt">&lt;/ns5:SubjectDistinguishedName&gt;</span>
-              <span class="nt">&lt;ns5:IssuerDistinguishedName</span> <span class="na">Format=</span><span class="s">&quot;CANONICAL&quot;</span><span class="nt">&gt;</span>cn=test of esteid2018,2.5.4.97=#0c0e4e545245452d3130373437303133,o=sk id solutions as,c=ee<span class="nt">&lt;/ns5:IssuerDistinguishedName&gt;</span>
-              <span class="nt">&lt;ns5:IssuerDistinguishedName</span> <span class="na">Format=</span><span class="s">&quot;RFC2253&quot;</span><span class="nt">&gt;</span>CN=TEST of ESTEID2018,2.5.4.97=#0c0e4e545245452d3130373437303133,O=SK ID Solutions AS,C=EE<span class="nt">&lt;/ns5:IssuerDistinguishedName&gt;</span>
-              <span class="nt">&lt;ns5:SerialNumber&gt;</span>19005286950875642170302181391352002125<span class="nt">&lt;/ns5:SerialNumber&gt;</span>
-              <span class="nt">&lt;ns5:CommonName&gt;</span>JÕEORG,JAAK-KRISTJAN,38001085718<span class="nt">&lt;/ns5:CommonName&gt;</span>
-              <span class="nt">&lt;ns5:CountryName&gt;</span>EE<span class="nt">&lt;/ns5:CountryName&gt;</span>
-              <span class="nt">&lt;ns5:GivenName&gt;</span>JAAK-KRISTJAN<span class="nt">&lt;/ns5:GivenName&gt;</span>
-              <span class="nt">&lt;ns5:Surname&gt;</span>JÕEORG<span class="nt">&lt;/ns5:Surname&gt;</span>
-              <span class="nt">&lt;ns5:AuthorityInformationAccessUrls&gt;</span>
-                <span class="nt">&lt;ns5:Url&gt;</span>http://c.sk.ee/Test_of_ESTEID2018.der.crt<span class="nt">&lt;/ns5:Url&gt;</span>
-              <span class="nt">&lt;/ns5:AuthorityInformationAccessUrls&gt;</span>
-              <span class="nt">&lt;ns5:CRLDistributionPoints/&gt;</span>
-              <span class="nt">&lt;ns5:OCSPAccessUrls&gt;</span>
-                <span class="nt">&lt;ns5:Url&gt;</span>http://aia.demo.sk.ee/esteid2018<span class="nt">&lt;/ns5:Url&gt;</span>
-              <span class="nt">&lt;/ns5:OCSPAccessUrls&gt;</span>
-              <span class="nt">&lt;ns5:DigestAlgoAndValues&gt;</span>
-                <span class="nt">&lt;ns5:DigestAlgoAndValue&gt;</span>
-                  <span class="nt">&lt;ns5:DigestMethod&gt;</span>SHA256<span class="nt">&lt;/ns5:DigestMethod&gt;</span>
-                  <span class="nt">&lt;ns5:DigestValue&gt;</span>5fJt54bGpUx1wRXgujHfMo7Xzt1dtTnBB41gP17sWC4=<span class="nt">&lt;/ns5:DigestValue&gt;</span>
-                <span class="nt">&lt;/ns5:DigestAlgoAndValue&gt;</span>
-              <span class="nt">&lt;/ns5:DigestAlgoAndValues&gt;</span>
-              <span class="nt">&lt;ns5:NotAfter&gt;</span>2023-10-17T21:59:59<span class="nt">&lt;/ns5:NotAfter&gt;</span>
-              <span class="nt">&lt;ns5:NotBefore&gt;</span>2018-10-18T10:32:20<span class="nt">&lt;/ns5:NotBefore&gt;</span>
-              <span class="nt">&lt;ns5:PublicKeySize&gt;</span>384<span class="nt">&lt;/ns5:PublicKeySize&gt;</span>
-              <span class="nt">&lt;ns5:PublicKeyEncryptionAlgo&gt;</span>ECDSA<span class="nt">&lt;/ns5:PublicKeyEncryptionAlgo&gt;</span>
-              <span class="nt">&lt;ns5:KeyUsageBits&gt;</span>
-                <span class="nt">&lt;ns5:KeyUsage&gt;</span>nonRepudiation<span class="nt">&lt;/ns5:KeyUsage&gt;</span>
-              <span class="nt">&lt;/ns5:KeyUsageBits&gt;</span>
-              <span class="nt">&lt;ns5:ExtendedKeyUsages/&gt;</span>
-              <span class="nt">&lt;ns5:IdPkixOcspNoCheck&gt;</span>false<span class="nt">&lt;/ns5:IdPkixOcspNoCheck&gt;</span>
-              <span class="nt">&lt;ns5:BasicSignature&gt;</span>
-                ...
-              <span class="nt">&lt;/ns5:BasicSignature&gt;</span>
-              <span class="nt">&lt;ns5:SigningCertificate</span> <span class="na">Id=</span><span class="s">&quot;2291C167B5275152B53F1EFA2C1805C9A15EC8DEF7120E56A3726A2959B31049&quot;</span><span class="nt">/&gt;</span>
-              <span class="nt">&lt;ns5:CertificateChain&gt;</span>
-                <span class="nt">&lt;ns5:ChainItem</span> <span class="na">Id=</span><span class="s">&quot;2291C167B5275152B53F1EFA2C1805C9A15EC8DEF7120E56A3726A2959B31049&quot;</span><span class="nt">&gt;</span>
-                  <span class="nt">&lt;ns5:Source&gt;</span>TRUSTED_LIST<span class="nt">&lt;/ns5:Source&gt;</span>
-                <span class="nt">&lt;/ns5:ChainItem&gt;</span>
-              <span class="nt">&lt;/ns5:CertificateChain&gt;</span>
-              <span class="nt">&lt;ns5:Trusted&gt;</span>false<span class="nt">&lt;/ns5:Trusted&gt;</span>
-              <span class="nt">&lt;ns5:SelfSigned&gt;</span>false<span class="nt">&lt;/ns5:SelfSigned&gt;</span>
-              <span class="nt">&lt;ns5:CertificatePolicies&gt;</span>
-                <span class="nt">&lt;ns5:certificatePolicy</span> <span class="na">cpsUrl=</span><span class="s">&quot;https://www.sk.ee/CPS&quot;</span><span class="nt">&gt;</span>1.3.6.1.4.1.51361.1.2.1<span class="nt">&lt;/ns5:certificatePolicy&gt;</span>
-                <span class="nt">&lt;ns5:certificatePolicy</span> <span class="na">Description=</span><span class="s">&quot;qcp-natural-qscd&quot;</span><span class="nt">&gt;</span>0.4.0.194112.1.2<span class="nt">&lt;/ns5:certificatePolicy&gt;</span>
-              <span class="nt">&lt;/ns5:CertificatePolicies&gt;</span>
-              <span class="nt">&lt;ns5:QCStatementIds&gt;</span>
-                ...
-              <span class="nt">&lt;/ns5:QCStatementIds&gt;</span>
-              <span class="nt">&lt;ns5:QCTypes&gt;</span>
-                <span class="nt">&lt;ns5:oid</span> <span class="na">Description=</span><span class="s">&quot;qc-type-esign&quot;</span><span class="nt">&gt;</span>0.4.0.1862.1.6.1<span class="nt">&lt;/ns5:oid&gt;</span>
-              <span class="nt">&lt;/ns5:QCTypes&gt;</span>
-              <span class="nt">&lt;ns5:TrustedServiceProviders&gt;</span>
-                ...
-              <span class="nt">&lt;/ns5:TrustedServiceProviders&gt;</span>
-              <span class="nt">&lt;ns5:Revocations&gt;</span>
-                <span class="nt">&lt;ns5:Revocation</span> <span class="na">Id=</span><span class="s">&quot;e5f26de786c6a54c75c115e0ba31df328ed7cedd5db539c1078d603f5eec582ee4ed1851458ed17d2473fe68cf6c86bc860ec1f65904752b0431cf85edc106b3&quot;</span><span class="nt">&gt;</span>
-                  <span class="nt">&lt;ns5:Origin&gt;</span>SIGNATURE<span class="nt">&lt;/ns5:Origin&gt;</span>
-                  <span class="nt">&lt;ns5:Source&gt;</span>OCSPToken<span class="nt">&lt;/ns5:Source&gt;</span>
-                  <span class="nt">&lt;ns5:Status&gt;</span>true<span class="nt">&lt;/ns5:Status&gt;</span>
-                  <span class="nt">&lt;ns5:ProductionDate&gt;</span>2018-12-21T09:07:24<span class="nt">&lt;/ns5:ProductionDate&gt;</span>
-                  <span class="nt">&lt;ns5:ThisUpdate&gt;</span>2018-12-21T09:07:24<span class="nt">&lt;/ns5:ThisUpdate&gt;</span>
-                  <span class="nt">&lt;ns5:DigestAlgoAndValues&gt;</span>
-                    <span class="nt">&lt;ns5:DigestAlgoAndValue&gt;</span>
-                      <span class="nt">&lt;ns5:DigestMethod&gt;</span>SHA256<span class="nt">&lt;/ns5:DigestMethod&gt;</span>
-                      <span class="nt">&lt;ns5:DigestValue&gt;</span>5O0YUUWO0X0kc/5oz2yGvIYOwfZZBHUrBDHPhe3BBrM=<span class="nt">&lt;/ns5:DigestValue&gt;</span>
-                    <span class="nt">&lt;/ns5:DigestAlgoAndValue&gt;</span>
-                  <span class="nt">&lt;/ns5:DigestAlgoAndValues&gt;</span>
-                  <span class="nt">&lt;ns5:BasicSignature&gt;</span>
-                    ...
-                  <span class="nt">&lt;/ns5:BasicSignature&gt;</span>
-                  <span class="nt">&lt;ns5:SigningCertificate</span> <span class="na">Id=</span><span class="s">&quot;E83A008AF341579A76367AF41CDD371F7F35E949220FC4621A3F2596A73D1D05&quot;</span><span class="nt">/&gt;</span>
-                  <span class="nt">&lt;ns5:CertificateChain&gt;</span>
-                    <span class="nt">&lt;ns5:ChainItem</span> <span class="na">Id=</span><span class="s">&quot;E83A008AF341579A76367AF41CDD371F7F35E949220FC4621A3F2596A73D1D05&quot;</span><span class="nt">&gt;</span>
-                      <span class="nt">&lt;ns5:Source&gt;</span>TRUSTED_LIST<span class="nt">&lt;/ns5:Source&gt;</span>
-                    <span class="nt">&lt;/ns5:ChainItem&gt;</span>
-                  <span class="nt">&lt;/ns5:CertificateChain&gt;</span>
-                <span class="nt">&lt;/ns5:Revocation&gt;</span>
-              <span class="nt">&lt;/ns5:Revocations&gt;</span>
-            <span class="nt">&lt;/ns5:Certificate&gt;</span>
-            ...
-          <span class="nt">&lt;/ns5:UsedCertificates&gt;</span>
-          <span class="nt">&lt;ns5:TrustedLists&gt;</span>
-            <span class="nt">&lt;ns5:TrustedList&gt;</span>
-              <span class="nt">&lt;ns5:CountryCode&gt;</span>EU<span class="nt">&lt;/ns5:CountryCode&gt;</span>
-              <span class="nt">&lt;ns5:Url&gt;</span>https://ec.europa.eu/tools/lotl/eu-lotl.xml<span class="nt">&lt;/ns5:Url&gt;</span>
-              <span class="nt">&lt;ns5:SequenceNumber&gt;</span>237<span class="nt">&lt;/ns5:SequenceNumber&gt;</span>
-              <span class="nt">&lt;ns5:Version&gt;</span>5<span class="nt">&lt;/ns5:Version&gt;</span>
-              <span class="nt">&lt;ns5:LastLoading&gt;</span>2019-03-25T14:34:13<span class="nt">&lt;/ns5:LastLoading&gt;</span>
-              <span class="nt">&lt;ns5:IssueDate&gt;</span>2019-03-21T07:00:00<span class="nt">&lt;/ns5:IssueDate&gt;</span>
-              <span class="nt">&lt;ns5:NextUpdate&gt;</span>2019-09-21T00:00:00<span class="nt">&lt;/ns5:NextUpdate&gt;</span>
-              <span class="nt">&lt;ns5:WellSigned&gt;</span>true<span class="nt">&lt;/ns5:WellSigned&gt;</span>
-            <span class="nt">&lt;/ns5:TrustedList&gt;</span>
-          <span class="nt">&lt;/ns5:TrustedLists&gt;</span>
-          <span class="nt">&lt;ns5:ListOfTrustedLists&gt;</span>
-            <span class="nt">&lt;ns5:CountryCode&gt;</span>EU<span class="nt">&lt;/ns5:CountryCode&gt;</span>
-            <span class="nt">&lt;ns5:Url&gt;</span>https://ec.europa.eu/tools/lotl/eu-lotl.xml<span class="nt">&lt;/ns5:Url&gt;</span>
-            <span class="nt">&lt;ns5:SequenceNumber&gt;</span>237<span class="nt">&lt;/ns5:SequenceNumber&gt;</span>
-            <span class="nt">&lt;ns5:Version&gt;</span>5<span class="nt">&lt;/ns5:Version&gt;</span>
-            <span class="nt">&lt;ns5:LastLoading&gt;</span>2019-03-25T14:34:13<span class="nt">&lt;/ns5:LastLoading&gt;</span>
-            <span class="nt">&lt;ns5:IssueDate&gt;</span>2019-03-21T07:00:00<span class="nt">&lt;/ns5:IssueDate&gt;</span>
-            <span class="nt">&lt;ns5:NextUpdate&gt;</span>2019-09-21T00:00:00<span class="nt">&lt;/ns5:NextUpdate&gt;</span>
-            <span class="nt">&lt;ns5:WellSigned&gt;</span>true<span class="nt">&lt;/ns5:WellSigned&gt;</span>
-          <span class="nt">&lt;/ns5:ListOfTrustedLists&gt;</span>
-        <span class="nt">&lt;/ns3:DiagnosticData&gt;</span>
-      <span class="nt">&lt;/ns3:ValidationReport&gt;</span>
-    <span class="nt">&lt;/ns2:ValidateDocumentResponse&gt;</span>
-  <span class="nt">&lt;/soap:Body&gt;</span>
-<span class="nt">&lt;/soap:Envelope&gt;</span>
-</pre></div>
-
-
 <h3 id="sample-json-response-error-situation">Sample JSON response (error situation)</h3>
 <p>In case of error (when validation report is not returned) status code 400 is returned together with following message body:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span><span class="nt">&quot;requestErrors&quot;</span><span class="p">:</span> <span class="p">[{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span><span class="nt">&quot;requestErrors&quot;</span><span class="p">:</span> <span class="p">[{</span>
     <span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Document malformed or not matching documentType&quot;</span><span class="p">,</span>
     <span class="nt">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;document&quot;</span>
 <span class="p">}]}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h3 id="sample-soap-response-error-situation">Sample SOAP response (error situation)</h3>
-<div class="codehilite"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
 <span class="nt">&lt;soap:Envelope</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span><span class="nt">&gt;</span>
   <span class="nt">&lt;soap:Body&gt;</span>
     <span class="nt">&lt;soap:Fault&gt;</span>
@@ -3395,23 +2896,23 @@
     <span class="nt">&lt;/soap:Fault&gt;</span>
   <span class="nt">&lt;/soap:Body&gt;</span>
 <span class="nt">&lt;/soap:Envelope&gt;</span>
-</pre></div>
+</code></pre></div>
 
 
 <h2 id="data-files-request-interface">Data files request interface</h2>
 <p><strong> REST JSON Endpoint </strong></p>
-<div class="codehilite"><pre><span></span>POST https://&lt;server url&gt;/getDataFiles
-</pre></div>
+<div class="codehilite"><pre><span></span><code><span class="err">POST https://&lt;server url&gt;/getDataFiles</span>
+</code></pre></div>
 
 
 <p><strong> SOAP Endpoint </strong></p>
-<div class="codehilite"><pre><span></span>POST https://&lt;server url&gt;/soap/dataFilesWebService/getDocumentDataFiles
-</pre></div>
+<div class="codehilite"><pre><span></span><code><span class="err">POST https://&lt;server url&gt;/soap/dataFilesWebService/getDocumentDataFiles</span>
+</code></pre></div>
 
 
 <p><strong> SOAP WSDL </strong></p>
-<div class="codehilite"><pre><span></span>POST https://&lt;server url&gt;/soap/dataFilesWebService/getDocumentDataFiles?wsdl
-</pre></div>
+<div class="codehilite"><pre><span></span><code><span class="err">POST https://&lt;server url&gt;/soap/dataFilesWebService/getDocumentDataFiles?wsdl</span>
+</code></pre></div>
 
 
 <h3 id="data-files-request-parameters">Data files request parameters</h3>
@@ -3444,15 +2945,15 @@
 </tbody>
 </table>
 <h3 id="sample-json-request">Sample JSON request</h3>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;filename&quot;</span><span class="p">:</span><span class="s2">&quot;sample.ddoc&quot;</span><span class="p">,</span>
   <span class="nt">&quot;document&quot;</span><span class="p">:</span><span class="s2">&quot;PD94bWwgdmVyc2lvbj0iMS4....&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h3 id="sample-soap-request_1">Sample SOAP request</h3>
-<div class="codehilite"><pre><span></span><span class="nt">&lt;soapenv:Envelope</span> <span class="na">xmlns:soapenv=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span><span class="nt">&gt;</span>
+<div class="codehilite"><pre><span></span><code><span class="nt">&lt;soapenv:Envelope</span> <span class="na">xmlns:soapenv=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span><span class="nt">&gt;</span>
   <span class="nt">&lt;soapenv:Header/&gt;</span>
   <span class="nt">&lt;soapenv:Body&gt;</span>
     <span class="nt">&lt;soap:GetDocumentDataFiles&gt;</span>
@@ -3463,7 +2964,7 @@
     <span class="nt">&lt;/soap:GetDocumentDataFiles&gt;</span>
   <span class="nt">&lt;/soapenv:Body&gt;</span>
 <span class="nt">&lt;/soapenv:Envelope&gt;</span>
-</pre></div>
+</code></pre></div>
 
 
 <h2 id="data-files-response-interface">Data files response interface</h2>
@@ -3526,18 +3027,18 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
 </tbody>
 </table>
 <h3 id="sample-json-response-successful-scenario">Sample JSON response (successful scenario)</h3>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
 <span class="nt">&quot;dataFiles&quot;</span><span class="p">:</span> <span class="p">[{</span>
  <span class="nt">&quot;fileName&quot;</span><span class="p">:</span> <span class="s2">&quot;Glitter-rock-4_gallery.jpg&quot;</span><span class="p">,</span>
  <span class="nt">&quot;size&quot;</span><span class="p">:</span> <span class="mi">41114</span><span class="p">,</span>
  <span class="nt">&quot;base64&quot;</span><span class="p">:</span> <span class="s2">&quot;/9j/4AAQSkZJ...&quot;</span><span class="p">,</span>
  <span class="nt">&quot;mimeType&quot;</span><span class="p">:</span> <span class="s2">&quot;application/octet-stream&quot;</span> <span class="p">}]</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h3 id="sample-soap-response-successful-scenario">Sample SOAP response (successful scenario)</h3>
-<div class="codehilite"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
 <span class="nt">&lt;soap:Envelope</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span><span class="nt">&gt;</span>
   <span class="nt">&lt;soap:Body&gt;</span>
     <span class="nt">&lt;ns2:GetDocumentDataFilesResponse</span> <span class="na">xmlns:ns2=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span> <span class="na">xmlns:ns3=</span><span class="s">&quot;http://x-road.eu/xsd/identifiers&quot;</span> <span class="na">xmlns:ns4=</span><span class="s">&quot;http://x-road.eu/xsd/xroad.xsd&quot;</span><span class="nt">&gt;</span>
@@ -3554,20 +3055,20 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
    <span class="nt">&lt;/ns2:GetDocumentDataFilesResponse&gt;</span>
   <span class="nt">&lt;/soap:Body&gt;</span>
 <span class="nt">&lt;/soap:Envelope&gt;</span>
-</pre></div>
+</code></pre></div>
 
 
 <h3 id="sample-json-response-error-situation_1">Sample JSON response (error situation)</h3>
 <p>In case of error (when datafiles are not returned) status code 400 is returned together with following message body:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span><span class="nt">&quot;requestErrors&quot;</span><span class="p">:</span> <span class="p">[{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span><span class="nt">&quot;requestErrors&quot;</span><span class="p">:</span> <span class="p">[{</span>
     <span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid document type. Can only return data files for DDOC type containers.&quot;</span><span class="p">,</span>
     <span class="nt">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;documentType&quot;</span>
 <span class="p">}]}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h3 id="sample-soap-response-error-situation_1">Sample SOAP response (error situation)</h3>
-<div class="codehilite"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
 <span class="nt">&lt;soap:Envelope</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span><span class="nt">&gt;</span>
   <span class="nt">&lt;soap:Body&gt;</span>
     <span class="nt">&lt;soap:Fault&gt;</span>
@@ -3576,7 +3077,7 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
     <span class="nt">&lt;/soap:Fault&gt;</span>
   <span class="nt">&lt;/soap:Body&gt;</span>
 <span class="nt">&lt;/soap:Envelope&gt;</span>
-</pre></div>
+</code></pre></div>
 
 
 <h2 id="service-health-monitoring">Service health monitoring</h2>
@@ -3584,8 +3085,8 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
 <h3 id="the-request">The request</h3>
 <p>The monitoring endpoint is accessible via HTTP GET at <strong>/monitoring/health</strong> or <strong>/monitoring/health.json</strong> url.</p>
 <p>Sample request:</p>
-<div class="codehilite"><pre><span></span>GET https://&lt;server url&gt;/monitoring/health
-</pre></div>
+<div class="codehilite"><pre><span></span><code><span class="err">GET https://&lt;server url&gt;/monitoring/health</span>
+</code></pre></div>
 
 
 <h3 id="the-response">The response</h3>
@@ -3603,58 +3104,115 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
 <td>General status of the webapp. <br/>Possible values: <ul><li><strong>DOWN</strong> - when some of the dependent indicators status are down (ie when <code>link{number}.status</code> is DOWN, the overall service status is DOWN)</li><li><strong>UP</strong> - the default value. </li></ul></td>
 </tr>
 <tr>
-<td>health.status</td>
+<td>components.health.status</td>
 <td>Status of current webapp - constant value <strong>UP</strong></td>
 </tr>
 <tr>
-<td>health.webappName</td>
+<td>components.health.details.webappName</td>
 <td>The artifact name of the webapp. Taken from the MANIFEST.MF file (inside the jar/war file).</td>
 </tr>
 <tr>
-<td>health.version</td>
+<td>components.health.details.version</td>
 <td>The release version fo the webapp. Taken from the MANIFEST.MF (inside the jar/war file).</td>
 </tr>
 <tr>
-<td>health.buildTime</td>
+<td>components.health.details.buildTime</td>
 <td>Build date and time (format yyyy-MM-dd'T'HH:mm:ss'Z') of the webapp. Taken from the MANIFEST.MF (inside the jar/war file).</td>
 </tr>
 <tr>
-<td>health.startTime</td>
+<td>components.health.details.startTime</td>
 <td>Webapp startup date and time (format yyyy-MM-dd'T'HH:mm:ss'Z')</td>
 </tr>
 <tr>
-<td>health.currentTime</td>
+<td>components.health.details.currentTime</td>
 <td>Current server date and time (format yyyy-MM-dd'T'HH:mm:ss'Z')</td>
 </tr>
 <tr>
-<td>link{number}.status</td>
+<td>components.link{number}.status</td>
 <td>(OPTIONAL) Represents the status of a link to the external system that the webapp depends on. <ul><li><strong>DOWN</strong> when the webapp does not respond (within a specified timeout limit - default 10 seconds) or the response is in invalid format (default Spring boot actuator /health endpoint format is expected).</li><li><strong>UP</strong> if the service responds with HTTP status code 200 and returns a valid JSON object with status "UP"</li></ul></td>
 </tr>
 <tr>
-<td>link{number}.name</td>
+<td>components.link{number}.details.name</td>
 <td>(OPTIONAL) Descriptive name for the link to the external system</td>
 </tr>
 </tbody>
 </table>
 <p>Sample response:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="s2">&quot;UP&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;health&quot;</span><span class="p">:{</span>
-      <span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="s2">&quot;UP&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;webappName&quot;</span><span class="p">:</span><span class="s2">&quot;siva-sample-application&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="s2">&quot;3.2.2&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;buildTime&quot;</span><span class="p">:</span><span class="s2">&quot;2016-10-21T15:56:21Z&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;startTime&quot;</span><span class="p">:</span><span class="s2">&quot;2016-10-21T15:57:48Z&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;currentTime&quot;</span><span class="p">:</span><span class="s2">&quot;2016-10-21T15:58:39Z&quot;</span>
-    <span class="p">},</span>
-    <span class="nt">&quot;link1&quot;</span><span class="p">:{</span>
-      <span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="s2">&quot;UP&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;sivaService&quot;</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+    <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;UP&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;components&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;health&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;details&quot;</span><span class="p">:</span> <span class="p">{</span>
+               <span class="nt">&quot;webappName&quot;</span><span class="p">:</span><span class="s2">&quot;siva-sample-application&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="s2">&quot;3.2.2&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;buildTime&quot;</span><span class="p">:</span><span class="s2">&quot;2016-10-21T15:56:21Z&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;startTime&quot;</span><span class="p">:</span><span class="s2">&quot;2016-10-21T15:57:48Z&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;currentTime&quot;</span><span class="p">:</span><span class="s2">&quot;2016-10-21T15:58:39Z&quot;</span>
+            <span class="p">},</span>
+            <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;UP&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;link1&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;details&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;sivaService&quot;</span>
+            <span class="p">},</span>
+            <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;UP&quot;</span>
+        <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
+<h2 id="changes-in-api-compared-to-v3-v320-non-breaking-additions-to-protocol">Changes in API compared to V3 v3.2.0 (non breaking additions to protocol)</h2>
+<p>Changes are described using notation from REST endpoint.</p>
+<h3 id="changes-in-response">Changes in response</h3>
+<table>
+<thead>
+<tr>
+<th>Report</th>
+<th>Parameter</th>
+<th>Change</th>
+<th>Link</th>
+<th>Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>validationConclusion</td>
+<td>signatures[0].signatureMethod</td>
+<td>Parameter added</td>
+<td><a href="../interfaces/#validation-response-parameters-simple-report-successful-scenario">Link</a></td>
+<td>Used signature method is now returned</td>
+</tr>
+<tr>
+<td>validationConclusion</td>
+<td>signatures[0].info.timeAssertionMessageImprint</td>
+<td>Parameter added</td>
+<td><a href="../interfaces/#validation-response-parameters-simple-report-successful-scenario">Link</a></td>
+<td>Base64 encoded value of message imprint retrieved from time assertion. In case of LT_TM (TimeMark) signatures, OCSP nonce value is returned. In case of T, LT or LTA (TimeStamp) signatures, TimeStamp message imprint is returned.</td>
+</tr>
+<tr>
+<td>validationConclusion</td>
+<td>signatures[0].info.signatureProductionPlace</td>
+<td>Parameter added</td>
+<td><a href="../interfaces/#validation-response-parameters-simple-report-successful-scenario">Link</a></td>
+<td>Object containing optional signing location info added</td>
+</tr>
+<tr>
+<td>validationConclusion</td>
+<td>signatures[0].info.signerRole</td>
+<td>Parameter added</td>
+<td><a href="../interfaces/#validation-response-parameters-simple-report-successful-scenario">Link</a></td>
+<td>Array containing optional signer roles added</td>
+</tr>
+<tr>
+<td>validationConclusion</td>
+<td>signatures[0].certificates</td>
+<td>Parameter added</td>
+<td><a href="../interfaces/#validation-response-parameters-simple-report-successful-scenario">Link</a></td>
+<td>Array containing certificates that are present in the signature or in TSL.</td>
+</tr>
+</tbody>
+</table>
 <h2 id="changes-in-api-compared-to-v2">Changes in API compared to V2</h2>
 <p>Changes are described using notation from REST endpoint.</p>
 <h3 id="changes-in-request">Changes in request</h3>
@@ -3685,7 +3243,7 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
 </tr>
 </tbody>
 </table>
-<h3 id="changes-in-response">Changes in response</h3>
+<h3 id="changes-in-response_1">Changes in response</h3>
 <table>
 <thead>
 <tr>
@@ -3756,8 +3314,6 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
 </tbody>
 </table>
                 
-                  
-                
               
               
                 
@@ -3773,34 +3329,34 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
 <footer class="md-footer">
   
     <div class="md-footer-nav">
-      <nav class="md-footer-nav__inner md-grid">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../use_cases/" title="3.2 Use cases" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
-            <div class="md-flex__cell md-flex__cell--shrink">
-              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+          <a href="../use_cases/" title="3.2 Use cases" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
-            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
-              <span class="md-flex__ellipsis">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
                 3.2 Use cases
-              </span>
+              </div>
             </div>
           </a>
         
         
-          <a href="../deployment/" title="5.1 Deployment model" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
-            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
-              <span class="md-flex__ellipsis">
+          <a href="../deployment/" title="5.1 Deployment model" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
                 5.1 Deployment model
-              </span>
+              </div>
             </div>
-            <div class="md-flex__cell md-flex__cell--shrink">
-              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
             </div>
           </a>
         
@@ -3811,11 +3367,10 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
     <div class="md-footer-meta__inner md-grid">
       <div class="md-footer-copyright">
         
-        powered by
-        <a href="https://www.mkdocs.org">MkDocs</a>
-        and
-        <a href="https://squidfunk.github.io/mkdocs-material/">
-          Material for MkDocs</a>
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
       </div>
       
     </div>
@@ -3824,9 +3379,18 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
       
     </div>
     
-      <script src="../../assets/javascripts/application.dc02f8ce.js"></script>
+      <script src="../../assets/javascripts/vendor.d710d30a.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a45f732b.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
       
-      <script>app.initialize({version:"1.0.4",url:{base:"../.."}})</script>
+      <script>
+        app = initialize({
+          base: "../..",
+          features: [],
+          search: Object.assign({
+            worker: "../../assets/javascripts/worker/search.c03f0417.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
       
     
   </body>

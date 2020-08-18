@@ -1,0 +1,2315 @@
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.2.3">
+    
+    
+      
+        <title>5.2 Deployment guide - SiVa 3.3 - Signature Validation Service Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.6e35a1a6.min.css">
+      
+      
+    
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../../override.css">
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#system-requirements" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="../.." title="SiVa 3.3 - Signature Validation Service Documentation" class="md-header-nav__button md-logo" aria-label="SiVa 3.3 - Signature Validation Service Documentation">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      
+        <div class="md-header-nav__ellipsis">
+          <span class="md-header-nav__topic md-ellipsis">
+            SiVa 3.3 - Signature Validation Service Documentation
+          </span>
+          <span class="md-header-nav__topic md-ellipsis">
+            
+              5.2 Deployment guide
+            
+          </span>
+        </div>
+      
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active">
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header-nav__source">
+        
+<a href="https://github.com/open-eid/SiVa/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+        
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="SiVa 3.3 - Signature Validation Service Documentation" class="md-nav__button md-logo" aria-label="SiVa 3.3 - Signature Validation Service Documentation">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    SiVa 3.3 - Signature Validation Service Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/open-eid/SiVa/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../version_info/" title="VERSION HISTORY" class="md-nav__link">
+      VERSION HISTORY
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="INTRODUCTION" class="md-nav__link">
+      INTRODUCTION
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../definitions/" title="1. DEFINITIONS" class="md-nav__link">
+      1. DEFINITIONS
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../overview/" title="2. BACKGROUND" class="md-nav__link">
+      2. BACKGROUND
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+    
+    <label class="md-nav__link" for="nav-5">
+      3. STRUCTURE & ACTIVITIES
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="3. STRUCTURE & ACTIVITIES" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        3. STRUCTURE & ACTIVITIES
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../structure_and_activities/" title="3.1 Component model" class="md-nav__link">
+      3.1 Component model
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../use_cases/" title="3.2 Use cases" class="md-nav__link">
+      3.2 Use cases
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../interfaces/" title="4. INTERFACES" class="md-nav__link">
+      4. INTERFACES
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7" checked>
+    
+    <label class="md-nav__link" for="nav-7">
+      5. DEPLOYMENT
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="5. DEPLOYMENT" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        5. DEPLOYMENT
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../deployment/" title="5.1 Deployment model" class="md-nav__link">
+      5.1 Deployment model
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        5.2 Deployment guide
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
+        </span>
+      </label>
+    
+    <a href="./" title="5.2 Deployment guide" class="md-nav__link md-nav__link--active">
+      5.2 Deployment guide
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#system-requirements" class="md-nav__link">
+    System requirements
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#building" class="md-nav__link">
+    Building
+  </a>
+  
+    <nav class="md-nav" aria-label="Building">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#building-siva-webapps" class="md-nav__link">
+    Building SiVa webapps
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploying" class="md-nav__link">
+    Deploying
+  </a>
+  
+    <nav class="md-nav" aria-label="Deploying">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-1-starting-webapps-from-command-line" class="md-nav__link">
+    OPTION 1 - starting webapps from command line
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-2-running-webapps-as-systemd-services" class="md-nav__link">
+    OPTION 2 - running webapps as systemd services
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-3-deploy-webapps-as-war-files-tomcat-setup-for-legacy-systems" class="md-nav__link">
+    OPTION 3  - deploy webapps as war files (Tomcat setup for legacy systems)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-set-war-deployed-siva-applicationproperties" class="md-nav__link">
+    How-to set WAR deployed SiVa application.properties
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#smoke-testing-your-deployed-system" class="md-nav__link">
+    Smoke testing your deployed system
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#logging" class="md-nav__link">
+    Logging
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#statistics" class="md-nav__link">
+    Statistics
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring" class="md-nav__link">
+    Monitoring
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-report-signature" class="md-nav__link">
+    Validation Report Signature
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-parameters" class="md-nav__link">
+    Configuration parameters
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#siva-webapp-parameters" class="md-nav__link">
+    Siva webapp parameters
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demo-webapp-parameters" class="md-nav__link">
+    Demo webapp parameters
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8">
+    
+    <label class="md-nav__link" for="nav-8">
+      6. QUALITY ASSURANCE
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="6. QUALITY ASSURANCE" data-md-level="1">
+      <label class="md-nav__title" for="nav-8">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        6. QUALITY ASSURANCE
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../qa_strategy/" title="6.1 QA Strategy" class="md-nav__link">
+      6.1 QA Strategy
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../test_plan/" title="6.2 Test Plan" class="md-nav__link">
+      6.2 Test Plan
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../references/" title="7. REFERENCES" class="md-nav__link">
+      7. REFERENCES
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-10" type="checkbox" id="nav-10">
+    
+    <label class="md-nav__link" for="nav-10">
+      8. APPENDICES
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="8. APPENDICES" data-md-level="1">
+      <label class="md-nav__title" for="nav-10">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        8. APPENDICES
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../appendix/validation_policy/" title="Appendix 1 - Validation Policy" class="md-nav__link">
+      Appendix 1 - Validation Policy
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../appendix/test_cases/" title="Appendix 2 - Test Case Descriptions" class="md-nav__link">
+      Appendix 2 - Test Case Descriptions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../appendix/wsdl/" title="Appendix 3 - WSDL/XSD of SOAP Interface" class="md-nav__link">
+      Appendix 3 - WSDL/XSD of SOAP Interface
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../appendix/known_issues/" title="Appendix 4 - Known Issues" class="md-nav__link">
+      Appendix 4 - Known Issues
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-11" type="checkbox" id="nav-11">
+    
+    <label class="md-nav__link" for="nav-11">
+      9. SIVA 2.0 (Deprecated)
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="9. SIVA 2.0 (Deprecated)" data-md-level="1">
+      <label class="md-nav__title" for="nav-11">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        9. SIVA 2.0 (Deprecated)
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva2/definitions/" title="9.1. DEFINITIONS" class="md-nav__link">
+      9.1. DEFINITIONS
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva2/overview/" title="9.2. BACKGROUND" class="md-nav__link">
+      9.2. BACKGROUND
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-11-3" type="checkbox" id="nav-11-3">
+    
+    <label class="md-nav__link" for="nav-11-3">
+      9.3. STRUCTURE & ACTIVITIES
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="9.3. STRUCTURE & ACTIVITIES" data-md-level="2">
+      <label class="md-nav__title" for="nav-11-3">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        9.3. STRUCTURE & ACTIVITIES
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva2/structure_and_activities/" title="9.3.1 Component model" class="md-nav__link">
+      9.3.1 Component model
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva2/use_cases/" title="9.3.2 Use cases" class="md-nav__link">
+      9.3.2 Use cases
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva2/interfaces/" title="9.4. INTERFACES" class="md-nav__link">
+      9.4. INTERFACES
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-11-5" type="checkbox" id="nav-11-5">
+    
+    <label class="md-nav__link" for="nav-11-5">
+      9.5. DEPLOYMENT
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="9.5. DEPLOYMENT" data-md-level="2">
+      <label class="md-nav__title" for="nav-11-5">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        9.5. DEPLOYMENT
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva2/deployment/" title="9.5.1 Deployment model" class="md-nav__link">
+      9.5.1 Deployment model
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva2/systemintegrators_guide/" title="9.5.2 System integrator's guide" class="md-nav__link">
+      9.5.2 System integrator's guide
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-11-6" type="checkbox" id="nav-11-6">
+    
+    <label class="md-nav__link" for="nav-11-6">
+      9.6. QUALITY ASSURANCE
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="9.6. QUALITY ASSURANCE" data-md-level="2">
+      <label class="md-nav__title" for="nav-11-6">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        9.6. QUALITY ASSURANCE
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva2/qa_strategy/" title="9.6.1 QA Strategy" class="md-nav__link">
+      9.6.1 QA Strategy
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva2/test_plan/" title="9.6.2 Test Plan" class="md-nav__link">
+      9.6.2 Test Plan
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva2/references/" title="9.7. REFERENCES" class="md-nav__link">
+      9.7. REFERENCES
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-11-8" type="checkbox" id="nav-11-8">
+    
+    <label class="md-nav__link" for="nav-11-8">
+      9.8. APPENDICES
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="9.8. APPENDICES" data-md-level="2">
+      <label class="md-nav__title" for="nav-11-8">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        9.8. APPENDICES
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva2/appendix/validation_policy/" title="Appendix 1 - Validation Policy" class="md-nav__link">
+      Appendix 1 - Validation Policy
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva2/appendix/test_cases/" title="Appendix 2 - Test Case Descriptions" class="md-nav__link">
+      Appendix 2 - Test Case Descriptions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva2/appendix/wsdl/" title="Appendix 3 - WSDL/XSD of SOAP Interface" class="md-nav__link">
+      Appendix 3 - WSDL/XSD of SOAP Interface
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva2/appendix/known_issues/" title="Appendix 4 - Known Issues" class="md-nav__link">
+      Appendix 4 - Known Issues
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-12" type="checkbox" id="nav-12">
+    
+    <label class="md-nav__link" for="nav-12">
+      10. SIVA 1.1 (Deprecated)
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="10. SIVA 1.1 (Deprecated)" data-md-level="1">
+      <label class="md-nav__title" for="nav-12">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        10. SIVA 1.1 (Deprecated)
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/definitions/" title="10.1. DEFINITIONS" class="md-nav__link">
+      10.1. DEFINITIONS
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/overview/" title="10.2. BACKGROUND" class="md-nav__link">
+      10.2. BACKGROUND
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-12-3" type="checkbox" id="nav-12-3">
+    
+    <label class="md-nav__link" for="nav-12-3">
+      10.3. STRUCTURE & ACTIVITIES
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="10.3. STRUCTURE & ACTIVITIES" data-md-level="2">
+      <label class="md-nav__title" for="nav-12-3">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        10.3. STRUCTURE & ACTIVITIES
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/v2/structure_and_activities/" title="10.3.1 Component model" class="md-nav__link">
+      10.3.1 Component model
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/v2/use_cases/" title="10.3.2 Use cases" class="md-nav__link">
+      10.3.2 Use cases
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/v2/interfaces/" title="10.4. INTERFACES" class="md-nav__link">
+      10.4. INTERFACES
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-12-5" type="checkbox" id="nav-12-5">
+    
+    <label class="md-nav__link" for="nav-12-5">
+      10.5. DEPLOYMENT
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="10.5. DEPLOYMENT" data-md-level="2">
+      <label class="md-nav__title" for="nav-12-5">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        10.5. DEPLOYMENT
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/v2/deployment/" title="10.5.1 Deployment model" class="md-nav__link">
+      10.5.1 Deployment model
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/v2/systemintegrators_guide/" title="10.5.2 System integrator's guide" class="md-nav__link">
+      10.5.2 System integrator's guide
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-12-6" type="checkbox" id="nav-12-6">
+    
+    <label class="md-nav__link" for="nav-12-6">
+      10.6. QUALITY ASSURANCE
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="10.6. QUALITY ASSURANCE" data-md-level="2">
+      <label class="md-nav__title" for="nav-12-6">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        10.6. QUALITY ASSURANCE
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/qa_strategy/" title="10.6.1 QA Strategy" class="md-nav__link">
+      10.6.1 QA Strategy
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/test_plan/" title="10.6.2 Test Plan" class="md-nav__link">
+      10.6.2 Test Plan
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/references/" title="10.7. REFERENCES" class="md-nav__link">
+      10.7. REFERENCES
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-12-8" type="checkbox" id="nav-12-8">
+    
+    <label class="md-nav__link" for="nav-12-8">
+      10.8. APPENDICES
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="10.8. APPENDICES" data-md-level="2">
+      <label class="md-nav__title" for="nav-12-8">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        10.8. APPENDICES
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/appendix/validation_policy/" title="Appendix 1 - Validation Policy" class="md-nav__link">
+      Appendix 1 - Validation Policy
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/appendix/test_cases/" title="Appendix 2 - Test Case Descriptions" class="md-nav__link">
+      Appendix 2 - Test Case Descriptions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/appendix/wsdl/" title="Appendix 3 - WSDL of SOAP Interface" class="md-nav__link">
+      Appendix 3 - WSDL of SOAP Interface
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../siva/appendix/known_issues/" title="Appendix 4 - Known Issues" class="md-nav__link">
+      Appendix 4 - Known Issues
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#system-requirements" class="md-nav__link">
+    System requirements
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#building" class="md-nav__link">
+    Building
+  </a>
+  
+    <nav class="md-nav" aria-label="Building">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#building-siva-webapps" class="md-nav__link">
+    Building SiVa webapps
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploying" class="md-nav__link">
+    Deploying
+  </a>
+  
+    <nav class="md-nav" aria-label="Deploying">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-1-starting-webapps-from-command-line" class="md-nav__link">
+    OPTION 1 - starting webapps from command line
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-2-running-webapps-as-systemd-services" class="md-nav__link">
+    OPTION 2 - running webapps as systemd services
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-3-deploy-webapps-as-war-files-tomcat-setup-for-legacy-systems" class="md-nav__link">
+    OPTION 3  - deploy webapps as war files (Tomcat setup for legacy systems)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-set-war-deployed-siva-applicationproperties" class="md-nav__link">
+    How-to set WAR deployed SiVa application.properties
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#smoke-testing-your-deployed-system" class="md-nav__link">
+    Smoke testing your deployed system
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#logging" class="md-nav__link">
+    Logging
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#statistics" class="md-nav__link">
+    Statistics
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring" class="md-nav__link">
+    Monitoring
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-report-signature" class="md-nav__link">
+    Validation Report Signature
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-parameters" class="md-nav__link">
+    Configuration parameters
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#siva-webapp-parameters" class="md-nav__link">
+    Siva webapp parameters
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demo-webapp-parameters" class="md-nav__link">
+    Demo webapp parameters
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/open-eid/SiVa/edit/master/docs/siva3/deployment_guide.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                  
+                
+                
+                  <h1>5.2 Deployment guide</h1>
+                
+                <p>The following guide is for system integrators who need to set-up, configure, manage and troubleshoot SiVa service.</p>
+<h3 id="system-requirements">System requirements</h3>
+<p>Following are the minimum requirements to build and deploy SiVa webapps as a service:</p>
+<ul>
+<li>Java 11 or above is supported</li>
+<li>Git version control system version 1.8 or above is recommended</li>
+<li>Minimum 2 GB of RAM. Recommended at least 4 GB of RAM</li>
+<li>Minimum 1 processor core</li>
+<li>Open internet connection</li>
+<li>2GB of free disk space</li>
+<li>Supported operating system is Ubuntu 16.04 LTS</li>
+</ul>
+<h2 id="building">Building</h2>
+<h3 id="building-siva-webapps">Building SiVa webapps</h3>
+<p>It is recommended to build the project with Maven Wrapper. Run following command in the projects main directory:</p>
+<div class="codehilite"><pre><span></span><code>./mvnw clean install
+</code></pre></div>
+
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The first time build can take up to <strong>45 minutes</strong> because of downloading the required dependencies, running vulnerability checks and unit tests.</p>
+</div>
+<p>To verify that SiVa project built successfully look for <code>BUILD SUCCESS</code> in build compilation output last lines.
+The last lines of build output should look very similar to below image:</p>
+<div class="codehilite"><pre><span></span><code>[INFO] Reactor Summary:
+[INFO]
+[INFO] SiVa Digitally signed documents validation service 3.2.2 SUCCESS [  2.089 s]
+[INFO] validation-services-parent ......................... SUCCESS [  0.380 s]
+[INFO] validation-commons ................................. SUCCESS [ 13.782 s]
+[INFO] tsl-loader ......................................... SUCCESS [  9.372 s]
+[INFO] Generic Validation Service ......................... SUCCESS [ 41.723 s]
+[INFO] TimeStampToken Validation Service .................. SUCCESS [  8.400 s]
+[INFO] Time-mark container Validation Service ............. SUCCESS [ 36.508 s]
+[INFO] SiVa webapp and other core modules ................. SUCCESS [  0.374 s]
+[INFO] siva-monitoring .................................... SUCCESS [ 11.982 s]
+[INFO] xroad-validation-service ........................... SUCCESS [ 19.587 s]
+[INFO] siva-statistics .................................... SUCCESS [  9.816 s]
+[INFO] SiVa validation service proxy ...................... SUCCESS [ 14.861 s]
+[INFO] SiVa signature service ............................. SUCCESS [  7.801 s]
+[INFO] siva-webapp ........................................ SUCCESS [ 42.451 s]
+[INFO] SiVa Sample Web application ........................ SUCCESS [ 42.236 s]
+[INFO] SiVa Web Service integration tests ................. SUCCESS [ 18.830 s]
+[INFO] siva-distribution 3.2.2 ............................ SUCCESS [  5.763 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 04:46 min
+[INFO] Finished at: 2020-07-03T14:22:02+03:00
+[INFO] ------------------------------------------------------------------------
+</code></pre></div>
+
+
+<h2 id="deploying">Deploying</h2>
+<h3 id="option-1-starting-webapps-from-command-line">OPTION 1 - starting webapps from command line</h3>
+<p>SiVa project compiles <strong>3 fat executable JAR</strong> files that you can run after successfully building the
+project by issuing below commands:</p>
+<p><strong>First start the Siva webapp</strong></p>
+<div class="codehilite"><pre><span></span><code>./siva-parent/siva-webapp/target/siva-webapp-3.2.2.jar
+</code></pre></div>
+
+
+<p><strong>Secondly start X-road validation webapp</strong></p>
+<div class="codehilite"><pre><span></span><code>./validation-services-parent/xroad-validation-service/target/xroad-validation-service-3.2.2.jar
+</code></pre></div>
+
+
+<p>The SiVa webapp by default runs on port <strong>8080</strong> and XRoad validation service starts up on port <strong>8081</strong>.
+Easiest way to test out the deployment is to run SiVa demo application and use it for validation.</p>
+<p><strong>Start the Demo webapp</strong></p>
+<div class="codehilite"><pre><span></span><code>./siva-parent/siva-sample-application/target/siva-sample-application-3.2.2.jar
+</code></pre></div>
+
+
+<p>Now point Your browser to URL: <a href="http://localhost:9000">http://localhost:9000</a></p>
+<h3 id="option-2-running-webapps-as-systemd-services">OPTION 2 - running webapps as systemd services</h3>
+<p>Maven build generates executable JAR files. This means web container and all its dependencies are package inside
+single JAR file. It makes a lot easier to deploy it into servers.</p>
+<p>Easiest option to setup SiVa is as <code>systemd</code> service in Ubuntu servers.</p>
+<p>For that we first need to create service file:</p>
+<div class="codehilite"><pre><span></span><code>vim siva-webapp.service
+</code></pre></div>
+
+
+<p>Inside it we need to paste below text. You need to change few things in service setup file.</p>
+<ul>
+<li>First you <strong>must not</strong> run service as <code>root</code>. So it's strongly recommended to change line <code>User=root</code></li>
+<li>Second You can change Java JVM options by modifying the <code>JAVA_OPTS</code> inside the <code>siva-webapp.service</code> file.</li>
+<li>Also You can change the SiVa application configuration options by modifying <code>RUN_ARGS</code> section in file</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="k">[Unit]</span>
+<span class="na">Description</span><span class="o">=</span><span class="s">siva-webapp</span>
+<span class="na">After</span><span class="o">=</span><span class="s">syslog.target</span>
+
+<span class="k">[Service]</span>
+<span class="na">User</span><span class="o">=</span><span class="s">root</span>
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">/var/apps/siva-webapp.jar</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">JAVA_OPTS=-Xmx320m RUN_ARGS=--server.port=80</span>
+<span class="na">SuccessExitStatus</span><span class="o">=</span><span class="s">143</span>
+
+<span class="k">[Install]</span>
+<span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
+</code></pre></div>
+
+
+<p>Save and close the <code>siva-webapp.service</code> file.
+Next we need to move <code>siva-webapp-3.2.2.jar</code> into newly created <code>/var/apps</code> directory and rename to
+JAR file to <code>siva-webapp.jar</code>. match</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The copied JAR filename must match option <code>ExecStart</code> in  <code>siva-webapp.service</code> file</p>
+</div>
+<div class="codehilite"><pre><span></span><code>sudo mkdir /var/apps
+sudo cp siva-parent/siva-webapp/target/executable/siva-webapp-3.2.2.jar /var/apps/siva-webapp.jar
+</code></pre></div>
+
+
+<p>Next we need to copy the <code>siva-webapp.service</code> file into <code>/lib/systemd/system</code> directory.
+Then we are ready to start the <code>siva-webapp</code> service.</p>
+<div class="codehilite"><pre><span></span><code>sudo cp siva-webapp.service /lib/systemd/system
+sudo systemctl start siva-webapp
+</code></pre></div>
+
+
+<p>Final step of setting up the <code>siva-webapp</code> service is to verify that service started correctly by issuing below
+command.</p>
+<div class="codehilite"><pre><span></span><code>systemctl status siva-webapp
+</code></pre></div>
+
+
+<p>It should print out similar to below picture:</p>
+<div class="codehilite"><pre><span></span><code><span class="err">●</span> <span class="nt">siva-webapp</span><span class="p">.</span><span class="nc">service</span> <span class="nt">-</span> <span class="nt">siva-webapp</span>
+   <span class="nt">Loaded</span><span class="o">:</span> <span class="nt">loaded</span> <span class="o">(/</span><span class="nt">lib</span><span class="o">/</span><span class="nt">systemd</span><span class="o">/</span><span class="nt">system</span><span class="o">/</span><span class="nt">siva-webapp</span><span class="p">.</span><span class="nc">service</span><span class="o">;</span> <span class="nt">disabled</span><span class="o">;</span> <span class="nt">vendor</span> <span class="nt">preset</span><span class="o">:</span> <span class="nt">enabled</span><span class="o">)</span>
+   <span class="nt">Active</span><span class="o">:</span> <span class="nt">active</span> <span class="o">(</span><span class="nt">running</span><span class="o">)</span> <span class="nt">since</span> <span class="nt">Thu</span> <span class="nt">2016-07-21</span> <span class="nt">08</span><span class="p">:</span><span class="nd">48</span><span class="p">:</span><span class="nd">14</span> <span class="nt">EDT</span><span class="o">;</span> <span class="nt">1</span> <span class="nt">day</span> <span class="nt">2h</span> <span class="nt">ago</span>
+ <span class="nt">Main</span> <span class="nt">PID</span><span class="o">:</span> <span class="nt">15965</span> <span class="o">(</span><span class="nt">siva-webapp</span><span class="p">.</span><span class="nc">jar</span><span class="o">)</span>
+    <span class="nt">Tasks</span><span class="o">:</span> <span class="nt">34</span>
+   <span class="nt">Memory</span><span class="o">:</span> <span class="nt">429</span><span class="p">.</span><span class="nc">6M</span>
+      <span class="nt">CPU</span><span class="o">:</span> <span class="nt">2min</span> <span class="nt">5</span><span class="p">.</span><span class="nc">721s</span>
+   <span class="nt">CGroup</span><span class="o">:</span> <span class="o">/</span><span class="nt">system</span><span class="p">.</span><span class="nc">slice</span><span class="o">/</span><span class="nt">siva-webapp</span><span class="p">.</span><span class="nc">service</span>
+           <span class="err">├─</span><span class="nt">15965</span> <span class="o">/</span><span class="nt">bin</span><span class="o">/</span><span class="nt">bash</span> <span class="o">/</span><span class="nt">var</span><span class="o">/</span><span class="nt">apps</span><span class="o">/</span><span class="nt">stage</span><span class="o">/</span><span class="nt">siva-webapp</span><span class="p">.</span><span class="nc">jar</span>
+           <span class="err">└─</span><span class="nt">15982</span> <span class="o">/</span><span class="nt">usr</span><span class="o">/</span><span class="nt">bin</span><span class="o">/</span><span class="nt">java</span> <span class="nt">-Dsun</span><span class="p">.</span><span class="nc">misc</span><span class="p">.</span><span class="nc">URLClassPath</span><span class="p">.</span><span class="nc">disableJarChecking</span><span class="o">=</span><span class="nt">true</span> <span class="nt">-Xmx320m</span> <span class="nt">-jar</span> <span class="o">/</span><span class="nt">var</span><span class="o">/</span><span class="nt">apps</span><span class="o">/</span><span class="nt">stage</span><span class="o">/</span><span class="nt">siva-webapp</span><span class="p">.</span><span class="nc">jar</span>
+
+<span class="nt">Jul</span> <span class="nt">20</span> <span class="nt">03</span><span class="p">:</span><span class="nd">00</span><span class="p">:</span><span class="nd">01</span> <span class="nt">siva</span> <span class="nt">siva-webapp</span><span class="p">.</span><span class="nc">jar</span><span class="cp">[</span><span class="mi">15965</span><span class="cp">]</span><span class="o">:</span>         <span class="nt">at</span> <span class="nt">eu</span><span class="p">.</span><span class="nc">europa</span><span class="p">.</span><span class="nc">esig</span><span class="p">.</span><span class="nc">dss</span><span class="p">.</span><span class="nc">tsl</span><span class="p">.</span><span class="nc">service</span><span class="p">.</span><span class="nc">TSLParser</span><span class="p">.</span><span class="nc">getTslModel</span><span class="o">(</span><span class="nt">TSLParser</span><span class="p">.</span><span class="nc">java</span><span class="p">:</span><span class="nd">143</span><span class="o">)</span>
+<span class="nt">Jul</span> <span class="nt">20</span> <span class="nt">03</span><span class="p">:</span><span class="nd">00</span><span class="p">:</span><span class="nd">01</span> <span class="nt">siva</span> <span class="nt">siva-webapp</span><span class="p">.</span><span class="nc">jar</span><span class="cp">[</span><span class="mi">15965</span><span class="cp">]</span><span class="o">:</span>         <span class="nt">at</span> <span class="nt">eu</span><span class="p">.</span><span class="nc">europa</span><span class="p">.</span><span class="nc">esig</span><span class="p">.</span><span class="nc">dss</span><span class="p">.</span><span class="nc">tsl</span><span class="p">.</span><span class="nc">service</span><span class="p">.</span><span class="nc">TSLParser</span><span class="p">.</span><span class="nc">call</span><span class="o">(</span><span class="nt">TSLParser</span><span class="p">.</span><span class="nc">java</span><span class="p">:</span><span class="nd">129</span><span class="o">)</span>
+<span class="nt">Jul</span> <span class="nt">20</span> <span class="nt">03</span><span class="p">:</span><span class="nd">00</span><span class="p">:</span><span class="nd">01</span> <span class="nt">siva</span> <span class="nt">siva-webapp</span><span class="p">.</span><span class="nc">jar</span><span class="cp">[</span><span class="mi">15965</span><span class="cp">]</span><span class="o">:</span>         <span class="o">...</span> <span class="nt">5</span> <span class="nt">common</span> <span class="nt">frames</span> <span class="nt">omitted</span>
+<span class="nt">Jul</span> <span class="nt">20</span> <span class="nt">03</span><span class="p">:</span><span class="nd">00</span><span class="p">:</span><span class="nd">01</span> <span class="nt">siva</span> <span class="nt">siva-webapp</span><span class="p">.</span><span class="nc">jar</span><span class="cp">[</span><span class="mi">15965</span><span class="cp">]</span><span class="o">:</span> <span class="nt">20</span><span class="p">.</span><span class="nc">07</span><span class="p">.</span><span class="nc">2016</span> <span class="nt">03</span><span class="p">:</span><span class="nd">00</span><span class="p">:</span><span class="nd">01</span><span class="p">.</span><span class="nc">450</span> <span class="nt">INFO</span>  <span class="cp">[</span><span class="nx">pool</span><span class="o">-</span><span class="mi">3</span><span class="na">-thread</span><span class="o">-</span><span class="mi">1</span><span class="cp">]</span> <span class="cp">[</span><span class="nx">e.e.e.dss.tsl.service.TSLRepository.sync</span>
+<span class="nx">Jul</span> <span class="mi">20</span> <span class="mi">03</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">01</span> <span class="nx">siva</span> <span class="nx">siva</span><span class="na">-webapp.jar</span><span class="err">[</span><span class="mi">15965</span><span class="cp">]</span><span class="o">:</span> <span class="nt">20</span><span class="p">.</span><span class="nc">07</span><span class="p">.</span><span class="nc">2016</span> <span class="nt">03</span><span class="p">:</span><span class="nd">00</span><span class="p">:</span><span class="nd">01</span><span class="p">.</span><span class="nc">450</span> <span class="nt">INFO</span>  <span class="cp">[</span><span class="nx">pool</span><span class="o">-</span><span class="mi">3</span><span class="na">-thread</span><span class="o">-</span><span class="mi">1</span><span class="cp">]</span> <span class="cp">[</span><span class="nx">e.e.e.dss.tsl.service.TSLRepository.sync</span>
+</code></pre></div>
+
+
+<h3 id="option-3-deploy-webapps-as-war-files-tomcat-setup-for-legacy-systems">OPTION 3  - deploy webapps as war files (Tomcat setup for legacy systems)</h3>
+<blockquote>
+<p><strong>NOTE 1</strong>: Each SiVa service <strong>must</strong> be deployed to separate instance of Tomcat to avoid Java JAR library version
+conflicts.</p>
+<p><strong>NOTE 2</strong>: To limit your webapp request size (this is set automatically when deploying service as jar) one needs to configure the container manually. For example, when using <a href="http://tomcat.apache.org/tomcat-8.0-doc/config/http.html">Tomcat 8</a> -
+the http connector parameter <code>maxPostSize</code> should be configured with the desired limit.</p>
+<p><strong>NOTE 3</strong>: The war file must be deployed to Tomcat ROOT.</p>
+</blockquote>
+<p>First we need to download Tomcat web servlet container as of the writing latest version available in version 8 branch is 8.5.24. We will download it with <code>wget</code></p>
+<div class="codehilite"><pre><span></span><code>wget http://www-eu.apache.org/dist/tomcat/tomcat-8/v8.5.24/bin/apache-tomcat-8.5.24.tar.gz
+</code></pre></div>
+
+
+<p>Unpack it somewhere:</p>
+<div class="codehilite"><pre><span></span><code>tar xf apache-tomcat-8.5.24.tar.gz
+</code></pre></div>
+
+
+<p>Now we should build the WAR file. We have created helper script with all the correct Maven parameters.</p>
+<div class="codehilite"><pre><span></span><code>./war-build.sh
+</code></pre></div>
+
+
+<p>Final steps would be copying built WAR file into Tomcat <code>webapps</code> directory and starting the servlet container.</p>
+<div class="codehilite"><pre><span></span><code>cp siva-parent/siva-webapp/target/siva-webapp-3.2.2.war apache-tomcat-8.5.24/webapps
+./apache-tomcat-7.0.77/bin/catalina.sh run
+</code></pre></div>
+
+
+<blockquote>
+<p><strong>IMPORTANT</strong> siva-webapp on startup creates <code>etc</code> directory where it copies the TSL validaiton certificates
+<code>siva-keystore.jks</code>. Default location for this directory is application root or <code>$CATALINA_HOME</code>. To change
+this default behavior you should set environment variable <code>DSS_DATA_FOLDER</code>. </p>
+<p><strong>IMPORTANT</strong> When updating the siva-keystore.jks it is needed to delete the "temp" keystore from default/specified location. 
+Deleting the "temp" keystore is also needed when upgrading your deployment to newer SIVA version!</p>
+</blockquote>
+<h3 id="how-to-set-war-deployed-siva-applicationproperties">How-to set WAR deployed SiVa <code>application.properties</code></h3>
+<p>SiVa override properties can be set using <code>application.properties</code> file. The file can locate anywhare in the host system.
+To make properties file accessible for SiVa you need to create or edit <code>setenv.sh</code> placed inside <code>bin</code> directory.</p>
+<p>Contents of the <code>setenv.sh</code> file should look like:</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">export</span> <span class="nv">CATALINA_OPTS</span><span class="o">=</span><span class="s2">&quot;-Dspring.config.location=file:/path/to/application.properties&quot;</span>
+</code></pre></div>
+
+
+<h3 id="smoke-testing-your-deployed-system">Smoke testing your deployed system</h3>
+<p><strong>Step 1</strong>. Install HTTPIE
+<code>httpie</code> is more user friendly version of <code>curl</code> and we will use to verify that SiVa was installed
+and started correctly on our server.</p>
+<p>If you have Python and its package manager <code>pip</code> installed. Then You can issue below command:</p>
+<div class="codehilite"><pre><span></span><code>pip install httpie
+</code></pre></div>
+
+
+<p><strong>Step 2</strong>. Download a sample JSON request file.</p>
+<div class="codehilite"><pre><span></span><code>http --download https://raw.githubusercontent.com/open-eid/SiVa/develop/build-helpers/sample-requests/bdocPass.json
+</code></pre></div>
+
+
+<p><strong>Step 3</strong>. After successful download issue below command in same directory where you downloaded the file using
+the command below.</p>
+<div class="codehilite"><pre><span></span><code>http POST http://localhost:8080/validate &lt; bdocPass.json
+</code></pre></div>
+
+
+<p><strong>Step 4</strong>. Verify the output. The output of previous command should have similar data as below screenshot. Look for <code>signatureCount</code> and
+<code>validSignatureCount</code>, they <strong>must</strong> be equal.</p>
+<p><img alt="HTTPIE output validation" src="../../img/siva/siva3-output.png" /></p>
+<h2 id="logging">Logging</h2>
+<p>By default, logging works on the INFO level and logs are directed to the system console only. Logging functionality is handled by the SLF4J logging facade and on top of the Logback framework. As a result, logging can be configured via the standard Logback configuration file through Spring boot. Additional logging appenders can be added. Consult <a href="http://logback.qos.ch/documentation.html">logback documentation</a> for more details on log file structure.</p>
+<p>For example, adding application.properties to classpath with the <strong>logging.config</strong> property</p>
+<div class="codehilite"><pre><span></span><code>logging.config<span class="o">=</span>/path/to/logback.xml
+</code></pre></div>
+
+
+<h2 id="statistics">Statistics</h2>
+<p>For every validation a statistical report is composed that contains the following data:</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>stats</td>
+<td>Object</td>
+<td>Object containing statistic info</td>
+</tr>
+<tr>
+<td>stats.type</td>
+<td>String</td>
+<td>Container type ( text value that identifies the container type) of the validated document: ASiC-E, ASIC-S, PAdES, DIGIDOC_XML, N/A</td>
+</tr>
+<tr>
+<td>stats.sigType</td>
+<td>String</td>
+<td>Signature type in validated document: XAdES, CAdES, PAdES, XROAD_XAdES, N/A</td>
+</tr>
+<tr>
+<td>stats.usrId</td>
+<td>String</td>
+<td>(Text data that contains the SiVa user identifier for reports (from the HTTP x-authenticated-user header) or N/A)</td>
+</tr>
+<tr>
+<td>stats.dur</td>
+<td>Number</td>
+<td>The time it takes to process an incoming request - measured in milliseconds</td>
+</tr>
+<tr>
+<td>stats.sigCt</td>
+<td>Number</td>
+<td>The value of the "signaturesCount" element in the validation report</td>
+</tr>
+<tr>
+<td>stats.vSigCt</td>
+<td>Number</td>
+<td>The value of the "validSignaturesCount" element in the validation report</td>
+</tr>
+<tr>
+<td>stats.sigRslt</td>
+<td>Array</td>
+<td>Array of signature statistic objects</td>
+</tr>
+<tr>
+<td>stats.sigRslt[0]</td>
+<td>Object</td>
+<td>Object containing signature statistic info</td>
+</tr>
+<tr>
+<td>stats.sigRslt[0].i</td>
+<td>String</td>
+<td>Value of signature indication field from the validation report</td>
+</tr>
+<tr>
+<td>stats.sigRslt[0].si</td>
+<td>String</td>
+<td>Value of signature subindication field from the validation report. Element not present if not in validation report</td>
+</tr>
+<tr>
+<td>stats.sigRslt[0].cc</td>
+<td>String</td>
+<td>Country code extracted from the signer cert subject field. The ISO-3166-1 alpha-2 country code that is associated with signature (the signing certificate or XX if the country cannot be determined.</td>
+</tr>
+<tr>
+<td>stats.sigRslt[0].sf</td>
+<td>String</td>
+<td>Values of signatureFormat field from the validation report</td>
+</tr>
+</tbody>
+</table>
+<p>Example of statistic</p>
+<div class="codehilite"><pre><span></span><code><span class="err">{</span>
+<span class="err">   &quot;stats&quot;: {</span>
+<span class="err">      &quot;type&quot;: &quot;PAdES&quot;,</span>
+<span class="err">      &quot;sigType&quot;: &quot;PAdES&quot;,</span>
+<span class="err">      &quot;usrId&quot;: &quot;sample_user1&quot;,</span>
+<span class="err">      &quot;dur&quot;: 4021,</span>
+<span class="err">      &quot;sigCt&quot;: 2,</span>
+<span class="err">      &quot;vSigCt&quot;: 1,</span>
+<span class="err">      &quot;sigRslt&quot;: [</span>
+<span class="err">         {&quot;i&quot;:&quot;TOTAL-PASSED&quot;, &quot;cc&quot;:&quot;EE&quot;, &quot;sf&quot;:&quot;PAdES_BASELINE_LT&quot;},</span>
+<span class="err">         {&quot;i&quot;:&quot;INDETERMINATE&quot;, &quot;si&quot;:&quot;NO_CERTIFICATE_CHAIN_FOUND&quot;, &quot;cc&quot;:&quot;EE&quot;, &quot;sf&quot;:&quot;PAdES_BASELINE_LT&quot;}</span>
+<span class="err">      ]</span>
+<span class="err">   }</span>
+<span class="err">}</span>
+</code></pre></div>
+
+
+<p>This information is sent to log feeds (at INFO level) which can be redirected to files or to a syslog feed.</p>
+<h2 id="monitoring">Monitoring</h2>
+<p>SiVa webapps provide an endpoint for external monitoring tools to periodically check the generic service health status.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Note that this endpoint is disabled by default.</p>
+</div>
+<p>The url for accessing JSON formatted health information with HTTP GET is <code>/monitoring/health</code> . See the <a href="/siva/v3/interfaces.md#service-health-monitoring">Interfaces section</a> for response structure and details.</p>
+<ul>
+<li><strong>Enabling and disabling the monitoring endpoint</strong></li>
+</ul>
+<p>To enable the endpoint, use the following configuration parameter:</p>
+<div class="codehilite"><pre><span></span><code>management.endpoints.web.exposure.include<span class="o">=</span>health
+</code></pre></div>
+
+
+<ul>
+<li><strong>External service health indicators</strong></li>
+</ul>
+<p>The endpoint is implemented as a customized Spring boot <a href="http://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html#production-ready-health">health endpoint</a>, which allows to add custom health indicators.</p>
+<p>Demo webapp and Siva webapp include additional information about the health of their dependent services.
+These links to dependent web services have been preconfigured. For example, the Demo webapp is preset to check whether the Siva webapp is accessible from the following url (parameter <code>siva.service.serviceHost</code> value)/monitoring/health and the Siva webapp verifies that the X-road validation service webapp is accessible by checking the default url (configured by parameter <code>siva.proxy.xroadUrl</code> value)/monitoring/health url.</p>
+<h2 id="validation-report-signature">Validation Report Signature</h2>
+<p>SiVa provides the ability to sign the validation report. The idea of supplementing the validation report with a validation report signature is to prove the authority's authenticity and integrity over the validation.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Signing of validation report is disabled by default</p>
+</div>
+<p>To enable it, use the following configuration parameter:</p>
+<div class="codehilite"><pre><span></span><code>siva.report.reportSignatureEnabled<span class="o">=</span><span class="nb">true</span>
+</code></pre></div>
+
+
+<p>When validation report signature is enabled, only detailed validation reports will be signed, simple reports will not be signed.
+The validation report's digital signature is composed out of response's <code>validationReport</code> object. The target format of the signature is ASiC-E (signature level is configurable). The ASiC-E container contents are encoded into Base64 and put on the same level int the response as the validation report itself.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Enabling the validation report signing will affect the performance of the service.</p>
+</div>
+<p>Example structure of the response containing report signature:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;validationReport&quot;</span><span class="p">:</span> <span class="p">{</span>
+  <span class="err">...</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;validationReportSignature&quot;</span><span class="p">:</span> <span class="s2">&quot;ZHNmYmhkZmdoZGcgZmRmMTM0NTM...&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<p>Supported interfaces for signature creation:</p>
+<ul>
+<li><strong>PKCS#11</strong> - a platform-independent API for cryptographic tokens, such as hardware security modules (HSM) and smart cards</li>
+<li><strong>PKCS#12</strong> - for files bundled with private key and certificate</li>
+</ul>
+<p>Report signature configuration parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>siva.report.reportSignatureEnabled</strong></td>
+<td>Enables signing of the validation report. Validation report will only be signed when requesting detailed report.  <ul><li>Default: <strong>false</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.signatureService.signatureLevel</strong></td>
+<td>The level of the validation report signature. <br> <strong>Example values:</strong> <br> * XAdES_BASELINE_B <br> * XAdES_BASELINE_T <br> * XAdES_BASELINE_LT <br> * XAdES_BASELINE_LTA</td>
+</tr>
+<tr>
+<td><strong>siva.signatureService.tspUrl</strong></td>
+<td>URL of the timestamp provider. <br> Only needed when the configured signature level is at least XAdES_BASELINE_T</td>
+</tr>
+<tr>
+<td><strong>siva.signatureService.ocspUrl</strong></td>
+<td>URL of the OCSP provider. <br> Only needed when the configured signature level is at least XAdES_BASELINE_LT</td>
+</tr>
+<tr>
+<td><strong>siva.signatureService.pkcs11.path</strong></td>
+<td>path to PKCS#11 module (depends on your installed smart card or hardware token library, for example: /usr/local/lib/opensc-pkcs11.so)</td>
+</tr>
+<tr>
+<td><strong>siva.signatureService.pkcs11.password</strong></td>
+<td>pin/password of the smart card or hardware token</td>
+</tr>
+<tr>
+<td><strong>siva.signatureService.pkcs11.slotIndex</strong></td>
+<td>depends on the hardware token. E.g. Estonian Smart Card uses 2, USB eToken uses 0. <ul><li>Default: <strong>0</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.signatureService.pkcs12.path</strong></td>
+<td>path to keystore file containing certificate and private key</td>
+</tr>
+<tr>
+<td><strong>siva.signatureService.pkcs12.password</strong></td>
+<td>password of the keystore file containing certificate and private key</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When configuring report signature, either PKCS#11 or PKCS#12 should be configured, no need to configure both.</p>
+</div>
+<hr />
+<h2 id="configuration-parameters">Configuration parameters</h2>
+<p>All SiVa webapps have been designed to run with predetermined defaults after building and without additional configuration.
+However, all the properties can be overridden on the service or embedded web server level, if necessary.</p>
+<p>By default, the service loads it's global configuration from the application.yml file that is packaged inside the jar file.
+Default configuration parameters can be overridden by providing custom application.yml in the <a href="http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html#boot-features-external-config-application-property-files">following locations</a>, or using command line parameters or by using other <a href="http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html">externalized configuration methods</a> methods.</p>
+<p>For example, to configure the embedded Tomcat web server inside a fat jar to run on different port (default is 8080), change the <strong>server.port</strong> following property:</p>
+<div class="codehilite"><pre><span></span><code>server.port<span class="o">=</span><span class="m">8080</span>
+</code></pre></div>
+
+
+<p>Or to increase or modify the default http request limit, override the <strong>server.max-http-post-size</strong> property:</p>
+<div class="codehilite"><pre><span></span><code>server.max-http-post-size: <span class="m">13981016</span>
+</code></pre></div>
+
+
+<p>See the reference list of all common <a href="http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html">application properties</a> provided by Spring boot</p>
+<h3 id="siva-webapp-parameters">Siva webapp parameters</h3>
+<ul>
+<li>Updating TSL</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>siva.tsl.loader.loadFromCache</strong></td>
+<td>A boolean value that determines, whether the TSL disk cache is updated by downloading a new TSL in a predetermined interval<br/><br/>Note that the cache is by default stored in a system temporary folder (can be set with system property <code>java.io.tmpdir</code>) in a subdirectory named <code>dss_cache_tsl</code><ul><li>When set to <strong>false</strong> the cache is refreshed periodically by SiVa in a predetermined interval specified by <code>siva.tsl.loader.schedulerCron</code> using <code>siva.tsl.loader.url</code></li><li>When set to <strong>true</strong> the siva uses existing cache as it's TSL. No direct polling for updates are performed. </li><li>Default: <strong>false</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.tsl.loader.url</strong></td>
+<td>A url value that points to the external TSL <ul><li>Default: <strong>https://ec.europa.eu/tools/lotl/eu-lotl.xml</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.tsl.loader.ojUrl</strong></td>
+<td>A url value that points to the legal act in Official Journal of the European Union <ul><li>Default: <strong>https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=uriserv:OJ.C_.2019.276.01.0001.01.ENG</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.tsl.loader.lotlRootSchemeInfoUri</strong></td>
+<td>A url value that points to the European Unions' disclaimer regarding LOTL <ul><li>Default: <strong>https://ec.europa.eu/tools/lotl/eu-lotl-legalnotice.html</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.tsl.loader.code</strong></td>
+<td>Sets the LOTL code in DSS <ul><li>Default: <strong>EU</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.tsl.loader.trustedTerritories</strong></td>
+<td>Sets the trusted territories by countries <ul><li>Default: <strong>"AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "GR", "HU", "HR", "IE", "IS", "IT", "LT", "LU", "LV", "LI", "MT", "NO", "NL", "PL", "PT", "RO", "SE", "SI", "SK", "UK"</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.tsl.loader.schedulerCron</strong></td>
+<td>A string in a <a href="http://www.manpagez.com/man/5/crontab/">Crontab expression format</a> that defines the interval at which the TSL renewal process is started. The default is 03:00 every day (local time) <ul><li>Default: <strong>0 0 3 * * ?</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.tsl.loader.sslTruststorePath</strong></td>
+<td>Path to truststore containing trusted CA certificates used in HTTPS connection to retrieve member states TSLs <ul><li>Default: <strong>classpath:tsl-ssl-truststore.p12</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.tsl.loader.sslTruststoreType</strong></td>
+<td>Truststore type <ul><li>Default: <strong>PKCS12</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.tsl.loader.sslTruststorePassword</strong></td>
+<td>Truststore password <ul><li>Default: <strong>digidoc4j-password</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.keystore.type</strong></td>
+<td>Keystore type <ul><li>Default: <strong>JKS</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.keystore.filename</strong></td>
+<td>Keystore that contains public keys of trusted LOTL signers for LOTL signature validation<ul><li>Default: <strong>siva-keystore.jks</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.keystore.password</strong></td>
+<td>Keystore password <ul><li>Default: <strong>siva-keystore-password</strong></li></ul></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Note that the keystore file location can be overriden using environment variable <code>DSS_DATA_FOLDER</code>. By default the keystore file location, is expected to be on local filesystem in <code>etc</code> directory which is at the same level with the fat jar file (one is created, if no such directory exists).</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When updating the siva-keystore.jks it is needed to delete the "temp" keystore from default/specified location. Deleting the "temp" keystore is also needed when upgrading your deployment to newer SIVA version!</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>TSL is currently used only by Generic and BDOC validators</p>
+</div>
+<ul>
+<li>Forward to custom X-road webapp instance</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>siva.proxy.xroadUrl</strong></td>
+<td>A URL where the X-Road validation requests are forwarded <ul><li>Default: <strong>http://localhost:8081</strong></li></ul></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Configure SOAP services endpoint URL-s displayed in WSDL</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>siva.wsdl.endpoint-url</strong></td>
+<td>SOAP services endpoint URL to what specific service name is added within the application. Must contain only scheme, host and/or port and optional path. Service name must not be added to the url.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>TimeMark validation - customizing policies</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>siva.bdoc.digidoc4JConfigurationFile</strong></td>
+<td>Path to Digidoc4j configuration override <ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>siva.bdoc.signaturePolicy.defaultPolicy</strong></td>
+<td>Selected default policy name <ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.bdoc.signaturePolicy.policies[index].name</strong></td>
+<td>Policy name <ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.bdoc.signaturePolicy.policies[index].description</strong></td>
+<td>Policy description <ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.bdoc.signaturePolicy.policies[index].constraintPath</strong></td>
+<td>Constraint XML file path for the policy. An absolute path or a reference to a resource on the classpath<ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.bdoc.signaturePolicy.policies[index].url</strong></td>
+<td>Policy URL <ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+</tbody>
+</table>
+<p>By default, the following configuration is used</p>
+<div class="codehilite"><pre><span></span><code>siva.bdoc.signaturePolicy.policies[0].name=POLv3
+siva.bdoc.signaturePolicy.policies[0].description=Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.
+siva.bdoc.signaturePolicy.policies[0].url=http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv3
+siva.bdoc.signaturePolicy.policies[0].constraintPath=bdoc_constraint_ades.xml
+
+siva.bdoc.signaturePolicy.policies[1].name=POLv4
+siva.bdoc.signaturePolicy.policies[1].description=Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result.
+siva.bdoc.signaturePolicy.policies[1].url=http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
+siva.bdoc.signaturePolicy.policies[1].constraintPath=bdoc_constraint_qes.xml
+</code></pre></div>
+
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Default policy configuration is lost when policy detail properties (name, description, url or constraintPath) are overridden or new custom policies added in custom configuration files (in this case, the existing default policies must be redefined in configuration files explicitly)</p>
+</div>
+<ul>
+<li>Generic validation - customize validation policies</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>siva.europe.signaturePolicy.defaultPolicy</strong></td>
+<td>Selected default policy name <ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.europe.signaturePolicy.policies[index].name</strong></td>
+<td>Policy name <ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.europe.signaturePolicy.policies[index].description</strong></td>
+<td>Policy description <ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.europe.signaturePolicy.policies[index].constraintPath</strong></td>
+<td>Constraint XML file path for the policy. An absolute path or a reference to a resource on the classpath<ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.europe.signaturePolicy.policies[index].url</strong></td>
+<td>Policy URL <ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+</tbody>
+</table>
+<p>By default, the following configuration is used</p>
+<div class="codehilite"><pre><span></span><code>siva.europe.signaturePolicy.policies[0].name=POLv3
+siva.europe.signaturePolicy.policies[0].description=Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.
+siva.europe.signaturePolicy.policies[0].url=http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv3
+siva.europe.signaturePolicy.policies[0].constraintPath=generic_constraint_ades.xml
+
+siva.europe.signaturePolicy.policies[1].name=POLv4
+siva.europe.signaturePolicy.policies[1].description=Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result.
+siva.europe.signaturePolicy.policies[1].url=http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
+siva.europe.signaturePolicy.policies[1].constraintPath=generic_constraint_qes.xml
+</code></pre></div>
+
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Default policy configuration is lost when policy detail properties (name, description, url or constraintPath) are overridden or new custom policies added in custom configuration files (in this case, the existing default policies must be redefined in configuration files explicitly)</p>
+</div>
+<ul>
+<li>X-road validation</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>siva.xroad.validation.service.configurationDirectoryPath</strong></td>
+<td>Directory that contains the certs of approved CA's, TSA's and list of members <ul><li>Default: <strong>/verificationconf</strong></li></ul></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>siva.xroad.signaturePolicy.defaultPolicy</strong></td>
+<td>Selected default policy name <ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.xroad.signaturePolicy.policies[index].name</strong></td>
+<td>Policy name <ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.xroad.signaturePolicy.policies[index].description</strong></td>
+<td>Policy description <ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.xroad.signaturePolicy.policies[index].constraintPath</strong></td>
+<td>Constraint XML file path for the policy. An absolute path or a reference to a resource on the classpath<ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.xroad.signaturePolicy.policies[index].url</strong></td>
+<td>Policy URL <ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+</tbody>
+</table>
+<p>By default, the following configuration is used</p>
+<div class="codehilite"><pre><span></span><code>siva.xroad.signaturePolicy.policies[0].name=POLv3
+siva.xroad.signaturePolicy.policies[0].description=Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.
+siva.xroad.signaturePolicy.policies[0].url=http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv3
+siva.xroad.signaturePolicy.policies[0].constraintPath=xroad_constraint_no_type.xml
+</code></pre></div>
+
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Default policy configuration is lost when policy detail properties (name, description, url or constraintPath) are overridden or new custom policies added in custom configuration files (in this case, the existing default policies must be redefined in configuration files explicitly)</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>By default, X-road validation currently supports only POLv3</p>
+</div>
+<h3 id="demo-webapp-parameters">Demo webapp parameters</h3>
+<ul>
+<li>Linking to SiVa webapp</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>siva.service.serviceHost</strong></td>
+<td>An HTTP URL link to the Siva webapp <ul><li>Default: <strong>http://localhost:8080</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.service.jsonServicePath</strong></td>
+<td>Service path in Siva webapp to access the REST/JSON API<ul><li>Default: <strong>/validate</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.service.soapServicePath</strong></td>
+<td>Service path in Siva webapp to access the SOAP API <ul><li>Default: <strong>/soap/validationWebService/validateDocument</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.service.jsonDataFilesServicePath</strong></td>
+<td>Data file service path in Siva webapp to access the REST/JSON API<ul><li>Default: <strong>/getDataFiles</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.service.soapDataFilesServicePath</strong></td>
+<td>Data file service path in Siva webapp to access the SOAP API <ul><li>Default: <strong>/soap/dataFilesWebService/getDocumentDataFiles</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.service.trustStore</strong></td>
+<td>Path to Siva webapp truststore on classpath <ul><li>Default: <strong>siva_server_truststore.p12</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.service.trustStorePassword</strong></td>
+<td>Siva webapp truststore password <ul><li>Default: <strong>password</strong></li></ul></td>
+</tr>
+</tbody>
+</table>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../deployment/" title="5.1 Deployment model" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                5.1 Deployment model
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../qa_strategy/" title="6.1 QA Strategy" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                6.1 QA Strategy
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/vendor.d710d30a.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a45f732b.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      
+      <script>
+        app = initialize({
+          base: "../..",
+          features: [],
+          search: Object.assign({
+            worker: "../../assets/javascripts/worker/search.c03f0417.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+    
+  </body>
+</html>

@@ -31,7 +31,7 @@ The last lines of build output should look very similar to below image:
 ```text
 [INFO] Reactor Summary:
 [INFO]
-[INFO] SiVa Digitally signed documents validation service 3.2.2 SUCCESS [  2.089 s]
+[INFO] SiVa Digitally signed documents validation service 3.3.0 SUCCESS [  2.089 s]
 [INFO] validation-services-parent ......................... SUCCESS [  0.380 s]
 [INFO] validation-commons ................................. SUCCESS [ 13.782 s]
 [INFO] tsl-loader ......................................... SUCCESS [  9.372 s]
@@ -47,7 +47,7 @@ The last lines of build output should look very similar to below image:
 [INFO] siva-webapp ........................................ SUCCESS [ 42.451 s]
 [INFO] SiVa Sample Web application ........................ SUCCESS [ 42.236 s]
 [INFO] SiVa Web Service integration tests ................. SUCCESS [ 18.830 s]
-[INFO] siva-distribution 3.2.2 ............................ SUCCESS [  5.763 s]
+[INFO] siva-distribution 3.3.0 ............................ SUCCESS [  5.763 s]
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
@@ -67,13 +67,13 @@ project by issuing below commands:
 **First start the Siva webapp**
 
 ```bash
-./siva-parent/siva-webapp/target/siva-webapp-3.2.2.jar
+./siva-parent/siva-webapp/target/siva-webapp-3.3.0.jar
 ```
 
 **Secondly start X-road validation webapp**
 
 ```bash
-./validation-services-parent/xroad-validation-service/target/xroad-validation-service-3.2.2.jar
+./validation-services-parent/xroad-validation-service/target/xroad-validation-service-3.3.0.jar
 ```
 
 The SiVa webapp by default runs on port **8080** and XRoad validation service starts up on port **8081**.
@@ -82,7 +82,7 @@ Easiest way to test out the deployment is to run SiVa demo application and use i
 **Start the Demo webapp**
 
 ```bash
-./siva-parent/siva-sample-application/target/siva-sample-application-3.2.2.jar
+./siva-parent/siva-sample-application/target/siva-sample-application-3.3.0.jar
 ```
 
 Now point Your browser to URL: <http://localhost:9000>
@@ -122,7 +122,7 @@ WantedBy=multi-user.target
 ```
 
 Save and close the `siva-webapp.service` file.
-Next we need to move `siva-webapp-3.2.2.jar` into newly created `/var/apps` directory and rename to
+Next we need to move `siva-webapp-3.3.0.jar` into newly created `/var/apps` directory and rename to
 JAR file to `siva-webapp.jar`. match
 
 !!! note
@@ -130,7 +130,7 @@ JAR file to `siva-webapp.jar`. match
 
 ```bash
 sudo mkdir /var/apps
-sudo cp siva-parent/siva-webapp/target/executable/siva-webapp-3.2.2.jar /var/apps/siva-webapp.jar
+sudo cp siva-parent/siva-webapp/target/executable/siva-webapp-3.3.0.jar /var/apps/siva-webapp.jar
 ```
 
 Next we need to copy the `siva-webapp.service` file into `/lib/systemd/system` directory.
@@ -200,7 +200,7 @@ Now we should build the WAR file. We have created helper script with all the cor
 Final steps would be copying built WAR file into Tomcat `webapps` directory and starting the servlet container.
 
 ```bash
-cp siva-parent/siva-webapp/target/siva-webapp-3.2.2.war apache-tomcat-8.5.24/webapps
+cp siva-parent/siva-webapp/target/siva-webapp-3.3.0.war apache-tomcat-8.5.24/webapps
 ./apache-tomcat-7.0.77/bin/catalina.sh run
 ```
 

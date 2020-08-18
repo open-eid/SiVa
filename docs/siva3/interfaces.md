@@ -680,7 +680,7 @@ Sample response:
         "health": {
             "details": {
                "webappName":"siva-sample-application",
-                "version":"3.2.2",
+                "version":"3.3.0",
                 "buildTime":"2016-10-21T15:56:21Z",
                 "startTime":"2016-10-21T15:57:48Z",
                 "currentTime":"2016-10-21T15:58:39Z"

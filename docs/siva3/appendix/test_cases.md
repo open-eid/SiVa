@@ -220,6 +220,15 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   **Attention! This test is disabled: test file is needed where certificate expiration end is before the OCSP produced at time
 
 
+**TestCaseID: Asice-ValidationFail-24**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
+  * Title: BDoc with invalid signature, no signing certificate found
+  * Expected Result: The document should fail the validation
+  * File: TM-invalid-sig-no-sign-cert.asice
+
+
 ## AsiceValidationPassIT.java
 [Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/AsiceValidationPassIT.java)
 
@@ -427,7 +436,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Requirement: []()
   * Title: Validation of ASICs with DDOC inside
   * Expected Result: TST and inner DDOC are valid
-  * File: ValidDDOCinsideAsics.asics
+  * File: ddocWithRoleAndSigProductionPlace.asics
 
 
 **TestCaseID: Asics-ValidationPass-2**
@@ -722,6 +731,15 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * File: BDOC-1.0.bdoc
 
 
+**TestCaseID: Bdoc-ValidationFail-30**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
+  * Title: Asice unsigned data files in the container
+  * Expected Result: The document should fail the validation
+  * File: EE_SER-AEX-B-LT-V-34.asice
+
+
 ## BdocValidationPassIT.java
 [Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/BdocValidationPassIT.java)
 
@@ -796,7 +814,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * TestType: Automated
   * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4)
   * Title: Asice Baseline-LTA file
-  * Expected Result: The document should pass the validation
+  * Expected Result: The document should pass the validation. DD4J do not return certificates for LTA timestamp.
   * File: EE_SER-AEX-B-LTA-V-24.asice
 
 
@@ -863,15 +881,6 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * File: BDOC2.1_content_as_sce.sce
 
 
-**TestCaseID: Bdoc-ValidationPass-16**
-
-  * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
-  * Title: *.sce file with TimeStamp
-  * Expected Result: The document should pass the validation
-  * File: ASICE_TS_LTA_content_as_sce.sce
-
-
 **TestCaseID: Bdoc-ValidationPass-17**
 
   * TestType: Automated
@@ -879,15 +888,6 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Title: Bdoc-TS with special characters in data file
   * Expected Result: The document should pass the validation with correct signature scope
   * File: Nonconventionalcharacters.asice
-
-
-**TestCaseID: Bdoc-ValidationPass-18**
-
-  * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
-  * Title: Asice unsigned data files in the container
-  * Expected Result: The document should pass the validation with warning
-  * File: EE_SER-AEX-B-LT-V-34.asice
 
 
 **TestCaseID: Bdoc-ValidationPass-19**
@@ -925,8 +925,6 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Expected Result: The document should pass
   * File: 23147_weak-warning-sha1-invalid-mimetype-in-manifest.bdoc
 
-  **Attention! This test is disabled: s://jira.ria.ee/browse/DD4J-161")
-
 
 ## DdocGetDataFilesIT.java
 [Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/DdocGetDataFilesIT.java)
@@ -935,7 +933,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID:  Ddoc-Get-Data-Files-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/use_cases/#ddoc-data-file-extraction-process](http://open-eid.github.io/SiVa/siva2/use_cases/#ddoc-data-file-extraction-process)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process](http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process)
   * Title: Valid DDOC with data file used
   * Expected Result: The data file should be returned
   * File: 18912.ddoc
@@ -944,16 +942,25 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID:  Ddoc-Get-Data-Files-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/use_cases/#ddoc-data-file-extraction-process](http://open-eid.github.io/SiVa/siva2/use_cases/#ddoc-data-file-extraction-process)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process](http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process)
   * Title: Invalid DDOC with data file used
   * Expected Result: The data file should be returned
   * File: OCSP nonce vale.ddoc
 
 
+**TestCaseID:  Ddoc-Get-Data-Files-10**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process](http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process)
+  * Title:DDOC with xml v1.1 is  used
+  * Expected Result: The data file is returned
+  * File: DIGIDOC-XML1.1.ddoc
+
+
 **TestCaseID:  Ddoc-Get-Data-Files-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/use_cases/#ddoc-data-file-extraction-process](http://open-eid.github.io/SiVa/siva2/use_cases/#ddoc-data-file-extraction-process)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process](http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process)
   * Title:DDOC with xml v1.1 is  used
   * Expected Result: The data file is returned
   * File: DIGIDOC-XML1.1.ddoc
@@ -962,7 +969,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID:  Ddoc-Get-Data-Files-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/use_cases/#ddoc-data-file-extraction-process](http://open-eid.github.io/SiVa/siva2/use_cases/#ddoc-data-file-extraction-process)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process](http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process)
   * Title: DDOC with xml v1.2 is  used
   * Expected Result: The data file is returned
   * File: DIGIDOC-XML1.2.ddoc
@@ -971,27 +978,27 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID:  Ddoc-Get-Data-Files-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/use_cases/#ddoc-data-file-extraction-process](http://open-eid.github.io/SiVa/siva2/use_cases/#ddoc-data-file-extraction-process)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process](http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process)
   * Title: DDOC with xml v1.3 is  used
   * Expected Result: The data file is returned
-  * File: DIGIDOC-XML1.3.ddoc
+  * File: valid_XML1_3.ddoc
 
 
 **TestCaseID:  Ddoc-Get-Data-Files-6**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/use_cases/#ddoc-data-file-extraction-process](http://open-eid.github.io/SiVa/siva2/use_cases/#ddoc-data-file-extraction-process)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process](http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process)
   * Title: Hashcoded DDOC  is  used
   * Expected Result: Null is returned
   * File: DIGIDOC-XML1.3_hashcode.ddoc
 
-  **Attention! This test is disabled: Run this test manually as it fails in Travis
+  **Attention! This test is disabled: 
 
 
 **TestCaseID:  Ddoc-Get-Data-Files-7**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/use_cases/#ddoc-data-file-extraction-process](http://open-eid.github.io/SiVa/siva2/use_cases/#ddoc-data-file-extraction-process)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process](http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process)
   * Title: DDOC  with 12 different  files of different types  is  used
   * Expected Result: Data file returned for each file correctly
   * File: igasugust1.3.ddoc
@@ -1000,7 +1007,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID:  Ddoc-Get-Data-Files-8**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/use_cases/#ddoc-data-file-extraction-process](http://open-eid.github.io/SiVa/siva2/use_cases/#ddoc-data-file-extraction-process)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process](http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process)
   * Title: BDOC with data file used
   * Expected Result: The error message  should be returned
   * File: BDOC-TS.bdoc
@@ -1009,7 +1016,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID:  Ddoc-Get-Data-Files-9**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/use_cases/#ddoc-data-file-extraction-process](http://open-eid.github.io/SiVa/siva2/use_cases/#ddoc-data-file-extraction-process)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process](http://open-eid.github.io/SiVa/siva3/use_cases/#ddoc-data-file-extraction-process)
   * Title: PDF file used
   * Expected Result: The error message  should be returned
   * File: hellopades-lt-b.pdf
@@ -1044,15 +1051,6 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Title: Ddoc with multiple signatures both valid and invalid
   * Expected Result: The document should fail the validation
   * File: multipleValidAndInvalidSignatures.ddoc
-
-
-**TestCaseID: Ddoc-ValidationFail-4**
-
-  * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
-  * Title: Ddoc with no signatures
-  * Expected Result: The document should fail the validation
-  * File: DdocContainerNoSignature.bdoc
 
 
 **TestCaseID: Ddoc-ValidationFail-5**
@@ -1139,7 +1137,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationFail-13**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/](http://open-eid.github.io/SiVa/siva2/interfaces/)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/](http://open-eid.github.io/SiVa/siva3/interfaces/)
   * Title: Ddoc with XML Entity expansion attack
   * Expected Result: The document should fail the validation with error
   * File: xml_expansion.ddoc
@@ -1148,7 +1146,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationFail-14**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/](http://open-eid.github.io/SiVa/siva2/interfaces/)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/](http://open-eid.github.io/SiVa/siva3/interfaces/)
   * Title: Ddoc with XML server side request forgery attack
   * Expected Result: The document should fail the validation with error
   * File: xml_entity.ddoc
@@ -1163,6 +1161,33 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * File: KS-02_tyhi.ddoc
 
 
+**TestCaseID: Ddoc-ValidationFail-16**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
+  * Title: Ddoc with invalid datafile id
+  * Expected Result: The document should fail the validation
+  * File: 22915-bad-df-id.ddoc
+
+
+**TestCaseID: Ddoc-ValidationFail-17**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
+  * Title: Validation of DDOC with revoked certificate status
+  * Expected Result: The document should fail the validation
+  * File: cert-revoked.ddoc
+
+
+**TestCaseID: Ddoc-ValidationFail-18**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
+  * Title: Validation of DDOC with unknown OCSP status
+  * Expected Result: The document should fail the validation
+  * File: cert-unknown.ddoc
+
+
 ## DdocValidationPassIT.java
 [Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/DdocValidationPassIT.java)
 
@@ -1174,8 +1199,6 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Title: Ddoc v1.0 with valid signatures
   * Expected Result: The document should pass the validation
   * File: SK-XML1.0.ddoc
-
-  **Attention! This test is disabled: DDOC 1.0 fails in Travis CI. Needs investigation
 
 
 **TestCaseID: Ddoc-ValidationPass-3**
@@ -1295,6 +1318,15 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * File: 18912.ddoc
 
 
+**TestCaseID: Ddoc-ValidationPass-16**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
+  * Title: Ddoc with no signatures
+  * Expected Result: Document passes the validation
+  * File: DdocContainerNoSignature.ddoc
+
+
 **TestCaseID: DdocHashcode-ValidationPass-1**
 
   * TestType: Automated
@@ -1302,8 +1334,6 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Title: Validation of DDOC Hashcode v1.0
   * Expected Result: Document passes the validation
   * File: SK-XML1.0_hashcode.ddoc
-
-  **Attention! This test is disabled: 
 
 
 **TestCaseID: DdocHashcode-ValidationPass-2**
@@ -1314,8 +1344,6 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Expected Result: Document passes the validation
   * File: DIGIDOC-XML1.1_hashcode.ddoc
 
-  **Attention! This test is disabled: This tests fails in Travis. Has been executed locally
-
 
 **TestCaseID: DdocHashcode-ValidationPass-3**
 
@@ -1325,8 +1353,6 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Expected Result: Document passes the validation
   * File: DIGIDOC-XML1.2_hashcode.ddoc
 
-  **Attention! This test is disabled: This tests fails in Travis. Has been executed locally
-
 
 **TestCaseID: DdocHashcode-ValidationPass-4**
 
@@ -1335,8 +1361,6 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Title: Validation of DDOC Hashcode v1.3
   * Expected Result: Document passes the validation
   * File: DIGIDOC-XML1.3_hashcode.ddoc
-
-  **Attention! This test is disabled: This tests fails in Travis. Has been executed locally
 
 
 ## DocumentFormatIT.java
@@ -1480,7 +1504,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * TestType: Automated
   * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
   * Title: Bdoc with one unsigned document, NOT named in manifest.
-  * Expected Result: The document should fail the validation and warnings should be displayed.
+  * Expected Result: The document should fail the validation and warning should be displayed.
   * File:3f_2signed_1unsigned_2in_manifest.bdoc
 
 
@@ -1767,7 +1791,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: PDF-LargeFiles-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva2/overview/#main-features-of-siva-validation-service)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
   * Title: 9MB PDF files (PAdES Baseline LT).
   * Expected Result: Validation report is returned
   * File: 9MB_PDF.pdf
@@ -1776,7 +1800,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-LargeFiles-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva2/overview/#main-features-of-siva-validation-service)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
   * Title: 9MB ASIC-E file
   * Expected Result: Validation report is returned
   * File: 9MB_BDOC-TS.bdoc
@@ -1785,7 +1809,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-LargeFiles-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva2/overview/#main-features-of-siva-validation-service)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
   * Title: 9MB BDOC-TM
   * Expected Result: Validation report is returned
   * File: 9MB_BDOC-TM.bdoc
@@ -1794,7 +1818,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-LargeFiles-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva2/overview/#main-features-of-siva-validation-service)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
   * Title: 9MB DDOC
   * Expected Result: Validation report is returned
   * File: 9MB_DDOC.ddoc
@@ -1807,7 +1831,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: WebApp-Monitoring-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#service-health-monitoring](http://open-eid.github.io/SiVa/siva2/interfaces/#service-health-monitoring)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#service-health-monitoring](http://open-eid.github.io/SiVa/siva3/interfaces/#service-health-monitoring)
   * Title: Health monitor response structure
   * Expected Result: response matches the expected structure of JSON
   * File: not relevant
@@ -2024,7 +2048,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Expected Result: Document signed with expired certificate should fail
   * File: hellopades-lt-sha256-rsa1024-expired2.pdf
 
-  **Attention! This test is disabled: le needed
+  **Attention! This test is disabled: Test file needed
 
 
 **TestCaseID: PDF-ValidationFail-7**
@@ -2093,6 +2117,8 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * Expected Result: Warning should be returned but validation should pass
   * File: hellopades-lt-sha256-rsa2048-ocsp-before-ts.pdf
 
+  **Attention! This test is disabled: 
+
 
 ## ReportSignatureIT.java
 [Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/ReportSignatureIT.java)
@@ -2101,7 +2127,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Detailed-Report-Signature-1**
 
   * TestType: Auto
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Simple report signature should not be in response
   * Expected Result: Simple report response should not contain signature
   * File: hellopades-pades-lt-sha256-sign.pdf
@@ -2110,7 +2136,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Detailed-Report-Signature-2**
 
   * TestType: Auto
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Detailed report signature should be in response
   * Expected Result: Detailed report response should contain signature
   * File: hellopades-pades-lt-sha256-sign.pdf
@@ -2119,7 +2145,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Detailed-Report-Signature-3**
 
   * TestType: Auto
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Validate detailed report signature
   * Expected Result: Signed report is successfully validated
   * File: hellopades-lt-sha256-rsa2048.pdf
@@ -2128,7 +2154,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Detailed-Report-Signature-4**
 
   * TestType: Auto
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: In simple report reportSignatureEnabled parameter value true
   * Expected Result: File hash in hex in report
   * File: hellopades-lt-sha256-rsa2048.pdf
@@ -2137,7 +2163,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Detailed-Report-Signature-5**
 
   * TestType: Auto
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: In simple report reportSignatureEnabled parameter value false
   * Expected Result: File hash in hex not in report
   * File: hellopades-lt-sha256-rsa2048.pdf
@@ -2152,25 +2178,29 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv4-Signature-Policy-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The PDF-file is Ades level
   * Expected Result: Signatures are invalid according to policy
   * File: soft-cert-signature.pdf
+
+  **Attention! This test is disabled: New test file is needed
 
 
 **TestCaseID: POLv4-Signature-Policy-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The bdoc is Ades level
   * Expected Result: Signatures are invalid according to policy
-  * File: allkiri_ades.asice
+  * File:
+
+  **Attention! This test is disabled: test file needed
 
 
 **TestCaseID: POLv4-Signature-Policy-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The bdoc is Ades signature
   * Expected Result: Signatures are invalid according to policy
   * File:
@@ -2181,7 +2211,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv4-Signature-Policy-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The asice is Ades signature
   * Expected Result: Signatures are invalid according to policy
   * File:
@@ -2192,7 +2222,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv4-Signature-Policy-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The bdoc is Ades seal
   * Expected Result: Signatures are invalid according to policy
   * File:
@@ -2203,7 +2233,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv4-Signature-Policy-6**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The asice is ades seal
   * Expected Result: Signatures are valid according to policy
   * File:
@@ -2214,7 +2244,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv4-Signature-Policy-7**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The certificate is QC level signature, but do not have SSCD/QSCD compliance
   * Expected Result: Signatures are valid according to policy, warning is returned about signature level
   * File: testAdesQC.asice
@@ -2223,7 +2253,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv4-Signature-Policy-8**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The certificate is QC level signature, but do not have SSCD/QSCD compliance
   * Expected Result: Signatures are valid according to policy, warning is returned about signature level
   * File: testAdesQC.asice
@@ -2232,7 +2262,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv4-Signature-Policy-9**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The certificate is QC level seal, but do not have SSCD/QSCD compliance
   * Expected Result: Signatures are valid according to policy, no warning about the signature level
   * File: IB-4828_tempel_not_qscd_TS.asice
@@ -2241,7 +2271,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv4-Signature-Policy-10**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The certificate is QC level seal, but do not have SSCD/QSCD compliance
   * Expected Result: Signatures are valid according to policy, no warning about the signature level
   * File: IB-4828_tempel_not_qscd_TM.bdoc
@@ -2250,7 +2280,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv4-Signature-Policy-11**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The certificate is QC level, but do not have SSCD/QSCD compliance and type identifier
   * Expected Result: Signatures are valid according to policy, no warning about the signature level
   * File:
@@ -2261,7 +2291,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv4-Signature-Policy-12**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The certificate is QC level, but do not have SSCD/QSCD compliance and type identifier
   * Expected Result: Signatures are valid according to policy, no warning about the signature level
   * File:
@@ -2272,7 +2302,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv4-Signature-Policy-13**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The bdoc is QES level signature
   * Expected Result: Signatures are valid according to policy
   * File: Valid_ID_sig.bdoc
@@ -2281,7 +2311,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv4-Signature-Policy-14**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The bdoc is QES level signature
   * Expected Result: Signatures are valid according to policy
   * File: ValidLiveSignature.asice
@@ -2290,7 +2320,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv4-Signature-Policy-15**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The bdoc is QES level seal
   * Expected Result: Signatures are valid according to policy
   * File: IB-4828_tempel_qscd_TM.bdoc
@@ -2299,7 +2329,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv4-Signature-Policy-16**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The asice is QES level seal
   * Expected Result: Signatures are valid according to policy
   * File: IB-4828_tempel_qscd_TS.asice
@@ -2308,7 +2338,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv4-Signature-Policy-17**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The bdoc is QES level
   * Expected Result: Signatures are valid according to policy
   * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
@@ -2317,7 +2347,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv4-Signature-Policy-18**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The asice is QES level
   * Expected Result: Signatures are valid according to policy
   * File: EE_SER-AEX-B-LT-V-28.asice
@@ -2326,25 +2356,29 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv3-Signature-Policy-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3)
   * Title: The PDF-file is Ades level
   * Expected Result: Signatures are not valid according to policy
   * File: soft-cert-signature.pdf
+
+  **Attention! This test is disabled: New testfile is needed
 
 
 **TestCaseID: POLv3-Signature-Policy-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3)
   * Title: The bdoc is Ades level
   * Expected Result: Signatures are valid according to policy
   * File: allkiri_ades.asice
+
+  **Attention! This test is disabled: New testfile is needed
 
 
 **TestCaseID: POLv3-Signature-Policy-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3)
   * Title: The bdoc is ADES level signature
   * Expected Result: Signatures are valid according to policy
   * File: allkiri_ades.asice
@@ -2355,7 +2389,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv3-Signature-Policy-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3)
   * Title: The asice is Ades level signature
   * Expected Result: Signatures are valid according to policy
   * File:
@@ -2366,7 +2400,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv3-Signature-Policy-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3)
   * Title: The bdoc is Ades seal
   * Expected Result: Signatures are valid according to policy
   * File:
@@ -2377,7 +2411,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv3-Signature-Policy-6**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3)
   * Title: The asice is Ades level seal
   * Expected Result: Signatures are valid according to policy
   * File:
@@ -2388,7 +2422,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv3-Signature-Policy-7**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The certificate is QC level signature, but do not have SSCD/QSCD compliance
   * Expected Result: Signatures are valid according to policy, warning is returned about signature level
   * File: testAdesQC.asice
@@ -2397,7 +2431,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv3-Signature-Policy-8**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The certificate is QC level signature, but do not have SSCD/QSCD compliance
   * Expected Result: Signatures are valid according to policy, warning is returned about signature level
   * File: testAdesQC.asice
@@ -2406,7 +2440,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv3-Signature-Policy-9**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The certificate is QC level seal, but do not have SSCD/QSCD compliance
   * Expected Result: Signatures are valid according to policy, no warning about the signature level
   * File: IB-4828_tempel_not_qscd_TS.asice
@@ -2415,7 +2449,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv3-Signature-Policy-10**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The certificate is QC level seal, but do not have SSCD/QSCD compliance
   * Expected Result: Signatures are valid according to policy, no warning about the signature level
   * File: IB-4828_tempel_not_qscd_TM.bdoc
@@ -2424,7 +2458,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv3-Signature-Policy-11**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The certificate is QC level, but do not have SSCD/QSCD compliance and type identifier
   * Expected Result: Signatures are valid according to policy, no warning about the signature level
   * File:
@@ -2435,7 +2469,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv3-Signature-Policy-12**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The certificate is QC level, but do not have SSCD/QSCD compliance and type identifier
   * Expected Result: Signatures are valid according to policy, no warning about the signature level
   * File:
@@ -2446,7 +2480,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv3-Signature-Policy-13**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The bdoc is QES level signature
   * Expected Result: Signatures are valid according to policy
   * File: Valid_ID_sig.bdoc
@@ -2455,7 +2489,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv3-Signature-Policy-14**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The bdoc is QES level signature
   * Expected Result: Signatures are valid according to policy
   * File: ValidLiveSignature.asice
@@ -2464,7 +2498,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv3-Signature-Policy-15**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The bdoc is QES level seal
   * Expected Result: Signatures are valid according to policy
   * File: IB-4828_tempel_qscd_TM.bdoc
@@ -2473,7 +2507,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv3-Signature-Policy-16**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The asice is QES level seal
   * Expected Result: Signatures are valid according to policy
   * File: IB-4828_tempel_qscd_TS.asice
@@ -2482,7 +2516,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv3-Signature-Policy-17**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The bdoc is QES level
   * Expected Result: Signatures are valid according to policy
   * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
@@ -2491,7 +2525,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: POLv3-Signature-Policy-18**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The asice is QES level
   * Expected Result: Signatures are valid according to policy
   * File: EE_SER-AEX-B-LT-V-28.asice
@@ -2500,7 +2534,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Revocation-Signature-Policy-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The PDF-file is missing an OCSP or CRL
   * Expected Result: Signatures are invalid according to policy
   * File: PadesProfileT.pdf
@@ -2509,7 +2543,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Revocation-Signature-Policy-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva2/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
   * Title: The PDF-file with included CRL
   * Expected Result: Signatures are valid according to policy
   * File: PadesProfileLtWithCrl.pdf
@@ -2531,7 +2565,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Xades-Hashcode-Validation-Fail-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Hashes do not match
   * Expected Result: Validation fails
   * File: Valid_XAdES_LT_TM.xml
@@ -2540,7 +2574,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Xades-Hashcode-Validation-Fail-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Wrong data file name is used
   * Expected Result: Validation report is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -2549,9 +2583,18 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Xades-Hashcode-Validation-Fail-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Invalid signature in XAdES
   * Expected Result: Validation report is returned
+  * File: Valid_XAdES_LT_TM.xml
+
+
+**TestCaseID: Xades-Hashcode-Validation-Fail-5**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
+  * Title: Invalid signature in XAdES
+  * Expected Result: Error is given
   * File: Valid_XAdES_LT_TM.xml
 
 
@@ -2649,50 +2692,6 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
   * File: sha512_TS.xml
 
 
-## XRoadValidationFailIT.java
-[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/XRoadValidationFailIT.java)
-
-
-**TestCaseID: Xroad-ValidationFail-1**
-
-  * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
-  * Title: Simple xroad document with container fault
-  * Expected Result: Document should fail validation
-  * File: invalid-digest.asice
-
-
-## XRoadValidationPassIT.java
-[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/XRoadValidationPassIT.java)
-
-
-**TestCaseID: Xroad-ValidationPass-1**
-
-  * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
-  * Title: Simple xroad document
-  * Expected Result: Document should pass
-  * File: xroad-simple.asice
-
-
-**TestCaseID: Xroad-ValidationPass-2**
-
-  * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
-  * Title: Batchsignature xroad document
-  * Expected Result: Document should pass
-  * File: xroad-batchsignature.asice
-
-
-**TestCaseID: Xroad-ValidationPass-3**
-
-  * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
-  * Title: Attachment xroad document
-  * Expected Result: Document should pass
-  * File: xroad-attachment.asice
-
-
 ## DetailedReportValidationManualIT.java
 [Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/manualtest/DetailedReportValidationManualIT.java)
 
@@ -2700,7 +2699,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Detailed-Report-Validation-1**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: ValidationConclusion element
   * Expected Result: Detailed report includes validationConclusion element
   * File: ValidLiveSignature.asice
@@ -2709,16 +2708,18 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Detailed-Report-Validation-2**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: TL analysis element
   * Expected Result: Detailed report includes tlanalysis element and its values
   * File: pades-baseline-lta-live-aj.pdf
+
+  **Attention! This test is disabled: New test LOTL is needed with correct data
 
 
 **TestCaseID: Detailed-Report-Validation-3**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Signatures element
   * Expected Result: Detailed report includes signatures element and its sub-elements and its values
   * File: hellopades-lt-sha256-ec256.pdf
@@ -2727,7 +2728,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Detailed-Report-Validation-4**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: basicBuildingBlocks element
   * Expected Result: Detailed report includes basicBuildingBlocks element and its sub-elements and its values
   * File: pades-baseline-lta-live-aj.pdf
@@ -2736,7 +2737,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Detailed-Report-Validation-5**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: BasicBuildingBlocks element
   * Expected Result: Detailed report includes basicBuildingBlocks element and its sub-elements and its values
   * File: pades-baseline-lta-live-aj.pdf
@@ -2745,18 +2746,16 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Detailed-Report-Validation-6**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: BasicBuildingBlocks element
   * Expected Result: Detailed report includes basicBuildingBlocks element and its sub-elements and its values
   * File: pades-baseline-lta-live-aj.pdf
-
-  **Attention! This test is disabled: The sequence of blocks changes
 
 
 **TestCaseID: Detailed-Report-Validation-7**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Wrong signature value
   * Expected Result: Detailed report includes wrong signature value
   * File: TS-02_23634_TS_wrong_SignatureValue.asice
@@ -2765,7 +2764,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Detailed-Report-Validation-8**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Wrong data file in manifest
   * Expected Result:
   * File: WrongDataFileInManifestAsics.asics
@@ -2774,16 +2773,18 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Detailed-Report-Validation-9**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Validate detailed report file hash if ReportSignatureEnabled value true
   * Expected Result: fileHash calculated
   * File: hellopades-lt-sha256-rsa2048.pdf
+
+  **Attention! This test is disabled: 6")
 
 
 **TestCaseID: Detailed-Report-Validation-10**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Validate detailed report file hash if ReportSignatureEnabled value false
   * Expected Result: fileHash no calculated
   * File: hellopades-lt-sha256-rsa2048.pdf
@@ -2798,7 +2799,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Diagnostic-Report-Validation-1**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: ValidationConclusion element
   * Expected Result: Diagnostic report includes validationConclusion element
   * File: ValidLiveSignature.asice
@@ -2807,7 +2808,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Diagnostic-Report-Validation-2**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Trusted List element
   * Expected Result: Diagnostic report includes Trust List element and its values
   * File: pades-baseline-lta-live-aj.pdf
@@ -2816,7 +2817,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Diagnostic-Report-Validation-3**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: List Of Trusted List element
   * Expected Result: Diagnostic report includes lotl element and its values
   * File: pades-baseline-lta-live-aj.pdf
@@ -2825,7 +2826,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Diagnostic-Report-Validation-4**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Signatures element
   * Expected Result: Diagnostic report includes tlanalysis element and its values
   * File: pades-baseline-lta-live-aj.pdf
@@ -2834,21 +2835,21 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Diagnostic-Report-Validation-5**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Used Certificates
   * Expected Result: Diagnostic report includes used certificates element and its values
   * File: pades-baseline-lta-live-aj.pdf
-
-  **Attention! This test is disabled: 
 
 
 **TestCaseID: Diagnostic-Report-Validation-6**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Wrong signature value
   * Expected Result: Diagnostic report includes wrong signature value
   * File: TS-02_23634_TS_wrong_SignatureValue.asice
+
+  **Attention! This test is disabled: 
 
 
 ## ReportSignatureManuallT.java
@@ -2858,7 +2859,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Detailed-Report-Signatures-2**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Validate detailed report signature when SignatureLevel XAdES_BASELINE_LTA signed with RSA key.
   * Expected Result: validationReportSignature exists in report
   * File: hellopades-lt-sha256-rsa2048.pdf
@@ -2869,7 +2870,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Detailed-Report-Signatures-3**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Validate detailed report signature when SignatureLevel XAdES_BASELINE_LT signed with RSA key.
   * Expected Result: validationReportSignature exists in report
   * File: hellopades-lt-sha256-rsa2048.pdf
@@ -2880,7 +2881,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Detailed-Report-Signatures-4**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Validate detailed report signature when SignatureLevel XAdES_BASELINE_T signed with RSA key.
   * Expected Result: validationReportSignature exists in report
   * File: hellopades-lt-sha256-rsa2048.pdf
@@ -2891,7 +2892,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Detailed-Report-Signatures-5**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Validate detailed report signature when SignatureLevel XAdES_BASELINE_B signed with RSA key.
   * Expected Result: validationReportSignature exists in report
   * File: hellopades-lt-sha256-rsa2048.pdf
@@ -2902,7 +2903,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Detailed-Report-Signatures-6**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Validate detailed report signature when SignatureLevel XAdES_BASELINE_LTA and signed with ECC key.
   * Expected Result: validationReportSignature exists in report
   * File: hellopades-lt-sha256-rsa2048.pdf
@@ -2913,7 +2914,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Detailed-Report-Signatures-7**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Validate detailed report signature when SignatureLevel XAdES_BASELINE_LT and signed with ECC key.
   * Expected Result: validationReportSignature exists in report
   * File: hellopades-lt-sha256-rsa2048.pdf
@@ -2924,7 +2925,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Detailed-Report-Signatures-8**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Validate detailed report signature when SignatureLevel XAdES_BASELINE_T and signed with ECC key.
   * Expected Result: validationReportSignature exists in report
   * File: hellopades-lt-sha256-rsa2048.pdf
@@ -2935,7 +2936,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Detailed-Report-Signatures-9**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Validate detailed report signature when SignatureLevel XAdES_BASELINE_B and signed with ECC key.
   * Expected Result: validationReportSignature exists in report
   * File: hellopades-lt-sha256-rsa2048.pdf
@@ -2946,7 +2947,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Detailed-Report-Signatures-10**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Validate detailed report signature when configuration parameter OcspUrl empty
   * Expected Result: No signature
   * File: hellopades-lt-sha256-rsa2048.pdf
@@ -2955,7 +2956,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Detailed-Report-Signatures-11**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Validate detailed report signature when configuration parameter TspUrl empty
   * Expected Result: No signature
   * File: hellopades-lt-sha256-rsa2048.pdf
@@ -2964,7 +2965,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Detailed-Report-Signatures-12**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Validate detailed report signature when configuration parameter Pkcs11 wrong value
   * Expected Result: Error message
   * File: hellopades-lt-sha256-rsa2048.pdf
@@ -2975,7 +2976,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Detailed-Report-Signatures-13**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Validate detailed report signature when configuration parameter SignatureLevel empty
   * Expected Result: No Signature
   * File: hellopades-lt-sha256-rsa2048.pdf
@@ -2984,7 +2985,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Detailed-Report-Signatures-14**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Validate detailed report signature when using pks11 to sign
   * Expected Result: Signature exists
   * File: hellopades-lt-sha256-rsa2048.pdf
@@ -3001,7 +3002,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-Statistics-Log-1**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics](http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics)
   * Title: Bdoc valid container is validated
   * Expected Result: Correct data is shown in the log with correct structure
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -3010,7 +3011,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-Statistics-Log-2**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics](http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics)
   * Title: Bdoc invalid container is validated
   * Expected Result: Correct data is shown in the log with correct structure
   * File: SS-4_teadmataCA.4.asice
@@ -3019,7 +3020,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-Statistics-Log-3**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics](http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics)
   * Title: Bdoc not supported file is inserted
   * Expected Result: No message in statistics as the container is not validated
   * File: xroad-simple.asice
@@ -3028,7 +3029,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-Statistics-Log-4**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics](http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics)
   * Title: Bdoc with certificates from different countries.
   * Expected Result: Correct data is shown in the log with correct structure
   * File: Baltic MoU digital signing_EST_LT_LV.bdoc
@@ -3037,16 +3038,16 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-Statistics-Log-1**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics](http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics)
   * Title: Ddoc valid container is validated
   * Expected Result: Correct data is shown in the log with correct structure
-  * File: igasugust1.3.ddoc
+  * File: valid_XML1_3.ddoc
 
 
 **TestCaseID: Ddoc-Statistics-Log-2**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics](http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics)
   * Title: Ddoc invalid container is validated
   * Expected Result: Correct data is shown in the log with correct structure
   * File: ilma_kehtivuskinnituseta.ddoc
@@ -3055,7 +3056,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-Statistics-Log-3**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics](http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics)
   * Title: Ddoc not supported file is inserted
   * Expected Result: No message in statistics as the container is not validated
   * File: xroad-simple.asice
@@ -3064,18 +3065,16 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-Statistics-Log-4**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics](http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics)
   * Title: Ddoc with certificates from different countries.
   * Expected Result: Correct data is shown in the log with correct structure
   * File: Belgia_kandeavaldus_LIV.ddoc
-
-  **Attention! This test is disabled: 2-126")
 
 
 **TestCaseID: Pdf-Statistics-Log-1**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics](http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics)
   * Title: Pdf valid container is validated
   * Expected Result: Correct data is shown in the log with correct structure
   * File: pades_lt_two_valid_sig.pdf
@@ -3084,7 +3083,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Pdf-Statistics-Log-2**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics](http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics)
   * Title: Pdf invalid container is validated
   * Expected Result: Correct data is shown in the log with correct structure
   * File: hellopades-lt1-lt2-wrongDigestValue.pdf
@@ -3093,7 +3092,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Pdf-Statistics-Log-4**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics](http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics)
   * Title: Pdf with certificates from non Estonian countries.
   * Expected Result: Correct data is shown in the log with correct structure
   * File: Regulatione-signedbyco-legislators.pdf
@@ -3102,7 +3101,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Xroad-Statistics-Log-1**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics](http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics)
   * Title: Xroad valid container is validated
   * Expected Result: Correct data is shown in the log with correct structure
   * File: xroad-batchsignature.asice
@@ -3111,7 +3110,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Xroad-Statistics-Log-2**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics](http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics)
   * Title: Xroad invalid container is validated
   * Expected Result: Correct data is shown in the log with correct structure
   * File: invalid-digest.asice
@@ -3120,7 +3119,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Xroad-Statistics-Log-3**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics](http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics)
   * Title: Xroad not supported file is inserted
   * Expected Result: No message in statistics as the container is not validated
   * File: BDOC-TS.bdoc
@@ -3129,7 +3128,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asics-Statistics-Log-1**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics](http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics)
   * Title: ASiCs valid container is validated
   * Expected Result: Correct data is shown in the log with correct structure
   * File: ValidBDOCinsideAsics.asics
@@ -3138,7 +3137,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Asics-Statistics-Log-3**
 
   * TestType: Manual
-  * Requirement: [http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf](http://open-eid.github.io/SiVa/pdf-files/SiVa_statistics_v3.pdf)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics](http://open-eid.github.io/SiVa/siva3/deployment_guide/#statistics)
   * Title: asics invalid container is validated
   * Expected Result: No message in statistics as the container is not validated
   * File: TwoDataFilesAsics.asics
@@ -3151,7 +3150,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Get-Data-Files-Request-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title: Input empty values
   * Expected Result: Errors are returned stating the missing values
   * File: not relevant
@@ -3160,7 +3159,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Get-Data-Files-Request-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title: Totally empty request body is sent
   * Expected Result: Errors are given
   * File: not relevant
@@ -3169,88 +3168,88 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Get-Data-Files-Request-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title: Order of elements is changed in request
   * Expected Result: Order of  elements is ignored, no error messages in response
-  * File: susisevad1_3.ddoc
+  * File: valid_XML1_3.ddoc
 
 
 **TestCaseID: Get-Data-Files-Request-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title: Additional elements are added
   * Expected Result: Added elements ignored, no error messages and  additional elements in response
-  * File: susisevad1_3.ddoc
+  * File: valid_XML1_3.ddoc
 
 
 **TestCaseID: Get-Data-Files-Request-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title: Mandatory element 'documentType' is duplicated, duplicated element with bdoc value
   * Expected Result: Error message is returned
-  * File: susisevad1_3.ddoc
+  * File: test_fail.ddoc
 
 
 **TestCaseID: Get-Data-Files-Request-6**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title: Mandatory element 'document' is deleted
   * Expected Result: Errors returned stating the missing element
-  * File: susisevad1_3.ddoc
+  * File: valid_XML1_3.ddoc
 
 
 **TestCaseID: Get-Data-Files-Request-8**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title: Low case for document type is used
   * Expected Result: Data file is returned, no error messages
-  * File: susisevad1_3.ddoc
+  * File: valid_XML1_3.ddoc
 
 
 **TestCaseID: Get-Data-Files-Request-9**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title: Document Type is changed in request to BDOC, actual is DDOC
   * Expected Result: Error is returned
-  * File: susisevad1_3.ddoc
+  * File: valid_XML1_3.ddoc
 
 
 **TestCaseID: Get-Data-Files-Request-10**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title: Document Type is changed in request to PDF, actual is DDOC
   * Expected Result: Error is returned
-  * File: susisevad1_3.ddoc
+  * File: valid_XML1_3.ddoc
 
 
 **TestCaseID: Get-Data-Files-Request-11**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title: Document Type is changed in request to unsupported format (JPG), actual is DDOC
   * Expected Result: Error is returned
-  * File: susisevad1_3.ddoc
+  * File: valid_XML1_3.ddoc
 
 
 **TestCaseID: Get-Data-Files-Request-12**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title: Document Type is changed in request to XROAD format, actual is DDOC
   * Expected Result: Error is returned
-  * File: susisevad1_3.ddoc
+  * File: valid_XML1_3.ddoc
 
 
 **TestCaseID: Get-Data-Files-Request-13**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title: Document Type is changed in request to DDOC format, actual is BDOC
   * Expected Result: Error is returned
   * File: BDOC-TS.bdoc
@@ -3259,7 +3258,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Get-Data-Files-Request-14**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title: Document Type is changed in request to DDOC format, actual is PDF
   * Expected Result: Error is returned
   * File: PdfValidSingleSignature.pdf
@@ -3268,7 +3267,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Get-Data-Files-Request-15**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title: For Unsupported format Document Type is changed in request to DDOC format, actual is PNG
   * Expected Result: Error is returned
   * File: Picture.png
@@ -3281,7 +3280,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Report-Type-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Input correct values for simple report
   * Expected Result: Simple report is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -3290,7 +3289,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Report-Type-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Input correct values for detailed report
   * Expected Result: Simple report is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -3299,7 +3298,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Report-Type-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Report type missing
   * Expected Result: Default is used
   * File: Valid_XAdES_LT_TS.xml
@@ -3308,7 +3307,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Report-Type-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Report type case sensitivity
   * Expected Result: Report type is case insensitive
   * File: Valid_XAdES_LT_TS.xml
@@ -3317,7 +3316,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Report-Type-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Report type is invalid
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -3326,7 +3325,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Report-Type-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Input correct values for detailed report
   * Expected Result: Simple report is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -3335,7 +3334,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Policy-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Signature policy POLv3
   * Expected Result: Correct policy is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -3344,7 +3343,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Policy-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Signature policy POLv4
   * Expected Result: Correct policy is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -3353,7 +3352,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Policy-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Signature policy missing
   * Expected Result: Default is used
   * File: Valid_XAdES_LT_TS.xml
@@ -3362,7 +3361,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Policy-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Signature policy is invalid
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -3371,7 +3370,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Policy-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Incorrect signature policy format
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -3380,7 +3379,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Policy-6**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Signature policy is empty
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -3389,7 +3388,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Policy-7**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Signature policy too long
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -3398,7 +3397,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Policy-8**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Double signature policy
   * Expected Result: Last value is used
   * File: Valid_XAdES_LT_TS.xml
@@ -3407,7 +3406,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Signature-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Input missing signature files
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -3416,7 +3415,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Signature-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Input missing signature file
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -3425,7 +3424,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Signature-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Input incorrect signature
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -3434,7 +3433,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Signature-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Input file without signature
   * Expected Result: Validation report is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -3443,7 +3442,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Signature-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Not correct file type
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -3452,7 +3451,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Datafiles-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Data files not in request
   * Expected Result: Simple report is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -3461,7 +3460,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Datafiles-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Empty data files list
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -3470,7 +3469,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Datafiles-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Data file filename missing
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -3479,7 +3478,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Datafiles-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Data file filename empty
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -3488,7 +3487,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Datafiles-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Data file filename too long
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -3497,7 +3496,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Datafiles-6**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Data file invalid hash algorithm
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -3506,7 +3505,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Datafiles-7**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Data file hash algorithm case sensitivity
   * Expected Result: Validation report is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -3515,7 +3514,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Datafiles-8**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Data file hash missing
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -3524,7 +3523,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Datafiles-9**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Data file hash empty
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -3533,7 +3532,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Datafiles-10**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Data file hash wrong format
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -3542,7 +3541,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Datafiles-11**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Hash too long
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -3551,7 +3550,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Policy-12**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Double fields in datafile object
   * Expected Result: Last value is used
   * File: Valid_XAdES_LT_TS.xml
@@ -3560,7 +3559,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Datafiles-12**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Excess data files are ignored
   * Expected Result: Validation report is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -3569,7 +3568,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Signatures-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Several signatures validated
   * Expected Result: Validation report is returned
   * File: multiple files
@@ -3578,7 +3577,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Signatures-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Several signatures validated with datafile info
   * Expected Result: Validation report is returned
   * File: multiple files
@@ -3587,7 +3586,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Hascode-Validation-Request-Signatures-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Several signatures validated one signature not valid
   * Expected Result: Validation report is returned
   * File: multiple files
@@ -3600,25 +3599,25 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationReportVerification-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface#validation-request-interface)
   * Title: Verification of values in Validation Report XAdES_BASELINE_LT_TM, QES, FullSignatureScope
   * Expected Result: All required elements are present and meet the expected values.
-  * File: Valid_ID_sig.bdoc
+  * File: TwoValidTmSignaturesWithRolesAndProductionPlace.bdoc
 
 
 **TestCaseID: Bdoc-ValidationReportVerification-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Verification of values in Validation Report XAdES_BASELINE_LT, QES, FullSignatureScope
   * Expected Result: All required elements are present and meet the expected values.
-  * File: 23635_bdoc_ts_OCSP_random_nonce.bdoc
+  * File: validTsSignatureWithRolesAndProductionPlace.asice
 
 
 **TestCaseID: Bdoc-ValidationReportVerification-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Verification of values in Validation Report XAdES_BASELINE_LT, QES, FullSignatureScope
   * Expected Result: All required elements are present and meet the expected values.
   * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
@@ -3627,7 +3626,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationReportVerification-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Verification of values in Validation Report XAdES_BASELINE_LT-TM, AdESqc
   * Expected Result: All required elements are present and meet the expected values.
   * File: testAdesQCInvalid.asice
@@ -3636,7 +3635,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationReportVerification-6**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: JSON structure has all elements (Bdoc valid multiple signatures)
   * Expected Result: All required elements are present according to SimpleReportSchema.json
   * File: Baltic MoU digital signing_EST_LT_LV.bdoc
@@ -3645,7 +3644,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationReportVerification-7**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: JSON structure has all elements (Bdoc indeterminate status)
   * Expected Result: All required elements are present according to BdocDocSimpleReportSchema.json
   * File: SS-4_teadmataCA.4.asice
@@ -3656,7 +3655,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-ValidationReportVerification-8**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title:  Bdoc report with no signatures
   * Expected Result: Report is returned with required elements
   * File:BdocContainerNoSignature.bdoc
@@ -3665,16 +3664,16 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Pdf-ValidationReportVerification-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: JSON structure has all elements (Pdf valid single signature)
   * Expected Result: All required elements are present according to SimpleReportSchema.json
-  * File: hellopades-lt-sha256-ec256.pdf
+  * File: reason_and_location_Test.pdf
 
 
 **TestCaseID: Pdf-ValidationReportVerification-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: JSON structure has all elements (Pdf valid Multiple signatures)
   * Expected Result: All required elements are present according to SimpleReportSchema.json
   * File: pades_lt_two_valid_sig.pdf
@@ -3683,7 +3682,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Pdf-ValidationReportVerification-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: JSON structure has all elements (Pdf invalid signature)
   * Expected Result: All required elements are present according to SimpleReportSchema.json
   * File: hellopades-lt-b.pdf
@@ -3692,7 +3691,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Pdf-ValidationReportVerification-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: JSON structure has all elements (Pdf indeterminate status)
   * Expected Result: All required elements are present according to SimpleReportSchema.json
   * File: hellopades-lt-rsa1024-sha1-expired.pdf
@@ -3701,7 +3700,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Pdf-ValidationReportVerification-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title:  Pdf report with no signatures
   * Expected Result: Report is returned with required elements
   * File: PdfNoSignature.pdf
@@ -3710,7 +3709,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationReportVerification-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: JSON structure has all elements (ddoc valid single signature)
   * Expected Result: All required elements are present according to SimpleReportSchema.json
   * File: DIGIDOC-XML1.3.ddoc
@@ -3719,7 +3718,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationReportVerification-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: JSON structure has all elements (ddoc invalid signature)
   * Expected Result: All required elements are present according to SimpleReportSchema.json
   * File: multipleInvalidSignatures.ddoc
@@ -3728,7 +3727,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationReportVerification-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Check for optional warning element
   * Expected Result: Warning element is present
   * File: 18912.ddoc
@@ -3737,7 +3736,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationReportVerification-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title:  Ddoc report with no signatures
   * Expected Result: Report is returned with required elements
   * File: DdocContainerNoSignature.ddoc
@@ -3746,18 +3745,16 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationReportVerification-6**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Verification of values in Validation Report, xml v1.0, checks for missing info
   * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
   * File: SK-XML1.0.ddoc
-
-  **Attention! This test is disabled: DDOC 1.0 fails in Travis CI. Needs investigation
 
 
 **TestCaseID: Ddoc-ValidationReportVerification-7**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Verification of values in Validation Report, xml v1.1, checks for missing info
   * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
   * File: Igasugust1.1.ddoc
@@ -3766,7 +3763,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationReportVerification-8**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Verification of values in Validation Report, xml v1.2, checks for missing info
   * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
   * File: Igasugust1.2.ddoc
@@ -3775,46 +3772,10 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-ValidationReportVerification-9**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Verification of values in Validation Report, xml v1.3, checks for missing info
   * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
   * File: Igasugust1.3.ddoc
-
-
-**TestCaseID: Xroad-ValidationReportVerification-1**
-
-  * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
-  * Title: Verification of values in Validation Report, xroad-simple container
-  * Expected Result: Report is returned with required elements
-  * File: xroad-simple.asice
-
-
-**TestCaseID: Xroad-ValidationReportVerification-2**
-
-  * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
-  * Title: Verification of values in Validation Report, xroad-batchsignature container
-  * Expected Result: Report is returned with required elements
-  * File: xroad-batchsignature.asice
-
-
-**TestCaseID: Xroad-ValidationReportVerification-3**
-
-  * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
-  * Title: Verification of values in Validation Report, xroad-attachment container
-  * Expected Result: Report is returned with required elements
-  * File: xroad-attachment.asice
-
-
-**TestCaseID: Xroad-ValidationReportVerification-4**
-
-  * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
-  * Title: Verification of values in Validation Report with invalid xroad container
-  * Expected Result: Report is returned with required elements
-  * File: xroad-attachment.asice
 
 
 ## ValidationRequestIT.java
@@ -3824,25 +3785,16 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: ValidationRequest-Parameters-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
-  * Title: Happy path valid mandatory input test
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
+  * Title: Happy path valid mandatory inputs
   * Expected Result: Validation report is returned
-  * File: Valid_IDCard_MobID_signatures.bdoc
-
-
-**TestCaseID: ValidationRequest-Parameters-2**
-
-  * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
-  * Title: Happy path valid all input test
-  * Expected Result: Validation report is returned
-  * File: xroad-simple.asice
+  * File: singleValidSignatureTM.bdoc
 
 
 **TestCaseID: ValidationRequest-Parameters-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Totally empty request body is sent
   * Expected Result: Error is given
   * File: not relevant
@@ -3851,7 +3803,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: ValidationRequest-Parameters-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Input empty values
   * Expected Result: Errors are returned stating the missing values
   * File: not relevant
@@ -3860,25 +3812,25 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: ValidationRequest-Parameters-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Request with more parameters than expected is sent
   * Expected Result: Error is given or extra parameters are ignored?
-  * File: Valid_IDCard_MobID_signatures.bdoc
+  * File: singleValidSignatureTM.bdoc
 
 
 **TestCaseID: ValidationRequest-Parameters-6**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Request has invalid keys (capital letters)
   * Expected Result: Error is returned stating wrong values
-  * File: Valid_IDCard_MobID_signatures.bdoc
+  * File: singleValidSignatureTM.bdoc
 
 
 **TestCaseID: ValidationRequest-Parameters-7**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Document parameter is missing
   * Expected Result: Errors are returned stating missing Document values
   * File: not relevant
@@ -3887,34 +3839,34 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: ValidationRequest-Parameters-8**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Filename parameter is missing
   * Expected Result: Errors are returned stating the missing values
-  * File: Valid_IDCard_MobID_signatures.bdoc
+  * File: singleValidSignatureTM.bdoc
 
 
 **TestCaseID: ValidationRequest-Parameters-9**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Happy path valid file encoding format
   * Expected Result: Validation report is returned
-  * File: xroad-simple.asice
+  * File: singleValidSignatureTM.bdoc
 
 
 **TestCaseID: ValidationRequest-Parameters-10**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Happy path valid file encoding format
   * Expected Result: Validation report is returned
-  * File: xroad-simple.asice
+  * File: singleValidSignatureTM.bdoc
 
 
 **TestCaseID: ValidationRequest-Parameters-11**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Request with not base64 string as document
   * Expected Result: Error is returned stating encoding problem
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -3923,61 +3875,52 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: ValidationRequest-Parameters-12**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Filename field should be case insensitive
   * Expected Result: Validation report is returned
-  * File: Valid_IDCard_MobID_signatures.bdoc
+  * File: singleValidSignatureTM.bdoc
 
 
 **TestCaseID: ValidationRequest-Parameters-13**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Filename field should ignore spaces
   * Expected Result: Validation report is returned
-  * File: Valid_IDCard_MobID_signatures.bdoc
+  * File: singleValidSignatureTM.bdoc
 
 
 **TestCaseID: ValidationRequest-Parameters-15**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Filename is in allowed length
   * Expected Result: Report is returned with the same filename
-  * File: Valid_IDCard_MobID_signatures.bdoc
+  * File: singleValidSignatureTM.bdoc
 
 
 **TestCaseID: ValidationRequest-Parameters-16**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Filename is over allowed length
   * Expected Result: Error is returned
-  * File: Valid_IDCard_MobID_signatures.bdoc
+  * File: singleValidSignatureTM.bdoc
 
 
 **TestCaseID: ValidationRequest-Parameters-17**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: DocumentType parameter is missing
   * Expected Result: Document type is selected automatically and validation report is returned
-  * File: Valid_IDCard_MobID_signatures.bdoc
-
-
-**TestCaseID: ValidationRequest-Parameters-18**
-
-  * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
-  * Title: DocumentType parameter is XROAD
-  * Expected Result: Xroad validatior is used for validation and report is returned
-  * File: xroad-simple.asice
+  * File: singleValidSignatureTM.bdoc
 
 
 **TestCaseID: ValidationRequest-Parameters-19**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: DocumentType parameter is XROAD
   * Expected Result: Xroad validatior is used for validation and report is returned
   * File: xroad-simple.asice
@@ -3986,114 +3929,115 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: ValidationRequest-Parameters-20**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: SignaturePolicy parameter is missing, default is used
   * Expected Result: Validation report is returned with POLv4
-  * File: Valid_IDCard_MobID_signatures.bdoc
+  * File: singleValidSignatureTM.bdoc
 
 
 **TestCaseID: ValidationRequest-Parameters-21**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: SignaturePolicy is set as POLv3
   * Expected Result: Validation report is returned with POLv3
-  * File: Valid_IDCard_MobID_signatures.bdoc
+  * File: singleValidSignatureTM.bdoc
 
 
 **TestCaseID: ValidationRequest-Parameters-22**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: SignaturePolicy is set as POLv4
   * Expected Result: Validation report is returned with POLv4
-  * File: Valid_IDCard_MobID_signatures.bdoc
+  * File: singleValidSignatureTM.bdoc
 
 
 **TestCaseID: ValidationRequest-Parameters-23**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: SignaturePolicy has not allowed value
   * Expected Result: error is returned
-  * File: Valid_IDCard_MobID_signatures.bdoc
+  * File: singleValidSignatureTM.bdoc
 
 
 **TestCaseID: ValidationRequest-Parameters-24**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: ReportType parameter is missing
   * Expected Result: Simple report is returned as default
-  * File: TS-11_23634_TS_2_timestamps.asice
+  * File: singleValidSignatureTS.asice
 
 
 **TestCaseID: ValidationRequest-Parameters-25**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: ReportType parameter Simple
   * Expected Result: Simple report is returned
-  * File: TS-11_23634_TS_2_timestamps.asice
+  * File: singleValidSignatureTS.asice
 
 
 **TestCaseID: ValidationRequest-Parameters-26**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: ReportType parameter Detailed
   * Expected Result: Detailed report is returned
-  * File: TS-11_23634_TS_2_timestamps.asice
+  * File: singleValidSignatureTS.asice
 
 
 **TestCaseID: ValidationRequest-Parameters-27**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: ReportType parameter is invalid
   * Expected Result: Error is returned
-  * File: xroad-simple.asice
+  * File: singleValidSignatureTS.asice
 
 
 **TestCaseID: ValidationRequest-Parameters-28**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Filename is under allowed length
   * Expected Result: Error is returned
-  * File: Valid_IDCard_MobID_signatures.bdoc
+  * File: singleValidSignatureTM.bdoc
 
 
 **TestCaseID: ValidationRequest-Parameters-29**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: SignaturePolicy is under allowed length
   * Expected Result: Error is returned
-  * File: Valid_IDCard_MobID_signatures.bdoc
+  * File: singleValidSignatureTM.bdoc
 
 
 **TestCaseID: ValidationRequest-Parameters-30**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
+  * Title: SignaturePolicy is too long
   * Expected Result: Error is returned
-  * File: Valid_IDCard_MobID_signatures.bdoc
+  * File: singleValidSignatureTM.bdoc
 
 
 **TestCaseID: ValidationRequest-Parameters-31**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: ReportType parameter Diagnostic
   * Expected Result: Diagnostic report is returned
-  * File: TS-11_23634_TS_2_timestamps.asice
+  * File: singleValidSignatureTS.asice
 
 
 **TestCaseID: ValidationRequest-Validator-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Mismatch in stated and actual document (bdoc and pdf)
   * Expected Result: Error is returned
   * File: PdfValidSingleSignature.pdf
@@ -4102,7 +4046,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: ValidationRequest-Validator-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Input random base64 string as bdoc
   * Expected Result: Error is returned stating problem in document
   * File: not relevant
@@ -4111,16 +4055,16 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: ValidationRequest-Validator-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Acceptance of ASICE as BDOC document type
   * Expected Result: Asice files are handled the same as bdoc
-  * File: bdoc21-TS.asice
+  * File: singleValidSignatureTS.asice
 
 
 **TestCaseID: ValidationRequest-Validator-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Input random base64 string as pdf
   * Expected Result: Error is returned stating problem in document
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -4129,37 +4073,21 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: ValidationRequest-Validator-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Mismatch in stated and actual document (ddoc and bdoc)
   * Expected Result: Error is returned
-  * File: Valid_IDCard_MobID_signatures.bdoc
+  * File: singleValidSignatureTM.bdoc
 
 
 **TestCaseID: ValidationRequest-Validator-6**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Input random base64 string as ddoc
   * Expected Result: Error is returned stating problem in document
   * File: not relevant
 
-
-**TestCaseID: ValidationRequest-Validator-7**
-
-  * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
-  * Title: Mismatch in stated and actual document (xroad and ddoc)
-  * Expected Result: Error is returned
-  * File: igasugust1.3.ddoc
-
-
-**TestCaseID: ValidationRequest-Validator-8**
-
-  * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
-  * Title: Input random base64 string as document with xroad document type
-  * Expected Result: Error is returned stating problem in document
-  * File: not relevant
+  **Attention! This test is disabled: 6")
 
 
 ## SoapGetDataFileReportIT.java
@@ -4169,16 +4097,16 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: SoapGetDataFile-Report-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-response-interface)
   * Title: Verification of values in Validation Report, checks for  File name, Base64, Mimetype and Size
   * Expected Result: All required elements are present and meet the expected values
-  * File: ddoc_1_3.xml.ddoc
+  * File: valid_XML1_3.ddoc
 
 
 **TestCaseID: SoapGetDataFile-Report-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-response-interface)
   * Title: Verification of values in Validation Report xml v1.1, checks for  File name, Base64, Mimetype and Size
   * Expected Result: All required elements are present and meet the expected values
   * File: DIGIDOC-XML1.1.ddoc
@@ -4187,7 +4115,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: SoapGetDataFile-Report-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-response-interface)
   * Title: Verification of values in Validation Report xml v1.2, checks for  File name, Base64, Mimetype and Size
   * Expected Result: All required elements are present and meet the expected values
   * File: DIGIDOC-XML1.2.ddoc
@@ -4196,12 +4124,10 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: SoapGetDataFile-Report-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-response-interface)
   * Title: Verification of values in Validation Report for container with a number of files, checks for  File name, Base64, Mimetype and Size for each file
   * Expected Result: All required elements are present and meet the expected values
   * File: igasugust1.3.ddoc
-
-  **Attention! This test is disabled: Run this test manually as it fails in Travis because of big response data
 
 
 ## SoapGetDataFileRequestIT.java
@@ -4211,7 +4137,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Validation-Request-For-Data-Files-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title: Input empty values
   * Expected Result: Error is returned
   * File: not relevant
@@ -4220,7 +4146,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Validation-Request-For-Data-Files-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title: Input empty body
   * Expected Result: Error is returned
   * File: not relevant
@@ -4229,88 +4155,88 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Validation-Request-For-Data-Files-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title: Element DocumentType is removed from the body
   * Expected Result: Error is returned
-  * File: ddoc_1_3.xml.ddoc
+  * File: valid_XML1_3.ddoc
 
 
 **TestCaseID: Soap-Validation-Request-For-Data-Files-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title: Element Document is removed from the body
   * Expected Result: Error is returned
-  * File: ddoc_1_3.xml.ddoc
+  * File: valid_XML1_3.ddoc
 
 
 **TestCaseID: Soap-Validation-Request-For-Data-Files-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title: Element DocumentType is duplicated in the body with different value
   * Expected Result: Error is returned
-  * File: ddoc_1_3.xml.ddoc
+  * File: valid_XML1_3.ddoc
 
 
 **TestCaseID: Soap-Validation-Request-For-Data-Files-6**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title: Additional element Filename is added to  the body
   * Expected Result: Error is returned
-  * File: ddoc_1_3.xml.ddoc
+  * File: valid_XML1_3.ddoc
 
 
 **TestCaseID: Soap-Validation-Request-For-Data-Files-7**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title: Value for element Document was changed
   * Expected Result: Error is returned
-  * File: ddoc_1_3.xml.ddoc
+  * File: valid_XML1_3.ddoc
 
 
 **TestCaseID: Soap-Validation-Request-For-Data-Files-9**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title:  DocumentType was changed to BDOC when actual is DDOC
   * Expected Result: Error is returned
-  * File: 18912.ddoc
+  * File: valid_XML1_3.ddoc
 
 
 **TestCaseID: Soap-Validation-Request-For-Data-Files-10**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title:  DocumentType was changed to PDF when actual is DDOC
   * Expected Result: Error is returned
-  * File: 18912.ddoc
+  * File: valid_XML1_3.ddoc
 
 
 **TestCaseID: Soap-Validation-Request-For-Data-Files-11**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title:  DocumentType was changed to XROAD when actual is DDOC
   * Expected Result: Error is returned
-  * File: 18912.ddoc
+  * File: valid_XML1_3.ddoc
 
 
 **TestCaseID: Soap-Validation-Request-For-Data-Files-12**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title:  DocumentType was changed to unsupported format JPG when actual is DDOC
   * Expected Result: Error is returned
-  * File: 18912.ddoc
+  * File: valid_XML1_3.ddoc
 
 
 **TestCaseID: Soap-Validation-Request-For-Data-Files-13**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title:  DocumentType was changed to DDOC when actual is PDF
   * Expected Result: Error is returned
   * File: PdfValidSingleSignature.pdf
@@ -4319,7 +4245,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Validation-Request-For-Data-Files-14**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title:  DocumentType was changed to DDOC when actual is BDOC
   * Expected Result: Error is returned
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -4332,7 +4258,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-Validation-Report-Type-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Valid request
   * Expected Result: Simple report is returned with valid signatures
   * File: Valid_XAdES_LT_TS.xml
@@ -4341,7 +4267,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-Validation-Report-Type-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Valid request with detailed report
   * Expected Result: Simple report is returned with valid signatures
   * File: Valid_XAdES_LT_TS.xml
@@ -4350,7 +4276,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-Validation-Report-Type-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Report type missing
   * Expected Result: Default is used
   * File: Valid_XAdES_LT_TS.xml
@@ -4359,7 +4285,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-Validation-Report-Type-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Report type case sensitivity
   * Expected Result: Report type is case insensitive
   * File: Valid_XAdES_LT_TS.xml
@@ -4368,7 +4294,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-Validation-Report-Type-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Report type is invalid
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -4377,7 +4303,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-Validation-Report-Type-6**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Valid request with report Diagnostic
   * Expected Result: Simple report is returned with valid signatures
   * File: Valid_XAdES_LT_TS.xml
@@ -4386,7 +4312,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-Validation-Policy-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Signature policy POLv3
   * Expected Result: Correct policy is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -4395,7 +4321,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-Validation-Policy-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Signature policy POLv4
   * Expected Result: Correct policy is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -4404,7 +4330,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-Validation-Policy-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Default policy
   * Expected Result: POLv4 is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -4413,7 +4339,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-Validation-Policy-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Invalid policy asked
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -4422,7 +4348,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-Validation-Policy-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Invalid policy format
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -4431,7 +4357,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-Validation-Policy-6**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface-for-hashcode)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Too long policy
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -4440,7 +4366,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-ValidationRequest-Signature-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Signature file missing
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -4449,7 +4375,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-ValidationRequest-Signature-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Signature file empty
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -4458,7 +4384,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-ValidationRequest-Signature-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Signature file not Base64
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -4467,7 +4393,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-ValidationRequest-Signature-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Signature file without signature
   * Expected Result: Report without signature is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -4476,7 +4402,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-ValidationRequest-Signature-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Signature file not XML
   * Expected Result: Report without signature is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -4485,7 +4411,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Request without datafiles
   * Expected Result: Validation report is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -4494,7 +4420,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Request with empty data files
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -4503,7 +4429,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Request without datafile filename
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -4512,7 +4438,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Request with empty filename
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -4521,7 +4447,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Request without datafile filename
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -4530,7 +4456,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-6**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Request with too long datafile name
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -4539,7 +4465,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-7**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Request with invalid hash algorithm
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -4548,7 +4474,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-8**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Hash algo small case
   * Expected Result: Report is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -4557,7 +4483,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-9**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Hash algo mismatch
   * Expected Result: Report with invalid signature
   * File: Valid_XAdES_LT_TS.xml
@@ -4566,7 +4492,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-10**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Datafile hash missing
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -4575,7 +4501,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-11**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Data file hash empty
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -4584,7 +4510,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-12**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Datafile hash not Base64
   * Expected Result: Error is returned
   * File: Valid_XAdES_LT_TS.xml
@@ -4593,7 +4519,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-ValidationRequest-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Multiple data files
   * Expected Result: Report is returned with signature statuses
   * File: Valid_XAdES_LT_TS.xml
@@ -4602,7 +4528,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-ValidationRequest-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Wrong hash
   * Expected Result: Report is returned with invalid signature
   * File: Valid_XAdES_LT_TS.xml
@@ -4611,7 +4537,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-ValidationRequest-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Wrong data file name
   * Expected Result: Report is returned with signature statuses
   * File: Valid_XAdES_LT_TS.xml
@@ -4620,7 +4546,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-Hashcode-ValidationRequest-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Empty request body
   * Expected Result: Report is returned with signature statuses
   * File: Valid_XAdES_LT_TS.xml
@@ -4669,25 +4595,25 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-SoapValidationReportValue-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Verification of values in Validation Report XAdES_BASELINE_LT_TM, QES, FullSignatureScope
   * Expected Result: All required elements are present and meet the expected values.
-  * File: Valid_ID_sig.bdoc
+  * File: TwoValidTmSignaturesWithRolesAndProductionPlace.bdoc
 
 
 **TestCaseID: Bdoc-SoapValidationReportValue-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Verification of values in Validation Report XAdES_BASELINE_LT, QES, FullSignatureScope
   * Expected Result: All required elements are present and meet the expected values.
-  * File: 23635_bdoc_ts_OCSP_random_nonce.bdoc
+  * File: validTsSignatureWithRolesAndProductionPlace.asice
 
 
 **TestCaseID: Bdoc-SoapValidationReportValue-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Verification of values in Validation Report XAdES_BASELINE_LT, AdES, FullSignatureScope
   * Expected Result: All required elements are present and meet the expected values.
   * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
@@ -4698,7 +4624,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-SoapValidationReportValue-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Verification of values in Validation Report XAdES_BASELINE_LT_TM, AdESqc, FullSignatureScope
   * Expected Result: All required elements are present and meet the expected values.
   * File: testAdesQC.bdoc
@@ -4709,7 +4635,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Bdoc-SoapValidationReportValue-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Verification of values in Validation Report XAdES_BASELINE_LTA, QES, FullSignatureScope
   * Expected Result: All required elements are present and meet the expected values.
   * File: EE_SER-AEX-B-LTA-V-24.bdoc
@@ -4718,18 +4644,16 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-SoapValidationReportValue-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Verification of values in Validation Report, xml v1.0, checks for missing info
   * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
   * File: SK-XML1.0.ddoc
-
-  **Attention! This test is disabled: DDOC 1.0 fails in Travis CI. Needs investigation
 
 
 **TestCaseID: Ddoc-SoapValidationReportValue-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Verification of values in Validation Report, xml v1.1, checks for missing info
   * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
   * File: Igasugust1.1.ddoc
@@ -4738,7 +4662,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-SoapValidationReportValue-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Verification of values in Validation Report, xml v1.2, checks for missing info
   * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
   * File: Igasugust1.2.ddoc
@@ -4747,7 +4671,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Ddoc-SoapValidationReportValue-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Verification of values in Validation Report, xml v1.3, checks for missing info
   * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
   * File: Igasugust1.3.ddoc
@@ -4756,7 +4680,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Pdf-SoapValidationReportValue-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Verification of values in Validation Report, PAdES_baseline_LT, checks for missing info
   * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
   * File: pades_lt_two_valid_sig.pdf
@@ -4765,28 +4689,91 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Pdf-SoapValidationReportValue-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
   * Title: Verification of values in Validation Report, PAdES_baseline_B, checks for missing info
   * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
   * File: hellopades-pades-b-sha256-auth.pdf
 
 
-**TestCaseID: Xroad-SoapValidationReportValue-1**
+**TestCaseID: Asice-SoapRoleAndProductionPlaceValue-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
-  * Title: Verification of values in Validation Report, xroad-simple container
-  * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
-  * File: xroad-simple.asice
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
+  * Title: Verification of filled SignerRole and SignatureProductionPlace values.
+  * Expected Result: All required elements are present and meet the expected values.
+  * File: role_productionPlace.asice
 
 
-**TestCaseID: Xroad-SoapValidationReportValue-2**
+**TestCaseID: Asice-SoapRoleAndProductionPlaceValue-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-response-interface)
-  * Title: Verification of values in Validation Report, xroad-simple invalid container
-  * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
-  * File: invalid-digest.asice
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
+  * Title: Verification of filled SignerRole and SignatureProductionPlace special character values.
+  * Expected Result: All required elements are present and meet the expected values.
+  * File: role_productionPlace.asice
+
+
+**TestCaseID: Asice-SoapRoleAndProductionPlaceValue-3**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
+  * Title: Verification of filled SignerRole and SignatureProductionPlace values in XML and JSON syntax.
+  * Expected Result: All required elements are present and meet the expected values. Structure is not malformed.
+  * File: role_productionPlace.asice
+
+
+**TestCaseID: Asice-SoapRoleAndProductionPlaceValue-4**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
+  * Title: Verification of empty SignerRole and SignatureProductionPlace elements.
+  * Expected Result: Structure does not contain SignerRole and SignatureProductionPlace elements.
+  * File: role_productionPlace.asice
+
+
+**TestCaseID: Asice-SoapRoleAndProductionPlaceValue-5**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
+  * Title: Verification of filled SignerRole and empty SignatureProductionPlace elements.
+  * Expected Result: SignerRole element is present and meets the expected value. Structure does not contain SignatureProductionPlace elements.
+  * File: role_productionPlace.asice
+
+
+**TestCaseID: Asice-SoapRoleAndProductionPlaceValue-6**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
+  * Title: Verification of empty SignerRole and partially filled SignatureProductionPlace element.
+  * Expected Result: SignatureProductionPlace.City element is present and meets the expected value. Structure does not contain SignerRole element.
+  * File: role_productionPlace.asice
+
+
+**TestCaseID: Asice-SoapRoleAndProductionPlaceValue-7**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
+  * Title: Verification of short data type maximum range value for SignerRole and SignatureProductionPlace.
+  * Expected Result: All required elements are present and corresponding values meet the short data type maximum range of 32767 characters.
+  * File: role_productionPlace.asice
+
+
+**TestCaseID: Asice-SoapRoleAndProductionPlaceValue-8**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
+  * Title:  Verification of int data type value longer than short data type maximum value for SignatureProductionPlace.
+  * Expected Result: Element is present and meets expected value of 32768 characters.
+  * File: role_productionPlace.asice
+
+
+**TestCaseID: Asice-SoapRoleAndProductionPlaceValue-9**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
+  * Title: Verification of 3 concurrent claimed roles.
+  * Expected Result: All claimed roles are present and meet the expected values.
+  * File: role_productionPlace.asice
 
 
 ## SoapValidationRequestIT.java
@@ -4796,7 +4783,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-ValidationRequest-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Empty request body
   * Expected Result: Error is returned stating mismatch with required elements
   * File: not relevant
@@ -4805,7 +4792,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-ValidationRequest-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Request with not base64 string as document
   * Expected Result: Error is returned stating encoding problem
   * File: not relevant
@@ -4814,7 +4801,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-ValidationRequest-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Verification of wrong document type as input
   * Expected Result: Correct error code is returned
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -4823,7 +4810,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-ValidationRequest-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Verification of case sensitivity in document type
   * Expected Result: Error is returned as WSDL defines the allowed values
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -4832,7 +4819,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-ValidationRequest-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Request has XML as document type (special case, XML is similar to ddoc and was a accepted document type in earlier versions)
   * Expected Result: Error is given
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -4841,7 +4828,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-ValidationRequest-6**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Request has long filename field
   * Expected Result: Report is returned with the same filename
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -4850,7 +4837,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-ValidationRequest-7**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Totally empty request body is sent
   * Expected Result: Error is given
   * File: not relevant
@@ -4859,7 +4846,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-ValidationRequest-8**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Request with more parameters than expected is sent
   * Expected Result: Error is given or extra parameters are ignored?
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -4868,7 +4855,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-ValidationRequest-9**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Request with more parameters than expected is sent
   * Expected Result: Error is given or extra parameters are ignored?
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -4877,7 +4864,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-ValidationRequest-10**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Request with special chars is sent
   * Expected Result: Validation report is returned
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -4886,7 +4873,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-ValidationRequest-11**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Request with no optional SignaturePolicy field
   * Expected Result: Validation report is returned using default policy
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -4895,7 +4882,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-ValidationRequest-12**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Request with XML expansion
   * Expected Result: Error is returned and Entity is not handled
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -4904,7 +4891,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-ValidationRequest-13**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Request XML external entity attack
   * Expected Result: Error message is returned and Doctype field is not handled
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -4913,7 +4900,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-ValidationRequest-14**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Request with empty document
   * Expected Result: Error is returned
   * File: not relevant
@@ -4922,7 +4909,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-ValidationRequest-15**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Request with empty filename
   * Expected Result: Error is returned
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -4931,7 +4918,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-ValidationRequest-16**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Request with not allowed signature policy characters
   * Expected Result: Error is returned
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -4940,7 +4927,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-ValidationRequest-17**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: SignaturePolicy is over allowed length
   * Expected Result: Error is returned
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -4949,7 +4936,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-ValidationRequest-18**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: SignaturePolicy is under allowed length
   * Expected Result: Error is returned
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -4958,7 +4945,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-ValidationRequest-19**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Filename is under allowed length
   * Expected Result: Error is returned
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -4967,7 +4954,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-ValidationRequest-20**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Filename is over allowed length
   * Expected Result: Error is returned
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -4976,7 +4963,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-BdocValidationRequest-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Input random base64 string as document with bdoc document type
   * Expected Result: Error is returned stating problem in document
   * File: not relevant
@@ -4985,7 +4972,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-BdocValidationRequest-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Verification of filename value (filename do not match the actual file)
   * Expected Result: The same filename is returned as sent in the request
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -4994,7 +4981,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-BdocValidationRequest-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Mismatch in documentType and actual document (bdoc and pdf)
   * Expected Result: Error is returned
   * File: PdfValidSingleSignature.pdf
@@ -5003,7 +4990,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-BdocValidationRequest-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Bdoc file, not existing value in signaturePolicy
   * Expected Result: Error is returned
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -5012,7 +4999,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-BdocValidationRequest-6**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Bdoc file, policy fiels should be case insensitive
   * Expected Result: Error is returned
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -5021,7 +5008,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-DdocValidationRequest-7**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Mismatch in documentType and actual document (bdoc and xroad)
   * Expected Result: Error is returned
   * File: xroad-simple.asice
@@ -5030,7 +5017,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-DdocValidationRequest-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Input random base64 string as document with ddoc document type
   * Expected Result: Error is returned stating problem in document
   * File:
@@ -5039,7 +5026,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-DdocValidationRequest-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Mismatch in documentType and actual document (ddoc and bdoc)
   * Expected Result: Error is returned
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -5048,7 +5035,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-DdocValidationRequest-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Mismatch in documentType and actual document (ddoc and bdoc)
   * Expected Result: Error is returned
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -5057,7 +5044,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-DdocValidationRequest-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Mismatch in documentType and actual document (ddoc and pdf)
   * Expected Result: Error is returned
   * File: PdfValidSingleSignature.pdf
@@ -5066,7 +5053,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-DdocValidationRequest-5**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Ddoc file, not existing value in signaturePolicy
   * Expected Result: Error is returned
   * File: igasugust1.3.ddoc
@@ -5075,7 +5062,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-DdocValidationRequest-6**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Mismatch in documentType and actual document (ddoc and xroad)
   * Expected Result: Error is returned
   * File: xroad-attachment.asice
@@ -5084,7 +5071,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-PdfValidationRequest-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Input random base64 string as document with pdf document type
   * Expected Result: Error is returned stating problem in document
   * File: not relevant
@@ -5093,73 +5080,145 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: Soap-PdfValidationRequest-4**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: PDF file, not existing value in signaturePolicy
   * Expected Result: Error is returned
   * File: PdfValidSingleSignature.pdf
 
 
-**TestCaseID: Soap-XroadValidationRequest-1**
+**TestCaseID: Soap-ValidationRequest-PDF-ReportType-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
-  * Title: X-road file, not existing value in signaturePolicy
-  * Expected Result: Error is returned
-  * File: xroad-simple.asice
-
-
-**TestCaseID: Soap-XroadValidationRequest-2**
-
-  * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
-  * Title: Mismatch in documentType and actual document (xroad and ddoc)
-  * Expected Result: Error is returned
-  * File: igasugust1.3.ddoc
-
-
-**TestCaseID: Soap-XroadValidationRequest-3**
-
-  * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
-  * Title: Mismatch in documentType and actual document (pdf and bdoc)
-  * Expected Result: Error is returned
-  * File: Valid_IDCard_MobID_signatures.bdoc
-
-
-**TestCaseID: Soap-XroadValidationRequest-4**
-
-  * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
-  * Title: Mismatch in documentType and actual document (bdoc and pdf)
-  * Expected Result: Error is returned
-  * File: PdfValidSingleSignature.pdf
-
-
-**TestCaseID: Soap-ValidationRequest-ReportType-1**
-
-  * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Simple report is requested
   * Expected Result: Simple report is returned
   * File:PdfValidSingleSignature.pdf
 
 
-**TestCaseID: Soap-ValidationRequest-ReportType-2**
+**TestCaseID: Soap-ValidationRequest-PDF-ReportType-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Detailed report is requested
   * Expected Result: Detailed report is returned
   * File:PdfValidSingleSignature.pdf
 
 
-**TestCaseID: Soap-ValidationRequest-ReportType-3**
+**TestCaseID: Soap-ValidationRequest-PDF-ReportType-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Diagnostic report is requested
   * Expected Result: Diagnostic report is returned
   * File:PdfValidSingleSignature.pdf
+
+
+**TestCaseID: Soap-ValidationRequest-BDOC-ReportType-1**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
+  * Title: Simple report is requested
+  * Expected Result: Simple report is returned
+  * File: testECCDemo.bdoc
+
+
+**TestCaseID: Soap-ValidationRequest-BDOC-ReportType-2**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
+  * Title: Detailed report is requested
+  * Expected Result: Simple report is returned
+  * File: testECCDemo.bdoc
+
+
+**TestCaseID: Soap-ValidationRequest-BDOC-ReportType-3**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
+  * Title: Diagnostic report is requested
+  * Expected Result: Simple report is returned
+  * File: testECCDemo.bdoc
+
+
+**TestCaseID: Soap-ValidationRequest-DDOC-ReportType-1**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
+  * Title: Simple report is requested
+  * Expected Result: Simple report is returned
+  * File: igasugust1.3.ddoc
+
+
+**TestCaseID: Soap-ValidationRequest-DDOC-ReportType-2**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
+  * Title: Detailed report is requested
+  * Expected Result: Simple report is returned
+  * File: igasugust1.3.ddoc
+
+
+**TestCaseID: Soap-ValidationRequest-DDOC-ReportType-3**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
+  * Title: Diagnostic report is requested
+  * Expected Result: Simple report is returned
+  * File: igasugust1.3.ddoc
+
+
+**TestCaseID: Soap-ValidationRequest-ASICE-ReportType-1**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
+  * Title: Simple report is requested
+  * Expected Result: Simple report is returned
+  * File: Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice
+
+
+**TestCaseID: Soap-ValidationRequest-ASICE-ReportType-2**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
+  * Title: Detailed report is requested
+  * Expected Result: Detailed report is returned
+  * File: Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice
+
+
+**TestCaseID: Soap-ValidationRequest-ASICE-ReportType-3**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
+  * Title: Diagnostic report is requested
+  * Expected Result: Diagnostic report is returned
+  * File: Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice
+
+
+**TestCaseID: Soap-ValidationRequest-XROAD-ReportType-1**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
+  * Title: Simple report is requested
+  * Expected Result: Simple report is returned
+  * File: xroad-simple.asice
+
+
+**TestCaseID: Soap-ValidationRequest-XROAD-ReportType-2**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
+  * Title: Detailed report is requested
+  * Expected Result: Simple report is returned
+  * File: xroad-simple.asice
+
+
+**TestCaseID: Soap-ValidationRequest-XROAD-ReportType-3**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
+  * Title: Diagnostic report is requested
+  * Expected Result: Simple report is returned
+  * File: xroad-simple.asice
 
 
 ## SoapXRoadRequestHeaderIT.java
@@ -5169,7 +5228,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: XroadSoap-RequestVerification-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Soap headers are returned in response
   * Expected Result: Same headers are in response as in request
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -5178,7 +5237,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: XroadSoap-RequestVerification-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Soap headers are returned in correct order
   * Expected Result: Same headers are in response as in request
   * File: Valid_IDCard_MobID_signatures.bdoc
@@ -5187,7 +5246,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: XroadSoap-RequestVerification-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#validation-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
   * Title: Soap headers are returned in error response
   * Expected Result: Same headers are in response as in request
   * File: not relevant
@@ -5196,7 +5255,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: XroadSoap-GetDataFiles-RequestVerification-1**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title: Soap headers are returned in response for Get Data Files
   * Expected Result: Same headers are in response as in request
   * File: susisevad1_3.ddoc
@@ -5205,19 +5264,206 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **TestCaseID: XroadSoap-GetDataFiles-RequestVerification-2**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title: Soap headers are returned in correct order for Get Data Files
   * Expected Result: Same headers are in response as in request
-  * File: susisevad1_3.ddoc
+  * File: valid_XML1_3.ddoc
 
 
 **TestCaseID: XroadSoap-GetDataFiles-RequestVerification-3**
 
   * TestType: Automated
-  * Requirement: [http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva2/interfaces/#data-files-request-interface)
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface)
   * Title: Soap headers are returned in error response for Get Data Files
   * Expected Result: Same headers are in response as in request
   * File: not relevant
+
+
+## XRoadValidationFailIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/xroadtest/XRoadValidationFailIT.java)
+
+
+**TestCaseID: Xroad-ValidationFail-1**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
+  * Title: Simple xroad document with container fault
+  * Expected Result: Document should fail validation
+  * File: invalid-digest.asice
+
+
+## XRoadValidationPassIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/xroadtest/XRoadValidationPassIT.java)
+
+
+**TestCaseID: Xroad-ValidationPass-1**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
+  * Title: Simple xroad document
+  * Expected Result: Document should pass
+  * File: xroad-simple.asice
+
+
+**TestCaseID: Xroad-ValidationPass-2**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
+  * Title: Batchsignature xroad document
+  * Expected Result: Document should pass
+  * File: xroad-batchsignature.asice
+
+
+**TestCaseID: Xroad-ValidationPass-3**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
+  * Title: Attachment xroad document
+  * Expected Result: Document should pass
+  * File: xroad-attachment.asice
+
+
+## ValidationReportValueVerificationIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/resttest/ValidationReportValueVerificationIT.java)
+
+
+**TestCaseID: Xroad-ValidationReportVerification-1**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
+  * Title: Verification of values in Validation Report, xroad-simple container
+  * Expected Result: Report is returned with required elements
+  * File: xroad-simple.asice
+
+
+**TestCaseID: Xroad-ValidationReportVerification-2**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
+  * Title: Verification of values in Validation Report, xroad-batchsignature container
+  * Expected Result: Report is returned with required elements
+  * File: xroad-batchsignature.asice
+
+
+**TestCaseID: Xroad-ValidationReportVerification-3**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
+  * Title: Verification of values in Validation Report, xroad-attachment container
+  * Expected Result: Report is returned with required elements
+  * File: xroad-attachment.asice
+
+
+**TestCaseID: Xroad-ValidationReportVerification-4**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
+  * Title: Verification of values in Validation Report with invalid xroad container
+  * Expected Result: Report is returned with required elements
+  * File: xroad-attachment.asice
+
+
+## ValidationRequestIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/resttest/ValidationRequestIT.java)
+
+
+**TestCaseID: ValidationRequest-Parameters-2**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
+  * Title: Happy path valid all input test
+  * Expected Result: Validation report is returned
+  * File: xroad-simple.asice
+
+
+**TestCaseID: ValidationRequest-Parameters-18**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
+  * Title: DocumentType parameter is XROAD
+  * Expected Result: Xroad validatior is used for validation and report is returned
+  * File: xroad-simple.asice
+
+
+**TestCaseID: ValidationRequest-Validator-8**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
+  * Title: Input random base64 string as document with xroad document type
+  * Expected Result: Error is returned stating problem in document
+  * File: not relevant
+
+
+**TestCaseID: ValidationRequest-Validator-7**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
+  * Title: Mismatch in stated and actual document (xroad and ddoc)
+  * Expected Result: Error is returned
+  * File: igasugust1.3.ddoc
+
+
+## SoapValidationReportValueIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/soaptest/SoapValidationReportValueIT.java)
+
+
+**TestCaseID: Xroad-SoapValidationReportValue-1**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
+  * Title: Verification of values in Validation Report, xroad-simple container
+  * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
+  * File: xroad-simple.asice
+
+
+**TestCaseID: Xroad-SoapValidationReportValue-2**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
+  * Title: Verification of values in Validation Report, xroad-simple invalid container
+  * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
+  * File: invalid-digest.asice
+
+
+## SoapValidationRequestIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/soaptest/SoapValidationRequestIT.java)
+
+
+**TestCaseID: Soap-XroadValidationRequest-1**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
+  * Title: X-road file, not existing value in signaturePolicy
+  * Expected Result: Error is returned
+  * File: xroad-simple.asice
+
+
+**TestCaseID: Soap-XroadValidationRequest-2**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
+  * Title: Mismatch in documentType and actual document (xroad and ddoc)
+  * Expected Result: Error is returned
+  * File: igasugust1.3.ddoc
+
+
+**TestCaseID: Soap-XroadValidationRequest-3**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
+  * Title: Mismatch in documentType and actual document (pdf and bdoc)
+  * Expected Result: Error is returned
+  * File: Valid_IDCard_MobID_signatures.bdoc
+
+
+**TestCaseID: Soap-XroadValidationRequest-4**
+
+  * TestType: Automated
+  * Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
+  * Title: Mismatch in documentType and actual document (bdoc and pdf)
+  * Expected Result: Error is returned
+  * File: PdfValidSingleSignature.pdf
+
 
 
 [//]: # (Manually generated test cases start here. Do NOT overwrite with autogenerated test cases!)

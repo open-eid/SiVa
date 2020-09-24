@@ -421,6 +421,36 @@ public class AsiceValidationPassIT extends SiVaRestTests {
 
     }
 
+    /**
+     * TestCaseID: Asice-ValidationPass-14
+     * <p>
+     * TestType: Automated
+     * <p>
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
+     * <p>
+     * Title: Asice pss signature
+     * <p>
+     * Expected Result: The document should pass the validation
+     * <p>
+     * File: PSS-signature.asice
+     */
+    @Test
+    public void asicePssSignatureShouldPass() {
+        setTestFilesDirectory("bdoc/test/timestamp/");
+        post(validationRequestFor("PSS-signature.asice"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[0].warnings", Matchers.emptyOrNullString())
+                .body("signatures[0].signatureMethod", Matchers.is("http://www.w3.org/2007/05/xmldsig-more#sha256-rsa-MGF1"))
+                .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("ŽÕRINÜWŠKY,MÄRÜ-LÖÖZ,11404176865"))
+                .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("11404176865"))
+                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("validSignaturesCount", Matchers.is(1));
+
+    }
+
+
     @Override
     protected String getTestFilesDirectory() {
         return testFilesDirectory;

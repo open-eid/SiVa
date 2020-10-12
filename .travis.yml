@@ -1,4 +1,4 @@
-dist: xenial
+dist: focal
 language: java
 sudo: false
 cache: false
@@ -19,6 +19,5 @@ notifications:
     recipients:
     - aare.nurm@nortal.com
     - siim.suu@nortal.com
-    - risto.seene@nortal.com
     on_success: change
     on_failure: always

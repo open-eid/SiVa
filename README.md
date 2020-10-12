@@ -2,7 +2,7 @@
 
 # Signature Verification Service
 
-[![Build Status](https://travis-ci.org/open-eid/SiVa.svg?branch=develop)](https://travis-ci.org/open-eid/SiVa)
+[![Build Status](https://travis-ci.org/open-eid/SiVa.svg?branch=develop)](https://travis-ci.com/open-eid/SiVa)
 [![Coverage Status](https://coveralls.io/repos/github/open-eid/SiVa/badge.svg?branch=develop)](https://coveralls.io/github/open-eid/SiVa?branch=develop)
 [![GitHub license](https://img.shields.io/badge/license-EUPLv1.1-blue.svg)](https://raw.githubusercontent.com/open-eid/SiVa/develop/LICENSE.md)
 
